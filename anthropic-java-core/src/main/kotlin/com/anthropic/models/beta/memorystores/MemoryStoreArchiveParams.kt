@@ -11,7 +11,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Archive a memory store */
+/** Archive a Memory Store */
 class MemoryStoreArchiveParams
 private constructor(
     private val memoryStoreId: String?,
@@ -23,9 +23,9 @@ private constructor(
 ) : Params {
 
     /**
-     * ID of the memory store to archive (a `memstore_...` identifier). Required. Archiving is
-     * one-way and idempotent; archived stores cannot be unarchived. Enumerate IDs via `GET
-     * /v1/memory_stores`.
+     * The ID of the memory store to archive (`memstore_...`).
+     *
+     * Archiving can't be undone. Archiving a store that is already archived returns it unchanged.
      */
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
@@ -85,9 +85,10 @@ private constructor(
         }
 
         /**
-         * ID of the memory store to archive (a `memstore_...` identifier). Required. Archiving is
-         * one-way and idempotent; archived stores cannot be unarchived. Enumerate IDs via `GET
-         * /v1/memory_stores`.
+         * The ID of the memory store to archive (`memstore_...`).
+         *
+         * Archiving can't be undone. Archiving a store that is already archived returns it
+         * unchanged.
          */
         fun memoryStoreId(memoryStoreId: String?) = apply { this.memoryStoreId = memoryStoreId }
 

@@ -21,7 +21,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Create a memory store */
+/** Create a Memory Store */
 class MemoryStoreCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
@@ -47,9 +47,16 @@ private constructor(
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
-     * Human-readable name for the store. Required; 1–255 characters; no control characters. The
-     * mount-path slug under `/mnt/memory/` is derived from this name (lowercased, non-alphanumeric
-     * runs collapsed to a hyphen). Names need not be unique within a workspace.
+     * The name of the memory store, 1 to 255 characters long, without control characters. Names
+     * don't have to be unique in a workspace.
+     *
+     * In a session, the store's directory under `/mnt/memory/` is based on this name. The name is
+     * lowercased and every run of characters other than ASCII letters and digits becomes one
+     * hyphen. The session's memory store resource gives the exact path in `mount_path`.
+     *
+     * See the
+     * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#how-the-agent-accesses-memory)
+     * to learn more about how agents access memory stores.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -57,7 +64,7 @@ private constructor(
     fun name(): String = body.name()
 
     /**
-     * Free-text description of what the store contains, up to 1024 characters. Included in the
+     * Free-text description of what the store contains, up to 1,024 characters. Included in the
      * agent's system prompt when the store is attached, so word it to be useful to the agent.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -66,8 +73,11 @@ private constructor(
     fun description(): Optional<String> = body.description()
 
     /**
-     * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs to).
-     * Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Not visible to the agent.
+     * Key-value pairs for your own use, such as the end user that the store belongs to. The agent
+     * doesn't see them.
+     *
+     * A store has at most 16 pairs. Keys are 1 to 64 characters long and values at most 512
+     * characters.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -187,10 +197,16 @@ private constructor(
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /**
-         * Human-readable name for the store. Required; 1–255 characters; no control characters. The
-         * mount-path slug under `/mnt/memory/` is derived from this name (lowercased,
-         * non-alphanumeric runs collapsed to a hyphen). Names need not be unique within a
-         * workspace.
+         * The name of the memory store, 1 to 255 characters long, without control characters. Names
+         * don't have to be unique in a workspace.
+         *
+         * In a session, the store's directory under `/mnt/memory/` is based on this name. The name
+         * is lowercased and every run of characters other than ASCII letters and digits becomes one
+         * hyphen. The session's memory store resource gives the exact path in `mount_path`.
+         *
+         * See the
+         * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#how-the-agent-accesses-memory)
+         * to learn more about how agents access memory stores.
          */
         fun name(name: String) = apply { body.name(name) }
 
@@ -203,7 +219,7 @@ private constructor(
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
         /**
-         * Free-text description of what the store contains, up to 1024 characters. Included in the
+         * Free-text description of what the store contains, up to 1,024 characters. Included in the
          * agent's system prompt when the store is attached, so word it to be useful to the agent.
          */
         fun description(description: String) = apply { body.description(description) }
@@ -218,9 +234,11 @@ private constructor(
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
         /**
-         * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs
-         * to). Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Not visible to
-         * the agent.
+         * Key-value pairs for your own use, such as the end user that the store belongs to. The
+         * agent doesn't see them.
+         *
+         * A store has at most 16 pairs. Keys are 1 to 64 characters long and values at most 512
+         * characters.
          */
         fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
 
@@ -419,10 +437,16 @@ private constructor(
         ) : this(name, description, metadata, mutableMapOf())
 
         /**
-         * Human-readable name for the store. Required; 1–255 characters; no control characters. The
-         * mount-path slug under `/mnt/memory/` is derived from this name (lowercased,
-         * non-alphanumeric runs collapsed to a hyphen). Names need not be unique within a
-         * workspace.
+         * The name of the memory store, 1 to 255 characters long, without control characters. Names
+         * don't have to be unique in a workspace.
+         *
+         * In a session, the store's directory under `/mnt/memory/` is based on this name. The name
+         * is lowercased and every run of characters other than ASCII letters and digits becomes one
+         * hyphen. The session's memory store resource gives the exact path in `mount_path`.
+         *
+         * See the
+         * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#how-the-agent-accesses-memory)
+         * to learn more about how agents access memory stores.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -430,7 +454,7 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
-         * Free-text description of what the store contains, up to 1024 characters. Included in the
+         * Free-text description of what the store contains, up to 1,024 characters. Included in the
          * agent's system prompt when the store is attached, so word it to be useful to the agent.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -439,9 +463,11 @@ private constructor(
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
-         * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs
-         * to). Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Not visible to
-         * the agent.
+         * Key-value pairs for your own use, such as the end user that the store belongs to. The
+         * agent doesn't see them.
+         *
+         * A store has at most 16 pairs. Keys are 1 to 64 characters long and values at most 512
+         * characters.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -519,10 +545,17 @@ private constructor(
             }
 
             /**
-             * Human-readable name for the store. Required; 1–255 characters; no control characters.
-             * The mount-path slug under `/mnt/memory/` is derived from this name (lowercased,
-             * non-alphanumeric runs collapsed to a hyphen). Names need not be unique within a
-             * workspace.
+             * The name of the memory store, 1 to 255 characters long, without control characters.
+             * Names don't have to be unique in a workspace.
+             *
+             * In a session, the store's directory under `/mnt/memory/` is based on this name. The
+             * name is lowercased and every run of characters other than ASCII letters and digits
+             * becomes one hyphen. The session's memory store resource gives the exact path in
+             * `mount_path`.
+             *
+             * See the
+             * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#how-the-agent-accesses-memory)
+             * to learn more about how agents access memory stores.
              */
             fun name(name: String) = name(JsonField.of(name))
 
@@ -536,7 +569,7 @@ private constructor(
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /**
-             * Free-text description of what the store contains, up to 1024 characters. Included in
+             * Free-text description of what the store contains, up to 1,024 characters. Included in
              * the agent's system prompt when the store is attached, so word it to be useful to the
              * agent.
              */
@@ -554,9 +587,11 @@ private constructor(
             }
 
             /**
-             * Arbitrary key-value tags for your own bookkeeping (such as the end user a store
-             * belongs to). Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Not
-             * visible to the agent.
+             * Key-value pairs for your own use, such as the end user that the store belongs to. The
+             * agent doesn't see them.
+             *
+             * A store has at most 16 pairs. Keys are 1 to 64 characters long and values at most 512
+             * characters.
              */
             fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
@@ -674,8 +709,11 @@ private constructor(
     }
 
     /**
-     * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs to).
-     * Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Not visible to the agent.
+     * Key-value pairs for your own use, such as the end user that the store belongs to. The agent
+     * doesn't see them.
+     *
+     * A store has at most 16 pairs. Keys are 1 to 64 characters long and values at most 512
+     * characters.
      */
     class Metadata
     @JsonCreator

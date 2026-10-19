@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.74.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.73.0...v2.74.0) (2026-10-16)
+## [2.74.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.73.0...v2.74.0) (2026-10-19)
 
 ### Features
 
@@ -16,6 +16,7 @@
 
 * **docs:** add credential expiry descriptions to the Managed Agents API reference
 * **docs:** correct plugin manifest_version and reach descriptions
+* **docs:** improve Managed Agents memory store descriptions
 * **docs:** improve Managed Agents vault and credential descriptions
 * **internal:** check constructor properties in the custom lint rules
 * **tests:** declare the client once per service test class

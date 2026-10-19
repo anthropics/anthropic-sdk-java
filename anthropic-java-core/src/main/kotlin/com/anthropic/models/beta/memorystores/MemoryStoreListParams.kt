@@ -12,7 +12,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List memory stores */
+/** List Memory Stores */
 class MemoryStoreListParams
 private constructor(
     private val createdAtGte: OffsetDateTime?,
@@ -26,16 +26,10 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /**
-     * Return only stores whose `created_at` is at or after this time (inclusive). Sent on the wire
-     * as `created_at[gte]`.
-     */
+    /** Return only memory stores created at or after this time (inclusive). */
     fun createdAtGte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGte)
 
-    /**
-     * Return only stores whose `created_at` is at or before this time (inclusive). Sent on the wire
-     * as `created_at[lte]`.
-     */
+    /** Return only memory stores created at or before this time (inclusive). */
     fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
 
     /**
@@ -51,8 +45,8 @@ private constructor(
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
     /**
-     * Opaque pagination cursor (a `page_...` value). Pass the `next_page` value from a previous
-     * response to fetch the next page; omit for the first page.
+     * The `next_page` value from a previous response, to get the next page. Omit it to get the
+     * first page.
      */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
@@ -113,20 +107,14 @@ private constructor(
             additionalQueryParams = memoryStoreListParams.additionalQueryParams.toBuilder()
         }
 
-        /**
-         * Return only stores whose `created_at` is at or after this time (inclusive). Sent on the
-         * wire as `created_at[gte]`.
-         */
+        /** Return only memory stores created at or after this time (inclusive). */
         fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
 
         /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
         fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
             createdAtGte(createdAtGte.getOrNull())
 
-        /**
-         * Return only stores whose `created_at` is at or before this time (inclusive). Sent on the
-         * wire as `created_at[lte]`.
-         */
+        /** Return only memory stores created at or before this time (inclusive). */
         fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
 
         /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
@@ -169,8 +157,8 @@ private constructor(
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
         /**
-         * Opaque pagination cursor (a `page_...` value). Pass the `next_page` value from a previous
-         * response to fetch the next page; omit for the first page.
+         * The `next_page` value from a previous response, to get the next page. Omit it to get the
+         * first page.
          */
         fun page(page: String?) = apply { this.page = page }
 

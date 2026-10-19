@@ -17,11 +17,12 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Optimistic-concurrency precondition: the update applies only if the memory's stored
- * `content_sha256` equals the supplied value. On mismatch, the request returns
- * `memory_precondition_failed_error` (HTTP 409); re-read the memory and retry against the fresh
- * state. If the precondition fails but the stored state already exactly matches the requested
- * `content` and `path`, the server returns 200 instead of 409.
+ * A precondition that applies an update only if the memory's current content has the hash in
+ * `content_sha256`.
+ *
+ * If the hashes differ, the request fails with HTTP status 409. Retrieve the memory and retry. If
+ * the memory already has exactly the requested `content` and `path`, the request succeeds even
+ * though the hashes differ.
  */
 class BetaManagedAgentsContentSha256Precondition
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)

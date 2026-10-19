@@ -17,8 +17,8 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * The error returned with HTTP status 409 when a create or rename targets a path that another
- * memory uses, or a path that overlaps another memory's path.
+ * The error returned with HTTP status 409 when you create or rename a memory and the path you give
+ * is already used by another memory or overlaps another memory's path.
  *
  * Two paths overlap when one is an ancestor of the other, such as `/notes` and `/notes/todo.md`. To
  * free the path, rename or delete the memory that `conflicting_memory_id` references, then retry.

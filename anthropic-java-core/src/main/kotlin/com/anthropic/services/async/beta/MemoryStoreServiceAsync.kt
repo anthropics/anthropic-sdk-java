@@ -35,7 +35,7 @@ interface MemoryStoreServiceAsync {
 
     fun memoryVersions(): MemoryVersionServiceAsync
 
-    /** Create a memory store */
+    /** Create a Memory Store */
     fun create(params: MemoryStoreCreateParams): CompletableFuture<BetaManagedAgentsMemoryStore> =
         create(params, RequestOptions.none())
 
@@ -45,7 +45,7 @@ interface MemoryStoreServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsMemoryStore>
 
-    /** Retrieve a memory store */
+    /** Retrieve a Memory Store */
     fun retrieve(memoryStoreId: String): CompletableFuture<BetaManagedAgentsMemoryStore> =
         retrieve(memoryStoreId, MemoryStoreRetrieveParams.none())
 
@@ -82,7 +82,7 @@ interface MemoryStoreServiceAsync {
     ): CompletableFuture<BetaManagedAgentsMemoryStore> =
         retrieve(memoryStoreId, MemoryStoreRetrieveParams.none(), requestOptions)
 
-    /** Update a memory store */
+    /** Update a Memory Store */
     fun update(memoryStoreId: String): CompletableFuture<BetaManagedAgentsMemoryStore> =
         update(memoryStoreId, MemoryStoreUpdateParams.none())
 
@@ -118,7 +118,7 @@ interface MemoryStoreServiceAsync {
     ): CompletableFuture<BetaManagedAgentsMemoryStore> =
         update(memoryStoreId, MemoryStoreUpdateParams.none(), requestOptions)
 
-    /** List memory stores */
+    /** List Memory Stores */
     fun list(): CompletableFuture<MemoryStoreListPageAsync> = list(MemoryStoreListParams.none())
 
     /** @see list */
@@ -136,7 +136,7 @@ interface MemoryStoreServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<MemoryStoreListPageAsync> =
         list(MemoryStoreListParams.none(), requestOptions)
 
-    /** Delete a memory store */
+    /** Delete a Memory Store */
     fun delete(memoryStoreId: String): CompletableFuture<BetaManagedAgentsDeletedMemoryStore> =
         delete(memoryStoreId, MemoryStoreDeleteParams.none())
 
@@ -174,7 +174,7 @@ interface MemoryStoreServiceAsync {
     ): CompletableFuture<BetaManagedAgentsDeletedMemoryStore> =
         delete(memoryStoreId, MemoryStoreDeleteParams.none(), requestOptions)
 
-    /** Archive a memory store */
+    /** Archive a Memory Store */
     fun archive(memoryStoreId: String): CompletableFuture<BetaManagedAgentsMemoryStore> =
         archive(memoryStoreId, MemoryStoreArchiveParams.none())
 

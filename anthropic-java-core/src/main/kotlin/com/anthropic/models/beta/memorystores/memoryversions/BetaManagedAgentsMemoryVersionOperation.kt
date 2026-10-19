@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * The kind of mutation a `memory_version` records. Every non-no-op mutation to a memory appends
- * exactly one version row with one of these values.
+ * The kind of change that a memory version records.
+ *
+ * Every change to a memory adds one version. If you update a memory and nothing changes, the memory
+ * doesn't get a new version.
  */
 class BetaManagedAgentsMemoryVersionOperation
 private constructor(private val value: JsonField<String>) : Enum {

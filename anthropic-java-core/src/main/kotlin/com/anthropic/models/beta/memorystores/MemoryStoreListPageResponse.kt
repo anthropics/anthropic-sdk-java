@@ -43,8 +43,7 @@ private constructor(
     fun data(): Optional<List<BetaManagedAgentsMemoryStore>> = data.getOptional("data")
 
     /**
-     * Opaque cursor for the next page (a `page_...` value). Pass as `page` on the next request.
-     * `null` when there are no more results.
+     * The value to pass as `page` to get the next page, or `null` if there are no more results.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -134,8 +133,7 @@ private constructor(
         }
 
         /**
-         * Opaque cursor for the next page (a `page_...` value). Pass as `page` on the next request.
-         * `null` when there are no more results.
+         * The value to pass as `page` to get the next page, or `null` if there are no more results.
          */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 
