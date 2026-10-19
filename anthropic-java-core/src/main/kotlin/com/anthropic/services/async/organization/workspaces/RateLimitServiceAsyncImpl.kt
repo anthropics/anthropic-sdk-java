@@ -11,6 +11,7 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCallAsync
@@ -18,6 +19,8 @@ import com.anthropic.core.prepareAsync
 import com.anthropic.models.organization.workspaces.ratelimits.RateLimitListPageAsync
 import com.anthropic.models.organization.workspaces.ratelimits.RateLimitListPageResponse
 import com.anthropic.models.organization.workspaces.ratelimits.RateLimitListParams
+import com.anthropic.models.organization.workspaces.ratelimits.RateLimitUpdateParams
+import com.anthropic.models.organization.workspaces.ratelimits.WorkspaceRateLimit
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -33,6 +36,13 @@ class RateLimitServiceAsyncImpl internal constructor(private val clientOptions: 
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): RateLimitServiceAsync =
         RateLimitServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun update(
+        params: RateLimitUpdateParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<WorkspaceRateLimit> =
+        // post /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}
+        withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: RateLimitListParams,
@@ -53,6 +63,45 @@ class RateLimitServiceAsyncImpl internal constructor(private val clientOptions: 
             RateLimitServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        private val updateHandler: Handler<WorkspaceRateLimit> =
+            jsonHandler<WorkspaceRateLimit>(clientOptions.jsonMapper)
+
+        override fun update(
+            params: RateLimitUpdateParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<WorkspaceRateLimit>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("rateLimitId", params.rateLimitId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "workspaces")
+                    .addPathParam("workspaceId", params._pathParam(0))
+                    .addPathSegments("rate_limits")
+                    .addPathParam("rateLimitId", params._pathParam(1))
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { updateHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
+                                }
+                        }
+                    }
+            }
+        }
 
         private val listHandler: Handler<RateLimitListPageResponse> =
             jsonHandler<RateLimitListPageResponse>(clientOptions.jsonMapper)

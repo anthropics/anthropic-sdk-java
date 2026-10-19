@@ -57,7 +57,8 @@ private constructor(
 
     /**
      * Identifier of this rate-limit entry. It is stable within the organization and differs between
-     * organizations; the group's own identifier is `group.id`.
+     * organizations; the group's own identifier is `group.id`. Pass it as `rate_limit_id` to set a
+     * workspace's overrides for this group.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -216,7 +217,8 @@ private constructor(
 
         /**
          * Identifier of this rate-limit entry. It is stable within the organization and differs
-         * between organizations; the group's own identifier is `group.id`.
+         * between organizations; the group's own identifier is `group.id`. Pass it as
+         * `rate_limit_id` to set a workspace's overrides for this group.
          */
         fun id(id: String) = id(JsonField.of(id))
 

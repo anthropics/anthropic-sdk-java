@@ -5,6 +5,8 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.organization.workspaces.ratelimits.RateLimitListPageAsync
 import com.anthropic.models.organization.workspaces.ratelimits.RateLimitListParams
+import com.anthropic.models.organization.workspaces.ratelimits.RateLimitUpdateParams
+import com.anthropic.models.organization.workspaces.ratelimits.WorkspaceRateLimit
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -21,6 +23,41 @@ interface RateLimitServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): RateLimitServiceAsync
+
+    /**
+     * Set or clear rate-limit overrides for one rate-limit group in a workspace.
+     *
+     * Only the limiter types named in `limits` change: an integer `value` sets that type's override
+     * and `null` clears it. Types not named keep their current value. A value above the
+     * organization's own limit is stored, but the organization limit still applies, so the lower of
+     * the two is enforced.
+     *
+     * Returns the targeted group's entry with this request applied, in the shape `GET
+     * /v1/organizations/workspaces/{workspace_id}/rate_limits` returns. Changes take effect within
+     * about an hour.
+     */
+    fun update(
+        rateLimitId: String,
+        params: RateLimitUpdateParams,
+    ): CompletableFuture<WorkspaceRateLimit> = update(rateLimitId, params, RequestOptions.none())
+
+    /** @see update */
+    fun update(
+        rateLimitId: String,
+        params: RateLimitUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<WorkspaceRateLimit> =
+        update(params.toBuilder().rateLimitId(rateLimitId).build(), requestOptions)
+
+    /** @see update */
+    fun update(params: RateLimitUpdateParams): CompletableFuture<WorkspaceRateLimit> =
+        update(params, RequestOptions.none())
+
+    /** @see update */
+    fun update(
+        params: RateLimitUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<WorkspaceRateLimit>
 
     /**
      * List a workspace's rate limits.
@@ -80,6 +117,37 @@ interface RateLimitServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): RateLimitServiceAsync.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `post
+         * /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}`, but is
+         * otherwise the same as [RateLimitServiceAsync.update].
+         */
+        fun update(
+            rateLimitId: String,
+            params: RateLimitUpdateParams,
+        ): CompletableFuture<HttpResponseFor<WorkspaceRateLimit>> =
+            update(rateLimitId, params, RequestOptions.none())
+
+        /** @see update */
+        fun update(
+            rateLimitId: String,
+            params: RateLimitUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<WorkspaceRateLimit>> =
+            update(params.toBuilder().rateLimitId(rateLimitId).build(), requestOptions)
+
+        /** @see update */
+        fun update(
+            params: RateLimitUpdateParams
+        ): CompletableFuture<HttpResponseFor<WorkspaceRateLimit>> =
+            update(params, RequestOptions.none())
+
+        /** @see update */
+        fun update(
+            params: RateLimitUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<WorkspaceRateLimit>>
 
         /**
          * Returns a raw HTTP response for `get

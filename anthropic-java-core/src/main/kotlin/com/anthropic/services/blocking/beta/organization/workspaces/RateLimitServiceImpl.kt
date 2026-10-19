@@ -11,12 +11,15 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
+import com.anthropic.models.beta.organization.workspaces.ratelimits.BetaWorkspaceRateLimit
 import com.anthropic.models.beta.organization.workspaces.ratelimits.RateLimitListPage
 import com.anthropic.models.beta.organization.workspaces.ratelimits.RateLimitListPageResponse
 import com.anthropic.models.beta.organization.workspaces.ratelimits.RateLimitListParams
+import com.anthropic.models.beta.organization.workspaces.ratelimits.RateLimitUpdateParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -31,6 +34,13 @@ class RateLimitServiceImpl internal constructor(private val clientOptions: Clien
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): RateLimitService =
         RateLimitServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun update(
+        params: RateLimitUpdateParams,
+        requestOptions: RequestOptions,
+    ): BetaWorkspaceRateLimit =
+        // post /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}?beta=true
+        withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: RateLimitListParams,
@@ -51,6 +61,43 @@ class RateLimitServiceImpl internal constructor(private val clientOptions: Clien
             RateLimitServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        private val updateHandler: Handler<BetaWorkspaceRateLimit> =
+            jsonHandler<BetaWorkspaceRateLimit>(clientOptions.jsonMapper)
+
+        override fun update(
+            params: RateLimitUpdateParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaWorkspaceRateLimit> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("rateLimitId", params.rateLimitId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "workspaces")
+                    .addPathParam("workspaceId", params._pathParam(0))
+                    .addPathSegments("rate_limits")
+                    .addPathParam("rateLimitId", params._pathParam(1))
+                    .putQueryParam("beta", "true")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { updateHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
+                        }
+                }
+            }
+        }
 
         private val listHandler: Handler<RateLimitListPageResponse> =
             jsonHandler<RateLimitListPageResponse>(clientOptions.jsonMapper)

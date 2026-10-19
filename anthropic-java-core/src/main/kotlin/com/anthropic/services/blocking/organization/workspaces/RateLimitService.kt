@@ -5,6 +5,8 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.organization.workspaces.ratelimits.RateLimitListPage
 import com.anthropic.models.organization.workspaces.ratelimits.RateLimitListParams
+import com.anthropic.models.organization.workspaces.ratelimits.RateLimitUpdateParams
+import com.anthropic.models.organization.workspaces.ratelimits.WorkspaceRateLimit
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -21,6 +23,39 @@ interface RateLimitService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): RateLimitService
+
+    /**
+     * Set or clear rate-limit overrides for one rate-limit group in a workspace.
+     *
+     * Only the limiter types named in `limits` change: an integer `value` sets that type's override
+     * and `null` clears it. Types not named keep their current value. A value above the
+     * organization's own limit is stored, but the organization limit still applies, so the lower of
+     * the two is enforced.
+     *
+     * Returns the targeted group's entry with this request applied, in the shape `GET
+     * /v1/organizations/workspaces/{workspace_id}/rate_limits` returns. Changes take effect within
+     * about an hour.
+     */
+    fun update(rateLimitId: String, params: RateLimitUpdateParams): WorkspaceRateLimit =
+        update(rateLimitId, params, RequestOptions.none())
+
+    /** @see update */
+    fun update(
+        rateLimitId: String,
+        params: RateLimitUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): WorkspaceRateLimit =
+        update(params.toBuilder().rateLimitId(rateLimitId).build(), requestOptions)
+
+    /** @see update */
+    fun update(params: RateLimitUpdateParams): WorkspaceRateLimit =
+        update(params, RequestOptions.none())
+
+    /** @see update */
+    fun update(
+        params: RateLimitUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): WorkspaceRateLimit
 
     /**
      * List a workspace's rate limits.
@@ -70,6 +105,38 @@ interface RateLimitService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): RateLimitService.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `post
+         * /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}`, but is
+         * otherwise the same as [RateLimitService.update].
+         */
+        @MustBeClosed
+        fun update(
+            rateLimitId: String,
+            params: RateLimitUpdateParams,
+        ): HttpResponseFor<WorkspaceRateLimit> = update(rateLimitId, params, RequestOptions.none())
+
+        /** @see update */
+        @MustBeClosed
+        fun update(
+            rateLimitId: String,
+            params: RateLimitUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<WorkspaceRateLimit> =
+            update(params.toBuilder().rateLimitId(rateLimitId).build(), requestOptions)
+
+        /** @see update */
+        @MustBeClosed
+        fun update(params: RateLimitUpdateParams): HttpResponseFor<WorkspaceRateLimit> =
+            update(params, RequestOptions.none())
+
+        /** @see update */
+        @MustBeClosed
+        fun update(
+            params: RateLimitUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<WorkspaceRateLimit>
 
         /**
          * Returns a raw HTTP response for `get
