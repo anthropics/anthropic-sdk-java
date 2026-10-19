@@ -69,20 +69,51 @@ private constructor(
     fun model(): Model = model.getRequired("model")
 
     /**
+     * The `max_tokens` for the fallback attempt that uses this `fallbacks` entry's `model`, in
+     * place of the request's `max_tokens`. If you leave it out or set it to `null`, the attempt
+     * uses the request's `max_tokens`.
+     *
+     * See the
+     * [refusals and fallback guide](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback#naming-your-own-fallback-models)
+     * to learn more about fallback entries.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun maxTokens(): Optional<Long> = maxTokens.getOptional("max_tokens")
 
     /**
+     * Output parameters for the fallback attempt that uses this `fallbacks` entry's `model`,
+     * combined with the request's `output_config` one field at a time.
+     * - `format`: If you leave it out, the attempt uses the request's `format`. If you set it to
+     *   `null`, the attempt runs without a format.
+     * - `effort`: If you leave it out, the attempt uses the request's `effort` when `model`
+     *   supports that level with the attempt's `thinking`. If the request doesn't set `effort`, if
+     *   `model` doesn't support the level, or if you set `effort` to `null`, the attempt runs at
+     *   the default effort of `model`.
+     * - `task_budget`: If you leave it out, the attempt uses the request's `task_budget` when
+     *   `model` accepts a task budget of that size. If the request doesn't set `task_budget`, if
+     *   `model` doesn't accept it, or if you set `task_budget` to `null`, the attempt runs without
+     *   a task budget.
+     *
+     * Set `output_config` to `null` to run the attempt without a format or a task budget, at the
+     * default effort of `model`.
+     *
+     * These rules apply with the `server-side-fallback-2026-07-01` beta header.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun outputConfig(): Optional<BetaOutputConfig> = outputConfig.getOptional("output_config")
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * The inference speed mode for the fallback attempt that uses this `fallbacks` entry's `model`.
+     * If you leave it out, the attempt runs at `fast` speed only when the request sets `speed` to
+     * `fast` and your organization can use fast mode on `model`.
+     *
+     * Otherwise, or when you set this field to `null`, the attempt runs at `standard` speed.
+     *
+     * These rules apply with the `server-side-fallback-2026-07-01` beta header.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -90,6 +121,19 @@ private constructor(
     fun speed(): Optional<Speed> = speed.getOptional("speed")
 
     /**
+     * The thinking configuration for the fallback attempt that uses this `fallbacks` entry's
+     * `model`. If you leave it out, the attempt uses the request's `thinking` when `model` supports
+     * that thinking `type`.
+     *
+     * If you leave it out and the request's thinking `type` is `between_tools` but `model` doesn't
+     * support `between_tools`, the attempt uses `disabled` if `model` supports it. Otherwise, if
+     * `model` doesn't support the request's thinking `type`, if the request doesn't set `thinking`,
+     * or if you set this field to `null`, the attempt uses the thinking `type` that `model` uses
+     * when a request leaves out `thinking`. The request's `thinking.display` still applies where
+     * `model` allows it.
+     *
+     * These rules apply with the `server-side-fallback-2026-07-01` beta header.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -215,6 +259,15 @@ private constructor(
          */
         fun model(value: String) = model(Model.of(value))
 
+        /**
+         * The `max_tokens` for the fallback attempt that uses this `fallbacks` entry's `model`, in
+         * place of the request's `max_tokens`. If you leave it out or set it to `null`, the attempt
+         * uses the request's `max_tokens`.
+         *
+         * See the
+         * [refusals and fallback guide](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback#naming-your-own-fallback-models)
+         * to learn more about fallback entries.
+         */
         fun maxTokens(maxTokens: Long?) = maxTokens(JsonField.ofNullable(maxTokens))
 
         /**
@@ -235,6 +288,25 @@ private constructor(
          */
         fun maxTokens(maxTokens: JsonField<Long>) = apply { this.maxTokens = maxTokens }
 
+        /**
+         * Output parameters for the fallback attempt that uses this `fallbacks` entry's `model`,
+         * combined with the request's `output_config` one field at a time.
+         * - `format`: If you leave it out, the attempt uses the request's `format`. If you set it
+         *   to `null`, the attempt runs without a format.
+         * - `effort`: If you leave it out, the attempt uses the request's `effort` when `model`
+         *   supports that level with the attempt's `thinking`. If the request doesn't set `effort`,
+         *   if `model` doesn't support the level, or if you set `effort` to `null`, the attempt
+         *   runs at the default effort of `model`.
+         * - `task_budget`: If you leave it out, the attempt uses the request's `task_budget` when
+         *   `model` accepts a task budget of that size. If the request doesn't set `task_budget`,
+         *   if `model` doesn't accept it, or if you set `task_budget` to `null`, the attempt runs
+         *   without a task budget.
+         *
+         * Set `output_config` to `null` to run the attempt without a format or a task budget, at
+         * the default effort of `model`.
+         *
+         * These rules apply with the `server-side-fallback-2026-07-01` beta header.
+         */
         fun outputConfig(outputConfig: BetaOutputConfig?) =
             outputConfig(JsonField.ofNullable(outputConfig))
 
@@ -254,9 +326,13 @@ private constructor(
         }
 
         /**
-         * Inference speed mode. `fast` provides significantly faster output token generation at
-         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-         * create time.
+         * The inference speed mode for the fallback attempt that uses this `fallbacks` entry's
+         * `model`. If you leave it out, the attempt runs at `fast` speed only when the request sets
+         * `speed` to `fast` and your organization can use fast mode on `model`.
+         *
+         * Otherwise, or when you set this field to `null`, the attempt runs at `standard` speed.
+         *
+         * These rules apply with the `server-side-fallback-2026-07-01` beta header.
          */
         fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
@@ -271,6 +347,20 @@ private constructor(
          */
         fun speed(speed: JsonField<Speed>) = apply { this.speed = speed }
 
+        /**
+         * The thinking configuration for the fallback attempt that uses this `fallbacks` entry's
+         * `model`. If you leave it out, the attempt uses the request's `thinking` when `model`
+         * supports that thinking `type`.
+         *
+         * If you leave it out and the request's thinking `type` is `between_tools` but `model`
+         * doesn't support `between_tools`, the attempt uses `disabled` if `model` supports it.
+         * Otherwise, if `model` doesn't support the request's thinking `type`, if the request
+         * doesn't set `thinking`, or if you set this field to `null`, the attempt uses the thinking
+         * `type` that `model` uses when a request leaves out `thinking`. The request's
+         * `thinking.display` still applies where `model` allows it.
+         *
+         * These rules apply with the `server-side-fallback-2026-07-01` beta header.
+         */
         fun thinking(thinking: Thinking?) = thinking(JsonField.ofNullable(thinking))
 
         /** Alias for calling [Builder.thinking] with `thinking.orElse(null)`. */
@@ -396,8 +486,13 @@ private constructor(
             (thinking.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * The inference speed mode for the fallback attempt that uses this `fallbacks` entry's `model`.
+     * If you leave it out, the attempt runs at `fast` speed only when the request sets `speed` to
+     * `fast` and your organization can use fast mode on `model`.
+     *
+     * Otherwise, or when you set this field to `null`, the attempt runs at `standard` speed.
+     *
+     * These rules apply with the `server-side-fallback-2026-07-01` beta header.
      */
     class Speed private constructor(private val value: JsonField<String>) : Enum {
 
@@ -547,6 +642,20 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /**
+     * The thinking configuration for the fallback attempt that uses this `fallbacks` entry's
+     * `model`. If you leave it out, the attempt uses the request's `thinking` when `model` supports
+     * that thinking `type`.
+     *
+     * If you leave it out and the request's thinking `type` is `between_tools` but `model` doesn't
+     * support `between_tools`, the attempt uses `disabled` if `model` supports it. Otherwise, if
+     * `model` doesn't support the request's thinking `type`, if the request doesn't set `thinking`,
+     * or if you set this field to `null`, the attempt uses the thinking `type` that `model` uses
+     * when a request leaves out `thinking`. The request's `thinking.display` still applies where
+     * `model` allows it.
+     *
+     * These rules apply with the `server-side-fallback-2026-07-01` beta header.
+     */
     @JsonDeserialize(using = Thinking.Deserializer::class)
     @JsonSerialize(using = Thinking.Serializer::class)
     class Thinking
