@@ -97,9 +97,8 @@ private constructor(
 
     /**
      * The user profile ID to attribute the requests in this batch to. Use when acting on behalf of
-     * a party other than your organization. Requires the `user-profiles` beta header. Applies to
-     * every request in the batch; an individual request whose `user_profile_id` body field
-     * conflicts with this header is errored.
+     * a party other than your organization. Applies to every request in the batch; an individual
+     * request whose `user_profile_id` body field conflicts with this header is errored.
      */
     fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
 
@@ -170,9 +169,9 @@ private constructor(
 
         /**
          * The user profile ID to attribute the requests in this batch to. Use when acting on behalf
-         * of a party other than your organization. Requires the `user-profiles` beta header.
-         * Applies to every request in the batch; an individual request whose `user_profile_id` body
-         * field conflicts with this header is errored.
+         * of a party other than your organization. Applies to every request in the batch; an
+         * individual request whose `user_profile_id` body field conflicts with this header is
+         * errored.
          */
         fun userProfileId(userProfileId: String?) = apply { this.userProfileId = userProfileId }
 

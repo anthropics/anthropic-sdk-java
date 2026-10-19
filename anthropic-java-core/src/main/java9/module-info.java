@@ -99,6 +99,7 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.tunnels;
     exports com.anthropic.models.beta.tunnels.certificates;
     exports com.anthropic.models.beta.userprofiles;
+    exports com.anthropic.models.beta.userprofiles.actionurls;
     exports com.anthropic.models.beta.vaults;
     exports com.anthropic.models.beta.vaults.credentials;
     exports com.anthropic.models.beta.webhooks;
@@ -125,6 +126,8 @@ open module com.anthropic.core {
     exports com.anthropic.models.organization.workspaces.serviceaccounts;
     exports com.anthropic.models.skills;
     exports com.anthropic.models.skills.versions;
+    exports com.anthropic.models.userprofiles;
+    exports com.anthropic.models.userprofiles.actionurls;
     exports com.anthropic.services.async;
     exports com.anthropic.services.async.beta;
     exports com.anthropic.services.async.beta.agents;
@@ -148,6 +151,7 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.beta.sessions.threads;
     exports com.anthropic.services.async.beta.skills;
     exports com.anthropic.services.async.beta.tunnels;
+    exports com.anthropic.services.async.beta.userprofiles;
     exports com.anthropic.services.async.beta.vaults;
     exports com.anthropic.services.async.messages;
     exports com.anthropic.services.async.organization;
@@ -156,6 +160,7 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.organization.serviceaccounts;
     exports com.anthropic.services.async.organization.workspaces;
     exports com.anthropic.services.async.skills;
+    exports com.anthropic.services.async.userprofiles;
     exports com.anthropic.services.blocking;
     exports com.anthropic.services.blocking.beta;
     exports com.anthropic.services.blocking.beta.agents;
@@ -179,6 +184,7 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.beta.sessions.threads;
     exports com.anthropic.services.blocking.beta.skills;
     exports com.anthropic.services.blocking.beta.tunnels;
+    exports com.anthropic.services.blocking.beta.userprofiles;
     exports com.anthropic.services.blocking.beta.vaults;
     exports com.anthropic.services.blocking.messages;
     exports com.anthropic.services.blocking.organization;
@@ -187,4 +193,5 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.organization.serviceaccounts;
     exports com.anthropic.services.blocking.organization.workspaces;
     exports com.anthropic.services.blocking.skills;
+    exports com.anthropic.services.blocking.userprofiles;
 }

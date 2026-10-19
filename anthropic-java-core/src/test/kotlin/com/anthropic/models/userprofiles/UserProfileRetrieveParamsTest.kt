@@ -1,0 +1,58 @@
+package com.anthropic.models.userprofiles
+
+import com.anthropic.core.http.Headers
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+internal class UserProfileRetrieveParamsTest {
+
+    @Test
+    fun create() {
+        UserProfileRetrieveParams.builder()
+            .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+            .build()
+    }
+
+    @Test
+    fun pathParams() {
+        val params =
+            UserProfileRetrieveParams.builder()
+                .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
+                .build()
+
+        assertThat(params._pathParam(0)).isEqualTo("uprof_011CZkZCu8hGbp5mYRQgUmz9")
+        // out-of-bound path param
+        assertThat(params._pathParam(1)).isEqualTo("")
+    }
+
+    @Test
+    fun headers() {
+        val params =
+            UserProfileRetrieveParams.builder()
+                .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder()
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
+    }
+
+    @Test
+    fun headersWithoutOptionalFields() {
+        val params =
+            UserProfileRetrieveParams.builder()
+                .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers).isEqualTo(Headers.builder().build())
+    }
+}

@@ -8,6 +8,7 @@ import com.anthropic.services.async.MessageServiceAsync
 import com.anthropic.services.async.ModelServiceAsync
 import com.anthropic.services.async.OrganizationServiceAsync
 import com.anthropic.services.async.SkillServiceAsync
+import com.anthropic.services.async.UserProfileServiceAsync
 import java.util.function.Consumer
 
 /**
@@ -59,6 +60,8 @@ interface AnthropicClientAsync {
 
     fun skills(): SkillServiceAsync
 
+    fun userProfiles(): UserProfileServiceAsync
+
     fun organization(): OrganizationServiceAsync
 
     fun beta(): BetaServiceAsync
@@ -99,6 +102,8 @@ interface AnthropicClientAsync {
         fun files(): FileServiceAsync.WithRawResponse
 
         fun skills(): SkillServiceAsync.WithRawResponse
+
+        fun userProfiles(): UserProfileServiceAsync.WithRawResponse
 
         fun organization(): OrganizationServiceAsync.WithRawResponse
 

@@ -3,14 +3,17 @@ package com.anthropic.services.async.beta
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.models.beta.userprofiles.BetaDeletedUserProfile
 import com.anthropic.models.beta.userprofiles.BetaUserProfile
 import com.anthropic.models.beta.userprofiles.BetaUserProfileEnrollmentUrl
 import com.anthropic.models.beta.userprofiles.UserProfileCreateEnrollmentUrlParams
 import com.anthropic.models.beta.userprofiles.UserProfileCreateParams
+import com.anthropic.models.beta.userprofiles.UserProfileDeleteParams
 import com.anthropic.models.beta.userprofiles.UserProfileListPageAsync
 import com.anthropic.models.beta.userprofiles.UserProfileListParams
 import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
 import com.anthropic.models.beta.userprofiles.UserProfileUpdateParams
+import com.anthropic.services.async.beta.userprofiles.ActionUrlServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -27,6 +30,8 @@ interface UserProfileServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserProfileServiceAsync
+
+    fun actionUrls(): ActionUrlServiceAsync
 
     /** Create User Profile */
     fun create(): CompletableFuture<BetaUserProfile> = create(UserProfileCreateParams.none())
@@ -134,6 +139,42 @@ interface UserProfileServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<UserProfileListPageAsync> =
         list(UserProfileListParams.none(), requestOptions)
 
+    /** Delete User Profile */
+    fun delete(userProfileId: String): CompletableFuture<BetaDeletedUserProfile> =
+        delete(userProfileId, UserProfileDeleteParams.none())
+
+    /** @see delete */
+    fun delete(
+        userProfileId: String,
+        params: UserProfileDeleteParams = UserProfileDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<BetaDeletedUserProfile> =
+        delete(params.toBuilder().userProfileId(userProfileId).build(), requestOptions)
+
+    /** @see delete */
+    fun delete(
+        userProfileId: String,
+        params: UserProfileDeleteParams = UserProfileDeleteParams.none(),
+    ): CompletableFuture<BetaDeletedUserProfile> =
+        delete(userProfileId, params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(
+        params: UserProfileDeleteParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<BetaDeletedUserProfile>
+
+    /** @see delete */
+    fun delete(params: UserProfileDeleteParams): CompletableFuture<BetaDeletedUserProfile> =
+        delete(params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(
+        userProfileId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<BetaDeletedUserProfile> =
+        delete(userProfileId, UserProfileDeleteParams.none(), requestOptions)
+
     /** Create Enrollment URL */
     fun createEnrollmentUrl(
         userProfileId: String
@@ -192,6 +233,8 @@ interface UserProfileServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): UserProfileServiceAsync.WithRawResponse
+
+        fun actionUrls(): ActionUrlServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/user_profiles?beta=true`, but is otherwise the
@@ -324,6 +367,49 @@ interface UserProfileServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<UserProfileListPageAsync>> =
             list(UserProfileListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /v1/user_profiles/{user_profile_id}?beta=true`,
+         * but is otherwise the same as [UserProfileServiceAsync.delete].
+         */
+        fun delete(
+            userProfileId: String
+        ): CompletableFuture<HttpResponseFor<BetaDeletedUserProfile>> =
+            delete(userProfileId, UserProfileDeleteParams.none())
+
+        /** @see delete */
+        fun delete(
+            userProfileId: String,
+            params: UserProfileDeleteParams = UserProfileDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<BetaDeletedUserProfile>> =
+            delete(params.toBuilder().userProfileId(userProfileId).build(), requestOptions)
+
+        /** @see delete */
+        fun delete(
+            userProfileId: String,
+            params: UserProfileDeleteParams = UserProfileDeleteParams.none(),
+        ): CompletableFuture<HttpResponseFor<BetaDeletedUserProfile>> =
+            delete(userProfileId, params, RequestOptions.none())
+
+        /** @see delete */
+        fun delete(
+            params: UserProfileDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<BetaDeletedUserProfile>>
+
+        /** @see delete */
+        fun delete(
+            params: UserProfileDeleteParams
+        ): CompletableFuture<HttpResponseFor<BetaDeletedUserProfile>> =
+            delete(params, RequestOptions.none())
+
+        /** @see delete */
+        fun delete(
+            userProfileId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BetaDeletedUserProfile>> =
+            delete(userProfileId, UserProfileDeleteParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post

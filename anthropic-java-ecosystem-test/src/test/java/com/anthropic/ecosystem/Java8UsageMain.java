@@ -23,6 +23,7 @@ public final class Java8UsageMain {
         require(client.models() != null, "models");
         require(client.files() != null, "files");
         require(client.skills() != null, "skills");
+        require(client.userProfiles() != null, "userProfiles");
         require(client.organization() != null, "organization");
         require(client.beta() != null, "beta");
 

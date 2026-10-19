@@ -16,10 +16,10 @@ internal class UserProfileUpdateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
-            .externalId("user_12345")
+            .externalId("x")
             .externalUserDetails(
                 BetaUserProfileExternalUserDetailsParams.builder()
-                    .accountStatus(BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE)
+                    .accountStatus(BetaUserProfileExternalUserDetailsParams.AccountStatus.SUSPENDED)
                     .country("country")
                     .emailHash("x")
                     .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
@@ -58,11 +58,11 @@ internal class UserProfileUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
-                .externalId("user_12345")
+                .externalId("x")
                 .externalUserDetails(
                     BetaUserProfileExternalUserDetailsParams.builder()
                         .accountStatus(
-                            BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE
+                            BetaUserProfileExternalUserDetailsParams.AccountStatus.SUSPENDED
                         )
                         .country("country")
                         .emailHash("x")
@@ -116,11 +116,11 @@ internal class UserProfileUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
-                .externalId("user_12345")
+                .externalId("x")
                 .externalUserDetails(
                     BetaUserProfileExternalUserDetailsParams.builder()
                         .accountStatus(
-                            BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE
+                            BetaUserProfileExternalUserDetailsParams.AccountStatus.SUSPENDED
                         )
                         .country("country")
                         .emailHash("x")
@@ -142,11 +142,11 @@ internal class UserProfileUpdateParamsTest {
         val body = params._body()
 
         assertThat(body.accessType()).contains(UserProfileUpdateParams.AccessType.APPLICATION)
-        assertThat(body.externalId()).contains("user_12345")
+        assertThat(body.externalId()).contains("x")
         assertThat(body.externalUserDetails())
             .contains(
                 BetaUserProfileExternalUserDetailsParams.builder()
-                    .accountStatus(BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE)
+                    .accountStatus(BetaUserProfileExternalUserDetailsParams.AccountStatus.SUSPENDED)
                     .country("country")
                     .emailHash("x")
                     .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)

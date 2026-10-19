@@ -16,15 +16,19 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
+import com.anthropic.models.beta.userprofiles.BetaDeletedUserProfile
 import com.anthropic.models.beta.userprofiles.BetaUserProfile
 import com.anthropic.models.beta.userprofiles.BetaUserProfileEnrollmentUrl
 import com.anthropic.models.beta.userprofiles.UserProfileCreateEnrollmentUrlParams
 import com.anthropic.models.beta.userprofiles.UserProfileCreateParams
+import com.anthropic.models.beta.userprofiles.UserProfileDeleteParams
 import com.anthropic.models.beta.userprofiles.UserProfileListPage
 import com.anthropic.models.beta.userprofiles.UserProfileListPageResponse
 import com.anthropic.models.beta.userprofiles.UserProfileListParams
 import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
 import com.anthropic.models.beta.userprofiles.UserProfileUpdateParams
+import com.anthropic.services.blocking.beta.userprofiles.ActionUrlService
+import com.anthropic.services.blocking.beta.userprofiles.ActionUrlServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -41,10 +45,14 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
         WithRawResponseImpl(clientOptions)
     }
 
+    private val actionUrls: ActionUrlService by lazy { ActionUrlServiceImpl(clientOptions) }
+
     override fun withRawResponse(): UserProfileService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserProfileService =
         UserProfileServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun actionUrls(): ActionUrlService = actionUrls
 
     override fun create(
         params: UserProfileCreateParams,
@@ -74,6 +82,13 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
         // get /v1/user_profiles?beta=true
         withRawResponse().list(params, requestOptions).parse()
 
+    override fun delete(
+        params: UserProfileDeleteParams,
+        requestOptions: RequestOptions,
+    ): BetaDeletedUserProfile =
+        // delete /v1/user_profiles/{user_profile_id}?beta=true
+        withRawResponse().delete(params, requestOptions).parse()
+
     override fun createEnrollmentUrl(
         params: UserProfileCreateEnrollmentUrlParams,
         requestOptions: RequestOptions,
@@ -87,12 +102,18 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val actionUrls: ActionUrlService.WithRawResponse by lazy {
+            ActionUrlServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): UserProfileService.WithRawResponse =
             UserProfileServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        override fun actionUrls(): ActionUrlService.WithRawResponse = actionUrls
 
         private val createHandler: Handler<BetaUserProfile> =
             jsonHandler<BetaUserProfile>(clientOptions.jsonMapper)
@@ -231,6 +252,42 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
                                 .params(params)
                                 .response(it)
                                 .build()
+                        }
+                }
+            }
+        }
+
+        private val deleteHandler: Handler<BetaDeletedUserProfile> =
+            jsonHandler<BetaDeletedUserProfile>(clientOptions.jsonMapper)
+
+        override fun delete(
+            params: UserProfileDeleteParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaDeletedUserProfile> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("userProfileId", params.userProfileId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "user_profiles")
+                    .addPathParam("userProfileId", params._pathParam(0))
+                    .putQueryParam("beta", "true")
+                    .putAllHeaders(DEFAULT_HEADERS)
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { deleteHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
                 }
             }

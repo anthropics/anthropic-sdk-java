@@ -32,10 +32,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /**
-     * This endpoint is in beta: requests must send `user-profiles-2026-03-24`,
-     * `user-profiles-2026-08-18`, or `user-profiles-2026-09-04` in this header.
-     */
+    /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -58,9 +55,9 @@ private constructor(
     fun accessType(): Optional<AccessType> = body.accessType()
 
     /**
-     * Platform's own identifier for this user. Not enforced unique. Maximum 255 characters.
-     * Accepted under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta headers;
-     * under `user-profiles-2026-09-04` send `external_user_details.reference_id` instead.
+     * Platform's own identifier for this user. Not enforced unique. Maximum 255 characters. Legacy
+     * field, accepted only under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta
+     * headers; without one of them, send `external_user_details.reference_id`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -69,7 +66,9 @@ private constructor(
 
     /**
      * Details about the entity this profile represents, as the platform states them. Every field is
-     * optional. Accepted under the `user-profiles-2026-09-04` beta header only.
+     * optional. Not accepted under the legacy `user-profiles-2026-03-24` and
+     * `user-profiles-2026-08-18` beta headers, which take the top-level `external_id` (and, under
+     * `user-profiles-2026-08-18`, `external_user_onboarded_at`) instead.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -81,9 +80,9 @@ private constructor(
      * When the entity this profile represents opened its account with the platform, in RFC 3339
      * format: for an `application` profile, when the end-user signed up; for a `passthrough`
      * profile, when the company became the platform's customer. Must be a complete timestamp no
-     * more than 1 minute in the future. Optional. Accepted under the `user-profiles-2026-08-18`
-     * beta header; under `user-profiles-2026-09-04` send `external_user_details.onboarded_at`
-     * instead.
+     * more than 1 minute in the future. Optional. Legacy field, accepted only under the
+     * `user-profiles-2026-08-18` beta header; without a legacy header, send
+     * `external_user_details.onboarded_at`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -190,10 +189,7 @@ private constructor(
             additionalQueryParams = userProfileCreateParams.additionalQueryParams.toBuilder()
         }
 
-        /**
-         * This endpoint is in beta: requests must send `user-profiles-2026-03-24`,
-         * `user-profiles-2026-08-18`, or `user-profiles-2026-09-04` in this header.
-         */
+        /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
@@ -261,9 +257,9 @@ private constructor(
 
         /**
          * Platform's own identifier for this user. Not enforced unique. Maximum 255 characters.
-         * Accepted under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta
-         * headers; under `user-profiles-2026-09-04` send `external_user_details.reference_id`
-         * instead.
+         * Legacy field, accepted only under the `user-profiles-2026-03-24` and
+         * `user-profiles-2026-08-18` beta headers; without one of them, send
+         * `external_user_details.reference_id`.
          */
         fun externalId(externalId: String?) = apply { body.externalId(externalId) }
 
@@ -281,7 +277,9 @@ private constructor(
 
         /**
          * Details about the entity this profile represents, as the platform states them. Every
-         * field is optional. Accepted under the `user-profiles-2026-09-04` beta header only.
+         * field is optional. Not accepted under the legacy `user-profiles-2026-03-24` and
+         * `user-profiles-2026-08-18` beta headers, which take the top-level `external_id` (and,
+         * under `user-profiles-2026-08-18`, `external_user_onboarded_at`) instead.
          */
         fun externalUserDetails(externalUserDetails: BetaUserProfileExternalUserDetailsParams) =
             apply {
@@ -303,9 +301,9 @@ private constructor(
          * When the entity this profile represents opened its account with the platform, in RFC 3339
          * format: for an `application` profile, when the end-user signed up; for a `passthrough`
          * profile, when the company became the platform's customer. Must be a complete timestamp no
-         * more than 1 minute in the future. Optional. Accepted under the `user-profiles-2026-08-18`
-         * beta header; under `user-profiles-2026-09-04` send `external_user_details.onboarded_at`
-         * instead.
+         * more than 1 minute in the future. Optional. Legacy field, accepted only under the
+         * `user-profiles-2026-08-18` beta header; without a legacy header, send
+         * `external_user_details.onboarded_at`.
          */
         fun externalUserOnboardedAt(externalUserOnboardedAt: OffsetDateTime) = apply {
             body.externalUserOnboardedAt(externalUserOnboardedAt)
@@ -570,9 +568,9 @@ private constructor(
 
         /**
          * Platform's own identifier for this user. Not enforced unique. Maximum 255 characters.
-         * Accepted under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta
-         * headers; under `user-profiles-2026-09-04` send `external_user_details.reference_id`
-         * instead.
+         * Legacy field, accepted only under the `user-profiles-2026-03-24` and
+         * `user-profiles-2026-08-18` beta headers; without one of them, send
+         * `external_user_details.reference_id`.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -581,7 +579,9 @@ private constructor(
 
         /**
          * Details about the entity this profile represents, as the platform states them. Every
-         * field is optional. Accepted under the `user-profiles-2026-09-04` beta header only.
+         * field is optional. Not accepted under the legacy `user-profiles-2026-03-24` and
+         * `user-profiles-2026-08-18` beta headers, which take the top-level `external_id` (and,
+         * under `user-profiles-2026-08-18`, `external_user_onboarded_at`) instead.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -593,9 +593,9 @@ private constructor(
          * When the entity this profile represents opened its account with the platform, in RFC 3339
          * format: for an `application` profile, when the end-user signed up; for a `passthrough`
          * profile, when the company became the platform's customer. Must be a complete timestamp no
-         * more than 1 minute in the future. Optional. Accepted under the `user-profiles-2026-08-18`
-         * beta header; under `user-profiles-2026-09-04` send `external_user_details.onboarded_at`
-         * instead.
+         * more than 1 minute in the future. Optional. Legacy field, accepted only under the
+         * `user-profiles-2026-08-18` beta header; without a legacy header, send
+         * `external_user_details.onboarded_at`.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -736,9 +736,9 @@ private constructor(
 
             /**
              * Platform's own identifier for this user. Not enforced unique. Maximum 255 characters.
-             * Accepted under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta
-             * headers; under `user-profiles-2026-09-04` send `external_user_details.reference_id`
-             * instead.
+             * Legacy field, accepted only under the `user-profiles-2026-03-24` and
+             * `user-profiles-2026-08-18` beta headers; without one of them, send
+             * `external_user_details.reference_id`.
              */
             fun externalId(externalId: String?) = externalId(JsonField.ofNullable(externalId))
 
@@ -756,7 +756,9 @@ private constructor(
 
             /**
              * Details about the entity this profile represents, as the platform states them. Every
-             * field is optional. Accepted under the `user-profiles-2026-09-04` beta header only.
+             * field is optional. Not accepted under the legacy `user-profiles-2026-03-24` and
+             * `user-profiles-2026-08-18` beta headers, which take the top-level `external_id` (and,
+             * under `user-profiles-2026-08-18`, `external_user_onboarded_at`) instead.
              */
             fun externalUserDetails(externalUserDetails: BetaUserProfileExternalUserDetailsParams) =
                 externalUserDetails(JsonField.of(externalUserDetails))
@@ -776,9 +778,9 @@ private constructor(
              * When the entity this profile represents opened its account with the platform, in RFC
              * 3339 format: for an `application` profile, when the end-user signed up; for a
              * `passthrough` profile, when the company became the platform's customer. Must be a
-             * complete timestamp no more than 1 minute in the future. Optional. Accepted under the
-             * `user-profiles-2026-08-18` beta header; under `user-profiles-2026-09-04` send
-             * `external_user_details.onboarded_at` instead.
+             * complete timestamp no more than 1 minute in the future. Optional. Legacy field,
+             * accepted only under the `user-profiles-2026-08-18` beta header; without a legacy
+             * header, send `external_user_details.onboarded_at`.
              */
             fun externalUserOnboardedAt(externalUserOnboardedAt: OffsetDateTime) =
                 externalUserOnboardedAt(JsonField.of(externalUserOnboardedAt))
