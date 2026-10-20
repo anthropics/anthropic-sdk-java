@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.75.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.75.0...v2.75.1) (2026-10-20)
+
+### Documentation
+
+* **api:** remove outdated system role note from messages description
+
 ## [2.75.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.74.0...v2.75.0) (2026-10-20)
 
 ### Features
