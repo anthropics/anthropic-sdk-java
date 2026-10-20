@@ -45,6 +45,8 @@ import com.anthropic.services.blocking.beta.organization.TelemetryDestinationSer
 import com.anthropic.services.blocking.beta.organization.TelemetryDestinationServiceImpl
 import com.anthropic.services.blocking.beta.organization.UserService
 import com.anthropic.services.blocking.beta.organization.UserServiceImpl
+import com.anthropic.services.blocking.beta.organization.WebhookService
+import com.anthropic.services.blocking.beta.organization.WebhookServiceImpl
 import com.anthropic.services.blocking.beta.organization.WorkspaceService
 import com.anthropic.services.blocking.beta.organization.WorkspaceServiceImpl
 import java.util.function.Consumer
@@ -96,6 +98,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
         TelemetryDestinationServiceImpl(clientOptions)
     }
 
+    private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptions) }
+
     override fun withRawResponse(): OrganizationService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrganizationService =
@@ -132,6 +136,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
     override fun pluginMarketplaces(): PluginMarketplaceService = pluginMarketplaces
 
     override fun telemetryDestinations(): TelemetryDestinationService = telemetryDestinations
+
+    override fun webhooks(): WebhookService = webhooks
 
     override fun retrieve(
         params: OrganizationRetrieveParams,
@@ -210,6 +216,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
             TelemetryDestinationServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val webhooks: WebhookService.WithRawResponse by lazy {
+            WebhookServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): OrganizationService.WithRawResponse =
@@ -251,6 +261,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
         override fun telemetryDestinations(): TelemetryDestinationService.WithRawResponse =
             telemetryDestinations
+
+        override fun webhooks(): WebhookService.WithRawResponse = webhooks
 
         private val retrieveHandler: Handler<BetaOrganization> =
             jsonHandler<BetaOrganization>(clientOptions.jsonMapper)

@@ -67,6 +67,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -145,6 +147,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -223,6 +227,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -301,6 +307,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -380,6 +388,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -458,6 +468,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -536,6 +548,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -616,6 +630,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -695,6 +711,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -773,6 +791,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -852,6 +872,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -931,6 +953,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1011,6 +1035,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1092,6 +1118,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1173,6 +1201,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1251,6 +1281,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1329,6 +1361,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1407,6 +1441,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1487,6 +1523,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1568,6 +1606,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1649,6 +1689,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1731,6 +1773,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1810,6 +1854,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1888,6 +1934,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -1966,6 +2014,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2044,6 +2094,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2122,6 +2174,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2200,6 +2254,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2278,6 +2334,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2356,6 +2414,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2434,6 +2494,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2512,6 +2574,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2590,6 +2654,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2668,6 +2734,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2746,6 +2814,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2825,6 +2895,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2903,6 +2975,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -2981,6 +3055,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -3059,6 +3135,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -3137,6 +3215,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -3215,6 +3295,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -3293,6 +3375,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).contains(memoryStoreArchived)
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -3371,6 +3455,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).contains(memoryStoreDeleted)
         assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -3449,6 +3535,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
         assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
         assertThat(betaWebhookEventData.sessionBudgetReached()).contains(sessionBudgetReached)
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
     }
 
     @Test
@@ -3460,6 +3548,174 @@ internal class BetaWebhookEventDataTest {
                     .id("id")
                     .organizationId("organization_id")
                     .workspaceId("workspace_id")
+                    .build()
+            )
+
+        val roundtrippedBetaWebhookEventData =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaWebhookEventData),
+                jacksonTypeRef<BetaWebhookEventData>(),
+            )
+
+        assertThat(roundtrippedBetaWebhookEventData).isEqualTo(betaWebhookEventData)
+    }
+
+    @Test
+    fun ofUserProfileEnforcementActionOpened() {
+        val userProfileEnforcementActionOpened =
+            BetaWebhookUserProfileEnforcementActionOpenedEventData.builder()
+                .id("id")
+                .enforcementActionId("enforcement_action_id")
+                .organizationId("organization_id")
+                .build()
+
+        val betaWebhookEventData =
+            BetaWebhookEventData.ofUserProfileEnforcementActionOpened(
+                userProfileEnforcementActionOpened
+            )
+
+        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
+        assertThat(betaWebhookEventData.sessionPending()).isEmpty
+        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
+        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
+        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
+        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
+        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
+        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
+        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
+        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
+        assertThat(betaWebhookEventData.agentCreated()).isEmpty
+        assertThat(betaWebhookEventData.agentArchived()).isEmpty
+        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
+        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
+        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
+        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
+        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
+        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
+        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened())
+            .contains(userProfileEnforcementActionOpened)
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
+    }
+
+    @Test
+    fun ofUserProfileEnforcementActionOpenedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaWebhookEventData =
+            BetaWebhookEventData.ofUserProfileEnforcementActionOpened(
+                BetaWebhookUserProfileEnforcementActionOpenedEventData.builder()
+                    .id("id")
+                    .enforcementActionId("enforcement_action_id")
+                    .organizationId("organization_id")
+                    .build()
+            )
+
+        val roundtrippedBetaWebhookEventData =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaWebhookEventData),
+                jacksonTypeRef<BetaWebhookEventData>(),
+            )
+
+        assertThat(roundtrippedBetaWebhookEventData).isEqualTo(betaWebhookEventData)
+    }
+
+    @Test
+    fun ofUserProfileEnforcementActionResolved() {
+        val userProfileEnforcementActionResolved =
+            BetaWebhookUserProfileEnforcementActionResolvedEventData.builder()
+                .id("id")
+                .enforcementActionId("enforcement_action_id")
+                .organizationId("organization_id")
+                .build()
+
+        val betaWebhookEventData =
+            BetaWebhookEventData.ofUserProfileEnforcementActionResolved(
+                userProfileEnforcementActionResolved
+            )
+
+        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
+        assertThat(betaWebhookEventData.sessionPending()).isEmpty
+        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
+        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
+        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
+        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
+        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
+        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
+        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
+        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
+        assertThat(betaWebhookEventData.agentCreated()).isEmpty
+        assertThat(betaWebhookEventData.agentArchived()).isEmpty
+        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
+        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
+        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
+        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
+        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
+        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
+        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved())
+            .contains(userProfileEnforcementActionResolved)
+    }
+
+    @Test
+    fun ofUserProfileEnforcementActionResolvedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaWebhookEventData =
+            BetaWebhookEventData.ofUserProfileEnforcementActionResolved(
+                BetaWebhookUserProfileEnforcementActionResolvedEventData.builder()
+                    .id("id")
+                    .enforcementActionId("enforcement_action_id")
+                    .organizationId("organization_id")
                     .build()
             )
 
@@ -3485,6 +3741,7 @@ internal class BetaWebhookEventDataTest {
                             "workspace_id" to "workspace_id",
                             "session_thread_id" to "session_thread_id",
                             "vault_id" to "vault_id",
+                            "enforcement_action_id" to "enforcement_action_id",
                         )
                     ),
                     jacksonTypeRef<BetaWebhookEventData>(),
@@ -3495,9 +3752,10 @@ internal class BetaWebhookEventDataTest {
 
         assertThat(betaWebhookEventData.id()).isEqualTo("id")
         assertThat(betaWebhookEventData.organizationId()).isEqualTo("organization_id")
-        assertThat(betaWebhookEventData.workspaceId()).isEqualTo("workspace_id")
+        assertThat(betaWebhookEventData.workspaceId()).contains("workspace_id")
         assertThat(betaWebhookEventData.sessionThreadId()).contains("session_thread_id")
         assertThat(betaWebhookEventData.vaultId()).contains("vault_id")
+        assertThat(betaWebhookEventData.enforcementActionId()).contains("enforcement_action_id")
 
         val mismatchedBetaWebhookEventData =
             jsonMapper()
@@ -3510,6 +3768,7 @@ internal class BetaWebhookEventDataTest {
                             "workspace_id" to listOf("invalid"),
                             "session_thread_id" to listOf("invalid"),
                             "vault_id" to listOf("invalid"),
+                            "enforcement_action_id" to listOf("invalid"),
                         )
                     ),
                     jacksonTypeRef<BetaWebhookEventData>(),
@@ -3519,9 +3778,10 @@ internal class BetaWebhookEventDataTest {
         assertThrows<AnthropicInvalidDataException> {
             mismatchedBetaWebhookEventData.organizationId()
         }
-        assertThrows<AnthropicInvalidDataException> { mismatchedBetaWebhookEventData.workspaceId() }
+        assertThat(mismatchedBetaWebhookEventData.workspaceId()).isEmpty
         assertThat(mismatchedBetaWebhookEventData.sessionThreadId()).isEmpty
         assertThat(mismatchedBetaWebhookEventData.vaultId()).isEmpty
+        assertThat(mismatchedBetaWebhookEventData.enforcementActionId()).isEmpty
     }
 
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
@@ -3543,8 +3803,9 @@ internal class BetaWebhookEventDataTest {
 
         assertThrows<AnthropicInvalidDataException> { betaWebhookEventData.id() }
         assertThrows<AnthropicInvalidDataException> { betaWebhookEventData.organizationId() }
-        assertThrows<AnthropicInvalidDataException> { betaWebhookEventData.workspaceId() }
+        assertThat(betaWebhookEventData.workspaceId()).isEmpty
         assertThat(betaWebhookEventData.sessionThreadId()).isEmpty
         assertThat(betaWebhookEventData.vaultId()).isEmpty
+        assertThat(betaWebhookEventData.enforcementActionId()).isEmpty
     }
 }

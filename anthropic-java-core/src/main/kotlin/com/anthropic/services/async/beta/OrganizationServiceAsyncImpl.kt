@@ -46,6 +46,8 @@ import com.anthropic.services.async.beta.organization.TelemetryDestinationServic
 import com.anthropic.services.async.beta.organization.TelemetryDestinationServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.UserServiceAsync
 import com.anthropic.services.async.beta.organization.UserServiceAsyncImpl
+import com.anthropic.services.async.beta.organization.WebhookServiceAsync
+import com.anthropic.services.async.beta.organization.WebhookServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.WorkspaceServiceAsync
 import com.anthropic.services.async.beta.organization.WorkspaceServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
@@ -112,6 +114,8 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
         TelemetryDestinationServiceAsyncImpl(clientOptions)
     }
 
+    private val webhooks: WebhookServiceAsync by lazy { WebhookServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): OrganizationServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrganizationServiceAsync =
@@ -148,6 +152,8 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
     override fun pluginMarketplaces(): PluginMarketplaceServiceAsync = pluginMarketplaces
 
     override fun telemetryDestinations(): TelemetryDestinationServiceAsync = telemetryDestinations
+
+    override fun webhooks(): WebhookServiceAsync = webhooks
 
     override fun retrieve(
         params: OrganizationRetrieveParams,
@@ -227,6 +233,10 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
             TelemetryDestinationServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val webhooks: WebhookServiceAsync.WithRawResponse by lazy {
+            WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): OrganizationServiceAsync.WithRawResponse =
@@ -268,6 +278,8 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
 
         override fun telemetryDestinations(): TelemetryDestinationServiceAsync.WithRawResponse =
             telemetryDestinations
+
+        override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks
 
         private val retrieveHandler: Handler<BetaOrganization> =
             jsonHandler<BetaOrganization>(clientOptions.jsonMapper)
