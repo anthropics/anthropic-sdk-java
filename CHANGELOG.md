@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.74.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.74.0...v2.74.1) (2026-10-20)
+
+### Chores
+
+* **ci:** run the changelog check on a standard runner
+
 ## [2.74.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.73.0...v2.74.0) (2026-10-20)
 
 ### Features
