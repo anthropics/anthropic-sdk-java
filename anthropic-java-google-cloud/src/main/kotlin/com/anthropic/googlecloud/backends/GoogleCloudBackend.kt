@@ -18,8 +18,10 @@ import java.util.function.Supplier
  * credentials, create them separately and supply them to [Builder.googleCredentials], or provide a
  * bearer-token supplier to [Builder.bearerTokenSupplier].
  *
- * A workspace ID must be set via [Builder.workspaceId] or the `ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID`
- * environment variable. It is embedded in the path of the derived base URL.
+ * When the base URL is derived, a workspace ID set via [Builder.workspaceId] or the
+ * `ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID` environment variable is required for every route outside
+ * `/v1/organizations`. Those organization-level routes are sent to the project's organization
+ * endpoint and need none.
  *
  * See the Google Cloud documentation for details on how to configure Google credentials.
  */
@@ -68,9 +70,15 @@ private constructor(
 
         private const val DEFAULT_LOCATION = "global"
 
-        private const val URL_TEMPLATE =
-            "https://claude.googleapis.com/v1alpha" +
-                "/projects/{project}/locations/{location}/workspaces/{workspaceId}/invoke"
+        private const val LOCATION_URL_TEMPLATE =
+            "https://claude.googleapis.com/v1/projects/{project}/locations/{location}"
+
+        private const val URL_TEMPLATE = "$LOCATION_URL_TEMPLATE/workspaces/{workspaceId}/invoke"
+
+        private const val ORGANIZATION_URL_TEMPLATE =
+            "$LOCATION_URL_TEMPLATE/claudeOrganization/invoke"
+
+        private const val ORGANIZATION_PATH_PREFIX = "/v1/organizations/"
 
         @JvmStatic fun builder() = Builder()
 
@@ -83,18 +91,43 @@ private constructor(
 
     override fun baseUrl(): String {
         if (baseUrlOverride != null) return baseUrlOverride
+        // Without a workspace ID only organization-level routes can be served.
+        return if (workspaceId != null) workspaceBaseUrl() else organizationBaseUrl()
+    }
+
+    private fun workspaceBaseUrl(): String {
+        checkNotNull(workspaceId) {
+            "Workspace ID is required; set workspaceId or the $ENV_WORKSPACE_ID " +
+                "environment variable."
+        }
+        return locationUrl(URL_TEMPLATE).replace("{workspaceId}", workspaceId)
+    }
+
+    private fun organizationBaseUrl(): String = locationUrl(ORGANIZATION_URL_TEMPLATE)
+
+    private fun locationUrl(template: String): String {
         checkNotNull(project) { "No project configured to derive base URL." }
         checkNotNull(location) { "No location configured to derive base URL." }
-        checkNotNull(workspaceId) { "No workspace ID configured to derive base URL." }
-        return URL_TEMPLATE.replace("{project}", project)
-            .replace("{location}", location)
-            .replace("{workspaceId}", workspaceId)
+        return template.replace("{project}", project).replace("{location}", location)
     }
+
+    private fun isOrganizationRoute(request: HttpRequest): Boolean =
+        request.pathSegments
+            .joinToString(separator = "/", prefix = "/")
+            .startsWith(ORGANIZATION_PATH_PREFIX)
 
     override fun openTelemetryPlatform(): Optional<String> = Optional.of("googlecloud")
 
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val builder = request.toBuilder()
+
+        // A request carrying any other base URL had it set on the client, which then takes every
+        // route.
+        if (baseUrlOverride == null && request.baseUrl == baseUrl()) {
+            builder.baseUrl(
+                if (isOrganizationRoute(request)) organizationBaseUrl() else workspaceBaseUrl()
+            )
+        }
 
         // User-supplied headers (e.g. set by an interceptor) win over the defaults.
         if (!request.headers.names().contains(HEADER_VERSION)) {
@@ -263,8 +296,7 @@ private constructor(
         /**
          * Skips all authentication. When enabled, no auth headers are added to requests. This is
          * useful when requests go through a gateway or proxy that handles authentication on the
-         * caller's behalf. A workspace ID is still required to derive the base URL unless [baseUrl]
-         * is set explicitly. Conflicts with [googleCredentials] and [bearerTokenSupplier].
+         * caller's behalf. Conflicts with [googleCredentials] and [bearerTokenSupplier].
          */
         fun skipAuth(skipAuth: Boolean) = apply { this.skipAuth = skipAuth }
 
@@ -297,10 +329,6 @@ private constructor(
                         "on the builder, or configure application default credentials and call " +
                         "fromEnv()."
                 }
-                checkNotNull(workspaceId) {
-                    "Workspace ID is required; set workspaceId or the $ENV_WORKSPACE_ID " +
-                        "environment variable."
-                }
             }
 
             if (baseUrlOverride == null) {
@@ -308,10 +336,6 @@ private constructor(
                     "No project found. Set project on the builder, set the $ENV_PROJECT " +
                         "environment variable, or configure application default credentials " +
                         "with a project."
-                }
-                checkNotNull(workspaceId) {
-                    "Workspace ID is required; set workspaceId or the $ENV_WORKSPACE_ID " +
-                        "environment variable."
                 }
             }
 
