@@ -175,6 +175,8 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         val TELEMETRY_DESTINATIONS_2026_08_11 =
             AnthropicBeta(JsonField.of("telemetry-destinations-2026-08-11"))
 
+        @JvmField val WEBHOOKS_2026_10_07 = AnthropicBeta(JsonField.of("webhooks-2026-10-07"))
+
         @JvmStatic
         fun of(value: String): AnthropicBeta =
             // Intern known values so `==` works
@@ -234,6 +236,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
                 "ce-plugins-2026-09-01" -> CE_PLUGINS_2026_09_01
                 "spend-limit-reads-2026-09-26" -> SPEND_LIMIT_READS_2026_09_26
                 "telemetry-destinations-2026-08-11" -> TELEMETRY_DESTINATIONS_2026_08_11
+                "webhooks-2026-10-07" -> WEBHOOKS_2026_10_07
                 else -> AnthropicBeta(JsonField.of(value))
             }
 
@@ -296,6 +299,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         CE_PLUGINS_2026_09_01,
         SPEND_LIMIT_READS_2026_09_26,
         TELEMETRY_DESTINATIONS_2026_08_11,
+        WEBHOOKS_2026_10_07,
     }
 
     /**
@@ -359,6 +363,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         CE_PLUGINS_2026_09_01,
         SPEND_LIMIT_READS_2026_09_26,
         TELEMETRY_DESTINATIONS_2026_08_11,
+        WEBHOOKS_2026_10_07,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -429,6 +434,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             CE_PLUGINS_2026_09_01 -> Value.CE_PLUGINS_2026_09_01
             SPEND_LIMIT_READS_2026_09_26 -> Value.SPEND_LIMIT_READS_2026_09_26
             TELEMETRY_DESTINATIONS_2026_08_11 -> Value.TELEMETRY_DESTINATIONS_2026_08_11
+            WEBHOOKS_2026_10_07 -> Value.WEBHOOKS_2026_10_07
             else -> Value._UNKNOWN
         }
 
@@ -497,6 +503,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             CE_PLUGINS_2026_09_01 -> Known.CE_PLUGINS_2026_09_01
             SPEND_LIMIT_READS_2026_09_26 -> Known.SPEND_LIMIT_READS_2026_09_26
             TELEMETRY_DESTINATIONS_2026_08_11 -> Known.TELEMETRY_DESTINATIONS_2026_08_11
+            WEBHOOKS_2026_10_07 -> Known.WEBHOOKS_2026_10_07
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

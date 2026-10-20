@@ -455,6 +455,34 @@ private constructor(
             data(BetaWebhookEventData.ofSessionBudgetReached(sessionBudgetReached))
 
         /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofUserProfileEnforcementActionOpened(userProfileEnforcementActionOpened)`.
+         */
+        fun data(
+            userProfileEnforcementActionOpened:
+                BetaWebhookUserProfileEnforcementActionOpenedEventData
+        ) =
+            data(
+                BetaWebhookEventData.ofUserProfileEnforcementActionOpened(
+                    userProfileEnforcementActionOpened
+                )
+            )
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofUserProfileEnforcementActionResolved(userProfileEnforcementActionResolved)`.
+         */
+        fun data(
+            userProfileEnforcementActionResolved:
+                BetaWebhookUserProfileEnforcementActionResolvedEventData
+        ) =
+            data(
+                BetaWebhookEventData.ofUserProfileEnforcementActionResolved(
+                    userProfileEnforcementActionResolved
+                )
+            )
+
+        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the

@@ -71,6 +71,12 @@ private constructor(
     private val memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData? = null,
     private val memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData? = null,
     private val sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData? = null,
+    private val userProfileEnforcementActionOpened:
+        BetaWebhookUserProfileEnforcementActionOpenedEventData? =
+        null,
+    private val userProfileEnforcementActionResolved:
+        BetaWebhookUserProfileEnforcementActionResolvedEventData? =
+        null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -120,6 +126,10 @@ private constructor(
             memoryStoreArchived != null -> Type.MEMORY_STORE_ARCHIVED
             memoryStoreDeleted != null -> Type.MEMORY_STORE_DELETED
             sessionBudgetReached != null -> Type.SESSION_BUDGET_REACHED
+            userProfileEnforcementActionOpened != null ->
+                Type.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+            userProfileEnforcementActionResolved != null ->
+                Type.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
             else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
         }
 
@@ -169,6 +179,9 @@ private constructor(
             memoryStoreArchived != null -> memoryStoreArchived.id()
             memoryStoreDeleted != null -> memoryStoreDeleted.id()
             sessionBudgetReached != null -> sessionBudgetReached.id()
+            userProfileEnforcementActionOpened != null -> userProfileEnforcementActionOpened.id()
+            userProfileEnforcementActionResolved != null ->
+                userProfileEnforcementActionResolved.id()
             else -> _json.getProperty<String>("id").getRequired("id")
         }
 
@@ -218,56 +231,64 @@ private constructor(
             memoryStoreArchived != null -> memoryStoreArchived.organizationId()
             memoryStoreDeleted != null -> memoryStoreDeleted.organizationId()
             sessionBudgetReached != null -> sessionBudgetReached.organizationId()
+            userProfileEnforcementActionOpened != null ->
+                userProfileEnforcementActionOpened.organizationId()
+            userProfileEnforcementActionResolved != null ->
+                userProfileEnforcementActionResolved.organizationId()
             else -> _json.getProperty<String>("organization_id").getRequired("organization_id")
         }
 
-    fun workspaceId(): String =
+    fun workspaceId(): Optional<String> =
         when {
-            sessionCreated != null -> sessionCreated.workspaceId()
-            sessionPending != null -> sessionPending.workspaceId()
-            sessionRunning != null -> sessionRunning.workspaceId()
-            sessionIdled != null -> sessionIdled.workspaceId()
-            sessionRequiresAction != null -> sessionRequiresAction.workspaceId()
-            sessionArchived != null -> sessionArchived.workspaceId()
-            sessionDeleted != null -> sessionDeleted.workspaceId()
-            sessionStatusRescheduled != null -> sessionStatusRescheduled.workspaceId()
-            sessionStatusRunStarted != null -> sessionStatusRunStarted.workspaceId()
-            sessionStatusIdled != null -> sessionStatusIdled.workspaceId()
-            sessionStatusTerminated != null -> sessionStatusTerminated.workspaceId()
-            sessionThreadCreated != null -> sessionThreadCreated.workspaceId()
-            sessionThreadIdled != null -> sessionThreadIdled.workspaceId()
-            sessionThreadTerminated != null -> sessionThreadTerminated.workspaceId()
-            sessionOutcomeEvaluationEnded != null -> sessionOutcomeEvaluationEnded.workspaceId()
-            vaultCreated != null -> vaultCreated.workspaceId()
-            vaultArchived != null -> vaultArchived.workspaceId()
-            vaultDeleted != null -> vaultDeleted.workspaceId()
-            vaultCredentialCreated != null -> vaultCredentialCreated.workspaceId()
-            vaultCredentialArchived != null -> vaultCredentialArchived.workspaceId()
-            vaultCredentialDeleted != null -> vaultCredentialDeleted.workspaceId()
-            vaultCredentialRefreshFailed != null -> vaultCredentialRefreshFailed.workspaceId()
-            sessionUpdated != null -> sessionUpdated.workspaceId()
-            agentCreated != null -> agentCreated.workspaceId()
-            agentArchived != null -> agentArchived.workspaceId()
-            agentDeleted != null -> agentDeleted.workspaceId()
-            deploymentPaused != null -> deploymentPaused.workspaceId()
-            deploymentRunFailed != null -> deploymentRunFailed.workspaceId()
-            deploymentCreated != null -> deploymentCreated.workspaceId()
-            deploymentUpdated != null -> deploymentUpdated.workspaceId()
-            deploymentUnpaused != null -> deploymentUnpaused.workspaceId()
-            agentUpdated != null -> agentUpdated.workspaceId()
-            deploymentArchived != null -> deploymentArchived.workspaceId()
-            deploymentRunStarted != null -> deploymentRunStarted.workspaceId()
-            deploymentDeleted != null -> deploymentDeleted.workspaceId()
-            deploymentRunSucceeded != null -> deploymentRunSucceeded.workspaceId()
-            environmentCreated != null -> environmentCreated.workspaceId()
-            environmentUpdated != null -> environmentUpdated.workspaceId()
-            environmentArchived != null -> environmentArchived.workspaceId()
-            environmentDeleted != null -> environmentDeleted.workspaceId()
-            memoryStoreCreated != null -> memoryStoreCreated.workspaceId()
-            memoryStoreArchived != null -> memoryStoreArchived.workspaceId()
-            memoryStoreDeleted != null -> memoryStoreDeleted.workspaceId()
-            sessionBudgetReached != null -> sessionBudgetReached.workspaceId()
-            else -> _json.getProperty<String>("workspace_id").getRequired("workspace_id")
+            sessionCreated != null -> Optional.of(sessionCreated.workspaceId())
+            sessionPending != null -> Optional.of(sessionPending.workspaceId())
+            sessionRunning != null -> Optional.of(sessionRunning.workspaceId())
+            sessionIdled != null -> Optional.of(sessionIdled.workspaceId())
+            sessionRequiresAction != null -> Optional.of(sessionRequiresAction.workspaceId())
+            sessionArchived != null -> Optional.of(sessionArchived.workspaceId())
+            sessionDeleted != null -> Optional.of(sessionDeleted.workspaceId())
+            sessionStatusRescheduled != null -> Optional.of(sessionStatusRescheduled.workspaceId())
+            sessionStatusRunStarted != null -> Optional.of(sessionStatusRunStarted.workspaceId())
+            sessionStatusIdled != null -> Optional.of(sessionStatusIdled.workspaceId())
+            sessionStatusTerminated != null -> Optional.of(sessionStatusTerminated.workspaceId())
+            sessionThreadCreated != null -> Optional.of(sessionThreadCreated.workspaceId())
+            sessionThreadIdled != null -> Optional.of(sessionThreadIdled.workspaceId())
+            sessionThreadTerminated != null -> Optional.of(sessionThreadTerminated.workspaceId())
+            sessionOutcomeEvaluationEnded != null ->
+                Optional.of(sessionOutcomeEvaluationEnded.workspaceId())
+            vaultCreated != null -> Optional.of(vaultCreated.workspaceId())
+            vaultArchived != null -> Optional.of(vaultArchived.workspaceId())
+            vaultDeleted != null -> Optional.of(vaultDeleted.workspaceId())
+            vaultCredentialCreated != null -> Optional.of(vaultCredentialCreated.workspaceId())
+            vaultCredentialArchived != null -> Optional.of(vaultCredentialArchived.workspaceId())
+            vaultCredentialDeleted != null -> Optional.of(vaultCredentialDeleted.workspaceId())
+            vaultCredentialRefreshFailed != null ->
+                Optional.of(vaultCredentialRefreshFailed.workspaceId())
+            sessionUpdated != null -> Optional.of(sessionUpdated.workspaceId())
+            agentCreated != null -> Optional.of(agentCreated.workspaceId())
+            agentArchived != null -> Optional.of(agentArchived.workspaceId())
+            agentDeleted != null -> Optional.of(agentDeleted.workspaceId())
+            deploymentPaused != null -> Optional.of(deploymentPaused.workspaceId())
+            deploymentRunFailed != null -> Optional.of(deploymentRunFailed.workspaceId())
+            deploymentCreated != null -> Optional.of(deploymentCreated.workspaceId())
+            deploymentUpdated != null -> Optional.of(deploymentUpdated.workspaceId())
+            deploymentUnpaused != null -> Optional.of(deploymentUnpaused.workspaceId())
+            agentUpdated != null -> Optional.of(agentUpdated.workspaceId())
+            deploymentArchived != null -> Optional.of(deploymentArchived.workspaceId())
+            deploymentRunStarted != null -> Optional.of(deploymentRunStarted.workspaceId())
+            deploymentDeleted != null -> Optional.of(deploymentDeleted.workspaceId())
+            deploymentRunSucceeded != null -> Optional.of(deploymentRunSucceeded.workspaceId())
+            environmentCreated != null -> Optional.of(environmentCreated.workspaceId())
+            environmentUpdated != null -> Optional.of(environmentUpdated.workspaceId())
+            environmentArchived != null -> Optional.of(environmentArchived.workspaceId())
+            environmentDeleted != null -> Optional.of(environmentDeleted.workspaceId())
+            memoryStoreCreated != null -> Optional.of(memoryStoreCreated.workspaceId())
+            memoryStoreArchived != null -> Optional.of(memoryStoreArchived.workspaceId())
+            memoryStoreDeleted != null -> Optional.of(memoryStoreDeleted.workspaceId())
+            sessionBudgetReached != null -> Optional.of(sessionBudgetReached.workspaceId())
+            userProfileEnforcementActionOpened != null -> Optional.empty()
+            userProfileEnforcementActionResolved != null -> Optional.empty()
+            else -> _json.getProperty<String>("workspace_id").asKnown()
         }
 
     fun sessionThreadId(): Optional<String> =
@@ -317,6 +338,8 @@ private constructor(
             memoryStoreArchived != null -> Optional.empty()
             memoryStoreDeleted != null -> Optional.empty()
             sessionBudgetReached != null -> Optional.empty()
+            userProfileEnforcementActionOpened != null -> Optional.empty()
+            userProfileEnforcementActionResolved != null -> Optional.empty()
             else -> _json.getProperty<String>("session_thread_id").asKnown()
         }
 
@@ -367,7 +390,62 @@ private constructor(
             memoryStoreArchived != null -> Optional.empty()
             memoryStoreDeleted != null -> Optional.empty()
             sessionBudgetReached != null -> Optional.empty()
+            userProfileEnforcementActionOpened != null -> Optional.empty()
+            userProfileEnforcementActionResolved != null -> Optional.empty()
             else -> _json.getProperty<String>("vault_id").asKnown()
+        }
+
+    fun enforcementActionId(): Optional<String> =
+        when {
+            sessionCreated != null -> Optional.empty()
+            sessionPending != null -> Optional.empty()
+            sessionRunning != null -> Optional.empty()
+            sessionIdled != null -> Optional.empty()
+            sessionRequiresAction != null -> Optional.empty()
+            sessionArchived != null -> Optional.empty()
+            sessionDeleted != null -> Optional.empty()
+            sessionStatusRescheduled != null -> Optional.empty()
+            sessionStatusRunStarted != null -> Optional.empty()
+            sessionStatusIdled != null -> Optional.empty()
+            sessionStatusTerminated != null -> Optional.empty()
+            sessionThreadCreated != null -> Optional.empty()
+            sessionThreadIdled != null -> Optional.empty()
+            sessionThreadTerminated != null -> Optional.empty()
+            sessionOutcomeEvaluationEnded != null -> Optional.empty()
+            vaultCreated != null -> Optional.empty()
+            vaultArchived != null -> Optional.empty()
+            vaultDeleted != null -> Optional.empty()
+            vaultCredentialCreated != null -> Optional.empty()
+            vaultCredentialArchived != null -> Optional.empty()
+            vaultCredentialDeleted != null -> Optional.empty()
+            vaultCredentialRefreshFailed != null -> Optional.empty()
+            sessionUpdated != null -> Optional.empty()
+            agentCreated != null -> Optional.empty()
+            agentArchived != null -> Optional.empty()
+            agentDeleted != null -> Optional.empty()
+            deploymentPaused != null -> Optional.empty()
+            deploymentRunFailed != null -> Optional.empty()
+            deploymentCreated != null -> Optional.empty()
+            deploymentUpdated != null -> Optional.empty()
+            deploymentUnpaused != null -> Optional.empty()
+            agentUpdated != null -> Optional.empty()
+            deploymentArchived != null -> Optional.empty()
+            deploymentRunStarted != null -> Optional.empty()
+            deploymentDeleted != null -> Optional.empty()
+            deploymentRunSucceeded != null -> Optional.empty()
+            environmentCreated != null -> Optional.empty()
+            environmentUpdated != null -> Optional.empty()
+            environmentArchived != null -> Optional.empty()
+            environmentDeleted != null -> Optional.empty()
+            memoryStoreCreated != null -> Optional.empty()
+            memoryStoreArchived != null -> Optional.empty()
+            memoryStoreDeleted != null -> Optional.empty()
+            sessionBudgetReached != null -> Optional.empty()
+            userProfileEnforcementActionOpened != null ->
+                Optional.of(userProfileEnforcementActionOpened.enforcementActionId())
+            userProfileEnforcementActionResolved != null ->
+                Optional.of(userProfileEnforcementActionResolved.enforcementActionId())
+            else -> _json.getProperty<String>("enforcement_action_id").asKnown()
         }
 
     fun sessionCreated(): Optional<BetaWebhookSessionCreatedEventData> =
@@ -503,6 +581,14 @@ private constructor(
     fun sessionBudgetReached(): Optional<BetaWebhookSessionBudgetReachedEventData> =
         Optional.ofNullable(sessionBudgetReached)
 
+    fun userProfileEnforcementActionOpened():
+        Optional<BetaWebhookUserProfileEnforcementActionOpenedEventData> =
+        Optional.ofNullable(userProfileEnforcementActionOpened)
+
+    fun userProfileEnforcementActionResolved():
+        Optional<BetaWebhookUserProfileEnforcementActionResolvedEventData> =
+        Optional.ofNullable(userProfileEnforcementActionResolved)
+
     fun isSessionCreated(): Boolean = sessionCreated != null
 
     fun isSessionPending(): Boolean = sessionPending != null
@@ -590,6 +676,11 @@ private constructor(
     fun isMemoryStoreDeleted(): Boolean = memoryStoreDeleted != null
 
     fun isSessionBudgetReached(): Boolean = sessionBudgetReached != null
+
+    fun isUserProfileEnforcementActionOpened(): Boolean = userProfileEnforcementActionOpened != null
+
+    fun isUserProfileEnforcementActionResolved(): Boolean =
+        userProfileEnforcementActionResolved != null
 
     fun asSessionCreated(): BetaWebhookSessionCreatedEventData =
         sessionCreated.getOrThrow("sessionCreated")
@@ -717,6 +808,14 @@ private constructor(
     fun asSessionBudgetReached(): BetaWebhookSessionBudgetReachedEventData =
         sessionBudgetReached.getOrThrow("sessionBudgetReached")
 
+    fun asUserProfileEnforcementActionOpened():
+        BetaWebhookUserProfileEnforcementActionOpenedEventData =
+        userProfileEnforcementActionOpened.getOrThrow("userProfileEnforcementActionOpened")
+
+    fun asUserProfileEnforcementActionResolved():
+        BetaWebhookUserProfileEnforcementActionResolvedEventData =
+        userProfileEnforcementActionResolved.getOrThrow("userProfileEnforcementActionResolved")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -805,6 +904,12 @@ private constructor(
             memoryStoreArchived != null -> visitor.visitMemoryStoreArchived(memoryStoreArchived)
             memoryStoreDeleted != null -> visitor.visitMemoryStoreDeleted(memoryStoreDeleted)
             sessionBudgetReached != null -> visitor.visitSessionBudgetReached(sessionBudgetReached)
+            userProfileEnforcementActionOpened != null ->
+                visitor.visitUserProfileEnforcementActionOpened(userProfileEnforcementActionOpened)
+            userProfileEnforcementActionResolved != null ->
+                visitor.visitUserProfileEnforcementActionResolved(
+                    userProfileEnforcementActionResolved
+                )
             else -> visitor.unknown(_json)
         }
 
@@ -868,6 +973,10 @@ private constructor(
             memoryStoreArchived != null -> memoryStoreArchived.validate()
             memoryStoreDeleted != null -> memoryStoreDeleted.validate()
             sessionBudgetReached != null -> sessionBudgetReached.validate()
+            userProfileEnforcementActionOpened != null ->
+                userProfileEnforcementActionOpened.validate()
+            userProfileEnforcementActionResolved != null ->
+                userProfileEnforcementActionResolved.validate()
             else -> throw AnthropicInvalidDataException("Unknown BetaWebhookEventData: $_json")
         }
         validated = true
@@ -933,6 +1042,10 @@ private constructor(
             memoryStoreArchived != null -> memoryStoreArchived.validity()
             memoryStoreDeleted != null -> memoryStoreDeleted.validity()
             sessionBudgetReached != null -> sessionBudgetReached.validity()
+            userProfileEnforcementActionOpened != null ->
+                userProfileEnforcementActionOpened.validity()
+            userProfileEnforcementActionResolved != null ->
+                userProfileEnforcementActionResolved.validity()
             else -> 0
         }
 
@@ -985,7 +1098,9 @@ private constructor(
             memoryStoreCreated == other.memoryStoreCreated &&
             memoryStoreArchived == other.memoryStoreArchived &&
             memoryStoreDeleted == other.memoryStoreDeleted &&
-            sessionBudgetReached == other.sessionBudgetReached
+            sessionBudgetReached == other.sessionBudgetReached &&
+            userProfileEnforcementActionOpened == other.userProfileEnforcementActionOpened &&
+            userProfileEnforcementActionResolved == other.userProfileEnforcementActionResolved
     }
 
     override fun hashCode(): Int =
@@ -1034,6 +1149,8 @@ private constructor(
             memoryStoreArchived,
             memoryStoreDeleted,
             sessionBudgetReached,
+            userProfileEnforcementActionOpened,
+            userProfileEnforcementActionResolved,
         )
 
     override fun toString(): String =
@@ -1111,6 +1228,10 @@ private constructor(
                 "BetaWebhookEventData{memoryStoreDeleted=$memoryStoreDeleted}"
             sessionBudgetReached != null ->
                 "BetaWebhookEventData{sessionBudgetReached=$sessionBudgetReached}"
+            userProfileEnforcementActionOpened != null ->
+                "BetaWebhookEventData{userProfileEnforcementActionOpened=$userProfileEnforcementActionOpened}"
+            userProfileEnforcementActionResolved != null ->
+                "BetaWebhookEventData{userProfileEnforcementActionResolved=$userProfileEnforcementActionResolved}"
             _json != null -> "BetaWebhookEventData{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaWebhookEventData")
         }
@@ -1303,6 +1424,24 @@ private constructor(
         @JvmStatic
         fun ofSessionBudgetReached(sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData) =
             BetaWebhookEventData(sessionBudgetReached = sessionBudgetReached)
+
+        @JvmStatic
+        fun ofUserProfileEnforcementActionOpened(
+            userProfileEnforcementActionOpened:
+                BetaWebhookUserProfileEnforcementActionOpenedEventData
+        ) =
+            BetaWebhookEventData(
+                userProfileEnforcementActionOpened = userProfileEnforcementActionOpened
+            )
+
+        @JvmStatic
+        fun ofUserProfileEnforcementActionResolved(
+            userProfileEnforcementActionResolved:
+                BetaWebhookUserProfileEnforcementActionResolvedEventData
+        ) =
+            BetaWebhookEventData(
+                userProfileEnforcementActionResolved = userProfileEnforcementActionResolved
+            )
     }
 
     /**
@@ -1431,6 +1570,16 @@ private constructor(
 
         fun visitSessionBudgetReached(
             sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
+        ): T
+
+        fun visitUserProfileEnforcementActionOpened(
+            userProfileEnforcementActionOpened:
+                BetaWebhookUserProfileEnforcementActionOpenedEventData
+        ): T
+
+        fun visitUserProfileEnforcementActionResolved(
+            userProfileEnforcementActionResolved:
+                BetaWebhookUserProfileEnforcementActionResolvedEventData
         ): T
 
         /**
@@ -1786,6 +1935,32 @@ private constructor(
                         ?.let { BetaWebhookEventData(sessionBudgetReached = it, _json = json) }
                         ?: BetaWebhookEventData(_json = json)
                 }
+                "user_profile.enforcement_action_opened" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookUserProfileEnforcementActionOpenedEventData>(),
+                        )
+                        ?.let {
+                            BetaWebhookEventData(
+                                userProfileEnforcementActionOpened = it,
+                                _json = json,
+                            )
+                        } ?: BetaWebhookEventData(_json = json)
+                }
+                "user_profile.enforcement_action_resolved" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<
+                                BetaWebhookUserProfileEnforcementActionResolvedEventData
+                            >(),
+                        )
+                        ?.let {
+                            BetaWebhookEventData(
+                                userProfileEnforcementActionResolved = it,
+                                _json = json,
+                            )
+                        } ?: BetaWebhookEventData(_json = json)
+                }
             }
 
             return BetaWebhookEventData(_json = json)
@@ -1861,6 +2036,10 @@ private constructor(
                 value.memoryStoreDeleted != null -> generator.writeObject(value.memoryStoreDeleted)
                 value.sessionBudgetReached != null ->
                     generator.writeObject(value.sessionBudgetReached)
+                value.userProfileEnforcementActionOpened != null ->
+                    generator.writeObject(value.userProfileEnforcementActionOpened)
+                value.userProfileEnforcementActionResolved != null ->
+                    generator.writeObject(value.userProfileEnforcementActionResolved)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaWebhookEventData")
             }
@@ -1978,6 +2157,14 @@ private constructor(
 
             @JvmField val SESSION_BUDGET_REACHED = Type(JsonField.of("session.budget_reached"))
 
+            @JvmField
+            val USER_PROFILE_ENFORCEMENT_ACTION_OPENED =
+                Type(JsonField.of("user_profile.enforcement_action_opened"))
+
+            @JvmField
+            val USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED =
+                Type(JsonField.of("user_profile.enforcement_action_resolved"))
+
             @JvmStatic
             fun of(value: String): Type =
                 // Intern known values so `==` works
@@ -2026,6 +2213,10 @@ private constructor(
                     "memory_store.archived" -> MEMORY_STORE_ARCHIVED
                     "memory_store.deleted" -> MEMORY_STORE_DELETED
                     "session.budget_reached" -> SESSION_BUDGET_REACHED
+                    "user_profile.enforcement_action_opened" ->
+                        USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+                    "user_profile.enforcement_action_resolved" ->
+                        USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
                     else -> Type(JsonField.of(value))
                 }
 
@@ -2081,6 +2272,8 @@ private constructor(
             MEMORY_STORE_ARCHIVED,
             MEMORY_STORE_DELETED,
             SESSION_BUDGET_REACHED,
+            USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
+            USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
         }
 
         /**
@@ -2137,6 +2330,8 @@ private constructor(
             MEMORY_STORE_ARCHIVED,
             MEMORY_STORE_DELETED,
             SESSION_BUDGET_REACHED,
+            USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
+            USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -2194,6 +2389,10 @@ private constructor(
                 MEMORY_STORE_ARCHIVED -> Value.MEMORY_STORE_ARCHIVED
                 MEMORY_STORE_DELETED -> Value.MEMORY_STORE_DELETED
                 SESSION_BUDGET_REACHED -> Value.SESSION_BUDGET_REACHED
+                USER_PROFILE_ENFORCEMENT_ACTION_OPENED ->
+                    Value.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+                USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
+                    Value.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
                 else -> Value._UNKNOWN
             }
 
@@ -2252,6 +2451,10 @@ private constructor(
                 MEMORY_STORE_ARCHIVED -> Known.MEMORY_STORE_ARCHIVED
                 MEMORY_STORE_DELETED -> Known.MEMORY_STORE_DELETED
                 SESSION_BUDGET_REACHED -> Known.SESSION_BUDGET_REACHED
+                USER_PROFILE_ENFORCEMENT_ACTION_OPENED ->
+                    Known.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+                USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
+                    Known.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 

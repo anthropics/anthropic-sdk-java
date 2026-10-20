@@ -85,6 +85,7 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.organization.telemetrydestinations;
     exports com.anthropic.models.beta.organization.telemetrydestinations.workspaces;
     exports com.anthropic.models.beta.organization.users;
+    exports com.anthropic.models.beta.organization.webhooks;
     exports com.anthropic.models.beta.organization.workspaces;
     exports com.anthropic.models.beta.organization.workspaces.members;
     exports com.anthropic.models.beta.organization.workspaces.ratelimits;

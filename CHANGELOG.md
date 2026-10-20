@@ -1,6 +1,11 @@
 # Changelog
 
-## [2.74.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.74.0...v2.74.1) (2026-10-20)
+## [2.75.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.74.0...v2.75.0) (2026-10-20)
+
+### Features
+
+* **api:** add org webhook endpoints and user profile enforcement events
+
 
 ### Chores
 
