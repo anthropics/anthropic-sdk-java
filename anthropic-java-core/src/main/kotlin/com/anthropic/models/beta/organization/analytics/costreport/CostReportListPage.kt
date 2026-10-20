@@ -5,6 +5,7 @@ import com.anthropic.core.Page
 import com.anthropic.core.checkRequired
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsCostReportTimeBucket
 import com.anthropic.services.blocking.beta.organization.analytics.CostReportService
+import java.time.OffsetDateTime
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -32,9 +33,30 @@ private constructor(
      */
     fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")
 
+    /**
+     * Delegates to [CostReportListPageResponse], but gracefully handles missing data.
+     *
+     * @see CostReportListPageResponse.hasMore
+     */
+    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
+
+    /**
+     * Delegates to [CostReportListPageResponse], but gracefully handles missing data.
+     *
+     * @see CostReportListPageResponse.dataRefreshedAt
+     */
+    fun dataRefreshedAt(): Optional<OffsetDateTime> =
+        response._dataRefreshedAt().getOptional("data_refreshed_at")
+
     override fun items(): List<BetaAnalyticsCostReportTimeBucket> = data()
 
-    override fun hasNextPage(): Boolean = nextPageRaw().isPresent
+    override fun hasNextPage(): Boolean {
+        if (hasMore().getOrNull() == false) {
+            return false
+        }
+
+        return nextPageRaw().isPresent
+    }
 
     fun nextPageParams(): CostReportListParams {
         val nextCursor =

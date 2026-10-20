@@ -1,9 +1,10 @@
 # Changelog
 
-## [2.74.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.73.0...v2.74.0) (2026-10-19)
+## [2.74.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.73.0...v2.74.0) (2026-10-20)
 
 ### Features
 
+* **api:** add data_refreshed_at and has_more to analytics report pages
 * **api:** add workspace rate-limit updates to the Admin API
 * **api:** make User Profiles generally available
 * **client:** yield server-sent events with unrecognized event names
