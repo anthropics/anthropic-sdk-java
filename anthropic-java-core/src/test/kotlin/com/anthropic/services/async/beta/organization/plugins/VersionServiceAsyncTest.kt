@@ -22,13 +22,14 @@ import org.junit.jupiter.api.parallel.ResourceLock
 @ResourceLock("https://github.com/wiremock/wiremock/issues/169")
 internal class VersionServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val versionServiceAsync = client.beta().organization().plugins().versions()
 
         val betaPluginVersionFuture =
@@ -47,11 +48,6 @@ internal class VersionServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val versionServiceAsync = client.beta().organization().plugins().versions()
 
         val betaPluginVersionFuture =
@@ -70,11 +66,6 @@ internal class VersionServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val versionServiceAsync = client.beta().organization().plugins().versions()
 
         val pageFuture = versionServiceAsync.list("plugin_id")
@@ -85,12 +76,10 @@ internal class VersionServiceAsyncTest {
 
     @Test
     fun download(wmRuntimeInfo: WireMockRuntimeInfo) {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(wmRuntimeInfo.httpBaseUrl)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val versionServiceAsync = client.beta().organization().plugins().versions()
+        val versionServiceAsync =
+            client.beta().organization().plugins().versions().withOptions {
+                it.baseUrl(wmRuntimeInfo.httpBaseUrl)
+            }
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
         val responseFuture =

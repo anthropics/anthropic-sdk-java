@@ -10,7 +10,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Retrieve a memory store */
+/** Retrieve a Memory Store */
 class MemoryStoreRetrieveParams
 private constructor(
     private val memoryStoreId: String?,
@@ -20,10 +20,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /**
-     * ID of the memory store to retrieve (a `memstore_...` identifier). Required. Enumerate IDs via
-     * `GET /v1/memory_stores`.
-     */
+    /** The ID of the memory store to retrieve (`memstore_...`). */
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
     /**
@@ -77,10 +74,7 @@ private constructor(
             additionalQueryParams = memoryStoreRetrieveParams.additionalQueryParams.toBuilder()
         }
 
-        /**
-         * ID of the memory store to retrieve (a `memstore_...` identifier). Required. Enumerate IDs
-         * via `GET /v1/memory_stores`.
-         */
+        /** The ID of the memory store to retrieve (`memstore_...`). */
         fun memoryStoreId(memoryStoreId: String?) = apply { this.memoryStoreId = memoryStoreId }
 
         /** Alias for calling [Builder.memoryStoreId] with `memoryStoreId.orElse(null)`. */

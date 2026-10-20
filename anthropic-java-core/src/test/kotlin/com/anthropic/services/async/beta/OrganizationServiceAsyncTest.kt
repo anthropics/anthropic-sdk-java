@@ -8,13 +8,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class OrganizationServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val organizationServiceAsync = client.beta().organization()
 
         val betaOrganizationFuture = organizationServiceAsync.retrieve()

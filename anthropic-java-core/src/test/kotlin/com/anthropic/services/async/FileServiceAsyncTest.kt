@@ -22,13 +22,14 @@ import org.junit.jupiter.api.parallel.ResourceLock
 @ResourceLock("https://github.com/wiremock/wiremock/issues/169")
 internal class FileServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val fileServiceAsync = client.files()
 
         val pageFuture = fileServiceAsync.list()
@@ -39,11 +40,6 @@ internal class FileServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val fileServiceAsync = client.files()
 
         val deletedFileFuture =
@@ -60,12 +56,7 @@ internal class FileServiceAsyncTest {
 
     @Test
     fun download(wmRuntimeInfo: WireMockRuntimeInfo) {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(wmRuntimeInfo.httpBaseUrl)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val fileServiceAsync = client.files()
+        val fileServiceAsync = client.files().withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
         val responseFuture =
@@ -82,11 +73,6 @@ internal class FileServiceAsyncTest {
 
     @Test
     fun retrieveMetadata() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val fileServiceAsync = client.files()
 
         val fileMetadataFuture =
@@ -103,11 +89,6 @@ internal class FileServiceAsyncTest {
 
     @Test
     fun upload() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val fileServiceAsync = client.files()
 
         val fileMetadataFuture =

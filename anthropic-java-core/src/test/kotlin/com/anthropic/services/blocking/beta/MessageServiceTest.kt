@@ -37,13 +37,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class MessageServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val messageService = client.beta().messages()
 
         val betaMessage =
@@ -228,11 +229,6 @@ internal class MessageServiceTest {
 
     @Test
     fun createStreaming() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val messageService = client.beta().messages()
 
         val betaMessageStreamResponse =
@@ -419,11 +415,6 @@ internal class MessageServiceTest {
 
     @Test
     fun countTokens() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val messageService = client.beta().messages()
 
         val betaMessageTokensCount =

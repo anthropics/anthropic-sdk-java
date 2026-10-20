@@ -14,13 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class TunnelServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val tunnelServiceAsync = client.beta().tunnels()
 
         val betaTunnelFuture =
@@ -38,11 +39,6 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val tunnelServiceAsync = client.beta().tunnels()
 
         val betaTunnelFuture =
@@ -60,11 +56,6 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val tunnelServiceAsync = client.beta().tunnels()
 
         val pageFuture = tunnelServiceAsync.list()
@@ -75,11 +66,6 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val tunnelServiceAsync = client.beta().tunnels()
 
         val betaTunnelFuture =
@@ -97,11 +83,6 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun revealToken() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val tunnelServiceAsync = client.beta().tunnels()
 
         val betaTunnelTokenFuture =
@@ -119,11 +100,6 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun rotateToken() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val tunnelServiceAsync = client.beta().tunnels()
 
         val betaTunnelTokenFuture =

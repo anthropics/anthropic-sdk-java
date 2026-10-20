@@ -32,7 +32,7 @@ interface VaultService {
 
     fun credentials(): CredentialService
 
-    /** Create Vault */
+    /** Create a Vault */
     fun create(params: VaultCreateParams): BetaManagedAgentsVault =
         create(params, RequestOptions.none())
 
@@ -42,7 +42,7 @@ interface VaultService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsVault
 
-    /** Get Vault */
+    /** Retrieve a Vault */
     fun retrieve(vaultId: String): BetaManagedAgentsVault =
         retrieve(vaultId, VaultRetrieveParams.none())
 
@@ -74,7 +74,7 @@ interface VaultService {
     fun retrieve(vaultId: String, requestOptions: RequestOptions): BetaManagedAgentsVault =
         retrieve(vaultId, VaultRetrieveParams.none(), requestOptions)
 
-    /** Update Vault */
+    /** Update a Vault */
     fun update(vaultId: String): BetaManagedAgentsVault = update(vaultId, VaultUpdateParams.none())
 
     /** @see update */
@@ -121,7 +121,7 @@ interface VaultService {
     fun list(requestOptions: RequestOptions): VaultListPage =
         list(VaultListParams.none(), requestOptions)
 
-    /** Delete Vault */
+    /** Delete a Vault */
     fun delete(vaultId: String): BetaManagedAgentsDeletedVault =
         delete(vaultId, VaultDeleteParams.none())
 
@@ -153,7 +153,7 @@ interface VaultService {
     fun delete(vaultId: String, requestOptions: RequestOptions): BetaManagedAgentsDeletedVault =
         delete(vaultId, VaultDeleteParams.none(), requestOptions)
 
-    /** Archive Vault */
+    /** Archive a Vault */
     fun archive(vaultId: String): BetaManagedAgentsVault =
         archive(vaultId, VaultArchiveParams.none())
 

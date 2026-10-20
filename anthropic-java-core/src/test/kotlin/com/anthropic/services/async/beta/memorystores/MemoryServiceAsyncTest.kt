@@ -15,13 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class MemoryServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryServiceAsync = client.beta().memoryStores().memories()
 
         val betaManagedAgentsMemoryFuture =
@@ -42,11 +43,6 @@ internal class MemoryServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryServiceAsync = client.beta().memoryStores().memories()
 
         val betaManagedAgentsMemoryFuture =
@@ -66,11 +62,6 @@ internal class MemoryServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryServiceAsync = client.beta().memoryStores().memories()
 
         val betaManagedAgentsMemoryFuture =
@@ -98,11 +89,6 @@ internal class MemoryServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryServiceAsync = client.beta().memoryStores().memories()
 
         val pageFuture = memoryServiceAsync.list("memory_store_id")
@@ -113,11 +99,6 @@ internal class MemoryServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryServiceAsync = client.beta().memoryStores().memories()
 
         val betaManagedAgentsDeletedMemoryFuture =

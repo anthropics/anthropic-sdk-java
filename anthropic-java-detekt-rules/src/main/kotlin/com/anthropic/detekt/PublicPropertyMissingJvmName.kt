@@ -8,9 +8,11 @@ import io.gitlab.arturbosch.detekt.api.Issue
 import io.gitlab.arturbosch.detekt.api.Rule
 import io.gitlab.arturbosch.detekt.api.Severity
 import org.jetbrains.kotlin.lexer.KtTokens
+import org.jetbrains.kotlin.psi.KtCallableDeclaration
 import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtObjectDeclaration
+import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.psiUtil.containingClassOrObject
 import org.jetbrains.kotlin.psi.psiUtil.isPrivate
@@ -35,12 +37,22 @@ class PublicPropertyMissingJvmName(config: Config) : Rule(config) {
     override fun visitProperty(property: KtProperty) {
         super.visitProperty(property)
         if (property.isLocal) return
+        if (property.getter?.hasAnnotation("JvmName") == true) return
+        check(property)
+    }
+
+    override fun visitParameter(parameter: KtParameter) {
+        super.visitParameter(parameter)
+        if (!parameter.hasValOrVar()) return
+        check(parameter)
+    }
+
+    private fun check(property: KtCallableDeclaration) {
         if (!property.isEffectivelyPublic()) return
         if (property.hasModifier(KtTokens.CONST_KEYWORD)) return
         if (property.hasModifier(KtTokens.OVERRIDE_KEYWORD)) return
         if (property.hasAnnotation("JvmField")) return
         if (property.hasUseSiteAnnotation("get", "JvmName")) return
-        if (property.getter?.hasAnnotation("JvmName") == true) return
         // `@JvmSynthetic` already hides the accessor from Java.
         if (property.hasAnnotation("JvmSynthetic")) return
         if (property.hasUseSiteAnnotation("get", "JvmSynthetic")) return
@@ -67,7 +79,7 @@ class PublicPropertyMissingJvmName(config: Config) : Rule(config) {
         )
     }
 
-    private fun KtProperty.isFinalIn(container: KtClassOrObject): Boolean {
+    private fun KtCallableDeclaration.isFinalIn(container: KtClassOrObject): Boolean {
         if (hasModifier(KtTokens.ABSTRACT_KEYWORD)) return false
         if (hasModifier(KtTokens.OPEN_KEYWORD)) return false
         // Interface members without a body are abstract; with a body they're open.

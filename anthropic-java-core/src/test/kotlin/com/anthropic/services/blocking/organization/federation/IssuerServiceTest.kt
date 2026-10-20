@@ -11,13 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class IssuerServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val issuerService = client.organization().federation().issuers()
 
         val federationIssuer =
@@ -41,11 +42,6 @@ internal class IssuerServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val issuerService = client.organization().federation().issuers()
 
         val federationIssuer = issuerService.retrieve("federation_issuer_id")
@@ -55,11 +51,6 @@ internal class IssuerServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val issuerService = client.organization().federation().issuers()
 
         val federationIssuer =
@@ -85,11 +76,6 @@ internal class IssuerServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val issuerService = client.organization().federation().issuers()
 
         val page = issuerService.list()
@@ -99,11 +85,6 @@ internal class IssuerServiceTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val issuerService = client.organization().federation().issuers()
 
         val federationIssuer = issuerService.archive("federation_issuer_id")

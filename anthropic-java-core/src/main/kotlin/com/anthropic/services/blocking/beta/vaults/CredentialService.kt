@@ -31,7 +31,7 @@ interface CredentialService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): CredentialService
 
-    /** Create Credential */
+    /** Create a Credential */
     fun create(vaultId: String, params: CredentialCreateParams): BetaManagedAgentsCredential =
         create(vaultId, params, RequestOptions.none())
 
@@ -53,7 +53,7 @@ interface CredentialService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsCredential
 
-    /** Get Credential */
+    /** Retrieve a Credential */
     fun retrieve(
         credentialId: String,
         params: CredentialRetrieveParams,
@@ -77,7 +77,7 @@ interface CredentialService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsCredential
 
-    /** Update Credential */
+    /** Update a Credential */
     fun update(credentialId: String, params: CredentialUpdateParams): BetaManagedAgentsCredential =
         update(credentialId, params, RequestOptions.none())
 
@@ -128,7 +128,7 @@ interface CredentialService {
     fun list(vaultId: String, requestOptions: RequestOptions): CredentialListPage =
         list(vaultId, CredentialListParams.none(), requestOptions)
 
-    /** Delete Credential */
+    /** Delete a Credential */
     fun delete(
         credentialId: String,
         params: CredentialDeleteParams,
@@ -152,7 +152,7 @@ interface CredentialService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsDeletedCredential
 
-    /** Archive Credential */
+    /** Archive a Credential */
     fun archive(
         credentialId: String,
         params: CredentialArchiveParams,
@@ -176,7 +176,7 @@ interface CredentialService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsCredential
 
-    /** Validate Credential */
+    /** Validate an MCP OAuth Credential */
     fun mcpOAuthValidate(
         credentialId: String,
         params: CredentialMcpOAuthValidateParams,

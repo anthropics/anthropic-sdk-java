@@ -14,13 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class MemberServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberService = client.organization().workspaces().members()
 
         val workspaceMember =
@@ -33,11 +34,6 @@ internal class MemberServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberService = client.organization().workspaces().members()
 
         val workspaceMember =
@@ -54,11 +50,6 @@ internal class MemberServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberService = client.organization().workspaces().members()
 
         val page = memberService.list("workspace_id")
@@ -68,11 +59,6 @@ internal class MemberServiceTest {
 
     @Test
     fun add() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberService = client.organization().workspaces().members()
 
         val workspaceMember =
@@ -89,11 +75,6 @@ internal class MemberServiceTest {
 
     @Test
     fun remove() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberService = client.organization().workspaces().members()
 
         val member =

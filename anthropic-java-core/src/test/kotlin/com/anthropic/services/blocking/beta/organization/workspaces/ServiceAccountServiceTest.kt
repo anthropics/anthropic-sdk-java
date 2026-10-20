@@ -14,13 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class ServiceAccountServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.beta().organization().workspaces().serviceAccounts()
 
         val betaServiceAccountWorkspaceMember =
@@ -37,11 +38,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.beta().organization().workspaces().serviceAccounts()
 
         val betaServiceAccountWorkspaceMember =
@@ -59,11 +55,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.beta().organization().workspaces().serviceAccounts()
 
         val page = serviceAccountService.list("workspace_id")
@@ -73,11 +64,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun add() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.beta().organization().workspaces().serviceAccounts()
 
         val betaServiceAccountWorkspaceMember =
@@ -95,11 +81,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun remove() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.beta().organization().workspaces().serviceAccounts()
 
         val serviceAccount =

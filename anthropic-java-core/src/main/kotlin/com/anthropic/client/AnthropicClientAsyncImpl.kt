@@ -16,6 +16,8 @@ import com.anthropic.services.async.OrganizationServiceAsync
 import com.anthropic.services.async.OrganizationServiceAsyncImpl
 import com.anthropic.services.async.SkillServiceAsync
 import com.anthropic.services.async.SkillServiceAsyncImpl
+import com.anthropic.services.async.UserProfileServiceAsync
+import com.anthropic.services.async.UserProfileServiceAsyncImpl
 import java.util.function.Consumer
 
 class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : AnthropicClientAsync {
@@ -53,6 +55,10 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
         SkillServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val userProfiles: UserProfileServiceAsync by lazy {
+        UserProfileServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     private val organization: OrganizationServiceAsync by lazy {
         OrganizationServiceAsyncImpl(clientOptionsWithUserAgent)
     }
@@ -77,6 +83,8 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
     override fun files(): FileServiceAsync = files
 
     override fun skills(): SkillServiceAsync = skills
+
+    override fun userProfiles(): UserProfileServiceAsync = userProfiles
 
     override fun organization(): OrganizationServiceAsync = organization
 
@@ -116,6 +124,10 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
             SkillServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val userProfiles: UserProfileServiceAsync.WithRawResponse by lazy {
+            UserProfileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val organization: OrganizationServiceAsync.WithRawResponse by lazy {
             OrganizationServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -140,6 +152,8 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
         override fun files(): FileServiceAsync.WithRawResponse = files
 
         override fun skills(): SkillServiceAsync.WithRawResponse = skills
+
+        override fun userProfiles(): UserProfileServiceAsync.WithRawResponse = userProfiles
 
         override fun organization(): OrganizationServiceAsync.WithRawResponse = organization
 

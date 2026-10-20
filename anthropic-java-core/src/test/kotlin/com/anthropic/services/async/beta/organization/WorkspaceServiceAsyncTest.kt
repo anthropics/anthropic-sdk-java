@@ -14,13 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class WorkspaceServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceServiceAsync = client.beta().organization().workspaces()
 
         val betaWorkspaceFuture =
@@ -54,11 +55,6 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceServiceAsync = client.beta().organization().workspaces()
 
         val betaWorkspaceFuture = workspaceServiceAsync.retrieve("workspace_id")
@@ -69,11 +65,6 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceServiceAsync = client.beta().organization().workspaces()
 
         val betaWorkspaceFuture =
@@ -106,11 +97,6 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceServiceAsync = client.beta().organization().workspaces()
 
         val pageFuture = workspaceServiceAsync.list()
@@ -121,11 +107,6 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceServiceAsync = client.beta().organization().workspaces()
 
         val betaWorkspaceFuture = workspaceServiceAsync.archive("workspace_id")

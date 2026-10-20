@@ -20,7 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Update a memory store */
+/** Update a Memory Store */
 class MemoryStoreUpdateParams
 private constructor(
     private val memoryStoreId: String?,
@@ -32,8 +32,9 @@ private constructor(
 ) : Params {
 
     /**
-     * ID of the memory store to update (a `memstore_...` identifier). Required. Enumerate IDs via
-     * `GET /v1/memory_stores`. Updating an archived store returns 400.
+     * The ID of the memory store to update (`memstore_...`).
+     *
+     * The request fails with HTTP status 400 if the store is archived.
      */
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
@@ -53,7 +54,7 @@ private constructor(
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
-     * New description for the store, up to 1024 characters. Pass an empty string to clear it.
+     * New description for the store, up to 1,024 characters. Pass an empty string to clear it.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -61,9 +62,11 @@ private constructor(
     fun description(): Optional<String> = body.description()
 
     /**
-     * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the field
-     * to preserve. The stored bag is limited to 16 keys (up to 64 chars each) with values up to 512
-     * chars.
+     * Changes to apply to the memory store's metadata. Keys you leave out keep their values.
+     *
+     * Set a key to a string to add or replace it, or to `null` to remove it. After the change, the
+     * metadata can hold at most 16 key-value pairs. Keys are 1 to 64 characters long and values at
+     * most 512 characters.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -71,8 +74,10 @@ private constructor(
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
-     * New human-readable name for the store. 1–255 characters; no control characters. Renaming
-     * changes the slug used for the store's `mount_path` in sessions created after the update.
+     * The new name of the memory store, 1 to 255 characters long, without control characters.
+     *
+     * Sessions created after the change use the new name for the store's directory under
+     * `/mnt/memory/`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -139,8 +144,9 @@ private constructor(
         }
 
         /**
-         * ID of the memory store to update (a `memstore_...` identifier). Required. Enumerate IDs
-         * via `GET /v1/memory_stores`. Updating an archived store returns 400.
+         * The ID of the memory store to update (`memstore_...`).
+         *
+         * The request fails with HTTP status 400 if the store is archived.
          */
         fun memoryStoreId(memoryStoreId: String?) = apply { this.memoryStoreId = memoryStoreId }
 
@@ -199,7 +205,7 @@ private constructor(
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /**
-         * New description for the store, up to 1024 characters. Pass an empty string to clear it.
+         * New description for the store, up to 1,024 characters. Pass an empty string to clear it.
          */
         fun description(description: String?) = apply { body.description(description) }
 
@@ -216,9 +222,11 @@ private constructor(
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
         /**
-         * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the
-         * field to preserve. The stored bag is limited to 16 keys (up to 64 chars each) with values
-         * up to 512 chars.
+         * Changes to apply to the memory store's metadata. Keys you leave out keep their values.
+         *
+         * Set a key to a string to add or replace it, or to `null` to remove it. After the change,
+         * the metadata can hold at most 16 key-value pairs. Keys are 1 to 64 characters long and
+         * values at most 512 characters.
          */
         fun metadata(metadata: Metadata?) = apply { body.metadata(metadata) }
 
@@ -235,8 +243,10 @@ private constructor(
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
 
         /**
-         * New human-readable name for the store. 1–255 characters; no control characters. Renaming
-         * changes the slug used for the store's `mount_path` in sessions created after the update.
+         * The new name of the memory store, 1 to 255 characters long, without control characters.
+         *
+         * Sessions created after the change use the new name for the store's directory under
+         * `/mnt/memory/`.
          */
         fun name(name: String?) = apply { body.name(name) }
 
@@ -440,7 +450,7 @@ private constructor(
         ) : this(description, metadata, name, mutableMapOf())
 
         /**
-         * New description for the store, up to 1024 characters. Pass an empty string to clear it.
+         * New description for the store, up to 1,024 characters. Pass an empty string to clear it.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -448,9 +458,11 @@ private constructor(
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
-         * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the
-         * field to preserve. The stored bag is limited to 16 keys (up to 64 chars each) with values
-         * up to 512 chars.
+         * Changes to apply to the memory store's metadata. Keys you leave out keep their values.
+         *
+         * Set a key to a string to add or replace it, or to `null` to remove it. After the change,
+         * the metadata can hold at most 16 key-value pairs. Keys are 1 to 64 characters long and
+         * values at most 512 characters.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -458,8 +470,10 @@ private constructor(
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
         /**
-         * New human-readable name for the store. 1–255 characters; no control characters. Renaming
-         * changes the slug used for the store's `mount_path` in sessions created after the update.
+         * The new name of the memory store, 1 to 255 characters long, without control characters.
+         *
+         * Sessions created after the change use the new name for the store's directory under
+         * `/mnt/memory/`.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -524,7 +538,7 @@ private constructor(
             }
 
             /**
-             * New description for the store, up to 1024 characters. Pass an empty string to clear
+             * New description for the store, up to 1,024 characters. Pass an empty string to clear
              * it.
              */
             fun description(description: String?) = description(JsonField.ofNullable(description))
@@ -544,9 +558,12 @@ private constructor(
             }
 
             /**
-             * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the
-             * field to preserve. The stored bag is limited to 16 keys (up to 64 chars each) with
-             * values up to 512 chars.
+             * Changes to apply to the memory store's metadata. Keys you leave out keep their
+             * values.
+             *
+             * Set a key to a string to add or replace it, or to `null` to remove it. After the
+             * change, the metadata can hold at most 16 key-value pairs. Keys are 1 to 64 characters
+             * long and values at most 512 characters.
              */
             fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
 
@@ -563,9 +580,11 @@ private constructor(
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
             /**
-             * New human-readable name for the store. 1–255 characters; no control characters.
-             * Renaming changes the slug used for the store's `mount_path` in sessions created after
-             * the update.
+             * The new name of the memory store, 1 to 255 characters long, without control
+             * characters.
+             *
+             * Sessions created after the change use the new name for the store's directory under
+             * `/mnt/memory/`.
              */
             fun name(name: String?) = name(JsonField.ofNullable(name))
 
@@ -674,9 +693,11 @@ private constructor(
     }
 
     /**
-     * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the field
-     * to preserve. The stored bag is limited to 16 keys (up to 64 chars each) with values up to 512
-     * chars.
+     * Changes to apply to the memory store's metadata. Keys you leave out keep their values.
+     *
+     * Set a key to a string to add or replace it, or to `null` to remove it. After the change, the
+     * metadata can hold at most 16 key-value pairs. Keys are 1 to 64 characters long and values at
+     * most 512 characters.
      */
     class Metadata
     @JsonCreator

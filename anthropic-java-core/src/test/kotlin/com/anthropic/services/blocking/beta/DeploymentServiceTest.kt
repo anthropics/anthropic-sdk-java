@@ -24,13 +24,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class DeploymentServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val deploymentService = client.beta().deployments()
 
         val betaManagedAgentsDeployment =
@@ -91,11 +92,6 @@ internal class DeploymentServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val deploymentService = client.beta().deployments()
 
         val betaManagedAgentsDeployment =
@@ -112,11 +108,6 @@ internal class DeploymentServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val deploymentService = client.beta().deployments()
 
         val betaManagedAgentsDeployment =
@@ -178,11 +169,6 @@ internal class DeploymentServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val deploymentService = client.beta().deployments()
 
         val page = deploymentService.list()
@@ -192,11 +178,6 @@ internal class DeploymentServiceTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val deploymentService = client.beta().deployments()
 
         val betaManagedAgentsDeployment =
@@ -213,11 +194,6 @@ internal class DeploymentServiceTest {
 
     @Test
     fun pause() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val deploymentService = client.beta().deployments()
 
         val betaManagedAgentsDeployment =
@@ -234,11 +210,6 @@ internal class DeploymentServiceTest {
 
     @Test
     fun run() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val deploymentService = client.beta().deployments()
 
         val betaManagedAgentsDeploymentRun =
@@ -255,11 +226,6 @@ internal class DeploymentServiceTest {
 
     @Test
     fun unpause() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val deploymentService = client.beta().deployments()
 
         val betaManagedAgentsDeployment =

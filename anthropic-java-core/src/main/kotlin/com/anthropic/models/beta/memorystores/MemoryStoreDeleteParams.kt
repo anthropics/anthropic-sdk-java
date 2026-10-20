@@ -11,7 +11,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Delete a memory store */
+/** Delete a Memory Store */
 class MemoryStoreDeleteParams
 private constructor(
     private val memoryStoreId: String?,
@@ -23,8 +23,9 @@ private constructor(
 ) : Params {
 
     /**
-     * ID of the memory store to permanently delete (a `memstore_...` identifier). Required.
-     * Deletion cascades to all memories and memory versions in the store and cannot be undone.
+     * The ID of the memory store to delete (`memstore_...`).
+     *
+     * Deleting a store also deletes all its memories and memory versions. It can't be undone.
      */
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
@@ -84,8 +85,9 @@ private constructor(
         }
 
         /**
-         * ID of the memory store to permanently delete (a `memstore_...` identifier). Required.
-         * Deletion cascades to all memories and memory versions in the store and cannot be undone.
+         * The ID of the memory store to delete (`memstore_...`).
+         *
+         * Deleting a store also deletes all its memories and memory versions. It can't be undone.
          */
         fun memoryStoreId(memoryStoreId: String?) = apply { this.memoryStoreId = memoryStoreId }
 

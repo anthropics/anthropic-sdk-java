@@ -67,8 +67,7 @@ private constructor(
     )
 
     /**
-     * Unique identifier for the memory store (a `memstore_...` tagged ID). Use this when attaching
-     * the store to a session, or in the `{memory_store_id}` path parameter of subsequent calls.
+     * The unique ID of the memory store (`memstore_...`). Use it to attach the store to a session.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -76,8 +75,15 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * Timestamp when the store was archived, or `null` if active. Set once and never cleared;
-     * archiving is one-way. Archived stores are read-only and cannot be attached to new sessions.
+     * When the memory store was archived, in RFC 3339, or `null` if it hasn't been.
+     *
+     * Archiving can't be undone. An archived store can't be attached to new sessions. You can't
+     * create or update its memories or update the store. You can still read and delete its
+     * memories, redact their versions, and delete the store.
+     *
+     * See the
+     * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#archive-a-store) to
+     * learn more about archiving.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -85,7 +91,7 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
-     * Timestamp when the store was created.
+     * When the memory store was created, in RFC 3339.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -93,7 +99,7 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
-     * Free-text description of what the store contains, up to 1024 characters. Included in the
+     * Free-text description of what the store contains, up to 1,024 characters. Included in the
      * agent's system prompt when the store is attached, so word it to be useful to the agent. Empty
      * string when unset.
      *
@@ -103,9 +109,10 @@ private constructor(
     fun description(): String = description.getRequired("description")
 
     /**
-     * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs to).
-     * Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Returned on retrieve/list
-     * but not filterable.
+     * Key-value pairs for your own use, such as the end user that the store belongs to.
+     *
+     * A store has at most 16 pairs. Keys are 1 to 64 characters long and values at most 512
+     * characters. You can't filter lists by metadata.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -128,8 +135,10 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Timestamp when the store's `name`, `description`, or `metadata` was last modified. Memory
-     * writes inside the store do not advance this.
+     * When the memory store was last changed, in RFC 3339.
+     *
+     * Changing its `name`, `description`, or `metadata` updates it. Archiving the store does too.
+     * Changes to the store's memories don't.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -257,9 +266,8 @@ private constructor(
         }
 
         /**
-         * Unique identifier for the memory store (a `memstore_...` tagged ID). Use this when
-         * attaching the store to a session, or in the `{memory_store_id}` path parameter of
-         * subsequent calls.
+         * The unique ID of the memory store (`memstore_...`). Use it to attach the store to a
+         * session.
          */
         fun id(id: String) = id(JsonField.of(id))
 
@@ -272,9 +280,15 @@ private constructor(
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         /**
-         * Timestamp when the store was archived, or `null` if active. Set once and never cleared;
-         * archiving is one-way. Archived stores are read-only and cannot be attached to new
-         * sessions.
+         * When the memory store was archived, in RFC 3339, or `null` if it hasn't been.
+         *
+         * Archiving can't be undone. An archived store can't be attached to new sessions. You can't
+         * create or update its memories or update the store. You can still read and delete its
+         * memories, redact their versions, and delete the store.
+         *
+         * See the
+         * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#archive-a-store)
+         * to learn more about archiving.
          */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
@@ -292,7 +306,7 @@ private constructor(
             this.archivedAt = archivedAt
         }
 
-        /** Timestamp when the store was created. */
+        /** When the memory store was created, in RFC 3339. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
@@ -305,7 +319,7 @@ private constructor(
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /**
-         * Free-text description of what the store contains, up to 1024 characters. Included in the
+         * Free-text description of what the store contains, up to 1,024 characters. Included in the
          * agent's system prompt when the store is attached, so word it to be useful to the agent.
          * Empty string when unset.
          */
@@ -321,9 +335,10 @@ private constructor(
         fun description(description: JsonField<String>) = apply { this.description = description }
 
         /**
-         * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs
-         * to). Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Returned on
-         * retrieve/list but not filterable.
+         * Key-value pairs for your own use, such as the end user that the store belongs to.
+         *
+         * A store has at most 16 pairs. Keys are 1 to 64 characters long and values at most 512
+         * characters. You can't filter lists by metadata.
          */
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
@@ -361,8 +376,10 @@ private constructor(
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /**
-         * Timestamp when the store's `name`, `description`, or `metadata` was last modified. Memory
-         * writes inside the store do not advance this.
+         * When the memory store was last changed, in RFC 3339.
+         *
+         * Changing its `name`, `description`, or `metadata` updates it. Archiving the store does
+         * too. Changes to the store's memories don't.
          */
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
@@ -478,9 +495,10 @@ private constructor(
             (if (updatedAt.asKnown().isPresent) 1 else 0)
 
     /**
-     * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs to).
-     * Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Returned on retrieve/list
-     * but not filterable.
+     * Key-value pairs for your own use, such as the end user that the store belongs to.
+     *
+     * A store has at most 16 pairs. Keys are 1 to 64 characters long and values at most 512
+     * characters. You can't filter lists by metadata.
      */
     class Metadata
     @JsonCreator

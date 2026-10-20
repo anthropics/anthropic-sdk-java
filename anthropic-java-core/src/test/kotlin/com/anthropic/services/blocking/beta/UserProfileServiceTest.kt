@@ -7,6 +7,7 @@ import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.userprofiles.BetaUserProfileExternalUserDetailsParams
 import com.anthropic.models.beta.userprofiles.UserProfileCreateEnrollmentUrlParams
 import com.anthropic.models.beta.userprofiles.UserProfileCreateParams
+import com.anthropic.models.beta.userprofiles.UserProfileDeleteParams
 import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
 import com.anthropic.models.beta.userprofiles.UserProfileUpdateParams
 import java.time.OffsetDateTime
@@ -16,13 +17,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class UserProfileServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileService = client.beta().userProfiles()
 
         val betaUserProfile =
@@ -31,25 +33,25 @@ internal class UserProfileServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .accessType(UserProfileCreateParams.AccessType.APPLICATION)
-                    .externalId("user_12345")
+                    .externalId("x")
                     .externalUserDetails(
                         BetaUserProfileExternalUserDetailsParams.builder()
                             .accountStatus(
                                 BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE
                             )
-                            .country("country")
+                            .country("US")
                             .emailHash("x")
                             .entityType(
-                                BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL
+                                BetaUserProfileExternalUserDetailsParams.EntityType.BUSINESS
                             )
                             .nameHash("x")
-                            .onboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                            .referenceId("x")
+                            .onboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
+                            .referenceId("user_12345")
                             .build()
                     )
-                    .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
+                    .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .metadata(UserProfileCreateParams.Metadata.builder().build())
-                    .name("x")
+                    .name("Example User")
                     .build()
             )
 
@@ -58,11 +60,6 @@ internal class UserProfileServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileService = client.beta().userProfiles()
 
         val betaUserProfile =
@@ -79,11 +76,6 @@ internal class UserProfileServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileService = client.beta().userProfiles()
 
         val betaUserProfile =
@@ -93,11 +85,11 @@ internal class UserProfileServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
-                    .externalId("user_12345")
+                    .externalId("x")
                     .externalUserDetails(
                         BetaUserProfileExternalUserDetailsParams.builder()
                             .accountStatus(
-                                BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE
+                                BetaUserProfileExternalUserDetailsParams.AccountStatus.SUSPENDED
                             )
                             .country("country")
                             .emailHash("x")
@@ -124,11 +116,6 @@ internal class UserProfileServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileService = client.beta().userProfiles()
 
         val page = userProfileService.list()
@@ -137,12 +124,23 @@ internal class UserProfileServiceTest {
     }
 
     @Test
+    fun delete() {
+        val userProfileService = client.beta().userProfiles()
+
+        val betaDeletedUserProfile =
+            userProfileService.delete(
+                UserProfileDeleteParams.builder()
+                    .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
+
+        betaDeletedUserProfile.validate()
+    }
+
+    @Test
     fun createEnrollmentUrl() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileService = client.beta().userProfiles()
 
         val betaUserProfileEnrollmentUrl =

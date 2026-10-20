@@ -8,9 +8,11 @@ import io.gitlab.arturbosch.detekt.api.Issue
 import io.gitlab.arturbosch.detekt.api.Rule
 import io.gitlab.arturbosch.detekt.api.Severity
 import org.jetbrains.kotlin.lexer.KtTokens
+import org.jetbrains.kotlin.psi.KtCallableDeclaration
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.psi.KtNamedFunction
+import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.KtPropertyAccessor
 import org.jetbrains.kotlin.psi.psiUtil.containingClassOrObject
@@ -44,18 +46,13 @@ class InternalMemberMissingJvmSynthetic(config: Config) : Rule(config) {
     override fun visitProperty(property: KtProperty) {
         super.visitProperty(property)
         if (property.isLocal) return
-        if (!property.isReachableInternal()) return
-        // Any JvmSynthetic placement (bare, @get:, @set:, @field:) means the author addressed Java
-        // visibility; the message below recommends the accessor sites.
-        if (property.hasAnyJvmSynthetic()) return
-        if (property.hasAnnotation("JvmField")) return
-        val advice =
-            if (property.isVar) "@get:JvmSynthetic @set:JvmSynthetic" else "@get:JvmSynthetic"
-        report(
-            property,
-            "internal ${if (property.isVar) "var" else "val"} ${property.name}",
-            advice,
-        )
+        checkProperty(property, property.isVar)
+    }
+
+    override fun visitParameter(parameter: KtParameter) {
+        super.visitParameter(parameter)
+        if (!parameter.hasValOrVar()) return
+        checkProperty(parameter, parameter.isMutable)
     }
 
     override fun visitPropertyAccessor(accessor: KtPropertyAccessor) {
@@ -69,6 +66,16 @@ class InternalMemberMissingJvmSynthetic(config: Config) : Rule(config) {
         val site = if (accessor.isGetter) "get" else "set"
         if (property.hasUseSiteAnnotation(site, "JvmSynthetic")) return
         report(accessor, "internal $site on ${property.name}", "@$site:JvmSynthetic")
+    }
+
+    private fun checkProperty(property: KtCallableDeclaration, isVar: Boolean) {
+        if (!property.isReachableInternal()) return
+        // Any JvmSynthetic placement (bare, @get:, @set:, @field:) means the author addressed Java
+        // visibility; the message below recommends the accessor sites.
+        if (property.hasAnyJvmSynthetic()) return
+        if (property.hasAnnotation("JvmField")) return
+        val advice = if (isVar) "@get:JvmSynthetic @set:JvmSynthetic" else "@get:JvmSynthetic"
+        report(property, "internal ${if (isVar) "var" else "val"} ${property.name}", advice)
     }
 
     private fun KtDeclaration.isReachableInternal(): Boolean =
@@ -100,7 +107,7 @@ private fun KtDeclaration.isEnclosedInNonPublic(): Boolean {
     return false
 }
 
-private fun KtProperty.hasAnyJvmSynthetic(): Boolean =
+private fun KtCallableDeclaration.hasAnyJvmSynthetic(): Boolean =
     hasAnnotation("JvmSynthetic") ||
         hasUseSiteAnnotation("get", "JvmSynthetic") ||
         hasUseSiteAnnotation("set", "JvmSynthetic") ||

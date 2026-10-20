@@ -13,6 +13,14 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
+/**
+ * A `cache_miss_reason` for a request whose `tools` differ from the previous request's, for example
+ * because tools were added, removed, or reordered.
+ *
+ * See the
+ * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+ * to learn what to change for each reason.
+ */
 class CacheMissToolsChanged
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

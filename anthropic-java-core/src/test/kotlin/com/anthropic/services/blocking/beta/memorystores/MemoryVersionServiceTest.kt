@@ -12,13 +12,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class MemoryVersionServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryVersionService = client.beta().memoryStores().memoryVersions()
 
         val betaManagedAgentsMemoryVersion =
@@ -37,11 +38,6 @@ internal class MemoryVersionServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryVersionService = client.beta().memoryStores().memoryVersions()
 
         val page = memoryVersionService.list("memory_store_id")
@@ -51,11 +47,6 @@ internal class MemoryVersionServiceTest {
 
     @Test
     fun redact() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryVersionService = client.beta().memoryStores().memoryVersions()
 
         val betaManagedAgentsMemoryVersion =

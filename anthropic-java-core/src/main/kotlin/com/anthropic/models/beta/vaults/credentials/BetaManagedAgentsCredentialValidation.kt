@@ -83,7 +83,8 @@ private constructor(
     fun hasRefreshToken(): Boolean = hasRefreshToken.getRequired("has_refresh_token")
 
     /**
-     * Details of the failing MCP probe step. Null when the probe succeeded.
+     * Details of the MCP probe step that failed, or `null` if the probe succeeded or there was no
+     * access token to test.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -287,7 +288,10 @@ private constructor(
             this.hasRefreshToken = hasRefreshToken
         }
 
-        /** Details of the failing MCP probe step. Null when the probe succeeded. */
+        /**
+         * Details of the MCP probe step that failed, or `null` if the probe succeeded or there was
+         * no access token to test.
+         */
         fun mcpProbe(mcpProbe: BetaManagedAgentsMcpProbe?) =
             mcpProbe(JsonField.ofNullable(mcpProbe))
 

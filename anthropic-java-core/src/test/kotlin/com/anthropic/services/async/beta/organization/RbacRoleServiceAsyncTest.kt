@@ -8,13 +8,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class RbacRoleServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacRoleServiceAsync = client.beta().organization().rbacRoles()
 
         val betaRbacRoleFuture = rbacRoleServiceAsync.retrieve("rbac_role_id")
@@ -25,11 +26,6 @@ internal class RbacRoleServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacRoleServiceAsync = client.beta().organization().rbacRoles()
 
         val pageFuture = rbacRoleServiceAsync.list()

@@ -63,7 +63,8 @@ private constructor(
     fun secretName(): String = secretName.getRequired("secret_name")
 
     /**
-     * Secret value. Write-only; never returned in responses.
+     * The secret to substitute into the agent's outbound requests. It's write-only and never
+     * returned in responses.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -240,7 +241,10 @@ private constructor(
          */
         fun secretName(secretName: JsonField<String>) = apply { this.secretName = secretName }
 
-        /** Secret value. Write-only; never returned in responses. */
+        /**
+         * The secret to substitute into the agent's outbound requests. It's write-only and never
+         * returned in responses.
+         */
         fun secretValue(secretValue: String) = secretValue(JsonField.of(secretValue))
 
         /**

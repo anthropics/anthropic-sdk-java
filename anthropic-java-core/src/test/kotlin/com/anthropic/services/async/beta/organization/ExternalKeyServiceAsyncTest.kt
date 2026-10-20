@@ -11,13 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class ExternalKeyServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val externalKeyServiceAsync = client.beta().organization().externalKeys()
 
         val betaExternalKeyFuture =
@@ -43,11 +44,6 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val externalKeyServiceAsync = client.beta().organization().externalKeys()
 
         val betaExternalKeyFuture = externalKeyServiceAsync.retrieve("external_key_id")
@@ -58,11 +54,6 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val externalKeyServiceAsync = client.beta().organization().externalKeys()
 
         val betaExternalKeyFuture =
@@ -89,11 +80,6 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val externalKeyServiceAsync = client.beta().organization().externalKeys()
 
         val pageFuture = externalKeyServiceAsync.list()
@@ -104,11 +90,6 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val externalKeyServiceAsync = client.beta().organization().externalKeys()
 
         val externalKeyFuture = externalKeyServiceAsync.delete("external_key_id")
@@ -119,11 +100,6 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun validate() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val externalKeyServiceAsync = client.beta().organization().externalKeys()
 
         val responseFuture = externalKeyServiceAsync.validate("external_key_id")

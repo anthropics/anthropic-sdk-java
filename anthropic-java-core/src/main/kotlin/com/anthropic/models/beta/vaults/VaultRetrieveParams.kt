@@ -10,7 +10,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get Vault */
+/** Retrieve a Vault */
 class VaultRetrieveParams
 private constructor(
     private val vaultId: String?,

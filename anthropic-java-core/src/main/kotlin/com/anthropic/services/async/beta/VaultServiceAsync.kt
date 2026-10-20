@@ -32,7 +32,7 @@ interface VaultServiceAsync {
 
     fun credentials(): CredentialServiceAsync
 
-    /** Create Vault */
+    /** Create a Vault */
     fun create(params: VaultCreateParams): CompletableFuture<BetaManagedAgentsVault> =
         create(params, RequestOptions.none())
 
@@ -42,7 +42,7 @@ interface VaultServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsVault>
 
-    /** Get Vault */
+    /** Retrieve a Vault */
     fun retrieve(vaultId: String): CompletableFuture<BetaManagedAgentsVault> =
         retrieve(vaultId, VaultRetrieveParams.none())
 
@@ -77,7 +77,7 @@ interface VaultServiceAsync {
     ): CompletableFuture<BetaManagedAgentsVault> =
         retrieve(vaultId, VaultRetrieveParams.none(), requestOptions)
 
-    /** Update Vault */
+    /** Update a Vault */
     fun update(vaultId: String): CompletableFuture<BetaManagedAgentsVault> =
         update(vaultId, VaultUpdateParams.none())
 
@@ -130,7 +130,7 @@ interface VaultServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<VaultListPageAsync> =
         list(VaultListParams.none(), requestOptions)
 
-    /** Delete Vault */
+    /** Delete a Vault */
     fun delete(vaultId: String): CompletableFuture<BetaManagedAgentsDeletedVault> =
         delete(vaultId, VaultDeleteParams.none())
 
@@ -166,7 +166,7 @@ interface VaultServiceAsync {
     ): CompletableFuture<BetaManagedAgentsDeletedVault> =
         delete(vaultId, VaultDeleteParams.none(), requestOptions)
 
-    /** Archive Vault */
+    /** Archive a Vault */
     fun archive(vaultId: String): CompletableFuture<BetaManagedAgentsVault> =
         archive(vaultId, VaultArchiveParams.none())
 

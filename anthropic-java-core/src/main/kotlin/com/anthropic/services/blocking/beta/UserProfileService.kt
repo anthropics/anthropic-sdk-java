@@ -3,14 +3,17 @@ package com.anthropic.services.blocking.beta
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.models.beta.userprofiles.BetaDeletedUserProfile
 import com.anthropic.models.beta.userprofiles.BetaUserProfile
 import com.anthropic.models.beta.userprofiles.BetaUserProfileEnrollmentUrl
 import com.anthropic.models.beta.userprofiles.UserProfileCreateEnrollmentUrlParams
 import com.anthropic.models.beta.userprofiles.UserProfileCreateParams
+import com.anthropic.models.beta.userprofiles.UserProfileDeleteParams
 import com.anthropic.models.beta.userprofiles.UserProfileListPage
 import com.anthropic.models.beta.userprofiles.UserProfileListParams
 import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
 import com.anthropic.models.beta.userprofiles.UserProfileUpdateParams
+import com.anthropic.services.blocking.beta.userprofiles.ActionUrlService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -27,6 +30,8 @@ interface UserProfileService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserProfileService
+
+    fun actionUrls(): ActionUrlService
 
     /** Create User Profile */
     fun create(): BetaUserProfile = create(UserProfileCreateParams.none())
@@ -126,6 +131,38 @@ interface UserProfileService {
     fun list(requestOptions: RequestOptions): UserProfileListPage =
         list(UserProfileListParams.none(), requestOptions)
 
+    /** Delete User Profile */
+    fun delete(userProfileId: String): BetaDeletedUserProfile =
+        delete(userProfileId, UserProfileDeleteParams.none())
+
+    /** @see delete */
+    fun delete(
+        userProfileId: String,
+        params: UserProfileDeleteParams = UserProfileDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): BetaDeletedUserProfile =
+        delete(params.toBuilder().userProfileId(userProfileId).build(), requestOptions)
+
+    /** @see delete */
+    fun delete(
+        userProfileId: String,
+        params: UserProfileDeleteParams = UserProfileDeleteParams.none(),
+    ): BetaDeletedUserProfile = delete(userProfileId, params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(
+        params: UserProfileDeleteParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): BetaDeletedUserProfile
+
+    /** @see delete */
+    fun delete(params: UserProfileDeleteParams): BetaDeletedUserProfile =
+        delete(params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(userProfileId: String, requestOptions: RequestOptions): BetaDeletedUserProfile =
+        delete(userProfileId, UserProfileDeleteParams.none(), requestOptions)
+
     /** Create Enrollment URL */
     fun createEnrollmentUrl(userProfileId: String): BetaUserProfileEnrollmentUrl =
         createEnrollmentUrl(userProfileId, UserProfileCreateEnrollmentUrlParams.none())
@@ -180,6 +217,8 @@ interface UserProfileService {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): UserProfileService.WithRawResponse
+
+        fun actionUrls(): ActionUrlService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/user_profiles?beta=true`, but is otherwise the
@@ -318,6 +357,51 @@ interface UserProfileService {
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<UserProfileListPage> =
             list(UserProfileListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /v1/user_profiles/{user_profile_id}?beta=true`,
+         * but is otherwise the same as [UserProfileService.delete].
+         */
+        @MustBeClosed
+        fun delete(userProfileId: String): HttpResponseFor<BetaDeletedUserProfile> =
+            delete(userProfileId, UserProfileDeleteParams.none())
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(
+            userProfileId: String,
+            params: UserProfileDeleteParams = UserProfileDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaDeletedUserProfile> =
+            delete(params.toBuilder().userProfileId(userProfileId).build(), requestOptions)
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(
+            userProfileId: String,
+            params: UserProfileDeleteParams = UserProfileDeleteParams.none(),
+        ): HttpResponseFor<BetaDeletedUserProfile> =
+            delete(userProfileId, params, RequestOptions.none())
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(
+            params: UserProfileDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaDeletedUserProfile>
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(params: UserProfileDeleteParams): HttpResponseFor<BetaDeletedUserProfile> =
+            delete(params, RequestOptions.none())
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(
+            userProfileId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaDeletedUserProfile> =
+            delete(userProfileId, UserProfileDeleteParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post

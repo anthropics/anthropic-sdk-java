@@ -21,7 +21,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Create Vault */
+/** Create a Vault */
 class VaultCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,

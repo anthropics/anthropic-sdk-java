@@ -33,7 +33,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Create Credential */
+/** Create a Credential */
 class CredentialCreateParams
 private constructor(
     private val vaultId: String?,

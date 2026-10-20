@@ -15,13 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class VaultServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val vaultServiceAsync = client.beta().vaults()
 
         val betaManagedAgentsVaultFuture =
@@ -44,11 +45,6 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val vaultServiceAsync = client.beta().vaults()
 
         val betaManagedAgentsVaultFuture =
@@ -66,11 +62,6 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val vaultServiceAsync = client.beta().vaults()
 
         val betaManagedAgentsVaultFuture =
@@ -94,11 +85,6 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val vaultServiceAsync = client.beta().vaults()
 
         val pageFuture = vaultServiceAsync.list()
@@ -109,11 +95,6 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val vaultServiceAsync = client.beta().vaults()
 
         val betaManagedAgentsDeletedVaultFuture =
@@ -131,11 +112,6 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val vaultServiceAsync = client.beta().vaults()
 
         val betaManagedAgentsVaultFuture =

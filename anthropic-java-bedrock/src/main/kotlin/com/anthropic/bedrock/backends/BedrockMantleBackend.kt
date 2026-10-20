@@ -4,6 +4,11 @@ import com.anthropic.aws.auth.AwsAuthUtil
 import com.anthropic.backends.Backend
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.bodyToJson
+import com.anthropic.core.http.json
+import com.anthropic.core.jsonMapper
+import com.anthropic.errors.AnthropicException
+import com.fasterxml.jackson.core.JsonProcessingException
 import java.util.Optional
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsCredentials
@@ -43,6 +48,8 @@ private constructor(
     private val baseUrlOverride: String?,
 ) : Backend {
 
+    private val jsonMapper = jsonMapper()
+
     fun awsCredentialsProvider(): Optional<AwsCredentialsProvider> =
         Optional.ofNullable(awsCredentialsProvider)
 
@@ -59,9 +66,13 @@ private constructor(
         private const val ANTHROPIC_VERSION = "2023-06-01"
         private const val HEADER_VERSION = "anthropic-version"
         private const val HEADER_AUTHORIZATION = "authorization"
+        private const val HEADER_USER_PROFILE_ID = "anthropic-user-profile-id"
         private const val ENV_API_KEY = "AWS_BEARER_TOKEN_BEDROCK"
         private const val ENV_API_KEY_FALLBACK = "ANTHROPIC_AWS_API_KEY"
         private const val ENV_BASE_URL = "ANTHROPIC_BEDROCK_MANTLE_BASE_URL"
+
+        private val USER_PROFILE_ID_BODY_PATHS =
+            setOf(listOf("v1", "messages"), listOf("v1", "messages", "count_tokens"))
 
         @JvmStatic fun builder() = Builder()
 
@@ -88,10 +99,42 @@ private constructor(
 
     override fun openTelemetryPlatform(): Optional<String> = Optional.of("bedrock")
 
-    override fun prepareRequest(request: HttpRequest): HttpRequest =
+    override fun prepareRequest(request: HttpRequest): HttpRequest {
+        if (request.pathSegments.getOrNull(1) == "user_profiles") {
+            throw AnthropicException("Service is not supported for Bedrock Mantle: user_profiles.")
+        }
+
+        val prepared = moveUserProfileIdToBody(request)
+
         // A user-supplied "anthropic-version" (e.g. set by an interceptor) wins over the default.
-        if (request.headers.names().contains(HEADER_VERSION)) request
-        else request.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION).build()
+        return if (prepared.headers.names().contains(HEADER_VERSION)) prepared
+        else prepared.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION).build()
+    }
+
+    // Bedrock Mantle reads the user profile from the body and does not pass the header through.
+    private fun moveUserProfileIdToBody(request: HttpRequest): HttpRequest {
+        val userProfileIds = request.headers.values(HEADER_USER_PROFILE_ID)
+        if (userProfileIds.isEmpty() || request.pathSegments !in USER_PROFILE_ID_BODY_PATHS) {
+            return request
+        }
+
+        val jsonBody =
+            try {
+                bodyToJson(jsonMapper, request.body)
+            } catch (_: JsonProcessingException) {
+                null
+            } ?: return request
+
+        if (!jsonBody.has("user_profile_id")) {
+            jsonBody.put("user_profile_id", userProfileIds.joinToString(", "))
+        }
+
+        return request
+            .toBuilder()
+            .removeHeaders(HEADER_USER_PROFILE_ID)
+            .body(json(jsonMapper, jsonBody))
+            .build()
+    }
 
     override fun authorizeRequest(request: HttpRequest): HttpRequest {
         if (skipAuth) {

@@ -58,7 +58,7 @@ private constructor(
         injectionLocation.getOptional("injection_location")
 
     /**
-     * Updated networking scope. Full replacement.
+     * The new networking scope, which replaces the stored one as a whole.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -67,7 +67,7 @@ private constructor(
         networking.getOptional("networking")
 
     /**
-     * Updated secret value.
+     * The new secret value to replace the stored one.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -191,7 +191,7 @@ private constructor(
             injectionLocation: JsonField<BetaManagedAgentsInjectionLocationUpdateParams>
         ) = apply { this.injectionLocation = injectionLocation }
 
-        /** Updated networking scope. Full replacement. */
+        /** The new networking scope, which replaces the stored one as a whole. */
         fun networking(networking: BetaManagedAgentsCredentialNetworkingParams?) =
             networking(JsonField.ofNullable(networking))
 
@@ -241,7 +241,7 @@ private constructor(
                     .build()
             )
 
-        /** Updated secret value. */
+        /** The new secret value to replace the stored one. */
         fun secretValue(secretValue: String?) = secretValue(JsonField.ofNullable(secretValue))
 
         /** Alias for calling [Builder.secretValue] with `secretValue.orElse(null)`. */

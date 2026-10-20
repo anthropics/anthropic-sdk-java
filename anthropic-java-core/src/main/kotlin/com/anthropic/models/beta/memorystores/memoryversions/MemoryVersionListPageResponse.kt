@@ -16,7 +16,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Response payload for [List memory versions](/en/api/beta/memory_stores/memory_versions/list). */
+/**
+ * A page of results from
+ * [List Memory Versions](https://platform.claude.com/docs/en/api/beta/memory_stores/memory_versions/list).
+ */
 class MemoryVersionListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -43,8 +46,7 @@ private constructor(
     fun data(): Optional<List<BetaManagedAgentsMemoryVersion>> = data.getOptional("data")
 
     /**
-     * Opaque cursor for the next page (a `page_...` value), or `null` if there are no more results.
-     * Pass as `page` on the next request.
+     * The value to pass as `page` to get the next page, or `null` if there are no more results.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -135,8 +137,7 @@ private constructor(
         }
 
         /**
-         * Opaque cursor for the next page (a `page_...` value), or `null` if there are no more
-         * results. Pass as `page` on the next request.
+         * The value to pass as `page` to get the next page, or `null` if there are no more results.
          */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 

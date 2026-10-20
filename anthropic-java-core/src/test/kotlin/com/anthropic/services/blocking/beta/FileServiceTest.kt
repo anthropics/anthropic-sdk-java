@@ -23,13 +23,14 @@ import org.junit.jupiter.api.parallel.ResourceLock
 @ResourceLock("https://github.com/wiremock/wiremock/issues/169")
 internal class FileServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val fileService = client.beta().files()
 
         val page = fileService.list()
@@ -39,11 +40,6 @@ internal class FileServiceTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val fileService = client.beta().files()
 
         val betaDeletedFile =
@@ -60,12 +56,8 @@ internal class FileServiceTest {
 
     @Test
     fun download(wmRuntimeInfo: WireMockRuntimeInfo) {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(wmRuntimeInfo.httpBaseUrl)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val fileService = client.beta().files()
+        val fileService =
+            client.beta().files().withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
         val response =
@@ -82,11 +74,6 @@ internal class FileServiceTest {
 
     @Test
     fun retrieveMetadata() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val fileService = client.beta().files()
 
         val betaFileMetadata =
@@ -103,11 +90,6 @@ internal class FileServiceTest {
 
     @Test
     fun upload() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val fileService = client.beta().files()
 
         val betaFileMetadata =

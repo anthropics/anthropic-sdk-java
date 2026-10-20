@@ -11,13 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class WorkspaceServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceServiceAsync = client.beta().organization().federation().rules().workspaces()
 
         val pageFuture = workspaceServiceAsync.list("federation_rule_id")
@@ -28,11 +29,6 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun add() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceServiceAsync = client.beta().organization().federation().rules().workspaces()
 
         val betaFederationRuleWorkspaceFuture =
@@ -50,11 +46,6 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun remove() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceServiceAsync = client.beta().organization().federation().rules().workspaces()
 
         val workspaceFuture =

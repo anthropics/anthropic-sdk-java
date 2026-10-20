@@ -15,13 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class MemoryStoreServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryStoreService = client.beta().memoryStores()
 
         val betaManagedAgentsMemoryStore =
@@ -44,11 +45,6 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryStoreService = client.beta().memoryStores()
 
         val betaManagedAgentsMemoryStore =
@@ -65,11 +61,6 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryStoreService = client.beta().memoryStores()
 
         val betaManagedAgentsMemoryStore =
@@ -93,11 +84,6 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryStoreService = client.beta().memoryStores()
 
         val page = memoryStoreService.list()
@@ -107,11 +93,6 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryStoreService = client.beta().memoryStores()
 
         val betaManagedAgentsDeletedMemoryStore =
@@ -128,11 +109,6 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memoryStoreService = client.beta().memoryStores()
 
         val betaManagedAgentsMemoryStore =

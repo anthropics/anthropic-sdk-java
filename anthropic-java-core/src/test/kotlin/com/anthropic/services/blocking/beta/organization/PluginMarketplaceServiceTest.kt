@@ -13,13 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class PluginMarketplaceServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val pluginMarketplaceService = client.beta().organization().pluginMarketplaces()
 
         val betaPluginMarketplace =
@@ -36,11 +37,6 @@ internal class PluginMarketplaceServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val pluginMarketplaceService = client.beta().organization().pluginMarketplaces()
 
         val betaPluginMarketplace =
@@ -59,11 +55,6 @@ internal class PluginMarketplaceServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val pluginMarketplaceService = client.beta().organization().pluginMarketplaces()
 
         val page = pluginMarketplaceService.list()
@@ -73,11 +64,6 @@ internal class PluginMarketplaceServiceTest {
 
     @Test
     fun validateArchive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val pluginMarketplaceService = client.beta().organization().pluginMarketplaces()
 
         val betaPluginMarketplaceValidationReport =
@@ -93,11 +79,6 @@ internal class PluginMarketplaceServiceTest {
 
     @Test
     fun validateRepository() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val pluginMarketplaceService = client.beta().organization().pluginMarketplaces()
 
         val betaPluginMarketplaceValidationReport =

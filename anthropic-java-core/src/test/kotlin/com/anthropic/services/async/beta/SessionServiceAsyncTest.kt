@@ -27,13 +27,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class SessionServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionServiceAsync = client.beta().sessions()
 
         val betaManagedAgentsSessionFuture =
@@ -87,11 +88,6 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionServiceAsync = client.beta().sessions()
 
         val betaManagedAgentsSessionFuture =
@@ -109,11 +105,6 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionServiceAsync = client.beta().sessions()
 
         val betaManagedAgentsSessionFuture =
@@ -191,11 +182,6 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionServiceAsync = client.beta().sessions()
 
         val pageFuture = sessionServiceAsync.list()
@@ -206,11 +192,6 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionServiceAsync = client.beta().sessions()
 
         val betaManagedAgentsDeletedSessionFuture =
@@ -228,11 +209,6 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionServiceAsync = client.beta().sessions()
 
         val betaManagedAgentsSessionFuture =

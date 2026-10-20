@@ -14,13 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class DreamServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val dreamService = client.beta().dreams()
 
         val betaDream =
@@ -42,11 +43,6 @@ internal class DreamServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val dreamService = client.beta().dreams()
 
         val betaDream =
@@ -63,11 +59,6 @@ internal class DreamServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val dreamService = client.beta().dreams()
 
         val page = dreamService.list()
@@ -77,11 +68,6 @@ internal class DreamServiceTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val dreamService = client.beta().dreams()
 
         val betaDream =
@@ -98,11 +84,6 @@ internal class DreamServiceTest {
 
     @Test
     fun cancel() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val dreamService = client.beta().dreams()
 
         val betaDream =

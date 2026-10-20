@@ -49,7 +49,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Updated OAuth access token.
+     * The new OAuth access token to replace the stored one.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -57,7 +57,13 @@ private constructor(
     fun accessToken(): Optional<String> = accessToken.getOptional("access_token")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the credential's access token expires, in RFC 3339. Leave it out to keep the stored
+     * expiry.
+     *
+     * If you send a new `access_token`, send its `expires_at` too, or the new token keeps the old
+     * expiry.
+     *
+     * Must be in the future.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -171,7 +177,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** Updated OAuth access token. */
+        /** The new OAuth access token to replace the stored one. */
         fun accessToken(accessToken: String?) = accessToken(JsonField.ofNullable(accessToken))
 
         /** Alias for calling [Builder.accessToken] with `accessToken.orElse(null)`. */
@@ -186,7 +192,15 @@ private constructor(
          */
         fun accessToken(accessToken: JsonField<String>) = apply { this.accessToken = accessToken }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When the credential's access token expires, in RFC 3339. Leave it out to keep the stored
+         * expiry.
+         *
+         * If you send a new `access_token`, send its `expires_at` too, or the new token keeps the
+         * old expiry.
+         *
+         * Must be in the future.
+         */
         fun expiresAt(expiresAt: OffsetDateTime?) = expiresAt(JsonField.ofNullable(expiresAt))
 
         /** Alias for calling [Builder.expiresAt] with `expiresAt.orElse(null)`. */

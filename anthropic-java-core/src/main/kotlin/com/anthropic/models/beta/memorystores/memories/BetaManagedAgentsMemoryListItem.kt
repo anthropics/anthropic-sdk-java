@@ -22,8 +22,9 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * One item in a [List memories](/en/api/beta/memory_stores/memories/list) response: either a
- * `memory` object or, when `depth` is set, a `memory_prefix` rollup marker.
+ * One item in a
+ * [List Memories](https://platform.claude.com/docs/en/api/beta/memory_stores/memories/list)
+ * response: a `memory`, or a `memory_prefix` marker when `depth` is `1`.
  */
 @JsonDeserialize(using = BetaManagedAgentsMemoryListItem.Deserializer::class)
 @JsonSerialize(using = BetaManagedAgentsMemoryListItem.Serializer::class)
@@ -49,20 +50,26 @@ private constructor(
         }
 
     /**
-     * A `memory` object: a single text document at a hierarchical path inside a memory store. The
-     * `content` field is populated when `view=full` and `null` when `view=basic`; the
-     * `content_size_bytes` and `content_sha256` fields are always populated so sync clients can
-     * diff without fetching content. Memories are addressed by their `mem_...` ID; the path is the
-     * create key and can be changed via update.
+     * A text document at a path inside a memory store.
+     *
+     * `content` is `null` when the response uses `view=basic`. `content_size_bytes` and
+     * `content_sha256` are always set, so you can detect changes without fetching the content. To
+     * retrieve, update, or delete a memory, pass its ID, which stays the same when its path
+     * changes.
+     *
+     * See the
+     * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#view-and-edit-memories)
+     * to learn more about working with memories.
      */
     fun memory(): Optional<BetaManagedAgentsMemory> = Optional.ofNullable(memory)
 
     /**
-     * A rolled-up directory marker returned by
-     * [List memories](/en/api/beta/memory_stores/memories/list) when `depth` is set. Indicates that
-     * one or more memories exist deeper than the requested depth under this prefix. This is a
-     * list-time rollup, not a stored resource; it has no ID and no lifecycle. Each prefix counts
-     * toward the page `limit` and interleaves with `memory` items in path order.
+     * A directory marker that
+     * [List Memories](https://platform.claude.com/docs/en/api/beta/memory_stores/memories/list)
+     * returns instead of the memories below the requested `depth`.
+     *
+     * It stands for one or more memories whose paths start with `path`. It isn't a stored object
+     * and doesn't have an ID. Each marker counts toward the page `limit`.
      */
     fun memoryPrefix(): Optional<BetaManagedAgentsMemoryPrefix> = Optional.ofNullable(memoryPrefix)
 
@@ -71,20 +78,26 @@ private constructor(
     fun isMemoryPrefix(): Boolean = memoryPrefix != null
 
     /**
-     * A `memory` object: a single text document at a hierarchical path inside a memory store. The
-     * `content` field is populated when `view=full` and `null` when `view=basic`; the
-     * `content_size_bytes` and `content_sha256` fields are always populated so sync clients can
-     * diff without fetching content. Memories are addressed by their `mem_...` ID; the path is the
-     * create key and can be changed via update.
+     * A text document at a path inside a memory store.
+     *
+     * `content` is `null` when the response uses `view=basic`. `content_size_bytes` and
+     * `content_sha256` are always set, so you can detect changes without fetching the content. To
+     * retrieve, update, or delete a memory, pass its ID, which stays the same when its path
+     * changes.
+     *
+     * See the
+     * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#view-and-edit-memories)
+     * to learn more about working with memories.
      */
     fun asMemory(): BetaManagedAgentsMemory = memory.getOrThrow("memory")
 
     /**
-     * A rolled-up directory marker returned by
-     * [List memories](/en/api/beta/memory_stores/memories/list) when `depth` is set. Indicates that
-     * one or more memories exist deeper than the requested depth under this prefix. This is a
-     * list-time rollup, not a stored resource; it has no ID and no lifecycle. Each prefix counts
-     * toward the page `limit` and interleaves with `memory` items in path order.
+     * A directory marker that
+     * [List Memories](https://platform.claude.com/docs/en/api/beta/memory_stores/memories/list)
+     * returns instead of the memories below the requested `depth`.
+     *
+     * It stands for one or more memories whose paths start with `path`. It isn't a stored object
+     * and doesn't have an ID. Each marker counts toward the page `limit`.
      */
     fun asMemoryPrefix(): BetaManagedAgentsMemoryPrefix = memoryPrefix.getOrThrow("memoryPrefix")
 
@@ -196,22 +209,28 @@ private constructor(
     companion object {
 
         /**
-         * A `memory` object: a single text document at a hierarchical path inside a memory store.
-         * The `content` field is populated when `view=full` and `null` when `view=basic`; the
-         * `content_size_bytes` and `content_sha256` fields are always populated so sync clients can
-         * diff without fetching content. Memories are addressed by their `mem_...` ID; the path is
-         * the create key and can be changed via update.
+         * A text document at a path inside a memory store.
+         *
+         * `content` is `null` when the response uses `view=basic`. `content_size_bytes` and
+         * `content_sha256` are always set, so you can detect changes without fetching the content.
+         * To retrieve, update, or delete a memory, pass its ID, which stays the same when its path
+         * changes.
+         *
+         * See the
+         * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#view-and-edit-memories)
+         * to learn more about working with memories.
          */
         @JvmStatic
         fun ofMemory(memory: BetaManagedAgentsMemory) =
             BetaManagedAgentsMemoryListItem(memory = memory)
 
         /**
-         * A rolled-up directory marker returned by
-         * [List memories](/en/api/beta/memory_stores/memories/list) when `depth` is set. Indicates
-         * that one or more memories exist deeper than the requested depth under this prefix. This
-         * is a list-time rollup, not a stored resource; it has no ID and no lifecycle. Each prefix
-         * counts toward the page `limit` and interleaves with `memory` items in path order.
+         * A directory marker that
+         * [List Memories](https://platform.claude.com/docs/en/api/beta/memory_stores/memories/list)
+         * returns instead of the memories below the requested `depth`.
+         *
+         * It stands for one or more memories whose paths start with `path`. It isn't a stored
+         * object and doesn't have an ID. Each marker counts toward the page `limit`.
          */
         @JvmStatic
         fun ofMemoryPrefix(memoryPrefix: BetaManagedAgentsMemoryPrefix) =
@@ -238,20 +257,26 @@ private constructor(
     interface Visitor<out T> {
 
         /**
-         * A `memory` object: a single text document at a hierarchical path inside a memory store.
-         * The `content` field is populated when `view=full` and `null` when `view=basic`; the
-         * `content_size_bytes` and `content_sha256` fields are always populated so sync clients can
-         * diff without fetching content. Memories are addressed by their `mem_...` ID; the path is
-         * the create key and can be changed via update.
+         * A text document at a path inside a memory store.
+         *
+         * `content` is `null` when the response uses `view=basic`. `content_size_bytes` and
+         * `content_sha256` are always set, so you can detect changes without fetching the content.
+         * To retrieve, update, or delete a memory, pass its ID, which stays the same when its path
+         * changes.
+         *
+         * See the
+         * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#view-and-edit-memories)
+         * to learn more about working with memories.
          */
         fun visitMemory(memory: BetaManagedAgentsMemory): T
 
         /**
-         * A rolled-up directory marker returned by
-         * [List memories](/en/api/beta/memory_stores/memories/list) when `depth` is set. Indicates
-         * that one or more memories exist deeper than the requested depth under this prefix. This
-         * is a list-time rollup, not a stored resource; it has no ID and no lifecycle. Each prefix
-         * counts toward the page `limit` and interleaves with `memory` items in path order.
+         * A directory marker that
+         * [List Memories](https://platform.claude.com/docs/en/api/beta/memory_stores/memories/list)
+         * returns instead of the memories below the requested `depth`.
+         *
+         * It stands for one or more memories whose paths start with `path`. It isn't a stored
+         * object and doesn't have an ID. Each marker counts toward the page `limit`.
          */
         fun visitMemoryPrefix(memoryPrefix: BetaManagedAgentsMemoryPrefix): T
 

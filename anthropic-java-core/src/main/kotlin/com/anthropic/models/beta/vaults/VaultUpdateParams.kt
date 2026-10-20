@@ -20,7 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Update Vault */
+/** Update a Vault */
 class VaultUpdateParams
 private constructor(
     private val vaultId: String?,

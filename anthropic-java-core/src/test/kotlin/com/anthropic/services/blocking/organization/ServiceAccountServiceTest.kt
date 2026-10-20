@@ -10,13 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class ServiceAccountServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.organization().serviceAccounts()
 
         val serviceAccount =
@@ -33,11 +34,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.organization().serviceAccounts()
 
         val serviceAccount = serviceAccountService.retrieve("service_account_id")
@@ -47,11 +43,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.organization().serviceAccounts()
 
         val serviceAccount =
@@ -68,11 +59,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.organization().serviceAccounts()
 
         val page = serviceAccountService.list()
@@ -82,11 +68,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.organization().serviceAccounts()
 
         val serviceAccount = serviceAccountService.archive("service_account_id")

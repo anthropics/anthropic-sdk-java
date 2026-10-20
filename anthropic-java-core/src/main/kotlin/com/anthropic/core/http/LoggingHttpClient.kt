@@ -29,8 +29,8 @@ private constructor(
     /**
      * Sensitive headers to redact from logs.
      *
-     * Defaults to `Set.of("authorization", "proxy-authorization", "api-key", "x-api-key", "cookie",
-     * "set-cookie")`.
+     * Defaults to `Set.of("authorization", "proxy-authorization", "api-key", "x-api-key",
+     * "x-amz-security-token", "cookie", "set-cookie")`.
      */
     @get:JvmName("redactedHeaders") val redactedHeaders: SortedSet<String>,
     /**
@@ -197,6 +197,7 @@ private constructor(
                 "proxy-authorization",
                 "api-key",
                 "x-api-key",
+                "x-amz-security-token",
                 "cookie",
                 "set-cookie",
             )
@@ -218,7 +219,7 @@ private constructor(
          * Sensitive headers to redact from logs.
          *
          * Defaults to `Set.of("authorization", "proxy-authorization", "api-key", "x-api-key",
-         * "cookie", "set-cookie")`.
+         * "x-amz-security-token", "cookie", "set-cookie")`.
          */
         fun redactedHeaders(redactedHeaders: Set<String>) = apply {
             this.redactedHeaders = redactedHeaders

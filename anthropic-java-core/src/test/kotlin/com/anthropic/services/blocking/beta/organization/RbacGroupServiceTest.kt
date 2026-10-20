@@ -10,13 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class RbacGroupServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacGroupService = client.beta().organization().rbacGroups()
 
         val betaRbacGroup =
@@ -27,11 +28,6 @@ internal class RbacGroupServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacGroupService = client.beta().organization().rbacGroups()
 
         val betaRbacGroup = rbacGroupService.retrieve("rbac_group_id")
@@ -41,11 +37,6 @@ internal class RbacGroupServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacGroupService = client.beta().organization().rbacGroups()
 
         val betaRbacGroup =
@@ -61,11 +52,6 @@ internal class RbacGroupServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacGroupService = client.beta().organization().rbacGroups()
 
         val page = rbacGroupService.list()
@@ -75,11 +61,6 @@ internal class RbacGroupServiceTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacGroupService = client.beta().organization().rbacGroups()
 
         val rbacGroup = rbacGroupService.delete("rbac_group_id")

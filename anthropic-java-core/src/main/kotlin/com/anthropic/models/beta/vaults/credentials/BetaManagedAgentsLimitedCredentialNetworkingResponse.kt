@@ -35,8 +35,11 @@ private constructor(
     ) : this(allowedHosts, type, mutableMapOf())
 
     /**
-     * Hostnames on which the secret will be substituted. An entry matches the request host exactly;
-     * a `*.`-prefixed entry matches any subdomain of the named domain but not the domain itself.
+     * The destination hosts of the outbound requests that the credential's secret is substituted
+     * into.
+     *
+     * An entry matches the request host exactly. An entry such as `*.example.com` matches any
+     * subdomain of `example.com` but not `example.com` itself.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -115,9 +118,11 @@ private constructor(
         }
 
         /**
-         * Hostnames on which the secret will be substituted. An entry matches the request host
-         * exactly; a `*.`-prefixed entry matches any subdomain of the named domain but not the
-         * domain itself.
+         * The destination hosts of the outbound requests that the credential's secret is
+         * substituted into.
+         *
+         * An entry matches the request host exactly. An entry such as `*.example.com` matches any
+         * subdomain of `example.com` but not `example.com` itself.
          */
         fun allowedHosts(allowedHosts: List<String>) = allowedHosts(JsonField.of(allowedHosts))
 

@@ -154,7 +154,12 @@ private constructor(
     fun displayName(): Optional<String> = displayName.getOptional("display_name")
 
     /**
-     * The version string the manifest declares; null when it declares none.
+     * The manifest's `version`, normalized for display: one leading `v` or `V` is dropped, and the
+     * result is returned only if it is 1 to 64 characters, starts with a digit, and uses only ASCII
+     * letters, digits, `.`, `+`, and `-`; otherwise `null`. For example, `"v1.4.0"` is returned as
+     * `"1.4.0"`, and `"latest"` as `null`. For a synchronized plugin, the `version` of its
+     * `marketplace.json` entry can take the place of the manifest's `version`. It is also `null`
+     * for a version stored before claude.ai began recording this field (August 2026).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -170,8 +175,8 @@ private constructor(
     fun pluginId(): String = pluginId.getRequired("plugin_id")
 
     /**
-     * How far the version reaches: `remote`, `privileged` or `contained`, as on the Plugin; null
-     * when not classifiable.
+     * How far the version reaches: `remote`, `privileged`, `contained`, or `null`, as defined on
+     * the Plugin's `reach`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -495,7 +500,15 @@ private constructor(
          */
         fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
 
-        /** The version string the manifest declares; null when it declares none. */
+        /**
+         * The manifest's `version`, normalized for display: one leading `v` or `V` is dropped, and
+         * the result is returned only if it is 1 to 64 characters, starts with a digit, and uses
+         * only ASCII letters, digits, `.`, `+`, and `-`; otherwise `null`. For example, `"v1.4.0"`
+         * is returned as `"1.4.0"`, and `"latest"` as `null`. For a synchronized plugin, the
+         * `version` of its `marketplace.json` entry can take the place of the manifest's `version`.
+         * It is also `null` for a version stored before claude.ai began recording this field
+         * (August 2026).
+         */
         fun manifestVersion(manifestVersion: String?) =
             manifestVersion(JsonField.ofNullable(manifestVersion))
 
@@ -526,8 +539,8 @@ private constructor(
         fun pluginId(pluginId: JsonField<String>) = apply { this.pluginId = pluginId }
 
         /**
-         * How far the version reaches: `remote`, `privileged` or `contained`, as on the Plugin;
-         * null when not classifiable.
+         * How far the version reaches: `remote`, `privileged`, `contained`, or `null`, as defined
+         * on the Plugin's `reach`.
          */
         fun reach(reach: Reach?) = reach(JsonField.ofNullable(reach))
 
@@ -1054,8 +1067,8 @@ private constructor(
     }
 
     /**
-     * How far the version reaches: `remote`, `privileged` or `contained`, as on the Plugin; null
-     * when not classifiable.
+     * How far the version reaches: `remote`, `privileged`, `contained`, or `null`, as defined on
+     * the Plugin's `reach`.
      */
     class Reach private constructor(private val value: JsonField<String>) : Enum {
 

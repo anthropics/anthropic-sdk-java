@@ -17,15 +17,19 @@ import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
+import com.anthropic.models.beta.userprofiles.BetaDeletedUserProfile
 import com.anthropic.models.beta.userprofiles.BetaUserProfile
 import com.anthropic.models.beta.userprofiles.BetaUserProfileEnrollmentUrl
 import com.anthropic.models.beta.userprofiles.UserProfileCreateEnrollmentUrlParams
 import com.anthropic.models.beta.userprofiles.UserProfileCreateParams
+import com.anthropic.models.beta.userprofiles.UserProfileDeleteParams
 import com.anthropic.models.beta.userprofiles.UserProfileListPageAsync
 import com.anthropic.models.beta.userprofiles.UserProfileListPageResponse
 import com.anthropic.models.beta.userprofiles.UserProfileListParams
 import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
 import com.anthropic.models.beta.userprofiles.UserProfileUpdateParams
+import com.anthropic.services.async.beta.userprofiles.ActionUrlServiceAsync
+import com.anthropic.services.async.beta.userprofiles.ActionUrlServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -43,10 +47,16 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
         WithRawResponseImpl(clientOptions)
     }
 
+    private val actionUrls: ActionUrlServiceAsync by lazy {
+        ActionUrlServiceAsyncImpl(clientOptions)
+    }
+
     override fun withRawResponse(): UserProfileServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserProfileServiceAsync =
         UserProfileServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun actionUrls(): ActionUrlServiceAsync = actionUrls
 
     override fun create(
         params: UserProfileCreateParams,
@@ -76,6 +86,13 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
         // get /v1/user_profiles?beta=true
         withRawResponse().list(params, requestOptions).thenParse()
 
+    override fun delete(
+        params: UserProfileDeleteParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<BetaDeletedUserProfile> =
+        // delete /v1/user_profiles/{user_profile_id}?beta=true
+        withRawResponse().delete(params, requestOptions).thenParse()
+
     override fun createEnrollmentUrl(
         params: UserProfileCreateEnrollmentUrlParams,
         requestOptions: RequestOptions,
@@ -89,12 +106,18 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val actionUrls: ActionUrlServiceAsync.WithRawResponse by lazy {
+            ActionUrlServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): UserProfileServiceAsync.WithRawResponse =
             UserProfileServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        override fun actionUrls(): ActionUrlServiceAsync.WithRawResponse = actionUrls
 
         private val createHandler: Handler<BetaUserProfile> =
             jsonHandler<BetaUserProfile>(clientOptions.jsonMapper)
@@ -247,6 +270,45 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                                         .params(params)
                                         .response(it)
                                         .build()
+                                }
+                        }
+                    }
+            }
+        }
+
+        private val deleteHandler: Handler<BetaDeletedUserProfile> =
+            jsonHandler<BetaDeletedUserProfile>(clientOptions.jsonMapper)
+
+        override fun delete(
+            params: UserProfileDeleteParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BetaDeletedUserProfile>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("userProfileId", params.userProfileId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "user_profiles")
+                    .addPathParam("userProfileId", params._pathParam(0))
+                    .putQueryParam("beta", "true")
+                    .putAllHeaders(DEFAULT_HEADERS)
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { deleteHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
                         }
                     }

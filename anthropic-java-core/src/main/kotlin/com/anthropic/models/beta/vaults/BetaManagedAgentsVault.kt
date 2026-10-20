@@ -52,7 +52,7 @@ private constructor(
     ) : this(id, archivedAt, createdAt, displayName, metadata, type, updatedAt, mutableMapOf())
 
     /**
-     * Unique identifier for the vault.
+     * The unique ID of the vault (`vlt_...`).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -217,7 +217,7 @@ private constructor(
             additionalProperties = betaManagedAgentsVault.additionalProperties.toMutableMap()
         }
 
-        /** Unique identifier for the vault. */
+        /** The unique ID of the vault (`vlt_...`). */
         fun id(id: String) = id(JsonField.of(id))
 
         /**

@@ -33,7 +33,7 @@ private constructor(
     ) : this(clientSecret, type, mutableMapOf())
 
     /**
-     * OAuth client secret.
+     * The OAuth client secret, sent to `token_endpoint` in the POST body.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -106,7 +106,7 @@ private constructor(
                 betaManagedAgentsTokenEndpointAuthPostParam.additionalProperties.toMutableMap()
         }
 
-        /** OAuth client secret. */
+        /** The OAuth client secret, sent to `token_endpoint` in the POST body. */
         fun clientSecret(clientSecret: String) = clientSecret(JsonField.of(clientSecret))
 
         /**

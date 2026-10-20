@@ -56,17 +56,70 @@ private constructor(
             else -> _json.getProperty<Long>("cache_missed_input_tokens").asKnown()
         }
 
+    /**
+     * A `cache_miss_reason` for a request whose `model` or `speed` differs from the previous
+     * request's.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun modelChanged(): Optional<CacheMissModelChanged> = Optional.ofNullable(modelChanged)
 
+    /**
+     * A `cache_miss_reason` for a request whose `system` differs from the previous request's.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun systemChanged(): Optional<CacheMissSystemChanged> = Optional.ofNullable(systemChanged)
 
+    /**
+     * A `cache_miss_reason` for a request whose `tools` differ from the previous request's, for
+     * example because tools were added, removed, or reordered.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun toolsChanged(): Optional<CacheMissToolsChanged> = Optional.ofNullable(toolsChanged)
 
+    /**
+     * A `cache_miss_reason` for a request whose `messages` differ from the previous request's in an
+     * earlier entry, instead of only having entries appended. The `model`, `system`, and `tools`
+     * match.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun messagesChanged(): Optional<CacheMissMessagesChanged> = Optional.ofNullable(messagesChanged)
 
+    /**
+     * A `cache_miss_reason` for when the API doesn't have a stored record of the request that
+     * `diagnostics.previous_message_id` references.
+     *
+     * This doesn't mean that this request changed.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun previousMessageNotFound(): Optional<CacheMissPreviousMessageNotFound> =
         Optional.ofNullable(previousMessageNotFound)
 
+    /**
+     * A `cache_miss_reason` for when the API can't give a diagnosis. The request itself was
+     * processed normally.
+     *
+     * This includes a request whose `model`, `system`, and `tools` match the previous request's but
+     * whose other prompt-affecting parameters, such as `thinking` or `tool_choice`, differ.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun unavailable(): Optional<CacheMissUnavailable> = Optional.ofNullable(unavailable)
 
     fun isModelChanged(): Boolean = modelChanged != null
@@ -81,18 +134,71 @@ private constructor(
 
     fun isUnavailable(): Boolean = unavailable != null
 
+    /**
+     * A `cache_miss_reason` for a request whose `model` or `speed` differs from the previous
+     * request's.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun asModelChanged(): CacheMissModelChanged = modelChanged.getOrThrow("modelChanged")
 
+    /**
+     * A `cache_miss_reason` for a request whose `system` differs from the previous request's.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun asSystemChanged(): CacheMissSystemChanged = systemChanged.getOrThrow("systemChanged")
 
+    /**
+     * A `cache_miss_reason` for a request whose `tools` differ from the previous request's, for
+     * example because tools were added, removed, or reordered.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun asToolsChanged(): CacheMissToolsChanged = toolsChanged.getOrThrow("toolsChanged")
 
+    /**
+     * A `cache_miss_reason` for a request whose `messages` differ from the previous request's in an
+     * earlier entry, instead of only having entries appended. The `model`, `system`, and `tools`
+     * match.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun asMessagesChanged(): CacheMissMessagesChanged =
         messagesChanged.getOrThrow("messagesChanged")
 
+    /**
+     * A `cache_miss_reason` for when the API doesn't have a stored record of the request that
+     * `diagnostics.previous_message_id` references.
+     *
+     * This doesn't mean that this request changed.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun asPreviousMessageNotFound(): CacheMissPreviousMessageNotFound =
         previousMessageNotFound.getOrThrow("previousMessageNotFound")
 
+    /**
+     * A `cache_miss_reason` for when the API can't give a diagnosis. The request itself was
+     * processed normally.
+     *
+     * This includes a request whose `model`, `system`, and `tools` match the previous request's but
+     * whose other prompt-affecting parameters, such as `thinking` or `tool_choice`, differ.
+     *
+     * See the
+     * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+     * to learn what to change for each reason.
+     */
     fun asUnavailable(): CacheMissUnavailable = unavailable.getOrThrow("unavailable")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
@@ -229,6 +335,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * A `cache_miss_reason` for a request whose `model` or `speed` differs from the previous
+         * request's.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         @JvmStatic
         fun ofModelChanged(modelChanged: CacheMissModelChanged) =
             CacheMissReason(modelChanged = modelChanged)
@@ -241,6 +355,13 @@ private constructor(
         fun ofModelChanged(cacheMissedInputTokens: Long) =
             ofModelChanged(CacheMissModelChanged.of(cacheMissedInputTokens))
 
+        /**
+         * A `cache_miss_reason` for a request whose `system` differs from the previous request's.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         @JvmStatic
         fun ofSystemChanged(systemChanged: CacheMissSystemChanged) =
             CacheMissReason(systemChanged = systemChanged)
@@ -253,6 +374,14 @@ private constructor(
         fun ofSystemChanged(cacheMissedInputTokens: Long) =
             ofSystemChanged(CacheMissSystemChanged.of(cacheMissedInputTokens))
 
+        /**
+         * A `cache_miss_reason` for a request whose `tools` differ from the previous request's, for
+         * example because tools were added, removed, or reordered.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         @JvmStatic
         fun ofToolsChanged(toolsChanged: CacheMissToolsChanged) =
             CacheMissReason(toolsChanged = toolsChanged)
@@ -265,6 +394,15 @@ private constructor(
         fun ofToolsChanged(cacheMissedInputTokens: Long) =
             ofToolsChanged(CacheMissToolsChanged.of(cacheMissedInputTokens))
 
+        /**
+         * A `cache_miss_reason` for a request whose `messages` differ from the previous request's
+         * in an earlier entry, instead of only having entries appended. The `model`, `system`, and
+         * `tools` match.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         @JvmStatic
         fun ofMessagesChanged(messagesChanged: CacheMissMessagesChanged) =
             CacheMissReason(messagesChanged = messagesChanged)
@@ -277,10 +415,31 @@ private constructor(
         fun ofMessagesChanged(cacheMissedInputTokens: Long) =
             ofMessagesChanged(CacheMissMessagesChanged.of(cacheMissedInputTokens))
 
+        /**
+         * A `cache_miss_reason` for when the API doesn't have a stored record of the request that
+         * `diagnostics.previous_message_id` references.
+         *
+         * This doesn't mean that this request changed.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         @JvmStatic
         fun ofPreviousMessageNotFound(previousMessageNotFound: CacheMissPreviousMessageNotFound) =
             CacheMissReason(previousMessageNotFound = previousMessageNotFound)
 
+        /**
+         * A `cache_miss_reason` for when the API can't give a diagnosis. The request itself was
+         * processed normally.
+         *
+         * This includes a request whose `model`, `system`, and `tools` match the previous request's
+         * but whose other prompt-affecting parameters, such as `thinking` or `tool_choice`, differ.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         @JvmStatic
         fun ofUnavailable(unavailable: CacheMissUnavailable) =
             CacheMissReason(unavailable = unavailable)
@@ -292,18 +451,71 @@ private constructor(
      */
     interface Visitor<out T> {
 
+        /**
+         * A `cache_miss_reason` for a request whose `model` or `speed` differs from the previous
+         * request's.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         fun visitModelChanged(modelChanged: CacheMissModelChanged): T
 
+        /**
+         * A `cache_miss_reason` for a request whose `system` differs from the previous request's.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         fun visitSystemChanged(systemChanged: CacheMissSystemChanged): T
 
+        /**
+         * A `cache_miss_reason` for a request whose `tools` differ from the previous request's, for
+         * example because tools were added, removed, or reordered.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         fun visitToolsChanged(toolsChanged: CacheMissToolsChanged): T
 
+        /**
+         * A `cache_miss_reason` for a request whose `messages` differ from the previous request's
+         * in an earlier entry, instead of only having entries appended. The `model`, `system`, and
+         * `tools` match.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         fun visitMessagesChanged(messagesChanged: CacheMissMessagesChanged): T
 
+        /**
+         * A `cache_miss_reason` for when the API doesn't have a stored record of the request that
+         * `diagnostics.previous_message_id` references.
+         *
+         * This doesn't mean that this request changed.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         fun visitPreviousMessageNotFound(
             previousMessageNotFound: CacheMissPreviousMessageNotFound
         ): T
 
+        /**
+         * A `cache_miss_reason` for when the API can't give a diagnosis. The request itself was
+         * processed normally.
+         *
+         * This includes a request whose `model`, `system`, and `tools` match the previous request's
+         * but whose other prompt-affecting parameters, such as `thinking` or `tool_choice`, differ.
+         *
+         * See the
+         * [cache diagnostics guide](https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics#cache-miss-reason-types)
+         * to learn what to change for each reason.
+         */
         fun visitUnavailable(unavailable: CacheMissUnavailable): T
 
         /**

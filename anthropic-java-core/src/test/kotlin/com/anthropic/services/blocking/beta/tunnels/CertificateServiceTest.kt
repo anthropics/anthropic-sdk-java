@@ -12,13 +12,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class CertificateServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val certificateService = client.beta().tunnels().certificates()
 
         val betaTunnelCertificate =
@@ -36,11 +37,6 @@ internal class CertificateServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val certificateService = client.beta().tunnels().certificates()
 
         val betaTunnelCertificate =
@@ -58,11 +54,6 @@ internal class CertificateServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val certificateService = client.beta().tunnels().certificates()
 
         val page = certificateService.list("tunnel_id")
@@ -72,11 +63,6 @@ internal class CertificateServiceTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val certificateService = client.beta().tunnels().certificates()
 
         val betaTunnelCertificate =

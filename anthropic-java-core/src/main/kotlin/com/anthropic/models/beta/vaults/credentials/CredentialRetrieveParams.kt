@@ -11,7 +11,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get Credential */
+/** Retrieve a Credential */
 class CredentialRetrieveParams
 private constructor(
     private val vaultId: String,

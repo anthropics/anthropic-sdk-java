@@ -31,6 +31,7 @@ private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val metadata: JsonField<Metadata>,
+    private val name: JsonField<String>,
     private val trustGrants: JsonField<TrustGrants>,
     private val type: JsonField<Type>,
     private val updatedAt: JsonField<OffsetDateTime>,
@@ -38,7 +39,6 @@ private constructor(
     private val externalId: JsonField<String>,
     private val externalUserDetails: JsonField<BetaUserProfileExternalUserDetails>,
     private val externalUserOnboardedAt: JsonField<OffsetDateTime>,
-    private val name: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -49,6 +49,7 @@ private constructor(
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
+        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("trust_grants")
         @ExcludeMissing
         trustGrants: JsonField<TrustGrants> = JsonMissing.of(),
@@ -68,11 +69,11 @@ private constructor(
         @JsonProperty("external_user_onboarded_at")
         @ExcludeMissing
         externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
         createdAt,
         metadata,
+        name,
         trustGrants,
         type,
         updatedAt,
@@ -80,7 +81,6 @@ private constructor(
         externalId,
         externalUserDetails,
         externalUserOnboardedAt,
-        name,
         mutableMapOf(),
     )
 
@@ -109,6 +109,16 @@ private constructor(
     fun metadata(): Metadata = metadata.getRequired("metadata")
 
     /**
+     * Real-world name of the entity this profile represents (company or individual). For a company
+     * the platform resells Claude access to (`access_type` `passthrough`) this is that company's
+     * name. `null` until the platform supplies one.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun name(): Optional<String> = name.getOptional("name")
+
+    /**
      * Trust grants for this profile, keyed by grant name. Key omitted when no grant is active or in
      * flight.
      *
@@ -126,8 +136,10 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * When this user profile was last modified, in RFC 3339 format. Trust-grant status changes also
-     * bump this timestamp.
+     * When this user profile was last modified, in RFC 3339 format. It normally also updates
+     * shortly after Anthropic gives the profile an approval or withdraws one. Other changes to the
+     * statuses that Anthropic reports do not always update it, so read the status itself rather
+     * than watching this timestamp.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -136,7 +148,7 @@ private constructor(
 
     /**
      * How the platform uses the API for this entity: `application` (default) or `passthrough`.
-     * Present under the `user-profiles-2026-08-18` and later beta headers.
+     * Absent under the legacy `user-profiles-2026-03-24` beta header.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -144,9 +156,9 @@ private constructor(
     fun accessType(): Optional<AccessType> = accessType.getOptional("access_type")
 
     /**
-     * Platform's own identifier for this user. Not enforced unique. Present under the
-     * `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta headers; under
-     * `user-profiles-2026-09-04` the value is `external_user_details.reference_id`.
+     * Platform's own identifier for this user. Not enforced unique. Legacy field, present only
+     * under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta headers; without one
+     * of them, the value is `external_user_details.reference_id`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -155,10 +167,10 @@ private constructor(
 
     /**
      * Details about the entity this profile represents, as the platform states them; not verified
-     * by Anthropic. Present under the `user-profiles-2026-09-04` beta header, with every field
-     * present and `null` until the platform supplies a value; the earlier beta headers serve
-     * `reference_id` as the top-level `external_id`, and `user-profiles-2026-08-18` serves
-     * `onboarded_at` as `external_user_onboarded_at`.
+     * by Anthropic. Every field is present, `null` until the platform supplies a value. Absent
+     * under the legacy `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta headers,
+     * which serve `reference_id` as the top-level `external_id` and, under
+     * `user-profiles-2026-08-18`, `onboarded_at` as `external_user_onboarded_at`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -168,25 +180,15 @@ private constructor(
 
     /**
      * When the entity this profile represents opened its account with the platform, as stated by
-     * the platform, in RFC 3339 format (UTC). `null` until the platform supplies one. Present under
-     * the `user-profiles-2026-08-18` beta header; under `user-profiles-2026-09-04` the value is
-     * `external_user_details.onboarded_at`.
+     * the platform, in RFC 3339 format (UTC). `null` until the platform supplies one. Legacy field,
+     * present only under the `user-profiles-2026-08-18` beta header; without a legacy header, the
+     * value is `external_user_details.onboarded_at`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun externalUserOnboardedAt(): Optional<OffsetDateTime> =
         externalUserOnboardedAt.getOptional("external_user_onboarded_at")
-
-    /**
-     * Real-world name of the entity this profile represents (company or individual). For a company
-     * the platform resells Claude access to (`access_type` `passthrough`) this is that company's
-     * name.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun name(): Optional<String> = name.getOptional("name")
 
     /**
      * Returns the raw JSON value of [id].
@@ -210,6 +212,13 @@ private constructor(
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
+
+    /**
+     * Returns the raw JSON value of [name].
+     *
+     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
     /**
      * Returns the raw JSON value of [trustGrants].
@@ -272,13 +281,6 @@ private constructor(
     @ExcludeMissing
     fun _externalUserOnboardedAt(): JsonField<OffsetDateTime> = externalUserOnboardedAt
 
-    /**
-     * Returns the raw JSON value of [name].
-     *
-     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -301,6 +303,7 @@ private constructor(
          * .id()
          * .createdAt()
          * .metadata()
+         * .name()
          * .trustGrants()
          * .type()
          * .updatedAt()
@@ -315,6 +318,7 @@ private constructor(
         private var id: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var metadata: JsonField<Metadata>? = null
+        private var name: JsonField<String>? = null
         private var trustGrants: JsonField<TrustGrants>? = null
         private var type: JsonField<Type>? = null
         private var updatedAt: JsonField<OffsetDateTime>? = null
@@ -323,7 +327,6 @@ private constructor(
         private var externalUserDetails: JsonField<BetaUserProfileExternalUserDetails> =
             JsonMissing.of()
         private var externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var name: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -331,6 +334,7 @@ private constructor(
             id = betaUserProfile.id
             createdAt = betaUserProfile.createdAt
             metadata = betaUserProfile.metadata
+            name = betaUserProfile.name
             trustGrants = betaUserProfile.trustGrants
             type = betaUserProfile.type
             updatedAt = betaUserProfile.updatedAt
@@ -338,7 +342,6 @@ private constructor(
             externalId = betaUserProfile.externalId
             externalUserDetails = betaUserProfile.externalUserDetails
             externalUserOnboardedAt = betaUserProfile.externalUserOnboardedAt
-            name = betaUserProfile.name
             additionalProperties = betaUserProfile.additionalProperties.toMutableMap()
         }
 
@@ -381,6 +384,24 @@ private constructor(
         fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
         /**
+         * Real-world name of the entity this profile represents (company or individual). For a
+         * company the platform resells Claude access to (`access_type` `passthrough`) this is that
+         * company's name. `null` until the platform supplies one.
+         */
+        fun name(name: String?) = name(JsonField.ofNullable(name))
+
+        /** Alias for calling [Builder.name] with `name.orElse(null)`. */
+        fun name(name: Optional<String>) = name(name.getOrNull())
+
+        /**
+         * Sets [Builder.name] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun name(name: JsonField<String>) = apply { this.name = name }
+
+        /**
          * Trust grants for this profile, keyed by grant name. Key omitted when no grant is active
          * or in flight.
          */
@@ -409,8 +430,10 @@ private constructor(
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /**
-         * When this user profile was last modified, in RFC 3339 format. Trust-grant status changes
-         * also bump this timestamp.
+         * When this user profile was last modified, in RFC 3339 format. It normally also updates
+         * shortly after Anthropic gives the profile an approval or withdraws one. Other changes to
+         * the statuses that Anthropic reports do not always update it, so read the status itself
+         * rather than watching this timestamp.
          */
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
@@ -425,7 +448,7 @@ private constructor(
 
         /**
          * How the platform uses the API for this entity: `application` (default) or `passthrough`.
-         * Present under the `user-profiles-2026-08-18` and later beta headers.
+         * Absent under the legacy `user-profiles-2026-03-24` beta header.
          */
         fun accessType(accessType: AccessType) = accessType(JsonField.of(accessType))
 
@@ -439,9 +462,9 @@ private constructor(
         fun accessType(accessType: JsonField<AccessType>) = apply { this.accessType = accessType }
 
         /**
-         * Platform's own identifier for this user. Not enforced unique. Present under the
-         * `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta headers; under
-         * `user-profiles-2026-09-04` the value is `external_user_details.reference_id`.
+         * Platform's own identifier for this user. Not enforced unique. Legacy field, present only
+         * under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta headers; without
+         * one of them, the value is `external_user_details.reference_id`.
          */
         fun externalId(externalId: String?) = externalId(JsonField.ofNullable(externalId))
 
@@ -459,10 +482,10 @@ private constructor(
 
         /**
          * Details about the entity this profile represents, as the platform states them; not
-         * verified by Anthropic. Present under the `user-profiles-2026-09-04` beta header, with
-         * every field present and `null` until the platform supplies a value; the earlier beta
-         * headers serve `reference_id` as the top-level `external_id`, and
-         * `user-profiles-2026-08-18` serves `onboarded_at` as `external_user_onboarded_at`.
+         * verified by Anthropic. Every field is present, `null` until the platform supplies a
+         * value. Absent under the legacy `user-profiles-2026-03-24` and `user-profiles-2026-08-18`
+         * beta headers, which serve `reference_id` as the top-level `external_id` and, under
+         * `user-profiles-2026-08-18`, `onboarded_at` as `external_user_onboarded_at`.
          */
         fun externalUserDetails(externalUserDetails: BetaUserProfileExternalUserDetails) =
             externalUserDetails(JsonField.of(externalUserDetails))
@@ -480,9 +503,9 @@ private constructor(
 
         /**
          * When the entity this profile represents opened its account with the platform, as stated
-         * by the platform, in RFC 3339 format (UTC). `null` until the platform supplies one.
-         * Present under the `user-profiles-2026-08-18` beta header; under
-         * `user-profiles-2026-09-04` the value is `external_user_details.onboarded_at`.
+         * by the platform, in RFC 3339 format (UTC). `null` until the platform supplies one. Legacy
+         * field, present only under the `user-profiles-2026-08-18` beta header; without a legacy
+         * header, the value is `external_user_details.onboarded_at`.
          */
         fun externalUserOnboardedAt(externalUserOnboardedAt: OffsetDateTime?) =
             externalUserOnboardedAt(JsonField.ofNullable(externalUserOnboardedAt))
@@ -504,24 +527,6 @@ private constructor(
         fun externalUserOnboardedAt(externalUserOnboardedAt: JsonField<OffsetDateTime>) = apply {
             this.externalUserOnboardedAt = externalUserOnboardedAt
         }
-
-        /**
-         * Real-world name of the entity this profile represents (company or individual). For a
-         * company the platform resells Claude access to (`access_type` `passthrough`) this is that
-         * company's name.
-         */
-        fun name(name: String?) = name(JsonField.ofNullable(name))
-
-        /** Alias for calling [Builder.name] with `name.orElse(null)`. */
-        fun name(name: Optional<String>) = name(name.getOrNull())
-
-        /**
-         * Sets [Builder.name] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun name(name: JsonField<String>) = apply { this.name = name }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -552,6 +557,7 @@ private constructor(
          * .id()
          * .createdAt()
          * .metadata()
+         * .name()
          * .trustGrants()
          * .type()
          * .updatedAt()
@@ -564,6 +570,7 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("metadata", metadata),
+                checkRequired("name", name),
                 checkRequired("trustGrants", trustGrants),
                 checkRequired("type", type),
                 checkRequired("updatedAt", updatedAt),
@@ -571,7 +578,6 @@ private constructor(
                 externalId,
                 externalUserDetails,
                 externalUserOnboardedAt,
-                name,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -594,6 +600,7 @@ private constructor(
         id()
         createdAt()
         metadata().validate()
+        name()
         trustGrants().validate()
         type().validate()
         updatedAt()
@@ -601,7 +608,6 @@ private constructor(
         externalId()
         externalUserDetails().ifPresent { it.validate() }
         externalUserOnboardedAt()
-        name()
         validated = true
     }
 
@@ -623,14 +629,14 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (name.asKnown().isPresent) 1 else 0) +
             (trustGrants.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (accessType.asKnown().getOrNull()?.validity() ?: 0) +
             (if (externalId.asKnown().isPresent) 1 else 0) +
             (externalUserDetails.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (externalUserOnboardedAt.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0)
+            (if (externalUserOnboardedAt.asKnown().isPresent) 1 else 0)
 
     /**
      * Arbitrary key-value metadata. Maximum 16 pairs, keys up to 64 chars, values up to 512 chars.
@@ -999,7 +1005,7 @@ private constructor(
 
     /**
      * How the platform uses the API for this entity: `application` (default) or `passthrough`.
-     * Present under the `user-profiles-2026-08-18` and later beta headers.
+     * Absent under the legacy `user-profiles-2026-03-24` beta header.
      */
     class AccessType private constructor(private val value: JsonField<String>) : Enum {
 
@@ -1175,6 +1181,7 @@ private constructor(
             id == other.id &&
             createdAt == other.createdAt &&
             metadata == other.metadata &&
+            name == other.name &&
             trustGrants == other.trustGrants &&
             type == other.type &&
             updatedAt == other.updatedAt &&
@@ -1182,7 +1189,6 @@ private constructor(
             externalId == other.externalId &&
             externalUserDetails == other.externalUserDetails &&
             externalUserOnboardedAt == other.externalUserOnboardedAt &&
-            name == other.name &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1191,6 +1197,7 @@ private constructor(
             id,
             createdAt,
             metadata,
+            name,
             trustGrants,
             type,
             updatedAt,
@@ -1198,7 +1205,6 @@ private constructor(
             externalId,
             externalUserDetails,
             externalUserOnboardedAt,
-            name,
             additionalProperties,
         )
     }
@@ -1206,5 +1212,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaUserProfile{id=$id, createdAt=$createdAt, metadata=$metadata, trustGrants=$trustGrants, type=$type, updatedAt=$updatedAt, accessType=$accessType, externalId=$externalId, externalUserDetails=$externalUserDetails, externalUserOnboardedAt=$externalUserOnboardedAt, name=$name, additionalProperties=$additionalProperties}"
+        "BetaUserProfile{id=$id, createdAt=$createdAt, metadata=$metadata, name=$name, trustGrants=$trustGrants, type=$type, updatedAt=$updatedAt, accessType=$accessType, externalId=$externalId, externalUserDetails=$externalUserDetails, externalUserOnboardedAt=$externalUserOnboardedAt, additionalProperties=$additionalProperties}"
 }

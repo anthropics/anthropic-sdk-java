@@ -11,7 +11,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Delete Vault */
+/** Delete a Vault */
 class VaultDeleteParams
 private constructor(
     private val vaultId: String?,

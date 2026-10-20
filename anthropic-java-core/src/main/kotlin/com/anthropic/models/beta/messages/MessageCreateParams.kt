@@ -65,7 +65,7 @@ private constructor(
 
     /**
      * The user profile ID to attribute this request to. Use when acting on behalf of a party other
-     * than your organization. Requires the `user-profiles` beta header.
+     * than your organization.
      */
     fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
 
@@ -773,7 +773,7 @@ private constructor(
 
         /**
          * The user profile ID to attribute this request to. Use when acting on behalf of a party
-         * other than your organization. Requires the `user-profiles` beta header.
+         * other than your organization.
          */
         fun userProfileId(userProfileId: String?) = apply { this.userProfileId = userProfileId }
 
@@ -2231,6 +2231,13 @@ private constructor(
     override fun _spanData(): SpanData =
         SpanData(name = "anthropic.messages.create", route = "/v1/messages")
 
+    /**
+     * The parameters of a request for the next message in a conversation.
+     *
+     * See the
+     * [Messages API guide](https://platform.claude.com/docs/en/build-with-claude/working-with-messages#basic-request-and-response)
+     * to learn more about requests and responses.
+     */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(

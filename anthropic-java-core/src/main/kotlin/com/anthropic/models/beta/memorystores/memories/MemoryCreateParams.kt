@@ -21,7 +21,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Create a memory */
+/** Create a Memory */
 class MemoryCreateParams
 private constructor(
     private val memoryStoreId: String?,
@@ -37,10 +37,10 @@ private constructor(
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
     /**
-     * Selects which projection of a `memory` or `memory_version` the server returns. `basic`
-     * returns the object with `content` set to `null`; `full` populates `content`. When omitted,
-     * the default is endpoint-specific: retrieve operations default to `full`; list, create, and
-     * update operations default to `basic`. Listing with `view=full` caps `limit` at 20.
+     * Whether a `memory` or `memory_version` in the response includes its `content`. Defaults to
+     * `full` on retrieve operations and to `basic` on list, create, and update operations.
+     *
+     * With `full`, list operations return at most 20 items per page.
      */
     fun view(): Optional<BetaManagedAgentsMemoryView> = Optional.ofNullable(view)
 
@@ -60,8 +60,9 @@ private constructor(
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
-     * UTF-8 text content for the new memory. Maximum 100 kB (102,400 bytes). Required; pass `""`
-     * explicitly to create an empty memory.
+     * The UTF-8 text content of the new memory. Pass `""` to create an empty memory.
+     *
+     * The maximum size is 100 kB (102,400 bytes).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -69,10 +70,12 @@ private constructor(
     fun content(): Optional<String> = body.content()
 
     /**
-     * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with `/`,
-     * contain at least one non-empty segment, and be at most 1,024 bytes. Must not contain empty
-     * segments, `.` or `..` segments, control or format characters, or the Unicode line and
-     * paragraph separators (U+2028, U+2029), and must be NFC-normalized. Paths are case-sensitive.
+     * The path of the new memory, such as `/projects/foo/notes.md`. Paths are case-sensitive.
+     *
+     * A path starts with `/` and has 1 to 20 segments. A segment can't be empty and can't be `.` or
+     * `..`. A path can't contain control characters, format characters, or the line and paragraph
+     * separators U+2028 and U+2029. It must be in Unicode Normalization Form C and at most 1,024
+     * bytes long.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -147,11 +150,10 @@ private constructor(
             memoryStoreId(memoryStoreId.getOrNull())
 
         /**
-         * Selects which projection of a `memory` or `memory_version` the server returns. `basic`
-         * returns the object with `content` set to `null`; `full` populates `content`. When
-         * omitted, the default is endpoint-specific: retrieve operations default to `full`; list,
-         * create, and update operations default to `basic`. Listing with `view=full` caps `limit`
-         * at 20.
+         * Whether a `memory` or `memory_version` in the response includes its `content`. Defaults
+         * to `full` on retrieve operations and to `basic` on list, create, and update operations.
+         *
+         * With `full`, list operations return at most 20 items per page.
          */
         fun view(view: BetaManagedAgentsMemoryView?) = apply { this.view = view }
 
@@ -208,8 +210,9 @@ private constructor(
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /**
-         * UTF-8 text content for the new memory. Maximum 100 kB (102,400 bytes). Required; pass
-         * `""` explicitly to create an empty memory.
+         * The UTF-8 text content of the new memory. Pass `""` to create an empty memory.
+         *
+         * The maximum size is 100 kB (102,400 bytes).
          */
         fun content(content: String?) = apply { body.content(content) }
 
@@ -225,11 +228,12 @@ private constructor(
         fun content(content: JsonField<String>) = apply { body.content(content) }
 
         /**
-         * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with `/`,
-         * contain at least one non-empty segment, and be at most 1,024 bytes. Must not contain
-         * empty segments, `.` or `..` segments, control or format characters, or the Unicode line
-         * and paragraph separators (U+2028, U+2029), and must be NFC-normalized. Paths are
-         * case-sensitive.
+         * The path of the new memory, such as `/projects/foo/notes.md`. Paths are case-sensitive.
+         *
+         * A path starts with `/` and has 1 to 20 segments. A segment can't be empty and can't be
+         * `.` or `..`. A path can't contain control characters, format characters, or the line and
+         * paragraph separators U+2028 and U+2029. It must be in Unicode Normalization Form C and at
+         * most 1,024 bytes long.
          */
         fun path(path: String) = apply { body.path(path) }
 
@@ -426,11 +430,17 @@ private constructor(
         )
 
     /**
-     * Request parameters for [Create a memory](/en/api/beta/memory_stores/memories/create). The
-     * path must be unoccupied: if a memory already exists at the path, or the path is an ancestor
-     * or descendant of an existing memory's path, the request returns `memory_path_conflict_error`
-     * (HTTP 409). Create never overwrites; to modify an existing memory, use
-     * [Update a memory](/en/api/beta/memory_stores/memories/update).
+     * The request body for
+     * [Create a Memory](https://platform.claude.com/docs/en/api/beta/memory_stores/memories/create).
+     *
+     * Creating a memory never replaces another one. The request fails with HTTP status 409 if a
+     * memory already uses `path`, or if `path` is an ancestor or descendant of another memory's
+     * path. It also fails, with HTTP status 400, if the memory store is archived or has reached its
+     * limit of 10,000 memories. To change an existing memory, update it instead.
+     *
+     * See the
+     * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#create-a-memory) to
+     * learn more about creating memories.
      */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -447,8 +457,9 @@ private constructor(
         ) : this(content, path, mutableMapOf())
 
         /**
-         * UTF-8 text content for the new memory. Maximum 100 kB (102,400 bytes). Required; pass
-         * `""` explicitly to create an empty memory.
+         * The UTF-8 text content of the new memory. Pass `""` to create an empty memory.
+         *
+         * The maximum size is 100 kB (102,400 bytes).
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -456,11 +467,12 @@ private constructor(
         fun content(): Optional<String> = content.getOptional("content")
 
         /**
-         * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with `/`,
-         * contain at least one non-empty segment, and be at most 1,024 bytes. Must not contain
-         * empty segments, `.` or `..` segments, control or format characters, or the Unicode line
-         * and paragraph separators (U+2028, U+2029), and must be NFC-normalized. Paths are
-         * case-sensitive.
+         * The path of the new memory, such as `/projects/foo/notes.md`. Paths are case-sensitive.
+         *
+         * A path starts with `/` and has 1 to 20 segments. A segment can't be empty and can't be
+         * `.` or `..`. A path can't contain control characters, format characters, or the line and
+         * paragraph separators U+2028 and U+2029. It must be in Unicode Normalization Form C and at
+         * most 1,024 bytes long.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -522,8 +534,9 @@ private constructor(
             }
 
             /**
-             * UTF-8 text content for the new memory. Maximum 100 kB (102,400 bytes). Required; pass
-             * `""` explicitly to create an empty memory.
+             * The UTF-8 text content of the new memory. Pass `""` to create an empty memory.
+             *
+             * The maximum size is 100 kB (102,400 bytes).
              */
             fun content(content: String?) = content(JsonField.ofNullable(content))
 
@@ -540,11 +553,13 @@ private constructor(
             fun content(content: JsonField<String>) = apply { this.content = content }
 
             /**
-             * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with
-             * `/`, contain at least one non-empty segment, and be at most 1,024 bytes. Must not
-             * contain empty segments, `.` or `..` segments, control or format characters, or the
-             * Unicode line and paragraph separators (U+2028, U+2029), and must be NFC-normalized.
-             * Paths are case-sensitive.
+             * The path of the new memory, such as `/projects/foo/notes.md`. Paths are
+             * case-sensitive.
+             *
+             * A path starts with `/` and has 1 to 20 segments. A segment can't be empty and can't
+             * be `.` or `..`. A path can't contain control characters, format characters, or the
+             * line and paragraph separators U+2028 and U+2029. It must be in Unicode Normalization
+             * Form C and at most 1,024 bytes long.
              */
             fun path(path: String) = path(JsonField.of(path))
 

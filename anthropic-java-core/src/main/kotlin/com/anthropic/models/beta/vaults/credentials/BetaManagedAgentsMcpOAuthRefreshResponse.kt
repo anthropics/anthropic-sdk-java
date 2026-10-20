@@ -52,7 +52,7 @@ private constructor(
     ) : this(clientId, tokenEndpoint, tokenEndpointAuth, resource, scope, mutableMapOf())
 
     /**
-     * OAuth client ID.
+     * The OAuth client ID used when refreshing the access token.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -181,7 +181,7 @@ private constructor(
                 betaManagedAgentsMcpOAuthRefreshResponse.additionalProperties.toMutableMap()
         }
 
-        /** OAuth client ID. */
+        /** The OAuth client ID used when refreshing the access token. */
         fun clientId(clientId: String) = clientId(JsonField.of(clientId))
 
         /**

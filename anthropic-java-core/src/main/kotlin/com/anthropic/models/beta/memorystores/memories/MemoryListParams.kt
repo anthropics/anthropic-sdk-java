@@ -10,7 +10,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List memories */
+/** List Memories */
 class MemoryListParams
 private constructor(
     private val memoryStoreId: String?,
@@ -29,35 +29,42 @@ private constructor(
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
     /**
-     * `0` (or omitted) returns all descendants below `path_prefix` (recursive). `1` returns
-     * immediate children only; deeper entries roll up as `memory_prefix` items. `depth=1` behaves
-     * like `ls`; omitting `depth` behaves like `find`.
+     * How far below `path_prefix` to list. Defaults to `0`, which lists every memory below the
+     * prefix.
+     *
+     * Pass `1` to list only the direct children. Deeper memories are then grouped into
+     * `memory_prefix` items.
      */
     fun depth(): Optional<Int> = Optional.ofNullable(depth)
 
     /**
-     * Maximum number of items to return per page. Must be between 1 and 100. Defaults to 20 when
-     * omitted. Capped at 20 when `view=full`. Both `memory` and `memory_prefix` items count toward
-     * the limit.
+     * The maximum number of items to return per page, from 1 to 100. Defaults to 20.
+     *
+     * With `view=full`, a page holds at most 20 items. `memory` and `memory_prefix` items both
+     * count toward the limit.
      */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
     /**
-     * Opaque pagination cursor (a `page_...` value). Pass the `next_page` value from a previous
-     * response to fetch the next page; omit for the first page.
+     * The `next_page` value from a previous response, to get the next page. Omit it to get the
+     * first page.
      */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /**
-     * Optional path prefix filter. Must end with `/` (segment-aligned), e.g., `/notes/`. This value
+     * Return only memories whose path starts with this prefix, such as `/notes/`. This value
      * appears in request URLs. Do not include secrets or personally identifiable information.
+     *
+     * Omit it to list the whole store. The prefix must end with `/` and matches whole segments, so
+     * `/notes/` matches `/notes/todo.md` but not `/notes-archive/todo.md`.
      */
     fun pathPrefix(): Optional<String> = Optional.ofNullable(pathPrefix)
 
     /**
-     * Which projection of each `memory` to return. Defaults to `basic` (content omitted). `full`
-     * populates `content` on each item and caps `limit` at 20; use this as the bulk-read path for
-     * export and sync.
+     * Whether each memory in the response includes `content`. Defaults to `basic`, which sets it to
+     * `null`.
+     *
+     * With `full`, a page holds at most 20 items.
      */
     fun view(): Optional<BetaManagedAgentsMemoryView> = Optional.ofNullable(view)
 
@@ -128,9 +135,11 @@ private constructor(
             memoryStoreId(memoryStoreId.getOrNull())
 
         /**
-         * `0` (or omitted) returns all descendants below `path_prefix` (recursive). `1` returns
-         * immediate children only; deeper entries roll up as `memory_prefix` items. `depth=1`
-         * behaves like `ls`; omitting `depth` behaves like `find`.
+         * How far below `path_prefix` to list. Defaults to `0`, which lists every memory below the
+         * prefix.
+         *
+         * Pass `1` to list only the direct children. Deeper memories are then grouped into
+         * `memory_prefix` items.
          */
         fun depth(depth: Int?) = apply { this.depth = depth }
 
@@ -145,8 +154,9 @@ private constructor(
         fun depth(depth: Optional<Int>) = depth(depth.getOrNull())
 
         /**
-         * Maximum number of items to return per page. Must be between 1 and 100. Defaults to 20
-         * when omitted. Capped at 20 when `view=full`. Both `memory` and `memory_prefix` items
+         * The maximum number of items to return per page, from 1 to 100. Defaults to 20.
+         *
+         * With `view=full`, a page holds at most 20 items. `memory` and `memory_prefix` items both
          * count toward the limit.
          */
         fun limit(limit: Int?) = apply { this.limit = limit }
@@ -162,8 +172,8 @@ private constructor(
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
         /**
-         * Opaque pagination cursor (a `page_...` value). Pass the `next_page` value from a previous
-         * response to fetch the next page; omit for the first page.
+         * The `next_page` value from a previous response, to get the next page. Omit it to get the
+         * first page.
          */
         fun page(page: String?) = apply { this.page = page }
 
@@ -171,9 +181,11 @@ private constructor(
         fun page(page: Optional<String>) = page(page.getOrNull())
 
         /**
-         * Optional path prefix filter. Must end with `/` (segment-aligned), e.g., `/notes/`. This
-         * value appears in request URLs. Do not include secrets or personally identifiable
-         * information.
+         * Return only memories whose path starts with this prefix, such as `/notes/`. This value
+         * appears in request URLs. Do not include secrets or personally identifiable information.
+         *
+         * Omit it to list the whole store. The prefix must end with `/` and matches whole segments,
+         * so `/notes/` matches `/notes/todo.md` but not `/notes-archive/todo.md`.
          */
         fun pathPrefix(pathPrefix: String?) = apply { this.pathPrefix = pathPrefix }
 
@@ -181,9 +193,10 @@ private constructor(
         fun pathPrefix(pathPrefix: Optional<String>) = pathPrefix(pathPrefix.getOrNull())
 
         /**
-         * Which projection of each `memory` to return. Defaults to `basic` (content omitted).
-         * `full` populates `content` on each item and caps `limit` at 20; use this as the bulk-read
-         * path for export and sync.
+         * Whether each memory in the response includes `content`. Defaults to `basic`, which sets
+         * it to `null`.
+         *
+         * With `full`, a page holds at most 20 items.
          */
         fun view(view: BetaManagedAgentsMemoryView?) = apply { this.view = view }
 

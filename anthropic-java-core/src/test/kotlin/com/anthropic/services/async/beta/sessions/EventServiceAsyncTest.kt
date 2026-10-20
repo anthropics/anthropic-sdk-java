@@ -14,13 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class EventServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val eventServiceAsync = client.beta().sessions().events()
 
         val pageFuture = eventServiceAsync.list("sesn_011CZkZAtmR3yMPDzynEDxu7")
@@ -31,11 +32,6 @@ internal class EventServiceAsyncTest {
 
     @Test
     fun send() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val eventServiceAsync = client.beta().sessions().events()
 
         val betaManagedAgentsSendSessionEventsFuture =
@@ -63,11 +59,6 @@ internal class EventServiceAsyncTest {
 
     @Test
     fun streamStreaming() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val eventServiceAsync = client.beta().sessions().events()
 
         val betaManagedAgentsStreamSessionEventsStreamResponse =

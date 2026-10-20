@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.74.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.73.0...v2.74.0) (2026-10-20)
+
+### Features
+
+* **api:** add data_refreshed_at and has_more to analytics report pages
+* **api:** add workspace rate-limit updates to the Admin API
+* **api:** make User Profiles generally available
+* **client:** yield server-sent events with unrecognized event names
+* **google-cloud:** use the v1 endpoints and add the organization endpoint
+
+
+### Bug Fixes
+
+* **client:** treat x-amz-security-token as a sensitive header
+
+
+### Chores
+
+* **ci:** skip the changelog check on draft pull requests
+* **docs:** add credential expiry descriptions to the Managed Agents API reference
+* **docs:** add Messages API request descriptions
+* **docs:** correct plugin manifest_version and reach descriptions
+* **docs:** improve Managed Agents memory store descriptions
+* **docs:** improve Managed Agents vault and credential descriptions
+* **internal:** check constructor properties in the custom lint rules
+* **tests:** declare the client once per service test class
+
 ## [2.73.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.72.0...v2.73.0) (2026-10-15)
 
 ### Features

@@ -25,7 +25,7 @@ interface MemoryVersionService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MemoryVersionService
 
-    /** Retrieve a memory version */
+    /** Retrieve a Memory Version */
     fun retrieve(
         memoryVersionId: String,
         params: MemoryVersionRetrieveParams,
@@ -49,7 +49,7 @@ interface MemoryVersionService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsMemoryVersion
 
-    /** List memory versions */
+    /** List Memory Versions */
     fun list(memoryStoreId: String): MemoryVersionListPage =
         list(memoryStoreId, MemoryVersionListParams.none())
 
@@ -81,7 +81,7 @@ interface MemoryVersionService {
     fun list(memoryStoreId: String, requestOptions: RequestOptions): MemoryVersionListPage =
         list(memoryStoreId, MemoryVersionListParams.none(), requestOptions)
 
-    /** Redact a memory version */
+    /** Redact a Memory Version */
     fun redact(
         memoryVersionId: String,
         params: MemoryVersionRedactParams,

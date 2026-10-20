@@ -22,13 +22,14 @@ import org.junit.jupiter.api.parallel.ResourceLock
 @ResourceLock("https://github.com/wiremock/wiremock/issues/169")
 internal class VersionServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val versionService = client.beta().organization().plugins().versions()
 
         val betaPluginVersion =
@@ -46,11 +47,6 @@ internal class VersionServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val versionService = client.beta().organization().plugins().versions()
 
         val betaPluginVersion =
@@ -68,11 +64,6 @@ internal class VersionServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val versionService = client.beta().organization().plugins().versions()
 
         val page = versionService.list("plugin_id")
@@ -82,12 +73,10 @@ internal class VersionServiceTest {
 
     @Test
     fun download(wmRuntimeInfo: WireMockRuntimeInfo) {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(wmRuntimeInfo.httpBaseUrl)
-                .apiKey("my-anthropic-api-key")
-                .build()
-        val versionService = client.beta().organization().plugins().versions()
+        val versionService =
+            client.beta().organization().plugins().versions().withOptions {
+                it.baseUrl(wmRuntimeInfo.httpBaseUrl)
+            }
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
         val response =

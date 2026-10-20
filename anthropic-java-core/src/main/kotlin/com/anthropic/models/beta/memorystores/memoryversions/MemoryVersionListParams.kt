@@ -13,7 +13,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List memory versions */
+/** List Memory Versions */
 class MemoryVersionListParams
 private constructor(
     private val memoryStoreId: String?,
@@ -45,14 +45,18 @@ private constructor(
     /** Return versions created at or before this time (inclusive). */
     fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
 
-    /** The maximum number of versions to return per page. Defaults to 20. */
+    /**
+     * The maximum number of versions to return per page, from 1 to 100. Defaults to 20.
+     *
+     * With `view=full`, a page holds at most 20 versions.
+     */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
     /**
      * Return only versions of the memory with this ID (`mem_...`).
      *
-     * The filter still works after the memory is deleted. The results then include the version
-     * whose `operation` is `deleted`.
+     * The filter still works after the memory is deleted. While that memory's versions are
+     * retained, the results include the version whose `operation` is `deleted`.
      */
     fun memoryId(): Optional<String> = Optional.ofNullable(memoryId)
 
@@ -73,10 +77,10 @@ private constructor(
     fun sessionId(): Optional<String> = Optional.ofNullable(sessionId)
 
     /**
-     * Selects which projection of a `memory` or `memory_version` the server returns. `basic`
-     * returns the object with `content` set to `null`; `full` populates `content`. When omitted,
-     * the default is endpoint-specific: retrieve operations default to `full`; list, create, and
-     * update operations default to `basic`. Listing with `view=full` caps `limit` at 20.
+     * Whether a `memory` or `memory_version` in the response includes its `content`. Defaults to
+     * `full` on retrieve operations and to `basic` on list, create, and update operations.
+     *
+     * With `full`, list operations return at most 20 items per page.
      */
     fun view(): Optional<BetaManagedAgentsMemoryView> = Optional.ofNullable(view)
 
@@ -176,7 +180,11 @@ private constructor(
         fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
             createdAtLte(createdAtLte.getOrNull())
 
-        /** The maximum number of versions to return per page. Defaults to 20. */
+        /**
+         * The maximum number of versions to return per page, from 1 to 100. Defaults to 20.
+         *
+         * With `view=full`, a page holds at most 20 versions.
+         */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -192,8 +200,8 @@ private constructor(
         /**
          * Return only versions of the memory with this ID (`mem_...`).
          *
-         * The filter still works after the memory is deleted. The results then include the version
-         * whose `operation` is `deleted`.
+         * The filter still works after the memory is deleted. While that memory's versions are
+         * retained, the results include the version whose `operation` is `deleted`.
          */
         fun memoryId(memoryId: String?) = apply { this.memoryId = memoryId }
 
@@ -234,11 +242,10 @@ private constructor(
         fun sessionId(sessionId: Optional<String>) = sessionId(sessionId.getOrNull())
 
         /**
-         * Selects which projection of a `memory` or `memory_version` the server returns. `basic`
-         * returns the object with `content` set to `null`; `full` populates `content`. When
-         * omitted, the default is endpoint-specific: retrieve operations default to `full`; list,
-         * create, and update operations default to `basic`. Listing with `view=full` caps `limit`
-         * at 20.
+         * Whether a `memory` or `memory_version` in the response includes its `content`. Defaults
+         * to `full` on retrieve operations and to `basic` on list, create, and update operations.
+         *
+         * With `full`, list operations return at most 20 items per page.
          */
         fun view(view: BetaManagedAgentsMemoryView?) = apply { this.view = view }
 

@@ -1,14 +1,21 @@
 package com.anthropic.googlecloud.backends
 
+import com.anthropic.backends.Backend
+import com.anthropic.client.AnthropicClient
+import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.models.messages.MessageCreateParams
 import com.google.auth.oauth2.AccessToken
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.auth.oauth2.ServiceAccountCredentials
+import java.util.concurrent.CompletionException
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.function.Supplier
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.mockito.Mockito
@@ -22,6 +29,13 @@ internal class GoogleCloudBackendTest {
         private const val WORKSPACE_ID = "ws-12345"
         private const val CUSTOM_BASE_URL = "https://gateway.example.com/v1"
 
+        private const val GATEWAY_URL = "https://claude.googleapis.com/v1"
+        private const val WORKSPACE_BASE_URL =
+            "$GATEWAY_URL/projects/$PROJECT/locations/$LOCATION/workspaces/$WORKSPACE_ID/invoke"
+        private const val ORGANIZATION_BASE_URL =
+            "$GATEWAY_URL/projects/$PROJECT/locations/$LOCATION/claudeOrganization/invoke"
+        private const val ORGANIZATION_PATH = "/v1/organizations/workspaces?beta=true"
+
         private const val ENV_PROJECT = "ANTHROPIC_GOOGLE_CLOUD_PROJECT"
         private const val ENV_PROJECT_FALLBACK = "GOOGLE_CLOUD_PROJECT"
         private const val ENV_LOCATION = "ANTHROPIC_GOOGLE_CLOUD_LOCATION"
@@ -29,6 +43,13 @@ internal class GoogleCloudBackendTest {
         private const val ENV_BASE_URL = "ANTHROPIC_GOOGLE_CLOUD_BASE_URL"
 
         private val TOKEN_SUPPLIER: Supplier<String> = Supplier { TOKEN }
+
+        private val MESSAGE_PARAMS =
+            MessageCreateParams.builder()
+                .model("claude-haiku-4-5")
+                .maxTokens(16)
+                .addUserMessage("hi")
+                .build()
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -43,17 +64,10 @@ internal class GoogleCloudBackendTest {
     }
 
     @Test
-    fun builderMissingWorkspaceId() {
-        assertThatThrownBy {
-                GoogleCloudBackend.builder()
-                    .bearerTokenSupplier(TOKEN_SUPPLIER)
-                    .project(PROJECT)
-                    .location(LOCATION)
-                    .build()
-            }
-            .isExactlyInstanceOf(IllegalStateException::class.java)
-            .hasMessageContaining("Workspace ID is required")
-            .hasMessageContaining(ENV_WORKSPACE_ID)
+    fun builderMissingWorkspaceIdBuilds() {
+        val backend = createBackendWithoutWorkspaceId()
+
+        assertThat(backend.workspaceId()).isEmpty
     }
 
     @Test
@@ -396,7 +410,7 @@ internal class GoogleCloudBackendTest {
 
         assertThat(backend.baseUrl())
             .isEqualTo(
-                "https://claude.googleapis.com/v1alpha" +
+                "https://claude.googleapis.com/v1" +
                     "/projects/$PROJECT/locations/$LOCATION/workspaces/$WORKSPACE_ID/invoke"
             )
     }
@@ -412,7 +426,7 @@ internal class GoogleCloudBackendTest {
 
         assertThat(backend.baseUrl())
             .isEqualTo(
-                "https://claude.googleapis.com/v1alpha" +
+                "https://claude.googleapis.com/v1" +
                     "/projects/$PROJECT/locations/global/workspaces/$WORKSPACE_ID/invoke"
             )
     }
@@ -508,6 +522,323 @@ internal class GoogleCloudBackendTest {
     }
 
     // ---------------------------------------------------------------------------------------------
+    // Organization-level routes
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun organizationRouteUsesOrganizationBaseUrl() {
+        val backend = createBackendWithTokenSupplier()
+        val prepared = backend.prepareRequest(createOrganizationRequest(backend.baseUrl()))
+
+        assertThat(prepared.url()).isEqualTo(ORGANIZATION_BASE_URL + ORGANIZATION_PATH)
+        assertThat(backend.authorizeRequest(prepared).headers.values("Authorization"))
+            .containsExactly("Bearer $TOKEN")
+    }
+
+    @Test
+    fun organizationRouteUsesOrganizationBaseUrlWithDefaultLocation() {
+        val backend =
+            GoogleCloudBackend.builder()
+                .bearerTokenSupplier(TOKEN_SUPPLIER)
+                .project(PROJECT)
+                .workspaceId(WORKSPACE_ID)
+                .build()
+        val prepared = backend.prepareRequest(createOrganizationRequest(backend.baseUrl()))
+
+        assertThat(prepared.url())
+            .isEqualTo(
+                "$GATEWAY_URL/projects/$PROJECT/locations/global/claudeOrganization/invoke" +
+                    ORGANIZATION_PATH
+            )
+    }
+
+    @Test
+    fun workspaceRouteKeepsWorkspaceBaseUrl() {
+        val backend = createBackendWithTokenSupplier()
+        val prepared = backend.prepareRequest(createRequest(backend.baseUrl()))
+
+        assertThat(prepared.url()).isEqualTo("$WORKSPACE_BASE_URL/v1/messages")
+    }
+
+    @Test
+    fun routeOutsideOrganizationPathPrefixKeepsWorkspaceBaseUrl() {
+        val backend = createBackendWithTokenSupplier()
+        val request = createRequest(backend.baseUrl()).toBuilder()
+        val bare = request.replaceAllPathSegments("v1", "organizations").build()
+        val sibling = request.replaceAllPathSegments("v1", "organizations_other", "x").build()
+
+        assertThat(backend.prepareRequest(bare).url())
+            .isEqualTo("$WORKSPACE_BASE_URL/v1/organizations")
+        assertThat(backend.prepareRequest(sibling).url())
+            .isEqualTo("$WORKSPACE_BASE_URL/v1/organizations_other/x")
+    }
+
+    @Test
+    fun organizationRouteWithoutWorkspaceId() {
+        val backend = createBackendWithoutWorkspaceId()
+        val prepared = backend.prepareRequest(createOrganizationRequest(backend.baseUrl()))
+
+        assertThat(prepared.url()).isEqualTo(ORGANIZATION_BASE_URL + ORGANIZATION_PATH)
+    }
+
+    @Test
+    fun workspaceRouteWithoutWorkspaceIdThrows() {
+        val backend = createBackendWithoutWorkspaceId()
+
+        assertThatThrownBy { backend.prepareRequest(createRequest(backend.baseUrl())) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("workspaceId")
+            .hasMessageContaining(ENV_WORKSPACE_ID)
+    }
+
+    @Test
+    fun organizationRouteWithProjectFromServiceAccountCredentials() {
+        val saCredentials = Mockito.mock(ServiceAccountCredentials::class.java)
+        Mockito.`when`(saCredentials.projectId).thenReturn("sa-project")
+
+        val backend = mockBuilder(adc = saCredentials).location(LOCATION).fromEnv().build()
+        val prepared = backend.prepareRequest(createOrganizationRequest(backend.baseUrl()))
+
+        assertThat(prepared.url())
+            .isEqualTo(
+                "$GATEWAY_URL/projects/sa-project/locations/$LOCATION/claudeOrganization/invoke" +
+                    ORGANIZATION_PATH
+            )
+    }
+
+    @Test
+    fun baseUrlOverrideTakesEveryRoute() {
+        val backend = createBackendWithTokenSupplier().toBuilder().baseUrl(CUSTOM_BASE_URL).build()
+
+        assertThat(backend.prepareRequest(createOrganizationRequest(backend.baseUrl())).url())
+            .isEqualTo(CUSTOM_BASE_URL + ORGANIZATION_PATH)
+        assertThat(backend.prepareRequest(createRequest(backend.baseUrl())).url())
+            .isEqualTo("$CUSTOM_BASE_URL/v1/messages")
+    }
+
+    @Test
+    fun baseUrlOverrideEqualToDerivedTakesEveryRoute() {
+        val backend =
+            createBackendWithTokenSupplier().toBuilder().baseUrl(WORKSPACE_BASE_URL).build()
+        val prepared = backend.prepareRequest(createOrganizationRequest(backend.baseUrl()))
+
+        assertThat(prepared.url()).isEqualTo(WORKSPACE_BASE_URL + ORGANIZATION_PATH)
+    }
+
+    @Test
+    fun baseUrlFromEnvTakesEveryRoute() {
+        val backend =
+            mockBuilder(
+                    project = PROJECT,
+                    location = LOCATION,
+                    workspaceId = WORKSPACE_ID,
+                    baseUrl = "https://env.example.com",
+                )
+                .bearerTokenSupplier(TOKEN_SUPPLIER)
+                .fromEnv()
+                .build()
+        val prepared = backend.prepareRequest(createOrganizationRequest(backend.baseUrl()))
+
+        assertThat(prepared.url()).isEqualTo("https://env.example.com$ORGANIZATION_PATH")
+    }
+
+    @Test
+    fun baseUrlOverrideWithoutWorkspaceIdTakesEveryRoute() {
+        val backend =
+            GoogleCloudBackend.builder()
+                .bearerTokenSupplier(TOKEN_SUPPLIER)
+                .baseUrl(CUSTOM_BASE_URL)
+                .build()
+
+        assertThat(backend.prepareRequest(createOrganizationRequest(backend.baseUrl())).url())
+            .isEqualTo(CUSTOM_BASE_URL + ORGANIZATION_PATH)
+        assertThat(backend.prepareRequest(createRequest(backend.baseUrl())).url())
+            .isEqualTo("$CUSTOM_BASE_URL/v1/messages")
+    }
+
+    @Test
+    fun requestBaseUrlTakesEveryRoute() {
+        val backend = createBackendWithTokenSupplier()
+        val prepared = backend.prepareRequest(createOrganizationRequest(CUSTOM_BASE_URL))
+
+        assertThat(prepared.url()).isEqualTo(CUSTOM_BASE_URL + ORGANIZATION_PATH)
+    }
+
+    @Test
+    fun toBuilderKeepsRouting() {
+        val backend = createBackendWithTokenSupplier().toBuilder().location("europe-west4").build()
+        val prepared = backend.prepareRequest(createOrganizationRequest(backend.baseUrl()))
+
+        assertThat(prepared.url())
+            .isEqualTo(
+                "$GATEWAY_URL/projects/$PROJECT/locations/europe-west4/claudeOrganization/invoke" +
+                    ORGANIZATION_PATH
+            )
+    }
+
+    @Test
+    fun toBuilderKeepsBaseUrlOverride() {
+        val backend =
+            GoogleCloudBackend.builder()
+                .bearerTokenSupplier(TOKEN_SUPPLIER)
+                .project(PROJECT)
+                .workspaceId(WORKSPACE_ID)
+                .baseUrl(CUSTOM_BASE_URL)
+                .build()
+                .toBuilder()
+                .build()
+        val prepared = backend.prepareRequest(createOrganizationRequest(backend.baseUrl()))
+
+        assertThat(prepared.url()).isEqualTo(CUSTOM_BASE_URL + ORGANIZATION_PATH)
+    }
+
+    @Test
+    fun toBuilderKeepsBaseUrlOverrideWithoutWorkspaceId() {
+        val backend =
+            GoogleCloudBackend.builder()
+                .bearerTokenSupplier(TOKEN_SUPPLIER)
+                .baseUrl(CUSTOM_BASE_URL)
+                .build()
+                .toBuilder()
+                .build()
+        val prepared = backend.prepareRequest(createOrganizationRequest(backend.baseUrl()))
+
+        assertThat(prepared.url()).isEqualTo(CUSTOM_BASE_URL + ORGANIZATION_PATH)
+    }
+
+    @Test
+    fun clientOrganizationRoute() {
+        val backend = RecordingBackend(createBackendWithTokenSupplier())
+        val client = createClient(backend)
+
+        send { client.beta().organization().workspaces().list() }
+        send { client.async().beta().organization().workspaces().list().join() }
+
+        assertThat(backend.urls())
+            .containsExactly(
+                ORGANIZATION_BASE_URL + ORGANIZATION_PATH,
+                ORGANIZATION_BASE_URL + ORGANIZATION_PATH,
+            )
+        assertThat(backend.requests).allSatisfy {
+            assertThat(it.headers.values("Authorization")).containsExactly("Bearer $TOKEN")
+        }
+    }
+
+    @Test
+    fun clientWorkspaceRoute() {
+        val backend = RecordingBackend(createBackendWithTokenSupplier())
+        val client = createClient(backend)
+
+        send { client.messages().create(MESSAGE_PARAMS) }
+        send { client.async().messages().create(MESSAGE_PARAMS).join() }
+
+        assertThat(backend.urls())
+            .containsExactly("$WORKSPACE_BASE_URL/v1/messages", "$WORKSPACE_BASE_URL/v1/messages")
+    }
+
+    @Test
+    fun clientOrganizationRouteWithoutWorkspaceId() {
+        val backend = RecordingBackend(createBackendWithoutWorkspaceId())
+        val client = createClient(backend)
+
+        send { client.beta().organization().workspaces().list() }
+        send { client.async().beta().organization().workspaces().list().join() }
+
+        assertThat(backend.urls())
+            .containsExactly(
+                ORGANIZATION_BASE_URL + ORGANIZATION_PATH,
+                ORGANIZATION_BASE_URL + ORGANIZATION_PATH,
+            )
+    }
+
+    @Test
+    fun clientWorkspaceRouteWithoutWorkspaceIdThrowsBeforeSending() {
+        val backend = RecordingBackend(createBackendWithoutWorkspaceId())
+        val client = createClient(backend)
+
+        assertThatThrownBy { client.messages().create(MESSAGE_PARAMS) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("workspaceId")
+            .hasMessageContaining(ENV_WORKSPACE_ID)
+        assertThatThrownBy { client.async().messages().create(MESSAGE_PARAMS).join() }
+            .isExactlyInstanceOf(CompletionException::class.java)
+            .cause()
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("workspaceId")
+            .hasMessageContaining(ENV_WORKSPACE_ID)
+        assertThat(backend.requests).isEmpty()
+    }
+
+    @Test
+    fun clientBaseUrlOverrideTakesEveryRoute() {
+        val backend =
+            RecordingBackend(
+                createBackendWithTokenSupplier().toBuilder().baseUrl(CUSTOM_BASE_URL).build()
+            )
+        val client = createClient(backend)
+
+        send { client.beta().organization().workspaces().list() }
+        send { client.async().beta().organization().workspaces().list().join() }
+
+        assertThat(backend.urls())
+            .containsExactly(
+                CUSTOM_BASE_URL + ORGANIZATION_PATH,
+                CUSTOM_BASE_URL + ORGANIZATION_PATH,
+            )
+    }
+
+    @Test
+    fun clientWithOptionsKeepsRouting() {
+        val backend = RecordingBackend(createBackendWithTokenSupplier())
+        val client = createClient(backend).withOptions { it.maxRetries(1) }
+
+        send { client.beta().organization().workspaces().list() }
+        send { client.async().beta().organization().workspaces().list().join() }
+        send { client.messages().create(MESSAGE_PARAMS) }
+
+        assertThat(backend.urls())
+            .containsExactly(
+                ORGANIZATION_BASE_URL + ORGANIZATION_PATH,
+                ORGANIZATION_BASE_URL + ORGANIZATION_PATH,
+                "$WORKSPACE_BASE_URL/v1/messages",
+            )
+    }
+
+    @Test
+    fun clientWithOptionsBaseUrlTakesEveryRoute() {
+        val backend = RecordingBackend(createBackendWithTokenSupplier())
+        val client = createClient(backend).withOptions { it.baseUrl(CUSTOM_BASE_URL) }
+
+        send { client.beta().organization().workspaces().list() }
+        send { client.async().beta().organization().workspaces().list().join() }
+        send { client.withOptions { it.maxRetries(1) }.beta().organization().workspaces().list() }
+        send { client.messages().create(MESSAGE_PARAMS) }
+
+        assertThat(backend.urls())
+            .containsExactly(
+                CUSTOM_BASE_URL + ORGANIZATION_PATH,
+                CUSTOM_BASE_URL + ORGANIZATION_PATH,
+                CUSTOM_BASE_URL + ORGANIZATION_PATH,
+                "$CUSTOM_BASE_URL/v1/messages",
+            )
+    }
+
+    @Test
+    fun clientWithOptionsBaseUrlWithoutWorkspaceIdTakesEveryRoute() {
+        val backend = RecordingBackend(createBackendWithoutWorkspaceId())
+        val client =
+            createClient(backend)
+                .withOptions { it.baseUrl(CUSTOM_BASE_URL) }
+                .withOptions { it.maxRetries(1) }
+
+        send { client.beta().organization().workspaces().list() }
+        send { client.async().messages().create(MESSAGE_PARAMS).join() }
+
+        assertThat(backend.urls())
+            .containsExactly(CUSTOM_BASE_URL + ORGANIZATION_PATH, "$CUSTOM_BASE_URL/v1/messages")
+    }
+
+    // ---------------------------------------------------------------------------------------------
     // skipAuth
     // ---------------------------------------------------------------------------------------------
 
@@ -522,11 +853,10 @@ internal class GoogleCloudBackendTest {
     }
 
     @Test
-    fun skipAuthWithoutBaseUrlRequiresWorkspaceId() {
-        assertThatThrownBy { GoogleCloudBackend.builder().skipAuth(true).project(PROJECT).build() }
-            .isExactlyInstanceOf(IllegalStateException::class.java)
-            .hasMessageContaining("Workspace ID is required")
-            .hasMessageContaining(ENV_WORKSPACE_ID)
+    fun skipAuthWithoutBaseUrlBuildWithoutWorkspaceId() {
+        val backend = GoogleCloudBackend.builder().skipAuth(true).project(PROJECT).build()
+
+        assertThat(backend.workspaceId()).isEmpty
     }
 
     @Test
@@ -540,7 +870,7 @@ internal class GoogleCloudBackendTest {
 
         assertThat(backend.baseUrl())
             .isEqualTo(
-                "https://claude.googleapis.com/v1alpha" +
+                "https://claude.googleapis.com/v1" +
                     "/projects/$PROJECT/locations/global/workspaces/$WORKSPACE_ID/invoke"
             )
     }
@@ -598,13 +928,57 @@ internal class GoogleCloudBackendTest {
             .workspaceId(WORKSPACE_ID)
             .build()
 
-    private fun createRequest(): HttpRequest =
+    private fun createBackendWithoutWorkspaceId(): GoogleCloudBackend =
+        GoogleCloudBackend.builder()
+            .bearerTokenSupplier(TOKEN_SUPPLIER)
+            .project(PROJECT)
+            .location(LOCATION)
+            .build()
+
+    private fun createRequest(baseUrl: String = CUSTOM_BASE_URL): HttpRequest =
         HttpRequest.builder()
             .method(HttpMethod.POST)
-            .baseUrl(CUSTOM_BASE_URL)
+            .baseUrl(baseUrl)
             .addPathSegment("v1")
             .addPathSegment("messages")
             .build()
+
+    private fun createOrganizationRequest(baseUrl: String): HttpRequest =
+        HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(baseUrl)
+            .addPathSegments("v1", "organizations", "workspaces")
+            .putQueryParam("beta", "true")
+            .build()
+
+    private fun createClient(backend: Backend): AnthropicClient =
+        AnthropicOkHttpClient.builder().backend(backend).maxRetries(0).build()
+
+    /** Runs [call], which [RecordingBackend] fails before anything is sent. */
+    private fun send(call: () -> Unit) {
+        val thrown = catchThrowable { call() }
+
+        assertThat(generateSequence(thrown) { it.cause }.lastOrNull())
+            .isInstanceOf(RequestNotSentException::class.java)
+    }
+
+    private class RequestNotSentException : RuntimeException()
+
+    /**
+     * Records each request as the transport resolved and authorized it, then fails it so that
+     * nothing is sent.
+     */
+    private class RecordingBackend(private val backend: Backend) : Backend by backend {
+        val requests = CopyOnWriteArrayList<HttpRequest>()
+
+        /** The transport resolves the whole URL into the base URL before it authorizes. */
+        fun urls(): List<String?> = requests.map { it.baseUrl }
+
+        override fun authorizeRequest(request: HttpRequest): HttpRequest {
+            requests.add(backend.authorizeRequest(request))
+            throw RequestNotSentException()
+        }
+    }
 
     /**
      * Returns a spied builder whose [GoogleCloudBackend.Builder.getEnv] returns the given values

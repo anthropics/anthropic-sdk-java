@@ -31,7 +31,7 @@ private constructor(
     ) : this(id, type, mutableMapOf())
 
     /**
-     * Unique identifier of the deleted vault.
+     * The unique ID of the deleted vault (`vlt_...`).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -99,7 +99,7 @@ private constructor(
             additionalProperties = betaManagedAgentsDeletedVault.additionalProperties.toMutableMap()
         }
 
-        /** Unique identifier of the deleted vault. */
+        /** The unique ID of the deleted vault (`vlt_...`). */
         fun id(id: String) = id(JsonField.of(id))
 
         /**
