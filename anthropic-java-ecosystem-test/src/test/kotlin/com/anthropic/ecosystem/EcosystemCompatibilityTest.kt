@@ -33,13 +33,17 @@ internal class EcosystemCompatibilityTest {
             // We have to manually run the test methods instead of using the JUnit runner because it
             // seems impossible to get working with R8.
             val test = EcosystemCompatibilityTest()
-            test::class
-                .memberFunctions
-                .asSequence()
-                .filter { function ->
+            val functions =
+                test::class.memberFunctions.filter { function ->
                     function.javaMethod?.isAnnotationPresent(Test::class.java) == true
                 }
-                .forEach { it.call(test) }
+            check(functions.isNotEmpty()) { "Found no tests" }
+            val failed =
+                functions.filter { function ->
+                    println("Running ${function.name}")
+                    runCatching { function.call(test) }.onFailure { it.printStackTrace() }.isFailure
+                }
+            check(failed.isEmpty()) { "Failed: ${failed.map { it.name }}" }
         }
     }
 
@@ -162,6 +166,28 @@ internal class EcosystemCompatibilityTest {
             )
 
         bashCodeExecutionToolResultBlockParam.validate()
+        assertThat(roundtrippedBashCodeExecutionToolResultBlockParam)
+            .isEqualTo(bashCodeExecutionToolResultBlockParam)
+    }
+
+    @Test
+    fun bashCodeExecutionToolResultBlockParamWithUnknownFieldRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val bashCodeExecutionToolResultBlockParam =
+            jsonMapper.readValue(
+                "{\"content\":{\"error_code\":\"invalid_tool_input\",\"type\":\"bash_code_execution_tool_result_error\"},\"tool_use_id\":\"srvtoolu_SQfNkl1n_JR_\",\"type\":\"bash_code_execution_tool_result\",\"cache_control\":{\"type\":\"ephemeral\",\"ttl\":\"5m\"},\"unknown_field\":true}",
+                jacksonTypeRef<BashCodeExecutionToolResultBlockParam>(),
+            )
+
+        val roundtrippedBashCodeExecutionToolResultBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(bashCodeExecutionToolResultBlockParam),
+                jacksonTypeRef<BashCodeExecutionToolResultBlockParam>(),
+            )
+
+        bashCodeExecutionToolResultBlockParam.validate()
+        assertThat(bashCodeExecutionToolResultBlockParam._additionalProperties())
+            .containsKey("unknown_field")
         assertThat(roundtrippedBashCodeExecutionToolResultBlockParam)
             .isEqualTo(bashCodeExecutionToolResultBlockParam)
     }

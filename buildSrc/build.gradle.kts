@@ -54,4 +54,5 @@ dependencies {
         // in the newer catalog version, so require that instead.
         implementation(libs.log4j.core)
     }
+    implementation(libs.asm.tree)
 }

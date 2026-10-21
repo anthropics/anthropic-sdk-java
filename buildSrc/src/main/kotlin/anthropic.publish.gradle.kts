@@ -79,3 +79,5 @@ plugins.withType<SigningPlugin> {
 tasks.withType<Zip>().configureEach {
     isZip64 = true
 }
+
+configureReachabilityMetadata()

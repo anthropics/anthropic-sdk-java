@@ -57,35 +57,39 @@ dependencies {
 // the requested build.
 val jdk8 = javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(8)) }
 
-// Point this task at a JDK 8 toolchain, or decide what to do when none is installed. The toolchain
-// is resolved here (as the task is realized for the build) rather than by binding the launcher
-// provider eagerly, so the decision is made before the configuration cache serializes the task —
-// otherwise a missing JDK 8 fails at store time even when we'd rather skip:
-//   - found        -> run on JDK 8
-//   - missing + CI -> fail hard, so an ecosystem check can never silently pass in CI
-//   - missing      -> skip, so `./gradlew test` still works locally without a JDK 8 installed
-fun JavaExec.useJdk8() {
+// What to do with a task that can't run because of what this machine has installed:
+//   - CI        -> fail hard, so an ecosystem check can never silently pass in CI
+//   - elsewhere -> skip, so `./gradlew test` still works locally
+fun Task.failOnCiOrSkip(failure: String, skip: String, cause: Exception? = null) {
     val onCi =
         project.providers.environmentVariable("CI").getOrNull().toBoolean() ||
             project.providers.environmentVariable("GITHUB_ACTIONS").getOrNull().toBoolean()
+    if (onCi) {
+        throw GradleException("$path $failure", cause)
+    }
+    enabled = false
+    logger.lifecycle("$path skipped: $skip")
+}
 
+// Point this task at a JDK 8 toolchain, or decide what to do when none is installed. The toolchain
+// is resolved here (as the task is realized for the build) rather than by binding the launcher
+// provider eagerly, so the decision is made before the configuration cache serializes the task —
+// otherwise a missing JDK 8 fails at store time even when we'd rather skip.
+fun JavaExec.useJdk8() {
     try {
         javaLauncher.set(jdk8.get())
     } catch (e: Exception) {
-        if (onCi) {
-            throw GradleException(
-                "$path requires a JDK 8 toolchain, but none was found. CI installs Temurin 8 via " +
+        failOnCiOrSkip(
+            failure =
+                "requires a JDK 8 toolchain, but none was found. CI installs Temurin 8 via " +
                     "actions/setup-java; refusing to skip so this ecosystem check can't silently pass.",
-                e
-            )
-        }
-        enabled = false
-        // Toolchain detection is not a configuration-cache input (gradle/gradle#36734); the
-        // `--no-configuration-cache` hint ensures a fresh probe re-enables this task once a JDK 8
-        // is in place.
-        logger.lifecycle(
-            "$path skipped: no JDK 8 toolchain found (${e.message}). Install a JDK 8 (e.g. " +
-                "Temurin 8) and rerun once with --no-configuration-cache to pick it up."
+            // Toolchain detection is not a configuration-cache input (gradle/gradle#36734); the
+            // `--no-configuration-cache` hint ensures a fresh probe re-enables this task once a JDK 8
+            // is in place.
+            skip =
+                "no JDK 8 toolchain found (${e.message}). Install a JDK 8 (e.g. Temurin 8) and " +
+                    "rerun once with --no-configuration-cache to pick it up.",
+            cause = e,
         )
     }
 }
@@ -191,6 +195,41 @@ val testR8 by tasks.registering(JavaExec::class) {
 
     // This is a verification task with no file outputs, so rerun it only when
     // the JAR changes.
+    outputs.upToDateWhen { true }
+}
+
+// GraalVM native image compatibility
+
+val nativeImageFile = layout.buildDirectory.file("native-image/${project.name}")
+val nativeImage by tasks.registering(Exec::class) {
+    group = "verification"
+
+    val graalVmHome = providers.environmentVariable("GRAALVM_HOME").orNull
+    if (graalVmHome != null) {
+        executable = "$graalVmHome/bin/native-image"
+    } else {
+        failOnCiOrSkip(
+            failure = "requires GraalVM, but GRAALVM_HOME is not set.",
+            skip = "GRAALVM_HOME is not set.",
+        )
+    }
+    val classpath = sourceSets.test.get().output + configurations.testRuntimeClasspath.get()
+    val output = nativeImageFile
+    argumentProviders.add(CommandLineArgumentProvider {
+        listOf("-cp", classpath.asPath, "-o", output.get().asFile.absolutePath, "com.anthropic.ecosystem.EcosystemCompatibilityTest")
+    })
+
+    inputs.files(classpath).withNormalizer(ClasspathNormalizer::class)
+    outputs.file(nativeImageFile)
+}
+
+val testNativeImage by tasks.registering(Exec::class) {
+    group = "verification"
+
+    enabled = nativeImage.get().enabled
+    executable = nativeImageFile.get().asFile.absolutePath
+
+    inputs.files(nativeImage)
     outputs.upToDateWhen { true }
 }
 
@@ -344,6 +383,7 @@ val runKotlin1820 by tasks.registering(JavaExec::class) {
 tasks.test {
     dependsOn(testProGuard)
     dependsOn(testR8)
+    dependsOn(testNativeImage)
     dependsOn(testJava8)
     dependsOn(testJpms)
     dependsOn(testModuleInfo)
