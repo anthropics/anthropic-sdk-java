@@ -33,18 +33,13 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
-                                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                 .url("https://example-server.modelcontextprotocol.io/sse")
                                 .build()
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                .effort(
-                                    BetaManagedAgentsEffortLow.of(
-                                        BetaManagedAgentsEffortLow.Type.LOW
-                                    )
-                                )
+                                .effort(BetaManagedAgentsEffortLow.builder().build())
                                 .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
@@ -53,7 +48,6 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                         .addSkill(
                             BetaManagedAgentsAnthropicSkill.builder()
                                 .skillId("xlsx")
-                                .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                 .version("1")
                                 .build()
                         )
@@ -66,9 +60,7 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                                     BetaManagedAgentsBashToolConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                         )
                                         .build()
                                 )
@@ -76,23 +68,15 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAskPolicy.of(
-                                                BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                            )
+                                            BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                         )
                                         .build()
                                 )
-                                .type(
-                                    BetaManagedAgentsAgentToolset20260401.Type
-                                        .AGENT_TOOLSET_20260401
-                                )
                                 .build()
                         )
-                        .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                         .version(1)
                         .build()
                 )
-                .type(BetaManagedAgentsSessionMultiagentCoordinator.Type.COORDINATOR)
                 .build()
 
         assertThat(betaManagedAgentsSessionMultiagentCoordinator.agents())
@@ -107,18 +91,13 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
-                                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                 .url("https://example-server.modelcontextprotocol.io/sse")
                                 .build()
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                .effort(
-                                    BetaManagedAgentsEffortLow.of(
-                                        BetaManagedAgentsEffortLow.Type.LOW
-                                    )
-                                )
+                                .effort(BetaManagedAgentsEffortLow.builder().build())
                                 .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
@@ -127,7 +106,6 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                         .addSkill(
                             BetaManagedAgentsAnthropicSkill.builder()
                                 .skillId("xlsx")
-                                .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                 .version("1")
                                 .build()
                         )
@@ -140,9 +118,7 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                                     BetaManagedAgentsBashToolConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                         )
                                         .build()
                                 )
@@ -150,25 +126,16 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAskPolicy.of(
-                                                BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                            )
+                                            BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                         )
                                         .build()
                                 )
-                                .type(
-                                    BetaManagedAgentsAgentToolset20260401.Type
-                                        .AGENT_TOOLSET_20260401
-                                )
                                 .build()
                         )
-                        .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                         .version(1)
                         .build()
                 )
             )
-        assertThat(betaManagedAgentsSessionMultiagentCoordinator.type())
-            .isEqualTo(BetaManagedAgentsSessionMultiagentCoordinator.Type.COORDINATOR)
     }
 
     @Test
@@ -186,18 +153,13 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
-                                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                 .url("https://example-server.modelcontextprotocol.io/sse")
                                 .build()
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                .effort(
-                                    BetaManagedAgentsEffortLow.of(
-                                        BetaManagedAgentsEffortLow.Type.LOW
-                                    )
-                                )
+                                .effort(BetaManagedAgentsEffortLow.builder().build())
                                 .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
@@ -206,7 +168,6 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                         .addSkill(
                             BetaManagedAgentsAnthropicSkill.builder()
                                 .skillId("xlsx")
-                                .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                 .version("1")
                                 .build()
                         )
@@ -219,9 +180,7 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                                     BetaManagedAgentsBashToolConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                         )
                                         .build()
                                 )
@@ -229,23 +188,15 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAskPolicy.of(
-                                                BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                            )
+                                            BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                         )
                                         .build()
                                 )
-                                .type(
-                                    BetaManagedAgentsAgentToolset20260401.Type
-                                        .AGENT_TOOLSET_20260401
-                                )
                                 .build()
                         )
-                        .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                         .version(1)
                         .build()
                 )
-                .type(BetaManagedAgentsSessionMultiagentCoordinator.Type.COORDINATOR)
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionMultiagentCoordinator =

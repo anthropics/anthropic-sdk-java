@@ -120,7 +120,6 @@ internal class BatchServiceTest {
                                                 .build()
                                         )
                                     )
-                                    .temperature(1.0)
                                     .thinking(
                                         ThinkingConfigAdaptive.builder()
                                             .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -174,8 +173,6 @@ internal class BatchServiceTest {
                                             .type(Tool.Type.CUSTOM)
                                             .build()
                                     )
-                                    .topK(5L)
-                                    .topP(0.7)
                                     .build()
                             )
                             .build()

@@ -26,11 +26,9 @@ internal class BetaManagedAgentsMultiagentTest {
                 .addAgent(
                     BetaManagedAgentsAgentReference.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
                         .version(1)
                         .build()
                 )
-                .type(BetaManagedAgentsMultiagentCoordinator.Type.COORDINATOR)
                 .build()
 
         val betaManagedAgentsMultiagent = BetaManagedAgentsMultiagent.ofCoordinator(coordinator)
@@ -48,11 +46,9 @@ internal class BetaManagedAgentsMultiagentTest {
                     .addAgent(
                         BetaManagedAgentsAgentReference.builder()
                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                            .type(BetaManagedAgentsAgentReference.Type.AGENT)
                             .version(1)
                             .build()
                     )
-                    .type(BetaManagedAgentsMultiagentCoordinator.Type.COORDINATOR)
                     .build()
             )
 
@@ -78,7 +74,6 @@ internal class BetaManagedAgentsMultiagentTest {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentReference.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -92,7 +87,6 @@ internal class BetaManagedAgentsMultiagentTest {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentReference.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -122,7 +116,6 @@ internal class BetaManagedAgentsMultiagentTest {
                             .addPredefinedAgent(
                                 BetaManagedAgentsAgentReference.builder()
                                     .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                    .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                     .version(1)
                                     .build()
                             )
@@ -136,7 +129,6 @@ internal class BetaManagedAgentsMultiagentTest {
                             .addPredefinedAgent(
                                 BetaManagedAgentsAgentReference.builder()
                                     .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                    .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                     .version(1)
                                     .build()
                             )

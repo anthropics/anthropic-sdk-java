@@ -10,21 +10,14 @@ internal class BetaManagedAgentsManualTriggerContextTest {
     @Test
     fun create() {
         val betaManagedAgentsManualTriggerContext =
-            BetaManagedAgentsManualTriggerContext.of(
-                BetaManagedAgentsManualTriggerContext.Type.MANUAL
-            )
-
-        assertThat(betaManagedAgentsManualTriggerContext.type())
-            .isEqualTo(BetaManagedAgentsManualTriggerContext.Type.MANUAL)
+            BetaManagedAgentsManualTriggerContext.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsManualTriggerContext =
-            BetaManagedAgentsManualTriggerContext.of(
-                BetaManagedAgentsManualTriggerContext.Type.MANUAL
-            )
+            BetaManagedAgentsManualTriggerContext.builder().build()
 
         val roundtrippedBetaManagedAgentsManualTriggerContext =
             jsonMapper.readValue(

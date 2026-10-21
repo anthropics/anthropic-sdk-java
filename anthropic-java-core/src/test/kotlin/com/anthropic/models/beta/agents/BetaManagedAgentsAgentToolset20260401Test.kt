@@ -14,24 +14,15 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
                 .addConfig(
                     BetaManagedAgentsBashToolConfig.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .defaultConfig(
                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
-                .type(BetaManagedAgentsAgentToolset20260401.Type.AGENT_TOOLSET_20260401)
                 .build()
 
         assertThat(betaManagedAgentsAgentToolset20260401.configs())
@@ -39,11 +30,7 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
                 BetaManagedAgentsAgentToolConfig.ofBash(
                     BetaManagedAgentsBashToolConfig.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
             )
@@ -51,15 +38,9 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
             .isEqualTo(
                 BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
-        assertThat(betaManagedAgentsAgentToolset20260401.type())
-            .isEqualTo(BetaManagedAgentsAgentToolset20260401.Type.AGENT_TOOLSET_20260401)
     }
 
     @Test
@@ -70,24 +51,15 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
                 .addConfig(
                     BetaManagedAgentsBashToolConfig.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .defaultConfig(
                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
-                .type(BetaManagedAgentsAgentToolset20260401.Type.AGENT_TOOLSET_20260401)
                 .build()
 
         val roundtrippedBetaManagedAgentsAgentToolset20260401 =

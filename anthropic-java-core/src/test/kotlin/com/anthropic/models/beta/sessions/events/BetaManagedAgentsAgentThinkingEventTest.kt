@@ -14,14 +14,11 @@ internal class BetaManagedAgentsAgentThinkingEventTest {
             BetaManagedAgentsAgentThinkingEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsAgentThinkingEvent.Type.AGENT_THINKING)
                 .build()
 
         assertThat(betaManagedAgentsAgentThinkingEvent.id()).isEqualTo("id")
         assertThat(betaManagedAgentsAgentThinkingEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsAgentThinkingEvent.type())
-            .isEqualTo(BetaManagedAgentsAgentThinkingEvent.Type.AGENT_THINKING)
     }
 
     @Test
@@ -31,7 +28,6 @@ internal class BetaManagedAgentsAgentThinkingEventTest {
             BetaManagedAgentsAgentThinkingEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsAgentThinkingEvent.Type.AGENT_THINKING)
                 .build()
 
         val roundtrippedBetaManagedAgentsAgentThinkingEvent =

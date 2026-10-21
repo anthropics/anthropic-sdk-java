@@ -119,7 +119,7 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -167,7 +167,7 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             response
                                 .use { sendHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -210,7 +210,7 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             response
                                 .let { streamStreamingHandler.handle(it) }
                                 .let { streamResponse ->
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         streamResponse.map { it.validate() }
                                     } else {
                                         streamResponse

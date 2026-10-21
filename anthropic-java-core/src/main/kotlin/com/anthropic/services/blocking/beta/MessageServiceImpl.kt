@@ -121,7 +121,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     response
                         .use { createHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -174,7 +174,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     response
                         .let { createStreamingHandler.handle(it) }
                         .let { streamResponse ->
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 streamResponse.map { it.validate() }
                             } else {
                                 streamResponse
@@ -211,7 +211,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     response
                         .use { countTokensHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

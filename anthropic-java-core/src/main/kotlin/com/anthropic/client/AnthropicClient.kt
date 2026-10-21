@@ -2,7 +2,6 @@ package com.anthropic.client
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.blocking.BetaService
-import com.anthropic.services.blocking.CompletionService
 import com.anthropic.services.blocking.FileService
 import com.anthropic.services.blocking.MessageService
 import com.anthropic.services.blocking.ModelService
@@ -50,8 +49,6 @@ interface AnthropicClient {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): AnthropicClient
 
-    fun completions(): CompletionService
-
     fun messages(): MessageService
 
     fun models(): ModelService
@@ -88,8 +85,6 @@ interface AnthropicClient {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): AnthropicClient.WithRawResponse
-
-        fun completions(): CompletionService.WithRawResponse
 
         fun messages(): MessageService.WithRawResponse
 

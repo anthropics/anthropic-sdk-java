@@ -13,14 +13,11 @@ internal class BetaUserProfileEnrollmentUrlTest {
         val betaUserProfileEnrollmentUrl =
             BetaUserProfileEnrollmentUrl.builder()
                 .expiresAt(OffsetDateTime.parse("2026-03-15T10:15:00Z"))
-                .type(BetaUserProfileEnrollmentUrl.Type.ENROLLMENT_URL)
                 .url("https://platform.claude.com/user-profiles/enrollment/M3J0bGJxZ2ppMnptbnB1")
                 .build()
 
         assertThat(betaUserProfileEnrollmentUrl.expiresAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:15:00Z"))
-        assertThat(betaUserProfileEnrollmentUrl.type())
-            .isEqualTo(BetaUserProfileEnrollmentUrl.Type.ENROLLMENT_URL)
         assertThat(betaUserProfileEnrollmentUrl.url())
             .isEqualTo("https://platform.claude.com/user-profiles/enrollment/M3J0bGJxZ2ppMnptbnB1")
     }
@@ -31,7 +28,6 @@ internal class BetaUserProfileEnrollmentUrlTest {
         val betaUserProfileEnrollmentUrl =
             BetaUserProfileEnrollmentUrl.builder()
                 .expiresAt(OffsetDateTime.parse("2026-03-15T10:15:00Z"))
-                .type(BetaUserProfileEnrollmentUrl.Type.ENROLLMENT_URL)
                 .url("https://platform.claude.com/user-profiles/enrollment/M3J0bGJxZ2ppMnptbnB1")
                 .build()
 

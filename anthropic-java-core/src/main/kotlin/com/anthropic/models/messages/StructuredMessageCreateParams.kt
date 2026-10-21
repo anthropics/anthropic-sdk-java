@@ -135,16 +135,6 @@ internal constructor(
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
-     * @see MessageCreateParams.temperature
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-    )
-    fun temperature(): Optional<Double> = delegate.temperature()
-
-    /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
      * @see MessageCreateParams.thinking
      */
     fun thinking(): Optional<ThinkingConfigParam> = delegate.thinking()
@@ -162,26 +152,6 @@ internal constructor(
      * @see MessageCreateParams.tools
      */
     fun tools(): Optional<List<ToolUnion>> = delegate.tools()
-
-    /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     * @see MessageCreateParams.topK
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-    )
-    fun topK(): Optional<Long> = delegate.topK()
-
-    /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     * @see MessageCreateParams.topP
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-    )
-    fun topP(): Optional<Double> = delegate.topP()
 
     /**
      * Returns the raw JSON value of [maxTokens].
@@ -275,16 +245,6 @@ internal constructor(
     fun _system(): JsonField<MessageCreateParams.System> = delegate._system()
 
     /**
-     * Returns the raw JSON value of [temperature].
-     *
-     * Unlike [temperature], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-    )
-    fun _temperature(): JsonField<Double> = delegate._temperature()
-
-    /**
      * Returns the raw JSON value of [thinking].
      *
      * Unlike [thinking], this method doesn't throw if the JSON field has an unexpected type.
@@ -304,26 +264,6 @@ internal constructor(
      * Unlike [tools], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _tools(): JsonField<List<ToolUnion>> = delegate._tools()
-
-    /**
-     * Returns the raw JSON value of [topK].
-     *
-     * Unlike [topK], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-    )
-    fun _topK(): JsonField<Long> = delegate._topK()
-
-    /**
-     * Returns the raw JSON value of [topP].
-     *
-     * Unlike [topP], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-    )
-    fun _topP(): JsonField<Double> = delegate._topP()
 
     /** @see MessageCreateParams._additionalBodyProperties */
     fun _additionalBodyProperties(): Map<String, JsonValue> = delegate._additionalBodyProperties()
@@ -417,76 +357,85 @@ internal constructor(
         /** Alias for calling [addMessage] with `message.toParam()`. */
         fun addMessage(message: Message) = apply { delegate.addMessage(message) }
 
+        /** Alias for calling [addMessage] with `MessageParam.ofUser(user)`. */
+        fun addMessage(user: UserMessageParam) = apply { delegate.addMessage(user) }
+
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * MessageParam.builder()
-         *     .role(MessageParam.Role.USER)
+         * UserMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addUserMessage(content: MessageParam.Content) = apply {
+        fun addUserMessage(content: MessageContentParam) = apply {
             delegate.addUserMessage(content)
         }
 
-        /** Alias for calling [addUserMessage] with `MessageParam.Content.ofString(string)`. */
+        /** Alias for calling [addUserMessage] with `MessageContentParam.ofString(string)`. */
         fun addUserMessage(string: String) = apply { delegate.addUserMessage(string) }
 
         /**
          * Alias for calling [addUserMessage] with
-         * `MessageParam.Content.ofBlockParams(blockParams)`.
+         * `MessageContentParam.ofContentBlockParams(contentBlockParams)`.
          */
-        fun addUserMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
-            delegate.addUserMessageOfBlockParams(blockParams)
-        }
+        fun addUserMessageOfContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
+            apply {
+                delegate.addUserMessageOfContentBlockParams(contentBlockParams)
+            }
+
+        /** Alias for calling [addMessage] with `MessageParam.ofAssistant(assistant)`. */
+        fun addMessage(assistant: AssistantMessageParam) = apply { delegate.addMessage(assistant) }
 
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * MessageParam.builder()
-         *     .role(MessageParam.Role.ASSISTANT)
+         * AssistantMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addAssistantMessage(content: MessageParam.Content) = apply {
+        fun addAssistantMessage(content: MessageContentParam) = apply {
             delegate.addAssistantMessage(content)
         }
 
-        /** Alias for calling [addAssistantMessage] with `MessageParam.Content.ofString(string)`. */
+        /** Alias for calling [addAssistantMessage] with `MessageContentParam.ofString(string)`. */
         fun addAssistantMessage(string: String) = apply { delegate.addAssistantMessage(string) }
 
         /**
          * Alias for calling [addAssistantMessage] with
-         * `MessageParam.Content.ofBlockParams(blockParams)`.
+         * `MessageContentParam.ofContentBlockParams(contentBlockParams)`.
          */
-        fun addAssistantMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
-            delegate.addAssistantMessageOfBlockParams(blockParams)
-        }
+        fun addAssistantMessageOfContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
+            apply {
+                delegate.addAssistantMessageOfContentBlockParams(contentBlockParams)
+            }
+
+        /** Alias for calling [addMessage] with `MessageParam.ofSystem(system)`. */
+        fun addMessage(system: SystemMessageParam) = apply { delegate.addMessage(system) }
 
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * MessageParam.builder()
-         *     .role(MessageParam.Role.SYSTEM)
+         * SystemMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addSystemMessage(content: MessageParam.Content) = apply {
+        fun addSystemMessage(content: SystemMessageParam.Content) = apply {
             delegate.addSystemMessage(content)
         }
 
-        /** Alias for calling [addSystemMessage] with `MessageParam.Content.ofString(string)`. */
+        /**
+         * Alias for calling [addSystemMessage] with `SystemMessageParam.Content.ofString(string)`.
+         */
         fun addSystemMessage(string: String) = apply { delegate.addSystemMessage(string) }
 
         /**
-         * Alias for calling [addSystemMessage] with
-         * `MessageParam.Content.ofBlockParams(blockParams)`.
+         * Alias for calling [addSystemMessage] with `SystemMessageParam.Content.ofBlocks(blocks)`.
          */
-        fun addSystemMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
-            delegate.addSystemMessageOfBlockParams(blockParams)
+        fun addSystemMessageOfBlocks(blocks: List<TextBlockParam>) = apply {
+            delegate.addSystemMessageOfBlocks(blocks)
         }
 
         /** @see MessageCreateParams.Builder.model */
@@ -752,26 +701,6 @@ internal constructor(
             delegate.systemOfTextBlockParams(textBlockParams)
         }
 
-        /** @see MessageCreateParams.Builder.temperature */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        fun temperature(temperature: Double) = apply { delegate.temperature(temperature) }
-
-        /**
-         * Sets [Builder.temperature] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.temperature] with a well-typed [Double] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        fun temperature(temperature: JsonField<Double>) = apply {
-            delegate.temperature(temperature)
-        }
-
         /** @see MessageCreateParams.Builder.thinking */
         fun thinking(thinking: ThinkingConfigParam) = apply { delegate.thinking(thinking) }
 
@@ -1018,40 +947,6 @@ internal constructor(
         fun addTool(searchToolRegex20251119: ToolSearchToolRegex20251119) = apply {
             delegate.addTool(searchToolRegex20251119)
         }
-
-        /** @see MessageCreateParams.Builder.topK */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-        )
-        fun topK(topK: Long) = apply { delegate.topK(topK) }
-
-        /**
-         * Sets [Builder.topK] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.topK] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-        )
-        fun topK(topK: JsonField<Long>) = apply { delegate.topK(topK) }
-
-        /** @see MessageCreateParams.Builder.topP */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        fun topP(topP: Double) = apply { delegate.topP(topP) }
-
-        /**
-         * Sets [Builder.topP] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.topP] with a well-typed [Double] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        fun topP(topP: JsonField<Double>) = apply { delegate.topP(topP) }
 
         /** @see MessageCreateParams.Builder.body */
         fun body(body: MessageCreateParams.Body) = apply { delegate.body(body) }

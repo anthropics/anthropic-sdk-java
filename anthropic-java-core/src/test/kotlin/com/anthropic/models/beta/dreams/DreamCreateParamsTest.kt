@@ -15,9 +15,7 @@ internal class DreamCreateParamsTest {
             .addMemoryStoreInput("x")
             .model("string")
             .instructions("x")
-            .outputBehavior(
-                BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
-            )
+            .outputBehavior(BetaOutputBehaviorCreateNew.builder().build())
             .build()
     }
 
@@ -30,9 +28,7 @@ internal class DreamCreateParamsTest {
                 .addMemoryStoreInput("x")
                 .model("string")
                 .instructions("x")
-                .outputBehavior(
-                    BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
-                )
+                .outputBehavior(BetaOutputBehaviorCreateNew.builder().build())
                 .build()
 
         val headers = params._headers()
@@ -68,26 +64,16 @@ internal class DreamCreateParamsTest {
                 .addMemoryStoreInput("x")
                 .model("string")
                 .instructions("x")
-                .outputBehavior(
-                    BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
-                )
+                .outputBehavior(BetaOutputBehaviorCreateNew.builder().build())
                 .build()
 
         val body = params._body()
 
-        assertThat(body.inputs())
-            .containsExactly(
-                BetaDreamInput.ofMemoryStore(
-                    BetaDreamMemoryStoreInput.builder()
-                        .memoryStoreId("x")
-                        .type(BetaDreamMemoryStoreInput.Type.MEMORY_STORE)
-                        .build()
-                )
-            )
+        assertThat(body.inputs()).containsExactly(BetaDreamInput.ofMemoryStore("x"))
         assertThat(body.model()).isEqualTo(DreamCreateParams.Model.ofString("string"))
         assertThat(body.instructions()).contains("x")
         assertThat(body.outputBehavior())
-            .contains(BetaOutputBehavior.ofCreateNew(BetaOutputBehaviorCreateNew.Type.CREATE_NEW))
+            .contains(BetaOutputBehavior.ofCreateNew(BetaOutputBehaviorCreateNew.builder().build()))
     }
 
     @Test
@@ -96,15 +82,7 @@ internal class DreamCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body.inputs())
-            .containsExactly(
-                BetaDreamInput.ofMemoryStore(
-                    BetaDreamMemoryStoreInput.builder()
-                        .memoryStoreId("x")
-                        .type(BetaDreamMemoryStoreInput.Type.MEMORY_STORE)
-                        .build()
-                )
-            )
+        assertThat(body.inputs()).containsExactly(BetaDreamInput.ofMemoryStore("x"))
         assertThat(body.model()).isEqualTo(DreamCreateParams.Model.ofString("string"))
     }
 }

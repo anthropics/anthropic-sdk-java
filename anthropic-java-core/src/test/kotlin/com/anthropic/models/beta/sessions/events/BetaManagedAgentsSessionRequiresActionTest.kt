@@ -10,24 +10,16 @@ internal class BetaManagedAgentsSessionRequiresActionTest {
     @Test
     fun create() {
         val betaManagedAgentsSessionRequiresAction =
-            BetaManagedAgentsSessionRequiresAction.builder()
-                .addEventId("string")
-                .type(BetaManagedAgentsSessionRequiresAction.Type.REQUIRES_ACTION)
-                .build()
+            BetaManagedAgentsSessionRequiresAction.builder().addEventId("string").build()
 
         assertThat(betaManagedAgentsSessionRequiresAction.eventIds()).containsExactly("string")
-        assertThat(betaManagedAgentsSessionRequiresAction.type())
-            .isEqualTo(BetaManagedAgentsSessionRequiresAction.Type.REQUIRES_ACTION)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionRequiresAction =
-            BetaManagedAgentsSessionRequiresAction.builder()
-                .addEventId("string")
-                .type(BetaManagedAgentsSessionRequiresAction.Type.REQUIRES_ACTION)
-                .build()
+            BetaManagedAgentsSessionRequiresAction.builder().addEventId("string").build()
 
         val roundtrippedBetaManagedAgentsSessionRequiresAction =
             jsonMapper.readValue(

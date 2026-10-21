@@ -9,25 +9,15 @@ internal class BetaManagedAgentsMemoryPrefixTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsMemoryPrefix =
-            BetaManagedAgentsMemoryPrefix.builder()
-                .path("path")
-                .type(BetaManagedAgentsMemoryPrefix.Type.MEMORY_PREFIX)
-                .build()
+        val betaManagedAgentsMemoryPrefix = BetaManagedAgentsMemoryPrefix.of("path")
 
         assertThat(betaManagedAgentsMemoryPrefix.path()).isEqualTo("path")
-        assertThat(betaManagedAgentsMemoryPrefix.type())
-            .isEqualTo(BetaManagedAgentsMemoryPrefix.Type.MEMORY_PREFIX)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsMemoryPrefix =
-            BetaManagedAgentsMemoryPrefix.builder()
-                .path("path")
-                .type(BetaManagedAgentsMemoryPrefix.Type.MEMORY_PREFIX)
-                .build()
+        val betaManagedAgentsMemoryPrefix = BetaManagedAgentsMemoryPrefix.of("path")
 
         val roundtrippedBetaManagedAgentsMemoryPrefix =
             jsonMapper.readValue(

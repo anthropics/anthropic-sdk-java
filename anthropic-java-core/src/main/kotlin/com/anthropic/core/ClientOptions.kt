@@ -47,10 +47,10 @@ private constructor(
      * interceptor receives the underlying HTTP client.
      *
      * Interceptors observe requests in the canonical Anthropic API shape, with the client's default
-     * headers and first-party credentials (`X-Api-Key` or `Authorization`) already applied, and
-     * they observe responses normalized to the Anthropic shape (e.g. Bedrock's binary event stream
-     * is decoded to SSE). Backend-specific adaptation — URL rewriting, request signing (e.g. AWS
-     * SigV4), and backend credentials — happens below the interceptors and is not visible to them.
+     * headers and first-party credentials (`Authorization`) already applied, and they observe
+     * responses normalized to the Anthropic shape (e.g. Bedrock's binary event stream is decoded to
+     * SSE). Backend-specific adaptation — URL rewriting, request signing (e.g. AWS SigV4), and
+     * backend credentials — happens below the interceptors and is not visible to them.
      *
      * Because credentials are applied above the interceptors, an interceptor that wants to replace
      * them must use `replaceHeaders`, not `putHeader` (which would append a duplicate header).
@@ -268,11 +268,11 @@ private constructor(
          * last interceptor receives the underlying HTTP client.
          *
          * Interceptors observe requests in the canonical Anthropic API shape, with the client's
-         * default headers and first-party credentials (`X-Api-Key` or `Authorization`) already
-         * applied, and they observe responses normalized to the Anthropic shape (e.g. Bedrock's
-         * binary event stream is decoded to SSE). Backend-specific adaptation — URL rewriting,
-         * request signing (e.g. AWS SigV4), and backend credentials — happens below the
-         * interceptors and is not visible to them.
+         * default headers and first-party credentials (`Authorization`) already applied, and they
+         * observe responses normalized to the Anthropic shape (e.g. Bedrock's binary event stream
+         * is decoded to SSE). Backend-specific adaptation — URL rewriting, request signing (e.g.
+         * AWS SigV4), and backend credentials — happens below the interceptors and is not visible
+         * to them.
          *
          * Because credentials are applied above the interceptors, an interceptor that wants to
          * replace them must use `replaceHeaders`, not `putHeader` (which would append a duplicate
@@ -640,21 +640,16 @@ private constructor(
                 )
             val credentialResult = credentialResult
             val authorizedHttpClient =
-                when {
-                    credentialResult == null -> interceptedHttpClient
-                    credentialResult.provider != null ->
+                when (credentialResult) {
+                    null -> interceptedHttpClient
+                    is CredentialResult.Token ->
                         AuthorizingHttpClient.builder()
                             .httpClient(interceptedHttpClient)
                             .tokenProvider(credentialResult.provider)
-                            .defaultBaseUrl(baseUrl ?: PRODUCTION_URL)
                             .workspaceId(credentialResult.workspaceId)
                             .build()
-                    else ->
-                        HeaderAuthHttpClient(
-                            interceptedHttpClient,
-                            credentialResult.apiKey,
-                            credentialResult.authToken,
-                        )
+                    is CredentialResult.Static ->
+                        HeaderAuthHttpClient(interceptedHttpClient, credentialResult.credential)
                 }
 
             return ClientOptions(

@@ -15,7 +15,6 @@ internal class BetaManagedAgentsUserCustomToolResultEventTest {
             BetaManagedAgentsUserCustomToolResultEvent.builder()
                 .id("id")
                 .customToolUseId("custom_tool_use_id")
-                .type(BetaManagedAgentsUserCustomToolResultEvent.Type.USER_CUSTOM_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -25,15 +24,10 @@ internal class BetaManagedAgentsUserCustomToolResultEventTest {
         assertThat(betaManagedAgentsUserCustomToolResultEvent.id()).isEqualTo("id")
         assertThat(betaManagedAgentsUserCustomToolResultEvent.customToolUseId())
             .isEqualTo("custom_tool_use_id")
-        assertThat(betaManagedAgentsUserCustomToolResultEvent.type())
-            .isEqualTo(BetaManagedAgentsUserCustomToolResultEvent.Type.USER_CUSTOM_TOOL_RESULT)
         assertThat(betaManagedAgentsUserCustomToolResultEvent.content().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUserCustomToolResultEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
+                    "Where is my order #1234?"
                 )
             )
         assertThat(betaManagedAgentsUserCustomToolResultEvent.isError()).contains(true)
@@ -49,7 +43,6 @@ internal class BetaManagedAgentsUserCustomToolResultEventTest {
             BetaManagedAgentsUserCustomToolResultEvent.builder()
                 .id("id")
                 .customToolUseId("custom_tool_use_id")
-                .type(BetaManagedAgentsUserCustomToolResultEvent.Type.USER_CUSTOM_TOOL_RESULT)
                 .build()
 
         val betaManagedAgentsUserCustomToolResultEvent =
@@ -57,10 +50,7 @@ internal class BetaManagedAgentsUserCustomToolResultEventTest {
                 .toBuilder()
                 .addContent(
                     BetaManagedAgentsUserCustomToolResultEvent.Content.ofText(
-                        BetaManagedAgentsTextBlock.builder()
-                            .text("Where is my order #1234?")
-                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                            .build()
+                        "Where is my order #1234?"
                     )
                 )
                 .build()
@@ -68,10 +58,7 @@ internal class BetaManagedAgentsUserCustomToolResultEventTest {
         assertThat(betaManagedAgentsUserCustomToolResultEvent.content().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUserCustomToolResultEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
+                    "Where is my order #1234?"
                 )
             )
     }
@@ -83,7 +70,6 @@ internal class BetaManagedAgentsUserCustomToolResultEventTest {
             BetaManagedAgentsUserCustomToolResultEvent.builder()
                 .id("id")
                 .customToolUseId("custom_tool_use_id")
-                .type(BetaManagedAgentsUserCustomToolResultEvent.Type.USER_CUSTOM_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))

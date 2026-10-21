@@ -14,11 +14,7 @@ internal class BetaDreamInputTest {
 
     @Test
     fun ofMemoryStore() {
-        val memoryStore =
-            BetaDreamMemoryStoreInput.builder()
-                .memoryStoreId("x")
-                .type(BetaDreamMemoryStoreInput.Type.MEMORY_STORE)
-                .build()
+        val memoryStore = BetaDreamMemoryStoreInput.of("x")
 
         val betaDreamInput = BetaDreamInput.ofMemoryStore(memoryStore)
 
@@ -29,13 +25,7 @@ internal class BetaDreamInputTest {
     @Test
     fun ofMemoryStoreRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaDreamInput =
-            BetaDreamInput.ofMemoryStore(
-                BetaDreamMemoryStoreInput.builder()
-                    .memoryStoreId("x")
-                    .type(BetaDreamMemoryStoreInput.Type.MEMORY_STORE)
-                    .build()
-            )
+        val betaDreamInput = BetaDreamInput.ofMemoryStore(BetaDreamMemoryStoreInput.of("x"))
 
         val roundtrippedBetaDreamInput =
             jsonMapper.readValue(
@@ -48,11 +38,7 @@ internal class BetaDreamInputTest {
 
     @Test
     fun ofSessions() {
-        val sessions =
-            BetaDreamSessionsInput.builder()
-                .addSessionId("string")
-                .type(BetaDreamSessionsInput.Type.SESSIONS)
-                .build()
+        val sessions = BetaDreamSessionsInput.builder().addSessionId("string").build()
 
         val betaDreamInput = BetaDreamInput.ofSessions(sessions)
 
@@ -65,10 +51,7 @@ internal class BetaDreamInputTest {
         val jsonMapper = jsonMapper()
         val betaDreamInput =
             BetaDreamInput.ofSessions(
-                BetaDreamSessionsInput.builder()
-                    .addSessionId("string")
-                    .type(BetaDreamSessionsInput.Type.SESSIONS)
-                    .build()
+                BetaDreamSessionsInput.builder().addSessionId("string").build()
             )
 
         val roundtrippedBetaDreamInput =

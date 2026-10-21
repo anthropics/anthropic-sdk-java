@@ -10,24 +10,16 @@ internal class BetaManagedAgentsVaultArchivedRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsVaultArchivedRunError =
-            BetaManagedAgentsVaultArchivedRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsVaultArchivedRunError.Type.VAULT_ARCHIVED_ERROR)
-                .build()
+            BetaManagedAgentsVaultArchivedRunError.of("message")
 
         assertThat(betaManagedAgentsVaultArchivedRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsVaultArchivedRunError.type())
-            .isEqualTo(BetaManagedAgentsVaultArchivedRunError.Type.VAULT_ARCHIVED_ERROR)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsVaultArchivedRunError =
-            BetaManagedAgentsVaultArchivedRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsVaultArchivedRunError.Type.VAULT_ARCHIVED_ERROR)
-                .build()
+            BetaManagedAgentsVaultArchivedRunError.of("message")
 
         val roundtrippedBetaManagedAgentsVaultArchivedRunError =
             jsonMapper.readValue(

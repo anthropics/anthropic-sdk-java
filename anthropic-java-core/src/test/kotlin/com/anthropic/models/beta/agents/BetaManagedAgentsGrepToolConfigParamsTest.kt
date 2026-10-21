@@ -12,11 +12,7 @@ internal class BetaManagedAgentsGrepToolConfigParamsTest {
         val betaManagedAgentsGrepToolConfigParams =
             BetaManagedAgentsGrepToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsGrepToolConfigParams.Type.GREP)
                 .build()
 
@@ -24,7 +20,7 @@ internal class BetaManagedAgentsGrepToolConfigParamsTest {
         assertThat(betaManagedAgentsGrepToolConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsGrepToolConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
         assertThat(betaManagedAgentsGrepToolConfigParams.type())
@@ -37,11 +33,7 @@ internal class BetaManagedAgentsGrepToolConfigParamsTest {
         val betaManagedAgentsGrepToolConfigParams =
             BetaManagedAgentsGrepToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsGrepToolConfigParams.Type.GREP)
                 .build()
 

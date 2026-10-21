@@ -22,7 +22,6 @@ internal class AgentUpdateParamsTest {
             .addMcpServer(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
-                    .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                     .url("https://example-server.modelcontextprotocol.io/sse")
                     .build()
             )
@@ -47,43 +46,30 @@ internal class AgentUpdateParamsTest {
                         "agent_011CZkYqphY8vELVzwCUpqiQ"
                     ),
                     BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                        BetaManagedAgentsMultiagentSelfParams.builder().build()
                     ),
                 )
             )
             .name("name")
             .addSkill(
-                BetaManagedAgentsAnthropicSkillParams.builder()
-                    .skillId("xlsx")
-                    .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
-                    .version("1")
-                    .build()
+                BetaManagedAgentsAnthropicSkillParams.builder().skillId("xlsx").version("1").build()
             )
             .system(
                 "You are a general-purpose agent that can research, write code, run commands, and use connected tools to complete the user's task end to end."
             )
             .addTool(
                 BetaManagedAgentsAgentToolset20260401Params.builder()
-                    .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
                     .addConfig(
                         BetaManagedAgentsBashToolConfigParams.builder()
                             .enabled(true)
-                            .permissionPolicy(
-                                BetaManagedAgentsAlwaysAllowPolicy.of(
-                                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                )
-                            )
+                            .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                             .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                             .build()
                     )
                     .defaultConfig(
                         BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                             .enabled(true)
-                            .permissionPolicy(
-                                BetaManagedAgentsAlwaysAllowPolicy.of(
-                                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                )
-                            )
+                            .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                             .build()
                     )
                     .build()
@@ -113,7 +99,6 @@ internal class AgentUpdateParamsTest {
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
-                        .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                         .url("https://example-server.modelcontextprotocol.io/sse")
                         .build()
                 )
@@ -139,7 +124,7 @@ internal class AgentUpdateParamsTest {
                             "agent_011CZkYqphY8vELVzwCUpqiQ"
                         ),
                         BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                            BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                            BetaManagedAgentsMultiagentSelfParams.builder().build()
                         ),
                     )
                 )
@@ -147,7 +132,6 @@ internal class AgentUpdateParamsTest {
                 .addSkill(
                     BetaManagedAgentsAnthropicSkillParams.builder()
                         .skillId("xlsx")
-                        .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
                         .version("1")
                         .build()
                 )
@@ -156,16 +140,11 @@ internal class AgentUpdateParamsTest {
                 )
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -174,9 +153,7 @@ internal class AgentUpdateParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -221,7 +198,6 @@ internal class AgentUpdateParamsTest {
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
-                        .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                         .url("https://example-server.modelcontextprotocol.io/sse")
                         .build()
                 )
@@ -247,7 +223,7 @@ internal class AgentUpdateParamsTest {
                             "agent_011CZkYqphY8vELVzwCUpqiQ"
                         ),
                         BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                            BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                            BetaManagedAgentsMultiagentSelfParams.builder().build()
                         ),
                     )
                 )
@@ -255,7 +231,6 @@ internal class AgentUpdateParamsTest {
                 .addSkill(
                     BetaManagedAgentsAnthropicSkillParams.builder()
                         .skillId("xlsx")
-                        .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
                         .version("1")
                         .build()
                 )
@@ -264,16 +239,11 @@ internal class AgentUpdateParamsTest {
                 )
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -282,9 +252,7 @@ internal class AgentUpdateParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -302,7 +270,6 @@ internal class AgentUpdateParamsTest {
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
-                    .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                     .url("https://example-server.modelcontextprotocol.io/sse")
                     .build()
             )
@@ -331,12 +298,7 @@ internal class AgentUpdateParamsTest {
                 BetaManagedAgentsMultiagentParams.ofCoordinator(
                     BetaManagedAgentsMultiagentCoordinatorParams.builder()
                         .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .addAgent(
-                            BetaManagedAgentsMultiagentSelfParams.of(
-                                BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                            )
-                        )
-                        .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
+                        .addAgent(BetaManagedAgentsMultiagentSelfParams.builder().build())
                         .build()
                 )
             )
@@ -346,7 +308,6 @@ internal class AgentUpdateParamsTest {
                 BetaManagedAgentsSkillParams.ofAnthropic(
                     BetaManagedAgentsAnthropicSkillParams.builder()
                         .skillId("xlsx")
-                        .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
                         .version("1")
                         .build()
                 )
@@ -359,16 +320,11 @@ internal class AgentUpdateParamsTest {
             .containsExactly(
                 AgentUpdateParams.Tool.ofAgentToolset20260401(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -377,9 +333,7 @@ internal class AgentUpdateParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )

@@ -12,13 +12,8 @@ internal class BetaManagedAgentsDocumentBlockTest {
         val betaManagedAgentsDocumentBlock =
             BetaManagedAgentsDocumentBlock.builder()
                 .source(
-                    BetaManagedAgentsBase64DocumentSource.builder()
-                        .data("x")
-                        .mediaType("x")
-                        .type(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
-                        .build()
+                    BetaManagedAgentsBase64DocumentSource.builder().data("x").mediaType("x").build()
                 )
-                .type(BetaManagedAgentsDocumentBlock.Type.DOCUMENT)
                 .context("context")
                 .title("title")
                 .build()
@@ -26,15 +21,9 @@ internal class BetaManagedAgentsDocumentBlockTest {
         assertThat(betaManagedAgentsDocumentBlock.source())
             .isEqualTo(
                 BetaManagedAgentsDocumentBlock.Source.ofBase64(
-                    BetaManagedAgentsBase64DocumentSource.builder()
-                        .data("x")
-                        .mediaType("x")
-                        .type(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
-                        .build()
+                    BetaManagedAgentsBase64DocumentSource.builder().data("x").mediaType("x").build()
                 )
             )
-        assertThat(betaManagedAgentsDocumentBlock.type())
-            .isEqualTo(BetaManagedAgentsDocumentBlock.Type.DOCUMENT)
         assertThat(betaManagedAgentsDocumentBlock.context()).contains("context")
         assertThat(betaManagedAgentsDocumentBlock.title()).contains("title")
     }
@@ -45,13 +34,8 @@ internal class BetaManagedAgentsDocumentBlockTest {
         val betaManagedAgentsDocumentBlock =
             BetaManagedAgentsDocumentBlock.builder()
                 .source(
-                    BetaManagedAgentsBase64DocumentSource.builder()
-                        .data("x")
-                        .mediaType("x")
-                        .type(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
-                        .build()
+                    BetaManagedAgentsBase64DocumentSource.builder().data("x").mediaType("x").build()
                 )
-                .type(BetaManagedAgentsDocumentBlock.Type.DOCUMENT)
                 .context("context")
                 .title("title")
                 .build()

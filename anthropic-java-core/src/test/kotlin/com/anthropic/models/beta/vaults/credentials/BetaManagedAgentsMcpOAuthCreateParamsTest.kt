@@ -14,7 +14,6 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
             BetaManagedAgentsMcpOAuthCreateParams.builder()
                 .accessToken("x")
                 .mcpServerUrl("x")
-                .type(BetaManagedAgentsMcpOAuthCreateParams.Type.MCP_OAUTH)
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .refresh(
                     BetaManagedAgentsMcpOAuthRefreshParams.builder()
@@ -22,9 +21,7 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
                         .refreshToken("x")
                         .tokenEndpoint("x")
                         .tokenEndpointAuth(
-                            BetaManagedAgentsTokenEndpointAuthNoneParam.of(
-                                BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
-                            )
+                            BetaManagedAgentsTokenEndpointAuthNoneParam.builder().build()
                         )
                         .resource("x")
                         .scope("x")
@@ -34,8 +31,6 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
 
         assertThat(betaManagedAgentsMcpOAuthCreateParams.accessToken()).isEqualTo("x")
         assertThat(betaManagedAgentsMcpOAuthCreateParams.mcpServerUrl()).isEqualTo("x")
-        assertThat(betaManagedAgentsMcpOAuthCreateParams.type())
-            .isEqualTo(BetaManagedAgentsMcpOAuthCreateParams.Type.MCP_OAUTH)
         assertThat(betaManagedAgentsMcpOAuthCreateParams.expiresAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsMcpOAuthCreateParams.refresh())
@@ -45,9 +40,7 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
                     .refreshToken("x")
                     .tokenEndpoint("x")
                     .tokenEndpointAuth(
-                        BetaManagedAgentsTokenEndpointAuthNoneParam.of(
-                            BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
-                        )
+                        BetaManagedAgentsTokenEndpointAuthNoneParam.builder().build()
                     )
                     .resource("x")
                     .scope("x")
@@ -62,7 +55,6 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
             BetaManagedAgentsMcpOAuthCreateParams.builder()
                 .accessToken("x")
                 .mcpServerUrl("x")
-                .type(BetaManagedAgentsMcpOAuthCreateParams.Type.MCP_OAUTH)
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .refresh(
                     BetaManagedAgentsMcpOAuthRefreshParams.builder()
@@ -70,9 +62,7 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
                         .refreshToken("x")
                         .tokenEndpoint("x")
                         .tokenEndpointAuth(
-                            BetaManagedAgentsTokenEndpointAuthNoneParam.of(
-                                BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
-                            )
+                            BetaManagedAgentsTokenEndpointAuthNoneParam.builder().build()
                         )
                         .resource("x")
                         .scope("x")

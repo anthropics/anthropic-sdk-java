@@ -18,7 +18,6 @@ internal class BetaManagedAgentsOutcomeEvaluationResourceTest {
                 .iteration(0)
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .result("satisfied")
-                .type(BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION)
                 .build()
 
         assertThat(betaManagedAgentsOutcomeEvaluationResource.completedAt())
@@ -31,8 +30,6 @@ internal class BetaManagedAgentsOutcomeEvaluationResourceTest {
         assertThat(betaManagedAgentsOutcomeEvaluationResource.outcomeId())
             .isEqualTo("outc_011CZkZRSw2kEfs6ncTVmjxP")
         assertThat(betaManagedAgentsOutcomeEvaluationResource.result()).isEqualTo("satisfied")
-        assertThat(betaManagedAgentsOutcomeEvaluationResource.type())
-            .isEqualTo(BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION)
     }
 
     @Test
@@ -46,7 +43,6 @@ internal class BetaManagedAgentsOutcomeEvaluationResourceTest {
                 .iteration(0)
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .result("satisfied")
-                .type(BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION)
                 .build()
 
         val roundtrippedBetaManagedAgentsOutcomeEvaluationResource =

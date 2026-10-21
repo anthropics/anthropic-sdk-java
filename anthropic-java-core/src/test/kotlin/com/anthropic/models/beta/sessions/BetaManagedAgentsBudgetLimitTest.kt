@@ -12,31 +12,23 @@ internal class BetaManagedAgentsBudgetLimitTest {
     @Test
     fun create() {
         val betaManagedAgentsBudgetLimit =
-            BetaManagedAgentsBudgetLimit.builder()
-                .maxListCost(
-                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
-                )
-                .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                .build()
+            BetaManagedAgentsBudgetLimit.of(
+                BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+            )
 
         assertThat(betaManagedAgentsBudgetLimit.maxListCost())
             .isEqualTo(
                 BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
             )
-        assertThat(betaManagedAgentsBudgetLimit.type())
-            .isEqualTo(BetaManagedAgentsBudgetLimit.Type.LIMIT)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsBudgetLimit =
-            BetaManagedAgentsBudgetLimit.builder()
-                .maxListCost(
-                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
-                )
-                .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                .build()
+            BetaManagedAgentsBudgetLimit.of(
+                BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+            )
 
         val roundtrippedBetaManagedAgentsBudgetLimit =
             jsonMapper.readValue(

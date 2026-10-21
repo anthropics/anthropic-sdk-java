@@ -29,7 +29,6 @@ internal class BetaManagedAgentsMultiagent20261001ParamsTest {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentParams.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentParams.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -64,7 +63,6 @@ internal class BetaManagedAgentsMultiagent20261001ParamsTest {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentParams.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentParams.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -95,7 +93,6 @@ internal class BetaManagedAgentsMultiagent20261001ParamsTest {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentParams.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentParams.Type.AGENT)
                                 .version(1)
                                 .build()
                         )

@@ -15,10 +15,6 @@ internal class BetaManagedAgentsMcpOAuthRefreshUpdateParamsTest {
                 .scope("scope")
                 .tokenEndpointAuth(
                     BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.builder()
-                        .type(
-                            BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.Type
-                                .CLIENT_SECRET_BASIC
-                        )
                         .clientSecret("x")
                         .build()
                 )
@@ -30,10 +26,6 @@ internal class BetaManagedAgentsMcpOAuthRefreshUpdateParamsTest {
             .contains(
                 BetaManagedAgentsMcpOAuthRefreshUpdateParams.TokenEndpointAuth.ofClientSecretBasic(
                     BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.builder()
-                        .type(
-                            BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.Type
-                                .CLIENT_SECRET_BASIC
-                        )
                         .clientSecret("x")
                         .build()
                 )
@@ -49,10 +41,6 @@ internal class BetaManagedAgentsMcpOAuthRefreshUpdateParamsTest {
                 .scope("scope")
                 .tokenEndpointAuth(
                     BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.builder()
-                        .type(
-                            BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.Type
-                                .CLIENT_SECRET_BASIC
-                        )
                         .clientSecret("x")
                         .build()
                 )

@@ -25,7 +25,6 @@ internal class BetaManagedAgentsSpanModelRequestEndEventTest {
                         .build()
                 )
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSpanModelRequestEndEvent.Type.SPAN_MODEL_REQUEST_END)
                 .build()
 
         assertThat(betaManagedAgentsSpanModelRequestEndEvent.id()).isEqualTo("id")
@@ -44,8 +43,6 @@ internal class BetaManagedAgentsSpanModelRequestEndEventTest {
             )
         assertThat(betaManagedAgentsSpanModelRequestEndEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsSpanModelRequestEndEvent.type())
-            .isEqualTo(BetaManagedAgentsSpanModelRequestEndEvent.Type.SPAN_MODEL_REQUEST_END)
     }
 
     @Test
@@ -66,7 +63,6 @@ internal class BetaManagedAgentsSpanModelRequestEndEventTest {
                         .build()
                 )
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSpanModelRequestEndEvent.Type.SPAN_MODEL_REQUEST_END)
                 .build()
 
         val roundtrippedBetaManagedAgentsSpanModelRequestEndEvent =

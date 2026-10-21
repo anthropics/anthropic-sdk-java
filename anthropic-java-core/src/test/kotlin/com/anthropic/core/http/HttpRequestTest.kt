@@ -1,5 +1,6 @@
 package com.anthropic.core.http
 
+import com.anthropic.core.jsonMapper
 import java.io.OutputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -83,12 +84,13 @@ internal class HttpRequestTest {
         val bufferedRequest = request.buffered()
 
         assertThat(bufferedRequest).isNotSameAs(request)
-        assertThat(bufferedRequest.body!!.repeatable()).isTrue()
+        assertThat(bufferedRequest.body().get().repeatable()).isTrue()
     }
 
     private fun createRequest(vararg pathSegments: String): HttpRequest {
         return HttpRequest.builder()
             .method(HttpMethod.POST) // A method is required.
+            .baseUrl("https://api.example.com")
             .addPathSegments(*pathSegments)
             .build()
     }
@@ -241,5 +243,40 @@ internal class HttpRequestTest {
             )
             .isInstanceOf(IllegalStateException::class.java)
             .hasMessageContaining("`cardId` must be non-empty")
+    }
+
+    @Test
+    fun body_unset_returnsEmpty() {
+        val request =
+            HttpRequest.builder().method(HttpMethod.GET).baseUrl("https://api.example.com").build()
+
+        val body = request.body()
+
+        assertThat(body).isEmpty
+    }
+
+    @Test
+    fun body_set_returnsBody() {
+        val expectedBody = json(jsonMapper(), mapOf("name" to "value"))
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl("https://api.example.com")
+                .body(expectedBody)
+                .build()
+
+        val body = request.body()
+
+        assertThat(body).containsSame(expectedBody)
+    }
+
+    @Test
+    fun build_withoutBaseUrl_throws() {
+        assertThat(
+                runCatching { HttpRequest.builder().method(HttpMethod.GET).build() }
+                    .exceptionOrNull()
+            )
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("`baseUrl` is required, but was not set")
     }
 }

@@ -10,23 +10,14 @@ internal class BetaManagedAgentsSkillNotFoundDeploymentPausedReasonErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsSkillNotFoundDeploymentPausedReasonError =
-            BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.of(
-                BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.Type.SKILL_NOT_FOUND_ERROR
-            )
-
-        assertThat(betaManagedAgentsSkillNotFoundDeploymentPausedReasonError.type())
-            .isEqualTo(
-                BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.Type.SKILL_NOT_FOUND_ERROR
-            )
+            BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSkillNotFoundDeploymentPausedReasonError =
-            BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.of(
-                BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.Type.SKILL_NOT_FOUND_ERROR
-            )
+            BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.builder().build()
 
         val roundtrippedBetaManagedAgentsSkillNotFoundDeploymentPausedReasonError =
             jsonMapper.readValue(

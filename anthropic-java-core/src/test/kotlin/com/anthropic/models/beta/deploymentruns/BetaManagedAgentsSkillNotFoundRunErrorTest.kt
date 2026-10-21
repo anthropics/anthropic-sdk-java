@@ -10,24 +10,16 @@ internal class BetaManagedAgentsSkillNotFoundRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsSkillNotFoundRunError =
-            BetaManagedAgentsSkillNotFoundRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsSkillNotFoundRunError.Type.SKILL_NOT_FOUND_ERROR)
-                .build()
+            BetaManagedAgentsSkillNotFoundRunError.of("message")
 
         assertThat(betaManagedAgentsSkillNotFoundRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsSkillNotFoundRunError.type())
-            .isEqualTo(BetaManagedAgentsSkillNotFoundRunError.Type.SKILL_NOT_FOUND_ERROR)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSkillNotFoundRunError =
-            BetaManagedAgentsSkillNotFoundRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsSkillNotFoundRunError.Type.SKILL_NOT_FOUND_ERROR)
-                .build()
+            BetaManagedAgentsSkillNotFoundRunError.of("message")
 
         val roundtrippedBetaManagedAgentsSkillNotFoundRunError =
             jsonMapper.readValue(

@@ -90,7 +90,7 @@ class RateLimitServiceImpl internal constructor(private val clientOptions: Clien
                     response
                         .use { updateHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -124,7 +124,7 @@ class RateLimitServiceImpl internal constructor(private val clientOptions: Clien
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

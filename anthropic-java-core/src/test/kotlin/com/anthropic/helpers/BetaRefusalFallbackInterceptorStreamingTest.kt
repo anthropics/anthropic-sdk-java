@@ -11,6 +11,7 @@ import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaFallbackBlockParam
 import com.anthropic.models.beta.messages.BetaFallbackInfoParam
 import com.anthropic.models.beta.messages.BetaFallbackParam
+import com.anthropic.models.beta.messages.BetaMessageContentParam
 import com.anthropic.models.beta.messages.BetaMessageParam
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaThinkingBlockParam
@@ -472,9 +473,8 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
         // A turn served by a fallback on an earlier request, echoed back into this stream's
         // history.
         val replayedTurn =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.ASSISTANT)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofAssistant(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofThinking(
                             BetaThinkingBlockParam.builder()
@@ -495,7 +495,7 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
                         ),
                     )
                 )
-                .build()
+            )
         val body =
             jsonMapper.valueToTree<ObjectNode>(
                 MessageCreateParams.Body.builder()

@@ -32,8 +32,8 @@ import java.util.concurrent.CompletableFuture
  * Implements the SDK credential-resolution chain for OAuth and federation credentials.
  *
  * NOTE: Static credentials (ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN) are NOT resolved here. They
- * are handled by AnthropicBackend via AnthropicOkHttpClient.builder().fromEnv(), which sends API
- * keys as `X-Api-Key` headers (not `Authorization: Bearer`).
+ * are handled by AnthropicBackend via AnthropicOkHttpClient.builder().fromEnv(), which sends either
+ * one as a static `Authorization: Bearer` header.
  *
  * The resolver walks an ordered list of credential sources and returns the first one that yields a
  * usable credential. The overall shape is **ctor > env > auto/files**: explicit constructor
@@ -54,7 +54,7 @@ import java.util.concurrent.CompletableFuture
  */
 internal class CredentialResolver
 private constructor(
-    private val credentials: CredentialResult?,
+    private val credentials: CredentialResult.Token?,
     private val configurationProvider: ProfileConfigProvider?,
     private val envProfile: String?,
     private val envFederationRuleId: String?,
@@ -73,7 +73,7 @@ private constructor(
      * appends to `attemptedSources` so that, if we fall off the end, the resulting
      * [NoCredentialsException] explains exactly what was tried and why.
      */
-    internal fun resolve(): CredentialResult {
+    internal fun resolve(): CredentialResult.Token {
         val attemptedSources = mutableListOf<CredentialSource>()
 
         step1ExplicitCredentials(attemptedSources)?.let {
@@ -97,7 +97,7 @@ private constructor(
 
     private fun step1ExplicitCredentials(
         sources: MutableList<CredentialSource>
-    ): CredentialResult? {
+    ): CredentialResult.Token? {
         if (credentials != null) {
             return credentials
         }
@@ -108,7 +108,7 @@ private constructor(
 
     private fun step1bConfigurationProvider(
         sources: MutableList<CredentialSource>
-    ): CredentialResult? {
+    ): CredentialResult.Token? {
         val provider = configurationProvider ?: return null
         return resolveFromConfigurationProvider(provider, sources, "configuration provider")
     }
@@ -119,7 +119,7 @@ private constructor(
         sourceName: String,
         profileName: String? = null,
         cacheDir: Path? = null,
-    ): CredentialResult? {
+    ): CredentialResult.Token? {
         val config =
             try {
                 provider.get()
@@ -138,7 +138,7 @@ private constructor(
         sourceName: String,
         profileName: String? = null,
         cacheDir: Path? = null,
-    ): CredentialResult? {
+    ): CredentialResult.Token? {
         val auth = config.authentication().orElse(null)
         if (auth == null) {
             sources.add(
@@ -239,7 +239,7 @@ private constructor(
 
                 val cachingProvider = CachingAccessTokenProvider(tokenProvider)
 
-                CredentialResult.token(
+                CredentialResult.Token(
                     cachingProvider,
                     config.baseUrl().orElse(null),
                     // For federation profiles workspace_id is sent in the jwt-bearer exchange body,
@@ -318,7 +318,7 @@ private constructor(
                     )
                 val cachingProvider = CachingAccessTokenProvider(tokenProvider)
 
-                CredentialResult.token(
+                CredentialResult.Token(
                     cachingProvider,
                     config.baseUrl().orElse(null),
                     config.workspaceId().orElse(null),
@@ -337,7 +337,9 @@ private constructor(
         }
     }
 
-    private fun step2ExplicitProfile(sources: MutableList<CredentialSource>): CredentialResult? {
+    private fun step2ExplicitProfile(
+        sources: MutableList<CredentialSource>
+    ): CredentialResult.Token? {
         val profile = envProfile ?: return null
 
         val dir =
@@ -387,7 +389,9 @@ private constructor(
         )
     }
 
-    private fun step3EnvFederation(sources: MutableList<CredentialSource>): CredentialResult? {
+    private fun step3EnvFederation(
+        sources: MutableList<CredentialSource>
+    ): CredentialResult.Token? {
         val federationRuleId = envFederationRuleId
         val organizationId = envOrganizationId
 
@@ -449,10 +453,12 @@ private constructor(
             )
 
         val cachingProvider = CachingAccessTokenProvider(workloadCredentials)
-        return CredentialResult.token(cachingProvider)
+        return CredentialResult.Token(cachingProvider)
     }
 
-    private fun step4FallbackProfile(sources: MutableList<CredentialSource>): CredentialResult? {
+    private fun step4FallbackProfile(
+        sources: MutableList<CredentialSource>
+    ): CredentialResult.Token? {
         val dir = configDir
         if (dir == null) {
             sources.add(
@@ -560,7 +566,7 @@ private constructor(
     }
 
     class Builder {
-        private var credentials: CredentialResult? = null
+        private var credentials: CredentialResult.Token? = null
         private var configurationProvider: ProfileConfigProvider? = null
         private var envProfile: String? = null
         private var envFederationRuleId: String? = null
@@ -574,7 +580,7 @@ private constructor(
         private var jsonMapper: JsonMapper = jsonMapper()
 
         @JvmSynthetic
-        internal fun credentials(credentials: CredentialResult?) = apply {
+        internal fun credentials(credentials: CredentialResult.Token?) = apply {
             this.credentials = credentials
         }
 

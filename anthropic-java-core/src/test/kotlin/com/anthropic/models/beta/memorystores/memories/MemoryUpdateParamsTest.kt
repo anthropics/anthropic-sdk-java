@@ -19,10 +19,7 @@ internal class MemoryUpdateParamsTest {
             .content("content")
             .path("xx")
             .precondition(
-                BetaManagedAgentsPrecondition.builder()
-                    .type(BetaManagedAgentsPrecondition.Type.CONTENT_SHA256)
-                    .contentSha256("content_sha256")
-                    .build()
+                BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
             )
             .build()
     }
@@ -53,10 +50,7 @@ internal class MemoryUpdateParamsTest {
                 .content("content")
                 .path("xx")
                 .precondition(
-                    BetaManagedAgentsPrecondition.builder()
-                        .type(BetaManagedAgentsPrecondition.Type.CONTENT_SHA256)
-                        .contentSha256("content_sha256")
-                        .build()
+                    BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
                 )
                 .build()
 
@@ -100,10 +94,7 @@ internal class MemoryUpdateParamsTest {
                 .content("content")
                 .path("xx")
                 .precondition(
-                    BetaManagedAgentsPrecondition.builder()
-                        .type(BetaManagedAgentsPrecondition.Type.CONTENT_SHA256)
-                        .contentSha256("content_sha256")
-                        .build()
+                    BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
                 )
                 .build()
 
@@ -137,10 +128,7 @@ internal class MemoryUpdateParamsTest {
                 .content("content")
                 .path("xx")
                 .precondition(
-                    BetaManagedAgentsPrecondition.builder()
-                        .type(BetaManagedAgentsPrecondition.Type.CONTENT_SHA256)
-                        .contentSha256("content_sha256")
-                        .build()
+                    BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
                 )
                 .build()
 
@@ -150,10 +138,7 @@ internal class MemoryUpdateParamsTest {
         assertThat(body.path()).contains("xx")
         assertThat(body.precondition())
             .contains(
-                BetaManagedAgentsPrecondition.builder()
-                    .type(BetaManagedAgentsPrecondition.Type.CONTENT_SHA256)
-                    .contentSha256("content_sha256")
-                    .build()
+                BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
             )
     }
 

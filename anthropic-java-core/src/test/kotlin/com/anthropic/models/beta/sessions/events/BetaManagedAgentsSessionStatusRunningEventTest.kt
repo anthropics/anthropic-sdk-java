@@ -14,14 +14,11 @@ internal class BetaManagedAgentsSessionStatusRunningEventTest {
             BetaManagedAgentsSessionStatusRunningEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionStatusRunningEvent.Type.SESSION_STATUS_RUNNING)
                 .build()
 
         assertThat(betaManagedAgentsSessionStatusRunningEvent.id()).isEqualTo("id")
         assertThat(betaManagedAgentsSessionStatusRunningEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsSessionStatusRunningEvent.type())
-            .isEqualTo(BetaManagedAgentsSessionStatusRunningEvent.Type.SESSION_STATUS_RUNNING)
     }
 
     @Test
@@ -31,7 +28,6 @@ internal class BetaManagedAgentsSessionStatusRunningEventTest {
             BetaManagedAgentsSessionStatusRunningEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionStatusRunningEvent.Type.SESSION_STATUS_RUNNING)
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionStatusRunningEvent =

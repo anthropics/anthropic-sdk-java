@@ -1,7 +1,7 @@
 package com.anthropic.helpers
 
 import com.anthropic.core.JsonMissing
-import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaContent
+import com.anthropic.core.JsonValue
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentMessageEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsStreamSessionEvents
 import java.util.Collections
@@ -46,7 +46,6 @@ class BetaManagedAgentsEventAccumulator private constructor() {
                     .id(preview.id())
                     .content(listOf())
                     .processedAt(JsonMissing.of())
-                    .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                     .build()
             return event
         }
@@ -59,7 +58,7 @@ class BetaManagedAgentsEventAccumulator private constructor() {
                 return event
             }
             val fragment = delta.delta()
-            if (fragment.type() != BetaManagedAgentsDeltaContent.Type.CONTENT_DELTA) {
+            if (fragment._type() != JsonValue.from("content_delta")) {
                 return event
             }
             val fragmentText = fragment.content()._text().asString().getOrNull() ?: return event

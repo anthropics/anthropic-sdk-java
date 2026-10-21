@@ -9,18 +9,13 @@ internal class BetaManagedAgentsEffortHighTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsEffortHigh =
-            BetaManagedAgentsEffortHigh.of(BetaManagedAgentsEffortHigh.Type.HIGH)
-
-        assertThat(betaManagedAgentsEffortHigh.type())
-            .isEqualTo(BetaManagedAgentsEffortHigh.Type.HIGH)
+        val betaManagedAgentsEffortHigh = BetaManagedAgentsEffortHigh.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsEffortHigh =
-            BetaManagedAgentsEffortHigh.of(BetaManagedAgentsEffortHigh.Type.HIGH)
+        val betaManagedAgentsEffortHigh = BetaManagedAgentsEffortHigh.builder().build()
 
         val roundtrippedBetaManagedAgentsEffortHigh =
             jsonMapper.readValue(

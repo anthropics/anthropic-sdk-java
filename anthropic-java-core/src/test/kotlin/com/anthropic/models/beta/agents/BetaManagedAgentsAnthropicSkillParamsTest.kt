@@ -10,15 +10,9 @@ internal class BetaManagedAgentsAnthropicSkillParamsTest {
     @Test
     fun create() {
         val betaManagedAgentsAnthropicSkillParams =
-            BetaManagedAgentsAnthropicSkillParams.builder()
-                .skillId("xlsx")
-                .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
-                .version("1")
-                .build()
+            BetaManagedAgentsAnthropicSkillParams.builder().skillId("xlsx").version("1").build()
 
         assertThat(betaManagedAgentsAnthropicSkillParams.skillId()).isEqualTo("xlsx")
-        assertThat(betaManagedAgentsAnthropicSkillParams.type())
-            .isEqualTo(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
         assertThat(betaManagedAgentsAnthropicSkillParams.version()).contains("1")
     }
 
@@ -26,11 +20,7 @@ internal class BetaManagedAgentsAnthropicSkillParamsTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsAnthropicSkillParams =
-            BetaManagedAgentsAnthropicSkillParams.builder()
-                .skillId("xlsx")
-                .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
-                .version("1")
-                .build()
+            BetaManagedAgentsAnthropicSkillParams.builder().skillId("xlsx").version("1").build()
 
         val roundtrippedBetaManagedAgentsAnthropicSkillParams =
             jsonMapper.readValue(

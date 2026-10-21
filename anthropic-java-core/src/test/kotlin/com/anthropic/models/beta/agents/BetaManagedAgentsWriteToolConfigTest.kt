@@ -12,18 +12,14 @@ internal class BetaManagedAgentsWriteToolConfigTest {
         val betaManagedAgentsWriteToolConfig =
             BetaManagedAgentsWriteToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsWriteToolConfig.enabled()).isEqualTo(true)
         assertThat(betaManagedAgentsWriteToolConfig.permissionPolicy())
             .isEqualTo(
                 BetaManagedAgentsWriteToolConfig.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
     }
@@ -34,11 +30,7 @@ internal class BetaManagedAgentsWriteToolConfigTest {
         val betaManagedAgentsWriteToolConfig =
             BetaManagedAgentsWriteToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsWriteToolConfig =

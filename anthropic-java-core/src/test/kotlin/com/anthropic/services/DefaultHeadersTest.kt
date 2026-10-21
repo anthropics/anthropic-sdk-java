@@ -50,6 +50,7 @@ internal class DefaultHeadersTest {
         assertThat(request.header("Accept").values()).containsExactly("application/json")
         assertThat(request.header("User-Agent").values())
             .containsExactly("AnthropicClientImpl/Java ${getPackageVersion()}")
+        assertThat(request.header("anthropic-version").values()).containsExactly("2026-10-21")
     }
 
     @Test
@@ -69,6 +70,7 @@ internal class DefaultHeadersTest {
         assertThat(request.header("Accept").values()).containsExactly("application/json")
         assertThat(request.header("User-Agent").values())
             .containsExactly("AnthropicClientImpl/Java ${getPackageVersion()}")
+        assertThat(request.header("anthropic-version").values()).containsExactly("2026-10-21")
     }
 
     @Test
@@ -88,6 +90,7 @@ internal class DefaultHeadersTest {
         assertThat(request.header("Accept").values()).containsExactly("*/*")
         assertThat(request.header("User-Agent").values())
             .containsExactly("AnthropicClientImpl/Java ${getPackageVersion()}")
+        assertThat(request.header("anthropic-version").values()).containsExactly("2026-10-21")
     }
 
     @Test
@@ -110,6 +113,28 @@ internal class DefaultHeadersTest {
         val request = findAll(postRequestedFor(anyUrl())).single()
         assertThat(request.header("Accept").values()).containsExactly("application/json")
         assertThat(request.header("User-Agent").values()).containsExactly("my-app/1.0")
+        assertThat(request.header("anthropic-version").values()).containsExactly("2026-10-21")
+    }
+
+    @Test
+    fun createHeadersAnthropicVersionSetWithOptions() {
+        val messageService =
+            client.withOptions { it.putHeader("anthropic-version", "my-version") }.messages()
+        stubFor(post(anyUrl()).willReturn(ok("{}")))
+
+        messageService.create(
+            MessageCreateParams.builder()
+                .maxTokens(1024L)
+                .addUserMessage("Hello, world")
+                .model(Model.CLAUDE_OPUS_5_5)
+                .build()
+        )
+
+        val request = findAll(postRequestedFor(anyUrl())).single()
+        assertThat(request.header("Accept").values()).containsExactly("application/json")
+        assertThat(request.header("User-Agent").values())
+            .containsExactly("AnthropicClientImpl/Java ${getPackageVersion()}")
+        assertThat(request.header("anthropic-version").values()).containsExactly("my-version")
     }
 
     @Test
@@ -131,5 +156,6 @@ internal class DefaultHeadersTest {
         assertThat(request.header("Accept").values()).containsExactly("text/event-stream")
         assertThat(request.header("User-Agent").values())
             .containsExactly("AnthropicClientImpl/Java ${getPackageVersion()}")
+        assertThat(request.header("anthropic-version").values()).containsExactly("2026-10-21")
     }
 }

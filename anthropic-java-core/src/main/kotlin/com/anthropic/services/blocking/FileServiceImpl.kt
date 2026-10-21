@@ -100,7 +100,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -141,7 +141,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { deleteHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -198,7 +198,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { retrieveMetadataHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -228,7 +228,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { uploadHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

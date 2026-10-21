@@ -41,18 +41,13 @@ internal class BetaManagedAgentsSessionTest {
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
-                                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                 .url("https://example-server.modelcontextprotocol.io/sse")
                                 .build()
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                .effort(
-                                    BetaManagedAgentsEffortLow.of(
-                                        BetaManagedAgentsEffortLow.Type.LOW
-                                    )
-                                )
+                                .effort(BetaManagedAgentsEffortLow.builder().build())
                                 .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
@@ -71,9 +66,6 @@ internal class BetaManagedAgentsSessionTest {
                                         .addMcpServer(
                                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                                 .name("example-mcp")
-                                                .type(
-                                                    BetaManagedAgentsMcpServerUrlDefinition.Type.URL
-                                                )
                                                 .url(
                                                     "https://example-server.modelcontextprotocol.io/sse"
                                                 )
@@ -83,9 +75,7 @@ internal class BetaManagedAgentsSessionTest {
                                             BetaManagedAgentsModelConfig.builder()
                                                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                 .effort(
-                                                    BetaManagedAgentsEffortLow.of(
-                                                        BetaManagedAgentsEffortLow.Type.LOW
-                                                    )
+                                                    BetaManagedAgentsEffortLow.builder().build()
                                                 )
                                                 .inferenceGeo("inference_geo")
                                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -95,9 +85,6 @@ internal class BetaManagedAgentsSessionTest {
                                         .addSkill(
                                             BetaManagedAgentsAnthropicSkill.builder()
                                                 .skillId("xlsx")
-                                                .type(
-                                                    BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC
-                                                )
                                                 .version("1")
                                                 .build()
                                         )
@@ -110,11 +97,9 @@ internal class BetaManagedAgentsSessionTest {
                                                     BetaManagedAgentsBashToolConfig.builder()
                                                         .enabled(true)
                                                         .permissionPolicy(
-                                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                                BetaManagedAgentsAlwaysAllowPolicy
-                                                                    .Type
-                                                                    .ALWAYS_ALLOW
-                                                            )
+                                                            BetaManagedAgentsAlwaysAllowPolicy
+                                                                .builder()
+                                                                .build()
                                                         )
                                                         .build()
                                                 )
@@ -123,21 +108,14 @@ internal class BetaManagedAgentsSessionTest {
                                                         .builder()
                                                         .enabled(true)
                                                         .permissionPolicy(
-                                                            BetaManagedAgentsAlwaysAskPolicy.of(
-                                                                BetaManagedAgentsAlwaysAskPolicy
-                                                                    .Type
-                                                                    .ALWAYS_ASK
-                                                            )
+                                                            BetaManagedAgentsAlwaysAskPolicy
+                                                                .builder()
+                                                                .build()
                                                         )
                                                         .build()
                                                 )
-                                                .type(
-                                                    BetaManagedAgentsAgentToolset20260401.Type
-                                                        .AGENT_TOOLSET_20260401
-                                                )
                                                 .build()
                                         )
-                                        .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                                         .version(1)
                                         .build()
                                 )
@@ -147,14 +125,12 @@ internal class BetaManagedAgentsSessionTest {
                         .addSkill(
                             BetaManagedAgentsAnthropicSkill.builder()
                                 .skillId("xlsx")
-                                .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                 .version("1")
                                 .build()
                         )
                         .addSkill(
                             BetaManagedAgentsCustomSkill.builder()
                                 .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                                .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                 .version("2")
                                 .build()
                         )
@@ -167,9 +143,7 @@ internal class BetaManagedAgentsSessionTest {
                                     BetaManagedAgentsBashToolConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                         )
                                         .build()
                                 )
@@ -177,33 +151,23 @@ internal class BetaManagedAgentsSessionTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAskPolicy.of(
-                                                BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                            )
+                                            BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                         )
                                         .build()
                                 )
-                                .type(
-                                    BetaManagedAgentsAgentToolset20260401.Type
-                                        .AGENT_TOOLSET_20260401
-                                )
                                 .build()
                         )
-                        .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                         .version(1)
                         .build()
                 )
                 .archivedAt(null)
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
@@ -216,7 +180,6 @@ internal class BetaManagedAgentsSessionTest {
                         .iteration(0)
                         .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                         .result("satisfied")
-                        .type(BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION)
                         .build()
                 )
                 .addResource(
@@ -225,7 +188,6 @@ internal class BetaManagedAgentsSessionTest {
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                         .mountPath("/uploads/receipt.pdf")
-                        .type(BetaManagedAgentsFileResource.Type.FILE)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .build()
                 )
@@ -234,7 +196,6 @@ internal class BetaManagedAgentsSessionTest {
                         .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .mountPath("/workspace/example-repo")
-                        .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .url("https://github.com/example-org/example-repo")
                         .branchCheckout("main")
@@ -248,7 +209,6 @@ internal class BetaManagedAgentsSessionTest {
                 )
                 .status(BetaManagedAgentsSession.Status.IDLE)
                 .title("Order #1234 inquiry")
-                .type(BetaManagedAgentsSession.Type.SESSION)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .usage(
                     BetaManagedAgentsSessionUsage.builder()
@@ -292,16 +252,13 @@ internal class BetaManagedAgentsSessionTest {
                     .addMcpServer(
                         BetaManagedAgentsMcpServerUrlDefinition.builder()
                             .name("example-mcp")
-                            .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                             .url("https://example-server.modelcontextprotocol.io/sse")
                             .build()
                     )
                     .model(
                         BetaManagedAgentsModelConfig.builder()
                             .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                            .effort(
-                                BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW)
-                            )
+                            .effort(BetaManagedAgentsEffortLow.builder().build())
                             .inferenceGeo("inference_geo")
                             .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                             .build()
@@ -319,7 +276,6 @@ internal class BetaManagedAgentsSessionTest {
                                     .addMcpServer(
                                         BetaManagedAgentsMcpServerUrlDefinition.builder()
                                             .name("example-mcp")
-                                            .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                             .url(
                                                 "https://example-server.modelcontextprotocol.io/sse"
                                             )
@@ -328,11 +284,7 @@ internal class BetaManagedAgentsSessionTest {
                                     .model(
                                         BetaManagedAgentsModelConfig.builder()
                                             .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                            .effort(
-                                                BetaManagedAgentsEffortLow.of(
-                                                    BetaManagedAgentsEffortLow.Type.LOW
-                                                )
-                                            )
+                                            .effort(BetaManagedAgentsEffortLow.builder().build())
                                             .inferenceGeo("inference_geo")
                                             .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                             .build()
@@ -341,7 +293,6 @@ internal class BetaManagedAgentsSessionTest {
                                     .addSkill(
                                         BetaManagedAgentsAnthropicSkill.builder()
                                             .skillId("xlsx")
-                                            .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                             .version("1")
                                             .build()
                                     )
@@ -354,10 +305,8 @@ internal class BetaManagedAgentsSessionTest {
                                                 BetaManagedAgentsBashToolConfig.builder()
                                                     .enabled(true)
                                                     .permissionPolicy(
-                                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                            BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                                .ALWAYS_ALLOW
-                                                        )
+                                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                                            .build()
                                                     )
                                                     .build()
                                             )
@@ -365,20 +314,13 @@ internal class BetaManagedAgentsSessionTest {
                                                 BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                                     .enabled(true)
                                                     .permissionPolicy(
-                                                        BetaManagedAgentsAlwaysAskPolicy.of(
-                                                            BetaManagedAgentsAlwaysAskPolicy.Type
-                                                                .ALWAYS_ASK
-                                                        )
+                                                        BetaManagedAgentsAlwaysAskPolicy.builder()
+                                                            .build()
                                                     )
                                                     .build()
                                             )
-                                            .type(
-                                                BetaManagedAgentsAgentToolset20260401.Type
-                                                    .AGENT_TOOLSET_20260401
-                                            )
                                             .build()
                                     )
-                                    .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                                     .version(1)
                                     .build()
                             )
@@ -388,14 +330,12 @@ internal class BetaManagedAgentsSessionTest {
                     .addSkill(
                         BetaManagedAgentsAnthropicSkill.builder()
                             .skillId("xlsx")
-                            .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                             .version("1")
                             .build()
                     )
                     .addSkill(
                         BetaManagedAgentsCustomSkill.builder()
                             .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                            .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                             .version("2")
                             .build()
                     )
@@ -408,9 +348,7 @@ internal class BetaManagedAgentsSessionTest {
                                 BetaManagedAgentsBashToolConfig.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .build()
                             )
@@ -418,31 +356,21 @@ internal class BetaManagedAgentsSessionTest {
                                 BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAskPolicy.of(
-                                            BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                        )
+                                        BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                     )
                                     .build()
                             )
-                            .type(BetaManagedAgentsAgentToolset20260401.Type.AGENT_TOOLSET_20260401)
                             .build()
                     )
-                    .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                     .version(1)
                     .build()
             )
         assertThat(betaManagedAgentsSession.archivedAt()).isEmpty
         assertThat(betaManagedAgentsSession.budget())
             .contains(
-                BetaManagedAgentsBudgetLimit.builder()
-                    .maxListCost(
-                        BetaMonetaryAmount.builder()
-                            .amount("2500")
-                            .currency(BetaCurrency.USD)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                    .build()
+                BetaManagedAgentsBudgetLimit.of(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
             )
         assertThat(betaManagedAgentsSession.createdAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -459,7 +387,6 @@ internal class BetaManagedAgentsSessionTest {
                     .iteration(0)
                     .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                     .result("satisfied")
-                    .type(BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION)
                     .build()
             )
         assertThat(betaManagedAgentsSession.resources())
@@ -470,7 +397,6 @@ internal class BetaManagedAgentsSessionTest {
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                         .mountPath("/uploads/receipt.pdf")
-                        .type(BetaManagedAgentsFileResource.Type.FILE)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .build()
                 ),
@@ -479,7 +405,6 @@ internal class BetaManagedAgentsSessionTest {
                         .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .mountPath("/workspace/example-repo")
-                        .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .url("https://github.com/example-org/example-repo")
                         .branchCheckout("main")
@@ -496,7 +421,6 @@ internal class BetaManagedAgentsSessionTest {
         assertThat(betaManagedAgentsSession.status())
             .isEqualTo(BetaManagedAgentsSession.Status.IDLE)
         assertThat(betaManagedAgentsSession.title()).contains("Order #1234 inquiry")
-        assertThat(betaManagedAgentsSession.type()).isEqualTo(BetaManagedAgentsSession.Type.SESSION)
         assertThat(betaManagedAgentsSession.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaManagedAgentsSession.usage())
@@ -547,18 +471,13 @@ internal class BetaManagedAgentsSessionTest {
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
-                                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                 .url("https://example-server.modelcontextprotocol.io/sse")
                                 .build()
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                .effort(
-                                    BetaManagedAgentsEffortLow.of(
-                                        BetaManagedAgentsEffortLow.Type.LOW
-                                    )
-                                )
+                                .effort(BetaManagedAgentsEffortLow.builder().build())
                                 .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
@@ -577,9 +496,6 @@ internal class BetaManagedAgentsSessionTest {
                                         .addMcpServer(
                                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                                 .name("example-mcp")
-                                                .type(
-                                                    BetaManagedAgentsMcpServerUrlDefinition.Type.URL
-                                                )
                                                 .url(
                                                     "https://example-server.modelcontextprotocol.io/sse"
                                                 )
@@ -589,9 +505,7 @@ internal class BetaManagedAgentsSessionTest {
                                             BetaManagedAgentsModelConfig.builder()
                                                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                 .effort(
-                                                    BetaManagedAgentsEffortLow.of(
-                                                        BetaManagedAgentsEffortLow.Type.LOW
-                                                    )
+                                                    BetaManagedAgentsEffortLow.builder().build()
                                                 )
                                                 .inferenceGeo("inference_geo")
                                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -601,9 +515,6 @@ internal class BetaManagedAgentsSessionTest {
                                         .addSkill(
                                             BetaManagedAgentsAnthropicSkill.builder()
                                                 .skillId("xlsx")
-                                                .type(
-                                                    BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC
-                                                )
                                                 .version("1")
                                                 .build()
                                         )
@@ -616,11 +527,9 @@ internal class BetaManagedAgentsSessionTest {
                                                     BetaManagedAgentsBashToolConfig.builder()
                                                         .enabled(true)
                                                         .permissionPolicy(
-                                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                                BetaManagedAgentsAlwaysAllowPolicy
-                                                                    .Type
-                                                                    .ALWAYS_ALLOW
-                                                            )
+                                                            BetaManagedAgentsAlwaysAllowPolicy
+                                                                .builder()
+                                                                .build()
                                                         )
                                                         .build()
                                                 )
@@ -629,21 +538,14 @@ internal class BetaManagedAgentsSessionTest {
                                                         .builder()
                                                         .enabled(true)
                                                         .permissionPolicy(
-                                                            BetaManagedAgentsAlwaysAskPolicy.of(
-                                                                BetaManagedAgentsAlwaysAskPolicy
-                                                                    .Type
-                                                                    .ALWAYS_ASK
-                                                            )
+                                                            BetaManagedAgentsAlwaysAskPolicy
+                                                                .builder()
+                                                                .build()
                                                         )
                                                         .build()
                                                 )
-                                                .type(
-                                                    BetaManagedAgentsAgentToolset20260401.Type
-                                                        .AGENT_TOOLSET_20260401
-                                                )
                                                 .build()
                                         )
-                                        .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                                         .version(1)
                                         .build()
                                 )
@@ -653,14 +555,12 @@ internal class BetaManagedAgentsSessionTest {
                         .addSkill(
                             BetaManagedAgentsAnthropicSkill.builder()
                                 .skillId("xlsx")
-                                .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                 .version("1")
                                 .build()
                         )
                         .addSkill(
                             BetaManagedAgentsCustomSkill.builder()
                                 .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                                .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                 .version("2")
                                 .build()
                         )
@@ -673,9 +573,7 @@ internal class BetaManagedAgentsSessionTest {
                                     BetaManagedAgentsBashToolConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                         )
                                         .build()
                                 )
@@ -683,33 +581,23 @@ internal class BetaManagedAgentsSessionTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAskPolicy.of(
-                                                BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                            )
+                                            BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                         )
                                         .build()
                                 )
-                                .type(
-                                    BetaManagedAgentsAgentToolset20260401.Type
-                                        .AGENT_TOOLSET_20260401
-                                )
                                 .build()
                         )
-                        .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                         .version(1)
                         .build()
                 )
                 .archivedAt(null)
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
@@ -722,7 +610,6 @@ internal class BetaManagedAgentsSessionTest {
                         .iteration(0)
                         .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                         .result("satisfied")
-                        .type(BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION)
                         .build()
                 )
                 .addResource(
@@ -731,7 +618,6 @@ internal class BetaManagedAgentsSessionTest {
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                         .mountPath("/uploads/receipt.pdf")
-                        .type(BetaManagedAgentsFileResource.Type.FILE)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .build()
                 )
@@ -740,7 +626,6 @@ internal class BetaManagedAgentsSessionTest {
                         .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .mountPath("/workspace/example-repo")
-                        .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .url("https://github.com/example-org/example-repo")
                         .branchCheckout("main")
@@ -754,7 +639,6 @@ internal class BetaManagedAgentsSessionTest {
                 )
                 .status(BetaManagedAgentsSession.Status.IDLE)
                 .title("Order #1234 inquiry")
-                .type(BetaManagedAgentsSession.Type.SESSION)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .usage(
                     BetaManagedAgentsSessionUsage.builder()

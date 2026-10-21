@@ -146,7 +146,7 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                             response
                                 .use { createHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -187,7 +187,7 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -226,7 +226,7 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                             response
                                 .use { updateHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -260,7 +260,7 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -308,7 +308,7 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                             response
                                 .use { archiveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -348,7 +348,7 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                             response
                                 .use { pauseHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -388,7 +388,7 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                             response
                                 .use { runHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -428,7 +428,7 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                             response
                                 .use { unpauseHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

@@ -18,11 +18,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val bash =
             BetaManagedAgentsBashToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                 .build()
 
@@ -46,11 +42,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
             BetaManagedAgentsAgentToolConfigParams.ofBash(
                 BetaManagedAgentsBashToolConfigParams.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                     .build()
             )
@@ -70,11 +62,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val edit =
             BetaManagedAgentsEditToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsEditToolConfigParams.Type.EDIT)
                 .build()
 
@@ -98,11 +86,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
             BetaManagedAgentsAgentToolConfigParams.ofEdit(
                 BetaManagedAgentsEditToolConfigParams.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .type(BetaManagedAgentsEditToolConfigParams.Type.EDIT)
                     .build()
             )
@@ -122,11 +106,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val read =
             BetaManagedAgentsReadToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsReadToolConfigParams.Type.READ)
                 .build()
 
@@ -150,11 +130,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
             BetaManagedAgentsAgentToolConfigParams.ofRead(
                 BetaManagedAgentsReadToolConfigParams.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .type(BetaManagedAgentsReadToolConfigParams.Type.READ)
                     .build()
             )
@@ -174,11 +150,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val write =
             BetaManagedAgentsWriteToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsWriteToolConfigParams.Type.WRITE)
                 .build()
 
@@ -202,11 +174,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
             BetaManagedAgentsAgentToolConfigParams.ofWrite(
                 BetaManagedAgentsWriteToolConfigParams.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .type(BetaManagedAgentsWriteToolConfigParams.Type.WRITE)
                     .build()
             )
@@ -226,11 +194,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val glob =
             BetaManagedAgentsGlobToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsGlobToolConfigParams.Type.GLOB)
                 .build()
 
@@ -254,11 +218,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
             BetaManagedAgentsAgentToolConfigParams.ofGlob(
                 BetaManagedAgentsGlobToolConfigParams.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .type(BetaManagedAgentsGlobToolConfigParams.Type.GLOB)
                     .build()
             )
@@ -278,11 +238,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val grep =
             BetaManagedAgentsGrepToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsGrepToolConfigParams.Type.GREP)
                 .build()
 
@@ -306,11 +262,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
             BetaManagedAgentsAgentToolConfigParams.ofGrep(
                 BetaManagedAgentsGrepToolConfigParams.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .type(BetaManagedAgentsGrepToolConfigParams.Type.GREP)
                     .build()
             )
@@ -333,11 +285,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
                 .addBlockedDomain("string")
                 .enabled(true)
                 .maxContentTokens(0)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsWebFetchToolConfigParams.Type.WEB_FETCH)
                 .urlSources(
                     BetaManagedAgentsWebFetchUrlSourcesParams.builder()
@@ -371,11 +319,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
                     .addBlockedDomain("string")
                     .enabled(true)
                     .maxContentTokens(0)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .type(BetaManagedAgentsWebFetchToolConfigParams.Type.WEB_FETCH)
                     .urlSources(
                         BetaManagedAgentsWebFetchUrlSourcesParams.builder()
@@ -404,11 +348,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsWebSearchToolConfigParams.Type.WEB_SEARCH)
                 .userLocation(
                     BetaManagedAgentsUserLocation.builder()
@@ -442,11 +382,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
                     .addAllowedDomain("string")
                     .addBlockedDomain("string")
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .type(BetaManagedAgentsWebSearchToolConfigParams.Type.WEB_SEARCH)
                     .userLocation(
                         BetaManagedAgentsUserLocation.builder()

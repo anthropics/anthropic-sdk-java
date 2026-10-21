@@ -3,6 +3,7 @@ package com.anthropic.models.beta.sessions.events
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -17,7 +18,6 @@ internal class BetaManagedAgentsEventParamsTest {
         val userMessage =
             BetaManagedAgentsUserMessageEventParams.builder()
                 .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
                 .build()
 
         val betaManagedAgentsEventParams = BetaManagedAgentsEventParams.ofUserMessage(userMessage)
@@ -38,7 +38,6 @@ internal class BetaManagedAgentsEventParamsTest {
             BetaManagedAgentsEventParams.ofUserMessage(
                 BetaManagedAgentsUserMessageEventParams.builder()
                     .addTextContent("Where is my order #1234?")
-                    .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
                     .build()
             )
 
@@ -55,7 +54,6 @@ internal class BetaManagedAgentsEventParamsTest {
     fun ofUserInterrupt() {
         val userInterrupt =
             BetaManagedAgentsUserInterruptEventParams.builder()
-                .type(BetaManagedAgentsUserInterruptEventParams.Type.USER_INTERRUPT)
                 .sessionThreadId("session_thread_id")
                 .build()
 
@@ -77,7 +75,6 @@ internal class BetaManagedAgentsEventParamsTest {
         val betaManagedAgentsEventParams =
             BetaManagedAgentsEventParams.ofUserInterrupt(
                 BetaManagedAgentsUserInterruptEventParams.builder()
-                    .type(BetaManagedAgentsUserInterruptEventParams.Type.USER_INTERRUPT)
                     .sessionThreadId("session_thread_id")
                     .build()
             )
@@ -97,7 +94,6 @@ internal class BetaManagedAgentsEventParamsTest {
             BetaManagedAgentsUserToolConfirmationEventParams.builder()
                 .result(BetaManagedAgentsUserToolConfirmationEventParams.Result.ALLOW)
                 .toolUseId("x")
-                .type(BetaManagedAgentsUserToolConfirmationEventParams.Type.USER_TOOL_CONFIRMATION)
                 .denyMessage("deny_message")
                 .build()
 
@@ -122,9 +118,6 @@ internal class BetaManagedAgentsEventParamsTest {
                 BetaManagedAgentsUserToolConfirmationEventParams.builder()
                     .result(BetaManagedAgentsUserToolConfirmationEventParams.Result.ALLOW)
                     .toolUseId("x")
-                    .type(
-                        BetaManagedAgentsUserToolConfirmationEventParams.Type.USER_TOOL_CONFIRMATION
-                    )
                     .denyMessage("deny_message")
                     .build()
             )
@@ -143,7 +136,6 @@ internal class BetaManagedAgentsEventParamsTest {
         val userCustomToolResult =
             BetaManagedAgentsUserCustomToolResultEventParams.builder()
                 .customToolUseId("x")
-                .type(BetaManagedAgentsUserCustomToolResultEventParams.Type.USER_CUSTOM_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .build()
@@ -168,10 +160,6 @@ internal class BetaManagedAgentsEventParamsTest {
             BetaManagedAgentsEventParams.ofUserCustomToolResult(
                 BetaManagedAgentsUserCustomToolResultEventParams.builder()
                     .customToolUseId("x")
-                    .type(
-                        BetaManagedAgentsUserCustomToolResultEventParams.Type
-                            .USER_CUSTOM_TOOL_RESULT
-                    )
                     .addTextContent("Where is my order #1234?")
                     .isError(true)
                     .build()
@@ -192,7 +180,6 @@ internal class BetaManagedAgentsEventParamsTest {
             BetaManagedAgentsUserDefineOutcomeEventParams.builder()
                 .description("Produce a 2-page summary as summary.md")
                 .textRubric("Must cover all five sections; cite sources inline.")
-                .type(BetaManagedAgentsUserDefineOutcomeEventParams.Type.USER_DEFINE_OUTCOME)
                 .maxIterations(3)
                 .build()
 
@@ -216,7 +203,6 @@ internal class BetaManagedAgentsEventParamsTest {
                 BetaManagedAgentsUserDefineOutcomeEventParams.builder()
                     .description("Produce a 2-page summary as summary.md")
                     .textRubric("Must cover all five sections; cite sources inline.")
-                    .type(BetaManagedAgentsUserDefineOutcomeEventParams.Type.USER_DEFINE_OUTCOME)
                     .maxIterations(3)
                     .build()
             )
@@ -235,7 +221,6 @@ internal class BetaManagedAgentsEventParamsTest {
         val userToolResult =
             BetaManagedAgentsUserToolResultEventParams.builder()
                 .toolUseId("x")
-                .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .build()
@@ -259,7 +244,6 @@ internal class BetaManagedAgentsEventParamsTest {
             BetaManagedAgentsEventParams.ofUserToolResult(
                 BetaManagedAgentsUserToolResultEventParams.builder()
                     .toolUseId("x")
-                    .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
                     .addTextContent("Where is my order #1234?")
                     .isError(true)
                     .build()
@@ -278,8 +262,7 @@ internal class BetaManagedAgentsEventParamsTest {
     fun ofSystemMessage() {
         val systemMessage =
             BetaManagedAgentsSystemMessageEventParams.builder()
-                .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+                .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                 .build()
 
         val betaManagedAgentsEventParams =
@@ -300,8 +283,7 @@ internal class BetaManagedAgentsEventParamsTest {
         val betaManagedAgentsEventParams =
             BetaManagedAgentsEventParams.ofSystemMessage(
                 BetaManagedAgentsSystemMessageEventParams.builder()
-                    .addTextContent("Where is my order #1234?")
-                    .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+                    .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                     .build()
             )
 

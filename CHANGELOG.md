@@ -1,10 +1,15 @@
 # Changelog
 
-## [2.76.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.75.0...v2.76.0) (2026-10-21)
+## [3.0.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.75.0...v3.0.0) (2026-10-21)
+
+### ⚠ BREAKING CHANGES
+
+* **api:** add support for new API version 2026-10-21
 
 ### Features
 
 * **api:** add a workspace_id filter and the usage_tier scope type to list spend limits
+* **api:** add support for new API version 2026-10-21
 
 
 ### Documentation

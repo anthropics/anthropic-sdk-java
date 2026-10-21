@@ -15,11 +15,7 @@ internal class BetaManagedAgentsRepositoryAuthenticationErrorTest {
                     "The repository host rejected the credentials for the repository, or required credentials and received none."
                 )
                 .repositoryUrl("https://github.com/example-org/example-repo")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsRepositoryAuthenticationError.message())
@@ -31,7 +27,7 @@ internal class BetaManagedAgentsRepositoryAuthenticationErrorTest {
         assertThat(betaManagedAgentsRepositoryAuthenticationError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsRepositoryAuthenticationError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
             )
     }
@@ -45,11 +41,7 @@ internal class BetaManagedAgentsRepositoryAuthenticationErrorTest {
                     "The repository host rejected the credentials for the repository, or required credentials and received none."
                 )
                 .repositoryUrl("https://github.com/example-org/example-repo")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsRepositoryAuthenticationError =

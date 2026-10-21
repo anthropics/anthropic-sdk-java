@@ -286,7 +286,7 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

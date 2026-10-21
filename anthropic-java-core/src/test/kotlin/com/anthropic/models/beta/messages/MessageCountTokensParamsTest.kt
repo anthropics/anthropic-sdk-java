@@ -16,18 +16,7 @@ internal class MessageCountTokensParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .userProfileId("anthropic-user-profile-id")
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-            .addMessage(
-                BetaMessageParam.builder()
-                    .content("Hello, world")
-                    .role(BetaMessageParam.Role.USER)
-                    .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
-                    .outputConfig(
-                        BetaSystemMessageOutputConfig.builder()
-                            .effort(BetaSystemMessageOutputConfig.Effort.LOW)
-                            .build()
-                    )
-                    .build()
-            )
+            .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_5_5)
             .cacheControl(
                 BetaCacheControlEphemeral.builder()
@@ -156,18 +145,7 @@ internal class MessageCountTokensParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .userProfileId("anthropic-user-profile-id")
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-                .addMessage(
-                    BetaMessageParam.builder()
-                        .content("Hello, world")
-                        .role(BetaMessageParam.Role.USER)
-                        .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
-                        .outputConfig(
-                            BetaSystemMessageOutputConfig.builder()
-                                .effort(BetaSystemMessageOutputConfig.Effort.LOW)
-                                .build()
-                        )
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_5_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -322,18 +300,7 @@ internal class MessageCountTokensParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .userProfileId("anthropic-user-profile-id")
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-                .addMessage(
-                    BetaMessageParam.builder()
-                        .content("Hello, world")
-                        .role(BetaMessageParam.Role.USER)
-                        .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
-                        .outputConfig(
-                            BetaSystemMessageOutputConfig.builder()
-                                .effort(BetaSystemMessageOutputConfig.Effort.LOW)
-                                .build()
-                        )
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_5_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -460,16 +427,9 @@ internal class MessageCountTokensParamsTest {
 
         assertThat(body.messages())
             .containsExactly(
-                BetaMessageParam.builder()
-                    .content("Hello, world")
-                    .role(BetaMessageParam.Role.USER)
-                    .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
-                    .outputConfig(
-                        BetaSystemMessageOutputConfig.builder()
-                            .effort(BetaSystemMessageOutputConfig.Effort.LOW)
-                            .build()
-                    )
-                    .build()
+                BetaMessageParam.ofUser(
+                    BetaUserMessageParam.builder().content("Hello, world").build()
+                )
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
         assertThat(body.cacheControl())
@@ -623,10 +583,9 @@ internal class MessageCountTokensParamsTest {
 
         assertThat(body.messages())
             .containsExactly(
-                BetaMessageParam.builder()
-                    .content("Hello, world")
-                    .role(BetaMessageParam.Role.USER)
-                    .build()
+                BetaMessageParam.ofUser(
+                    BetaUserMessageParam.builder().content("Hello, world").build()
+                )
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
     }

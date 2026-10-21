@@ -15,6 +15,7 @@ import com.anthropic.models.beta.messages.BetaFallbackInfoParam
 import com.anthropic.models.beta.messages.BetaFallbackParam
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaMessage
+import com.anthropic.models.beta.messages.BetaMessageContentParam
 import com.anthropic.models.beta.messages.BetaMessageParam
 import com.anthropic.models.beta.messages.BetaOutputConfig
 import com.anthropic.models.beta.messages.BetaTextBlockParam
@@ -1290,13 +1291,10 @@ internal class BetaRefusalFallbackInterceptorTest {
         )
 
     private fun userMessage(text: String): BetaMessageParam =
-        BetaMessageParam.builder().role(BetaMessageParam.Role.USER).content(text).build()
+        BetaMessageParam.ofUser(BetaMessageContentParam.ofString(text))
 
     private fun assistantMessage(vararg blocks: BetaContentBlockParam): BetaMessageParam =
-        BetaMessageParam.builder()
-            .role(BetaMessageParam.Role.ASSISTANT)
-            .contentOfBetaContentBlockParams(blocks.toList())
-            .build()
+        BetaMessageParam.ofAssistant(BetaMessageContentParam.ofContentBlockParams(blocks.toList()))
 
     /** A replayed `fallback` seam, as a prior fallback-served response echoes back. */
     private fun seamBlock(): BetaContentBlockParam =
@@ -1324,7 +1322,7 @@ internal class BetaRefusalFallbackInterceptorTest {
         }
 
     private fun bodyBytes(request: HttpRequest): ByteArray =
-        ByteArrayOutputStream().also { request.body!!.writeTo(it) }.toByteArray()
+        ByteArrayOutputStream().also { request.body().get().writeTo(it) }.toByteArray()
 
     private fun messagesBody(): MessageCreateParams.Body =
         MessageCreateParams.Body.builder()

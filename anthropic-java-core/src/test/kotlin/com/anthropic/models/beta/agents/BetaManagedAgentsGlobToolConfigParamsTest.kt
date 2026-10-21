@@ -12,11 +12,7 @@ internal class BetaManagedAgentsGlobToolConfigParamsTest {
         val betaManagedAgentsGlobToolConfigParams =
             BetaManagedAgentsGlobToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsGlobToolConfigParams.Type.GLOB)
                 .build()
 
@@ -24,7 +20,7 @@ internal class BetaManagedAgentsGlobToolConfigParamsTest {
         assertThat(betaManagedAgentsGlobToolConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsGlobToolConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
         assertThat(betaManagedAgentsGlobToolConfigParams.type())
@@ -37,11 +33,7 @@ internal class BetaManagedAgentsGlobToolConfigParamsTest {
         val betaManagedAgentsGlobToolConfigParams =
             BetaManagedAgentsGlobToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsGlobToolConfigParams.Type.GLOB)
                 .build()
 

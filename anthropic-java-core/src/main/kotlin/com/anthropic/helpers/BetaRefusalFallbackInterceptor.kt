@@ -449,12 +449,12 @@ private constructor(
                 request.method != HttpMethod.POST ||
                 request.pathSegments != listOf("v1", "messages") ||
                 !request.queryParams.values("beta").contains("true") ||
-                request.body == null
+                !request.body().isPresent
         ) {
             return null
         }
         val bufferedRequest = request.buffered()
-        val bodyNode = bufferedRequest.body!!.json(ObjectNode::class.java)
+        val bodyNode = bufferedRequest.body().get().json(ObjectNode::class.java)
         // Combining the two fallback mechanisms would race retries against the server's own
         // chain, so it is rejected outright.
         if (bodyNode.hasNonNull("fallbacks")) {
@@ -476,7 +476,7 @@ private constructor(
                 bufferedRequest
             }
 
-        val state = requestOptions.fallbackState
+        val state = requestOptions.fallbackState().getOrNull()
         // Start from the pinned fallback (-1 = the original params).
         val index = state?.index() ?: -1
         if (index < -1 || index >= fallbacks.size) {
@@ -941,7 +941,7 @@ private fun withoutRejectedFastSpeed(
     if (jsonMapper().valueToTree<ObjectNode>(entry).has("speed")) {
         return null
     }
-    val body = request.body?.json(ObjectNode::class.java) ?: return null
+    val body = request.body().getOrNull()?.json(ObjectNode::class.java) ?: return null
     if (body.path("speed").asText() != "fast") {
         return null
     }
@@ -1363,7 +1363,7 @@ private class FallbackStreamSplicer(
     ): HttpRequest {
         // Re-parsed on every attempt so each request starts from the body the token was minted
         // against.
-        val body = initialRequest.body!!.json(ObjectNode::class.java)
+        val body = initialRequest.body().get().json(ObjectNode::class.java)
 
         // The other per-entry overrides are not applied, because the credit token is tied to the
         // refused request's body. `speed` and a `between_tools` thinking config are the exceptions,

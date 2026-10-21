@@ -29,6 +29,7 @@ import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicLong
+import kotlin.jvm.optionals.getOrNull
 import software.amazon.awssdk.auth.credentials.AwsCredentials
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
@@ -65,10 +66,15 @@ import software.amazon.eventstream.MessageDecoder
  */
 class BedrockBackend
 private constructor(
-    @get:JvmName("awsCredentialsProvider") val awsCredentialsProvider: AwsCredentialsProvider?,
-    @get:JvmName("apiKey") val apiKey: String?,
+    private val awsCredentialsProvider: AwsCredentialsProvider?,
+    private val apiKey: String?,
     @get:JvmName("region") val region: Region,
 ) : Backend {
+
+    fun awsCredentialsProvider(): Optional<AwsCredentialsProvider> =
+        Optional.ofNullable(awsCredentialsProvider)
+
+    fun apiKey(): Optional<String> = Optional.ofNullable(apiKey)
 
     private val jsonMapper = jsonMapper()
 
@@ -108,9 +114,9 @@ private constructor(
                 ?: throw IllegalStateException("AWS credentials provider was not set.")
 
     companion object {
-        private const val ANTHROPIC_VERSION = "bedrock-2023-05-31"
         private const val SERVICE_NAME = "bedrock-runtime"
         private const val HEADER_ANTHROPIC_BETA = "anthropic-beta"
+        private const val HEADER_ANTHROPIC_VERSION = "anthropic-version"
         private const val HEADER_CONTENT_TYPE = "content-type"
         private const val HEADER_AUTHORIZATION = "authorization"
         private const val CONTENT_TYPE_JSON = "application/json"
@@ -194,9 +200,6 @@ private constructor(
                     } // For now, ignore any other path segments.
                 }
             }
-            "complete" -> {
-                // Do nothing special.
-            }
             else ->
                 throw AnthropicException(
                     "Service is not supported for Bedrock: ${pathSegments[1]}."
@@ -204,10 +207,13 @@ private constructor(
         }
 
         val jsonBody: ObjectNode =
-            bodyToJson(jsonMapper, request.body)
+            bodyToJson(jsonMapper, request.body().getOrNull())
                 ?: throw AnthropicInvalidDataException("Request has no body")
 
-        jsonBody.put("anthropic_version", ANTHROPIC_VERSION)
+        // An interceptor's `putHeader` adds its value after the client's default.
+        request.headers.values(HEADER_ANTHROPIC_VERSION).lastOrNull()?.let {
+            jsonBody.put("anthropic_version", it)
+        }
 
         // Bedrock's InvokeModel API takes beta flags in the body's "anthropic_beta" array, not
         // the "anthropic-beta" header. Merge header betas into any betas already in the body
@@ -239,8 +245,10 @@ private constructor(
             .toBuilder()
             .replaceAllPathSegments("model", modelId)
             .addPathSegment(if (isStream) "invoke-with-response-stream" else "invoke")
-            // Bedrock takes betas in the body, so the header must not be signed or sent.
+            // Bedrock takes betas and the API version in the body, so the headers must not be
+            // signed or sent.
             .removeHeaders(HEADER_ANTHROPIC_BETA)
+            .removeHeaders(HEADER_ANTHROPIC_VERSION)
             .body(json(jsonMapper, jsonBody))
             .build()
     }
@@ -275,8 +283,8 @@ private constructor(
                     // "content-type" header with a "null" value and crash "replaceAllHeaders". It
                     // is better to provide a meaningful error earlier in the execution.
                     if (request.headers.values(HEADER_CONTENT_TYPE).isEmpty()) {
-                        if (request.body?.contentType() != null) {
-                            appendHeader(HEADER_CONTENT_TYPE, request.body!!.contentType())
+                        if (request.body().getOrNull()?.contentType() != null) {
+                            appendHeader(HEADER_CONTENT_TYPE, request.body().get().contentType())
                         } else {
                             throw AnthropicInvalidDataException(
                                 "No content type in request headers or body."
@@ -302,7 +310,7 @@ private constructor(
         val bufferedRequest = request.buffered()
         val bodyData = ByteArrayOutputStream()
 
-        bufferedRequest.body?.writeTo(bodyData)
+        bufferedRequest.body().getOrNull()?.writeTo(bodyData)
 
         val awsSignedRequest: SdkHttpRequest =
             AwsV4HttpSigner.create()

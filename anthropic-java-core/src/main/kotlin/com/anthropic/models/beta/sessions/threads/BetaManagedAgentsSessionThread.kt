@@ -47,7 +47,7 @@ private constructor(
     private val sessionId: JsonField<String>,
     private val stats: JsonField<BetaManagedAgentsSessionThreadStats>,
     private val status: JsonField<BetaManagedAgentsSessionThreadStatus>,
-    private val type: JsonField<Type>,
+    private val type: JsonValue,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val usage: JsonField<BetaManagedAgentsSessionThreadUsage>,
     private val workflowRunId: JsonField<String>,
@@ -74,7 +74,7 @@ private constructor(
         @JsonProperty("status")
         @ExcludeMissing
         status: JsonField<BetaManagedAgentsSessionThreadStatus> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -165,10 +165,15 @@ private constructor(
     fun status(): BetaManagedAgentsSessionThreadStatus = status.getRequired("status")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("session_thread")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
-    fun type(): Type = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * When the thread was last updated.
@@ -261,13 +266,6 @@ private constructor(
     fun _status(): JsonField<BetaManagedAgentsSessionThreadStatus> = status
 
     /**
-     * Returns the raw JSON value of [type].
-     *
-     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-    /**
      * Returns the raw JSON value of [updatedAt].
      *
      * Unlike [updatedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -322,7 +320,6 @@ private constructor(
          * .sessionId()
          * .stats()
          * .status()
-         * .type()
          * .updatedAt()
          * .usage()
          * .workflowRunId()
@@ -342,7 +339,7 @@ private constructor(
         private var sessionId: JsonField<String>? = null
         private var stats: JsonField<BetaManagedAgentsSessionThreadStats>? = null
         private var status: JsonField<BetaManagedAgentsSessionThreadStatus>? = null
-        private var type: JsonField<Type>? = null
+        private var type: JsonValue = JsonValue.from("session_thread")
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var usage: JsonField<BetaManagedAgentsSessionThreadUsage>? = null
         private var workflowRunId: JsonField<String>? = null
@@ -400,18 +397,12 @@ private constructor(
          * Alias for calling [agent] with the following:
          * ```java
          * BetaManagedAgentsAdvisor.builder()
-         *     .type(BetaManagedAgentsAdvisor.Type.ADVISOR)
          *     .model(model)
          *     .build()
          * ```
          */
         fun advisorAgent(model: String) =
-            agent(
-                BetaManagedAgentsAdvisor.builder()
-                    .type(BetaManagedAgentsAdvisor.Type.ADVISOR)
-                    .model(model)
-                    .build()
-            )
+            agent(BetaManagedAgentsAdvisor.builder().model(model).build())
 
         /** Alias for calling [agent] with `Agent.ofInline(inline)`. */
         fun agent(inline: BetaManagedAgentsInlineAgent) = agent(Agent.ofInline(inline))
@@ -507,15 +498,19 @@ private constructor(
             this.status = status
         }
 
-        fun type(type: Type) = type(JsonField.of(type))
-
         /**
-         * Sets [Builder.type] to an arbitrary JSON value.
+         * Sets the field to an arbitrary JSON value.
          *
-         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("session_thread")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         /** When the thread was last updated. */
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
@@ -603,7 +598,6 @@ private constructor(
          * .sessionId()
          * .stats()
          * .status()
-         * .type()
          * .updatedAt()
          * .usage()
          * .workflowRunId()
@@ -621,7 +615,7 @@ private constructor(
                 checkRequired("sessionId", sessionId),
                 checkRequired("stats", stats),
                 checkRequired("status", status),
-                checkRequired("type", type),
+                type,
                 checkRequired("updatedAt", updatedAt),
                 checkRequired("usage", usage),
                 checkRequired("workflowRunId", workflowRunId),
@@ -652,7 +646,11 @@ private constructor(
         sessionId()
         stats().ifPresent { it.validate() }
         status().validate()
-        type().validate()
+        _type().let {
+            if (it != JsonValue.from("session_thread")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         updatedAt()
         usage().ifPresent { it.validate() }
         workflowRunId()
@@ -682,7 +680,7 @@ private constructor(
             (if (sessionId.asKnown().isPresent) 1 else 0) +
             (stats.asKnown().getOrNull()?.validity() ?: 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("session_thread")) 1 else 0 } +
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (usage.asKnown().getOrNull()?.validity() ?: 0) +
             (if (workflowRunId.asKnown().isPresent) 1 else 0)
@@ -923,14 +921,7 @@ private constructor(
              * Returns an immutable instance of [Agent] whose [ofAdvisor] variant is built from the
              * given required [model].
              */
-            @JvmStatic
-            fun ofAdvisor(model: String) =
-                ofAdvisor(
-                    BetaManagedAgentsAdvisor.builder()
-                        .type(BetaManagedAgentsAdvisor.Type.ADVISOR)
-                        .model(model)
-                        .build()
-                )
+            @JvmStatic fun ofAdvisor(model: String) = ofAdvisor(BetaManagedAgentsAdvisor.of(model))
 
             /**
              * An agent that has no Agent resource, and so no `id` or `version`. It is defined
@@ -1178,147 +1169,6 @@ private constructor(
 
             override fun toString() = value.toString()
         }
-    }
-
-    class Type private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val SESSION_THREAD = Type(JsonField.of("session_thread"))
-
-            @JvmStatic
-            fun of(value: String): Type =
-                // Intern known values so `==` works
-                when (value) {
-                    "session_thread" -> SESSION_THREAD
-                    else -> Type(JsonField.of(value))
-                }
-
-            @JsonCreator
-            @JvmStatic
-            fun of(value: JsonField<String>): Type =
-                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            SESSION_THREAD
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            SESSION_THREAD,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                SESSION_THREAD -> Value.SESSION_THREAD
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                SESSION_THREAD -> Known.SESSION_THREAD
-                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): Type = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Type && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {

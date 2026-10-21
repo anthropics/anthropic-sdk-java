@@ -114,7 +114,6 @@ internal class ServiceParamsTest {
                             .build()
                     )
                 )
-                .temperature(1.0)
                 .thinking(
                     ThinkingConfigAdaptive.builder()
                         .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -153,8 +152,6 @@ internal class ServiceParamsTest {
                         .type(Tool.Type.CUSTOM)
                         .build()
                 )
-                .topK(5L)
-                .topP(0.7)
                 .putAdditionalHeader("Secret-Header", "42")
                 .putAdditionalQueryParam("secret_query_param", "42")
                 .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))

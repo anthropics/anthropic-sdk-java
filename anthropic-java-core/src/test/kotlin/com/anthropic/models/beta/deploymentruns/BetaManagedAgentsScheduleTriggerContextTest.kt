@@ -11,25 +11,21 @@ internal class BetaManagedAgentsScheduleTriggerContextTest {
     @Test
     fun create() {
         val betaManagedAgentsScheduleTriggerContext =
-            BetaManagedAgentsScheduleTriggerContext.builder()
-                .scheduledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsScheduleTriggerContext.Type.SCHEDULE)
-                .build()
+            BetaManagedAgentsScheduleTriggerContext.of(
+                OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+            )
 
         assertThat(betaManagedAgentsScheduleTriggerContext.scheduledAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsScheduleTriggerContext.type())
-            .isEqualTo(BetaManagedAgentsScheduleTriggerContext.Type.SCHEDULE)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsScheduleTriggerContext =
-            BetaManagedAgentsScheduleTriggerContext.builder()
-                .scheduledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsScheduleTriggerContext.Type.SCHEDULE)
-                .build()
+            BetaManagedAgentsScheduleTriggerContext.of(
+                OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+            )
 
         val roundtrippedBetaManagedAgentsScheduleTriggerContext =
             jsonMapper.readValue(

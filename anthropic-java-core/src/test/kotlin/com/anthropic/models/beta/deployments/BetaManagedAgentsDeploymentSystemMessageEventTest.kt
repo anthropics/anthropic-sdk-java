@@ -12,19 +12,11 @@ internal class BetaManagedAgentsDeploymentSystemMessageEventTest {
     fun create() {
         val betaManagedAgentsDeploymentSystemMessageEvent =
             BetaManagedAgentsDeploymentSystemMessageEvent.builder()
-                .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsDeploymentSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                 .build()
 
         assertThat(betaManagedAgentsDeploymentSystemMessageEvent.content())
-            .containsExactly(
-                BetaManagedAgentsSystemContentBlock.builder()
-                    .text("Where is my order #1234?")
-                    .type(BetaManagedAgentsSystemContentBlock.Type.TEXT)
-                    .build()
-            )
-        assertThat(betaManagedAgentsDeploymentSystemMessageEvent.type())
-            .isEqualTo(BetaManagedAgentsDeploymentSystemMessageEvent.Type.SYSTEM_MESSAGE)
+            .containsExactly(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
     }
 
     @Test
@@ -32,8 +24,7 @@ internal class BetaManagedAgentsDeploymentSystemMessageEventTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentSystemMessageEvent =
             BetaManagedAgentsDeploymentSystemMessageEvent.builder()
-                .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsDeploymentSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                 .build()
 
         val roundtrippedBetaManagedAgentsDeploymentSystemMessageEvent =

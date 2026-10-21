@@ -83,7 +83,7 @@ class ActionUrlServiceAsyncImpl internal constructor(private val clientOptions: 
                             response
                                 .use { createHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

@@ -9,24 +9,15 @@ internal class BetaDreamSessionsInputTest {
 
     @Test
     fun create() {
-        val betaDreamSessionsInput =
-            BetaDreamSessionsInput.builder()
-                .addSessionId("string")
-                .type(BetaDreamSessionsInput.Type.SESSIONS)
-                .build()
+        val betaDreamSessionsInput = BetaDreamSessionsInput.builder().addSessionId("string").build()
 
         assertThat(betaDreamSessionsInput.sessionIds()).containsExactly("string")
-        assertThat(betaDreamSessionsInput.type()).isEqualTo(BetaDreamSessionsInput.Type.SESSIONS)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaDreamSessionsInput =
-            BetaDreamSessionsInput.builder()
-                .addSessionId("string")
-                .type(BetaDreamSessionsInput.Type.SESSIONS)
-                .build()
+        val betaDreamSessionsInput = BetaDreamSessionsInput.builder().addSessionId("string").build()
 
         val roundtrippedBetaDreamSessionsInput =
             jsonMapper.readValue(

@@ -65,7 +65,6 @@ internal class EcosystemCompatibilityTest {
         val client = AnthropicOkHttpClient.builder().apiKey("my-anthropic-api-key").build()
 
         assertThat(client).isNotNull()
-        assertThat(client.completions()).isNotNull()
         assertThat(client.messages()).isNotNull()
         assertThat(client.models()).isNotNull()
         assertThat(client.files()).isNotNull()

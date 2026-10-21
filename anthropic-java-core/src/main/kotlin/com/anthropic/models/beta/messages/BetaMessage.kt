@@ -86,19 +86,15 @@ private constructor(
     )
 
     fun toParam(): BetaMessageParam =
-        BetaMessageParam.builder()
-            .content(
-                _content().map {
-                    BetaMessageParam.Content.ofBetaContentBlockParams(it.map { it.toParam() })
-                }
-            )
-            .role(
-                _role().let {
-                    if (it.isMissing() || it.isNull()) it
-                    else JsonField.of(BetaMessageParam.Role.of(it))
-                }
-            )
-            .build()
+        BetaMessageParam.ofAssistant(
+            BetaAssistantMessageParam.builder()
+                .content(
+                    _content().map {
+                        BetaMessageContentParam.ofContentBlockParams(it.map { it.toParam() })
+                    }
+                )
+                .build()
+        )
 
     /**
      * Unique object identifier.

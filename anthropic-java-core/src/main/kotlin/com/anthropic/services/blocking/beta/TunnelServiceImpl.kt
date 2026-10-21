@@ -129,7 +129,7 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { createHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -165,7 +165,7 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -196,7 +196,7 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -240,7 +240,7 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { archiveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -277,7 +277,7 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { revealTokenHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -314,7 +314,7 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { rotateTokenHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

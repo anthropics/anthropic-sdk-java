@@ -17,7 +17,6 @@ internal class BetaManagedAgentsSessionUsageEventTest {
             BetaManagedAgentsSessionUsageEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionUsageEvent.Type.SESSION_USAGE)
                 .usage(
                     BetaManagedAgentsSessionUsageSnapshot.builder()
                         .activeSeconds(0.0)
@@ -45,23 +44,18 @@ internal class BetaManagedAgentsSessionUsageEventTest {
                         .build()
                 )
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .build()
 
         assertThat(betaManagedAgentsSessionUsageEvent.id()).isEqualTo("id")
         assertThat(betaManagedAgentsSessionUsageEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsSessionUsageEvent.type())
-            .isEqualTo(BetaManagedAgentsSessionUsageEvent.Type.SESSION_USAGE)
         assertThat(betaManagedAgentsSessionUsageEvent.usage())
             .isEqualTo(
                 BetaManagedAgentsSessionUsageSnapshot.builder()
@@ -91,15 +85,9 @@ internal class BetaManagedAgentsSessionUsageEventTest {
             )
         assertThat(betaManagedAgentsSessionUsageEvent.budget())
             .contains(
-                BetaManagedAgentsBudgetLimit.builder()
-                    .maxListCost(
-                        BetaMonetaryAmount.builder()
-                            .amount("2500")
-                            .currency(BetaCurrency.USD)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                    .build()
+                BetaManagedAgentsBudgetLimit.of(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
             )
     }
 
@@ -110,7 +98,6 @@ internal class BetaManagedAgentsSessionUsageEventTest {
             BetaManagedAgentsSessionUsageEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionUsageEvent.Type.SESSION_USAGE)
                 .usage(
                     BetaManagedAgentsSessionUsageSnapshot.builder()
                         .activeSeconds(0.0)
@@ -138,15 +125,12 @@ internal class BetaManagedAgentsSessionUsageEventTest {
                         .build()
                 )
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .build()
 

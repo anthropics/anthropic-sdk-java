@@ -10,27 +10,17 @@ internal class BetaManagedAgentsBase64DocumentSourceTest {
     @Test
     fun create() {
         val betaManagedAgentsBase64DocumentSource =
-            BetaManagedAgentsBase64DocumentSource.builder()
-                .data("x")
-                .mediaType("x")
-                .type(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
-                .build()
+            BetaManagedAgentsBase64DocumentSource.builder().data("x").mediaType("x").build()
 
         assertThat(betaManagedAgentsBase64DocumentSource.data()).isEqualTo("x")
         assertThat(betaManagedAgentsBase64DocumentSource.mediaType()).isEqualTo("x")
-        assertThat(betaManagedAgentsBase64DocumentSource.type())
-            .isEqualTo(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsBase64DocumentSource =
-            BetaManagedAgentsBase64DocumentSource.builder()
-                .data("x")
-                .mediaType("x")
-                .type(BetaManagedAgentsBase64DocumentSource.Type.BASE64)
-                .build()
+            BetaManagedAgentsBase64DocumentSource.builder().data("x").mediaType("x").build()
 
         val roundtrippedBetaManagedAgentsBase64DocumentSource =
             jsonMapper.readValue(

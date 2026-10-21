@@ -4,8 +4,6 @@ import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
-import com.anthropic.core.toImmutable
-import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -19,7 +17,6 @@ import kotlin.jvm.optionals.getOrNull
 class ModelRetrieveParams
 private constructor(
     private val modelId: String?,
-    private val betas: List<AnthropicBeta>?,
     private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -27,12 +24,6 @@ private constructor(
 
     /** Model identifier or alias. */
     fun modelId(): Optional<String> = Optional.ofNullable(modelId)
-
-    /** Optional header to specify the beta version(s) you want to use. */
-    @Deprecated(
-        "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
-    )
-    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
      * Optional header to select the Workspace for this request. The value is a Workspace ID (for
@@ -63,7 +54,6 @@ private constructor(
     class Builder internal constructor() {
 
         private var modelId: String? = null
-        private var betas: MutableList<AnthropicBeta>? = null
         private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -71,7 +61,6 @@ private constructor(
         @JvmSynthetic
         internal fun from(modelRetrieveParams: ModelRetrieveParams) = apply {
             modelId = modelRetrieveParams.modelId
-            betas = modelRetrieveParams.betas?.toMutableList()
             workspaceId = modelRetrieveParams.workspaceId
             additionalHeaders = modelRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = modelRetrieveParams.additionalQueryParams.toBuilder()
@@ -82,42 +71,6 @@ private constructor(
 
         /** Alias for calling [Builder.modelId] with `modelId.orElse(null)`. */
         fun modelId(modelId: Optional<String>) = modelId(modelId.getOrNull())
-
-        /** Optional header to specify the beta version(s) you want to use. */
-        @Deprecated(
-            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
-        )
-        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
-
-        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
-        @Deprecated(
-            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
-        )
-        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
-
-        /**
-         * Adds a single [AnthropicBeta] to [betas].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        @Deprecated(
-            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
-        )
-        fun addBeta(beta: AnthropicBeta) = apply {
-            betas = (betas ?: mutableListOf()).apply { add(beta) }
-        }
-
-        /**
-         * Sets [addBeta] to an arbitrary [String].
-         *
-         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        @Deprecated(
-            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
-        )
-        fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         /**
          * Optional header to select the Workspace for this request. The value is a Workspace ID
@@ -237,7 +190,6 @@ private constructor(
         fun build(): ModelRetrieveParams =
             ModelRetrieveParams(
                 modelId,
-                betas?.toImmutable(),
                 workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -253,11 +205,6 @@ private constructor(
     override fun _headers(): Headers =
         Headers.builder()
             .apply {
-                betas?.let {
-                    if (it.isNotEmpty()) {
-                        put("anthropic-beta", it.joinToString(","))
-                    }
-                }
                 workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
@@ -279,15 +226,14 @@ private constructor(
 
         return other is ModelRetrieveParams &&
             modelId == other.modelId &&
-            betas == other.betas &&
             workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(modelId, betas, workspaceId, additionalHeaders, additionalQueryParams)
+        Objects.hash(modelId, workspaceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "ModelRetrieveParams{modelId=$modelId, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ModelRetrieveParams{modelId=$modelId, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

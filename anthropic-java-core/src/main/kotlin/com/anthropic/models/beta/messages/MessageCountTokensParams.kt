@@ -619,81 +619,89 @@ private constructor(
         /** Alias for calling [addMessage] with `message.toParam()`. */
         fun addMessage(message: BetaMessage) = apply { body.addMessage(message) }
 
+        /** Alias for calling [addMessage] with `BetaMessageParam.ofUser(user)`. */
+        fun addMessage(user: BetaUserMessageParam) = apply { body.addMessage(user) }
+
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * BetaMessageParam.builder()
-         *     .role(BetaMessageParam.Role.USER)
+         * BetaUserMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addUserMessage(content: BetaMessageParam.Content) = apply {
+        fun addUserMessage(content: BetaMessageContentParam) = apply {
             body.addUserMessage(content)
         }
 
-        /** Alias for calling [addUserMessage] with `BetaMessageParam.Content.ofString(string)`. */
+        /** Alias for calling [addUserMessage] with `BetaMessageContentParam.ofString(string)`. */
         fun addUserMessage(string: String) = apply { body.addUserMessage(string) }
 
         /**
          * Alias for calling [addUserMessage] with
-         * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
+         * `BetaMessageContentParam.ofContentBlockParams(contentBlockParams)`.
          */
-        fun addUserMessageOfBetaContentBlockParams(
-            betaContentBlockParams: List<BetaContentBlockParam>
-        ) = apply { body.addUserMessageOfBetaContentBlockParams(betaContentBlockParams) }
+        fun addUserMessageOfContentBlockParams(contentBlockParams: List<BetaContentBlockParam>) =
+            apply {
+                body.addUserMessageOfContentBlockParams(contentBlockParams)
+            }
+
+        /** Alias for calling [addMessage] with `BetaMessageParam.ofAssistant(assistant)`. */
+        fun addMessage(assistant: BetaAssistantMessageParam) = apply { body.addMessage(assistant) }
 
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * BetaMessageParam.builder()
-         *     .role(BetaMessageParam.Role.ASSISTANT)
+         * BetaAssistantMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addAssistantMessage(content: BetaMessageParam.Content) = apply {
+        fun addAssistantMessage(content: BetaMessageContentParam) = apply {
             body.addAssistantMessage(content)
         }
 
         /**
-         * Alias for calling [addAssistantMessage] with `BetaMessageParam.Content.ofString(string)`.
+         * Alias for calling [addAssistantMessage] with `BetaMessageContentParam.ofString(string)`.
          */
         fun addAssistantMessage(string: String) = apply { body.addAssistantMessage(string) }
 
         /**
          * Alias for calling [addAssistantMessage] with
-         * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
+         * `BetaMessageContentParam.ofContentBlockParams(contentBlockParams)`.
          */
-        fun addAssistantMessageOfBetaContentBlockParams(
-            betaContentBlockParams: List<BetaContentBlockParam>
-        ) = apply { body.addAssistantMessageOfBetaContentBlockParams(betaContentBlockParams) }
+        fun addAssistantMessageOfContentBlockParams(
+            contentBlockParams: List<BetaContentBlockParam>
+        ) = apply { body.addAssistantMessageOfContentBlockParams(contentBlockParams) }
+
+        /** Alias for calling [addMessage] with `BetaMessageParam.ofSystem(system)`. */
+        fun addMessage(system: BetaSystemMessageParam) = apply { body.addMessage(system) }
 
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * BetaMessageParam.builder()
-         *     .role(BetaMessageParam.Role.SYSTEM)
+         * BetaSystemMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addSystemMessage(content: BetaMessageParam.Content) = apply {
+        fun addSystemMessage(content: BetaSystemMessageParam.Content) = apply {
             body.addSystemMessage(content)
         }
 
         /**
-         * Alias for calling [addSystemMessage] with `BetaMessageParam.Content.ofString(string)`.
+         * Alias for calling [addSystemMessage] with
+         * `BetaSystemMessageParam.Content.ofString(string)`.
          */
         fun addSystemMessage(string: String) = apply { body.addSystemMessage(string) }
 
         /**
          * Alias for calling [addSystemMessage] with
-         * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
+         * `BetaSystemMessageParam.Content.ofBlocks(blocks)`.
          */
-        fun addSystemMessageOfBetaContentBlockParams(
-            betaContentBlockParams: List<BetaContentBlockParam>
-        ) = apply { body.addSystemMessageOfBetaContentBlockParams(betaContentBlockParams) }
+        fun addSystemMessageOfBlocks(
+            blocks: List<BetaSystemMessageParam.Content.SystemMessageContentBlock>
+        ) = apply { body.addSystemMessageOfBlocks(blocks) }
 
         /**
          * The model that will complete your prompt.
@@ -2070,109 +2078,96 @@ private constructor(
             /** Alias for calling [addMessage] with `message.toParam()`. */
             fun addMessage(message: BetaMessage) = addMessage(message.toParam())
 
+            /** Alias for calling [addMessage] with `BetaMessageParam.ofUser(user)`. */
+            fun addMessage(user: BetaUserMessageParam) = addMessage(BetaMessageParam.ofUser(user))
+
             /**
              * Alias for calling [addMessage] with the following:
              * ```java
-             * BetaMessageParam.builder()
-             *     .role(BetaMessageParam.Role.USER)
+             * BetaUserMessageParam.builder()
              *     .content(content)
              *     .build()
              * ```
              */
-            fun addUserMessage(content: BetaMessageParam.Content) =
-                addMessage(
-                    BetaMessageParam.builder()
-                        .role(BetaMessageParam.Role.USER)
-                        .content(content)
-                        .build()
-                )
+            fun addUserMessage(content: BetaMessageContentParam) =
+                addMessage(BetaUserMessageParam.builder().content(content).build())
 
             /**
-             * Alias for calling [addUserMessage] with `BetaMessageParam.Content.ofString(string)`.
+             * Alias for calling [addUserMessage] with `BetaMessageContentParam.ofString(string)`.
              */
             fun addUserMessage(string: String) =
-                addUserMessage(BetaMessageParam.Content.ofString(string))
+                addUserMessage(BetaMessageContentParam.ofString(string))
 
             /**
              * Alias for calling [addUserMessage] with
-             * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
+             * `BetaMessageContentParam.ofContentBlockParams(contentBlockParams)`.
              */
-            fun addUserMessageOfBetaContentBlockParams(
-                betaContentBlockParams: List<BetaContentBlockParam>
-            ) =
-                addUserMessage(
-                    BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)
-                )
+            fun addUserMessageOfContentBlockParams(
+                contentBlockParams: List<BetaContentBlockParam>
+            ) = addUserMessage(BetaMessageContentParam.ofContentBlockParams(contentBlockParams))
+
+            /** Alias for calling [addMessage] with `BetaMessageParam.ofAssistant(assistant)`. */
+            fun addMessage(assistant: BetaAssistantMessageParam) =
+                addMessage(BetaMessageParam.ofAssistant(assistant))
 
             /**
              * Alias for calling [addMessage] with the following:
              * ```java
-             * BetaMessageParam.builder()
-             *     .role(BetaMessageParam.Role.ASSISTANT)
+             * BetaAssistantMessageParam.builder()
              *     .content(content)
              *     .build()
              * ```
              */
-            fun addAssistantMessage(content: BetaMessageParam.Content) =
-                addMessage(
-                    BetaMessageParam.builder()
-                        .role(BetaMessageParam.Role.ASSISTANT)
-                        .content(content)
-                        .build()
-                )
+            fun addAssistantMessage(content: BetaMessageContentParam) =
+                addMessage(BetaAssistantMessageParam.builder().content(content).build())
 
             /**
              * Alias for calling [addAssistantMessage] with
-             * `BetaMessageParam.Content.ofString(string)`.
+             * `BetaMessageContentParam.ofString(string)`.
              */
             fun addAssistantMessage(string: String) =
-                addAssistantMessage(BetaMessageParam.Content.ofString(string))
+                addAssistantMessage(BetaMessageContentParam.ofString(string))
 
             /**
              * Alias for calling [addAssistantMessage] with
-             * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
+             * `BetaMessageContentParam.ofContentBlockParams(contentBlockParams)`.
              */
-            fun addAssistantMessageOfBetaContentBlockParams(
-                betaContentBlockParams: List<BetaContentBlockParam>
+            fun addAssistantMessageOfContentBlockParams(
+                contentBlockParams: List<BetaContentBlockParam>
             ) =
                 addAssistantMessage(
-                    BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)
+                    BetaMessageContentParam.ofContentBlockParams(contentBlockParams)
                 )
+
+            /** Alias for calling [addMessage] with `BetaMessageParam.ofSystem(system)`. */
+            fun addMessage(system: BetaSystemMessageParam) =
+                addMessage(BetaMessageParam.ofSystem(system))
 
             /**
              * Alias for calling [addMessage] with the following:
              * ```java
-             * BetaMessageParam.builder()
-             *     .role(BetaMessageParam.Role.SYSTEM)
+             * BetaSystemMessageParam.builder()
              *     .content(content)
              *     .build()
              * ```
              */
-            fun addSystemMessage(content: BetaMessageParam.Content) =
-                addMessage(
-                    BetaMessageParam.builder()
-                        .role(BetaMessageParam.Role.SYSTEM)
-                        .content(content)
-                        .build()
-                )
+            fun addSystemMessage(content: BetaSystemMessageParam.Content) =
+                addMessage(BetaSystemMessageParam.builder().content(content).build())
 
             /**
              * Alias for calling [addSystemMessage] with
-             * `BetaMessageParam.Content.ofString(string)`.
+             * `BetaSystemMessageParam.Content.ofString(string)`.
              */
             fun addSystemMessage(string: String) =
-                addSystemMessage(BetaMessageParam.Content.ofString(string))
+                addSystemMessage(BetaSystemMessageParam.Content.ofString(string))
 
             /**
              * Alias for calling [addSystemMessage] with
-             * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
+             * `BetaSystemMessageParam.Content.ofBlocks(blocks)`.
              */
-            fun addSystemMessageOfBetaContentBlockParams(
-                betaContentBlockParams: List<BetaContentBlockParam>
-            ) =
-                addSystemMessage(
-                    BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)
-                )
+            fun addSystemMessageOfBlocks(
+                blocks: List<BetaSystemMessageParam.Content.SystemMessageContentBlock>
+            ) = addSystemMessage(BetaSystemMessageParam.Content.ofBlocks(blocks))
 
             /**
              * The model that will complete your prompt.

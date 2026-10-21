@@ -10,24 +10,16 @@ internal class BetaManagedAgentsVaultNotFoundRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsVaultNotFoundRunError =
-            BetaManagedAgentsVaultNotFoundRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsVaultNotFoundRunError.Type.VAULT_NOT_FOUND_ERROR)
-                .build()
+            BetaManagedAgentsVaultNotFoundRunError.of("message")
 
         assertThat(betaManagedAgentsVaultNotFoundRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsVaultNotFoundRunError.type())
-            .isEqualTo(BetaManagedAgentsVaultNotFoundRunError.Type.VAULT_NOT_FOUND_ERROR)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsVaultNotFoundRunError =
-            BetaManagedAgentsVaultNotFoundRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsVaultNotFoundRunError.Type.VAULT_NOT_FOUND_ERROR)
-                .build()
+            BetaManagedAgentsVaultNotFoundRunError.of("message")
 
         val roundtrippedBetaManagedAgentsVaultNotFoundRunError =
             jsonMapper.readValue(

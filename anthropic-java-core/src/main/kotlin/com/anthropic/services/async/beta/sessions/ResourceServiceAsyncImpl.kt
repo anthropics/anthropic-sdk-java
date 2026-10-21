@@ -129,7 +129,7 @@ class ResourceServiceAsyncImpl internal constructor(private val clientOptions: C
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -170,7 +170,7 @@ class ResourceServiceAsyncImpl internal constructor(private val clientOptions: C
                             response
                                 .use { updateHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -209,7 +209,7 @@ class ResourceServiceAsyncImpl internal constructor(private val clientOptions: C
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -258,7 +258,7 @@ class ResourceServiceAsyncImpl internal constructor(private val clientOptions: C
                             response
                                 .use { deleteHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -298,7 +298,7 @@ class ResourceServiceAsyncImpl internal constructor(private val clientOptions: C
                             response
                                 .use { addHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

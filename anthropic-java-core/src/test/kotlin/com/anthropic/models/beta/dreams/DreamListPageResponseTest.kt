@@ -27,15 +27,10 @@ internal class DreamListPageResponseTest {
                                 .speed(BetaDreamModelConfig.Speed.STANDARD)
                                 .build()
                         )
-                        .outputBehavior(
-                            BetaOutputBehaviorCreateNew.of(
-                                BetaOutputBehaviorCreateNew.Type.CREATE_NEW
-                            )
-                        )
-                        .addMemoryStoreOutput("memory_store_id")
+                        .outputBehavior(BetaOutputBehaviorCreateNew.builder().build())
+                        .addOutput(BetaDreamOutput.of("memory_store_id"))
                         .sessionId("session_id")
                         .status(BetaDreamStatus.PENDING)
-                        .type(BetaDream.Type.DREAM)
                         .usage(
                             BetaDreamUsage.builder()
                                 .cacheCreationInputTokens(0)
@@ -65,13 +60,10 @@ internal class DreamListPageResponseTest {
                             .speed(BetaDreamModelConfig.Speed.STANDARD)
                             .build()
                     )
-                    .outputBehavior(
-                        BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
-                    )
-                    .addMemoryStoreOutput("memory_store_id")
+                    .outputBehavior(BetaOutputBehaviorCreateNew.builder().build())
+                    .addOutput(BetaDreamOutput.of("memory_store_id"))
                     .sessionId("session_id")
                     .status(BetaDreamStatus.PENDING)
-                    .type(BetaDream.Type.DREAM)
                     .usage(
                         BetaDreamUsage.builder()
                             .cacheCreationInputTokens(0)
@@ -105,15 +97,10 @@ internal class DreamListPageResponseTest {
                                 .speed(BetaDreamModelConfig.Speed.STANDARD)
                                 .build()
                         )
-                        .outputBehavior(
-                            BetaOutputBehaviorCreateNew.of(
-                                BetaOutputBehaviorCreateNew.Type.CREATE_NEW
-                            )
-                        )
-                        .addMemoryStoreOutput("memory_store_id")
+                        .outputBehavior(BetaOutputBehaviorCreateNew.builder().build())
+                        .addOutput(BetaDreamOutput.of("memory_store_id"))
                         .sessionId("session_id")
                         .status(BetaDreamStatus.PENDING)
-                        .type(BetaDream.Type.DREAM)
                         .usage(
                             BetaDreamUsage.builder()
                                 .cacheCreationInputTokens(0)

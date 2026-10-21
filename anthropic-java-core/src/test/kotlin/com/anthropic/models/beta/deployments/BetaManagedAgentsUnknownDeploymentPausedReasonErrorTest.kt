@@ -10,21 +10,14 @@ internal class BetaManagedAgentsUnknownDeploymentPausedReasonErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsUnknownDeploymentPausedReasonError =
-            BetaManagedAgentsUnknownDeploymentPausedReasonError.of(
-                BetaManagedAgentsUnknownDeploymentPausedReasonError.Type.UNKNOWN_ERROR
-            )
-
-        assertThat(betaManagedAgentsUnknownDeploymentPausedReasonError.type())
-            .isEqualTo(BetaManagedAgentsUnknownDeploymentPausedReasonError.Type.UNKNOWN_ERROR)
+            BetaManagedAgentsUnknownDeploymentPausedReasonError.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsUnknownDeploymentPausedReasonError =
-            BetaManagedAgentsUnknownDeploymentPausedReasonError.of(
-                BetaManagedAgentsUnknownDeploymentPausedReasonError.Type.UNKNOWN_ERROR
-            )
+            BetaManagedAgentsUnknownDeploymentPausedReasonError.builder().build()
 
         val roundtrippedBetaManagedAgentsUnknownDeploymentPausedReasonError =
             jsonMapper.readValue(

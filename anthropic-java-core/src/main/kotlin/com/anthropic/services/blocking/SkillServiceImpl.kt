@@ -101,7 +101,7 @@ class SkillServiceImpl internal constructor(private val clientOptions: ClientOpt
                     response
                         .use { createHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -134,7 +134,7 @@ class SkillServiceImpl internal constructor(private val clientOptions: ClientOpt
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -163,7 +163,7 @@ class SkillServiceImpl internal constructor(private val clientOptions: ClientOpt
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -204,7 +204,7 @@ class SkillServiceImpl internal constructor(private val clientOptions: ClientOpt
                     response
                         .use { deleteHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

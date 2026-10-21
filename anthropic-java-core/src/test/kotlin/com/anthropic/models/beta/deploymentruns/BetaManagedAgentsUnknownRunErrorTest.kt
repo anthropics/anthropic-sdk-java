@@ -9,25 +9,15 @@ internal class BetaManagedAgentsUnknownRunErrorTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsUnknownRunError =
-            BetaManagedAgentsUnknownRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsUnknownRunError.Type.UNKNOWN_ERROR)
-                .build()
+        val betaManagedAgentsUnknownRunError = BetaManagedAgentsUnknownRunError.of("message")
 
         assertThat(betaManagedAgentsUnknownRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsUnknownRunError.type())
-            .isEqualTo(BetaManagedAgentsUnknownRunError.Type.UNKNOWN_ERROR)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsUnknownRunError =
-            BetaManagedAgentsUnknownRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsUnknownRunError.Type.UNKNOWN_ERROR)
-                .build()
+        val betaManagedAgentsUnknownRunError = BetaManagedAgentsUnknownRunError.of("message")
 
         val roundtrippedBetaManagedAgentsUnknownRunError =
             jsonMapper.readValue(

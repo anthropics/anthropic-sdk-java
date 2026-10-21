@@ -7,26 +7,25 @@ import com.anthropic.core.http.HttpResponse
 import java.util.concurrent.CompletableFuture
 
 /**
- * Middleware [HttpClient] that attaches static first-party credentials (`X-Api-Key` or
- * `Authorization: Bearer`) to every outgoing request.
+ * Middleware [HttpClient] that attaches the static first-party credential (an API key or an auth
+ * token) to every outgoing request as `Authorization: Bearer`.
  *
- * Requests that already carry either header are passed through unchanged, so credentials set at the
- * client or request level take precedence.
+ * Requests that already carry an `Authorization` or `X-Api-Key` header are passed through
+ * unchanged, so credentials set at the client or request level take precedence.
  */
 internal class HeaderAuthHttpClient(
     private val httpClient: HttpClient,
-    private val apiKey: String?,
-    private val authToken: String?,
+    private val credential: String,
 ) : HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse =
-        httpClient.execute(request.withStaticAuthHeaders(apiKey, authToken), requestOptions)
+        httpClient.execute(request.withStaticAuthHeaders(credential), requestOptions)
 
     override fun executeAsync(
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> =
-        httpClient.executeAsync(request.withStaticAuthHeaders(apiKey, authToken), requestOptions)
+        httpClient.executeAsync(request.withStaticAuthHeaders(credential), requestOptions)
 
     override fun close() = httpClient.close()
 }

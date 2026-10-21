@@ -10,25 +10,17 @@ internal class BetaManagedAgentsFileRubricParamsTest {
     @Test
     fun create() {
         val betaManagedAgentsFileRubricParams =
-            BetaManagedAgentsFileRubricParams.builder()
-                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                .type(BetaManagedAgentsFileRubricParams.Type.FILE)
-                .build()
+            BetaManagedAgentsFileRubricParams.of("file_011CNha8iCJcU1wXNR6q4V8w")
 
         assertThat(betaManagedAgentsFileRubricParams.fileId())
             .isEqualTo("file_011CNha8iCJcU1wXNR6q4V8w")
-        assertThat(betaManagedAgentsFileRubricParams.type())
-            .isEqualTo(BetaManagedAgentsFileRubricParams.Type.FILE)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsFileRubricParams =
-            BetaManagedAgentsFileRubricParams.builder()
-                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                .type(BetaManagedAgentsFileRubricParams.Type.FILE)
-                .build()
+            BetaManagedAgentsFileRubricParams.of("file_011CNha8iCJcU1wXNR6q4V8w")
 
         val roundtrippedBetaManagedAgentsFileRubricParams =
             jsonMapper.readValue(

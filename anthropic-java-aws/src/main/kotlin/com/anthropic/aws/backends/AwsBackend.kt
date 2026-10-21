@@ -66,8 +66,6 @@ private constructor(
          */
         private const val SERVICE_SIGNING_NAME = "aws-external-anthropic"
 
-        private const val ANTHROPIC_VERSION = "2023-06-01"
-        private const val HEADER_VERSION = "anthropic-version"
         private const val HEADER_AUTHORIZATION = "authorization"
         private const val HEADER_WORKSPACE_ID = "anthropic-workspace-id"
 
@@ -125,9 +123,6 @@ private constructor(
         val builder = request.toBuilder()
 
         // User-supplied headers (e.g. set by an interceptor) win over the defaults.
-        if (!request.headers.names().contains(HEADER_VERSION)) {
-            builder.putHeader(HEADER_VERSION, ANTHROPIC_VERSION)
-        }
         if (
             !skipAuth &&
                 workspaceId != null &&

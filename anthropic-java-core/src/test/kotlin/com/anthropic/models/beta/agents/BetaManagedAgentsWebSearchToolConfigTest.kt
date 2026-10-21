@@ -13,11 +13,7 @@ internal class BetaManagedAgentsWebSearchToolConfigTest {
         val betaManagedAgentsWebSearchToolConfig =
             BetaManagedAgentsWebSearchToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .userLocation(
@@ -34,7 +30,7 @@ internal class BetaManagedAgentsWebSearchToolConfigTest {
         assertThat(betaManagedAgentsWebSearchToolConfig.permissionPolicy())
             .isEqualTo(
                 BetaManagedAgentsWebSearchToolConfig.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
         assertThat(betaManagedAgentsWebSearchToolConfig.allowedDomains().getOrNull())
@@ -57,11 +53,7 @@ internal class BetaManagedAgentsWebSearchToolConfigTest {
         val baseBetaManagedAgentsWebSearchToolConfig =
             BetaManagedAgentsWebSearchToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val betaManagedAgentsWebSearchToolConfig =
@@ -83,11 +75,7 @@ internal class BetaManagedAgentsWebSearchToolConfigTest {
         val betaManagedAgentsWebSearchToolConfig =
             BetaManagedAgentsWebSearchToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .userLocation(

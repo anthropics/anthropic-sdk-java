@@ -13,12 +13,7 @@ internal class BetaManagedAgentsMcpConnectionFailedErrorTest {
             BetaManagedAgentsMcpConnectionFailedError.builder()
                 .mcpServerName("mcp_server_name")
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(BetaManagedAgentsMcpConnectionFailedError.Type.MCP_CONNECTION_FAILED_ERROR)
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsMcpConnectionFailedError.mcpServerName())
@@ -27,11 +22,9 @@ internal class BetaManagedAgentsMcpConnectionFailedErrorTest {
         assertThat(betaManagedAgentsMcpConnectionFailedError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsMcpConnectionFailedError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
             )
-        assertThat(betaManagedAgentsMcpConnectionFailedError.type())
-            .isEqualTo(BetaManagedAgentsMcpConnectionFailedError.Type.MCP_CONNECTION_FAILED_ERROR)
     }
 
     @Test
@@ -41,12 +34,7 @@ internal class BetaManagedAgentsMcpConnectionFailedErrorTest {
             BetaManagedAgentsMcpConnectionFailedError.builder()
                 .mcpServerName("mcp_server_name")
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(BetaManagedAgentsMcpConnectionFailedError.Type.MCP_CONNECTION_FAILED_ERROR)
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsMcpConnectionFailedError =

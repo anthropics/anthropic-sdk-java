@@ -13,15 +13,7 @@ internal class BetaManagedAgentsMcpAuthenticationFailedErrorTest {
             BetaManagedAgentsMcpAuthenticationFailedError.builder()
                 .mcpServerName("mcp_server_name")
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(
-                    BetaManagedAgentsMcpAuthenticationFailedError.Type
-                        .MCP_AUTHENTICATION_FAILED_ERROR
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsMcpAuthenticationFailedError.mcpServerName())
@@ -30,12 +22,8 @@ internal class BetaManagedAgentsMcpAuthenticationFailedErrorTest {
         assertThat(betaManagedAgentsMcpAuthenticationFailedError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsMcpAuthenticationFailedError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
-            )
-        assertThat(betaManagedAgentsMcpAuthenticationFailedError.type())
-            .isEqualTo(
-                BetaManagedAgentsMcpAuthenticationFailedError.Type.MCP_AUTHENTICATION_FAILED_ERROR
             )
     }
 
@@ -46,15 +34,7 @@ internal class BetaManagedAgentsMcpAuthenticationFailedErrorTest {
             BetaManagedAgentsMcpAuthenticationFailedError.builder()
                 .mcpServerName("mcp_server_name")
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(
-                    BetaManagedAgentsMcpAuthenticationFailedError.Type
-                        .MCP_AUTHENTICATION_FAILED_ERROR
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsMcpAuthenticationFailedError =

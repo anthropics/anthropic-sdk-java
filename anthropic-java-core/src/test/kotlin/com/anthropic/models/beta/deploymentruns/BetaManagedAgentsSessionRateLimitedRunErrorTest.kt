@@ -10,24 +10,16 @@ internal class BetaManagedAgentsSessionRateLimitedRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsSessionRateLimitedRunError =
-            BetaManagedAgentsSessionRateLimitedRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsSessionRateLimitedRunError.Type.SESSION_RATE_LIMITED_ERROR)
-                .build()
+            BetaManagedAgentsSessionRateLimitedRunError.of("message")
 
         assertThat(betaManagedAgentsSessionRateLimitedRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsSessionRateLimitedRunError.type())
-            .isEqualTo(BetaManagedAgentsSessionRateLimitedRunError.Type.SESSION_RATE_LIMITED_ERROR)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionRateLimitedRunError =
-            BetaManagedAgentsSessionRateLimitedRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsSessionRateLimitedRunError.Type.SESSION_RATE_LIMITED_ERROR)
-                .build()
+            BetaManagedAgentsSessionRateLimitedRunError.of("message")
 
         val roundtrippedBetaManagedAgentsSessionRateLimitedRunError =
             jsonMapper.readValue(

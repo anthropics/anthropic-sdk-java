@@ -173,25 +173,12 @@ private constructor(
          */
         @JvmStatic
         fun ofSchedule(scheduledAt: OffsetDateTime) =
-            ofSchedule(
-                BetaManagedAgentsScheduleTriggerContext.builder()
-                    .type(BetaManagedAgentsScheduleTriggerContext.Type.SCHEDULE)
-                    .scheduledAt(scheduledAt)
-                    .build()
-            )
+            ofSchedule(BetaManagedAgentsScheduleTriggerContext.of(scheduledAt))
 
         /** The run was started manually by creating a session directly against the deployment. */
         @JvmStatic
         fun ofManual(manual: BetaManagedAgentsManualTriggerContext) =
             BetaManagedAgentsTriggerContext(manual = manual)
-
-        /**
-         * Returns an immutable instance of [BetaManagedAgentsTriggerContext] whose [ofManual]
-         * variant is built from the given required [type].
-         */
-        @JvmStatic
-        fun ofManual(type: BetaManagedAgentsManualTriggerContext.Type) =
-            ofManual(BetaManagedAgentsManualTriggerContext.of(type))
     }
 
     /**

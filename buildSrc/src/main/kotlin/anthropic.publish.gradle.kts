@@ -47,7 +47,7 @@ configure<MavenPublishBaseExtension> {
 
         licenses {
             license {
-                name.set("MIT")
+                name.set("Apache-2.0")
             }
         }
 

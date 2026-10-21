@@ -24,7 +24,6 @@ internal class BetaManagedAgentsCustomToolTest {
                         .build()
                 )
                 .name("name")
-                .type(BetaManagedAgentsCustomTool.Type.CUSTOM)
                 .build()
 
         assertThat(betaManagedAgentsCustomTool.description()).isEqualTo("description")
@@ -40,8 +39,6 @@ internal class BetaManagedAgentsCustomToolTest {
                     .build()
             )
         assertThat(betaManagedAgentsCustomTool.name()).isEqualTo("name")
-        assertThat(betaManagedAgentsCustomTool.type())
-            .isEqualTo(BetaManagedAgentsCustomTool.Type.CUSTOM)
     }
 
     @Test
@@ -61,7 +58,6 @@ internal class BetaManagedAgentsCustomToolTest {
                         .build()
                 )
                 .name("name")
-                .type(BetaManagedAgentsCustomTool.Type.CUSTOM)
                 .build()
 
         val roundtrippedBetaManagedAgentsCustomTool =

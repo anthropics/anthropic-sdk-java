@@ -14,7 +14,7 @@ internal class BetaOutputBehaviorTest {
 
     @Test
     fun ofCreateNew() {
-        val createNew = BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
+        val createNew = BetaOutputBehaviorCreateNew.builder().build()
 
         val betaOutputBehavior = BetaOutputBehavior.ofCreateNew(createNew)
 
@@ -26,9 +26,7 @@ internal class BetaOutputBehaviorTest {
     fun ofCreateNewRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaOutputBehavior =
-            BetaOutputBehavior.ofCreateNew(
-                BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
-            )
+            BetaOutputBehavior.ofCreateNew(BetaOutputBehaviorCreateNew.builder().build())
 
         val roundtrippedBetaOutputBehavior =
             jsonMapper.readValue(
@@ -41,11 +39,7 @@ internal class BetaOutputBehaviorTest {
 
     @Test
     fun ofUpdateExisting() {
-        val updateExisting =
-            BetaOutputBehaviorUpdateExisting.builder()
-                .memoryStoreId("x")
-                .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
-                .build()
+        val updateExisting = BetaOutputBehaviorUpdateExisting.of("x")
 
         val betaOutputBehavior = BetaOutputBehavior.ofUpdateExisting(updateExisting)
 
@@ -57,12 +51,7 @@ internal class BetaOutputBehaviorTest {
     fun ofUpdateExistingRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaOutputBehavior =
-            BetaOutputBehavior.ofUpdateExisting(
-                BetaOutputBehaviorUpdateExisting.builder()
-                    .memoryStoreId("x")
-                    .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
-                    .build()
-            )
+            BetaOutputBehavior.ofUpdateExisting(BetaOutputBehaviorUpdateExisting.of("x"))
 
         val roundtrippedBetaOutputBehavior =
             jsonMapper.readValue(

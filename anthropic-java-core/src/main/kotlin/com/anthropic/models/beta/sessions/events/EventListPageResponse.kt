@@ -146,18 +146,12 @@ private constructor(
          * Alias for calling [addData] with the following:
          * ```java
          * BetaManagedAgentsUserInterruptEvent.builder()
-         *     .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
          *     .id(id)
          *     .build()
          * ```
          */
         fun addUserInterruptData(id: String) =
-            addData(
-                BetaManagedAgentsUserInterruptEvent.builder()
-                    .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
-                    .id(id)
-                    .build()
-            )
+            addData(BetaManagedAgentsUserInterruptEvent.builder().id(id).build())
 
         /**
          * Alias for calling [addData] with

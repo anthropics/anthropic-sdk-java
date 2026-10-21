@@ -17,18 +17,7 @@ internal class MessageCreateParamsTest {
             .userProfileId("anthropic-user-profile-id")
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .maxTokens(1024L)
-            .addMessage(
-                BetaMessageParam.builder()
-                    .content("Hello, world")
-                    .role(BetaMessageParam.Role.USER)
-                    .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
-                    .outputConfig(
-                        BetaSystemMessageOutputConfig.builder()
-                            .effort(BetaSystemMessageOutputConfig.Effort.LOW)
-                            .build()
-                    )
-                    .build()
-            )
+            .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_5_5)
             .cacheControl(
                 BetaCacheControlEphemeral.builder()
@@ -125,7 +114,6 @@ internal class MessageCreateParamsTest {
                         .build()
                 )
             )
-            .temperature(1.0)
             .thinking(
                 BetaThinkingConfigAdaptive.builder()
                     .blockBinding(
@@ -169,8 +157,6 @@ internal class MessageCreateParamsTest {
                     .type(BetaTool.Type.CUSTOM)
                     .build()
             )
-            .topK(5L)
-            .topP(0.7)
             .build()
     }
 
@@ -182,18 +168,7 @@ internal class MessageCreateParamsTest {
                 .userProfileId("anthropic-user-profile-id")
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .maxTokens(1024L)
-                .addMessage(
-                    BetaMessageParam.builder()
-                        .content("Hello, world")
-                        .role(BetaMessageParam.Role.USER)
-                        .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
-                        .outputConfig(
-                            BetaSystemMessageOutputConfig.builder()
-                                .effort(BetaSystemMessageOutputConfig.Effort.LOW)
-                                .build()
-                        )
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_5_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -294,7 +269,6 @@ internal class MessageCreateParamsTest {
                             .build()
                     )
                 )
-                .temperature(1.0)
                 .thinking(
                     BetaThinkingConfigAdaptive.builder()
                         .blockBinding(
@@ -338,8 +312,6 @@ internal class MessageCreateParamsTest {
                         .type(BetaTool.Type.CUSTOM)
                         .build()
                 )
-                .topK(5L)
-                .topP(0.7)
                 .build()
 
         val headers = params._headers()
@@ -376,18 +348,7 @@ internal class MessageCreateParamsTest {
                 .userProfileId("anthropic-user-profile-id")
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .maxTokens(1024L)
-                .addMessage(
-                    BetaMessageParam.builder()
-                        .content("Hello, world")
-                        .role(BetaMessageParam.Role.USER)
-                        .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
-                        .outputConfig(
-                            BetaSystemMessageOutputConfig.builder()
-                                .effort(BetaSystemMessageOutputConfig.Effort.LOW)
-                                .build()
-                        )
-                        .build()
-                )
+                .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_5_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -488,7 +449,6 @@ internal class MessageCreateParamsTest {
                             .build()
                     )
                 )
-                .temperature(1.0)
                 .thinking(
                     BetaThinkingConfigAdaptive.builder()
                         .blockBinding(
@@ -532,8 +492,6 @@ internal class MessageCreateParamsTest {
                         .type(BetaTool.Type.CUSTOM)
                         .build()
                 )
-                .topK(5L)
-                .topP(0.7)
                 .build()
 
         val body = params._body()
@@ -541,16 +499,9 @@ internal class MessageCreateParamsTest {
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
             .containsExactly(
-                BetaMessageParam.builder()
-                    .content("Hello, world")
-                    .role(BetaMessageParam.Role.USER)
-                    .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
-                    .outputConfig(
-                        BetaSystemMessageOutputConfig.builder()
-                            .effort(BetaSystemMessageOutputConfig.Effort.LOW)
-                            .build()
-                    )
-                    .build()
+                BetaMessageParam.ofUser(
+                    BetaUserMessageParam.builder().content("Hello, world").build()
+                )
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
         assertThat(body.cacheControl())
@@ -663,7 +614,6 @@ internal class MessageCreateParamsTest {
                     )
                 )
             )
-        assertThat(body.temperature()).contains(1.0)
         assertThat(body.thinking())
             .contains(
                 BetaThinkingConfigParam.ofAdaptive(
@@ -718,8 +668,6 @@ internal class MessageCreateParamsTest {
                         .build()
                 )
             )
-        assertThat(body.topK()).contains(5L)
-        assertThat(body.topP()).contains(0.7)
     }
 
     @Test
@@ -736,10 +684,9 @@ internal class MessageCreateParamsTest {
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
             .containsExactly(
-                BetaMessageParam.builder()
-                    .content("Hello, world")
-                    .role(BetaMessageParam.Role.USER)
-                    .build()
+                BetaMessageParam.ofUser(
+                    BetaUserMessageParam.builder().content("Hello, world").build()
+                )
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
     }

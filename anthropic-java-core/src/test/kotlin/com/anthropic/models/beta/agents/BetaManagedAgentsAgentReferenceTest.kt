@@ -12,13 +12,10 @@ internal class BetaManagedAgentsAgentReferenceTest {
         val betaManagedAgentsAgentReference =
             BetaManagedAgentsAgentReference.builder()
                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                 .version(1)
                 .build()
 
         assertThat(betaManagedAgentsAgentReference.id()).isEqualTo("agent_011CZkYqphY8vELVzwCUpqiQ")
-        assertThat(betaManagedAgentsAgentReference.type())
-            .isEqualTo(BetaManagedAgentsAgentReference.Type.AGENT)
         assertThat(betaManagedAgentsAgentReference.version()).isEqualTo(1)
     }
 
@@ -28,7 +25,6 @@ internal class BetaManagedAgentsAgentReferenceTest {
         val betaManagedAgentsAgentReference =
             BetaManagedAgentsAgentReference.builder()
                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                 .version(1)
                 .build()
 

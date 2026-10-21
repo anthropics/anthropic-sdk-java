@@ -9,25 +9,15 @@ internal class BetaManagedAgentsTextRubricTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsTextRubric =
-            BetaManagedAgentsTextRubric.builder()
-                .content("content")
-                .type(BetaManagedAgentsTextRubric.Type.TEXT)
-                .build()
+        val betaManagedAgentsTextRubric = BetaManagedAgentsTextRubric.of("content")
 
         assertThat(betaManagedAgentsTextRubric.content()).isEqualTo("content")
-        assertThat(betaManagedAgentsTextRubric.type())
-            .isEqualTo(BetaManagedAgentsTextRubric.Type.TEXT)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsTextRubric =
-            BetaManagedAgentsTextRubric.builder()
-                .content("content")
-                .type(BetaManagedAgentsTextRubric.Type.TEXT)
-                .build()
+        val betaManagedAgentsTextRubric = BetaManagedAgentsTextRubric.of("content")
 
         val roundtrippedBetaManagedAgentsTextRubric =
             jsonMapper.readValue(

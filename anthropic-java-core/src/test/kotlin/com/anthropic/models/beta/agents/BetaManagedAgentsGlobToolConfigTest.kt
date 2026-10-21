@@ -12,18 +12,14 @@ internal class BetaManagedAgentsGlobToolConfigTest {
         val betaManagedAgentsGlobToolConfig =
             BetaManagedAgentsGlobToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsGlobToolConfig.enabled()).isEqualTo(true)
         assertThat(betaManagedAgentsGlobToolConfig.permissionPolicy())
             .isEqualTo(
                 BetaManagedAgentsGlobToolConfig.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
     }
@@ -34,11 +30,7 @@ internal class BetaManagedAgentsGlobToolConfigTest {
         val betaManagedAgentsGlobToolConfig =
             BetaManagedAgentsGlobToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsGlobToolConfig =

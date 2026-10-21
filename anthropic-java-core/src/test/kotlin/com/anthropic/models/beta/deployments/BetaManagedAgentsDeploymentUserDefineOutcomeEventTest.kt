@@ -1,7 +1,6 @@
 package com.anthropic.models.beta.deployments
 
 import com.anthropic.core.jsonMapper
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsFileRubric
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -14,23 +13,13 @@ internal class BetaManagedAgentsDeploymentUserDefineOutcomeEventTest {
             BetaManagedAgentsDeploymentUserDefineOutcomeEvent.builder()
                 .description("description")
                 .fileRubric("file_id")
-                .type(BetaManagedAgentsDeploymentUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
                 .maxIterations(0)
                 .build()
 
         assertThat(betaManagedAgentsDeploymentUserDefineOutcomeEvent.description())
             .isEqualTo("description")
         assertThat(betaManagedAgentsDeploymentUserDefineOutcomeEvent.rubric())
-            .isEqualTo(
-                BetaManagedAgentsDeploymentUserDefineOutcomeEvent.Rubric.ofFile(
-                    BetaManagedAgentsFileRubric.builder()
-                        .fileId("file_id")
-                        .type(BetaManagedAgentsFileRubric.Type.FILE)
-                        .build()
-                )
-            )
-        assertThat(betaManagedAgentsDeploymentUserDefineOutcomeEvent.type())
-            .isEqualTo(BetaManagedAgentsDeploymentUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
+            .isEqualTo(BetaManagedAgentsDeploymentUserDefineOutcomeEvent.Rubric.ofFile("file_id"))
         assertThat(betaManagedAgentsDeploymentUserDefineOutcomeEvent.maxIterations()).contains(0)
     }
 
@@ -41,7 +30,6 @@ internal class BetaManagedAgentsDeploymentUserDefineOutcomeEventTest {
             BetaManagedAgentsDeploymentUserDefineOutcomeEvent.builder()
                 .description("description")
                 .fileRubric("file_id")
-                .type(BetaManagedAgentsDeploymentUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
                 .maxIterations(0)
                 .build()
 

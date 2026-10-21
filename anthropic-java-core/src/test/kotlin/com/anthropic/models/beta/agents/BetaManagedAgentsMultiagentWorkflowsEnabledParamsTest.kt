@@ -19,7 +19,6 @@ internal class BetaManagedAgentsMultiagentWorkflowsEnabledParamsTest {
                 .addPredefinedAgent(
                     BetaManagedAgentsAgentParams.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentParams.Type.AGENT)
                         .version(1)
                         .build()
                 )
@@ -36,7 +35,6 @@ internal class BetaManagedAgentsMultiagentWorkflowsEnabledParamsTest {
                 BetaManagedAgentsMultiagentPredefinedAgentParams.ofBetaManagedAgentsAgentParams(
                     BetaManagedAgentsAgentParams.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentParams.Type.AGENT)
                         .version(1)
                         .build()
                 )
@@ -55,7 +53,6 @@ internal class BetaManagedAgentsMultiagentWorkflowsEnabledParamsTest {
                     BetaManagedAgentsMultiagentPredefinedAgentParams.ofBetaManagedAgentsAgentParams(
                         BetaManagedAgentsAgentParams.builder()
                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                            .type(BetaManagedAgentsAgentParams.Type.AGENT)
                             .version(1)
                             .build()
                     )
@@ -67,7 +64,6 @@ internal class BetaManagedAgentsMultiagentWorkflowsEnabledParamsTest {
                 BetaManagedAgentsMultiagentPredefinedAgentParams.ofBetaManagedAgentsAgentParams(
                     BetaManagedAgentsAgentParams.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentParams.Type.AGENT)
                         .version(1)
                         .build()
                 )
@@ -85,7 +81,6 @@ internal class BetaManagedAgentsMultiagentWorkflowsEnabledParamsTest {
                 .addPredefinedAgent(
                     BetaManagedAgentsAgentParams.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentParams.Type.AGENT)
                         .version(1)
                         .build()
                 )

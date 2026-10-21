@@ -14,11 +14,7 @@ internal class BetaManagedAgentsActorTest {
 
     @Test
     fun ofSession() {
-        val session =
-            BetaManagedAgentsSessionActor.builder()
-                .sessionId("x")
-                .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
-                .build()
+        val session = BetaManagedAgentsSessionActor.of("x")
 
         val betaManagedAgentsActor = BetaManagedAgentsActor.ofSession(session)
 
@@ -32,12 +28,7 @@ internal class BetaManagedAgentsActorTest {
     fun ofSessionRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsActor =
-            BetaManagedAgentsActor.ofSession(
-                BetaManagedAgentsSessionActor.builder()
-                    .sessionId("x")
-                    .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
-                    .build()
-            )
+            BetaManagedAgentsActor.ofSession(BetaManagedAgentsSessionActor.of("x"))
 
         val roundtrippedBetaManagedAgentsActor =
             jsonMapper.readValue(
@@ -50,11 +41,7 @@ internal class BetaManagedAgentsActorTest {
 
     @Test
     fun ofApi() {
-        val api =
-            BetaManagedAgentsApiActor.builder()
-                .apiKeyId("x")
-                .type(BetaManagedAgentsApiActor.Type.API_ACTOR)
-                .build()
+        val api = BetaManagedAgentsApiActor.of("x")
 
         val betaManagedAgentsActor = BetaManagedAgentsActor.ofApi(api)
 
@@ -67,13 +54,7 @@ internal class BetaManagedAgentsActorTest {
     @Test
     fun ofApiRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsActor =
-            BetaManagedAgentsActor.ofApi(
-                BetaManagedAgentsApiActor.builder()
-                    .apiKeyId("x")
-                    .type(BetaManagedAgentsApiActor.Type.API_ACTOR)
-                    .build()
-            )
+        val betaManagedAgentsActor = BetaManagedAgentsActor.ofApi(BetaManagedAgentsApiActor.of("x"))
 
         val roundtrippedBetaManagedAgentsActor =
             jsonMapper.readValue(
@@ -86,11 +67,7 @@ internal class BetaManagedAgentsActorTest {
 
     @Test
     fun ofUser() {
-        val user =
-            BetaManagedAgentsUserActor.builder()
-                .type(BetaManagedAgentsUserActor.Type.USER_ACTOR)
-                .userId("x")
-                .build()
+        val user = BetaManagedAgentsUserActor.of("x")
 
         val betaManagedAgentsActor = BetaManagedAgentsActor.ofUser(user)
 
@@ -104,12 +81,7 @@ internal class BetaManagedAgentsActorTest {
     fun ofUserRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsActor =
-            BetaManagedAgentsActor.ofUser(
-                BetaManagedAgentsUserActor.builder()
-                    .type(BetaManagedAgentsUserActor.Type.USER_ACTOR)
-                    .userId("x")
-                    .build()
-            )
+            BetaManagedAgentsActor.ofUser(BetaManagedAgentsUserActor.of("x"))
 
         val roundtrippedBetaManagedAgentsActor =
             jsonMapper.readValue(

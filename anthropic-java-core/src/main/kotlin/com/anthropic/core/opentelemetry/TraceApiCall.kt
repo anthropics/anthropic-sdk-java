@@ -554,7 +554,7 @@ private fun startApiCallSpan(
     builder.setAttribute(GEN_AI_PROVIDER_NAME, clientOptions.openTelemetryProviderName)
     builder.setAllAttributes(serverAttributes(clientOptions.baseUrl()))
     // A Session thread is a conversation, unless the application names the conversation itself.
-    (requestOptions.openTelemetry?.conversationId()?.getOrNull()
+    (requestOptions.openTelemetry().flatMap { it.conversationId() }.getOrNull()
             ?: spanData.attributes[ANTHROPIC_SESSION_THREAD_ID])
         ?.let { builder.setAttribute(GEN_AI_CONVERSATION_ID, it) }
     builder.setAllAttributes(attributes)
@@ -685,7 +685,7 @@ private fun urlAttributes(
 ): Attributes {
     val baseUrl =
         try {
-            URI(request.baseUrl.orEmpty())
+            URI(request.baseUrl)
         } catch (e: URISyntaxException) {
             return Attributes.empty()
         }

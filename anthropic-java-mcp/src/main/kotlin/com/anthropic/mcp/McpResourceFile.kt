@@ -7,10 +7,14 @@ import kotlin.jvm.optionals.getOrNull
 /** Represents an MCP resource as a file suitable for use with the files upload API. */
 class McpResourceFile
 private constructor(
-    @get:JvmName("filename") val filename: String?,
+    private val filename: String?,
     @get:JvmName("content") val content: ByteArray,
-    @get:JvmName("mimeType") val mimeType: String?,
+    private val mimeType: String?,
 ) {
+
+    fun filename(): Optional<String> = Optional.ofNullable(filename)
+
+    fun mimeType(): Optional<String> = Optional.ofNullable(mimeType)
 
     companion object {
 

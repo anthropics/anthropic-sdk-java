@@ -1,6 +1,5 @@
 package com.anthropic.models.beta.sessions.events
 
-import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -28,7 +27,7 @@ private constructor(
     private val agentName: JsonField<String>,
     private val processedAt: JsonField<OffsetDateTime>,
     private val sessionThreadId: JsonField<String>,
-    private val type: JsonField<Type>,
+    private val type: JsonValue,
     private val workflowRunId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -43,7 +42,7 @@ private constructor(
         @JsonProperty("session_thread_id")
         @ExcludeMissing
         sessionThreadId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("workflow_run_id")
         @ExcludeMissing
         workflowRunId: JsonField<String> = JsonMissing.of(),
@@ -82,10 +81,15 @@ private constructor(
     fun sessionThreadId(): String = sessionThreadId.getRequired("session_thread_id")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("session.thread_created")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
-    fun type(): Type = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * Identifier of the workflow run that created the thread, or `null` for any other thread.
@@ -128,13 +132,6 @@ private constructor(
     fun _sessionThreadId(): JsonField<String> = sessionThreadId
 
     /**
-     * Returns the raw JSON value of [type].
-     *
-     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-    /**
      * Returns the raw JSON value of [workflowRunId].
      *
      * Unlike [workflowRunId], this method doesn't throw if the JSON field has an unexpected type.
@@ -167,7 +164,6 @@ private constructor(
          * .agentName()
          * .processedAt()
          * .sessionThreadId()
-         * .type()
          * .workflowRunId()
          * ```
          */
@@ -181,7 +177,7 @@ private constructor(
         private var agentName: JsonField<String>? = null
         private var processedAt: JsonField<OffsetDateTime>? = null
         private var sessionThreadId: JsonField<String>? = null
-        private var type: JsonField<Type>? = null
+        private var type: JsonValue = JsonValue.from("session.thread_created")
         private var workflowRunId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -251,15 +247,19 @@ private constructor(
             this.sessionThreadId = sessionThreadId
         }
 
-        fun type(type: Type) = type(JsonField.of(type))
-
         /**
-         * Sets [Builder.type] to an arbitrary JSON value.
+         * Sets the field to an arbitrary JSON value.
          *
-         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("session.thread_created")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         /**
          * Identifier of the workflow run that created the thread, or `null` for any other thread.
@@ -312,7 +312,6 @@ private constructor(
          * .agentName()
          * .processedAt()
          * .sessionThreadId()
-         * .type()
          * .workflowRunId()
          * ```
          *
@@ -324,7 +323,7 @@ private constructor(
                 checkRequired("agentName", agentName),
                 checkRequired("processedAt", processedAt),
                 checkRequired("sessionThreadId", sessionThreadId),
-                checkRequired("type", type),
+                type,
                 checkRequired("workflowRunId", workflowRunId),
                 additionalProperties.toMutableMap(),
             )
@@ -349,7 +348,11 @@ private constructor(
         agentName()
         processedAt()
         sessionThreadId()
-        type().validate()
+        _type().let {
+            if (it != JsonValue.from("session.thread_created")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         workflowRunId()
         validated = true
     }
@@ -373,149 +376,8 @@ private constructor(
             (if (agentName.asKnown().isPresent) 1 else 0) +
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (if (sessionThreadId.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("session.thread_created")) 1 else 0 } +
             (if (workflowRunId.asKnown().isPresent) 1 else 0)
-
-    class Type private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val SESSION_THREAD_CREATED = Type(JsonField.of("session.thread_created"))
-
-            @JvmStatic
-            fun of(value: String): Type =
-                // Intern known values so `==` works
-                when (value) {
-                    "session.thread_created" -> SESSION_THREAD_CREATED
-                    else -> Type(JsonField.of(value))
-                }
-
-            @JsonCreator
-            @JvmStatic
-            fun of(value: JsonField<String>): Type =
-                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            SESSION_THREAD_CREATED
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            SESSION_THREAD_CREATED,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                SESSION_THREAD_CREATED -> Value.SESSION_THREAD_CREATED
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                SESSION_THREAD_CREATED -> Known.SESSION_THREAD_CREATED
-                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): Type = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Type && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

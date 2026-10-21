@@ -10,21 +10,14 @@ internal class BetaManagedAgentsUnrestrictedCredentialNetworkingResponseTest {
     @Test
     fun create() {
         val betaManagedAgentsUnrestrictedCredentialNetworkingResponse =
-            BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.of(
-                BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type.UNRESTRICTED
-            )
-
-        assertThat(betaManagedAgentsUnrestrictedCredentialNetworkingResponse.type())
-            .isEqualTo(BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type.UNRESTRICTED)
+            BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsUnrestrictedCredentialNetworkingResponse =
-            BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.of(
-                BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type.UNRESTRICTED
-            )
+            BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.builder().build()
 
         val roundtrippedBetaManagedAgentsUnrestrictedCredentialNetworkingResponse =
             jsonMapper.readValue(

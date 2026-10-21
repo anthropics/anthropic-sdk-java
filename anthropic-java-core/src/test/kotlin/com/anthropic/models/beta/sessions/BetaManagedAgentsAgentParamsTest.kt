@@ -10,15 +10,9 @@ internal class BetaManagedAgentsAgentParamsTest {
     @Test
     fun create() {
         val betaManagedAgentsAgentParams =
-            BetaManagedAgentsAgentParams.builder()
-                .id("x")
-                .type(BetaManagedAgentsAgentParams.Type.AGENT)
-                .version(0)
-                .build()
+            BetaManagedAgentsAgentParams.builder().id("x").version(0).build()
 
         assertThat(betaManagedAgentsAgentParams.id()).isEqualTo("x")
-        assertThat(betaManagedAgentsAgentParams.type())
-            .isEqualTo(BetaManagedAgentsAgentParams.Type.AGENT)
         assertThat(betaManagedAgentsAgentParams.version()).contains(0)
     }
 
@@ -26,11 +20,7 @@ internal class BetaManagedAgentsAgentParamsTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsAgentParams =
-            BetaManagedAgentsAgentParams.builder()
-                .id("x")
-                .type(BetaManagedAgentsAgentParams.Type.AGENT)
-                .version(0)
-                .build()
+            BetaManagedAgentsAgentParams.builder().id("x").version(0).build()
 
         val roundtrippedBetaManagedAgentsAgentParams =
             jsonMapper.readValue(

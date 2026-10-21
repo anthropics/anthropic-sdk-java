@@ -134,18 +134,12 @@ private constructor(
          * Alias for calling [addData] with the following:
          * ```java
          * BetaManagedAgentsUserInterruptEvent.builder()
-         *     .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
          *     .id(id)
          *     .build()
          * ```
          */
         fun addUserInterruptData(id: String) =
-            addData(
-                BetaManagedAgentsUserInterruptEvent.builder()
-                    .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
-                    .id(id)
-                    .build()
-            )
+            addData(BetaManagedAgentsUserInterruptEvent.builder().id(id).build())
 
         /** Alias for calling [addData] with `Data.ofUserToolConfirmation(userToolConfirmation)`. */
         fun addData(userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent) =
@@ -569,12 +563,7 @@ private constructor(
              */
             @JvmStatic
             fun ofUserInterrupt(id: String) =
-                ofUserInterrupt(
-                    BetaManagedAgentsUserInterruptEvent.builder()
-                        .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
-                        .id(id)
-                        .build()
-                )
+                ofUserInterrupt(BetaManagedAgentsUserInterruptEvent.of(id))
 
             /** A tool confirmation event that approves or denies a pending tool execution. */
             @JvmStatic

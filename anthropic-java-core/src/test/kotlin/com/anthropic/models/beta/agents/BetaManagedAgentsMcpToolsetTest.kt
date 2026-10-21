@@ -15,25 +15,16 @@ internal class BetaManagedAgentsMcpToolsetTest {
                     BetaManagedAgentsMcpToolConfig.builder()
                         .enabled(true)
                         .name("name")
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .defaultConfig(
                     BetaManagedAgentsMcpToolsetDefaultConfig.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .mcpServerName("mcp_server_name")
-                .type(BetaManagedAgentsMcpToolset.Type.MCP_TOOLSET)
                 .build()
 
         assertThat(betaManagedAgentsMcpToolset.configs())
@@ -41,27 +32,17 @@ internal class BetaManagedAgentsMcpToolsetTest {
                 BetaManagedAgentsMcpToolConfig.builder()
                     .enabled(true)
                     .name("name")
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
         assertThat(betaManagedAgentsMcpToolset.defaultConfig())
             .isEqualTo(
                 BetaManagedAgentsMcpToolsetDefaultConfig.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
         assertThat(betaManagedAgentsMcpToolset.mcpServerName()).isEqualTo("mcp_server_name")
-        assertThat(betaManagedAgentsMcpToolset.type())
-            .isEqualTo(BetaManagedAgentsMcpToolset.Type.MCP_TOOLSET)
     }
 
     @Test
@@ -73,25 +54,16 @@ internal class BetaManagedAgentsMcpToolsetTest {
                     BetaManagedAgentsMcpToolConfig.builder()
                         .enabled(true)
                         .name("name")
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .defaultConfig(
                     BetaManagedAgentsMcpToolsetDefaultConfig.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .mcpServerName("mcp_server_name")
-                .type(BetaManagedAgentsMcpToolset.Type.MCP_TOOLSET)
                 .build()
 
         val roundtrippedBetaManagedAgentsMcpToolset =

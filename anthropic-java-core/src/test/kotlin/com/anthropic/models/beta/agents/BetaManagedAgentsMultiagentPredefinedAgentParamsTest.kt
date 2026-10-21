@@ -45,11 +45,7 @@ internal class BetaManagedAgentsMultiagentPredefinedAgentParamsTest {
     @Test
     fun ofBetaManagedAgentsAgentParams() {
         val betaManagedAgentsAgentParams =
-            BetaManagedAgentsAgentParams.builder()
-                .id("x")
-                .type(BetaManagedAgentsAgentParams.Type.AGENT)
-                .version(0)
-                .build()
+            BetaManagedAgentsAgentParams.builder().id("x").version(0).build()
 
         val betaManagedAgentsMultiagentPredefinedAgentParams =
             BetaManagedAgentsMultiagentPredefinedAgentParams.ofBetaManagedAgentsAgentParams(
@@ -67,11 +63,7 @@ internal class BetaManagedAgentsMultiagentPredefinedAgentParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMultiagentPredefinedAgentParams =
             BetaManagedAgentsMultiagentPredefinedAgentParams.ofBetaManagedAgentsAgentParams(
-                BetaManagedAgentsAgentParams.builder()
-                    .id("x")
-                    .type(BetaManagedAgentsAgentParams.Type.AGENT)
-                    .version(0)
-                    .build()
+                BetaManagedAgentsAgentParams.builder().id("x").version(0).build()
             )
 
         val roundtrippedBetaManagedAgentsMultiagentPredefinedAgentParams =
@@ -86,10 +78,7 @@ internal class BetaManagedAgentsMultiagentPredefinedAgentParamsTest {
 
     @Test
     fun ofSelf() {
-        val self =
-            BetaManagedAgentsMultiagentSelfParams.of(
-                BetaManagedAgentsMultiagentSelfParams.Type.SELF
-            )
+        val self = BetaManagedAgentsMultiagentSelfParams.builder().build()
 
         val betaManagedAgentsMultiagentPredefinedAgentParams =
             BetaManagedAgentsMultiagentPredefinedAgentParams.ofSelf(self)
@@ -105,9 +94,7 @@ internal class BetaManagedAgentsMultiagentPredefinedAgentParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMultiagentPredefinedAgentParams =
             BetaManagedAgentsMultiagentPredefinedAgentParams.ofSelf(
-                BetaManagedAgentsMultiagentSelfParams.of(
-                    BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                )
+                BetaManagedAgentsMultiagentSelfParams.builder().build()
             )
 
         val roundtrippedBetaManagedAgentsMultiagentPredefinedAgentParams =

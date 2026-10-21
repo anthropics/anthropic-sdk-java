@@ -43,8 +43,8 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * ID of the Workspace the API key belongs to. Unlike the deprecated top-level `workspace_id`,
-     * this is the Workspace's real ID even for the organization's default Workspace.
+     * ID of the Workspace the API key belongs to, including when it is the organization's default
+     * Workspace.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -120,9 +120,8 @@ private constructor(
         fun type(type: JsonValue) = apply { this.type = type }
 
         /**
-         * ID of the Workspace the API key belongs to. Unlike the deprecated top-level
-         * `workspace_id`, this is the Workspace's real ID even for the organization's default
-         * Workspace.
+         * ID of the Workspace the API key belongs to, including when it is the organization's
+         * default Workspace.
          */
         fun workspaceId(workspaceId: String) = workspaceId(JsonField.of(workspaceId))
 

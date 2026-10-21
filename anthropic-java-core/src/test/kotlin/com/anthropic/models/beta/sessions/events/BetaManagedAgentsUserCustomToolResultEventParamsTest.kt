@@ -13,24 +13,16 @@ internal class BetaManagedAgentsUserCustomToolResultEventParamsTest {
         val betaManagedAgentsUserCustomToolResultEventParams =
             BetaManagedAgentsUserCustomToolResultEventParams.builder()
                 .customToolUseId("x")
-                .type(BetaManagedAgentsUserCustomToolResultEventParams.Type.USER_CUSTOM_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .build()
 
         assertThat(betaManagedAgentsUserCustomToolResultEventParams.customToolUseId())
             .isEqualTo("x")
-        assertThat(betaManagedAgentsUserCustomToolResultEventParams.type())
-            .isEqualTo(
-                BetaManagedAgentsUserCustomToolResultEventParams.Type.USER_CUSTOM_TOOL_RESULT
-            )
         assertThat(betaManagedAgentsUserCustomToolResultEventParams.content().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUserCustomToolResultEventParams.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
+                    "Where is my order #1234?"
                 )
             )
         assertThat(betaManagedAgentsUserCustomToolResultEventParams.isError()).contains(true)
@@ -39,20 +31,14 @@ internal class BetaManagedAgentsUserCustomToolResultEventParamsTest {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaManagedAgentsUserCustomToolResultEventParams =
-            BetaManagedAgentsUserCustomToolResultEventParams.builder()
-                .customToolUseId("x")
-                .type(BetaManagedAgentsUserCustomToolResultEventParams.Type.USER_CUSTOM_TOOL_RESULT)
-                .build()
+            BetaManagedAgentsUserCustomToolResultEventParams.of("x")
 
         val betaManagedAgentsUserCustomToolResultEventParams =
             baseBetaManagedAgentsUserCustomToolResultEventParams
                 .toBuilder()
                 .addContent(
                     BetaManagedAgentsUserCustomToolResultEventParams.Content.ofText(
-                        BetaManagedAgentsTextBlock.builder()
-                            .text("Where is my order #1234?")
-                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                            .build()
+                        "Where is my order #1234?"
                     )
                 )
                 .build()
@@ -60,10 +46,7 @@ internal class BetaManagedAgentsUserCustomToolResultEventParamsTest {
         assertThat(betaManagedAgentsUserCustomToolResultEventParams.content().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUserCustomToolResultEventParams.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
+                    "Where is my order #1234?"
                 )
             )
     }
@@ -74,7 +57,6 @@ internal class BetaManagedAgentsUserCustomToolResultEventParamsTest {
         val betaManagedAgentsUserCustomToolResultEventParams =
             BetaManagedAgentsUserCustomToolResultEventParams.builder()
                 .customToolUseId("x")
-                .type(BetaManagedAgentsUserCustomToolResultEventParams.Type.USER_CUSTOM_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .build()

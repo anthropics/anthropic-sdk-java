@@ -12,19 +12,11 @@ internal class BetaManagedAgentsSystemMessageEventParamsTest {
     fun create() {
         val betaManagedAgentsSystemMessageEventParams =
             BetaManagedAgentsSystemMessageEventParams.builder()
-                .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+                .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                 .build()
 
         assertThat(betaManagedAgentsSystemMessageEventParams.content())
-            .containsExactly(
-                BetaManagedAgentsSystemContentBlock.builder()
-                    .text("Where is my order #1234?")
-                    .type(BetaManagedAgentsSystemContentBlock.Type.TEXT)
-                    .build()
-            )
-        assertThat(betaManagedAgentsSystemMessageEventParams.type())
-            .isEqualTo(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+            .containsExactly(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
     }
 
     @Test
@@ -32,8 +24,7 @@ internal class BetaManagedAgentsSystemMessageEventParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSystemMessageEventParams =
             BetaManagedAgentsSystemMessageEventParams.builder()
-                .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+                .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                 .build()
 
         val roundtrippedBetaManagedAgentsSystemMessageEventParams =

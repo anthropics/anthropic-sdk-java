@@ -17,6 +17,7 @@ import com.anthropic.models.beta.messages.BetaFallbackBlockParam
 import com.anthropic.models.beta.messages.BetaImageBlockParam
 import com.anthropic.models.beta.messages.BetaMcpToolListingBlockParam
 import com.anthropic.models.beta.messages.BetaMcpToolUseBlockParam
+import com.anthropic.models.beta.messages.BetaMessageContentParam
 import com.anthropic.models.beta.messages.BetaMessageParam
 import com.anthropic.models.beta.messages.BetaPlainTextSource
 import com.anthropic.models.beta.messages.BetaRedactedThinkingBlockParam
@@ -101,23 +102,29 @@ object BetaMcp {
     /**
      * Converts an MCP prompt message into an Anthropic message parameter.
      *
-     * @throws AnthropicInvalidDataException for unsupported content types
+     * @throws AnthropicInvalidDataException for unsupported content types or roles
      */
     @JvmStatic
     @JvmOverloads
     fun mcpMessage(
         message: McpSchema.PromptMessage,
         cacheControl: BetaCacheControlEphemeral? = null,
-    ): BetaMessageParam =
-        BetaMessageParam.builder()
-            .role(BetaMessageParam.Role.of(message.role().name.lowercase()))
-            .contentOfBetaContentBlockParams(listOf(mcpContent(message.content(), cacheControl)))
-            .build()
+    ): BetaMessageParam {
+        val content =
+            BetaMessageContentParam.ofContentBlockParams(
+                listOf(mcpContent(message.content(), cacheControl))
+            )
+        return when (message.role()) {
+            McpSchema.Role.USER -> BetaMessageParam.ofUser(content)
+            McpSchema.Role.ASSISTANT -> BetaMessageParam.ofAssistant(content)
+            else -> throw AnthropicInvalidDataException("Unsupported MCP role: ${message.role()}")
+        }
+    }
 
     /**
      * Converts a list of MCP prompt messages into Anthropic message parameters.
      *
-     * @throws AnthropicInvalidDataException for unsupported content types
+     * @throws AnthropicInvalidDataException for unsupported content types or roles
      */
     @JvmStatic
     @JvmOverloads

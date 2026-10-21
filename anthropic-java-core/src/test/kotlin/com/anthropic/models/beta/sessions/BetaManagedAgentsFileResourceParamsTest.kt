@@ -12,14 +12,11 @@ internal class BetaManagedAgentsFileResourceParamsTest {
         val betaManagedAgentsFileResourceParams =
             BetaManagedAgentsFileResourceParams.builder()
                 .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                 .mountPath("/uploads/receipt.pdf")
                 .build()
 
         assertThat(betaManagedAgentsFileResourceParams.fileId())
             .isEqualTo("file_011CNha8iCJcU1wXNR6q4V8w")
-        assertThat(betaManagedAgentsFileResourceParams.type())
-            .isEqualTo(BetaManagedAgentsFileResourceParams.Type.FILE)
         assertThat(betaManagedAgentsFileResourceParams.mountPath()).contains("/uploads/receipt.pdf")
     }
 
@@ -29,7 +26,6 @@ internal class BetaManagedAgentsFileResourceParamsTest {
         val betaManagedAgentsFileResourceParams =
             BetaManagedAgentsFileResourceParams.builder()
                 .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                 .mountPath("/uploads/receipt.pdf")
                 .build()
 

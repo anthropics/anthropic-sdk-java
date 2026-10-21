@@ -10,13 +10,8 @@ internal class BetaManagedAgentsConflictErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsConflictError =
-            BetaManagedAgentsConflictError.builder()
-                .type(BetaManagedAgentsConflictError.Type.CONFLICT_ERROR)
-                .message("message")
-                .build()
+            BetaManagedAgentsConflictError.builder().message("message").build()
 
-        assertThat(betaManagedAgentsConflictError.type())
-            .isEqualTo(BetaManagedAgentsConflictError.Type.CONFLICT_ERROR)
         assertThat(betaManagedAgentsConflictError.message()).contains("message")
     }
 
@@ -24,10 +19,7 @@ internal class BetaManagedAgentsConflictErrorTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsConflictError =
-            BetaManagedAgentsConflictError.builder()
-                .type(BetaManagedAgentsConflictError.Type.CONFLICT_ERROR)
-                .message("message")
-                .build()
+            BetaManagedAgentsConflictError.builder().message("message").build()
 
         val roundtrippedBetaManagedAgentsConflictError =
             jsonMapper.readValue(

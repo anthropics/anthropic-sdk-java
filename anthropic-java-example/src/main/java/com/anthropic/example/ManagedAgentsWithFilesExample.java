@@ -47,11 +47,9 @@ public final class ManagedAgentsWithFilesExample {
                                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .build())
                         .addTool(BetaManagedAgentsAgentToolset20260401Params.builder()
-                                .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
                                 .defaultConfig(BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                         .enabled(true)
                                         .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
                                                 .build())
                                         .build())
                                 .build())
@@ -74,7 +72,6 @@ public final class ManagedAgentsWithFilesExample {
                         .environmentId(environment.id())
                         .agent(agent.id())
                         .addResource(BetaManagedAgentsFileResourceParams.builder()
-                                .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                                 .fileId(file.id())
                                 .mountPath("data.csv")
                                 .build())
@@ -97,7 +94,6 @@ public final class ManagedAgentsWithFilesExample {
                         .addUserMessageEvent(List.of(BetaManagedAgentsUserMessageEventParams.Content.ofText(
                                 BetaManagedAgentsTextBlock.builder()
                                         .text("Read /uploads/data.csv and tell me the column names.")
-                                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
                                         .build())))
                         .build());
 

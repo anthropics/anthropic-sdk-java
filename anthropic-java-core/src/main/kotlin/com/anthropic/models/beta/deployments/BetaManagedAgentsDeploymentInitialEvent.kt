@@ -207,12 +207,7 @@ private constructor(
          */
         @JvmStatic
         fun ofUserMessage(content: List<BetaManagedAgentsDeploymentUserMessageEvent.Content>) =
-            ofUserMessage(
-                BetaManagedAgentsDeploymentUserMessageEvent.builder()
-                    .type(BetaManagedAgentsDeploymentUserMessageEvent.Type.USER_MESSAGE)
-                    .content(content)
-                    .build()
-            )
+            ofUserMessage(BetaManagedAgentsDeploymentUserMessageEvent.of(content))
 
         /** An outcome the agent should work toward. The agent begins work on receipt. */
         @JvmStatic
@@ -235,12 +230,7 @@ private constructor(
          */
         @JvmStatic
         fun ofSystemMessage(content: List<BetaManagedAgentsSystemContentBlock>) =
-            ofSystemMessage(
-                BetaManagedAgentsDeploymentSystemMessageEvent.builder()
-                    .type(BetaManagedAgentsDeploymentSystemMessageEvent.Type.SYSTEM_MESSAGE)
-                    .content(content)
-                    .build()
-            )
+            ofSystemMessage(BetaManagedAgentsDeploymentSystemMessageEvent.of(content))
     }
 
     /**

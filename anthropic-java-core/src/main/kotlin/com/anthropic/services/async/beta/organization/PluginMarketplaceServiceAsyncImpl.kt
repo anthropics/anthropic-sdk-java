@@ -128,7 +128,7 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -167,7 +167,7 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                             response
                                 .use { updateHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -201,7 +201,7 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -249,7 +249,7 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                             response
                                 .use { validateArchiveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -289,7 +289,7 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                             response
                                 .use { validateRepositoryHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

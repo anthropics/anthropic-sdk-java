@@ -145,7 +145,7 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                             response
                                 .use { createHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -186,7 +186,7 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -225,7 +225,7 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                             response
                                 .use { updateHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -259,7 +259,7 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -306,7 +306,7 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                             response
                                 .use { deleteHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -346,7 +346,7 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                             response
                                 .use { createEnrollmentUrlHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

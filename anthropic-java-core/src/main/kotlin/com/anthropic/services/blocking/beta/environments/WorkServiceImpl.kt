@@ -139,7 +139,7 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -177,7 +177,7 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { updateHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -213,7 +213,7 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -259,7 +259,7 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { ackHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -298,7 +298,7 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { heartbeatHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -334,7 +334,7 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { pollHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.ifPresent { it.validate() }
                             }
                         }
@@ -370,7 +370,7 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { statsHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -409,7 +409,7 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { stopHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

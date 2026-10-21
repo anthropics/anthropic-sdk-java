@@ -24,7 +24,6 @@ internal class BetaManagedAgentsMemoryListItemTest {
                 .memoryStoreId("memory_store_id")
                 .memoryVersionId("memory_version_id")
                 .path("path")
-                .type(BetaManagedAgentsMemory.Type.MEMORY)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .content("content")
                 .build()
@@ -48,7 +47,6 @@ internal class BetaManagedAgentsMemoryListItemTest {
                     .memoryStoreId("memory_store_id")
                     .memoryVersionId("memory_version_id")
                     .path("path")
-                    .type(BetaManagedAgentsMemory.Type.MEMORY)
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .content("content")
                     .build()
@@ -66,11 +64,7 @@ internal class BetaManagedAgentsMemoryListItemTest {
 
     @Test
     fun ofMemoryPrefix() {
-        val memoryPrefix =
-            BetaManagedAgentsMemoryPrefix.builder()
-                .path("path")
-                .type(BetaManagedAgentsMemoryPrefix.Type.MEMORY_PREFIX)
-                .build()
+        val memoryPrefix = BetaManagedAgentsMemoryPrefix.of("path")
 
         val betaManagedAgentsMemoryListItem =
             BetaManagedAgentsMemoryListItem.ofMemoryPrefix(memoryPrefix)
@@ -83,12 +77,7 @@ internal class BetaManagedAgentsMemoryListItemTest {
     fun ofMemoryPrefixRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMemoryListItem =
-            BetaManagedAgentsMemoryListItem.ofMemoryPrefix(
-                BetaManagedAgentsMemoryPrefix.builder()
-                    .path("path")
-                    .type(BetaManagedAgentsMemoryPrefix.Type.MEMORY_PREFIX)
-                    .build()
-            )
+            BetaManagedAgentsMemoryListItem.ofMemoryPrefix(BetaManagedAgentsMemoryPrefix.of("path"))
 
         val roundtrippedBetaManagedAgentsMemoryListItem =
             jsonMapper.readValue(

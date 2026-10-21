@@ -231,7 +231,7 @@ internal class ToolRunnerSpansTest : TracingTestSupport() {
                 .build()
         return toolParams()
             .toBuilder()
-            .addAssistantMessageOfBetaContentBlockParams(
+            .addAssistantMessageOfContentBlockParams(
                 listOf(BetaContentBlockParam.ofToolUse(toolUse))
             )
             .build()

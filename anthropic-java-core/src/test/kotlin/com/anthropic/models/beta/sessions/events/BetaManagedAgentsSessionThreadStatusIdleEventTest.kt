@@ -22,12 +22,7 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
                         .explanation("explanation")
                         .build()
                 )
-                .stopReason(
-                    BetaManagedAgentsSessionEndTurn.of(
-                        BetaManagedAgentsSessionEndTurn.Type.END_TURN
-                    )
-                )
-                .type(BetaManagedAgentsSessionThreadStatusIdleEvent.Type.SESSION_THREAD_STATUS_IDLE)
+                .stopReason(BetaManagedAgentsSessionEndTurn.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.id())
@@ -48,12 +43,8 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.stopReason())
             .isEqualTo(
                 BetaManagedAgentsSessionThreadStatusIdleEvent.StopReason.ofEndTurn(
-                    BetaManagedAgentsSessionEndTurn.Type.END_TURN
+                    BetaManagedAgentsSessionEndTurn.builder().build()
                 )
-            )
-        assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.type())
-            .isEqualTo(
-                BetaManagedAgentsSessionThreadStatusIdleEvent.Type.SESSION_THREAD_STATUS_IDLE
             )
     }
 
@@ -72,12 +63,7 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
                         .explanation("explanation")
                         .build()
                 )
-                .stopReason(
-                    BetaManagedAgentsSessionEndTurn.of(
-                        BetaManagedAgentsSessionEndTurn.Type.END_TURN
-                    )
-                )
-                .type(BetaManagedAgentsSessionThreadStatusIdleEvent.Type.SESSION_THREAD_STATUS_IDLE)
+                .stopReason(BetaManagedAgentsSessionEndTurn.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionThreadStatusIdleEvent =

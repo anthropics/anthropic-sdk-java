@@ -24,12 +24,7 @@ internal class BetaManagedAgentsMultiagentParamsTest {
         val coordinator =
             BetaManagedAgentsMultiagentCoordinatorParams.builder()
                 .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                .addAgent(
-                    BetaManagedAgentsMultiagentSelfParams.of(
-                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                    )
-                )
-                .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
+                .addAgent(BetaManagedAgentsMultiagentSelfParams.builder().build())
                 .build()
 
         val betaManagedAgentsMultiagentParams =
@@ -46,12 +41,7 @@ internal class BetaManagedAgentsMultiagentParamsTest {
             BetaManagedAgentsMultiagentParams.ofCoordinator(
                 BetaManagedAgentsMultiagentCoordinatorParams.builder()
                     .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                    .addAgent(
-                        BetaManagedAgentsMultiagentSelfParams.of(
-                            BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                        )
-                    )
-                    .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
+                    .addAgent(BetaManagedAgentsMultiagentSelfParams.builder().build())
                     .build()
             )
 
@@ -86,7 +76,6 @@ internal class BetaManagedAgentsMultiagentParamsTest {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentParams.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentParams.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -127,7 +116,6 @@ internal class BetaManagedAgentsMultiagentParamsTest {
                             .addPredefinedAgent(
                                 BetaManagedAgentsAgentParams.builder()
                                     .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                    .type(BetaManagedAgentsAgentParams.Type.AGENT)
                                     .version(1)
                                     .build()
                             )

@@ -99,7 +99,6 @@ internal class ResourceServiceAsyncTest {
                     .betaManagedAgentsFileResourceParams(
                         BetaManagedAgentsFileResourceParams.builder()
                             .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                            .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                             .mountPath("/uploads/receipt.pdf")
                             .build()
                     )

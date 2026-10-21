@@ -16,7 +16,6 @@ internal class BetaManagedAgentsFileResourceTest {
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .mountPath("/uploads/receipt.pdf")
-                .type(BetaManagedAgentsFileResource.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .build()
 
@@ -26,8 +25,6 @@ internal class BetaManagedAgentsFileResourceTest {
         assertThat(betaManagedAgentsFileResource.fileId())
             .isEqualTo("file_011CNha8iCJcU1wXNR6q4V8w")
         assertThat(betaManagedAgentsFileResource.mountPath()).isEqualTo("/uploads/receipt.pdf")
-        assertThat(betaManagedAgentsFileResource.type())
-            .isEqualTo(BetaManagedAgentsFileResource.Type.FILE)
         assertThat(betaManagedAgentsFileResource.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
     }
@@ -41,7 +38,6 @@ internal class BetaManagedAgentsFileResourceTest {
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .mountPath("/uploads/receipt.pdf")
-                .type(BetaManagedAgentsFileResource.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .build()
 

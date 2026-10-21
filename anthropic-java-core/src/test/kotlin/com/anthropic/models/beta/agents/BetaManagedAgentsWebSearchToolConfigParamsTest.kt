@@ -15,11 +15,7 @@ internal class BetaManagedAgentsWebSearchToolConfigParamsTest {
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsWebSearchToolConfigParams.Type.WEB_SEARCH)
                 .userLocation(
                     BetaManagedAgentsUserLocation.builder()
@@ -39,7 +35,7 @@ internal class BetaManagedAgentsWebSearchToolConfigParamsTest {
         assertThat(betaManagedAgentsWebSearchToolConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsWebSearchToolConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
         assertThat(betaManagedAgentsWebSearchToolConfigParams.type())
@@ -81,11 +77,7 @@ internal class BetaManagedAgentsWebSearchToolConfigParamsTest {
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsWebSearchToolConfigParams.Type.WEB_SEARCH)
                 .userLocation(
                     BetaManagedAgentsUserLocation.builder()

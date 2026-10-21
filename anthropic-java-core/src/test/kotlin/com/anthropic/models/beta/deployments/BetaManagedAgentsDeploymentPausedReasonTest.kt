@@ -14,10 +14,7 @@ internal class BetaManagedAgentsDeploymentPausedReasonTest {
 
     @Test
     fun ofManual() {
-        val manual =
-            BetaManagedAgentsManualDeploymentPausedReason.of(
-                BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL
-            )
+        val manual = BetaManagedAgentsManualDeploymentPausedReason.builder().build()
 
         val betaManagedAgentsDeploymentPausedReason =
             BetaManagedAgentsDeploymentPausedReason.ofManual(manual)
@@ -31,9 +28,7 @@ internal class BetaManagedAgentsDeploymentPausedReasonTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReason =
             BetaManagedAgentsDeploymentPausedReason.ofManual(
-                BetaManagedAgentsManualDeploymentPausedReason.of(
-                    BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL
-                )
+                BetaManagedAgentsManualDeploymentPausedReason.builder().build()
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReason =
@@ -51,12 +46,9 @@ internal class BetaManagedAgentsDeploymentPausedReasonTest {
         val error =
             BetaManagedAgentsErrorDeploymentPausedReason.builder()
                 .error(
-                    BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.of(
-                        BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.Type
-                            .ENVIRONMENT_ARCHIVED_ERROR
-                    )
+                    BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.builder()
+                        .build()
                 )
-                .type(BetaManagedAgentsErrorDeploymentPausedReason.Type.ERROR)
                 .build()
 
         val betaManagedAgentsDeploymentPausedReason =
@@ -73,12 +65,9 @@ internal class BetaManagedAgentsDeploymentPausedReasonTest {
             BetaManagedAgentsDeploymentPausedReason.ofError(
                 BetaManagedAgentsErrorDeploymentPausedReason.builder()
                     .error(
-                        BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.of(
-                            BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.Type
-                                .ENVIRONMENT_ARCHIVED_ERROR
-                        )
+                        BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.builder()
+                            .build()
                     )
-                    .type(BetaManagedAgentsErrorDeploymentPausedReason.Type.ERROR)
                     .build()
             )
 

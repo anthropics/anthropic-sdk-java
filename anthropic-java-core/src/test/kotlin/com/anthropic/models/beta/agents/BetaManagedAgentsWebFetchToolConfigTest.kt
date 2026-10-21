@@ -13,11 +13,7 @@ internal class BetaManagedAgentsWebFetchToolConfigTest {
         val betaManagedAgentsWebFetchToolConfig =
             BetaManagedAgentsWebFetchToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .urlSources(
                     BetaManagedAgentsWebFetchUrlSources.builder()
                         .clientToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
@@ -34,7 +30,7 @@ internal class BetaManagedAgentsWebFetchToolConfigTest {
         assertThat(betaManagedAgentsWebFetchToolConfig.permissionPolicy())
             .isEqualTo(
                 BetaManagedAgentsWebFetchToolConfig.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
         assertThat(betaManagedAgentsWebFetchToolConfig.urlSources())
@@ -57,11 +53,7 @@ internal class BetaManagedAgentsWebFetchToolConfigTest {
         val baseBetaManagedAgentsWebFetchToolConfig =
             BetaManagedAgentsWebFetchToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .urlSources(
                     BetaManagedAgentsWebFetchUrlSources.builder()
                         .clientToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
@@ -90,11 +82,7 @@ internal class BetaManagedAgentsWebFetchToolConfigTest {
         val betaManagedAgentsWebFetchToolConfig =
             BetaManagedAgentsWebFetchToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .urlSources(
                     BetaManagedAgentsWebFetchUrlSources.builder()
                         .clientToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())

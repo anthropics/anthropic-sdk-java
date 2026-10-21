@@ -290,7 +290,6 @@ private constructor(
          * Alias for calling [tokenEndpointAuth] with the following:
          * ```java
          * BetaManagedAgentsTokenEndpointAuthBasicParam.builder()
-         *     .type(BetaManagedAgentsTokenEndpointAuthBasicParam.Type.CLIENT_SECRET_BASIC)
          *     .clientSecret(clientSecret)
          *     .build()
          * ```
@@ -298,7 +297,6 @@ private constructor(
         fun clientSecretBasicTokenEndpointAuth(clientSecret: String) =
             tokenEndpointAuth(
                 BetaManagedAgentsTokenEndpointAuthBasicParam.builder()
-                    .type(BetaManagedAgentsTokenEndpointAuthBasicParam.Type.CLIENT_SECRET_BASIC)
                     .clientSecret(clientSecret)
                     .build()
             )
@@ -314,7 +312,6 @@ private constructor(
          * Alias for calling [tokenEndpointAuth] with the following:
          * ```java
          * BetaManagedAgentsTokenEndpointAuthPostParam.builder()
-         *     .type(BetaManagedAgentsTokenEndpointAuthPostParam.Type.CLIENT_SECRET_POST)
          *     .clientSecret(clientSecret)
          *     .build()
          * ```
@@ -322,7 +319,6 @@ private constructor(
         fun clientSecretPostTokenEndpointAuth(clientSecret: String) =
             tokenEndpointAuth(
                 BetaManagedAgentsTokenEndpointAuthPostParam.builder()
-                    .type(BetaManagedAgentsTokenEndpointAuthPostParam.Type.CLIENT_SECRET_POST)
                     .clientSecret(clientSecret)
                     .build()
             )
@@ -619,14 +615,6 @@ private constructor(
             fun ofNone(none: BetaManagedAgentsTokenEndpointAuthNoneParam) =
                 TokenEndpointAuth(none = none)
 
-            /**
-             * Returns an immutable instance of [TokenEndpointAuth] whose [ofNone] variant is built
-             * from the given required [type].
-             */
-            @JvmStatic
-            fun ofNone(type: BetaManagedAgentsTokenEndpointAuthNoneParam.Type) =
-                ofNone(BetaManagedAgentsTokenEndpointAuthNoneParam.of(type))
-
             /** Token endpoint uses HTTP Basic authentication with client credentials. */
             @JvmStatic
             fun ofClientSecretBasic(
@@ -639,12 +627,7 @@ private constructor(
              */
             @JvmStatic
             fun ofClientSecretBasic(clientSecret: String) =
-                ofClientSecretBasic(
-                    BetaManagedAgentsTokenEndpointAuthBasicParam.builder()
-                        .type(BetaManagedAgentsTokenEndpointAuthBasicParam.Type.CLIENT_SECRET_BASIC)
-                        .clientSecret(clientSecret)
-                        .build()
-                )
+                ofClientSecretBasic(BetaManagedAgentsTokenEndpointAuthBasicParam.of(clientSecret))
 
             /** Token endpoint uses POST body authentication with client credentials. */
             @JvmStatic
@@ -657,12 +640,7 @@ private constructor(
              */
             @JvmStatic
             fun ofClientSecretPost(clientSecret: String) =
-                ofClientSecretPost(
-                    BetaManagedAgentsTokenEndpointAuthPostParam.builder()
-                        .type(BetaManagedAgentsTokenEndpointAuthPostParam.Type.CLIENT_SECRET_POST)
-                        .clientSecret(clientSecret)
-                        .build()
-                )
+                ofClientSecretPost(BetaManagedAgentsTokenEndpointAuthPostParam.of(clientSecret))
         }
 
         /**

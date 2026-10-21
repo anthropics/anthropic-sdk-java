@@ -18,7 +18,6 @@ internal class BetaManagedAgentsUserDefineOutcomeEventTest {
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                 .textRubric("Must cover all five sections; cite sources inline.")
-                .type(BetaManagedAgentsUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
                 .build()
 
         assertThat(betaManagedAgentsUserDefineOutcomeEvent.id())
@@ -33,14 +32,9 @@ internal class BetaManagedAgentsUserDefineOutcomeEventTest {
         assertThat(betaManagedAgentsUserDefineOutcomeEvent.rubric())
             .isEqualTo(
                 BetaManagedAgentsUserDefineOutcomeEvent.Rubric.ofText(
-                    BetaManagedAgentsTextRubric.builder()
-                        .content("Must cover all five sections; cite sources inline.")
-                        .type(BetaManagedAgentsTextRubric.Type.TEXT)
-                        .build()
+                    "Must cover all five sections; cite sources inline."
                 )
             )
-        assertThat(betaManagedAgentsUserDefineOutcomeEvent.type())
-            .isEqualTo(BetaManagedAgentsUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
     }
 
     @Test
@@ -54,7 +48,6 @@ internal class BetaManagedAgentsUserDefineOutcomeEventTest {
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                 .textRubric("Must cover all five sections; cite sources inline.")
-                .type(BetaManagedAgentsUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
                 .build()
 
         val roundtrippedBetaManagedAgentsUserDefineOutcomeEvent =

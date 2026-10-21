@@ -99,7 +99,7 @@ class InviteServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { createHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -136,7 +136,7 @@ class InviteServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -166,7 +166,7 @@ class InviteServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -208,7 +208,7 @@ class InviteServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { deleteHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

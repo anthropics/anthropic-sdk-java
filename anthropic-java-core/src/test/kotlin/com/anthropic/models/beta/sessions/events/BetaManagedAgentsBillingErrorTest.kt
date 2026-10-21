@@ -12,23 +12,16 @@ internal class BetaManagedAgentsBillingErrorTest {
         val betaManagedAgentsBillingError =
             BetaManagedAgentsBillingError.builder()
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(BetaManagedAgentsBillingError.Type.BILLING_ERROR)
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsBillingError.message()).isEqualTo("message")
         assertThat(betaManagedAgentsBillingError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsBillingError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
             )
-        assertThat(betaManagedAgentsBillingError.type())
-            .isEqualTo(BetaManagedAgentsBillingError.Type.BILLING_ERROR)
     }
 
     @Test
@@ -37,12 +30,7 @@ internal class BetaManagedAgentsBillingErrorTest {
         val betaManagedAgentsBillingError =
             BetaManagedAgentsBillingError.builder()
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(BetaManagedAgentsBillingError.Type.BILLING_ERROR)
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsBillingError =

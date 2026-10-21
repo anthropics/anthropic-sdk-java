@@ -146,18 +146,12 @@ private constructor(
          * Alias for calling [addData] with the following:
          * ```java
          * BetaManagedAgentsMemoryPrefix.builder()
-         *     .type(BetaManagedAgentsMemoryPrefix.Type.MEMORY_PREFIX)
          *     .path(path)
          *     .build()
          * ```
          */
         fun addMemoryPrefixData(path: String) =
-            addData(
-                BetaManagedAgentsMemoryPrefix.builder()
-                    .type(BetaManagedAgentsMemoryPrefix.Type.MEMORY_PREFIX)
-                    .path(path)
-                    .build()
-            )
+            addData(BetaManagedAgentsMemoryPrefix.builder().path(path).build())
 
         /**
          * The value to pass as `page` to get the next page, or `null` if there are no more results.

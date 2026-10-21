@@ -1,7 +1,6 @@
 package com.anthropic.models.beta.sessions
 
 import com.anthropic.core.jsonMapper
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
@@ -16,7 +15,6 @@ internal class BetaManagedAgentsUserToolResultEventTest {
             BetaManagedAgentsUserToolResultEvent.builder()
                 .id("id")
                 .toolUseId("tool_use_id")
-                .type(BetaManagedAgentsUserToolResultEvent.Type.USER_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -25,16 +23,9 @@ internal class BetaManagedAgentsUserToolResultEventTest {
 
         assertThat(betaManagedAgentsUserToolResultEvent.id()).isEqualTo("id")
         assertThat(betaManagedAgentsUserToolResultEvent.toolUseId()).isEqualTo("tool_use_id")
-        assertThat(betaManagedAgentsUserToolResultEvent.type())
-            .isEqualTo(BetaManagedAgentsUserToolResultEvent.Type.USER_TOOL_RESULT)
         assertThat(betaManagedAgentsUserToolResultEvent.content().getOrNull())
             .containsExactly(
-                BetaManagedAgentsUserToolResultEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
-                )
+                BetaManagedAgentsUserToolResultEvent.Content.ofText("Where is my order #1234?")
             )
         assertThat(betaManagedAgentsUserToolResultEvent.isError()).contains(true)
         assertThat(betaManagedAgentsUserToolResultEvent.processedAt())
@@ -46,33 +37,19 @@ internal class BetaManagedAgentsUserToolResultEventTest {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaManagedAgentsUserToolResultEvent =
-            BetaManagedAgentsUserToolResultEvent.builder()
-                .id("id")
-                .toolUseId("tool_use_id")
-                .type(BetaManagedAgentsUserToolResultEvent.Type.USER_TOOL_RESULT)
-                .build()
+            BetaManagedAgentsUserToolResultEvent.builder().id("id").toolUseId("tool_use_id").build()
 
         val betaManagedAgentsUserToolResultEvent =
             baseBetaManagedAgentsUserToolResultEvent
                 .toBuilder()
                 .addContent(
-                    BetaManagedAgentsUserToolResultEvent.Content.ofText(
-                        BetaManagedAgentsTextBlock.builder()
-                            .text("Where is my order #1234?")
-                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                            .build()
-                    )
+                    BetaManagedAgentsUserToolResultEvent.Content.ofText("Where is my order #1234?")
                 )
                 .build()
 
         assertThat(betaManagedAgentsUserToolResultEvent.content().getOrNull())
             .containsExactly(
-                BetaManagedAgentsUserToolResultEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
-                )
+                BetaManagedAgentsUserToolResultEvent.Content.ofText("Where is my order #1234?")
             )
     }
 
@@ -83,7 +60,6 @@ internal class BetaManagedAgentsUserToolResultEventTest {
             BetaManagedAgentsUserToolResultEvent.builder()
                 .id("id")
                 .toolUseId("tool_use_id")
-                .type(BetaManagedAgentsUserToolResultEvent.Type.USER_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))

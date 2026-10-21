@@ -46,9 +46,6 @@ internal fun startMessagesCreate(
         MessagesCreateRequest(
             model = params.model().asString(),
             maxTokens = params.maxTokens(),
-            temperature = params.temperature().getOrNull(),
-            topP = params.topP().getOrNull(),
-            topK = params.topK().getOrNull(),
             effort = params.outputConfig().flatMap { it.effort() }.getOrNull()?.asString(),
             setsJsonOutputFormat =
                 params.outputConfig().flatMap { it.format() }.getOrNull()?._type() ==
@@ -88,9 +85,6 @@ internal fun startMessagesCreate(
         MessagesCreateRequest(
             model = params.model().asString(),
             maxTokens = params.maxTokens(),
-            temperature = params.temperature().getOrNull(),
-            topP = params.topP().getOrNull(),
-            topK = params.topK().getOrNull(),
             effort = params.outputConfig().flatMap { it.effort() }.getOrNull()?.asString(),
             setsJsonOutputFormat = params.setsJsonOutputFormat(),
             serviceTier = params.serviceTier().getOrNull()?.asString(),
@@ -114,9 +108,6 @@ internal fun startMessagesCreate(
 private class MessagesCreateRequest(
     val model: String,
     val maxTokens: Long,
-    val temperature: Double?,
-    val topP: Double?,
-    val topK: Long?,
     val effort: String?,
     val setsJsonOutputFormat: Boolean,
     val serviceTier: String?,
@@ -209,9 +200,6 @@ private fun putMessagesCreateRequestAttributes(
 ) {
     attributes.put(GEN_AI_REQUEST_MODEL, request.model)
     attributes.put(GEN_AI_REQUEST_MAX_TOKENS, request.maxTokens)
-    request.temperature?.let { attributes.put(GEN_AI_REQUEST_TEMPERATURE, it) }
-    request.topP?.let { attributes.put(GEN_AI_REQUEST_TOP_P, it) }
-    request.topK?.let { attributes.put(GEN_AI_REQUEST_TOP_K, it) }
     request.effort?.let { attributes.put(GEN_AI_REQUEST_REASONING_LEVEL, it) }
     if (request.setsJsonOutputFormat) {
         attributes.put(GEN_AI_OUTPUT_TYPE, GenAiOutputTypeValues.JSON)

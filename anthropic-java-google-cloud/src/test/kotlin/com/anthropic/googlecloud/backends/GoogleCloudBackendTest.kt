@@ -465,11 +465,10 @@ internal class GoogleCloudBackendTest {
     // ---------------------------------------------------------------------------------------------
 
     @Test
-    fun prepareRequestAddsVersionHeaderOnly() {
+    fun prepareRequestAddsNoWorkspaceIdHeader() {
         val backend = createBackendWithTokenSupplier()
         val prepared = backend.prepareRequest(createRequest())
 
-        assertThat(prepared.headers.values("anthropic-version")).containsExactly("2023-06-01")
         // The workspace ID travels in the derived base URL path, never as a header.
         assertThat(prepared.headers.names()).doesNotContain("anthropic-workspace-id")
     }
@@ -488,17 +487,6 @@ internal class GoogleCloudBackendTest {
 
         assertThat(prepared.headers.values("anthropic-version")).containsExactly("2024-01-01")
         assertThat(prepared.headers.values("anthropic-workspace-id")).containsExactly("user-ws")
-    }
-
-    @Test
-    fun prepareRequestIsIdempotent() {
-        val backend = createBackendWithTokenSupplier()
-        val once = backend.prepareRequest(createRequest())
-        val twice = backend.prepareRequest(once)
-
-        assertThat(twice.headers.names()).isEqualTo(once.headers.names())
-        assertThat(twice.headers.values("anthropic-version"))
-            .isEqualTo(once.headers.values("anthropic-version"))
     }
 
     @Test
@@ -888,7 +876,6 @@ internal class GoogleCloudBackendTest {
         val backend = GoogleCloudBackend.builder().skipAuth(true).baseUrl(CUSTOM_BASE_URL).build()
         val prepared = backend.prepareRequest(createRequest())
 
-        assertThat(prepared.headers.values("anthropic-version")).containsExactly("2023-06-01")
         assertThat(prepared.headers.names()).doesNotContain("anthropic-workspace-id")
     }
 

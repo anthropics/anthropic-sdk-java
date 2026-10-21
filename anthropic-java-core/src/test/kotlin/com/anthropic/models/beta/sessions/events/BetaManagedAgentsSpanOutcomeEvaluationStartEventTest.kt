@@ -16,10 +16,6 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationStartEventTest {
                 .iteration(0)
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
-                .type(
-                    BetaManagedAgentsSpanOutcomeEvaluationStartEvent.Type
-                        .SPAN_OUTCOME_EVALUATION_START
-                )
                 .build()
 
         assertThat(betaManagedAgentsSpanOutcomeEvaluationStartEvent.id())
@@ -29,10 +25,6 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationStartEventTest {
             .isEqualTo("outc_011CZkZRSw2kEfs6ncTVmjxP")
         assertThat(betaManagedAgentsSpanOutcomeEvaluationStartEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
-        assertThat(betaManagedAgentsSpanOutcomeEvaluationStartEvent.type())
-            .isEqualTo(
-                BetaManagedAgentsSpanOutcomeEvaluationStartEvent.Type.SPAN_OUTCOME_EVALUATION_START
-            )
     }
 
     @Test
@@ -44,10 +36,6 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationStartEventTest {
                 .iteration(0)
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
-                .type(
-                    BetaManagedAgentsSpanOutcomeEvaluationStartEvent.Type
-                        .SPAN_OUTCOME_EVALUATION_START
-                )
                 .build()
 
         val roundtrippedBetaManagedAgentsSpanOutcomeEvaluationStartEvent =

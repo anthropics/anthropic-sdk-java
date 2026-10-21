@@ -9,25 +9,15 @@ internal class BetaManagedAgentsUrlImageSourceTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsUrlImageSource =
-            BetaManagedAgentsUrlImageSource.builder()
-                .type(BetaManagedAgentsUrlImageSource.Type.URL)
-                .url("x")
-                .build()
+        val betaManagedAgentsUrlImageSource = BetaManagedAgentsUrlImageSource.of("x")
 
-        assertThat(betaManagedAgentsUrlImageSource.type())
-            .isEqualTo(BetaManagedAgentsUrlImageSource.Type.URL)
         assertThat(betaManagedAgentsUrlImageSource.url()).isEqualTo("x")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsUrlImageSource =
-            BetaManagedAgentsUrlImageSource.builder()
-                .type(BetaManagedAgentsUrlImageSource.Type.URL)
-                .url("x")
-                .build()
+        val betaManagedAgentsUrlImageSource = BetaManagedAgentsUrlImageSource.of("x")
 
         val roundtrippedBetaManagedAgentsUrlImageSource =
             jsonMapper.readValue(

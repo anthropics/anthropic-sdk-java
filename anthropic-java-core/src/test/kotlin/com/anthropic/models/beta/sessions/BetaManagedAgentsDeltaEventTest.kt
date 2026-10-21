@@ -14,36 +14,21 @@ internal class BetaManagedAgentsDeltaEventTest {
             BetaManagedAgentsDeltaEvent.builder()
                 .delta(
                     BetaManagedAgentsDeltaContent.builder()
-                        .content(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsDeltaContent.Type.CONTENT_DELTA)
+                        .content(BetaManagedAgentsTextBlock.of("Where is my order #1234?"))
                         .index(0L)
                         .build()
                 )
                 .eventId("event_id")
-                .type(BetaManagedAgentsDeltaEvent.Type.EVENT_DELTA)
                 .build()
 
         assertThat(betaManagedAgentsDeltaEvent.delta())
             .isEqualTo(
                 BetaManagedAgentsDeltaContent.builder()
-                    .content(
-                        BetaManagedAgentsTextBlock.builder()
-                            .text("Where is my order #1234?")
-                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsDeltaContent.Type.CONTENT_DELTA)
+                    .content(BetaManagedAgentsTextBlock.of("Where is my order #1234?"))
                     .index(0L)
                     .build()
             )
         assertThat(betaManagedAgentsDeltaEvent.eventId()).isEqualTo("event_id")
-        assertThat(betaManagedAgentsDeltaEvent.type())
-            .isEqualTo(BetaManagedAgentsDeltaEvent.Type.EVENT_DELTA)
     }
 
     @Test
@@ -53,18 +38,11 @@ internal class BetaManagedAgentsDeltaEventTest {
             BetaManagedAgentsDeltaEvent.builder()
                 .delta(
                     BetaManagedAgentsDeltaContent.builder()
-                        .content(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsDeltaContent.Type.CONTENT_DELTA)
+                        .content(BetaManagedAgentsTextBlock.of("Where is my order #1234?"))
                         .index(0L)
                         .build()
                 )
                 .eventId("event_id")
-                .type(BetaManagedAgentsDeltaEvent.Type.EVENT_DELTA)
                 .build()
 
         val roundtrippedBetaManagedAgentsDeltaEvent =

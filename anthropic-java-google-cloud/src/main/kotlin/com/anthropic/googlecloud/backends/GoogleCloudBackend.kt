@@ -51,8 +51,6 @@ private constructor(
     fun toBuilder(): Builder = Builder().from(this)
 
     companion object {
-        private const val ANTHROPIC_VERSION = "2023-06-01"
-        private const val HEADER_VERSION = "anthropic-version"
         private const val HEADER_AUTHORIZATION = "Authorization"
 
         private const val ENV_PROJECT = "ANTHROPIC_GOOGLE_CLOUD_PROJECT"
@@ -127,11 +125,6 @@ private constructor(
             builder.baseUrl(
                 if (isOrganizationRoute(request)) organizationBaseUrl() else workspaceBaseUrl()
             )
-        }
-
-        // User-supplied headers (e.g. set by an interceptor) win over the defaults.
-        if (!request.headers.names().contains(HEADER_VERSION)) {
-            builder.putHeader(HEADER_VERSION, ANTHROPIC_VERSION)
         }
 
         return builder.build()

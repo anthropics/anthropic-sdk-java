@@ -19,7 +19,6 @@ import com.anthropic.models.beta.sessions.SessionCreateParams
 import com.anthropic.models.beta.sessions.SessionDeleteParams
 import com.anthropic.models.beta.sessions.SessionRetrieveParams
 import com.anthropic.models.beta.sessions.SessionUpdateParams
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -45,23 +44,17 @@ internal class SessionServiceAsyncTest {
                     .agent("agent_011CZkYpogX7uDKUyvBTophP")
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .budget(
-                        BetaManagedAgentsBudgetLimit.builder()
-                            .maxListCost(
-                                BetaMonetaryAmount.builder()
-                                    .amount("2500")
-                                    .currency(BetaCurrency.USD)
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                            .build()
+                        BetaManagedAgentsBudgetLimit.of(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
                     )
                     .addUserMessageInitialEvent(
                         listOf(
                             BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                                BetaManagedAgentsTextBlock.builder()
-                                    .text("Where is my order #1234?")
-                                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                    .build()
+                                "Where is my order #1234?"
                             )
                         )
                     )
@@ -73,7 +66,6 @@ internal class SessionServiceAsyncTest {
                     .addResource(
                         BetaManagedAgentsFileResourceParams.builder()
                             .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                            .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                             .mountPath("/uploads/receipt.pdf")
                             .build()
                     )
@@ -118,24 +110,16 @@ internal class SessionServiceAsyncTest {
                             .addMcpServer(
                                 BetaManagedAgentsUrlMcpServerParams.builder()
                                     .name("example-mcp")
-                                    .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                                     .url("https://example-server.modelcontextprotocol.io/sse")
                                     .build()
                             )
                             .addTool(
                                 BetaManagedAgentsAgentToolset20260401Params.builder()
-                                    .type(
-                                        BetaManagedAgentsAgentToolset20260401Params.Type
-                                            .AGENT_TOOLSET_20260401
-                                    )
                                     .addConfig(
                                         BetaManagedAgentsBashToolConfigParams.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
+                                                BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                             )
                                             .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                             .build()
@@ -144,10 +128,7 @@ internal class SessionServiceAsyncTest {
                                         BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
+                                                BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                             )
                                             .build()
                                     )
@@ -156,15 +137,12 @@ internal class SessionServiceAsyncTest {
                             .build()
                     )
                     .budget(
-                        BetaManagedAgentsBudgetLimit.builder()
-                            .maxListCost(
-                                BetaMonetaryAmount.builder()
-                                    .amount("2500")
-                                    .currency(BetaCurrency.USD)
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                            .build()
+                        BetaManagedAgentsBudgetLimit.of(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
                     )
                     .metadata(
                         SessionUpdateParams.Metadata.builder()

@@ -12,23 +12,18 @@ internal class BetaManagedAgentsErrorDeploymentPausedReasonTest {
         val betaManagedAgentsErrorDeploymentPausedReason =
             BetaManagedAgentsErrorDeploymentPausedReason.builder()
                 .error(
-                    BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.of(
-                        BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.Type
-                            .ENVIRONMENT_ARCHIVED_ERROR
-                    )
+                    BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.builder()
+                        .build()
                 )
-                .type(BetaManagedAgentsErrorDeploymentPausedReason.Type.ERROR)
                 .build()
 
         assertThat(betaManagedAgentsErrorDeploymentPausedReason.error())
             .isEqualTo(
                 BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentArchived(
-                    BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.Type
-                        .ENVIRONMENT_ARCHIVED_ERROR
+                    BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.builder()
+                        .build()
                 )
             )
-        assertThat(betaManagedAgentsErrorDeploymentPausedReason.type())
-            .isEqualTo(BetaManagedAgentsErrorDeploymentPausedReason.Type.ERROR)
     }
 
     @Test
@@ -37,12 +32,9 @@ internal class BetaManagedAgentsErrorDeploymentPausedReasonTest {
         val betaManagedAgentsErrorDeploymentPausedReason =
             BetaManagedAgentsErrorDeploymentPausedReason.builder()
                 .error(
-                    BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.of(
-                        BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.Type
-                            .ENVIRONMENT_ARCHIVED_ERROR
-                    )
+                    BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.builder()
+                        .build()
                 )
-                .type(BetaManagedAgentsErrorDeploymentPausedReason.Type.ERROR)
                 .build()
 
         val roundtrippedBetaManagedAgentsErrorDeploymentPausedReason =

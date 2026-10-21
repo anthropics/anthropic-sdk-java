@@ -10,25 +10,21 @@ internal class BetaManagedAgentsTextRubricParamsTest {
     @Test
     fun create() {
         val betaManagedAgentsTextRubricParams =
-            BetaManagedAgentsTextRubricParams.builder()
-                .content("Must cover all five sections; cite sources inline.")
-                .type(BetaManagedAgentsTextRubricParams.Type.TEXT)
-                .build()
+            BetaManagedAgentsTextRubricParams.of(
+                "Must cover all five sections; cite sources inline."
+            )
 
         assertThat(betaManagedAgentsTextRubricParams.content())
             .isEqualTo("Must cover all five sections; cite sources inline.")
-        assertThat(betaManagedAgentsTextRubricParams.type())
-            .isEqualTo(BetaManagedAgentsTextRubricParams.Type.TEXT)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsTextRubricParams =
-            BetaManagedAgentsTextRubricParams.builder()
-                .content("Must cover all five sections; cite sources inline.")
-                .type(BetaManagedAgentsTextRubricParams.Type.TEXT)
-                .build()
+            BetaManagedAgentsTextRubricParams.of(
+                "Must cover all five sections; cite sources inline."
+            )
 
         val roundtrippedBetaManagedAgentsTextRubricParams =
             jsonMapper.readValue(

@@ -12,7 +12,6 @@ import com.anthropic.core.opentelemetry.OpenTelemetryContentMode
 import com.anthropic.core.opentelemetry.StreamRecording
 import com.anthropic.core.opentelemetry.endApiCallSpanWhenStreamEnds
 import com.anthropic.errors.SseException
-import com.anthropic.models.completions.CompletionCreateParams
 import com.anthropic.models.messages.RawMessageStreamEvent
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.json.JsonMapper
@@ -526,38 +525,6 @@ internal class StreamRecordingTest : TracingTestSupport() {
         assertThat(span.string("gen_ai.provider.name")).isEqualTo("anthropic")
         assertThat(span.string("server.address")).isEqualTo("localhost")
         assertThat(span.long("http.response.status_code")).isEqualTo(200)
-    }
-
-    /** The API ends the stream of a legacy completion once it has sent everything. */
-    @Test
-    fun completionsCreateStreaming_readToTheEnd_isOk() {
-        stubFor(
-            post(urlPathEqualTo("/v1/complete"))
-                .willReturn(
-                    ok(
-                            sse(
-                                """{"type":"completion","id":"compl_1","completion":" Hi","stop_reason":null,"model":"claude-2.1"}""",
-                                """{"type":"completion","id":"compl_1","completion":"","stop_reason":"stop_sequence","model":"claude-2.1"}""",
-                            )
-                        )
-                        .withHeader("Content-Type", "text/event-stream")
-                )
-        )
-        val params =
-            CompletionCreateParams.builder()
-                .model("claude-2.1")
-                .maxTokensToSample(16)
-                .prompt("\n\nHuman: hello\n\nAssistant:")
-                .build()
-
-        val events = client.completions().createStreaming(params).use { it.stream().count() }
-
-        assertThat(events).isEqualTo(2)
-        val span = recorder.only()
-        assertThat(span.name).isEqualTo("anthropic.completions.create")
-        assertThat(span.hasEnded()).isTrue()
-        assertThat(span.status.statusCode).isEqualTo(StatusCode.OK)
-        assertThat(span.string("error.type")).isNull()
     }
 
     @Test

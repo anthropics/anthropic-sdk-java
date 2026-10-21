@@ -265,22 +265,6 @@ private constructor(
     fun system(): Optional<System> = body.system()
 
     /**
-     * Amount of randomness injected into the response.
-     *
-     * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
-     * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
-     *
-     * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-    )
-    fun temperature(): Optional<Double> = body.temperature()
-
-    /**
      * Configuration for Claude's thinking.
      *
      * With `{"type": "adaptive"}`, Claude decides when and how much to think. With `{"type":
@@ -383,39 +367,6 @@ private constructor(
     fun tools(): Optional<List<ToolUnion>> = body.tools()
 
     /**
-     * Only sample from the top K options for each subsequent token.
-     *
-     * Used to remove "long tail" low probability responses.
-     * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
-     *
-     * Recommended for advanced use cases only.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-    )
-    fun topK(): Optional<Long> = body.topK()
-
-    /**
-     * Use nucleus sampling.
-     *
-     * In nucleus sampling, we compute the cumulative distribution over all the options for each
-     * subsequent token in decreasing probability order and cut it off once it reaches a particular
-     * probability specified by `top_p`.
-     *
-     * Recommended for advanced use cases only.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-    )
-    fun topP(): Optional<Double> = body.topP()
-
-    /**
      * Returns the raw JSON value of [maxTokens].
      *
      * Unlike [maxTokens], this method doesn't throw if the JSON field has an unexpected type.
@@ -507,16 +458,6 @@ private constructor(
     fun _system(): JsonField<System> = body._system()
 
     /**
-     * Returns the raw JSON value of [temperature].
-     *
-     * Unlike [temperature], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-    )
-    fun _temperature(): JsonField<Double> = body._temperature()
-
-    /**
      * Returns the raw JSON value of [thinking].
      *
      * Unlike [thinking], this method doesn't throw if the JSON field has an unexpected type.
@@ -536,26 +477,6 @@ private constructor(
      * Unlike [tools], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _tools(): JsonField<List<ToolUnion>> = body._tools()
-
-    /**
-     * Returns the raw JSON value of [topK].
-     *
-     * Unlike [topK], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-    )
-    fun _topK(): JsonField<Long> = body._topK()
-
-    /**
-     * Returns the raw JSON value of [topP].
-     *
-     * Unlike [topP], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @Deprecated(
-        "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-    )
-    fun _topP(): JsonField<Double> = body._topP()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -740,74 +661,83 @@ private constructor(
         /** Alias for calling [addMessage] with `message.toParam()`. */
         fun addMessage(message: Message) = apply { body.addMessage(message) }
 
+        /** Alias for calling [addMessage] with `MessageParam.ofUser(user)`. */
+        fun addMessage(user: UserMessageParam) = apply { body.addMessage(user) }
+
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * MessageParam.builder()
-         *     .role(MessageParam.Role.USER)
+         * UserMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addUserMessage(content: MessageParam.Content) = apply { body.addUserMessage(content) }
+        fun addUserMessage(content: MessageContentParam) = apply { body.addUserMessage(content) }
 
-        /** Alias for calling [addUserMessage] with `MessageParam.Content.ofString(string)`. */
+        /** Alias for calling [addUserMessage] with `MessageContentParam.ofString(string)`. */
         fun addUserMessage(string: String) = apply { body.addUserMessage(string) }
 
         /**
          * Alias for calling [addUserMessage] with
-         * `MessageParam.Content.ofBlockParams(blockParams)`.
+         * `MessageContentParam.ofContentBlockParams(contentBlockParams)`.
          */
-        fun addUserMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
-            body.addUserMessageOfBlockParams(blockParams)
-        }
+        fun addUserMessageOfContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
+            apply {
+                body.addUserMessageOfContentBlockParams(contentBlockParams)
+            }
+
+        /** Alias for calling [addMessage] with `MessageParam.ofAssistant(assistant)`. */
+        fun addMessage(assistant: AssistantMessageParam) = apply { body.addMessage(assistant) }
 
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * MessageParam.builder()
-         *     .role(MessageParam.Role.ASSISTANT)
+         * AssistantMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addAssistantMessage(content: MessageParam.Content) = apply {
+        fun addAssistantMessage(content: MessageContentParam) = apply {
             body.addAssistantMessage(content)
         }
 
-        /** Alias for calling [addAssistantMessage] with `MessageParam.Content.ofString(string)`. */
+        /** Alias for calling [addAssistantMessage] with `MessageContentParam.ofString(string)`. */
         fun addAssistantMessage(string: String) = apply { body.addAssistantMessage(string) }
 
         /**
          * Alias for calling [addAssistantMessage] with
-         * `MessageParam.Content.ofBlockParams(blockParams)`.
+         * `MessageContentParam.ofContentBlockParams(contentBlockParams)`.
          */
-        fun addAssistantMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
-            body.addAssistantMessageOfBlockParams(blockParams)
-        }
+        fun addAssistantMessageOfContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
+            apply {
+                body.addAssistantMessageOfContentBlockParams(contentBlockParams)
+            }
+
+        /** Alias for calling [addMessage] with `MessageParam.ofSystem(system)`. */
+        fun addMessage(system: SystemMessageParam) = apply { body.addMessage(system) }
 
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * MessageParam.builder()
-         *     .role(MessageParam.Role.SYSTEM)
+         * SystemMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addSystemMessage(content: MessageParam.Content) = apply {
+        fun addSystemMessage(content: SystemMessageParam.Content) = apply {
             body.addSystemMessage(content)
         }
 
-        /** Alias for calling [addSystemMessage] with `MessageParam.Content.ofString(string)`. */
+        /**
+         * Alias for calling [addSystemMessage] with `SystemMessageParam.Content.ofString(string)`.
+         */
         fun addSystemMessage(string: String) = apply { body.addSystemMessage(string) }
 
         /**
-         * Alias for calling [addSystemMessage] with
-         * `MessageParam.Content.ofBlockParams(blockParams)`.
+         * Alias for calling [addSystemMessage] with `SystemMessageParam.Content.ofBlocks(blocks)`.
          */
-        fun addSystemMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
-            body.addSystemMessageOfBlockParams(blockParams)
+        fun addSystemMessageOfBlocks(blocks: List<TextBlockParam>) = apply {
+            body.addSystemMessageOfBlocks(blocks)
         }
 
         /**
@@ -1099,31 +1029,6 @@ private constructor(
         fun systemOfTextBlockParams(textBlockParams: List<TextBlockParam>) = apply {
             body.systemOfTextBlockParams(textBlockParams)
         }
-
-        /**
-         * Amount of randomness injected into the response.
-         *
-         * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
-         * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
-         *
-         * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        fun temperature(temperature: Double) = apply { body.temperature(temperature) }
-
-        /**
-         * Sets [Builder.temperature] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.temperature] with a well-typed [Double] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        fun temperature(temperature: JsonField<Double>) = apply { body.temperature(temperature) }
 
         /**
          * Configuration for Claude's thinking.
@@ -1453,55 +1358,6 @@ private constructor(
             body.addTool(searchToolRegex20251119)
         }
 
-        /**
-         * Only sample from the top K options for each subsequent token.
-         *
-         * Used to remove "long tail" low probability responses.
-         * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
-         *
-         * Recommended for advanced use cases only.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-        )
-        fun topK(topK: Long) = apply { body.topK(topK) }
-
-        /**
-         * Sets [Builder.topK] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.topK] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-        )
-        fun topK(topK: JsonField<Long>) = apply { body.topK(topK) }
-
-        /**
-         * Use nucleus sampling.
-         *
-         * In nucleus sampling, we compute the cumulative distribution over all the options for each
-         * subsequent token in decreasing probability order and cut it off once it reaches a
-         * particular probability specified by `top_p`.
-         *
-         * Recommended for advanced use cases only.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        fun topP(topP: Double) = apply { body.topP(topP) }
-
-        /**
-         * Sets [Builder.topP] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.topP] with a well-typed [Double] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        fun topP(topP: JsonField<Double>) = apply { body.topP(topP) }
-
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
         }
@@ -1682,12 +1538,9 @@ private constructor(
         private val speed: JsonField<Speed>,
         private val stopSequences: JsonField<List<String>>,
         private val system: JsonField<System>,
-        private val temperature: JsonField<Double>,
         private val thinking: JsonField<ThinkingConfigParam>,
         private val toolChoice: JsonField<ToolChoice>,
         private val tools: JsonField<List<ToolUnion>>,
-        private val topK: JsonField<Long>,
-        private val topP: JsonField<Double>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -1726,9 +1579,6 @@ private constructor(
             @ExcludeMissing
             stopSequences: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("system") @ExcludeMissing system: JsonField<System> = JsonMissing.of(),
-            @JsonProperty("temperature")
-            @ExcludeMissing
-            temperature: JsonField<Double> = JsonMissing.of(),
             @JsonProperty("thinking")
             @ExcludeMissing
             thinking: JsonField<ThinkingConfigParam> = JsonMissing.of(),
@@ -1738,8 +1588,6 @@ private constructor(
             @JsonProperty("tools")
             @ExcludeMissing
             tools: JsonField<List<ToolUnion>> = JsonMissing.of(),
-            @JsonProperty("top_k") @ExcludeMissing topK: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("top_p") @ExcludeMissing topP: JsonField<Double> = JsonMissing.of(),
         ) : this(
             maxTokens,
             messages,
@@ -1754,12 +1602,9 @@ private constructor(
             speed,
             stopSequences,
             system,
-            temperature,
             thinking,
             toolChoice,
             tools,
-            topK,
-            topP,
             mutableMapOf(),
         )
 
@@ -1964,22 +1809,6 @@ private constructor(
         fun system(): Optional<System> = system.getOptional("system")
 
         /**
-         * Amount of randomness injected into the response.
-         *
-         * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
-         * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
-         *
-         * Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        fun temperature(): Optional<Double> = temperature.getOptional("temperature")
-
-        /**
          * Configuration for Claude's thinking.
          *
          * With `{"type": "adaptive"}`, Claude decides when and how much to think. With `{"type":
@@ -2081,39 +1910,6 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun tools(): Optional<List<ToolUnion>> = tools.getOptional("tools")
-
-        /**
-         * Only sample from the top K options for each subsequent token.
-         *
-         * Used to remove "long tail" low probability responses.
-         * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
-         *
-         * Recommended for advanced use cases only.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-        )
-        fun topK(): Optional<Long> = topK.getOptional("top_k")
-
-        /**
-         * Use nucleus sampling.
-         *
-         * In nucleus sampling, we compute the cumulative distribution over all the options for each
-         * subsequent token in decreasing probability order and cut it off once it reaches a
-         * particular probability specified by `top_p`.
-         *
-         * Recommended for advanced use cases only.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        fun topP(): Optional<Double> = topP.getOptional("top_p")
 
         /**
          * Returns the raw JSON value of [maxTokens].
@@ -2227,18 +2023,6 @@ private constructor(
         @JsonProperty("system") @ExcludeMissing fun _system(): JsonField<System> = system
 
         /**
-         * Returns the raw JSON value of [temperature].
-         *
-         * Unlike [temperature], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        @JsonProperty("temperature")
-        @ExcludeMissing
-        fun _temperature(): JsonField<Double> = temperature
-
-        /**
          * Returns the raw JSON value of [thinking].
          *
          * Unlike [thinking], this method doesn't throw if the JSON field has an unexpected type.
@@ -2262,30 +2046,6 @@ private constructor(
          * Unlike [tools], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("tools") @ExcludeMissing fun _tools(): JsonField<List<ToolUnion>> = tools
-
-        /**
-         * Returns the raw JSON value of [topK].
-         *
-         * Unlike [topK], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-        )
-        @JsonProperty("top_k")
-        @ExcludeMissing
-        fun _topK(): JsonField<Long> = topK
-
-        /**
-         * Returns the raw JSON value of [topP].
-         *
-         * Unlike [topP], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @Deprecated(
-            "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-        )
-        @JsonProperty("top_p")
-        @ExcludeMissing
-        fun _topP(): JsonField<Double> = topP
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2330,12 +2090,9 @@ private constructor(
             private var speed: JsonField<Speed> = JsonMissing.of()
             private var stopSequences: JsonField<MutableList<String>>? = null
             private var system: JsonField<System> = JsonMissing.of()
-            private var temperature: JsonField<Double> = JsonMissing.of()
             private var thinking: JsonField<ThinkingConfigParam> = JsonMissing.of()
             private var toolChoice: JsonField<ToolChoice> = JsonMissing.of()
             private var tools: JsonField<MutableList<ToolUnion>>? = null
-            private var topK: JsonField<Long> = JsonMissing.of()
-            private var topP: JsonField<Double> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -2354,12 +2111,9 @@ private constructor(
                 stopSequences =
                     body.stopSequences.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 system = body.system
-                temperature = body.temperature
                 thinking = body.thinking
                 toolChoice = body.toolChoice
                 tools = body.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
-                topK = body.topK
-                topP = body.topP
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -2479,87 +2233,87 @@ private constructor(
             /** Alias for calling [addMessage] with `message.toParam()`. */
             fun addMessage(message: Message) = addMessage(message.toParam())
 
+            /** Alias for calling [addMessage] with `MessageParam.ofUser(user)`. */
+            fun addMessage(user: UserMessageParam) = addMessage(MessageParam.ofUser(user))
+
             /**
              * Alias for calling [addMessage] with the following:
              * ```java
-             * MessageParam.builder()
-             *     .role(MessageParam.Role.USER)
+             * UserMessageParam.builder()
              *     .content(content)
              *     .build()
              * ```
              */
-            fun addUserMessage(content: MessageParam.Content) =
-                addMessage(
-                    MessageParam.builder().role(MessageParam.Role.USER).content(content).build()
-                )
+            fun addUserMessage(content: MessageContentParam) =
+                addMessage(UserMessageParam.builder().content(content).build())
 
-            /** Alias for calling [addUserMessage] with `MessageParam.Content.ofString(string)`. */
+            /** Alias for calling [addUserMessage] with `MessageContentParam.ofString(string)`. */
             fun addUserMessage(string: String) =
-                addUserMessage(MessageParam.Content.ofString(string))
+                addUserMessage(MessageContentParam.ofString(string))
 
             /**
              * Alias for calling [addUserMessage] with
-             * `MessageParam.Content.ofBlockParams(blockParams)`.
+             * `MessageContentParam.ofContentBlockParams(contentBlockParams)`.
              */
-            fun addUserMessageOfBlockParams(blockParams: List<ContentBlockParam>) =
-                addUserMessage(MessageParam.Content.ofBlockParams(blockParams))
+            fun addUserMessageOfContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
+                addUserMessage(MessageContentParam.ofContentBlockParams(contentBlockParams))
+
+            /** Alias for calling [addMessage] with `MessageParam.ofAssistant(assistant)`. */
+            fun addMessage(assistant: AssistantMessageParam) =
+                addMessage(MessageParam.ofAssistant(assistant))
 
             /**
              * Alias for calling [addMessage] with the following:
              * ```java
-             * MessageParam.builder()
-             *     .role(MessageParam.Role.ASSISTANT)
+             * AssistantMessageParam.builder()
              *     .content(content)
              *     .build()
              * ```
              */
-            fun addAssistantMessage(content: MessageParam.Content) =
-                addMessage(
-                    MessageParam.builder()
-                        .role(MessageParam.Role.ASSISTANT)
-                        .content(content)
-                        .build()
-                )
+            fun addAssistantMessage(content: MessageContentParam) =
+                addMessage(AssistantMessageParam.builder().content(content).build())
 
             /**
-             * Alias for calling [addAssistantMessage] with `MessageParam.Content.ofString(string)`.
+             * Alias for calling [addAssistantMessage] with `MessageContentParam.ofString(string)`.
              */
             fun addAssistantMessage(string: String) =
-                addAssistantMessage(MessageParam.Content.ofString(string))
+                addAssistantMessage(MessageContentParam.ofString(string))
 
             /**
              * Alias for calling [addAssistantMessage] with
-             * `MessageParam.Content.ofBlockParams(blockParams)`.
+             * `MessageContentParam.ofContentBlockParams(contentBlockParams)`.
              */
-            fun addAssistantMessageOfBlockParams(blockParams: List<ContentBlockParam>) =
-                addAssistantMessage(MessageParam.Content.ofBlockParams(blockParams))
+            fun addAssistantMessageOfContentBlockParams(
+                contentBlockParams: List<ContentBlockParam>
+            ) = addAssistantMessage(MessageContentParam.ofContentBlockParams(contentBlockParams))
+
+            /** Alias for calling [addMessage] with `MessageParam.ofSystem(system)`. */
+            fun addMessage(system: SystemMessageParam) = addMessage(MessageParam.ofSystem(system))
 
             /**
              * Alias for calling [addMessage] with the following:
              * ```java
-             * MessageParam.builder()
-             *     .role(MessageParam.Role.SYSTEM)
+             * SystemMessageParam.builder()
              *     .content(content)
              *     .build()
              * ```
              */
-            fun addSystemMessage(content: MessageParam.Content) =
-                addMessage(
-                    MessageParam.builder().role(MessageParam.Role.SYSTEM).content(content).build()
-                )
-
-            /**
-             * Alias for calling [addSystemMessage] with `MessageParam.Content.ofString(string)`.
-             */
-            fun addSystemMessage(string: String) =
-                addSystemMessage(MessageParam.Content.ofString(string))
+            fun addSystemMessage(content: SystemMessageParam.Content) =
+                addMessage(SystemMessageParam.builder().content(content).build())
 
             /**
              * Alias for calling [addSystemMessage] with
-             * `MessageParam.Content.ofBlockParams(blockParams)`.
+             * `SystemMessageParam.Content.ofString(string)`.
              */
-            fun addSystemMessageOfBlockParams(blockParams: List<ContentBlockParam>) =
-                addSystemMessage(MessageParam.Content.ofBlockParams(blockParams))
+            fun addSystemMessage(string: String) =
+                addSystemMessage(SystemMessageParam.Content.ofString(string))
+
+            /**
+             * Alias for calling [addSystemMessage] with
+             * `SystemMessageParam.Content.ofBlocks(blocks)`.
+             */
+            fun addSystemMessageOfBlocks(blocks: List<TextBlockParam>) =
+                addSystemMessage(SystemMessageParam.Content.ofBlocks(blocks))
 
             /**
              * The model that will complete your prompt.
@@ -2820,34 +2574,6 @@ private constructor(
             /** Alias for calling [system] with `System.ofTextBlockParams(textBlockParams)`. */
             fun systemOfTextBlockParams(textBlockParams: List<TextBlockParam>) =
                 system(System.ofTextBlockParams(textBlockParams))
-
-            /**
-             * Amount of randomness injected into the response.
-             *
-             * Defaults to `1.0`. Ranges from `0.0` to `1.0`. Use `temperature` closer to `0.0` for
-             * analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
-             *
-             * Note that even with `temperature` of `0.0`, the results will not be fully
-             * deterministic.
-             */
-            @Deprecated(
-                "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-            )
-            fun temperature(temperature: Double) = temperature(JsonField.of(temperature))
-
-            /**
-             * Sets [Builder.temperature] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.temperature] with a well-typed [Double] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            @Deprecated(
-                "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-            )
-            fun temperature(temperature: JsonField<Double>) = apply {
-                this.temperature = temperature
-            }
 
             /**
              * Configuration for Claude's thinking.
@@ -3181,57 +2907,6 @@ private constructor(
             fun addTool(searchToolRegex20251119: ToolSearchToolRegex20251119) =
                 addTool(ToolUnion.ofSearchToolRegex20251119(searchToolRegex20251119))
 
-            /**
-             * Only sample from the top K options for each subsequent token.
-             *
-             * Used to remove "long tail" low probability responses.
-             * [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
-             *
-             * Recommended for advanced use cases only.
-             */
-            @Deprecated(
-                "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-            )
-            fun topK(topK: Long) = topK(JsonField.of(topK))
-
-            /**
-             * Sets [Builder.topK] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.topK] with a well-typed [Long] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            @Deprecated(
-                "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
-            )
-            fun topK(topK: JsonField<Long>) = apply { this.topK = topK }
-
-            /**
-             * Use nucleus sampling.
-             *
-             * In nucleus sampling, we compute the cumulative distribution over all the options for
-             * each subsequent token in decreasing probability order and cut it off once it reaches
-             * a particular probability specified by `top_p`.
-             *
-             * Recommended for advanced use cases only.
-             */
-            @Deprecated(
-                "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-            )
-            fun topP(topP: Double) = topP(JsonField.of(topP))
-
-            /**
-             * Sets [Builder.topP] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.topP] with a well-typed [Double] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            @Deprecated(
-                "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
-            )
-            fun topP(topP: JsonField<Double>) = apply { this.topP = topP }
-
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -3280,12 +2955,9 @@ private constructor(
                     speed,
                     (stopSequences ?: JsonMissing.of()).map { it.toImmutable() },
                     system,
-                    temperature,
                     thinking,
                     toolChoice,
                     (tools ?: JsonMissing.of()).map { it.toImmutable() },
-                    topK,
-                    topP,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -3319,12 +2991,9 @@ private constructor(
             speed().ifPresent { it.validate() }
             stopSequences()
             system().ifPresent { it.validate() }
-            temperature()
             thinking().ifPresent { it.validate() }
             toolChoice().ifPresent { it.validate() }
             tools().ifPresent { it.forEach { it.validate() } }
-            topK()
-            topP()
             validated = true
         }
 
@@ -3357,12 +3026,9 @@ private constructor(
                 (speed.asKnown().getOrNull()?.validity() ?: 0) +
                 (stopSequences.asKnown().getOrNull()?.size ?: 0) +
                 (system.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (temperature.asKnown().isPresent) 1 else 0) +
                 (thinking.asKnown().getOrNull()?.validity() ?: 0) +
                 (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
-                (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (if (topK.asKnown().isPresent) 1 else 0) +
-                (if (topP.asKnown().isPresent) 1 else 0)
+                (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -3383,12 +3049,9 @@ private constructor(
                 speed == other.speed &&
                 stopSequences == other.stopSequences &&
                 system == other.system &&
-                temperature == other.temperature &&
                 thinking == other.thinking &&
                 toolChoice == other.toolChoice &&
                 tools == other.tools &&
-                topK == other.topK &&
-                topP == other.topP &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -3407,12 +3070,9 @@ private constructor(
                 speed,
                 stopSequences,
                 system,
-                temperature,
                 thinking,
                 toolChoice,
                 tools,
-                topK,
-                topP,
                 additionalProperties,
             )
         }
@@ -3420,7 +3080,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, diagnostics=$diagnostics, inferenceGeo=$inferenceGeo, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, diagnostics=$diagnostics, inferenceGeo=$inferenceGeo, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /**

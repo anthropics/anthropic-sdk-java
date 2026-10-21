@@ -11,7 +11,8 @@ import com.anthropic.models.messages.Model;
  *
  * <p>The SDK will resolve credentials in this order:
  * <ol>
- *   <li>ANTHROPIC_API_KEY or ANTHROPIC_AUTH_TOKEN env vars
+ *   <li>ANTHROPIC_API_KEY env var
+ *   <li>ANTHROPIC_AUTH_TOKEN env var
  *   <li>ANTHROPIC_PROFILE env var (loads from ~/.config/anthropic/configs/{profile}.json)
  *   <li>ANTHROPIC_FEDERATION_RULE_ID + ANTHROPIC_ORGANIZATION_ID + identity token (WIF)
  *   <li>Default profile from ~/.config/anthropic/active_config or "default"

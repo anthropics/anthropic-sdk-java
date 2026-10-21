@@ -2,7 +2,6 @@ package com.anthropic.client
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.async.BetaServiceAsync
-import com.anthropic.services.async.CompletionServiceAsync
 import com.anthropic.services.async.FileServiceAsync
 import com.anthropic.services.async.MessageServiceAsync
 import com.anthropic.services.async.ModelServiceAsync
@@ -50,8 +49,6 @@ interface AnthropicClientAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): AnthropicClientAsync
 
-    fun completions(): CompletionServiceAsync
-
     fun messages(): MessageServiceAsync
 
     fun models(): ModelServiceAsync
@@ -92,8 +89,6 @@ interface AnthropicClientAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): AnthropicClientAsync.WithRawResponse
-
-        fun completions(): CompletionServiceAsync.WithRawResponse
 
         fun messages(): MessageServiceAsync.WithRawResponse
 

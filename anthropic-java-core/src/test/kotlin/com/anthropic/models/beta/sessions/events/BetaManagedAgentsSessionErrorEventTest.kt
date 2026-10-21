@@ -19,15 +19,10 @@ internal class BetaManagedAgentsSessionErrorEventTest {
                             "The repository host rejected the credentials for the repository, or required credentials and received none."
                         )
                         .repositoryUrl("https://github.com/example-org/example-repo")
-                        .retryStatus(
-                            BetaManagedAgentsRetryStatusRetrying.of(
-                                BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                            )
-                        )
+                        .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                         .build()
                 )
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionErrorEvent.Type.SESSION_ERROR)
                 .build()
 
         assertThat(betaManagedAgentsSessionErrorEvent.id()).isEqualTo("id")
@@ -39,18 +34,12 @@ internal class BetaManagedAgentsSessionErrorEventTest {
                             "The repository host rejected the credentials for the repository, or required credentials and received none."
                         )
                         .repositoryUrl("https://github.com/example-org/example-repo")
-                        .retryStatus(
-                            BetaManagedAgentsRetryStatusRetrying.of(
-                                BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                            )
-                        )
+                        .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                         .build()
                 )
             )
         assertThat(betaManagedAgentsSessionErrorEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsSessionErrorEvent.type())
-            .isEqualTo(BetaManagedAgentsSessionErrorEvent.Type.SESSION_ERROR)
     }
 
     @Test
@@ -65,15 +54,10 @@ internal class BetaManagedAgentsSessionErrorEventTest {
                             "The repository host rejected the credentials for the repository, or required credentials and received none."
                         )
                         .repositoryUrl("https://github.com/example-org/example-repo")
-                        .retryStatus(
-                            BetaManagedAgentsRetryStatusRetrying.of(
-                                BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                            )
-                        )
+                        .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                         .build()
                 )
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionErrorEvent.Type.SESSION_ERROR)
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionErrorEvent =

@@ -10,24 +10,16 @@ internal class BetaManagedAgentsMcpEgressBlockedRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsMcpEgressBlockedRunError =
-            BetaManagedAgentsMcpEgressBlockedRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsMcpEgressBlockedRunError.Type.MCP_EGRESS_BLOCKED_ERROR)
-                .build()
+            BetaManagedAgentsMcpEgressBlockedRunError.of("message")
 
         assertThat(betaManagedAgentsMcpEgressBlockedRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsMcpEgressBlockedRunError.type())
-            .isEqualTo(BetaManagedAgentsMcpEgressBlockedRunError.Type.MCP_EGRESS_BLOCKED_ERROR)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMcpEgressBlockedRunError =
-            BetaManagedAgentsMcpEgressBlockedRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsMcpEgressBlockedRunError.Type.MCP_EGRESS_BLOCKED_ERROR)
-                .build()
+            BetaManagedAgentsMcpEgressBlockedRunError.of("message")
 
         val roundtrippedBetaManagedAgentsMcpEgressBlockedRunError =
             jsonMapper.readValue(

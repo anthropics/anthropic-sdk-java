@@ -16,10 +16,6 @@ internal class BetaManagedAgentsSessionThreadStatusRescheduledEventTest {
                 .agentName("agent_name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
-                .type(
-                    BetaManagedAgentsSessionThreadStatusRescheduledEvent.Type
-                        .SESSION_THREAD_STATUS_RESCHEDULED
-                )
                 .build()
 
         assertThat(betaManagedAgentsSessionThreadStatusRescheduledEvent.id()).isEqualTo("id")
@@ -29,11 +25,6 @@ internal class BetaManagedAgentsSessionThreadStatusRescheduledEventTest {
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsSessionThreadStatusRescheduledEvent.sessionThreadId())
             .isEqualTo("session_thread_id")
-        assertThat(betaManagedAgentsSessionThreadStatusRescheduledEvent.type())
-            .isEqualTo(
-                BetaManagedAgentsSessionThreadStatusRescheduledEvent.Type
-                    .SESSION_THREAD_STATUS_RESCHEDULED
-            )
     }
 
     @Test
@@ -45,10 +36,6 @@ internal class BetaManagedAgentsSessionThreadStatusRescheduledEventTest {
                 .agentName("agent_name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
-                .type(
-                    BetaManagedAgentsSessionThreadStatusRescheduledEvent.Type
-                        .SESSION_THREAD_STATUS_RESCHEDULED
-                )
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionThreadStatusRescheduledEvent =

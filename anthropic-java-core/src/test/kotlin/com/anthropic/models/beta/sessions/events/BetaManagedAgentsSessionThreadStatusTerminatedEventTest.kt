@@ -16,10 +16,6 @@ internal class BetaManagedAgentsSessionThreadStatusTerminatedEventTest {
                 .agentName("agent_name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
-                .type(
-                    BetaManagedAgentsSessionThreadStatusTerminatedEvent.Type
-                        .SESSION_THREAD_STATUS_TERMINATED
-                )
                 .build()
 
         assertThat(betaManagedAgentsSessionThreadStatusTerminatedEvent.id()).isEqualTo("id")
@@ -29,11 +25,6 @@ internal class BetaManagedAgentsSessionThreadStatusTerminatedEventTest {
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsSessionThreadStatusTerminatedEvent.sessionThreadId())
             .isEqualTo("session_thread_id")
-        assertThat(betaManagedAgentsSessionThreadStatusTerminatedEvent.type())
-            .isEqualTo(
-                BetaManagedAgentsSessionThreadStatusTerminatedEvent.Type
-                    .SESSION_THREAD_STATUS_TERMINATED
-            )
     }
 
     @Test
@@ -45,10 +36,6 @@ internal class BetaManagedAgentsSessionThreadStatusTerminatedEventTest {
                 .agentName("agent_name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
-                .type(
-                    BetaManagedAgentsSessionThreadStatusTerminatedEvent.Type
-                        .SESSION_THREAD_STATUS_TERMINATED
-                )
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionThreadStatusTerminatedEvent =

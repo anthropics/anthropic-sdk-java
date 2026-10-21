@@ -25,13 +25,10 @@ internal class BetaDreamTest {
                         .speed(BetaDreamModelConfig.Speed.STANDARD)
                         .build()
                 )
-                .outputBehavior(
-                    BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
-                )
-                .addMemoryStoreOutput("memory_store_id")
+                .outputBehavior(BetaOutputBehaviorCreateNew.builder().build())
+                .addOutput(BetaDreamOutput.of("memory_store_id"))
                 .sessionId("session_id")
                 .status(BetaDreamStatus.PENDING)
-                .type(BetaDream.Type.DREAM)
                 .usage(
                     BetaDreamUsage.builder()
                         .cacheCreationInputTokens(0)
@@ -50,15 +47,7 @@ internal class BetaDreamTest {
         assertThat(betaDream.endedAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaDream.error())
             .contains(BetaDreamError.builder().message("message").type("type").build())
-        assertThat(betaDream.inputs())
-            .containsExactly(
-                BetaDreamInput.ofMemoryStore(
-                    BetaDreamMemoryStoreInput.builder()
-                        .memoryStoreId("x")
-                        .type(BetaDreamMemoryStoreInput.Type.MEMORY_STORE)
-                        .build()
-                )
-            )
+        assertThat(betaDream.inputs()).containsExactly(BetaDreamInput.ofMemoryStore("x"))
         assertThat(betaDream.instructions()).contains("instructions")
         assertThat(betaDream.model())
             .isEqualTo(
@@ -68,17 +57,12 @@ internal class BetaDreamTest {
                     .build()
             )
         assertThat(betaDream.outputBehavior())
-            .isEqualTo(BetaOutputBehavior.ofCreateNew(BetaOutputBehaviorCreateNew.Type.CREATE_NEW))
-        assertThat(betaDream.outputs())
-            .containsExactly(
-                BetaDreamOutput.builder()
-                    .memoryStoreId("memory_store_id")
-                    .type(BetaDreamOutput.Type.MEMORY_STORE)
-                    .build()
+            .isEqualTo(
+                BetaOutputBehavior.ofCreateNew(BetaOutputBehaviorCreateNew.builder().build())
             )
+        assertThat(betaDream.outputs()).containsExactly(BetaDreamOutput.of("memory_store_id"))
         assertThat(betaDream.sessionId()).contains("session_id")
         assertThat(betaDream.status()).isEqualTo(BetaDreamStatus.PENDING)
-        assertThat(betaDream.type()).isEqualTo(BetaDream.Type.DREAM)
         assertThat(betaDream.usage())
             .isEqualTo(
                 BetaDreamUsage.builder()
@@ -108,13 +92,10 @@ internal class BetaDreamTest {
                         .speed(BetaDreamModelConfig.Speed.STANDARD)
                         .build()
                 )
-                .outputBehavior(
-                    BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
-                )
-                .addMemoryStoreOutput("memory_store_id")
+                .outputBehavior(BetaOutputBehaviorCreateNew.builder().build())
+                .addOutput(BetaDreamOutput.of("memory_store_id"))
                 .sessionId("session_id")
                 .status(BetaDreamStatus.PENDING)
-                .type(BetaDream.Type.DREAM)
                 .usage(
                     BetaDreamUsage.builder()
                         .cacheCreationInputTokens(0)

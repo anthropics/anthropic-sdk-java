@@ -102,7 +102,6 @@ internal class MessageServiceTest {
                                 .build()
                         )
                     )
-                    .temperature(1.0)
                     .thinking(
                         ThinkingConfigAdaptive.builder()
                             .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -144,8 +143,6 @@ internal class MessageServiceTest {
                             .type(Tool.Type.CUSTOM)
                             .build()
                     )
-                    .topK(5L)
-                    .topP(0.7)
                     .build()
             )
 
@@ -224,7 +221,6 @@ internal class MessageServiceTest {
                                 .build()
                         )
                     )
-                    .temperature(1.0)
                     .thinking(
                         ThinkingConfigAdaptive.builder()
                             .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -266,8 +262,6 @@ internal class MessageServiceTest {
                             .type(Tool.Type.CUSTOM)
                             .build()
                     )
-                    .topK(5L)
-                    .topP(0.7)
                     .build()
             )
 

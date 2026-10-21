@@ -17,6 +17,7 @@ import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -318,7 +319,7 @@ internal class WorkloadIdentityCredentialsTest {
     }
 
     private fun extractBody(request: HttpRequest): String {
-        val body = request.body ?: return ""
+        val body = request.body().getOrNull() ?: return ""
         val outputStream = ByteArrayOutputStream()
         body.writeTo(outputStream)
         return outputStream.toString("UTF-8")
@@ -345,7 +346,7 @@ internal class WorkloadIdentityCredentialsTest {
     private class MockHttpClient(private val syncHandler: (HttpRequest) -> HttpResponse) :
         HttpClient {
         override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
-            assertThat(requestOptions.followRedirects).isFalse()
+            assertThat(requestOptions.followRedirects()).hasValue(false)
             return syncHandler(request)
         }
 

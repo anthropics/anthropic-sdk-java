@@ -9,18 +9,13 @@ internal class BetaOutputBehaviorCreateNewTest {
 
     @Test
     fun create() {
-        val betaOutputBehaviorCreateNew =
-            BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
-
-        assertThat(betaOutputBehaviorCreateNew.type())
-            .isEqualTo(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
+        val betaOutputBehaviorCreateNew = BetaOutputBehaviorCreateNew.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaOutputBehaviorCreateNew =
-            BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
+        val betaOutputBehaviorCreateNew = BetaOutputBehaviorCreateNew.builder().build()
 
         val roundtrippedBetaOutputBehaviorCreateNew =
             jsonMapper.readValue(

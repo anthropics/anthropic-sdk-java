@@ -120,7 +120,7 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -159,7 +159,7 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                             response
                                 .use { updateHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -196,7 +196,7 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -242,7 +242,7 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                             response
                                 .use { addHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -287,7 +287,7 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                             response
                                 .use { removeHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

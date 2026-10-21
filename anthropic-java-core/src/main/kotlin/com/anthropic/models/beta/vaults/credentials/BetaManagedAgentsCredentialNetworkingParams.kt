@@ -179,14 +179,6 @@ private constructor(
         fun ofUnrestricted(unrestricted: BetaManagedAgentsUnrestrictedCredentialNetworkingParams) =
             BetaManagedAgentsCredentialNetworkingParams(unrestricted = unrestricted)
 
-        /**
-         * Returns an immutable instance of [BetaManagedAgentsCredentialNetworkingParams] whose
-         * [ofUnrestricted] variant is built from the given required [type].
-         */
-        @JvmStatic
-        fun ofUnrestricted(type: BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type) =
-            ofUnrestricted(BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(type))
-
         /** Substitute the secret only on requests to the listed hosts. */
         @JvmStatic
         fun ofLimited(limited: BetaManagedAgentsLimitedCredentialNetworkingParams) =
@@ -198,12 +190,7 @@ private constructor(
          */
         @JvmStatic
         fun ofLimited(allowedHosts: List<String>) =
-            ofLimited(
-                BetaManagedAgentsLimitedCredentialNetworkingParams.builder()
-                    .type(BetaManagedAgentsLimitedCredentialNetworkingParams.Type.LIMITED)
-                    .allowedHosts(allowedHosts)
-                    .build()
-            )
+            ofLimited(BetaManagedAgentsLimitedCredentialNetworkingParams.of(allowedHosts))
     }
 
     /**

@@ -322,25 +322,12 @@ private constructor(
          */
         @JvmStatic
         fun ofUserMessage(content: List<BetaManagedAgentsUserMessageEventParams.Content>) =
-            ofUserMessage(
-                BetaManagedAgentsUserMessageEventParams.builder()
-                    .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
-                    .content(content)
-                    .build()
-            )
+            ofUserMessage(BetaManagedAgentsUserMessageEventParams.of(content))
 
         /** Parameters for sending an interrupt to pause the agent. */
         @JvmStatic
         fun ofUserInterrupt(userInterrupt: BetaManagedAgentsUserInterruptEventParams) =
             BetaManagedAgentsEventParams(userInterrupt = userInterrupt)
-
-        /**
-         * Returns an immutable instance of [BetaManagedAgentsEventParams] whose [ofUserInterrupt]
-         * variant is built from the given required [type].
-         */
-        @JvmStatic
-        fun ofUserInterrupt(type: BetaManagedAgentsUserInterruptEventParams.Type) =
-            ofUserInterrupt(BetaManagedAgentsUserInterruptEventParams.of(type))
 
         /** Parameters for confirming or denying a tool execution request. */
         @JvmStatic
@@ -361,13 +348,7 @@ private constructor(
         @JvmStatic
         fun ofUserCustomToolResult(customToolUseId: String) =
             ofUserCustomToolResult(
-                BetaManagedAgentsUserCustomToolResultEventParams.builder()
-                    .type(
-                        BetaManagedAgentsUserCustomToolResultEventParams.Type
-                            .USER_CUSTOM_TOOL_RESULT
-                    )
-                    .customToolUseId(customToolUseId)
-                    .build()
+                BetaManagedAgentsUserCustomToolResultEventParams.of(customToolUseId)
             )
 
         /**
@@ -393,12 +374,7 @@ private constructor(
          */
         @JvmStatic
         fun ofUserToolResult(toolUseId: String) =
-            ofUserToolResult(
-                BetaManagedAgentsUserToolResultEventParams.builder()
-                    .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
-                    .toolUseId(toolUseId)
-                    .build()
-            )
+            ofUserToolResult(BetaManagedAgentsUserToolResultEventParams.of(toolUseId))
 
         /**
          * Privileged context for the accompanying turn and all subsequent turns, appended to the
@@ -417,12 +393,7 @@ private constructor(
          */
         @JvmStatic
         fun ofSystemMessage(content: List<BetaManagedAgentsSystemContentBlock>) =
-            ofSystemMessage(
-                BetaManagedAgentsSystemMessageEventParams.builder()
-                    .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
-                    .content(content)
-                    .build()
-            )
+            ofSystemMessage(BetaManagedAgentsSystemMessageEventParams.of(content))
     }
 
     /**

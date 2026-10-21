@@ -198,11 +198,11 @@ class AnthropicOkHttpClientAsync private constructor() {
          * last interceptor receives the underlying HTTP client.
          *
          * Interceptors observe requests in the canonical Anthropic API shape, with the client's
-         * default headers and first-party credentials (`X-Api-Key` or `Authorization`) already
-         * applied, and they observe responses normalized to the Anthropic shape (e.g. Bedrock's
-         * binary event stream is decoded to SSE). Backend-specific adaptation — URL rewriting,
-         * request signing (e.g. AWS SigV4), and backend credentials — happens below the
-         * interceptors and is not visible to them.
+         * default headers and first-party credentials (`Authorization`) already applied, and they
+         * observe responses normalized to the Anthropic shape (e.g. Bedrock's binary event stream
+         * is decoded to SSE). Backend-specific adaptation — URL rewriting, request signing (e.g.
+         * AWS SigV4), and backend credentials — happens below the interceptors and is not visible
+         * to them.
          *
          * Because credentials are applied above the interceptors, an interceptor that wants to
          * replace them must use `replaceHeaders`, not `putHeader` (which would append a duplicate
@@ -465,6 +465,15 @@ class AnthropicOkHttpClientAsync private constructor() {
          *
          * System properties take precedence over environment variables.
          *
+         * A client holds one credential. If [apiKey], [authToken] or [configurationProvider] is set
+         * on this builder, before or after this call, no credential is taken from the system
+         * properties, the environment or a profile on disk. Otherwise the first credential found is
+         * used, in this order: the API key, the auth token, then the chain below. An API key in the
+         * environment comes before an auth token in a system property. An empty value counts as not
+         * set. Passing `null` to [apiKey] or [authToken] after this call drops the one this call
+         * found. When the API key is used and an auth token was found too, [build] prints a warning
+         * to [System.err], once per process.
+         *
          * In addition to the static credentials above, calling this method enables the full
          * credential-resolution chain, which reads these environment variables:
          * - `ANTHROPIC_PROFILE` — selects a named profile from an on-disk config file. When set,
@@ -517,6 +526,9 @@ class AnthropicOkHttpClientAsync private constructor() {
          * Returns an immutable instance of [AnthropicClientAsync].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * @throws IllegalStateException If more than one of [apiKey], [authToken] and
+         *   [configurationProvider] is set.
          */
         fun build(): AnthropicClientAsync {
             val backend = ensureBackend()

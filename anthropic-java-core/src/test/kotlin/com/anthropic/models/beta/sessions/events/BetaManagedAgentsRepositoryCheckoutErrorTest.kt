@@ -13,11 +13,7 @@ internal class BetaManagedAgentsRepositoryCheckoutErrorTest {
             BetaManagedAgentsRepositoryCheckoutError.builder()
                 .message("The requested branch or commit does not exist in the repository.")
                 .repositoryUrl("https://github.com/example-org/example-repo")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsRepositoryCheckoutError.message())
@@ -27,7 +23,7 @@ internal class BetaManagedAgentsRepositoryCheckoutErrorTest {
         assertThat(betaManagedAgentsRepositoryCheckoutError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsRepositoryCheckoutError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
             )
     }
@@ -39,11 +35,7 @@ internal class BetaManagedAgentsRepositoryCheckoutErrorTest {
             BetaManagedAgentsRepositoryCheckoutError.builder()
                 .message("The requested branch or commit does not exist in the repository.")
                 .repositoryUrl("https://github.com/example-org/example-repo")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsRepositoryCheckoutError =

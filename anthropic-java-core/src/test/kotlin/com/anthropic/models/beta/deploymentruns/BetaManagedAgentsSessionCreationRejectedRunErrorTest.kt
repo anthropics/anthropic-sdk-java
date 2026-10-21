@@ -10,33 +10,16 @@ internal class BetaManagedAgentsSessionCreationRejectedRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsSessionCreationRejectedRunError =
-            BetaManagedAgentsSessionCreationRejectedRunError.builder()
-                .message("message")
-                .type(
-                    BetaManagedAgentsSessionCreationRejectedRunError.Type
-                        .SESSION_CREATION_REJECTED_ERROR
-                )
-                .build()
+            BetaManagedAgentsSessionCreationRejectedRunError.of("message")
 
         assertThat(betaManagedAgentsSessionCreationRejectedRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsSessionCreationRejectedRunError.type())
-            .isEqualTo(
-                BetaManagedAgentsSessionCreationRejectedRunError.Type
-                    .SESSION_CREATION_REJECTED_ERROR
-            )
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionCreationRejectedRunError =
-            BetaManagedAgentsSessionCreationRejectedRunError.builder()
-                .message("message")
-                .type(
-                    BetaManagedAgentsSessionCreationRejectedRunError.Type
-                        .SESSION_CREATION_REJECTED_ERROR
-                )
-                .build()
+            BetaManagedAgentsSessionCreationRejectedRunError.of("message")
 
         val roundtrippedBetaManagedAgentsSessionCreationRejectedRunError =
             jsonMapper.readValue(

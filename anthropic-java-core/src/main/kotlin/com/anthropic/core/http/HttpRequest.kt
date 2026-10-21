@@ -6,17 +6,18 @@ import com.anthropic.core.contentToString
 import com.anthropic.core.toImmutable
 import java.net.URLEncoder
 import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class HttpRequest
 private constructor(
     @get:JvmName("method") val method: HttpMethod,
-    @get:JvmName("baseUrl") val baseUrl: String?,
+    @get:JvmName("baseUrl") val baseUrl: String,
     @get:JvmName("pathSegments") val pathSegments: List<String>,
     @get:JvmName("headers") val headers: Headers,
     @get:JvmName("queryParams") val queryParams: QueryParams,
-    @get:JvmName("body") val body: HttpRequestBody?,
+    private val body: HttpRequestBody?,
 ) {
+
+    fun body(): Optional<HttpRequestBody> = Optional.ofNullable(body)
 
     fun url(): String = buildString {
         append(baseUrl)
@@ -88,10 +89,7 @@ private constructor(
 
         fun method(method: HttpMethod) = apply { this.method = method }
 
-        fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl }
-
-        /** Alias for calling [Builder.baseUrl] with `baseUrl.orElse(null)`. */
-        fun baseUrl(baseUrl: Optional<String>) = baseUrl(baseUrl.getOrNull())
+        fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl }
 
         fun addPathSegment(pathSegment: String) = apply {
             pathSegments.add(checkPathSegment(pathSegment))
@@ -195,7 +193,7 @@ private constructor(
         fun build(): HttpRequest =
             HttpRequest(
                 checkRequired("method", method),
-                baseUrl,
+                checkRequired("baseUrl", baseUrl),
                 pathSegments.toImmutable(),
                 headers.build(),
                 queryParams.build(),

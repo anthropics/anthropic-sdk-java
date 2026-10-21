@@ -72,7 +72,6 @@ internal class MessageCreateParamsTest {
                         .build()
                 )
             )
-            .temperature(1.0)
             .thinking(
                 ThinkingConfigAdaptive.builder()
                     .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -111,8 +110,6 @@ internal class MessageCreateParamsTest {
                     .type(Tool.Type.CUSTOM)
                     .build()
             )
-            .topK(5L)
-            .topP(0.7)
             .build()
     }
 
@@ -181,7 +178,6 @@ internal class MessageCreateParamsTest {
                             .build()
                     )
                 )
-                .temperature(1.0)
                 .thinking(
                     ThinkingConfigAdaptive.builder()
                         .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -220,8 +216,6 @@ internal class MessageCreateParamsTest {
                         .type(Tool.Type.CUSTOM)
                         .build()
                 )
-                .topK(5L)
-                .topP(0.7)
                 .build()
 
         val headers = params._headers()
@@ -314,7 +308,6 @@ internal class MessageCreateParamsTest {
                             .build()
                     )
                 )
-                .temperature(1.0)
                 .thinking(
                     ThinkingConfigAdaptive.builder()
                         .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -353,8 +346,6 @@ internal class MessageCreateParamsTest {
                         .type(Tool.Type.CUSTOM)
                         .build()
                 )
-                .topK(5L)
-                .topP(0.7)
                 .build()
 
         val body = params._body()
@@ -362,7 +353,7 @@ internal class MessageCreateParamsTest {
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
             .containsExactly(
-                MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
+                MessageParam.ofUser(UserMessageParam.builder().content("Hello, world").build())
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
         assertThat(body.cacheControl())
@@ -427,7 +418,6 @@ internal class MessageCreateParamsTest {
                     )
                 )
             )
-        assertThat(body.temperature()).contains(1.0)
         assertThat(body.thinking())
             .contains(
                 ThinkingConfigParam.ofAdaptive(
@@ -475,8 +465,6 @@ internal class MessageCreateParamsTest {
                         .build()
                 )
             )
-        assertThat(body.topK()).contains(5L)
-        assertThat(body.topP()).contains(0.7)
     }
 
     @Test
@@ -493,7 +481,7 @@ internal class MessageCreateParamsTest {
         assertThat(body.maxTokens()).isEqualTo(1024L)
         assertThat(body.messages())
             .containsExactly(
-                MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
+                MessageParam.ofUser(UserMessageParam.builder().content("Hello, world").build())
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
     }

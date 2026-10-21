@@ -10,34 +10,17 @@ internal class BetaManagedAgentsSelfHostedResourcesUnsupportedRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsSelfHostedResourcesUnsupportedRunError =
-            BetaManagedAgentsSelfHostedResourcesUnsupportedRunError.builder()
-                .message("message")
-                .type(
-                    BetaManagedAgentsSelfHostedResourcesUnsupportedRunError.Type
-                        .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
-                )
-                .build()
+            BetaManagedAgentsSelfHostedResourcesUnsupportedRunError.of("message")
 
         assertThat(betaManagedAgentsSelfHostedResourcesUnsupportedRunError.message())
             .isEqualTo("message")
-        assertThat(betaManagedAgentsSelfHostedResourcesUnsupportedRunError.type())
-            .isEqualTo(
-                BetaManagedAgentsSelfHostedResourcesUnsupportedRunError.Type
-                    .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
-            )
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSelfHostedResourcesUnsupportedRunError =
-            BetaManagedAgentsSelfHostedResourcesUnsupportedRunError.builder()
-                .message("message")
-                .type(
-                    BetaManagedAgentsSelfHostedResourcesUnsupportedRunError.Type
-                        .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
-                )
-                .build()
+            BetaManagedAgentsSelfHostedResourcesUnsupportedRunError.of("message")
 
         val roundtrippedBetaManagedAgentsSelfHostedResourcesUnsupportedRunError =
             jsonMapper.readValue(

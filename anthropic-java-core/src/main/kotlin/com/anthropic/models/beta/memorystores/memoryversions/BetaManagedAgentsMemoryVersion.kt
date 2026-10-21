@@ -1,6 +1,5 @@
 package com.anthropic.models.beta.memorystores.memoryversions
 
-import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -40,7 +39,7 @@ private constructor(
     private val memoryId: JsonField<String>,
     private val memoryStoreId: JsonField<String>,
     private val operation: JsonField<BetaManagedAgentsMemoryVersionOperation>,
-    private val type: JsonField<Type>,
+    private val type: JsonValue,
     private val content: JsonField<String>,
     private val contentSha256: JsonField<String>,
     private val contentSizeBytes: JsonField<Int>,
@@ -64,7 +63,7 @@ private constructor(
         @JsonProperty("operation")
         @ExcludeMissing
         operation: JsonField<BetaManagedAgentsMemoryVersionOperation> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("content") @ExcludeMissing content: JsonField<String> = JsonMissing.of(),
         @JsonProperty("content_sha256")
         @ExcludeMissing
@@ -145,10 +144,15 @@ private constructor(
     fun operation(): BetaManagedAgentsMemoryVersionOperation = operation.getRequired("operation")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("memory_version")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
-    fun type(): Type = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * The memory's UTF-8 text content as of this version. `null` when `view=basic`, when
@@ -268,13 +272,6 @@ private constructor(
     fun _operation(): JsonField<BetaManagedAgentsMemoryVersionOperation> = operation
 
     /**
-     * Returns the raw JSON value of [type].
-     *
-     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-    /**
      * Returns the raw JSON value of [content].
      *
      * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
@@ -359,7 +356,6 @@ private constructor(
          * .memoryId()
          * .memoryStoreId()
          * .operation()
-         * .type()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -373,7 +369,7 @@ private constructor(
         private var memoryId: JsonField<String>? = null
         private var memoryStoreId: JsonField<String>? = null
         private var operation: JsonField<BetaManagedAgentsMemoryVersionOperation>? = null
-        private var type: JsonField<Type>? = null
+        private var type: JsonValue = JsonValue.from("memory_version")
         private var content: JsonField<String> = JsonMissing.of()
         private var contentSha256: JsonField<String> = JsonMissing.of()
         private var contentSizeBytes: JsonField<Int> = JsonMissing.of()
@@ -472,15 +468,19 @@ private constructor(
             this.operation = operation
         }
 
-        fun type(type: Type) = type(JsonField.of(type))
-
         /**
-         * Sets [Builder.type] to an arbitrary JSON value.
+         * Sets the field to an arbitrary JSON value.
          *
-         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("memory_version")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         /**
          * The memory's UTF-8 text content as of this version. `null` when `view=basic`, when
@@ -584,18 +584,12 @@ private constructor(
          * Alias for calling [createdBy] with the following:
          * ```java
          * BetaManagedAgentsSessionActor.builder()
-         *     .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
          *     .sessionId(sessionId)
          *     .build()
          * ```
          */
         fun sessionCreatedBy(sessionId: String) =
-            createdBy(
-                BetaManagedAgentsSessionActor.builder()
-                    .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
-                    .sessionId(sessionId)
-                    .build()
-            )
+            createdBy(BetaManagedAgentsSessionActor.builder().sessionId(sessionId).build())
 
         /** Alias for calling [createdBy] with `BetaManagedAgentsActor.ofApi(api)`. */
         fun createdBy(api: BetaManagedAgentsApiActor) = createdBy(BetaManagedAgentsActor.ofApi(api))
@@ -604,18 +598,12 @@ private constructor(
          * Alias for calling [createdBy] with the following:
          * ```java
          * BetaManagedAgentsApiActor.builder()
-         *     .type(BetaManagedAgentsApiActor.Type.API_ACTOR)
          *     .apiKeyId(apiKeyId)
          *     .build()
          * ```
          */
         fun apiCreatedBy(apiKeyId: String) =
-            createdBy(
-                BetaManagedAgentsApiActor.builder()
-                    .type(BetaManagedAgentsApiActor.Type.API_ACTOR)
-                    .apiKeyId(apiKeyId)
-                    .build()
-            )
+            createdBy(BetaManagedAgentsApiActor.builder().apiKeyId(apiKeyId).build())
 
         /** Alias for calling [createdBy] with `BetaManagedAgentsActor.ofUser(user)`. */
         fun createdBy(user: BetaManagedAgentsUserActor) =
@@ -625,18 +613,12 @@ private constructor(
          * Alias for calling [createdBy] with the following:
          * ```java
          * BetaManagedAgentsUserActor.builder()
-         *     .type(BetaManagedAgentsUserActor.Type.USER_ACTOR)
          *     .userId(userId)
          *     .build()
          * ```
          */
         fun userCreatedBy(userId: String) =
-            createdBy(
-                BetaManagedAgentsUserActor.builder()
-                    .type(BetaManagedAgentsUserActor.Type.USER_ACTOR)
-                    .userId(userId)
-                    .build()
-            )
+            createdBy(BetaManagedAgentsUserActor.builder().userId(userId).build())
 
         /**
          * Alias for calling [createdBy] with
@@ -727,18 +709,12 @@ private constructor(
          * Alias for calling [redactedBy] with the following:
          * ```java
          * BetaManagedAgentsSessionActor.builder()
-         *     .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
          *     .sessionId(sessionId)
          *     .build()
          * ```
          */
         fun sessionRedactedBy(sessionId: String) =
-            redactedBy(
-                BetaManagedAgentsSessionActor.builder()
-                    .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
-                    .sessionId(sessionId)
-                    .build()
-            )
+            redactedBy(BetaManagedAgentsSessionActor.builder().sessionId(sessionId).build())
 
         /** Alias for calling [redactedBy] with `BetaManagedAgentsActor.ofApi(api)`. */
         fun redactedBy(api: BetaManagedAgentsApiActor) =
@@ -748,18 +724,12 @@ private constructor(
          * Alias for calling [redactedBy] with the following:
          * ```java
          * BetaManagedAgentsApiActor.builder()
-         *     .type(BetaManagedAgentsApiActor.Type.API_ACTOR)
          *     .apiKeyId(apiKeyId)
          *     .build()
          * ```
          */
         fun apiRedactedBy(apiKeyId: String) =
-            redactedBy(
-                BetaManagedAgentsApiActor.builder()
-                    .type(BetaManagedAgentsApiActor.Type.API_ACTOR)
-                    .apiKeyId(apiKeyId)
-                    .build()
-            )
+            redactedBy(BetaManagedAgentsApiActor.builder().apiKeyId(apiKeyId).build())
 
         /** Alias for calling [redactedBy] with `BetaManagedAgentsActor.ofUser(user)`. */
         fun redactedBy(user: BetaManagedAgentsUserActor) =
@@ -769,18 +739,12 @@ private constructor(
          * Alias for calling [redactedBy] with the following:
          * ```java
          * BetaManagedAgentsUserActor.builder()
-         *     .type(BetaManagedAgentsUserActor.Type.USER_ACTOR)
          *     .userId(userId)
          *     .build()
          * ```
          */
         fun userRedactedBy(userId: String) =
-            redactedBy(
-                BetaManagedAgentsUserActor.builder()
-                    .type(BetaManagedAgentsUserActor.Type.USER_ACTOR)
-                    .userId(userId)
-                    .build()
-            )
+            redactedBy(BetaManagedAgentsUserActor.builder().userId(userId).build())
 
         /**
          * Alias for calling [redactedBy] with
@@ -835,7 +799,6 @@ private constructor(
          * .memoryId()
          * .memoryStoreId()
          * .operation()
-         * .type()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -847,7 +810,7 @@ private constructor(
                 checkRequired("memoryId", memoryId),
                 checkRequired("memoryStoreId", memoryStoreId),
                 checkRequired("operation", operation),
-                checkRequired("type", type),
+                type,
                 content,
                 contentSha256,
                 contentSizeBytes,
@@ -879,7 +842,11 @@ private constructor(
         memoryId()
         memoryStoreId()
         operation().validate()
-        type().validate()
+        _type().let {
+            if (it != JsonValue.from("memory_version")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         content()
         contentSha256()
         contentSizeBytes()
@@ -910,7 +877,7 @@ private constructor(
             (if (memoryId.asKnown().isPresent) 1 else 0) +
             (if (memoryStoreId.asKnown().isPresent) 1 else 0) +
             (operation.asKnown().getOrNull()?.validity() ?: 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("memory_version")) 1 else 0 } +
             (if (content.asKnown().isPresent) 1 else 0) +
             (if (contentSha256.asKnown().isPresent) 1 else 0) +
             (if (contentSizeBytes.asKnown().isPresent) 1 else 0) +
@@ -918,147 +885,6 @@ private constructor(
             (if (path.asKnown().isPresent) 1 else 0) +
             (if (redactedAt.asKnown().isPresent) 1 else 0) +
             (redactedBy.asKnown().getOrNull()?.validity() ?: 0)
-
-    class Type private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val MEMORY_VERSION = Type(JsonField.of("memory_version"))
-
-            @JvmStatic
-            fun of(value: String): Type =
-                // Intern known values so `==` works
-                when (value) {
-                    "memory_version" -> MEMORY_VERSION
-                    else -> Type(JsonField.of(value))
-                }
-
-            @JsonCreator
-            @JvmStatic
-            fun of(value: JsonField<String>): Type =
-                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            MEMORY_VERSION
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            MEMORY_VERSION,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                MEMORY_VERSION -> Value.MEMORY_VERSION
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                MEMORY_VERSION -> Known.MEMORY_VERSION
-                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): Type = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Type && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

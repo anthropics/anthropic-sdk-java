@@ -201,20 +201,20 @@ private constructor(
             )
 
         /**
+         * Returns an immutable instance of [BetaManagedAgentsMultiagentPredefinedAgentParams] whose
+         * [ofBetaManagedAgentsAgentParams] variant is built from the given required [id].
+         */
+        @JvmStatic
+        fun ofBetaManagedAgentsAgentParams(id: String) =
+            ofBetaManagedAgentsAgentParams(BetaManagedAgentsAgentParams.of(id))
+
+        /**
          * Sentinel roster entry meaning "the agent that owns this configuration". Resolved
          * server-side to a concrete agent reference.
          */
         @JvmStatic
         fun ofSelf(self: BetaManagedAgentsMultiagentSelfParams) =
             BetaManagedAgentsMultiagentPredefinedAgentParams(self = self)
-
-        /**
-         * Returns an immutable instance of [BetaManagedAgentsMultiagentPredefinedAgentParams] whose
-         * [ofSelf] variant is built from the given required [type].
-         */
-        @JvmStatic
-        fun ofSelf(type: BetaManagedAgentsMultiagentSelfParams.Type) =
-            ofSelf(BetaManagedAgentsMultiagentSelfParams.of(type))
     }
 
     /**

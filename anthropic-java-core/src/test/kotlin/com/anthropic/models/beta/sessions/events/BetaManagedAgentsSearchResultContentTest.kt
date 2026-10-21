@@ -9,25 +9,15 @@ internal class BetaManagedAgentsSearchResultContentTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsSearchResultContent =
-            BetaManagedAgentsSearchResultContent.builder()
-                .text("x")
-                .type(BetaManagedAgentsSearchResultContent.Type.TEXT)
-                .build()
+        val betaManagedAgentsSearchResultContent = BetaManagedAgentsSearchResultContent.of("x")
 
         assertThat(betaManagedAgentsSearchResultContent.text()).isEqualTo("x")
-        assertThat(betaManagedAgentsSearchResultContent.type())
-            .isEqualTo(BetaManagedAgentsSearchResultContent.Type.TEXT)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsSearchResultContent =
-            BetaManagedAgentsSearchResultContent.builder()
-                .text("x")
-                .type(BetaManagedAgentsSearchResultContent.Type.TEXT)
-                .build()
+        val betaManagedAgentsSearchResultContent = BetaManagedAgentsSearchResultContent.of("x")
 
         val roundtrippedBetaManagedAgentsSearchResultContent =
             jsonMapper.readValue(

@@ -8,6 +8,7 @@ import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.lang.System.clearProperty
 import java.lang.System.setProperty
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -404,19 +405,8 @@ internal class BedrockMantleBackendTest {
     // --- Prepare request tests ---
 
     @Test
-    fun prepareRequestAddsVersionHeader() {
-        val backend =
-            BedrockMantleBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
-        val request = createRequest()
-        val prepared = backend.prepareRequest(request)
-
-        assertThat(prepared.headers.values("anthropic-version")).containsExactly("2023-06-01")
-    }
-
-    @Test
-    fun prepareRequestPreservesExistingVersionHeader() {
-        // A user-supplied "anthropic-version" (e.g. set by an interceptor) must win over the
-        // default instead of throwing.
+    fun prepareRequestKeepsVersionHeader() {
+        // The client sets "anthropic-version" on every request; the backend must not touch it.
         val backend =
             BedrockMantleBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
         val request =
@@ -425,17 +415,6 @@ internal class BedrockMantleBackendTest {
         val prepared = backend.prepareRequest(request)
 
         assertThat(prepared.headers.values("anthropic-version")).containsExactly("2024-01-01")
-    }
-
-    @Test
-    fun prepareRequestIsIdempotent() {
-        val backend =
-            BedrockMantleBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
-        val prepared = backend.prepareRequest(createRequest())
-
-        val reprepared = backend.prepareRequest(prepared)
-
-        assertThat(reprepared.headers.values("anthropic-version")).containsExactly("2023-06-01")
     }
 
     @ParameterizedTest(name = "{0}")
@@ -451,7 +430,7 @@ internal class BedrockMantleBackendTest {
         val prepared = backend.prepareRequest(request)
 
         assertThat(prepared.headers.names()).doesNotContain(HEADER_USER_PROFILE_ID)
-        assertThat(bodyToJson(jsonMapper(), prepared.body))
+        assertThat(bodyToJson(jsonMapper(), prepared.body().getOrNull()))
             .isEqualTo(jsonMapper().readTree(expectedBody))
     }
 
@@ -463,7 +442,7 @@ internal class BedrockMantleBackendTest {
 
         val prepared = backend.prepareRequest(request)
 
-        assertThat(prepared.body).isSameAs(request.body)
+        assertThat(prepared.body().get()).isSameAs(request.body().get())
     }
 
     @ParameterizedTest(name = "{0}")
@@ -475,7 +454,7 @@ internal class BedrockMantleBackendTest {
         val prepared = backend.prepareRequest(request)
 
         assertThat(prepared.headers.values(HEADER_USER_PROFILE_ID)).containsExactly(USER_PROFILE_ID)
-        assertThat(prepared.body).isSameAs(request.body)
+        assertThat(prepared.body().get()).isSameAs(request.body().get())
     }
 
     // --- Skip auth tests ---

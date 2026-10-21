@@ -9,25 +9,15 @@ internal class BetaManagedAgentsTextBlockTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsTextBlock =
-            BetaManagedAgentsTextBlock.builder()
-                .text("Where is my order #1234?")
-                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                .build()
+        val betaManagedAgentsTextBlock = BetaManagedAgentsTextBlock.of("Where is my order #1234?")
 
         assertThat(betaManagedAgentsTextBlock.text()).isEqualTo("Where is my order #1234?")
-        assertThat(betaManagedAgentsTextBlock.type())
-            .isEqualTo(BetaManagedAgentsTextBlock.Type.TEXT)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsTextBlock =
-            BetaManagedAgentsTextBlock.builder()
-                .text("Where is my order #1234?")
-                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                .build()
+        val betaManagedAgentsTextBlock = BetaManagedAgentsTextBlock.of("Where is my order #1234?")
 
         val roundtrippedBetaManagedAgentsTextBlock =
             jsonMapper.readValue(

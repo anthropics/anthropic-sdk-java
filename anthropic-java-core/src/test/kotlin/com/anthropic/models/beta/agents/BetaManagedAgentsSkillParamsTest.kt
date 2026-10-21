@@ -15,11 +15,7 @@ internal class BetaManagedAgentsSkillParamsTest {
     @Test
     fun ofAnthropic() {
         val anthropic =
-            BetaManagedAgentsAnthropicSkillParams.builder()
-                .skillId("xlsx")
-                .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
-                .version("1")
-                .build()
+            BetaManagedAgentsAnthropicSkillParams.builder().skillId("xlsx").version("1").build()
 
         val betaManagedAgentsSkillParams = BetaManagedAgentsSkillParams.ofAnthropic(anthropic)
 
@@ -32,11 +28,7 @@ internal class BetaManagedAgentsSkillParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSkillParams =
             BetaManagedAgentsSkillParams.ofAnthropic(
-                BetaManagedAgentsAnthropicSkillParams.builder()
-                    .skillId("xlsx")
-                    .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
-                    .version("1")
-                    .build()
+                BetaManagedAgentsAnthropicSkillParams.builder().skillId("xlsx").version("1").build()
             )
 
         val roundtrippedBetaManagedAgentsSkillParams =
@@ -53,7 +45,6 @@ internal class BetaManagedAgentsSkillParamsTest {
         val custom =
             BetaManagedAgentsCustomSkillParams.builder()
                 .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
                 .version("2")
                 .build()
 
@@ -70,7 +61,6 @@ internal class BetaManagedAgentsSkillParamsTest {
             BetaManagedAgentsSkillParams.ofCustom(
                 BetaManagedAgentsCustomSkillParams.builder()
                     .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                    .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
                     .version("2")
                     .build()
             )

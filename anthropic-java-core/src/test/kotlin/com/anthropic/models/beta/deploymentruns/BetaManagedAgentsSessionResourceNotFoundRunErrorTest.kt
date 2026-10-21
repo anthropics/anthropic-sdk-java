@@ -10,33 +10,16 @@ internal class BetaManagedAgentsSessionResourceNotFoundRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsSessionResourceNotFoundRunError =
-            BetaManagedAgentsSessionResourceNotFoundRunError.builder()
-                .message("message")
-                .type(
-                    BetaManagedAgentsSessionResourceNotFoundRunError.Type
-                        .SESSION_RESOURCE_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsSessionResourceNotFoundRunError.of("message")
 
         assertThat(betaManagedAgentsSessionResourceNotFoundRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsSessionResourceNotFoundRunError.type())
-            .isEqualTo(
-                BetaManagedAgentsSessionResourceNotFoundRunError.Type
-                    .SESSION_RESOURCE_NOT_FOUND_ERROR
-            )
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionResourceNotFoundRunError =
-            BetaManagedAgentsSessionResourceNotFoundRunError.builder()
-                .message("message")
-                .type(
-                    BetaManagedAgentsSessionResourceNotFoundRunError.Type
-                        .SESSION_RESOURCE_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsSessionResourceNotFoundRunError.of("message")
 
         val roundtrippedBetaManagedAgentsSessionResourceNotFoundRunError =
             jsonMapper.readValue(

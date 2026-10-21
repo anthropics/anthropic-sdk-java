@@ -338,13 +338,7 @@ internal class BetaManagedAgentsErrorTest {
     @Test
     fun ofMemoryPreconditionFailed() {
         val memoryPreconditionFailed =
-            BetaManagedAgentsMemoryPreconditionFailedError.builder()
-                .type(
-                    BetaManagedAgentsMemoryPreconditionFailedError.Type
-                        .MEMORY_PRECONDITION_FAILED_ERROR
-                )
-                .message("message")
-                .build()
+            BetaManagedAgentsMemoryPreconditionFailedError.builder().message("message").build()
 
         val betaManagedAgentsError =
             BetaManagedAgentsError.ofMemoryPreconditionFailed(memoryPreconditionFailed)
@@ -369,13 +363,7 @@ internal class BetaManagedAgentsErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsError =
             BetaManagedAgentsError.ofMemoryPreconditionFailed(
-                BetaManagedAgentsMemoryPreconditionFailedError.builder()
-                    .type(
-                        BetaManagedAgentsMemoryPreconditionFailedError.Type
-                            .MEMORY_PRECONDITION_FAILED_ERROR
-                    )
-                    .message("message")
-                    .build()
+                BetaManagedAgentsMemoryPreconditionFailedError.builder().message("message").build()
             )
 
         val roundtrippedBetaManagedAgentsError =
@@ -391,7 +379,6 @@ internal class BetaManagedAgentsErrorTest {
     fun ofMemoryPathConflict() {
         val memoryPathConflict =
             BetaManagedAgentsMemoryPathConflictError.builder()
-                .type(BetaManagedAgentsMemoryPathConflictError.Type.MEMORY_PATH_CONFLICT_ERROR)
                 .conflictingMemoryId("conflicting_memory_id")
                 .conflictingPath("conflicting_path")
                 .message("message")
@@ -419,7 +406,6 @@ internal class BetaManagedAgentsErrorTest {
         val betaManagedAgentsError =
             BetaManagedAgentsError.ofMemoryPathConflict(
                 BetaManagedAgentsMemoryPathConflictError.builder()
-                    .type(BetaManagedAgentsMemoryPathConflictError.Type.MEMORY_PATH_CONFLICT_ERROR)
                     .conflictingMemoryId("conflicting_memory_id")
                     .conflictingPath("conflicting_path")
                     .message("message")
@@ -437,11 +423,7 @@ internal class BetaManagedAgentsErrorTest {
 
     @Test
     fun ofConflict() {
-        val conflict =
-            BetaManagedAgentsConflictError.builder()
-                .type(BetaManagedAgentsConflictError.Type.CONFLICT_ERROR)
-                .message("message")
-                .build()
+        val conflict = BetaManagedAgentsConflictError.builder().message("message").build()
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofConflict(conflict)
 
@@ -464,10 +446,7 @@ internal class BetaManagedAgentsErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsError =
             BetaManagedAgentsError.ofConflict(
-                BetaManagedAgentsConflictError.builder()
-                    .type(BetaManagedAgentsConflictError.Type.CONFLICT_ERROR)
-                    .message("message")
-                    .build()
+                BetaManagedAgentsConflictError.builder().message("message").build()
             )
 
         val roundtrippedBetaManagedAgentsError =

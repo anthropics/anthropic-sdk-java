@@ -207,6 +207,12 @@ private constructor(
             BetaManagedAgentsMultiagentRosterEntryParams(agent = agent)
 
         /**
+         * Returns an immutable instance of [BetaManagedAgentsMultiagentRosterEntryParams] whose
+         * [ofAgent] variant is built from the given required [id].
+         */
+        @JvmStatic fun ofAgent(id: String) = ofAgent(BetaManagedAgentsAgentParams.of(id))
+
+        /**
          * Sentinel roster entry meaning "the agent that owns this configuration". Resolved
          * server-side to a concrete agent reference.
          */
@@ -215,20 +221,19 @@ private constructor(
             BetaManagedAgentsMultiagentRosterEntryParams(self = self)
 
         /**
-         * Returns an immutable instance of [BetaManagedAgentsMultiagentRosterEntryParams] whose
-         * [ofSelf] variant is built from the given required [type].
-         */
-        @JvmStatic
-        fun ofSelf(type: BetaManagedAgentsMultiagentSelfParams.Type) =
-            ofSelf(BetaManagedAgentsMultiagentSelfParams.of(type))
-
-        /**
          * Platform advisor roster entry: a model the session's primary thread may consult mid-turn.
          * At most one per roster; the entry occupies the roster name `anthropic.advisor`.
          */
         @JvmStatic
         fun ofAdvisor(advisor: BetaManagedAgentsAdvisorParams) =
             BetaManagedAgentsMultiagentRosterEntryParams(advisor = advisor)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsMultiagentRosterEntryParams] whose
+         * [ofAdvisor] variant is built from the given required [model].
+         */
+        @JvmStatic
+        fun ofAdvisor(model: String) = ofAdvisor(BetaManagedAgentsAdvisorParams.of(model))
     }
 
     /**

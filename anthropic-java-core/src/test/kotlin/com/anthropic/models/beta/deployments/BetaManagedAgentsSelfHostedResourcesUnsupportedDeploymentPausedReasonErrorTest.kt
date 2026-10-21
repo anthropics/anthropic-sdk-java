@@ -10,28 +10,16 @@ internal class BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedRe
     @Test
     fun create() {
         val betaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError =
-            BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.of(
-                BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.Type
-                    .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
-            )
-
-        assertThat(
-                betaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.type()
-            )
-            .isEqualTo(
-                BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.Type
-                    .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
-            )
+            BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.builder()
+                .build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError =
-            BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.of(
-                BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.Type
-                    .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
-            )
+            BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.builder()
+                .build()
 
         val roundtrippedBetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError =
             jsonMapper.readValue(

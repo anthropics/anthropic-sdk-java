@@ -291,7 +291,7 @@ internal class MessageCountTokensParamsTest {
 
         assertThat(body.messages())
             .containsExactly(
-                MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
+                MessageParam.ofUser(UserMessageParam.builder().content("Hello, world").build())
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
         assertThat(body.cacheControl())
@@ -395,7 +395,7 @@ internal class MessageCountTokensParamsTest {
 
         assertThat(body.messages())
             .containsExactly(
-                MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
+                MessageParam.ofUser(UserMessageParam.builder().content("Hello, world").build())
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
     }

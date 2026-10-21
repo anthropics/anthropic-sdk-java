@@ -23,7 +23,6 @@ internal class BetaManagedAgentsMemoryStoreTest {
                         .build()
                 )
                 .name("name")
-                .type(BetaManagedAgentsMemoryStore.Type.MEMORY_STORE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
@@ -40,8 +39,6 @@ internal class BetaManagedAgentsMemoryStoreTest {
                     .build()
             )
         assertThat(betaManagedAgentsMemoryStore.name()).isEqualTo("name")
-        assertThat(betaManagedAgentsMemoryStore.type())
-            .isEqualTo(BetaManagedAgentsMemoryStore.Type.MEMORY_STORE)
         assertThat(betaManagedAgentsMemoryStore.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
@@ -61,7 +58,6 @@ internal class BetaManagedAgentsMemoryStoreTest {
                         .build()
                 )
                 .name("name")
-                .type(BetaManagedAgentsMemoryStore.Type.MEMORY_STORE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 

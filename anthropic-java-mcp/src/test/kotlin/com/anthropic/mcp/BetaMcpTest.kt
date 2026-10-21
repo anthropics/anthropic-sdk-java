@@ -128,6 +128,15 @@ internal class BetaMcpTest {
         assertThat(result.role()).isEqualTo(BetaMessageParam.Role.ASSISTANT)
     }
 
+    @Test
+    fun mcpMessage_noRole_throws() {
+        val message = McpSchema.PromptMessage(null, McpSchema.TextContent("hi"))
+
+        assertThatThrownBy { BetaMcp.mcpMessage(message) }
+            .isInstanceOf(AnthropicInvalidDataException::class.java)
+            .hasMessageContaining("role")
+    }
+
     // --- mcpMessages ---
 
     @Test
@@ -203,9 +212,9 @@ internal class BetaMcpTest {
         val files = BetaMcp.mcpResourceFiles(McpSchema.ReadResourceResult(listOf(resource)))
 
         assertThat(files).hasSize(1)
-        assertThat(files[0].filename).isEqualTo("data.bin")
+        assertThat(files[0].filename()).hasValue("data.bin")
         assertThat(files[0].content).isEqualTo(bytes)
-        assertThat(files[0].mimeType).isEqualTo("application/octet-stream")
+        assertThat(files[0].mimeType()).hasValue("application/octet-stream")
     }
 
     @Test
@@ -215,8 +224,19 @@ internal class BetaMcpTest {
         val files = BetaMcp.mcpResourceFiles(McpSchema.ReadResourceResult(listOf(resource)))
 
         assertThat(files).hasSize(1)
-        assertThat(files[0].filename).isEqualTo("doc.txt")
+        assertThat(files[0].filename()).hasValue("doc.txt")
         assertThat(String(files[0].content)).isEqualTo("hello")
+    }
+
+    @Test
+    fun mcpResourceFiles_withoutFilenameOrMimeType_returnsNeither() {
+        val resource = McpSchema.TextResourceContents("file:///", null, "hello")
+
+        val files = BetaMcp.mcpResourceFiles(McpSchema.ReadResourceResult(listOf(resource)))
+
+        assertThat(files).hasSize(1)
+        assertThat(files[0].filename()).isEmpty
+        assertThat(files[0].mimeType()).isEmpty
     }
 
     @Test
@@ -232,8 +252,8 @@ internal class BetaMcpTest {
         val files = BetaMcp.mcpResourceFiles(McpSchema.ReadResourceResult(listOf(text, blob)))
 
         assertThat(files).hasSize(2)
-        assertThat(files[0].filename).isEqualTo("a.txt")
-        assertThat(files[1].filename).isEqualTo("b.bin")
+        assertThat(files[0].filename()).hasValue("a.txt")
+        assertThat(files[1].filename()).hasValue("b.bin")
     }
 
     @Test

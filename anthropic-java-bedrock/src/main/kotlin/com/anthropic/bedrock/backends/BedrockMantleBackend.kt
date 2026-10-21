@@ -10,6 +10,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.fasterxml.jackson.core.JsonProcessingException
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsCredentials
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
@@ -63,8 +64,6 @@ private constructor(
         /** The AWS SigV4 service signing name for the Bedrock Mantle service. */
         private const val SERVICE_SIGNING_NAME = "bedrock-mantle"
 
-        private const val ANTHROPIC_VERSION = "2023-06-01"
-        private const val HEADER_VERSION = "anthropic-version"
         private const val HEADER_AUTHORIZATION = "authorization"
         private const val HEADER_USER_PROFILE_ID = "anthropic-user-profile-id"
         private const val ENV_API_KEY = "AWS_BEARER_TOKEN_BEDROCK"
@@ -104,11 +103,7 @@ private constructor(
             throw AnthropicException("Service is not supported for Bedrock Mantle: user_profiles.")
         }
 
-        val prepared = moveUserProfileIdToBody(request)
-
-        // A user-supplied "anthropic-version" (e.g. set by an interceptor) wins over the default.
-        return if (prepared.headers.names().contains(HEADER_VERSION)) prepared
-        else prepared.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION).build()
+        return moveUserProfileIdToBody(request)
     }
 
     // Bedrock Mantle reads the user profile from the body and does not pass the header through.
@@ -120,7 +115,7 @@ private constructor(
 
         val jsonBody =
             try {
-                bodyToJson(jsonMapper, request.body)
+                bodyToJson(jsonMapper, request.body().getOrNull())
             } catch (_: JsonProcessingException) {
                 null
             } ?: return request

@@ -10,18 +10,8 @@ internal class BetaManagedAgentsMemoryPreconditionFailedErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsMemoryPreconditionFailedError =
-            BetaManagedAgentsMemoryPreconditionFailedError.builder()
-                .type(
-                    BetaManagedAgentsMemoryPreconditionFailedError.Type
-                        .MEMORY_PRECONDITION_FAILED_ERROR
-                )
-                .message("message")
-                .build()
+            BetaManagedAgentsMemoryPreconditionFailedError.builder().message("message").build()
 
-        assertThat(betaManagedAgentsMemoryPreconditionFailedError.type())
-            .isEqualTo(
-                BetaManagedAgentsMemoryPreconditionFailedError.Type.MEMORY_PRECONDITION_FAILED_ERROR
-            )
         assertThat(betaManagedAgentsMemoryPreconditionFailedError.message()).contains("message")
     }
 
@@ -29,13 +19,7 @@ internal class BetaManagedAgentsMemoryPreconditionFailedErrorTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMemoryPreconditionFailedError =
-            BetaManagedAgentsMemoryPreconditionFailedError.builder()
-                .type(
-                    BetaManagedAgentsMemoryPreconditionFailedError.Type
-                        .MEMORY_PRECONDITION_FAILED_ERROR
-                )
-                .message("message")
-                .build()
+            BetaManagedAgentsMemoryPreconditionFailedError.builder().message("message").build()
 
         val roundtrippedBetaManagedAgentsMemoryPreconditionFailedError =
             jsonMapper.readValue(

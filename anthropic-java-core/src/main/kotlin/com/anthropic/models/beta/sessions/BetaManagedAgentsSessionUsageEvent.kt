@@ -1,6 +1,5 @@
 package com.anthropic.models.beta.sessions
 
-import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -25,7 +24,7 @@ class BetaManagedAgentsSessionUsageEvent
 private constructor(
     private val id: JsonField<String>,
     private val processedAt: JsonField<OffsetDateTime>,
-    private val type: JsonField<Type>,
+    private val type: JsonValue,
     private val usage: JsonField<BetaManagedAgentsSessionUsageSnapshot>,
     private val budget: JsonField<BetaManagedAgentsBudgetLimit>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -37,7 +36,7 @@ private constructor(
         @JsonProperty("processed_at")
         @ExcludeMissing
         processedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("usage")
         @ExcludeMissing
         usage: JsonField<BetaManagedAgentsSessionUsageSnapshot> = JsonMissing.of(),
@@ -63,10 +62,15 @@ private constructor(
     fun processedAt(): OffsetDateTime = processedAt.getRequired("processed_at")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("session.usage")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
-    fun type(): Type = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * The session's cumulative usage at the snapshot time.
@@ -99,13 +103,6 @@ private constructor(
     @JsonProperty("processed_at")
     @ExcludeMissing
     fun _processedAt(): JsonField<OffsetDateTime> = processedAt
-
-    /**
-     * Returns the raw JSON value of [type].
-     *
-     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     /**
      * Returns the raw JSON value of [usage].
@@ -147,7 +144,6 @@ private constructor(
          * ```java
          * .id()
          * .processedAt()
-         * .type()
          * .usage()
          * ```
          */
@@ -159,7 +155,7 @@ private constructor(
 
         private var id: JsonField<String>? = null
         private var processedAt: JsonField<OffsetDateTime>? = null
-        private var type: JsonField<Type>? = null
+        private var type: JsonValue = JsonValue.from("session.usage")
         private var usage: JsonField<BetaManagedAgentsSessionUsageSnapshot>? = null
         private var budget: JsonField<BetaManagedAgentsBudgetLimit> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -201,15 +197,19 @@ private constructor(
             this.processedAt = processedAt
         }
 
-        fun type(type: Type) = type(JsonField.of(type))
-
         /**
-         * Sets [Builder.type] to an arbitrary JSON value.
+         * Sets the field to an arbitrary JSON value.
          *
-         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("session.usage")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         /** The session's cumulative usage at the snapshot time. */
         fun usage(usage: BetaManagedAgentsSessionUsageSnapshot) = usage(JsonField.of(usage))
@@ -247,18 +247,12 @@ private constructor(
          * Alias for calling [budget] with the following:
          * ```java
          * BetaManagedAgentsBudgetLimit.builder()
-         *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
          *     .maxListCost(maxListCost)
          *     .build()
          * ```
          */
         fun limitBudget(maxListCost: BetaMonetaryAmount) =
-            budget(
-                BetaManagedAgentsBudgetLimit.builder()
-                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                    .maxListCost(maxListCost)
-                    .build()
-            )
+            budget(BetaManagedAgentsBudgetLimit.builder().maxListCost(maxListCost).build())
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -288,7 +282,6 @@ private constructor(
          * ```java
          * .id()
          * .processedAt()
-         * .type()
          * .usage()
          * ```
          *
@@ -298,7 +291,7 @@ private constructor(
             BetaManagedAgentsSessionUsageEvent(
                 checkRequired("id", id),
                 checkRequired("processedAt", processedAt),
-                checkRequired("type", type),
+                type,
                 checkRequired("usage", usage),
                 budget,
                 additionalProperties.toMutableMap(),
@@ -322,7 +315,11 @@ private constructor(
 
         id()
         processedAt()
-        type().validate()
+        _type().let {
+            if (it != JsonValue.from("session.usage")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         usage().validate()
         budget().ifPresent { it.validate() }
         validated = true
@@ -345,150 +342,9 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (processedAt.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("session.usage")) 1 else 0 } +
             (usage.asKnown().getOrNull()?.validity() ?: 0) +
             (budget.asKnown().getOrNull()?.validity() ?: 0)
-
-    class Type private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val SESSION_USAGE = Type(JsonField.of("session.usage"))
-
-            @JvmStatic
-            fun of(value: String): Type =
-                // Intern known values so `==` works
-                when (value) {
-                    "session.usage" -> SESSION_USAGE
-                    else -> Type(JsonField.of(value))
-                }
-
-            @JsonCreator
-            @JvmStatic
-            fun of(value: JsonField<String>): Type =
-                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            SESSION_USAGE
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            SESSION_USAGE,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                SESSION_USAGE -> Value.SESSION_USAGE
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                SESSION_USAGE -> Known.SESSION_USAGE
-                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): Type = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Type && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

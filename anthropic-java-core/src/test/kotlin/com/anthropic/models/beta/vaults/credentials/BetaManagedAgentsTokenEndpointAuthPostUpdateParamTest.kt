@@ -10,13 +10,8 @@ internal class BetaManagedAgentsTokenEndpointAuthPostUpdateParamTest {
     @Test
     fun create() {
         val betaManagedAgentsTokenEndpointAuthPostUpdateParam =
-            BetaManagedAgentsTokenEndpointAuthPostUpdateParam.builder()
-                .type(BetaManagedAgentsTokenEndpointAuthPostUpdateParam.Type.CLIENT_SECRET_POST)
-                .clientSecret("x")
-                .build()
+            BetaManagedAgentsTokenEndpointAuthPostUpdateParam.builder().clientSecret("x").build()
 
-        assertThat(betaManagedAgentsTokenEndpointAuthPostUpdateParam.type())
-            .isEqualTo(BetaManagedAgentsTokenEndpointAuthPostUpdateParam.Type.CLIENT_SECRET_POST)
         assertThat(betaManagedAgentsTokenEndpointAuthPostUpdateParam.clientSecret()).contains("x")
     }
 
@@ -24,10 +19,7 @@ internal class BetaManagedAgentsTokenEndpointAuthPostUpdateParamTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsTokenEndpointAuthPostUpdateParam =
-            BetaManagedAgentsTokenEndpointAuthPostUpdateParam.builder()
-                .type(BetaManagedAgentsTokenEndpointAuthPostUpdateParam.Type.CLIENT_SECRET_POST)
-                .clientSecret("x")
-                .build()
+            BetaManagedAgentsTokenEndpointAuthPostUpdateParam.builder().clientSecret("x").build()
 
         val roundtrippedBetaManagedAgentsTokenEndpointAuthPostUpdateParam =
             jsonMapper.readValue(

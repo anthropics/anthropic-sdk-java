@@ -2001,12 +2001,7 @@ private constructor(
          */
         @JvmStatic
         fun ofUserInterrupt(id: String) =
-            ofUserInterrupt(
-                BetaManagedAgentsUserInterruptEvent.builder()
-                    .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
-                    .id(id)
-                    .build()
-            )
+            ofUserInterrupt(BetaManagedAgentsUserInterruptEvent.of(id))
 
         /** A tool confirmation event that approves or denies a pending tool execution. */
         @JvmStatic
@@ -2278,12 +2273,7 @@ private constructor(
          */
         @JvmStatic
         fun ofEventStart(event: BetaManagedAgentsStartEventPreview) =
-            ofEventStart(
-                BetaManagedAgentsStartEvent.builder()
-                    .type(BetaManagedAgentsStartEvent.Type.EVENT_START)
-                    .event(event)
-                    .build()
-            )
+            ofEventStart(BetaManagedAgentsStartEvent.of(event))
 
         /**
          * Alias for calling [ofEventStart] with

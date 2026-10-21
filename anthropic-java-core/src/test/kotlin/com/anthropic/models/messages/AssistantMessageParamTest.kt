@@ -1,0 +1,105 @@
+package com.anthropic.models.messages
+
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+internal class AssistantMessageParamTest {
+
+    @Test
+    fun create() {
+        val assistantMessageParam =
+            AssistantMessageParam.builder()
+                .contentOfContentBlockParams(
+                    listOf(
+                        ContentBlockParam.ofText(
+                            TextBlockParam.builder()
+                                .text("What is a quaternion?")
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .addCitation(
+                                    CitationCharLocationParam.builder()
+                                        .citedText("The grass is green. The sky is blue.")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .build()
+                                )
+                                .build()
+                        )
+                    )
+                )
+                .build()
+
+        assertThat(assistantMessageParam.content())
+            .isEqualTo(
+                MessageContentParam.ofContentBlockParams(
+                    listOf(
+                        ContentBlockParam.ofText(
+                            TextBlockParam.builder()
+                                .text("What is a quaternion?")
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .addCitation(
+                                    CitationCharLocationParam.builder()
+                                        .citedText("The grass is green. The sky is blue.")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .build()
+                                )
+                                .build()
+                        )
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val assistantMessageParam =
+            AssistantMessageParam.builder()
+                .contentOfContentBlockParams(
+                    listOf(
+                        ContentBlockParam.ofText(
+                            TextBlockParam.builder()
+                                .text("What is a quaternion?")
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .addCitation(
+                                    CitationCharLocationParam.builder()
+                                        .citedText("The grass is green. The sky is blue.")
+                                        .documentIndex(0L)
+                                        .documentTitle("x")
+                                        .endCharIndex(0L)
+                                        .startCharIndex(0L)
+                                        .build()
+                                )
+                                .build()
+                        )
+                    )
+                )
+                .build()
+
+        val roundtrippedAssistantMessageParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(assistantMessageParam),
+                jacksonTypeRef<AssistantMessageParam>(),
+            )
+
+        assertThat(roundtrippedAssistantMessageParam).isEqualTo(assistantMessageParam)
+    }
+}

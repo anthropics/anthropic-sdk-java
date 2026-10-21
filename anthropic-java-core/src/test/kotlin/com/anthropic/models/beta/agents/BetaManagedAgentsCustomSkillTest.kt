@@ -12,14 +12,11 @@ internal class BetaManagedAgentsCustomSkillTest {
         val betaManagedAgentsCustomSkill =
             BetaManagedAgentsCustomSkill.builder()
                 .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                 .version("2")
                 .build()
 
         assertThat(betaManagedAgentsCustomSkill.skillId())
             .isEqualTo("skill_011CZkZFNu9hAbo3jZPRgTmx")
-        assertThat(betaManagedAgentsCustomSkill.type())
-            .isEqualTo(BetaManagedAgentsCustomSkill.Type.CUSTOM)
         assertThat(betaManagedAgentsCustomSkill.version()).isEqualTo("2")
     }
 
@@ -29,7 +26,6 @@ internal class BetaManagedAgentsCustomSkillTest {
         val betaManagedAgentsCustomSkill =
             BetaManagedAgentsCustomSkill.builder()
                 .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                 .version("2")
                 .build()
 

@@ -22,7 +22,6 @@ internal class BetaManagedAgentsVaultTest {
                         .putAdditionalProperty("environment", JsonValue.from("production"))
                         .build()
                 )
-                .type(BetaManagedAgentsVault.Type.VAULT)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .build()
 
@@ -37,7 +36,6 @@ internal class BetaManagedAgentsVaultTest {
                     .putAdditionalProperty("environment", JsonValue.from("production"))
                     .build()
             )
-        assertThat(betaManagedAgentsVault.type()).isEqualTo(BetaManagedAgentsVault.Type.VAULT)
         assertThat(betaManagedAgentsVault.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
     }
@@ -56,7 +54,6 @@ internal class BetaManagedAgentsVaultTest {
                         .putAdditionalProperty("environment", JsonValue.from("production"))
                         .build()
                 )
-                .type(BetaManagedAgentsVault.Type.VAULT)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .build()
 

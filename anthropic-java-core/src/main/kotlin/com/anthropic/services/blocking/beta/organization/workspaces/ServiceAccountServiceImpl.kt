@@ -118,7 +118,7 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -155,7 +155,7 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
                     response
                         .use { updateHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -190,7 +190,7 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -233,7 +233,7 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
                     response
                         .use { addHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -276,7 +276,7 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
                     response
                         .use { removeHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

@@ -183,12 +183,7 @@ private constructor(
          */
         @JvmStatic
         fun ofMemoryStore(memoryStoreId: String) =
-            ofMemoryStore(
-                BetaDreamMemoryStoreInput.builder()
-                    .type(BetaDreamMemoryStoreInput.Type.MEMORY_STORE)
-                    .memoryStoreId(memoryStoreId)
-                    .build()
-            )
+            ofMemoryStore(BetaDreamMemoryStoreInput.of(memoryStoreId))
 
         /** The sessions that a dream reads, given as an entry in `inputs`. */
         @JvmStatic
@@ -199,13 +194,7 @@ private constructor(
          * from the given required [sessionIds].
          */
         @JvmStatic
-        fun ofSessions(sessionIds: List<String>) =
-            ofSessions(
-                BetaDreamSessionsInput.builder()
-                    .type(BetaDreamSessionsInput.Type.SESSIONS)
-                    .sessionIds(sessionIds)
-                    .build()
-            )
+        fun ofSessions(sessionIds: List<String>) = ofSessions(BetaDreamSessionsInput.of(sessionIds))
     }
 
     /**

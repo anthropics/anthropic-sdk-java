@@ -14,7 +14,6 @@ internal class BetaManagedAgentsUserMessageEventTest {
             BetaManagedAgentsUserMessageEvent.builder()
                 .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                 .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .build()
 
@@ -22,15 +21,8 @@ internal class BetaManagedAgentsUserMessageEventTest {
             .isEqualTo("sevt_011CZkZGPp1iBcp4kaQSihUm")
         assertThat(betaManagedAgentsUserMessageEvent.content())
             .containsExactly(
-                BetaManagedAgentsUserMessageEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
-                )
+                BetaManagedAgentsUserMessageEvent.Content.ofText("Where is my order #1234?")
             )
-        assertThat(betaManagedAgentsUserMessageEvent.type())
-            .isEqualTo(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
         assertThat(betaManagedAgentsUserMessageEvent.processedAt())
             .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
     }
@@ -42,7 +34,6 @@ internal class BetaManagedAgentsUserMessageEventTest {
             BetaManagedAgentsUserMessageEvent.builder()
                 .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                 .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .build()
 

@@ -25,7 +25,6 @@ internal class FoundryBackendTest {
         private const val TOKEN = "my-token"
         private const val RESOURCE = "my-resource"
         private const val CUSTOM_BASE_URL = "https://resource.example.com"
-        private const val ANTHROPIC_VERSION = "2023-06-01"
 
         private const val ENV_API_KEY = "ANTHROPIC_FOUNDRY_API_KEY"
         private const val ENV_RESOURCE = "ANTHROPIC_FOUNDRY_RESOURCE"
@@ -176,14 +175,15 @@ internal class FoundryBackendTest {
     fun fromEnvWithResource() {
         val backend = mockBackendBuilder().withApiKeyEnvVar().withResourceEnvVar().fromEnv().build()
 
-        assertThat(backend.resource).isEqualTo(RESOURCE)
+        assertThat(backend.resource()).hasValue(RESOURCE)
     }
 
     @Test
     fun fromEnvWithBaseUrl() {
         val backend = mockBackendBuilder().withApiKeyEnvVar().withBaseUrlEnvVar().fromEnv().build()
 
-        assertThat(backend.baseUrl).isEqualTo(CUSTOM_BASE_URL)
+        assertThat(backend.baseUrl()).isEqualTo("$CUSTOM_BASE_URL/anthropic")
+        assertThat(backend.resource()).isEmpty
     }
 
     @Test
@@ -258,22 +258,19 @@ internal class FoundryBackendTest {
 
     @Test
     fun prepareRequestIsIdempotent() {
-        // `prepareRequest` no longer rewrites path segments — only the version header is added —
-        // so a second call leaves the request unchanged.
+        // `prepareRequest` only validates the request, so a second call leaves it unchanged.
         val backend = createBackendWithApiKeyAndResource()
         val request = createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
         val once = backend.prepareRequest(request)
         val twice = backend.prepareRequest(once)
 
         assertThat(twice.pathSegments).isEqualTo(once.pathSegments)
-        assertThat(twice.headers.values("anthropic-version"))
-            .isEqualTo(once.headers.values("anthropic-version"))
+        assertThat(twice.headers).isEqualTo(once.headers)
     }
 
     @Test
-    fun prepareRequestPreservesExistingVersionHeader() {
-        // A user-supplied "anthropic-version" (e.g. set by an interceptor) must win over the
-        // default instead of being duplicated.
+    fun prepareRequestKeepsVersionHeader() {
+        // The client sets "anthropic-version" on every request; the backend must not touch it.
         val backend = createBackendWithApiKeyAndResource()
         val request =
             createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
@@ -301,9 +298,6 @@ internal class FoundryBackendTest {
         val preparedRequest = backend.prepareRequest(request)
 
         assertThat(preparedRequest.pathSegments).containsExactly("v1", "messages", "count_tokens")
-        assertThat(preparedRequest.headers.names()).contains("anthropic-version")
-        assertThat(preparedRequest.headers.values("anthropic-version")[0])
-            .isEqualTo(ANTHROPIC_VERSION)
     }
 
     @Test
@@ -313,9 +307,6 @@ internal class FoundryBackendTest {
         val preparedRequest = backend.prepareRequest(request)
 
         assertThat(preparedRequest.pathSegments).containsExactly("v1", "messages")
-        assertThat(preparedRequest.headers.names()).contains("anthropic-version")
-        assertThat(preparedRequest.headers.values("anthropic-version")[0])
-            .isEqualTo(ANTHROPIC_VERSION)
     }
 
     @Test
@@ -408,7 +399,7 @@ internal class FoundryBackendTest {
         // original request plus the new authorization header.
         assertThat(authorizedRequest.method).isEqualTo(request.method)
         assertThat(authorizedRequest.baseUrl).isEqualTo(request.baseUrl)
-        assertThat(authorizedRequest.body).isEqualTo(request.body)
+        assertThat(authorizedRequest.body()).isEqualTo(request.body())
 
         assertThat(authorizedRequest.pathSegments.size).isEqualTo(2)
         assertThat(authorizedRequest.pathSegments[0]).isEqualTo("path-1")
@@ -464,7 +455,7 @@ internal class FoundryBackendTest {
         // original request plus the new authorization header.
         assertThat(authorizedRequest.method).isEqualTo(request.method)
         assertThat(authorizedRequest.baseUrl).isEqualTo(request.baseUrl)
-        assertThat(authorizedRequest.body).isEqualTo(request.body)
+        assertThat(authorizedRequest.body()).isEqualTo(request.body())
 
         assertThat(authorizedRequest.pathSegments.size).isEqualTo(2)
         assertThat(authorizedRequest.pathSegments[0]).isEqualTo("path-1")
@@ -509,6 +500,7 @@ internal class FoundryBackendTest {
     private fun createRequest(jsonData: String?, vararg pathSegments: String): HttpRequest =
         HttpRequest.builder()
             .method(HttpMethod.POST) // A method is required.
+            .baseUrl("https://$RESOURCE.services.ai.azure.com/anthropic")
             .addPathSegments(*pathSegments)
             .apply { jsonData?.let { body(json(jsonMapper(), parseJson(it))) } }
             .build()

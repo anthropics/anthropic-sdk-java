@@ -10,13 +10,8 @@ internal class BetaManagedAgentsPreconditionTest {
     @Test
     fun create() {
         val betaManagedAgentsPrecondition =
-            BetaManagedAgentsPrecondition.builder()
-                .type(BetaManagedAgentsPrecondition.Type.CONTENT_SHA256)
-                .contentSha256("content_sha256")
-                .build()
+            BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
 
-        assertThat(betaManagedAgentsPrecondition.type())
-            .isEqualTo(BetaManagedAgentsPrecondition.Type.CONTENT_SHA256)
         assertThat(betaManagedAgentsPrecondition.contentSha256()).contains("content_sha256")
     }
 
@@ -24,10 +19,7 @@ internal class BetaManagedAgentsPreconditionTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsPrecondition =
-            BetaManagedAgentsPrecondition.builder()
-                .type(BetaManagedAgentsPrecondition.Type.CONTENT_SHA256)
-                .contentSha256("content_sha256")
-                .build()
+            BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
 
         val roundtrippedBetaManagedAgentsPrecondition =
             jsonMapper.readValue(

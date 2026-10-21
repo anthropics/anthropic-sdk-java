@@ -180,12 +180,7 @@ private constructor(
          */
         @JvmStatic
         fun ofCoordinator(agents: List<BetaManagedAgentsMultiagentCoordinator.Agent>) =
-            ofCoordinator(
-                BetaManagedAgentsMultiagentCoordinator.builder()
-                    .type(BetaManagedAgentsMultiagentCoordinator.Type.COORDINATOR)
-                    .agents(agents)
-                    .build()
-            )
+            ofCoordinator(BetaManagedAgentsMultiagentCoordinator.of(agents))
 
         /**
          * Resolved multiagent configuration with three members, each enabled or disabled on its

@@ -12,11 +12,7 @@ internal class BetaManagedAgentsEditToolConfigParamsTest {
         val betaManagedAgentsEditToolConfigParams =
             BetaManagedAgentsEditToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsEditToolConfigParams.Type.EDIT)
                 .build()
 
@@ -24,7 +20,7 @@ internal class BetaManagedAgentsEditToolConfigParamsTest {
         assertThat(betaManagedAgentsEditToolConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsEditToolConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
         assertThat(betaManagedAgentsEditToolConfigParams.type())
@@ -37,11 +33,7 @@ internal class BetaManagedAgentsEditToolConfigParamsTest {
         val betaManagedAgentsEditToolConfigParams =
             BetaManagedAgentsEditToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsEditToolConfigParams.Type.EDIT)
                 .build()
 

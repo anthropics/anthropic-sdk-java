@@ -27,23 +27,16 @@ internal class SessionUpdateParamsTest {
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
                             .name("example-mcp")
-                            .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                             .url("https://example-server.modelcontextprotocol.io/sse")
                             .build()
                     )
                     .addTool(
                         BetaManagedAgentsAgentToolset20260401Params.builder()
-                            .type(
-                                BetaManagedAgentsAgentToolset20260401Params.Type
-                                    .AGENT_TOOLSET_20260401
-                            )
                             .addConfig(
                                 BetaManagedAgentsBashToolConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                     .build()
@@ -52,9 +45,7 @@ internal class SessionUpdateParamsTest {
                                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .build()
                             )
@@ -63,15 +54,9 @@ internal class SessionUpdateParamsTest {
                     .build()
             )
             .budget(
-                BetaManagedAgentsBudgetLimit.builder()
-                    .maxListCost(
-                        BetaMonetaryAmount.builder()
-                            .amount("2500")
-                            .currency(BetaCurrency.USD)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                    .build()
+                BetaManagedAgentsBudgetLimit.of(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
             )
             .metadata(
                 SessionUpdateParams.Metadata.builder()
@@ -105,23 +90,16 @@ internal class SessionUpdateParamsTest {
                         .addMcpServer(
                             BetaManagedAgentsUrlMcpServerParams.builder()
                                 .name("example-mcp")
-                                .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                                 .url("https://example-server.modelcontextprotocol.io/sse")
                                 .build()
                         )
                         .addTool(
                             BetaManagedAgentsAgentToolset20260401Params.builder()
-                                .type(
-                                    BetaManagedAgentsAgentToolset20260401Params.Type
-                                        .AGENT_TOOLSET_20260401
-                                )
                                 .addConfig(
                                     BetaManagedAgentsBashToolConfigParams.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                         )
                                         .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                         .build()
@@ -130,9 +108,7 @@ internal class SessionUpdateParamsTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                         )
                                         .build()
                                 )
@@ -141,15 +117,12 @@ internal class SessionUpdateParamsTest {
                         .build()
                 )
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .metadata(
                     SessionUpdateParams.Metadata.builder()
@@ -197,23 +170,16 @@ internal class SessionUpdateParamsTest {
                         .addMcpServer(
                             BetaManagedAgentsUrlMcpServerParams.builder()
                                 .name("example-mcp")
-                                .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                                 .url("https://example-server.modelcontextprotocol.io/sse")
                                 .build()
                         )
                         .addTool(
                             BetaManagedAgentsAgentToolset20260401Params.builder()
-                                .type(
-                                    BetaManagedAgentsAgentToolset20260401Params.Type
-                                        .AGENT_TOOLSET_20260401
-                                )
                                 .addConfig(
                                     BetaManagedAgentsBashToolConfigParams.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                         )
                                         .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                         .build()
@@ -222,9 +188,7 @@ internal class SessionUpdateParamsTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                         )
                                         .build()
                                 )
@@ -233,15 +197,12 @@ internal class SessionUpdateParamsTest {
                         .build()
                 )
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .metadata(
                     SessionUpdateParams.Metadata.builder()
@@ -260,23 +221,16 @@ internal class SessionUpdateParamsTest {
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
                             .name("example-mcp")
-                            .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                             .url("https://example-server.modelcontextprotocol.io/sse")
                             .build()
                     )
                     .addTool(
                         BetaManagedAgentsAgentToolset20260401Params.builder()
-                            .type(
-                                BetaManagedAgentsAgentToolset20260401Params.Type
-                                    .AGENT_TOOLSET_20260401
-                            )
                             .addConfig(
                                 BetaManagedAgentsBashToolConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                     .build()
@@ -285,9 +239,7 @@ internal class SessionUpdateParamsTest {
                                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .build()
                             )
@@ -297,15 +249,9 @@ internal class SessionUpdateParamsTest {
             )
         assertThat(body.budget())
             .contains(
-                BetaManagedAgentsBudgetLimit.builder()
-                    .maxListCost(
-                        BetaMonetaryAmount.builder()
-                            .amount("2500")
-                            .currency(BetaCurrency.USD)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                    .build()
+                BetaManagedAgentsBudgetLimit.of(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
             )
         assertThat(body.metadata())
             .contains(

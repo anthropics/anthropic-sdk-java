@@ -163,17 +163,13 @@ private constructor(
          * Alias for calling [addData] with the following:
          * ```java
          * BetaManagedAgentsMemoryStoreResource.builder()
-         *     .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
          *     .memoryStoreId(memoryStoreId)
          *     .build()
          * ```
          */
         fun addMemoryStoreData(memoryStoreId: String) =
             addData(
-                BetaManagedAgentsMemoryStoreResource.builder()
-                    .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
-                    .memoryStoreId(memoryStoreId)
-                    .build()
+                BetaManagedAgentsMemoryStoreResource.builder().memoryStoreId(memoryStoreId).build()
             )
 
         /** Opaque cursor for the next page. Null when no more results. */

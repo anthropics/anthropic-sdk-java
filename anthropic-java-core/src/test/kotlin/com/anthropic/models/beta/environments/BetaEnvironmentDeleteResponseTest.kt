@@ -10,24 +10,16 @@ internal class BetaEnvironmentDeleteResponseTest {
     @Test
     fun create() {
         val betaEnvironmentDeleteResponse =
-            BetaEnvironmentDeleteResponse.builder()
-                .id("env_011CZkZ9X2dpNyB7HsEFoRfW")
-                .type(BetaEnvironmentDeleteResponse.Type.ENVIRONMENT_DELETED)
-                .build()
+            BetaEnvironmentDeleteResponse.of("env_011CZkZ9X2dpNyB7HsEFoRfW")
 
         assertThat(betaEnvironmentDeleteResponse.id()).isEqualTo("env_011CZkZ9X2dpNyB7HsEFoRfW")
-        assertThat(betaEnvironmentDeleteResponse.type())
-            .isEqualTo(BetaEnvironmentDeleteResponse.Type.ENVIRONMENT_DELETED)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaEnvironmentDeleteResponse =
-            BetaEnvironmentDeleteResponse.builder()
-                .id("env_011CZkZ9X2dpNyB7HsEFoRfW")
-                .type(BetaEnvironmentDeleteResponse.Type.ENVIRONMENT_DELETED)
-                .build()
+            BetaEnvironmentDeleteResponse.of("env_011CZkZ9X2dpNyB7HsEFoRfW")
 
         val roundtrippedBetaEnvironmentDeleteResponse =
             jsonMapper.readValue(

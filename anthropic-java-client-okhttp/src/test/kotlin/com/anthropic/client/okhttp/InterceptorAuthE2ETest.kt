@@ -49,9 +49,9 @@ internal class InterceptorAuthE2ETest {
         client.models().retrieve("claude-test")
 
         assertThat(interceptedRequests).hasSize(1)
-        assertThat(interceptedRequests[0].headers.values("X-Api-Key"))
-            .containsExactly("sk-test-key")
-        assertSingleWireHeader("X-Api-Key", "sk-test-key")
+        assertThat(interceptedRequests[0].headers.values("Authorization"))
+            .containsExactly("Bearer sk-test-key")
+        assertSingleWireHeader("Authorization", "Bearer sk-test-key")
     }
 
     @Test
@@ -85,9 +85,9 @@ internal class InterceptorAuthE2ETest {
         client.models().retrieve("claude-test").get()
 
         assertThat(interceptedRequests).hasSize(1)
-        assertThat(interceptedRequests[0].headers.values("X-Api-Key"))
-            .containsExactly("sk-test-key")
-        assertSingleWireHeader("X-Api-Key", "sk-test-key")
+        assertThat(interceptedRequests[0].headers.values("Authorization"))
+            .containsExactly("Bearer sk-test-key")
+        assertSingleWireHeader("Authorization", "Bearer sk-test-key")
     }
 
     private fun assertSingleWireHeader(name: String, value: String) {

@@ -12,20 +12,12 @@ internal class BetaManagedAgentsUserMessageEventParamsTest {
         val betaManagedAgentsUserMessageEventParams =
             BetaManagedAgentsUserMessageEventParams.builder()
                 .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
                 .build()
 
         assertThat(betaManagedAgentsUserMessageEventParams.content())
             .containsExactly(
-                BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
-                )
+                BetaManagedAgentsUserMessageEventParams.Content.ofText("Where is my order #1234?")
             )
-        assertThat(betaManagedAgentsUserMessageEventParams.type())
-            .isEqualTo(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
     }
 
     @Test
@@ -34,7 +26,6 @@ internal class BetaManagedAgentsUserMessageEventParamsTest {
         val betaManagedAgentsUserMessageEventParams =
             BetaManagedAgentsUserMessageEventParams.builder()
                 .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
                 .build()
 
         val roundtrippedBetaManagedAgentsUserMessageEventParams =

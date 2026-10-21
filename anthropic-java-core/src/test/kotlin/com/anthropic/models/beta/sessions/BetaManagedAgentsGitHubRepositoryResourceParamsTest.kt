@@ -11,28 +11,18 @@ internal class BetaManagedAgentsGitHubRepositoryResourceParamsTest {
     fun create() {
         val betaManagedAgentsGitHubRepositoryResourceParams =
             BetaManagedAgentsGitHubRepositoryResourceParams.builder()
-                .type(BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY)
                 .url("https://github.com/example-org/example-repo")
                 .authorizationToken("ghp_exampletoken")
                 .branchCheckout("main")
                 .mountPath("x")
                 .build()
 
-        assertThat(betaManagedAgentsGitHubRepositoryResourceParams.type())
-            .isEqualTo(BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY)
         assertThat(betaManagedAgentsGitHubRepositoryResourceParams.url())
             .isEqualTo("https://github.com/example-org/example-repo")
         assertThat(betaManagedAgentsGitHubRepositoryResourceParams.authorizationToken())
             .contains("ghp_exampletoken")
         assertThat(betaManagedAgentsGitHubRepositoryResourceParams.checkout())
-            .contains(
-                BetaManagedAgentsGitHubRepositoryResourceParams.Checkout.ofBranch(
-                    BetaManagedAgentsBranchCheckout.builder()
-                        .name("main")
-                        .type(BetaManagedAgentsBranchCheckout.Type.BRANCH)
-                        .build()
-                )
-            )
+            .contains(BetaManagedAgentsGitHubRepositoryResourceParams.Checkout.ofBranch("main"))
         assertThat(betaManagedAgentsGitHubRepositoryResourceParams.mountPath()).contains("x")
     }
 
@@ -41,7 +31,6 @@ internal class BetaManagedAgentsGitHubRepositoryResourceParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsGitHubRepositoryResourceParams =
             BetaManagedAgentsGitHubRepositoryResourceParams.builder()
-                .type(BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY)
                 .url("https://github.com/example-org/example-repo")
                 .authorizationToken("ghp_exampletoken")
                 .branchCheckout("main")

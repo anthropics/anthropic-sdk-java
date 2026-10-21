@@ -40,7 +40,6 @@ private constructor(
     private val scope: JsonField<Scope>,
     private val status: JsonField<Status>,
     private val type: JsonValue,
-    private val workspaceId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -66,9 +65,6 @@ private constructor(
         @JsonProperty("scope") @ExcludeMissing scope: JsonField<Scope> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-        @JsonProperty("workspace_id")
-        @ExcludeMissing
-        workspaceId: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
         createdAt,
@@ -80,7 +76,6 @@ private constructor(
         scope,
         status,
         type,
-        workspaceId,
         mutableMapOf(),
     )
 
@@ -177,19 +172,6 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Deprecated: use `scope` instead. ID of the Workspace associated with the API key, or `null`
-     * if the API key belongs to the default Workspace. Also `null` for a principal-bound API key
-     * that has no Workspace; `scope` tells the two apart.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    @Deprecated(
-        "Use `scope` instead. `workspace_id` is `null` both for an API key in the default Workspace and for a principal-bound API key that has no Workspace."
-    )
-    fun workspaceId(): Optional<String> = workspaceId.getOptional("workspace_id")
-
-    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -260,18 +242,6 @@ private constructor(
      */
     @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
 
-    /**
-     * Returns the raw JSON value of [workspaceId].
-     *
-     * Unlike [workspaceId], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @Deprecated(
-        "Use `scope` instead. `workspace_id` is `null` both for an API key in the default Workspace and for a principal-bound API key that has no Workspace."
-    )
-    @JsonProperty("workspace_id")
-    @ExcludeMissing
-    fun _workspaceId(): JsonField<String> = workspaceId
-
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -300,7 +270,6 @@ private constructor(
          * .principal()
          * .scope()
          * .status()
-         * .workspaceId()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -319,7 +288,6 @@ private constructor(
         private var scope: JsonField<Scope>? = null
         private var status: JsonField<Status>? = null
         private var type: JsonValue = JsonValue.from("api_key")
-        private var workspaceId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -334,7 +302,6 @@ private constructor(
             scope = betaApiKey.scope
             status = betaApiKey.status
             type = betaApiKey.type
-            workspaceId = betaApiKey.workspaceId
             additionalProperties = betaApiKey.additionalProperties.toMutableMap()
         }
 
@@ -540,34 +507,6 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
-        /**
-         * Deprecated: use `scope` instead. ID of the Workspace associated with the API key, or
-         * `null` if the API key belongs to the default Workspace. Also `null` for a principal-bound
-         * API key that has no Workspace; `scope` tells the two apart.
-         */
-        @Deprecated(
-            "Use `scope` instead. `workspace_id` is `null` both for an API key in the default Workspace and for a principal-bound API key that has no Workspace."
-        )
-        fun workspaceId(workspaceId: String?) = workspaceId(JsonField.ofNullable(workspaceId))
-
-        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
-        @Deprecated(
-            "Use `scope` instead. `workspace_id` is `null` both for an API key in the default Workspace and for a principal-bound API key that has no Workspace."
-        )
-        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
-
-        /**
-         * Sets [Builder.workspaceId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.workspaceId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        @Deprecated(
-            "Use `scope` instead. `workspace_id` is `null` both for an API key in the default Workspace and for a principal-bound API key that has no Workspace."
-        )
-        fun workspaceId(workspaceId: JsonField<String>) = apply { this.workspaceId = workspaceId }
-
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -603,7 +542,6 @@ private constructor(
          * .principal()
          * .scope()
          * .status()
-         * .workspaceId()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -620,7 +558,6 @@ private constructor(
                 checkRequired("scope", scope),
                 checkRequired("status", status),
                 type,
-                checkRequired("workspaceId", workspaceId),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -654,7 +591,6 @@ private constructor(
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
-        workspaceId()
         validated = true
     }
 
@@ -682,8 +618,7 @@ private constructor(
             (principal.asKnown().getOrNull()?.validity() ?: 0) +
             (scope.asKnown().getOrNull()?.validity() ?: 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
-            type.let { if (it == JsonValue.from("api_key")) 1 else 0 } +
-            (if (workspaceId.asKnown().isPresent) 1 else 0)
+            type.let { if (it == JsonValue.from("api_key")) 1 else 0 }
 
     /**
      * The principal the API key acts as (a User or a Service Account), or `null` if the API key is
@@ -1606,7 +1541,6 @@ private constructor(
             scope == other.scope &&
             status == other.status &&
             type == other.type &&
-            workspaceId == other.workspaceId &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1622,7 +1556,6 @@ private constructor(
             scope,
             status,
             type,
-            workspaceId,
             additionalProperties,
         )
     }
@@ -1630,5 +1563,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaApiKey{id=$id, createdAt=$createdAt, createdBy=$createdBy, expiresAt=$expiresAt, name=$name, partialKeyHint=$partialKeyHint, principal=$principal, scope=$scope, status=$status, type=$type, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
+        "BetaApiKey{id=$id, createdAt=$createdAt, createdBy=$createdBy, expiresAt=$expiresAt, name=$name, partialKeyHint=$partialKeyHint, principal=$principal, scope=$scope, status=$status, type=$type, additionalProperties=$additionalProperties}"
 }

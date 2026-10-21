@@ -9,25 +9,15 @@ internal class BetaManagedAgentsSessionActorTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsSessionActor =
-            BetaManagedAgentsSessionActor.builder()
-                .sessionId("x")
-                .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
-                .build()
+        val betaManagedAgentsSessionActor = BetaManagedAgentsSessionActor.of("x")
 
         assertThat(betaManagedAgentsSessionActor.sessionId()).isEqualTo("x")
-        assertThat(betaManagedAgentsSessionActor.type())
-            .isEqualTo(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsSessionActor =
-            BetaManagedAgentsSessionActor.builder()
-                .sessionId("x")
-                .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
-                .build()
+        val betaManagedAgentsSessionActor = BetaManagedAgentsSessionActor.of("x")
 
         val roundtrippedBetaManagedAgentsSessionActor =
             jsonMapper.readValue(

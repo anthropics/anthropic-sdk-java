@@ -44,18 +44,13 @@ internal class SessionListPageResponseTest {
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
-                                        .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                         .url("https://example-server.modelcontextprotocol.io/sse")
                                         .build()
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
                                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                        .effort(
-                                            BetaManagedAgentsEffortLow.of(
-                                                BetaManagedAgentsEffortLow.Type.LOW
-                                            )
-                                        )
+                                        .effort(BetaManagedAgentsEffortLow.builder().build())
                                         .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                         .build()
@@ -75,11 +70,6 @@ internal class SessionListPageResponseTest {
                                                     BetaManagedAgentsMcpServerUrlDefinition
                                                         .builder()
                                                         .name("example-mcp")
-                                                        .type(
-                                                            BetaManagedAgentsMcpServerUrlDefinition
-                                                                .Type
-                                                                .URL
-                                                        )
                                                         .url(
                                                             "https://example-server.modelcontextprotocol.io/sse"
                                                         )
@@ -89,9 +79,8 @@ internal class SessionListPageResponseTest {
                                                     BetaManagedAgentsModelConfig.builder()
                                                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                         .effort(
-                                                            BetaManagedAgentsEffortLow.of(
-                                                                BetaManagedAgentsEffortLow.Type.LOW
-                                                            )
+                                                            BetaManagedAgentsEffortLow.builder()
+                                                                .build()
                                                         )
                                                         .inferenceGeo("inference_geo")
                                                         .speed(
@@ -104,10 +93,6 @@ internal class SessionListPageResponseTest {
                                                 .addSkill(
                                                     BetaManagedAgentsAnthropicSkill.builder()
                                                         .skillId("xlsx")
-                                                        .type(
-                                                            BetaManagedAgentsAnthropicSkill.Type
-                                                                .ANTHROPIC
-                                                        )
                                                         .version("1")
                                                         .build()
                                                 )
@@ -122,11 +107,8 @@ internal class SessionListPageResponseTest {
                                                                 .enabled(true)
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAllowPolicy
-                                                                        .of(
-                                                                            BetaManagedAgentsAlwaysAllowPolicy
-                                                                                .Type
-                                                                                .ALWAYS_ALLOW
-                                                                        )
+                                                                        .builder()
+                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
@@ -136,23 +118,12 @@ internal class SessionListPageResponseTest {
                                                                 .enabled(true)
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAskPolicy
-                                                                        .of(
-                                                                            BetaManagedAgentsAlwaysAskPolicy
-                                                                                .Type
-                                                                                .ALWAYS_ASK
-                                                                        )
+                                                                        .builder()
+                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
-                                                        .type(
-                                                            BetaManagedAgentsAgentToolset20260401
-                                                                .Type
-                                                                .AGENT_TOOLSET_20260401
-                                                        )
                                                         .build()
-                                                )
-                                                .type(
-                                                    BetaManagedAgentsSessionThreadAgent.Type.AGENT
                                                 )
                                                 .version(1)
                                                 .build()
@@ -163,14 +134,12 @@ internal class SessionListPageResponseTest {
                                 .addSkill(
                                     BetaManagedAgentsAnthropicSkill.builder()
                                         .skillId("xlsx")
-                                        .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                         .version("1")
                                         .build()
                                 )
                                 .addSkill(
                                     BetaManagedAgentsCustomSkill.builder()
                                         .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                                        .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                         .version("2")
                                         .build()
                                 )
@@ -183,10 +152,8 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsBashToolConfig.builder()
                                                 .enabled(true)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                            .ALWAYS_ALLOW
-                                                    )
+                                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                                        .build()
                                                 )
                                                 .build()
                                         )
@@ -194,34 +161,24 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                                 .enabled(true)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAskPolicy.of(
-                                                        BetaManagedAgentsAlwaysAskPolicy.Type
-                                                            .ALWAYS_ASK
-                                                    )
+                                                    BetaManagedAgentsAlwaysAskPolicy.builder()
+                                                        .build()
                                                 )
                                                 .build()
                                         )
-                                        .type(
-                                            BetaManagedAgentsAgentToolset20260401.Type
-                                                .AGENT_TOOLSET_20260401
-                                        )
                                         .build()
                                 )
-                                .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
                         .archivedAt(null)
                         .budget(
-                            BetaManagedAgentsBudgetLimit.builder()
-                                .maxListCost(
-                                    BetaMonetaryAmount.builder()
-                                        .amount("2500")
-                                        .currency(BetaCurrency.USD)
-                                        .build()
-                                )
-                                .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                                .build()
+                            BetaManagedAgentsBudgetLimit.of(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
                         )
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
@@ -234,10 +191,6 @@ internal class SessionListPageResponseTest {
                                 .iteration(0)
                                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                                 .result("satisfied")
-                                .type(
-                                    BetaManagedAgentsOutcomeEvaluationResource.Type
-                                        .OUTCOME_EVALUATION
-                                )
                                 .build()
                         )
                         .addResource(
@@ -246,7 +199,6 @@ internal class SessionListPageResponseTest {
                                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                                 .mountPath("/uploads/receipt.pdf")
-                                .type(BetaManagedAgentsFileResource.Type.FILE)
                                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .build()
                         )
@@ -255,9 +207,6 @@ internal class SessionListPageResponseTest {
                                 .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .mountPath("/workspace/example-repo")
-                                .type(
-                                    BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY
-                                )
                                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .url("https://github.com/example-org/example-repo")
                                 .branchCheckout("main")
@@ -271,7 +220,6 @@ internal class SessionListPageResponseTest {
                         )
                         .status(BetaManagedAgentsSession.Status.IDLE)
                         .title("Order #1234 inquiry")
-                        .type(BetaManagedAgentsSession.Type.SESSION)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .usage(
                             BetaManagedAgentsSessionUsage.builder()
@@ -321,18 +269,13 @@ internal class SessionListPageResponseTest {
                             .addMcpServer(
                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                     .name("example-mcp")
-                                    .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                     .url("https://example-server.modelcontextprotocol.io/sse")
                                     .build()
                             )
                             .model(
                                 BetaManagedAgentsModelConfig.builder()
                                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                    .effort(
-                                        BetaManagedAgentsEffortLow.of(
-                                            BetaManagedAgentsEffortLow.Type.LOW
-                                        )
-                                    )
+                                    .effort(BetaManagedAgentsEffortLow.builder().build())
                                     .inferenceGeo("inference_geo")
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                     .build()
@@ -351,10 +294,6 @@ internal class SessionListPageResponseTest {
                                             .addMcpServer(
                                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                                     .name("example-mcp")
-                                                    .type(
-                                                        BetaManagedAgentsMcpServerUrlDefinition.Type
-                                                            .URL
-                                                    )
                                                     .url(
                                                         "https://example-server.modelcontextprotocol.io/sse"
                                                     )
@@ -364,9 +303,7 @@ internal class SessionListPageResponseTest {
                                                 BetaManagedAgentsModelConfig.builder()
                                                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                     .effort(
-                                                        BetaManagedAgentsEffortLow.of(
-                                                            BetaManagedAgentsEffortLow.Type.LOW
-                                                        )
+                                                        BetaManagedAgentsEffortLow.builder().build()
                                                     )
                                                     .inferenceGeo("inference_geo")
                                                     .speed(
@@ -378,10 +315,6 @@ internal class SessionListPageResponseTest {
                                             .addSkill(
                                                 BetaManagedAgentsAnthropicSkill.builder()
                                                     .skillId("xlsx")
-                                                    .type(
-                                                        BetaManagedAgentsAnthropicSkill.Type
-                                                            .ANTHROPIC
-                                                    )
                                                     .version("1")
                                                     .build()
                                             )
@@ -395,11 +328,8 @@ internal class SessionListPageResponseTest {
                                                             .enabled(true)
                                                             .permissionPolicy(
                                                                 BetaManagedAgentsAlwaysAllowPolicy
-                                                                    .of(
-                                                                        BetaManagedAgentsAlwaysAllowPolicy
-                                                                            .Type
-                                                                            .ALWAYS_ALLOW
-                                                                    )
+                                                                    .builder()
+                                                                    .build()
                                                             )
                                                             .build()
                                                     )
@@ -408,21 +338,14 @@ internal class SessionListPageResponseTest {
                                                             .builder()
                                                             .enabled(true)
                                                             .permissionPolicy(
-                                                                BetaManagedAgentsAlwaysAskPolicy.of(
-                                                                    BetaManagedAgentsAlwaysAskPolicy
-                                                                        .Type
-                                                                        .ALWAYS_ASK
-                                                                )
+                                                                BetaManagedAgentsAlwaysAskPolicy
+                                                                    .builder()
+                                                                    .build()
                                                             )
                                                             .build()
                                                     )
-                                                    .type(
-                                                        BetaManagedAgentsAgentToolset20260401.Type
-                                                            .AGENT_TOOLSET_20260401
-                                                    )
                                                     .build()
                                             )
-                                            .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                                             .version(1)
                                             .build()
                                     )
@@ -432,14 +355,12 @@ internal class SessionListPageResponseTest {
                             .addSkill(
                                 BetaManagedAgentsAnthropicSkill.builder()
                                     .skillId("xlsx")
-                                    .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                     .version("1")
                                     .build()
                             )
                             .addSkill(
                                 BetaManagedAgentsCustomSkill.builder()
                                     .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                                    .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                     .version("2")
                                     .build()
                             )
@@ -452,10 +373,7 @@ internal class SessionListPageResponseTest {
                                         BetaManagedAgentsBashToolConfig.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
+                                                BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                             )
                                             .build()
                                     )
@@ -463,33 +381,23 @@ internal class SessionListPageResponseTest {
                                         BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAskPolicy.of(
-                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                                )
+                                                BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                             )
                                             .build()
                                     )
-                                    .type(
-                                        BetaManagedAgentsAgentToolset20260401.Type
-                                            .AGENT_TOOLSET_20260401
-                                    )
                                     .build()
                             )
-                            .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                             .version(1)
                             .build()
                     )
                     .archivedAt(null)
                     .budget(
-                        BetaManagedAgentsBudgetLimit.builder()
-                            .maxListCost(
-                                BetaMonetaryAmount.builder()
-                                    .amount("2500")
-                                    .currency(BetaCurrency.USD)
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                            .build()
+                        BetaManagedAgentsBudgetLimit.of(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
                     )
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
@@ -502,9 +410,6 @@ internal class SessionListPageResponseTest {
                             .iteration(0)
                             .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                             .result("satisfied")
-                            .type(
-                                BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION
-                            )
                             .build()
                     )
                     .addResource(
@@ -513,7 +418,6 @@ internal class SessionListPageResponseTest {
                             .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                             .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                             .mountPath("/uploads/receipt.pdf")
-                            .type(BetaManagedAgentsFileResource.Type.FILE)
                             .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                             .build()
                     )
@@ -522,7 +426,6 @@ internal class SessionListPageResponseTest {
                             .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                             .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                             .mountPath("/workspace/example-repo")
-                            .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
                             .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                             .url("https://github.com/example-org/example-repo")
                             .branchCheckout("main")
@@ -536,7 +439,6 @@ internal class SessionListPageResponseTest {
                     )
                     .status(BetaManagedAgentsSession.Status.IDLE)
                     .title("Order #1234 inquiry")
-                    .type(BetaManagedAgentsSession.Type.SESSION)
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .usage(
                         BetaManagedAgentsSessionUsage.builder()
@@ -593,18 +495,13 @@ internal class SessionListPageResponseTest {
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
-                                        .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                         .url("https://example-server.modelcontextprotocol.io/sse")
                                         .build()
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
                                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                        .effort(
-                                            BetaManagedAgentsEffortLow.of(
-                                                BetaManagedAgentsEffortLow.Type.LOW
-                                            )
-                                        )
+                                        .effort(BetaManagedAgentsEffortLow.builder().build())
                                         .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                         .build()
@@ -624,11 +521,6 @@ internal class SessionListPageResponseTest {
                                                     BetaManagedAgentsMcpServerUrlDefinition
                                                         .builder()
                                                         .name("example-mcp")
-                                                        .type(
-                                                            BetaManagedAgentsMcpServerUrlDefinition
-                                                                .Type
-                                                                .URL
-                                                        )
                                                         .url(
                                                             "https://example-server.modelcontextprotocol.io/sse"
                                                         )
@@ -638,9 +530,8 @@ internal class SessionListPageResponseTest {
                                                     BetaManagedAgentsModelConfig.builder()
                                                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                         .effort(
-                                                            BetaManagedAgentsEffortLow.of(
-                                                                BetaManagedAgentsEffortLow.Type.LOW
-                                                            )
+                                                            BetaManagedAgentsEffortLow.builder()
+                                                                .build()
                                                         )
                                                         .inferenceGeo("inference_geo")
                                                         .speed(
@@ -653,10 +544,6 @@ internal class SessionListPageResponseTest {
                                                 .addSkill(
                                                     BetaManagedAgentsAnthropicSkill.builder()
                                                         .skillId("xlsx")
-                                                        .type(
-                                                            BetaManagedAgentsAnthropicSkill.Type
-                                                                .ANTHROPIC
-                                                        )
                                                         .version("1")
                                                         .build()
                                                 )
@@ -671,11 +558,8 @@ internal class SessionListPageResponseTest {
                                                                 .enabled(true)
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAllowPolicy
-                                                                        .of(
-                                                                            BetaManagedAgentsAlwaysAllowPolicy
-                                                                                .Type
-                                                                                .ALWAYS_ALLOW
-                                                                        )
+                                                                        .builder()
+                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
@@ -685,23 +569,12 @@ internal class SessionListPageResponseTest {
                                                                 .enabled(true)
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAskPolicy
-                                                                        .of(
-                                                                            BetaManagedAgentsAlwaysAskPolicy
-                                                                                .Type
-                                                                                .ALWAYS_ASK
-                                                                        )
+                                                                        .builder()
+                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
-                                                        .type(
-                                                            BetaManagedAgentsAgentToolset20260401
-                                                                .Type
-                                                                .AGENT_TOOLSET_20260401
-                                                        )
                                                         .build()
-                                                )
-                                                .type(
-                                                    BetaManagedAgentsSessionThreadAgent.Type.AGENT
                                                 )
                                                 .version(1)
                                                 .build()
@@ -712,14 +585,12 @@ internal class SessionListPageResponseTest {
                                 .addSkill(
                                     BetaManagedAgentsAnthropicSkill.builder()
                                         .skillId("xlsx")
-                                        .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                         .version("1")
                                         .build()
                                 )
                                 .addSkill(
                                     BetaManagedAgentsCustomSkill.builder()
                                         .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                                        .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                         .version("2")
                                         .build()
                                 )
@@ -732,10 +603,8 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsBashToolConfig.builder()
                                                 .enabled(true)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                            .ALWAYS_ALLOW
-                                                    )
+                                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                                        .build()
                                                 )
                                                 .build()
                                         )
@@ -743,34 +612,24 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                                 .enabled(true)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAskPolicy.of(
-                                                        BetaManagedAgentsAlwaysAskPolicy.Type
-                                                            .ALWAYS_ASK
-                                                    )
+                                                    BetaManagedAgentsAlwaysAskPolicy.builder()
+                                                        .build()
                                                 )
                                                 .build()
                                         )
-                                        .type(
-                                            BetaManagedAgentsAgentToolset20260401.Type
-                                                .AGENT_TOOLSET_20260401
-                                        )
                                         .build()
                                 )
-                                .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
                         .archivedAt(null)
                         .budget(
-                            BetaManagedAgentsBudgetLimit.builder()
-                                .maxListCost(
-                                    BetaMonetaryAmount.builder()
-                                        .amount("2500")
-                                        .currency(BetaCurrency.USD)
-                                        .build()
-                                )
-                                .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                                .build()
+                            BetaManagedAgentsBudgetLimit.of(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
                         )
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
@@ -783,10 +642,6 @@ internal class SessionListPageResponseTest {
                                 .iteration(0)
                                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                                 .result("satisfied")
-                                .type(
-                                    BetaManagedAgentsOutcomeEvaluationResource.Type
-                                        .OUTCOME_EVALUATION
-                                )
                                 .build()
                         )
                         .addResource(
@@ -795,7 +650,6 @@ internal class SessionListPageResponseTest {
                                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                                 .mountPath("/uploads/receipt.pdf")
-                                .type(BetaManagedAgentsFileResource.Type.FILE)
                                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .build()
                         )
@@ -804,9 +658,6 @@ internal class SessionListPageResponseTest {
                                 .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .mountPath("/workspace/example-repo")
-                                .type(
-                                    BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY
-                                )
                                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .url("https://github.com/example-org/example-repo")
                                 .branchCheckout("main")
@@ -820,7 +671,6 @@ internal class SessionListPageResponseTest {
                         )
                         .status(BetaManagedAgentsSession.Status.IDLE)
                         .title("Order #1234 inquiry")
-                        .type(BetaManagedAgentsSession.Type.SESSION)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .usage(
                             BetaManagedAgentsSessionUsage.builder()
@@ -868,18 +718,13 @@ internal class SessionListPageResponseTest {
                             .addMcpServer(
                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                     .name("example-mcp")
-                                    .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                     .url("https://example-server.modelcontextprotocol.io/sse")
                                     .build()
                             )
                             .model(
                                 BetaManagedAgentsModelConfig.builder()
                                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                    .effort(
-                                        BetaManagedAgentsEffortLow.of(
-                                            BetaManagedAgentsEffortLow.Type.LOW
-                                        )
-                                    )
+                                    .effort(BetaManagedAgentsEffortLow.builder().build())
                                     .inferenceGeo("inference_geo")
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                     .build()
@@ -898,10 +743,6 @@ internal class SessionListPageResponseTest {
                                             .addMcpServer(
                                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                                     .name("example-mcp")
-                                                    .type(
-                                                        BetaManagedAgentsMcpServerUrlDefinition.Type
-                                                            .URL
-                                                    )
                                                     .url(
                                                         "https://example-server.modelcontextprotocol.io/sse"
                                                     )
@@ -911,9 +752,7 @@ internal class SessionListPageResponseTest {
                                                 BetaManagedAgentsModelConfig.builder()
                                                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                     .effort(
-                                                        BetaManagedAgentsEffortLow.of(
-                                                            BetaManagedAgentsEffortLow.Type.LOW
-                                                        )
+                                                        BetaManagedAgentsEffortLow.builder().build()
                                                     )
                                                     .inferenceGeo("inference_geo")
                                                     .speed(
@@ -925,10 +764,6 @@ internal class SessionListPageResponseTest {
                                             .addSkill(
                                                 BetaManagedAgentsAnthropicSkill.builder()
                                                     .skillId("xlsx")
-                                                    .type(
-                                                        BetaManagedAgentsAnthropicSkill.Type
-                                                            .ANTHROPIC
-                                                    )
                                                     .version("1")
                                                     .build()
                                             )
@@ -942,11 +777,8 @@ internal class SessionListPageResponseTest {
                                                             .enabled(true)
                                                             .permissionPolicy(
                                                                 BetaManagedAgentsAlwaysAllowPolicy
-                                                                    .of(
-                                                                        BetaManagedAgentsAlwaysAllowPolicy
-                                                                            .Type
-                                                                            .ALWAYS_ALLOW
-                                                                    )
+                                                                    .builder()
+                                                                    .build()
                                                             )
                                                             .build()
                                                     )
@@ -955,21 +787,14 @@ internal class SessionListPageResponseTest {
                                                             .builder()
                                                             .enabled(true)
                                                             .permissionPolicy(
-                                                                BetaManagedAgentsAlwaysAskPolicy.of(
-                                                                    BetaManagedAgentsAlwaysAskPolicy
-                                                                        .Type
-                                                                        .ALWAYS_ASK
-                                                                )
+                                                                BetaManagedAgentsAlwaysAskPolicy
+                                                                    .builder()
+                                                                    .build()
                                                             )
                                                             .build()
                                                     )
-                                                    .type(
-                                                        BetaManagedAgentsAgentToolset20260401.Type
-                                                            .AGENT_TOOLSET_20260401
-                                                    )
                                                     .build()
                                             )
-                                            .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                                             .version(1)
                                             .build()
                                     )
@@ -979,14 +804,12 @@ internal class SessionListPageResponseTest {
                             .addSkill(
                                 BetaManagedAgentsAnthropicSkill.builder()
                                     .skillId("xlsx")
-                                    .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                     .version("1")
                                     .build()
                             )
                             .addSkill(
                                 BetaManagedAgentsCustomSkill.builder()
                                     .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                                    .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                     .version("2")
                                     .build()
                             )
@@ -999,10 +822,7 @@ internal class SessionListPageResponseTest {
                                         BetaManagedAgentsBashToolConfig.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
+                                                BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                             )
                                             .build()
                                     )
@@ -1010,33 +830,23 @@ internal class SessionListPageResponseTest {
                                         BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAskPolicy.of(
-                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                                )
+                                                BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                             )
                                             .build()
                                     )
-                                    .type(
-                                        BetaManagedAgentsAgentToolset20260401.Type
-                                            .AGENT_TOOLSET_20260401
-                                    )
                                     .build()
                             )
-                            .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                             .version(1)
                             .build()
                     )
                     .archivedAt(null)
                     .budget(
-                        BetaManagedAgentsBudgetLimit.builder()
-                            .maxListCost(
-                                BetaMonetaryAmount.builder()
-                                    .amount("2500")
-                                    .currency(BetaCurrency.USD)
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                            .build()
+                        BetaManagedAgentsBudgetLimit.of(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
                     )
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
@@ -1049,9 +859,6 @@ internal class SessionListPageResponseTest {
                             .iteration(0)
                             .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                             .result("satisfied")
-                            .type(
-                                BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION
-                            )
                             .build()
                     )
                     .addResource(
@@ -1060,7 +867,6 @@ internal class SessionListPageResponseTest {
                             .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                             .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                             .mountPath("/uploads/receipt.pdf")
-                            .type(BetaManagedAgentsFileResource.Type.FILE)
                             .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                             .build()
                     )
@@ -1069,7 +875,6 @@ internal class SessionListPageResponseTest {
                             .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                             .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                             .mountPath("/workspace/example-repo")
-                            .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
                             .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                             .url("https://github.com/example-org/example-repo")
                             .branchCheckout("main")
@@ -1083,7 +888,6 @@ internal class SessionListPageResponseTest {
                     )
                     .status(BetaManagedAgentsSession.Status.IDLE)
                     .title("Order #1234 inquiry")
-                    .type(BetaManagedAgentsSession.Type.SESSION)
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .usage(
                         BetaManagedAgentsSessionUsage.builder()
@@ -1136,18 +940,13 @@ internal class SessionListPageResponseTest {
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
-                                        .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                         .url("https://example-server.modelcontextprotocol.io/sse")
                                         .build()
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
                                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                        .effort(
-                                            BetaManagedAgentsEffortLow.of(
-                                                BetaManagedAgentsEffortLow.Type.LOW
-                                            )
-                                        )
+                                        .effort(BetaManagedAgentsEffortLow.builder().build())
                                         .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                         .build()
@@ -1167,11 +966,6 @@ internal class SessionListPageResponseTest {
                                                     BetaManagedAgentsMcpServerUrlDefinition
                                                         .builder()
                                                         .name("example-mcp")
-                                                        .type(
-                                                            BetaManagedAgentsMcpServerUrlDefinition
-                                                                .Type
-                                                                .URL
-                                                        )
                                                         .url(
                                                             "https://example-server.modelcontextprotocol.io/sse"
                                                         )
@@ -1181,9 +975,8 @@ internal class SessionListPageResponseTest {
                                                     BetaManagedAgentsModelConfig.builder()
                                                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                         .effort(
-                                                            BetaManagedAgentsEffortLow.of(
-                                                                BetaManagedAgentsEffortLow.Type.LOW
-                                                            )
+                                                            BetaManagedAgentsEffortLow.builder()
+                                                                .build()
                                                         )
                                                         .inferenceGeo("inference_geo")
                                                         .speed(
@@ -1196,10 +989,6 @@ internal class SessionListPageResponseTest {
                                                 .addSkill(
                                                     BetaManagedAgentsAnthropicSkill.builder()
                                                         .skillId("xlsx")
-                                                        .type(
-                                                            BetaManagedAgentsAnthropicSkill.Type
-                                                                .ANTHROPIC
-                                                        )
                                                         .version("1")
                                                         .build()
                                                 )
@@ -1214,11 +1003,8 @@ internal class SessionListPageResponseTest {
                                                                 .enabled(true)
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAllowPolicy
-                                                                        .of(
-                                                                            BetaManagedAgentsAlwaysAllowPolicy
-                                                                                .Type
-                                                                                .ALWAYS_ALLOW
-                                                                        )
+                                                                        .builder()
+                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
@@ -1228,23 +1014,12 @@ internal class SessionListPageResponseTest {
                                                                 .enabled(true)
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAskPolicy
-                                                                        .of(
-                                                                            BetaManagedAgentsAlwaysAskPolicy
-                                                                                .Type
-                                                                                .ALWAYS_ASK
-                                                                        )
+                                                                        .builder()
+                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
-                                                        .type(
-                                                            BetaManagedAgentsAgentToolset20260401
-                                                                .Type
-                                                                .AGENT_TOOLSET_20260401
-                                                        )
                                                         .build()
-                                                )
-                                                .type(
-                                                    BetaManagedAgentsSessionThreadAgent.Type.AGENT
                                                 )
                                                 .version(1)
                                                 .build()
@@ -1255,14 +1030,12 @@ internal class SessionListPageResponseTest {
                                 .addSkill(
                                     BetaManagedAgentsAnthropicSkill.builder()
                                         .skillId("xlsx")
-                                        .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                         .version("1")
                                         .build()
                                 )
                                 .addSkill(
                                     BetaManagedAgentsCustomSkill.builder()
                                         .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                                        .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                         .version("2")
                                         .build()
                                 )
@@ -1275,10 +1048,8 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsBashToolConfig.builder()
                                                 .enabled(true)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                            .ALWAYS_ALLOW
-                                                    )
+                                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                                        .build()
                                                 )
                                                 .build()
                                         )
@@ -1286,34 +1057,24 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                                 .enabled(true)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAskPolicy.of(
-                                                        BetaManagedAgentsAlwaysAskPolicy.Type
-                                                            .ALWAYS_ASK
-                                                    )
+                                                    BetaManagedAgentsAlwaysAskPolicy.builder()
+                                                        .build()
                                                 )
                                                 .build()
                                         )
-                                        .type(
-                                            BetaManagedAgentsAgentToolset20260401.Type
-                                                .AGENT_TOOLSET_20260401
-                                        )
                                         .build()
                                 )
-                                .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
                         .archivedAt(null)
                         .budget(
-                            BetaManagedAgentsBudgetLimit.builder()
-                                .maxListCost(
-                                    BetaMonetaryAmount.builder()
-                                        .amount("2500")
-                                        .currency(BetaCurrency.USD)
-                                        .build()
-                                )
-                                .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                                .build()
+                            BetaManagedAgentsBudgetLimit.of(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
                         )
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
@@ -1326,10 +1087,6 @@ internal class SessionListPageResponseTest {
                                 .iteration(0)
                                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                                 .result("satisfied")
-                                .type(
-                                    BetaManagedAgentsOutcomeEvaluationResource.Type
-                                        .OUTCOME_EVALUATION
-                                )
                                 .build()
                         )
                         .addResource(
@@ -1338,7 +1095,6 @@ internal class SessionListPageResponseTest {
                                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                                 .mountPath("/uploads/receipt.pdf")
-                                .type(BetaManagedAgentsFileResource.Type.FILE)
                                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .build()
                         )
@@ -1347,9 +1103,6 @@ internal class SessionListPageResponseTest {
                                 .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .mountPath("/workspace/example-repo")
-                                .type(
-                                    BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY
-                                )
                                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                                 .url("https://github.com/example-org/example-repo")
                                 .branchCheckout("main")
@@ -1363,7 +1116,6 @@ internal class SessionListPageResponseTest {
                         )
                         .status(BetaManagedAgentsSession.Status.IDLE)
                         .title("Order #1234 inquiry")
-                        .type(BetaManagedAgentsSession.Type.SESSION)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .usage(
                             BetaManagedAgentsSessionUsage.builder()

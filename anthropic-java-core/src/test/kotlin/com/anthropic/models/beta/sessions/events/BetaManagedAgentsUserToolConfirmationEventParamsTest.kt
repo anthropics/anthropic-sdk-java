@@ -13,15 +13,12 @@ internal class BetaManagedAgentsUserToolConfirmationEventParamsTest {
             BetaManagedAgentsUserToolConfirmationEventParams.builder()
                 .result(BetaManagedAgentsUserToolConfirmationEventParams.Result.ALLOW)
                 .toolUseId("x")
-                .type(BetaManagedAgentsUserToolConfirmationEventParams.Type.USER_TOOL_CONFIRMATION)
                 .denyMessage("deny_message")
                 .build()
 
         assertThat(betaManagedAgentsUserToolConfirmationEventParams.result())
             .isEqualTo(BetaManagedAgentsUserToolConfirmationEventParams.Result.ALLOW)
         assertThat(betaManagedAgentsUserToolConfirmationEventParams.toolUseId()).isEqualTo("x")
-        assertThat(betaManagedAgentsUserToolConfirmationEventParams.type())
-            .isEqualTo(BetaManagedAgentsUserToolConfirmationEventParams.Type.USER_TOOL_CONFIRMATION)
         assertThat(betaManagedAgentsUserToolConfirmationEventParams.denyMessage())
             .contains("deny_message")
     }
@@ -33,7 +30,6 @@ internal class BetaManagedAgentsUserToolConfirmationEventParamsTest {
             BetaManagedAgentsUserToolConfirmationEventParams.builder()
                 .result(BetaManagedAgentsUserToolConfirmationEventParams.Result.ALLOW)
                 .toolUseId("x")
-                .type(BetaManagedAgentsUserToolConfirmationEventParams.Type.USER_TOOL_CONFIRMATION)
                 .denyMessage("deny_message")
                 .build()
 

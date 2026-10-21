@@ -108,7 +108,7 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -153,7 +153,7 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                     response
                         .use { removeHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -191,7 +191,7 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                     response
                         .use { setHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
