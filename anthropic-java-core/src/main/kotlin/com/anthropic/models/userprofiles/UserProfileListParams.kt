@@ -4,6 +4,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
+import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -11,6 +12,7 @@ import kotlin.jvm.optionals.getOrNull
 /** List User Profiles */
 class UserProfileListParams
 private constructor(
+    private val enforcementStatus: List<UserProfileEnforcementStatus>?,
     private val limit: Int?,
     private val order: UserProfileListOrder?,
     private val orderBy: UserProfileListOrderBy?,
@@ -19,6 +21,18 @@ private constructor(
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * Return only the user profiles whose `enforcement_status` is one of these values:
+     * `unrestricted`, `pending`, `restricted` or `banned`. Repeat the parameter to match any of
+     * several. With it set, a page may hold fewer than `limit` profiles, or none, and still carry a
+     * `next_page`: the service examines a bounded number of profiles per request, and only a null
+     * `next_page` means the listing is complete. Rejected with `invalid_request_error` under the
+     * `user-profiles-2026-09-04` and earlier beta headers. Fails with `overloaded_error` when a
+     * profile's enforcement actions cannot be read for the moment.
+     */
+    fun enforcementStatus(): Optional<List<UserProfileEnforcementStatus>> =
+        Optional.ofNullable(enforcementStatus)
 
     /** The maximum number of user profiles to return, from 1 to 100. Defaults to 20. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
@@ -67,6 +81,7 @@ private constructor(
     /** A builder for [UserProfileListParams]. */
     class Builder internal constructor() {
 
+        private var enforcementStatus: MutableList<UserProfileEnforcementStatus>? = null
         private var limit: Int? = null
         private var order: UserProfileListOrder? = null
         private var orderBy: UserProfileListOrderBy? = null
@@ -77,6 +92,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(userProfileListParams: UserProfileListParams) = apply {
+            enforcementStatus = userProfileListParams.enforcementStatus?.toMutableList()
             limit = userProfileListParams.limit
             order = userProfileListParams.order
             orderBy = userProfileListParams.orderBy
@@ -84,6 +100,34 @@ private constructor(
             workspaceId = userProfileListParams.workspaceId
             additionalHeaders = userProfileListParams.additionalHeaders.toBuilder()
             additionalQueryParams = userProfileListParams.additionalQueryParams.toBuilder()
+        }
+
+        /**
+         * Return only the user profiles whose `enforcement_status` is one of these values:
+         * `unrestricted`, `pending`, `restricted` or `banned`. Repeat the parameter to match any of
+         * several. With it set, a page may hold fewer than `limit` profiles, or none, and still
+         * carry a `next_page`: the service examines a bounded number of profiles per request, and
+         * only a null `next_page` means the listing is complete. Rejected with
+         * `invalid_request_error` under the `user-profiles-2026-09-04` and earlier beta headers.
+         * Fails with `overloaded_error` when a profile's enforcement actions cannot be read for the
+         * moment.
+         */
+        fun enforcementStatus(enforcementStatus: List<UserProfileEnforcementStatus>?) = apply {
+            this.enforcementStatus = enforcementStatus?.toMutableList()
+        }
+
+        /** Alias for calling [Builder.enforcementStatus] with `enforcementStatus.orElse(null)`. */
+        fun enforcementStatus(enforcementStatus: Optional<List<UserProfileEnforcementStatus>>) =
+            enforcementStatus(enforcementStatus.getOrNull())
+
+        /**
+         * Adds a single [UserProfileEnforcementStatus] to [Builder.enforcementStatus].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addEnforcementStatus(enforcementStatus: UserProfileEnforcementStatus) = apply {
+            this.enforcementStatus =
+                (this.enforcementStatus ?: mutableListOf()).apply { add(enforcementStatus) }
         }
 
         /** The maximum number of user profiles to return, from 1 to 100. Defaults to 20. */
@@ -241,6 +285,7 @@ private constructor(
          */
         fun build(): UserProfileListParams =
             UserProfileListParams(
+                enforcementStatus?.toImmutable(),
                 limit,
                 order,
                 orderBy,
@@ -262,6 +307,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                enforcementStatus?.forEach { put("enforcement_status[]", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
                 order?.let { put("order", it.toString()) }
                 orderBy?.let { put("order_by", it.toString()) }
@@ -274,7 +320,7 @@ private constructor(
         SpanData(
             name = "anthropic.user_profiles.list",
             route = "/v1/user_profiles",
-            queryParams = listOf("limit", "order", "order_by", "page"),
+            queryParams = listOf("enforcement_status", "limit", "order", "order_by", "page"),
         )
 
     override fun equals(other: Any?): Boolean {
@@ -283,6 +329,7 @@ private constructor(
         }
 
         return other is UserProfileListParams &&
+            enforcementStatus == other.enforcementStatus &&
             limit == other.limit &&
             order == other.order &&
             orderBy == other.orderBy &&
@@ -294,6 +341,7 @@ private constructor(
 
     override fun hashCode(): Int =
         Objects.hash(
+            enforcementStatus,
             limit,
             order,
             orderBy,
@@ -304,5 +352,5 @@ private constructor(
         )
 
     override fun toString() =
-        "UserProfileListParams{limit=$limit, order=$order, orderBy=$orderBy, page=$page, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UserProfileListParams{enforcementStatus=$enforcementStatus, limit=$limit, order=$order, orderBy=$orderBy, page=$page, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

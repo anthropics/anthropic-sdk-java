@@ -4,6 +4,7 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
+import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -30,6 +31,8 @@ private constructor(
     private val id: JsonField<String>,
     private val accessType: JsonField<UserProfileAccessType>,
     private val createdAt: JsonField<OffsetDateTime>,
+    private val enforcementActions: JsonField<List<UserProfileEnforcementAction>>,
+    private val enforcementStatus: JsonField<UserProfileEnforcementStatus>,
     private val externalUserDetails: JsonField<UserProfileExternalUserDetails>,
     private val metadata: JsonField<Metadata>,
     private val name: JsonField<String>,
@@ -48,6 +51,12 @@ private constructor(
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("enforcement_actions")
+        @ExcludeMissing
+        enforcementActions: JsonField<List<UserProfileEnforcementAction>> = JsonMissing.of(),
+        @JsonProperty("enforcement_status")
+        @ExcludeMissing
+        enforcementStatus: JsonField<UserProfileEnforcementStatus> = JsonMissing.of(),
         @JsonProperty("external_user_details")
         @ExcludeMissing
         externalUserDetails: JsonField<UserProfileExternalUserDetails> = JsonMissing.of(),
@@ -64,6 +73,8 @@ private constructor(
         id,
         accessType,
         createdAt,
+        enforcementActions,
+        enforcementStatus,
         externalUserDetails,
         metadata,
         name,
@@ -97,6 +108,30 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
+
+    /**
+     * The enforcement actions open on this profile; empty when none is open. Absent under the
+     * `user-profiles-2026-09-04` and earlier beta headers.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun enforcementActions(): List<UserProfileEnforcementAction> =
+        enforcementActions.getRequired("enforcement_actions")
+
+    /**
+     * Anthropic's enforcement status of this profile, from its open enforcement actions and any
+     * identity check under review, by the first rule that applies: `banned` while any open action
+     * is a `ban`; `pending` while a restriction that an identity check can clear is open, the end
+     * user has submitted that check, Anthropic's review of it has not ended, and no open action's
+     * `reason` is `account_compromise`; `restricted` while any action is open; `unrestricted` while
+     * none is. Absent under the `user-profiles-2026-09-04` and earlier beta headers.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun enforcementStatus(): UserProfileEnforcementStatus =
+        enforcementStatus.getRequired("enforcement_status")
 
     /**
      * Details about the entity this profile represents, as the platform states them; not verified
@@ -189,6 +224,26 @@ private constructor(
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
     /**
+     * Returns the raw JSON value of [enforcementActions].
+     *
+     * Unlike [enforcementActions], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("enforcement_actions")
+    @ExcludeMissing
+    fun _enforcementActions(): JsonField<List<UserProfileEnforcementAction>> = enforcementActions
+
+    /**
+     * Returns the raw JSON value of [enforcementStatus].
+     *
+     * Unlike [enforcementStatus], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("enforcement_status")
+    @ExcludeMissing
+    fun _enforcementStatus(): JsonField<UserProfileEnforcementStatus> = enforcementStatus
+
+    /**
      * Returns the raw JSON value of [externalUserDetails].
      *
      * Unlike [externalUserDetails], this method doesn't throw if the JSON field has an unexpected
@@ -252,6 +307,8 @@ private constructor(
          * .id()
          * .accessType()
          * .createdAt()
+         * .enforcementActions()
+         * .enforcementStatus()
          * .externalUserDetails()
          * .metadata()
          * .name()
@@ -268,6 +325,8 @@ private constructor(
         private var id: JsonField<String>? = null
         private var accessType: JsonField<UserProfileAccessType>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
+        private var enforcementActions: JsonField<MutableList<UserProfileEnforcementAction>>? = null
+        private var enforcementStatus: JsonField<UserProfileEnforcementStatus>? = null
         private var externalUserDetails: JsonField<UserProfileExternalUserDetails>? = null
         private var metadata: JsonField<Metadata>? = null
         private var name: JsonField<String>? = null
@@ -281,6 +340,11 @@ private constructor(
             id = userProfile.id
             accessType = userProfile.accessType
             createdAt = userProfile.createdAt
+            enforcementActions =
+                userProfile.enforcementActions
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            enforcementStatus = userProfile.enforcementStatus
             externalUserDetails = userProfile.externalUserDetails
             metadata = userProfile.metadata
             name = userProfile.name
@@ -329,6 +393,73 @@ private constructor(
          * supported value.
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+
+        /**
+         * The enforcement actions open on this profile; empty when none is open. Absent under the
+         * `user-profiles-2026-09-04` and earlier beta headers.
+         */
+        fun enforcementActions(enforcementActions: List<UserProfileEnforcementAction>) =
+            enforcementActions(JsonField.of(enforcementActions))
+
+        /**
+         * Sets [Builder.enforcementActions] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.enforcementActions] with a well-typed
+         * `List<UserProfileEnforcementAction>` value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun enforcementActions(enforcementActions: JsonField<List<UserProfileEnforcementAction>>) =
+            apply {
+                this.enforcementActions = enforcementActions.map { it.toMutableList() }
+            }
+
+        /**
+         * Adds a single [UserProfileEnforcementAction] to [enforcementActions].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addEnforcementAction(enforcementAction: UserProfileEnforcementAction) = apply {
+            enforcementActions =
+                (enforcementActions ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("enforcementActions", it).add(enforcementAction)
+                }
+        }
+
+        /**
+         * Alias for calling [addEnforcementAction] with
+         * `UserProfileEnforcementAction.ofRestriction(restriction)`.
+         */
+        fun addEnforcementAction(restriction: UserProfileEnforcementActionRestriction) =
+            addEnforcementAction(UserProfileEnforcementAction.ofRestriction(restriction))
+
+        /**
+         * Alias for calling [addEnforcementAction] with `UserProfileEnforcementAction.ofBan(ban)`.
+         */
+        fun addEnforcementAction(ban: UserProfileEnforcementActionBan) =
+            addEnforcementAction(UserProfileEnforcementAction.ofBan(ban))
+
+        /**
+         * Anthropic's enforcement status of this profile, from its open enforcement actions and any
+         * identity check under review, by the first rule that applies: `banned` while any open
+         * action is a `ban`; `pending` while a restriction that an identity check can clear is
+         * open, the end user has submitted that check, Anthropic's review of it has not ended, and
+         * no open action's `reason` is `account_compromise`; `restricted` while any action is open;
+         * `unrestricted` while none is. Absent under the `user-profiles-2026-09-04` and earlier
+         * beta headers.
+         */
+        fun enforcementStatus(enforcementStatus: UserProfileEnforcementStatus) =
+            enforcementStatus(JsonField.of(enforcementStatus))
+
+        /**
+         * Sets [Builder.enforcementStatus] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.enforcementStatus] with a well-typed
+         * [UserProfileEnforcementStatus] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun enforcementStatus(enforcementStatus: JsonField<UserProfileEnforcementStatus>) = apply {
+            this.enforcementStatus = enforcementStatus
+        }
 
         /**
          * Details about the entity this profile represents, as the platform states them; not
@@ -461,6 +592,8 @@ private constructor(
          * .id()
          * .accessType()
          * .createdAt()
+         * .enforcementActions()
+         * .enforcementStatus()
          * .externalUserDetails()
          * .metadata()
          * .name()
@@ -475,6 +608,8 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("accessType", accessType),
                 checkRequired("createdAt", createdAt),
+                checkRequired("enforcementActions", enforcementActions).map { it.toImmutable() },
+                checkRequired("enforcementStatus", enforcementStatus),
                 checkRequired("externalUserDetails", externalUserDetails),
                 checkRequired("metadata", metadata),
                 checkRequired("name", name),
@@ -503,6 +638,8 @@ private constructor(
         id()
         accessType().validate()
         createdAt()
+        enforcementActions().forEach { it.validate() }
+        enforcementStatus().validate()
         externalUserDetails().validate()
         metadata().validate()
         name()
@@ -534,6 +671,8 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (accessType.asKnown().getOrNull()?.validity() ?: 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (enforcementActions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (enforcementStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (externalUserDetails.asKnown().getOrNull()?.validity() ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
@@ -661,6 +800,8 @@ private constructor(
             id == other.id &&
             accessType == other.accessType &&
             createdAt == other.createdAt &&
+            enforcementActions == other.enforcementActions &&
+            enforcementStatus == other.enforcementStatus &&
             externalUserDetails == other.externalUserDetails &&
             metadata == other.metadata &&
             name == other.name &&
@@ -675,6 +816,8 @@ private constructor(
             id,
             accessType,
             createdAt,
+            enforcementActions,
+            enforcementStatus,
             externalUserDetails,
             metadata,
             name,
@@ -688,5 +831,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UserProfile{id=$id, accessType=$accessType, createdAt=$createdAt, externalUserDetails=$externalUserDetails, metadata=$metadata, name=$name, programs=$programs, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "UserProfile{id=$id, accessType=$accessType, createdAt=$createdAt, enforcementActions=$enforcementActions, enforcementStatus=$enforcementStatus, externalUserDetails=$externalUserDetails, metadata=$metadata, name=$name, programs=$programs, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

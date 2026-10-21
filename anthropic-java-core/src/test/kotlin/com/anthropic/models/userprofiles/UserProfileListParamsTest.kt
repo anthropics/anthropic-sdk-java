@@ -10,6 +10,7 @@ internal class UserProfileListParamsTest {
     @Test
     fun create() {
         UserProfileListParams.builder()
+            .addEnforcementStatus(UserProfileEnforcementStatus.UNRESTRICTED)
             .limit(0)
             .order(UserProfileListOrder.ASC)
             .orderBy(UserProfileListOrderBy.CREATED_AT)
@@ -22,6 +23,7 @@ internal class UserProfileListParamsTest {
     fun headers() {
         val params =
             UserProfileListParams.builder()
+                .addEnforcementStatus(UserProfileEnforcementStatus.UNRESTRICTED)
                 .limit(0)
                 .order(UserProfileListOrder.ASC)
                 .orderBy(UserProfileListOrderBy.CREATED_AT)
@@ -52,6 +54,7 @@ internal class UserProfileListParamsTest {
     fun queryParams() {
         val params =
             UserProfileListParams.builder()
+                .addEnforcementStatus(UserProfileEnforcementStatus.UNRESTRICTED)
                 .limit(0)
                 .order(UserProfileListOrder.ASC)
                 .orderBy(UserProfileListOrderBy.CREATED_AT)
@@ -64,6 +67,7 @@ internal class UserProfileListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
+                    .put("enforcement_status[]", "unrestricted")
                     .put("limit", "0")
                     .put("order", "asc")
                     .put("order_by", "created_at")
