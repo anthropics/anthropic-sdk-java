@@ -132,7 +132,7 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                             response
                                 .use { createHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -176,7 +176,7 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -215,7 +215,7 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                             response
                                 .use { updateHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -249,7 +249,7 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -296,7 +296,7 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                             response
                                 .use { deleteHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -337,7 +337,7 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                             response
                                 .use { regenerateSigningSecretHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

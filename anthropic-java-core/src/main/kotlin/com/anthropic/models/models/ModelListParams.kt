@@ -8,7 +8,6 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.beta.AnthropicBeta
 import com.fasterxml.jackson.annotation.JsonCreator
 import java.util.Objects
 import java.util.Optional
@@ -26,7 +25,6 @@ private constructor(
     private val beforeId: String?,
     private val lifecycle: List<Lifecycle>?,
     private val limit: Long?,
-    private val betas: List<AnthropicBeta>?,
     private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -57,12 +55,6 @@ private constructor(
      * Defaults to `20`. Ranges from `1` to `1000`.
      */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
-
-    /** Optional header to specify the beta version(s) you want to use. */
-    @Deprecated(
-        "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
-    )
-    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
      * Optional header to select the Workspace for this request. The value is a Workspace ID (for
@@ -96,7 +88,6 @@ private constructor(
         private var beforeId: String? = null
         private var lifecycle: MutableList<Lifecycle>? = null
         private var limit: Long? = null
-        private var betas: MutableList<AnthropicBeta>? = null
         private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -107,7 +98,6 @@ private constructor(
             beforeId = modelListParams.beforeId
             lifecycle = modelListParams.lifecycle?.toMutableList()
             limit = modelListParams.limit
-            betas = modelListParams.betas?.toMutableList()
             workspaceId = modelListParams.workspaceId
             additionalHeaders = modelListParams.additionalHeaders.toBuilder()
             additionalQueryParams = modelListParams.additionalQueryParams.toBuilder()
@@ -168,42 +158,6 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
-
-        /** Optional header to specify the beta version(s) you want to use. */
-        @Deprecated(
-            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
-        )
-        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
-
-        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
-        @Deprecated(
-            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
-        )
-        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
-
-        /**
-         * Adds a single [AnthropicBeta] to [betas].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        @Deprecated(
-            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
-        )
-        fun addBeta(beta: AnthropicBeta) = apply {
-            betas = (betas ?: mutableListOf()).apply { add(beta) }
-        }
-
-        /**
-         * Sets [addBeta] to an arbitrary [String].
-         *
-         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        @Deprecated(
-            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
-        )
-        fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         /**
          * Optional header to select the Workspace for this request. The value is a Workspace ID
@@ -326,7 +280,6 @@ private constructor(
                 beforeId,
                 lifecycle?.toImmutable(),
                 limit,
-                betas?.toImmutable(),
                 workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -336,11 +289,6 @@ private constructor(
     override fun _headers(): Headers =
         Headers.builder()
             .apply {
-                betas?.let {
-                    if (it.isNotEmpty()) {
-                        put("anthropic-beta", it.joinToString(","))
-                    }
-                }
                 workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
@@ -531,7 +479,6 @@ private constructor(
             beforeId == other.beforeId &&
             lifecycle == other.lifecycle &&
             limit == other.limit &&
-            betas == other.betas &&
             workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -543,12 +490,11 @@ private constructor(
             beforeId,
             lifecycle,
             limit,
-            betas,
             workspaceId,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "ModelListParams{afterId=$afterId, beforeId=$beforeId, lifecycle=$lifecycle, limit=$limit, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ModelListParams{afterId=$afterId, beforeId=$beforeId, lifecycle=$lifecycle, limit=$limit, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

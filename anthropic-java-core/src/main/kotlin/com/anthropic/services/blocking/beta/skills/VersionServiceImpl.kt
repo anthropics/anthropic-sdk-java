@@ -114,7 +114,7 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     response
                         .use { createHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -151,7 +151,7 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -186,7 +186,7 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -230,7 +230,7 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     response
                         .use { deleteHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

@@ -13,65 +13,42 @@ internal class BetaManagedAgentsMcpToolsetParamsTest {
         val betaManagedAgentsMcpToolsetParams =
             BetaManagedAgentsMcpToolsetParams.builder()
                 .mcpServerName("x")
-                .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
                 .addConfig(
                     BetaManagedAgentsMcpToolConfigParams.builder()
                         .name("x")
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .defaultConfig(
                     BetaManagedAgentsMcpToolsetDefaultConfigParams.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .build()
 
         assertThat(betaManagedAgentsMcpToolsetParams.mcpServerName()).isEqualTo("x")
-        assertThat(betaManagedAgentsMcpToolsetParams.type())
-            .isEqualTo(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
         assertThat(betaManagedAgentsMcpToolsetParams.configs().getOrNull())
             .containsExactly(
                 BetaManagedAgentsMcpToolConfigParams.builder()
                     .name("x")
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
         assertThat(betaManagedAgentsMcpToolsetParams.defaultConfig())
             .contains(
                 BetaManagedAgentsMcpToolsetDefaultConfigParams.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
     }
 
     @Test
     fun addToUnsetListsOnToBuilder() {
-        val baseBetaManagedAgentsMcpToolsetParams =
-            BetaManagedAgentsMcpToolsetParams.builder()
-                .mcpServerName("x")
-                .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
-                .build()
+        val baseBetaManagedAgentsMcpToolsetParams = BetaManagedAgentsMcpToolsetParams.of("x")
 
         val betaManagedAgentsMcpToolsetParams =
             baseBetaManagedAgentsMcpToolsetParams
@@ -80,11 +57,7 @@ internal class BetaManagedAgentsMcpToolsetParamsTest {
                     BetaManagedAgentsMcpToolConfigParams.builder()
                         .name("x")
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .build()
@@ -94,11 +67,7 @@ internal class BetaManagedAgentsMcpToolsetParamsTest {
                 BetaManagedAgentsMcpToolConfigParams.builder()
                     .name("x")
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
     }
@@ -109,26 +78,17 @@ internal class BetaManagedAgentsMcpToolsetParamsTest {
         val betaManagedAgentsMcpToolsetParams =
             BetaManagedAgentsMcpToolsetParams.builder()
                 .mcpServerName("x")
-                .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
                 .addConfig(
                     BetaManagedAgentsMcpToolConfigParams.builder()
                         .name("x")
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .defaultConfig(
                     BetaManagedAgentsMcpToolsetDefaultConfigParams.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .build()

@@ -104,7 +104,6 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.vaults;
     exports com.anthropic.models.beta.vaults.credentials;
     exports com.anthropic.models.beta.webhooks;
-    exports com.anthropic.models.completions;
     exports com.anthropic.models.files;
     exports com.anthropic.models.messages;
     exports com.anthropic.models.messages.batches;

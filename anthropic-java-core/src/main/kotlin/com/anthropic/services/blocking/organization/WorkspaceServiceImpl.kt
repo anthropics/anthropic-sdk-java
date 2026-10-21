@@ -140,7 +140,7 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                     response
                         .use { createHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -176,7 +176,7 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -210,7 +210,7 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                     response
                         .use { updateHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -239,7 +239,7 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -281,7 +281,7 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                     response
                         .use { archiveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

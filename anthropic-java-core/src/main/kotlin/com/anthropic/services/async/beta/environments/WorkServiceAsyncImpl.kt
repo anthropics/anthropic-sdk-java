@@ -153,7 +153,7 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -194,7 +194,7 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             response
                                 .use { updateHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -233,7 +233,7 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -283,7 +283,7 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             response
                                 .use { ackHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -325,7 +325,7 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             response
                                 .use { heartbeatHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -364,7 +364,7 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             response
                                 .use { pollHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.ifPresent { it.validate() }
                                     }
                                 }
@@ -403,7 +403,7 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             response
                                 .use { statsHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -445,7 +445,7 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             response
                                 .use { stopHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

@@ -24,9 +24,11 @@ private constructor(
     @JvmSynthetic internal val apiKey: String?,
     @JvmSynthetic internal val bearerTokenSupplier: Supplier<String>?,
     // One of `resource` _or_ `baseUrl` must be non-null, but not both.
-    val resource: String?,
-    val baseUrl: String?,
+    private val resource: String?,
+    private val baseUrl: String?,
 ) : Backend {
+
+    fun resource(): Optional<String> = Optional.ofNullable(resource)
 
     companion object {
         private const val ENV_API_KEY = "ANTHROPIC_FOUNDRY_API_KEY"
@@ -34,8 +36,6 @@ private constructor(
         private const val ENV_BASE_URL = "ANTHROPIC_FOUNDRY_BASE_URL"
         private const val HEADER_AUTHORIZATION = "Authorization"
         private const val HEADER_API_KEY = "x-api-key"
-        private const val ANTHROPIC_VERSION = "2023-06-01"
-        private const val HEADER_VERSION = "anthropic-version"
 
         @JvmStatic fun builder() = Builder()
 
@@ -93,12 +93,8 @@ private constructor(
         // deployment is the same as the model name, but it may be changed to an arbitrary value,
         // so do _not_ validate the model name against the enum of known model names.
 
-        // The `/anthropic` prefix lives in `baseUrl()`, so the path segments pass through
-        // unchanged — only the version header is added.
-        if (request.headers.names().contains(HEADER_VERSION)) {
-            return request
-        }
-        return request.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION).build()
+        // The `/anthropic` prefix lives in `baseUrl()`, so the request passes through unchanged.
+        return request
     }
 
     override fun authorizeRequest(request: HttpRequest): HttpRequest {

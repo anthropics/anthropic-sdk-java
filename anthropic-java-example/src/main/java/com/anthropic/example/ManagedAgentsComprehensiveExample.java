@@ -71,7 +71,6 @@ public final class ManagedAgentsComprehensiveExample {
                         .vaultId(vault.id())
                         .displayName("github-mcp")
                         .auth(BetaManagedAgentsStaticBearerCreateParams.builder()
-                                .type(BetaManagedAgentsStaticBearerCreateParams.Type.STATIC_BEARER)
                                 .mcpServerUrl(MCP_SERVER_URL)
                                 .token(githubToken)
                                 .build())
@@ -102,19 +101,15 @@ public final class ManagedAgentsComprehensiveExample {
                                 .build())
                         .system("You are a helpful assistant.")
                         .addMcpServer(BetaManagedAgentsUrlMcpServerParams.builder()
-                                .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                                 .name(MCP_SERVER_NAME)
                                 .url(MCP_SERVER_URL)
                                 .build())
                         .addTool(BetaManagedAgentsAgentToolset20260401Params.builder()
-                                .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
                                 .build())
                         .addTool(BetaManagedAgentsMcpToolsetParams.builder()
-                                .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
                                 .mcpServerName(MCP_SERVER_NAME)
                                 .build())
                         .addTool(BetaManagedAgentsCustomToolParams.builder()
-                                .type(BetaManagedAgentsCustomToolParams.Type.CUSTOM)
                                 .name("get_weather")
                                 .description("Look up the current weather for a city.")
                                 .inputSchema(BetaManagedAgentsCustomToolInputSchema.builder()
@@ -160,7 +155,6 @@ public final class ManagedAgentsComprehensiveExample {
                         .addUserMessageEvent(List.of(BetaManagedAgentsUserMessageEventParams.Content.ofText(
                                 BetaManagedAgentsTextBlock.builder()
                                         .text(PROMPT)
-                                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
                                         .build())))
                         .build());
 
@@ -183,9 +177,6 @@ public final class ManagedAgentsComprehensiveExample {
                                 .send(EventSendParams.builder()
                                         .sessionId(session.id())
                                         .addEvent(BetaManagedAgentsUserCustomToolResultEventParams.builder()
-                                                .type(
-                                                        BetaManagedAgentsUserCustomToolResultEventParams.Type
-                                                                .USER_CUSTOM_TOOL_RESULT)
                                                 .customToolUseId(toolUse.id())
                                                 .addTextContent("{\"temperature_c\": 14}")
                                                 .build())

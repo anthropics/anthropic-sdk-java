@@ -13,7 +13,6 @@ internal class BetaManagedAgentsUserDefineOutcomeEventParamsTest {
             BetaManagedAgentsUserDefineOutcomeEventParams.builder()
                 .description("Produce a 2-page summary as summary.md")
                 .textRubric("Must cover all five sections; cite sources inline.")
-                .type(BetaManagedAgentsUserDefineOutcomeEventParams.Type.USER_DEFINE_OUTCOME)
                 .maxIterations(3)
                 .build()
 
@@ -22,14 +21,9 @@ internal class BetaManagedAgentsUserDefineOutcomeEventParamsTest {
         assertThat(betaManagedAgentsUserDefineOutcomeEventParams.rubric())
             .isEqualTo(
                 BetaManagedAgentsUserDefineOutcomeEventParams.Rubric.ofText(
-                    BetaManagedAgentsTextRubricParams.builder()
-                        .content("Must cover all five sections; cite sources inline.")
-                        .type(BetaManagedAgentsTextRubricParams.Type.TEXT)
-                        .build()
+                    "Must cover all five sections; cite sources inline."
                 )
             )
-        assertThat(betaManagedAgentsUserDefineOutcomeEventParams.type())
-            .isEqualTo(BetaManagedAgentsUserDefineOutcomeEventParams.Type.USER_DEFINE_OUTCOME)
         assertThat(betaManagedAgentsUserDefineOutcomeEventParams.maxIterations()).contains(3)
     }
 
@@ -40,7 +34,6 @@ internal class BetaManagedAgentsUserDefineOutcomeEventParamsTest {
             BetaManagedAgentsUserDefineOutcomeEventParams.builder()
                 .description("Produce a 2-page summary as summary.md")
                 .textRubric("Must cover all five sections; cite sources inline.")
-                .type(BetaManagedAgentsUserDefineOutcomeEventParams.Type.USER_DEFINE_OUTCOME)
                 .maxIterations(3)
                 .build()
 

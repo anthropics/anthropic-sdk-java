@@ -19,7 +19,6 @@ internal class DeploymentRunListPageResponseTest {
                         .agent(
                             BetaManagedAgentsAgentReference.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -28,7 +27,6 @@ internal class DeploymentRunListPageResponseTest {
                         .environmentArchivedError("message")
                         .sessionId("session_id")
                         .scheduleTriggerContext(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .type(BetaManagedAgentsDeploymentRun.Type.DEPLOYMENT_RUN)
                         .build()
                 )
                 .nextPage("next_page")
@@ -41,7 +39,6 @@ internal class DeploymentRunListPageResponseTest {
                     .agent(
                         BetaManagedAgentsAgentReference.builder()
                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                            .type(BetaManagedAgentsAgentReference.Type.AGENT)
                             .version(1)
                             .build()
                     )
@@ -50,7 +47,6 @@ internal class DeploymentRunListPageResponseTest {
                     .environmentArchivedError("message")
                     .sessionId("session_id")
                     .scheduleTriggerContext(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsDeploymentRun.Type.DEPLOYMENT_RUN)
                     .build()
             )
         assertThat(deploymentRunListPageResponse.nextPage()).contains("next_page")
@@ -67,7 +63,6 @@ internal class DeploymentRunListPageResponseTest {
                         .agent(
                             BetaManagedAgentsAgentReference.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -76,7 +71,6 @@ internal class DeploymentRunListPageResponseTest {
                         .environmentArchivedError("message")
                         .sessionId("session_id")
                         .scheduleTriggerContext(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .type(BetaManagedAgentsDeploymentRun.Type.DEPLOYMENT_RUN)
                         .build()
                 )
                 .nextPage("next_page")

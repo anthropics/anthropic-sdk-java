@@ -10,15 +10,17 @@ import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.RateLimitException
 import com.anthropic.errors.SseException
 import com.anthropic.helpers.FakeHttpClient
-import com.anthropic.models.beta.messages.BetaMessageParam
+import com.anthropic.models.beta.messages.BetaAssistantMessageParam
 import com.anthropic.models.beta.messages.BetaToolResultBlockParam
 import com.anthropic.models.beta.messages.BetaToolUseBlockParam
+import com.anthropic.models.beta.messages.BetaUserMessageParam
+import com.anthropic.models.messages.AssistantMessageParam
 import com.anthropic.models.messages.ContentBlockParam
 import com.anthropic.models.messages.MessageCreateParams
-import com.anthropic.models.messages.MessageParam
 import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.models.messages.TextBlockParam
 import com.anthropic.models.messages.ThinkingBlockParam
+import com.anthropic.models.messages.UserMessageParam
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
@@ -559,10 +561,7 @@ internal class ContentTest : TracingTestSupport() {
                 .model("claude-requested")
                 .maxTokens(1)
                 .addMessage(
-                    MessageParam.builder()
-                        .role(MessageParam.Role.USER)
-                        .content(JsonValue.fromJsonNode(content))
-                        .build()
+                    UserMessageParam.builder().content(JsonValue.fromJsonNode(content)).build()
                 )
                 .addUserMessage("later")
                 .build()
@@ -1891,7 +1890,7 @@ internal class ContentTest : TracingTestSupport() {
         val params =
             messageParams()
                 .toBuilder()
-                .addAssistantMessageOfBlockParams(
+                .addAssistantMessageOfContentBlockParams(
                     listOf(
                         ContentBlockParam.ofThinking(
                             ThinkingBlockParam.builder()
@@ -1950,10 +1949,7 @@ internal class ContentTest : TracingTestSupport() {
             messageParams()
                 .toBuilder()
                 .addMessage(
-                    MessageParam.builder()
-                        .role(MessageParam.Role.USER)
-                        .content(JsonValue.fromJsonNode(content))
-                        .build()
+                    UserMessageParam.builder().content(JsonValue.fromJsonNode(content)).build()
                 )
                 .build()
 
@@ -2040,8 +2036,7 @@ internal class ContentTest : TracingTestSupport() {
             betaMessageParams()
                 .toBuilder()
                 .addMessage(
-                    BetaMessageParam.builder()
-                        .role(BetaMessageParam.Role.ASSISTANT)
+                    BetaAssistantMessageParam.builder()
                         .content(JsonValue.fromJsonNode(replayed))
                         .build()
                 )
@@ -2172,18 +2167,8 @@ internal class ContentTest : TracingTestSupport() {
                 .create(
                     betaMessageParams()
                         .toBuilder()
-                        .addMessage(
-                            BetaMessageParam.builder()
-                                .role(BetaMessageParam.Role.ASSISTANT)
-                                .content(replayed)
-                                .build()
-                        )
-                        .addMessage(
-                            BetaMessageParam.builder()
-                                .role(BetaMessageParam.Role.USER)
-                                .content(results)
-                                .build()
-                        )
+                        .addMessage(BetaAssistantMessageParam.builder().content(replayed).build())
+                        .addMessage(BetaUserMessageParam.builder().content(results).build())
                         .build()
                 )
         } else {
@@ -2192,18 +2177,8 @@ internal class ContentTest : TracingTestSupport() {
                 .create(
                     messageParams()
                         .toBuilder()
-                        .addMessage(
-                            MessageParam.builder()
-                                .role(MessageParam.Role.ASSISTANT)
-                                .content(replayed)
-                                .build()
-                        )
-                        .addMessage(
-                            MessageParam.builder()
-                                .role(MessageParam.Role.USER)
-                                .content(results)
-                                .build()
-                        )
+                        .addMessage(AssistantMessageParam.builder().content(replayed).build())
+                        .addMessage(UserMessageParam.builder().content(results).build())
                         .build()
                 )
         }

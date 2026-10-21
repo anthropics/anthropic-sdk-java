@@ -9,25 +9,15 @@ internal class BetaManagedAgentsBranchCheckoutTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsBranchCheckout =
-            BetaManagedAgentsBranchCheckout.builder()
-                .name("main")
-                .type(BetaManagedAgentsBranchCheckout.Type.BRANCH)
-                .build()
+        val betaManagedAgentsBranchCheckout = BetaManagedAgentsBranchCheckout.of("main")
 
         assertThat(betaManagedAgentsBranchCheckout.name()).isEqualTo("main")
-        assertThat(betaManagedAgentsBranchCheckout.type())
-            .isEqualTo(BetaManagedAgentsBranchCheckout.Type.BRANCH)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsBranchCheckout =
-            BetaManagedAgentsBranchCheckout.builder()
-                .name("main")
-                .type(BetaManagedAgentsBranchCheckout.Type.BRANCH)
-                .build()
+        val betaManagedAgentsBranchCheckout = BetaManagedAgentsBranchCheckout.of("main")
 
         val roundtrippedBetaManagedAgentsBranchCheckout =
             jsonMapper.readValue(

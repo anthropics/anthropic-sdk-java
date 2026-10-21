@@ -14,6 +14,7 @@ internal class SpendLimitListParamsTest {
             .limit(1L)
             .page("page")
             .addScopeType(SpendLimitListParams.ScopeType.ORGANIZATION)
+            .workspaceId("workspace_id")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
@@ -25,6 +26,7 @@ internal class SpendLimitListParamsTest {
                 .limit(1L)
                 .page("page")
                 .addScopeType(SpendLimitListParams.ScopeType.ORGANIZATION)
+                .workspaceId("workspace_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
@@ -58,6 +60,7 @@ internal class SpendLimitListParamsTest {
                 .limit(1L)
                 .page("page")
                 .addScopeType(SpendLimitListParams.ScopeType.ORGANIZATION)
+                .workspaceId("workspace_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
@@ -69,6 +72,7 @@ internal class SpendLimitListParamsTest {
                     .put("limit", "1")
                     .put("page", "page")
                     .put("scope_type[]", "organization")
+                    .put("workspace_id", "workspace_id")
                     .build()
             )
     }

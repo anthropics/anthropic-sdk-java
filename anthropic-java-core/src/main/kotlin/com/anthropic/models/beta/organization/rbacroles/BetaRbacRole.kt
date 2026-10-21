@@ -20,7 +20,6 @@ private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val displayName: JsonField<String>,
-    private val name: JsonField<String>,
     private val type: JsonValue,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -35,12 +34,11 @@ private constructor(
         @JsonProperty("display_name")
         @ExcludeMissing
         displayName: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(id, createdAt, displayName, name, type, updatedAt, mutableMapOf())
+    ) : this(id, createdAt, displayName, type, updatedAt, mutableMapOf())
 
     /**
      * ID of the RBAC Role.
@@ -67,16 +65,6 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun displayName(): String = displayName.getRequired("display_name")
-
-    /**
-     * Deprecated: use `display_name` instead. Name of the RBAC Role; always the same value as
-     * `display_name`.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    @Deprecated("Use `display_name` instead; `name` always has the same value.")
-    fun name(): String = name.getRequired("name")
 
     /**
      * Object type.
@@ -127,16 +115,6 @@ private constructor(
     fun _displayName(): JsonField<String> = displayName
 
     /**
-     * Returns the raw JSON value of [name].
-     *
-     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @Deprecated("Use `display_name` instead; `name` always has the same value.")
-    @JsonProperty("name")
-    @ExcludeMissing
-    fun _name(): JsonField<String> = name
-
-    /**
      * Returns the raw JSON value of [updatedAt].
      *
      * Unlike [updatedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -167,7 +145,6 @@ private constructor(
          * .id()
          * .createdAt()
          * .displayName()
-         * .name()
          * .updatedAt()
          * ```
          */
@@ -180,7 +157,6 @@ private constructor(
         private var id: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var displayName: JsonField<String>? = null
-        private var name: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("rbac_role")
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -190,7 +166,6 @@ private constructor(
             id = betaRbacRole.id
             createdAt = betaRbacRole.createdAt
             displayName = betaRbacRole.displayName
-            name = betaRbacRole.name
             type = betaRbacRole.type
             updatedAt = betaRbacRole.updatedAt
             additionalProperties = betaRbacRole.additionalProperties.toMutableMap()
@@ -234,22 +209,6 @@ private constructor(
          * value.
          */
         fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
-
-        /**
-         * Deprecated: use `display_name` instead. Name of the RBAC Role; always the same value as
-         * `display_name`.
-         */
-        @Deprecated("Use `display_name` instead; `name` always has the same value.")
-        fun name(name: String) = name(JsonField.of(name))
-
-        /**
-         * Sets [Builder.name] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        @Deprecated("Use `display_name` instead; `name` always has the same value.")
-        fun name(name: JsonField<String>) = apply { this.name = name }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -306,7 +265,6 @@ private constructor(
          * .id()
          * .createdAt()
          * .displayName()
-         * .name()
          * .updatedAt()
          * ```
          *
@@ -317,7 +275,6 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("displayName", displayName),
-                checkRequired("name", name),
                 type,
                 checkRequired("updatedAt", updatedAt),
                 additionalProperties.toMutableMap(),
@@ -342,7 +299,6 @@ private constructor(
         id()
         createdAt()
         displayName()
-        name()
         _type().let {
             if (it != JsonValue.from("rbac_role")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -370,7 +326,6 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (displayName.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("rbac_role")) 1 else 0 } +
             (if (updatedAt.asKnown().isPresent) 1 else 0)
 
@@ -383,18 +338,17 @@ private constructor(
             id == other.id &&
             createdAt == other.createdAt &&
             displayName == other.displayName &&
-            name == other.name &&
             type == other.type &&
             updatedAt == other.updatedAt &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, displayName, name, type, updatedAt, additionalProperties)
+        Objects.hash(id, createdAt, displayName, type, updatedAt, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaRbacRole{id=$id, createdAt=$createdAt, displayName=$displayName, name=$name, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "BetaRbacRole{id=$id, createdAt=$createdAt, displayName=$displayName, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

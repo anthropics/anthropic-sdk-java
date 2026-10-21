@@ -3,6 +3,7 @@ package com.anthropic.models.beta.deployments
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -17,7 +18,6 @@ internal class BetaManagedAgentsDeploymentInitialEventTest {
         val userMessage =
             BetaManagedAgentsDeploymentUserMessageEvent.builder()
                 .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsDeploymentUserMessageEvent.Type.USER_MESSAGE)
                 .build()
 
         val betaManagedAgentsDeploymentInitialEvent =
@@ -35,7 +35,6 @@ internal class BetaManagedAgentsDeploymentInitialEventTest {
             BetaManagedAgentsDeploymentInitialEvent.ofUserMessage(
                 BetaManagedAgentsDeploymentUserMessageEvent.builder()
                     .addTextContent("Where is my order #1234?")
-                    .type(BetaManagedAgentsDeploymentUserMessageEvent.Type.USER_MESSAGE)
                     .build()
             )
 
@@ -55,7 +54,6 @@ internal class BetaManagedAgentsDeploymentInitialEventTest {
             BetaManagedAgentsDeploymentUserDefineOutcomeEvent.builder()
                 .description("description")
                 .fileRubric("file_id")
-                .type(BetaManagedAgentsDeploymentUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
                 .maxIterations(0)
                 .build()
 
@@ -76,9 +74,6 @@ internal class BetaManagedAgentsDeploymentInitialEventTest {
                 BetaManagedAgentsDeploymentUserDefineOutcomeEvent.builder()
                     .description("description")
                     .fileRubric("file_id")
-                    .type(
-                        BetaManagedAgentsDeploymentUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME
-                    )
                     .maxIterations(0)
                     .build()
             )
@@ -97,8 +92,7 @@ internal class BetaManagedAgentsDeploymentInitialEventTest {
     fun ofSystemMessage() {
         val systemMessage =
             BetaManagedAgentsDeploymentSystemMessageEvent.builder()
-                .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsDeploymentSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                 .build()
 
         val betaManagedAgentsDeploymentInitialEvent =
@@ -115,8 +109,7 @@ internal class BetaManagedAgentsDeploymentInitialEventTest {
         val betaManagedAgentsDeploymentInitialEvent =
             BetaManagedAgentsDeploymentInitialEvent.ofSystemMessage(
                 BetaManagedAgentsDeploymentSystemMessageEvent.builder()
-                    .addTextContent("Where is my order #1234?")
-                    .type(BetaManagedAgentsDeploymentSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                    .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                     .build()
             )
 

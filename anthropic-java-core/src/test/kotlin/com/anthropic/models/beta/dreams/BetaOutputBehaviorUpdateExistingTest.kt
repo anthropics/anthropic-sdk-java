@@ -9,25 +9,15 @@ internal class BetaOutputBehaviorUpdateExistingTest {
 
     @Test
     fun create() {
-        val betaOutputBehaviorUpdateExisting =
-            BetaOutputBehaviorUpdateExisting.builder()
-                .memoryStoreId("x")
-                .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
-                .build()
+        val betaOutputBehaviorUpdateExisting = BetaOutputBehaviorUpdateExisting.of("x")
 
         assertThat(betaOutputBehaviorUpdateExisting.memoryStoreId()).isEqualTo("x")
-        assertThat(betaOutputBehaviorUpdateExisting.type())
-            .isEqualTo(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaOutputBehaviorUpdateExisting =
-            BetaOutputBehaviorUpdateExisting.builder()
-                .memoryStoreId("x")
-                .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
-                .build()
+        val betaOutputBehaviorUpdateExisting = BetaOutputBehaviorUpdateExisting.of("x")
 
         val roundtrippedBetaOutputBehaviorUpdateExisting =
             jsonMapper.readValue(

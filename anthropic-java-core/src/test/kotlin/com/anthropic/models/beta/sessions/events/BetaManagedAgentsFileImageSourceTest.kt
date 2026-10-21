@@ -9,25 +9,15 @@ internal class BetaManagedAgentsFileImageSourceTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsFileImageSource =
-            BetaManagedAgentsFileImageSource.builder()
-                .fileId("x")
-                .type(BetaManagedAgentsFileImageSource.Type.FILE)
-                .build()
+        val betaManagedAgentsFileImageSource = BetaManagedAgentsFileImageSource.of("x")
 
         assertThat(betaManagedAgentsFileImageSource.fileId()).isEqualTo("x")
-        assertThat(betaManagedAgentsFileImageSource.type())
-            .isEqualTo(BetaManagedAgentsFileImageSource.Type.FILE)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsFileImageSource =
-            BetaManagedAgentsFileImageSource.builder()
-                .fileId("x")
-                .type(BetaManagedAgentsFileImageSource.Type.FILE)
-                .build()
+        val betaManagedAgentsFileImageSource = BetaManagedAgentsFileImageSource.of("x")
 
         val roundtrippedBetaManagedAgentsFileImageSource =
             jsonMapper.readValue(

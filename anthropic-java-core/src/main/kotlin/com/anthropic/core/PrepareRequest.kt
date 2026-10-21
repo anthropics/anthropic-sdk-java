@@ -35,4 +35,5 @@ internal fun HttpRequest.prepareAsync(
  * Headers that are only defaults. `prepare` adds them, not `ClientOptions`, so that a value set on
  * a derived builder replaces them.
  */
-private val DEFAULT_HEADERS: Map<String, String> = mapOf("Accept" to "application/json")
+private val DEFAULT_HEADERS: Map<String, String> =
+    mapOf("Accept" to "application/json", "anthropic-version" to "2026-10-21")

@@ -12,18 +12,14 @@ internal class BetaManagedAgentsMcpToolsetDefaultConfigParamsTest {
         val betaManagedAgentsMcpToolsetDefaultConfigParams =
             BetaManagedAgentsMcpToolsetDefaultConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsMcpToolsetDefaultConfigParams.enabled()).contains(true)
         assertThat(betaManagedAgentsMcpToolsetDefaultConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsMcpToolsetDefaultConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
     }
@@ -34,11 +30,7 @@ internal class BetaManagedAgentsMcpToolsetDefaultConfigParamsTest {
         val betaManagedAgentsMcpToolsetDefaultConfigParams =
             BetaManagedAgentsMcpToolsetDefaultConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsMcpToolsetDefaultConfigParams =

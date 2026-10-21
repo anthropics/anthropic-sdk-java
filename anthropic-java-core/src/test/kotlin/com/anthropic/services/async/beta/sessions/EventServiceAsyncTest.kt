@@ -4,7 +4,6 @@ import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaType
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import com.anthropic.models.beta.sessions.events.EventSendParams
 import com.anthropic.models.beta.sessions.events.EventStreamParams
@@ -43,10 +42,7 @@ internal class EventServiceAsyncTest {
                     .addUserMessageEvent(
                         listOf(
                             BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                                BetaManagedAgentsTextBlock.builder()
-                                    .text("Where is my order #1234?")
-                                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                    .build()
+                                "Where is my order #1234?"
                             )
                         )
                     )

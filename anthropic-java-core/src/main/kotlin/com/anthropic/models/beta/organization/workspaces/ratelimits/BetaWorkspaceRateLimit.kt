@@ -39,7 +39,6 @@ class BetaWorkspaceRateLimit
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val group: JsonField<Group>,
-    private val groupType: JsonField<GroupType>,
     private val limits: JsonField<List<BetaWorkspaceRateLimitValue>>,
     private val models: JsonField<List<String>>,
     private val rateLimitId: JsonField<String>,
@@ -51,9 +50,6 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("group") @ExcludeMissing group: JsonField<Group> = JsonMissing.of(),
-        @JsonProperty("group_type")
-        @ExcludeMissing
-        groupType: JsonField<GroupType> = JsonMissing.of(),
         @JsonProperty("limits")
         @ExcludeMissing
         limits: JsonField<List<BetaWorkspaceRateLimitValue>> = JsonMissing.of(),
@@ -65,28 +61,15 @@ private constructor(
         @JsonProperty("workspace_id")
         @ExcludeMissing
         workspaceId: JsonField<String> = JsonMissing.of(),
-    ) : this(group, groupType, limits, models, rateLimitId, type, workspaceId, mutableMapOf())
+    ) : this(group, limits, models, rateLimitId, type, workspaceId, mutableMapOf())
 
     /**
-     * The rate-limit group this entry's limits apply to. Its `type` equals `group_type`.
+     * The rate-limit group this entry's limits apply to.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun group(): Group = group.getRequired("group")
-
-    /**
-     * Deprecated: use `group.type` instead. The kind of rate-limit group this entry represents.
-     * `model_group` entries apply to a family of models (listed in `models`); other values apply to
-     * an API-surface category and have `models` set to `null`. Always equal to `group.type`.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    @Deprecated(
-        "Use `group.type` instead. `group_type` is still returned and always equals `group.type`."
-    )
-    fun groupType(): GroupType = groupType.getRequired("group_type")
 
     /**
      * The workspace's limiter values for this group. By default only the limiter types with a
@@ -99,7 +82,7 @@ private constructor(
     fun limits(): List<BetaWorkspaceRateLimitValue> = limits.getRequired("limits")
 
     /**
-     * Model names this entry's limits apply to, including aliases. `null` when `group_type` is not
+     * Model names this entry's limits apply to, including aliases. `null` when `group.type` is not
      * `"model_group"`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -142,18 +125,6 @@ private constructor(
      * Unlike [group], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("group") @ExcludeMissing fun _group(): JsonField<Group> = group
-
-    /**
-     * Returns the raw JSON value of [groupType].
-     *
-     * Unlike [groupType], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @Deprecated(
-        "Use `group.type` instead. `group_type` is still returned and always equals `group.type`."
-    )
-    @JsonProperty("group_type")
-    @ExcludeMissing
-    fun _groupType(): JsonField<GroupType> = groupType
 
     /**
      * Returns the raw JSON value of [limits].
@@ -209,7 +180,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .group()
-         * .groupType()
          * .limits()
          * .models()
          * .rateLimitId()
@@ -223,7 +193,6 @@ private constructor(
     class Builder internal constructor() {
 
         private var group: JsonField<Group>? = null
-        private var groupType: JsonField<GroupType>? = null
         private var limits: JsonField<MutableList<BetaWorkspaceRateLimitValue>>? = null
         private var models: JsonField<MutableList<String>>? = null
         private var rateLimitId: JsonField<String>? = null
@@ -234,7 +203,6 @@ private constructor(
         @JvmSynthetic
         internal fun from(betaWorkspaceRateLimit: BetaWorkspaceRateLimit) = apply {
             group = betaWorkspaceRateLimit.group
-            groupType = betaWorkspaceRateLimit.groupType
             limits =
                 betaWorkspaceRateLimit.limits
                     .map { it.toMutableList() }
@@ -249,7 +217,7 @@ private constructor(
             additionalProperties = betaWorkspaceRateLimit.additionalProperties.toMutableMap()
         }
 
-        /** The rate-limit group this entry's limits apply to. Its `type` equals `group_type`. */
+        /** The rate-limit group this entry's limits apply to. */
         fun group(group: Group) = group(JsonField.of(group))
 
         /**
@@ -336,29 +304,6 @@ private constructor(
             group(BetaOrganizationRateLimitWebSearchGroup.builder().id(id).build())
 
         /**
-         * Deprecated: use `group.type` instead. The kind of rate-limit group this entry represents.
-         * `model_group` entries apply to a family of models (listed in `models`); other values
-         * apply to an API-surface category and have `models` set to `null`. Always equal to
-         * `group.type`.
-         */
-        @Deprecated(
-            "Use `group.type` instead. `group_type` is still returned and always equals `group.type`."
-        )
-        fun groupType(groupType: GroupType) = groupType(JsonField.of(groupType))
-
-        /**
-         * Sets [Builder.groupType] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.groupType] with a well-typed [GroupType] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        @Deprecated(
-            "Use `group.type` instead. `group_type` is still returned and always equals `group.type`."
-        )
-        fun groupType(groupType: JsonField<GroupType>) = apply { this.groupType = groupType }
-
-        /**
          * The workspace's limiter values for this group. By default only the limiter types with a
          * workspace-level override are listed. With `include_inherited` set to `true`, the limiter
          * types the workspace inherits from the organization are listed too, each marked by
@@ -390,7 +335,7 @@ private constructor(
         }
 
         /**
-         * Model names this entry's limits apply to, including aliases. `null` when `group_type` is
+         * Model names this entry's limits apply to, including aliases. `null` when `group.type` is
          * not `"model_group"`.
          */
         fun models(models: List<String>?) = models(JsonField.ofNullable(models))
@@ -486,7 +431,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .group()
-         * .groupType()
          * .limits()
          * .models()
          * .rateLimitId()
@@ -498,7 +442,6 @@ private constructor(
         fun build(): BetaWorkspaceRateLimit =
             BetaWorkspaceRateLimit(
                 checkRequired("group", group),
-                checkRequired("groupType", groupType),
                 checkRequired("limits", limits).map { it.toImmutable() },
                 checkRequired("models", models).map { it.toImmutable() },
                 checkRequired("rateLimitId", rateLimitId),
@@ -524,7 +467,6 @@ private constructor(
         }
 
         group().validate()
-        groupType().validate()
         limits().forEach { it.validate() }
         models()
         rateLimitId()
@@ -553,14 +495,13 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (group.asKnown().getOrNull()?.validity() ?: 0) +
-            (groupType.asKnown().getOrNull()?.validity() ?: 0) +
             (limits.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (models.asKnown().getOrNull()?.size ?: 0) +
             (if (rateLimitId.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("workspace_rate_limit")) 1 else 0 } +
             (if (workspaceId.asKnown().isPresent) 1 else 0)
 
-    /** The rate-limit group this entry's limits apply to. Its `type` equals `group_type`. */
+    /** The rate-limit group this entry's limits apply to. */
     @JsonDeserialize(using = Group.Deserializer::class)
     @JsonSerialize(using = Group.Serializer::class)
     class Group
@@ -1102,192 +1043,6 @@ private constructor(
         }
     }
 
-    /**
-     * Deprecated: use `group.type` instead. The kind of rate-limit group this entry represents.
-     * `model_group` entries apply to a family of models (listed in `models`); other values apply to
-     * an API-surface category and have `models` set to `null`. Always equal to `group.type`.
-     */
-    @Deprecated(
-        "Use `group.type` instead. `group_type` is still returned and always equals `group.type`."
-    )
-    class GroupType private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val BATCH = GroupType(JsonField.of("batch"))
-
-            @JvmField val FILES = GroupType(JsonField.of("files"))
-
-            @JvmField val MODEL_GROUP = GroupType(JsonField.of("model_group"))
-
-            @JvmField val SKILLS = GroupType(JsonField.of("skills"))
-
-            @JvmField val TOKEN_COUNT = GroupType(JsonField.of("token_count"))
-
-            @JvmField val WEB_SEARCH = GroupType(JsonField.of("web_search"))
-
-            @JvmStatic
-            fun of(value: String): GroupType =
-                // Intern known values so `==` works
-                when (value) {
-                    "batch" -> BATCH
-                    "files" -> FILES
-                    "model_group" -> MODEL_GROUP
-                    "skills" -> SKILLS
-                    "token_count" -> TOKEN_COUNT
-                    "web_search" -> WEB_SEARCH
-                    else -> GroupType(JsonField.of(value))
-                }
-
-            @JsonCreator
-            @JvmStatic
-            fun of(value: JsonField<String>): GroupType =
-                value.asString().getOrNull()?.let { of(it) } ?: GroupType(value)
-        }
-
-        /** An enum containing [GroupType]'s known values. */
-        enum class Known {
-            BATCH,
-            FILES,
-            MODEL_GROUP,
-            SKILLS,
-            TOKEN_COUNT,
-            WEB_SEARCH,
-        }
-
-        /**
-         * An enum containing [GroupType]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [GroupType] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            BATCH,
-            FILES,
-            MODEL_GROUP,
-            SKILLS,
-            TOKEN_COUNT,
-            WEB_SEARCH,
-            /**
-             * An enum member indicating that [GroupType] was instantiated with an unknown value.
-             */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                BATCH -> Value.BATCH
-                FILES -> Value.FILES
-                MODEL_GROUP -> Value.MODEL_GROUP
-                SKILLS -> Value.SKILLS
-                TOKEN_COUNT -> Value.TOKEN_COUNT
-                WEB_SEARCH -> Value.WEB_SEARCH
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                BATCH -> Known.BATCH
-                FILES -> Known.FILES
-                MODEL_GROUP -> Known.MODEL_GROUP
-                SKILLS -> Known.SKILLS
-                TOKEN_COUNT -> Known.TOKEN_COUNT
-                WEB_SEARCH -> Known.WEB_SEARCH
-                else -> throw AnthropicInvalidDataException("Unknown GroupType: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): GroupType = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is GroupType && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -1295,7 +1050,6 @@ private constructor(
 
         return other is BetaWorkspaceRateLimit &&
             group == other.group &&
-            groupType == other.groupType &&
             limits == other.limits &&
             models == other.models &&
             rateLimitId == other.rateLimitId &&
@@ -1305,20 +1059,11 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
-            group,
-            groupType,
-            limits,
-            models,
-            rateLimitId,
-            type,
-            workspaceId,
-            additionalProperties,
-        )
+        Objects.hash(group, limits, models, rateLimitId, type, workspaceId, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaWorkspaceRateLimit{group=$group, groupType=$groupType, limits=$limits, models=$models, rateLimitId=$rateLimitId, type=$type, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
+        "BetaWorkspaceRateLimit{group=$group, limits=$limits, models=$models, rateLimitId=$rateLimitId, type=$type, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
 }

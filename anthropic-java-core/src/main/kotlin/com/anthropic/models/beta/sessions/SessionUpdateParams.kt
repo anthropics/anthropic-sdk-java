@@ -272,7 +272,6 @@ private constructor(
          * Alias for calling [budget] with the following:
          * ```java
          * BetaManagedAgentsBudgetLimit.builder()
-         *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
          *     .maxListCost(maxListCost)
          *     .build()
          * ```
@@ -707,18 +706,12 @@ private constructor(
              * Alias for calling [budget] with the following:
              * ```java
              * BetaManagedAgentsBudgetLimit.builder()
-             *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
              *     .maxListCost(maxListCost)
              *     .build()
              * ```
              */
             fun limitBudget(maxListCost: BetaMonetaryAmount) =
-                budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .maxListCost(maxListCost)
-                        .build()
-                )
+                budget(BetaManagedAgentsBudgetLimit.builder().maxListCost(maxListCost).build())
 
             /**
              * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the

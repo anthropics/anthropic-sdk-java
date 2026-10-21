@@ -9,18 +9,13 @@ internal class BetaManagedAgentsAlwaysAskPolicyTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsAlwaysAskPolicy =
-            BetaManagedAgentsAlwaysAskPolicy.of(BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK)
-
-        assertThat(betaManagedAgentsAlwaysAskPolicy.type())
-            .isEqualTo(BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK)
+        val betaManagedAgentsAlwaysAskPolicy = BetaManagedAgentsAlwaysAskPolicy.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsAlwaysAskPolicy =
-            BetaManagedAgentsAlwaysAskPolicy.of(BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK)
+        val betaManagedAgentsAlwaysAskPolicy = BetaManagedAgentsAlwaysAskPolicy.builder().build()
 
         val roundtrippedBetaManagedAgentsAlwaysAskPolicy =
             jsonMapper.readValue(

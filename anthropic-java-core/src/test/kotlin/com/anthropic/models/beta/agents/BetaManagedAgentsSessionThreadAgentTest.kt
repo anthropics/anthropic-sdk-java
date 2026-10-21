@@ -19,25 +19,20 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")
-                        .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                         .url("https://example-server.modelcontextprotocol.io/sse")
                         .build()
                 )
                 .model(
                     BetaManagedAgentsModelConfig.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                        .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
+                        .effort(BetaManagedAgentsEffortLow.builder().build())
                         .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                         .build()
                 )
                 .name("Researcher")
                 .addSkill(
-                    BetaManagedAgentsAnthropicSkill.builder()
-                        .skillId("xlsx")
-                        .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
-                        .version("1")
-                        .build()
+                    BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
                 )
                 .system(
                     "You are a research subagent that gathers and summarises sources for the coordinating agent."
@@ -48,9 +43,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                             BetaManagedAgentsBashToolConfig.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -58,16 +51,12 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAskPolicy.of(
-                                        BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                    )
+                                    BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                 )
                                 .build()
                         )
-                        .type(BetaManagedAgentsAgentToolset20260401.Type.AGENT_TOOLSET_20260401)
                         .build()
                 )
-                .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                 .version(1)
                 .build()
 
@@ -85,7 +74,6 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
             .containsExactly(
                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                     .name("example-mcp")
-                    .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                     .url("https://example-server.modelcontextprotocol.io/sse")
                     .build()
             )
@@ -93,7 +81,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
             .isEqualTo(
                 BetaManagedAgentsModelConfig.builder()
                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                    .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
+                    .effort(BetaManagedAgentsEffortLow.builder().build())
                     .inferenceGeo("inference_geo")
                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                     .build()
@@ -102,11 +90,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
         assertThat(betaManagedAgentsSessionThreadAgent.skills())
             .containsExactly(
                 BetaManagedAgentsSessionThreadAgent.Skill.ofAnthropic(
-                    BetaManagedAgentsAnthropicSkill.builder()
-                        .skillId("xlsx")
-                        .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
-                        .version("1")
-                        .build()
+                    BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
                 )
             )
         assertThat(betaManagedAgentsSessionThreadAgent.system())
@@ -121,9 +105,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                             BetaManagedAgentsBashToolConfig.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -131,18 +113,13 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAskPolicy.of(
-                                        BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                    )
+                                    BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                 )
                                 .build()
                         )
-                        .type(BetaManagedAgentsAgentToolset20260401.Type.AGENT_TOOLSET_20260401)
                         .build()
                 )
             )
-        assertThat(betaManagedAgentsSessionThreadAgent.type())
-            .isEqualTo(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
         assertThat(betaManagedAgentsSessionThreadAgent.version()).isEqualTo(1)
     }
 
@@ -159,25 +136,20 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")
-                        .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                         .url("https://example-server.modelcontextprotocol.io/sse")
                         .build()
                 )
                 .model(
                     BetaManagedAgentsModelConfig.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                        .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
+                        .effort(BetaManagedAgentsEffortLow.builder().build())
                         .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                         .build()
                 )
                 .name("Researcher")
                 .addSkill(
-                    BetaManagedAgentsAnthropicSkill.builder()
-                        .skillId("xlsx")
-                        .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
-                        .version("1")
-                        .build()
+                    BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
                 )
                 .system(
                     "You are a research subagent that gathers and summarises sources for the coordinating agent."
@@ -188,9 +160,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                             BetaManagedAgentsBashToolConfig.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -198,16 +168,12 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAskPolicy.of(
-                                        BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                    )
+                                    BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                 )
                                 .build()
                         )
-                        .type(BetaManagedAgentsAgentToolset20260401.Type.AGENT_TOOLSET_20260401)
                         .build()
                 )
-                .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                 .version(1)
                 .build()
 

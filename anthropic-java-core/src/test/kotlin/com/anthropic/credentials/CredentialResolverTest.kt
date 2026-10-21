@@ -21,6 +21,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -41,7 +42,7 @@ internal class CredentialResolverTest {
                 ): CompletableFuture<AccessToken> =
                     CompletableFuture.completedFuture(AccessToken("explicit-cred-token"))
             }
-        val explicitCreds = CredentialResult.token(mockProvider, "https://custom.url", "wrk_123")
+        val explicitCreds = CredentialResult.Token(mockProvider, "https://custom.url", "wrk_123")
 
         val resolver = CredentialResolver.builder().credentials(explicitCreds).build()
 
@@ -101,7 +102,7 @@ internal class CredentialResolverTest {
         // For oidc_federation, workspace_id goes in the jwt-bearer exchange body, not the
         // anthropic-workspace-id header, so CredentialResult.workspaceId must be null.
         assertThat(result.workspaceId).isNull()
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("config-provider-token")
         assertThat(exchangeBody).isNotNull
         assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrk_config_provider")
@@ -151,7 +152,7 @@ internal class CredentialResolverTest {
         val result = resolver.resolve()
 
         assertThat(result).isNotNull
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("config-provider-beats-env")
     }
 
@@ -205,7 +206,7 @@ internal class CredentialResolverTest {
         val result = resolver.resolve()
 
         assertThat(result).isNotNull
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("explicit-profile-token")
         assertThat(exchangeBody).isNotNull
         assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrkspc_explicit")
@@ -233,7 +234,7 @@ internal class CredentialResolverTest {
         val result = resolver.resolve()
 
         assertThat(result).isNotNull
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("env-federation-token")
     }
 
@@ -259,7 +260,7 @@ internal class CredentialResolverTest {
         val result = resolver.resolve()
 
         assertThat(result).isNotNull
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("env-federation-value-token")
     }
 
@@ -288,7 +289,7 @@ internal class CredentialResolverTest {
         val result = resolver.resolve()
 
         assertThat(result).isNotNull
-        result.provider!!.get("https://api.anthropic.com", false)
+        result.provider.get("https://api.anthropic.com", false)
         assertThat(exchangeBody).isNotNull
         assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrkspc_01abc")
     }
@@ -321,7 +322,7 @@ internal class CredentialResolverTest {
 
         assertThat(result).isNotNull
         assertThat(result.workspaceId).isNull()
-        result.provider!!.get("https://api.anthropic.com", false)
+        result.provider.get("https://api.anthropic.com", false)
         assertThat(exchangeBody).isNotNull
         assertThat(exchangeBody!!).doesNotContainKey("workspace_id")
     }
@@ -369,7 +370,7 @@ internal class CredentialResolverTest {
         val result = resolver.resolve()
 
         assertThat(result).isNotNull
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("default-profile-token")
     }
 
@@ -419,7 +420,7 @@ internal class CredentialResolverTest {
         val result = resolver.resolve()
 
         assertThat(result).isNotNull
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("active-profile-token")
     }
 
@@ -473,7 +474,7 @@ internal class CredentialResolverTest {
         val result = resolver.resolve()
 
         assertThat(result).isNotNull
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("filled-profile-token")
     }
 
@@ -530,7 +531,7 @@ internal class CredentialResolverTest {
         // For oidc_federation, workspace_id goes in the jwt-bearer exchange body, not the
         // anthropic-workspace-id header, so CredentialResult.workspaceId must be null.
         assertThat(result.workspaceId).isNull()
-        result.provider!!.get("https://api.anthropic.com", false)
+        result.provider.get("https://api.anthropic.com", false)
         assertThat(exchangeBody).isNotNull
         assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrkspc_from_env")
     }
@@ -585,7 +586,7 @@ internal class CredentialResolverTest {
         val result = resolver.resolve()
 
         assertThat(result).isNotNull
-        result.provider!!.get("https://api.anthropic.com", false)
+        result.provider.get("https://api.anthropic.com", false)
         assertThat(exchangeBody).isNotNull
         assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrkspc_file")
     }
@@ -702,7 +703,7 @@ internal class CredentialResolverTest {
 
         val result = resolver.resolve()
         assertThat(result).isNotNull
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("cached-token-from-file")
     }
 
@@ -748,7 +749,7 @@ internal class CredentialResolverTest {
 
         val result = resolver.resolve()
         assertThat(result).isNotNull
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("new-wif-token")
 
         val cacheFile = tempDir.resolve("credentials").resolve("write-cache-profile.json")
@@ -789,7 +790,7 @@ internal class CredentialResolverTest {
                 .build()
 
         val result = resolver.resolve()
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
 
         assertThat(token.token).isEqualTo("sidecar-at")
         assertThat(httpCalled).isFalse()
@@ -904,7 +905,7 @@ internal class CredentialResolverTest {
                 .build()
 
         val result = resolver.resolve()
-        val token = result.provider!!.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false)
 
         assertThat(token.token).isEqualTo("freshly-refreshed")
     }
@@ -945,7 +946,7 @@ internal class CredentialResolverTest {
     }
 
     private fun extractBody(request: HttpRequest): String {
-        val body = request.body ?: return ""
+        val body = request.body().getOrNull() ?: return ""
         val outputStream = ByteArrayOutputStream()
         body.writeTo(outputStream)
         return outputStream.toString("UTF-8")

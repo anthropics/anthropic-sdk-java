@@ -14,11 +14,7 @@ internal class BetaManagedAgentsStartEventPreviewTest {
 
     @Test
     fun ofAgentMessage() {
-        val agentMessage =
-            BetaManagedAgentsAgentMessagePreview.builder()
-                .id("id")
-                .type(BetaManagedAgentsAgentMessagePreview.Type.AGENT_MESSAGE)
-                .build()
+        val agentMessage = BetaManagedAgentsAgentMessagePreview.of("id")
 
         val betaManagedAgentsStartEventPreview =
             BetaManagedAgentsStartEventPreview.ofAgentMessage(agentMessage)
@@ -32,10 +28,7 @@ internal class BetaManagedAgentsStartEventPreviewTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsStartEventPreview =
             BetaManagedAgentsStartEventPreview.ofAgentMessage(
-                BetaManagedAgentsAgentMessagePreview.builder()
-                    .id("id")
-                    .type(BetaManagedAgentsAgentMessagePreview.Type.AGENT_MESSAGE)
-                    .build()
+                BetaManagedAgentsAgentMessagePreview.of("id")
             )
 
         val roundtrippedBetaManagedAgentsStartEventPreview =
@@ -50,11 +43,7 @@ internal class BetaManagedAgentsStartEventPreviewTest {
 
     @Test
     fun ofAgentThinking() {
-        val agentThinking =
-            BetaManagedAgentsAgentThinkingPreview.builder()
-                .id("id")
-                .type(BetaManagedAgentsAgentThinkingPreview.Type.AGENT_THINKING)
-                .build()
+        val agentThinking = BetaManagedAgentsAgentThinkingPreview.of("id")
 
         val betaManagedAgentsStartEventPreview =
             BetaManagedAgentsStartEventPreview.ofAgentThinking(agentThinking)
@@ -68,10 +57,7 @@ internal class BetaManagedAgentsStartEventPreviewTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsStartEventPreview =
             BetaManagedAgentsStartEventPreview.ofAgentThinking(
-                BetaManagedAgentsAgentThinkingPreview.builder()
-                    .id("id")
-                    .type(BetaManagedAgentsAgentThinkingPreview.Type.AGENT_THINKING)
-                    .build()
+                BetaManagedAgentsAgentThinkingPreview.of("id")
             )
 
         val roundtrippedBetaManagedAgentsStartEventPreview =

@@ -4,8 +4,6 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.getPackageVersion
 import com.anthropic.services.async.BetaServiceAsync
 import com.anthropic.services.async.BetaServiceAsyncImpl
-import com.anthropic.services.async.CompletionServiceAsync
-import com.anthropic.services.async.CompletionServiceAsyncImpl
 import com.anthropic.services.async.FileServiceAsync
 import com.anthropic.services.async.FileServiceAsyncImpl
 import com.anthropic.services.async.MessageServiceAsync
@@ -35,10 +33,6 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
 
     private val withRawResponse: AnthropicClientAsync.WithRawResponse by lazy {
         WithRawResponseImpl(clientOptions)
-    }
-
-    private val completions: CompletionServiceAsync by lazy {
-        CompletionServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
     private val messages: MessageServiceAsync by lazy {
@@ -74,8 +68,6 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AnthropicClientAsync =
         AnthropicClientAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun completions(): CompletionServiceAsync = completions
-
     override fun messages(): MessageServiceAsync = messages
 
     override fun models(): ModelServiceAsync = models
@@ -103,10 +95,6 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
                     .toBuilder()
                     .putHeader("User-Agent", "AnthropicClientAsyncImpl/Java ${getPackageVersion()}")
                     .build()
-
-        private val completions: CompletionServiceAsync.WithRawResponse by lazy {
-            CompletionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
 
         private val messages: MessageServiceAsync.WithRawResponse by lazy {
             MessageServiceAsyncImpl.WithRawResponseImpl(clientOptions)
@@ -142,8 +130,6 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
             AnthropicClientAsyncImpl.WithRawResponseImpl(
                 originalClientOptions.toBuilder().apply(modifier::accept).build()
             )
-
-        override fun completions(): CompletionServiceAsync.WithRawResponse = completions
 
         override fun messages(): MessageServiceAsync.WithRawResponse = messages
 

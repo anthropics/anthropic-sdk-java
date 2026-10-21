@@ -1,7 +1,6 @@
 package com.anthropic.models.beta.deployments
 
 import com.anthropic.core.jsonMapper
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,20 +12,14 @@ internal class BetaManagedAgentsDeploymentUserMessageEventTest {
         val betaManagedAgentsDeploymentUserMessageEvent =
             BetaManagedAgentsDeploymentUserMessageEvent.builder()
                 .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsDeploymentUserMessageEvent.Type.USER_MESSAGE)
                 .build()
 
         assertThat(betaManagedAgentsDeploymentUserMessageEvent.content())
             .containsExactly(
                 BetaManagedAgentsDeploymentUserMessageEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
+                    "Where is my order #1234?"
                 )
             )
-        assertThat(betaManagedAgentsDeploymentUserMessageEvent.type())
-            .isEqualTo(BetaManagedAgentsDeploymentUserMessageEvent.Type.USER_MESSAGE)
     }
 
     @Test
@@ -35,7 +28,6 @@ internal class BetaManagedAgentsDeploymentUserMessageEventTest {
         val betaManagedAgentsDeploymentUserMessageEvent =
             BetaManagedAgentsDeploymentUserMessageEvent.builder()
                 .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsDeploymentUserMessageEvent.Type.USER_MESSAGE)
                 .build()
 
         val roundtrippedBetaManagedAgentsDeploymentUserMessageEvent =

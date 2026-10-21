@@ -2,7 +2,6 @@ package com.anthropic.models.models
 
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import com.anthropic.models.beta.AnthropicBeta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -15,7 +14,6 @@ internal class ModelListParamsTest {
             .beforeId("before_id")
             .addLifecycle(ModelListParams.Lifecycle.ACTIVE)
             .limit(1L)
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .build()
     }
@@ -28,7 +26,6 @@ internal class ModelListParamsTest {
                 .beforeId("before_id")
                 .addLifecycle(ModelListParams.Lifecycle.ACTIVE)
                 .limit(1L)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 
@@ -37,7 +34,6 @@ internal class ModelListParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -60,7 +56,6 @@ internal class ModelListParamsTest {
                 .beforeId("before_id")
                 .addLifecycle(ModelListParams.Lifecycle.ACTIVE)
                 .limit(1L)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 

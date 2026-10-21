@@ -32,9 +32,7 @@ internal class DreamServiceTest {
                     .addMemoryStoreInput("x")
                     .model("string")
                     .instructions("x")
-                    .outputBehavior(
-                        BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
-                    )
+                    .outputBehavior(BetaOutputBehaviorCreateNew.builder().build())
                     .build()
             )
 

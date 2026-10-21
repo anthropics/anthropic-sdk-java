@@ -13,11 +13,7 @@ internal class BetaManagedAgentsMcpToolConfigTest {
             BetaManagedAgentsMcpToolConfig.builder()
                 .enabled(true)
                 .name("name")
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsMcpToolConfig.enabled()).isEqualTo(true)
@@ -25,7 +21,7 @@ internal class BetaManagedAgentsMcpToolConfigTest {
         assertThat(betaManagedAgentsMcpToolConfig.permissionPolicy())
             .isEqualTo(
                 BetaManagedAgentsMcpToolConfig.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
     }
@@ -37,11 +33,7 @@ internal class BetaManagedAgentsMcpToolConfigTest {
             BetaManagedAgentsMcpToolConfig.builder()
                 .enabled(true)
                 .name("name")
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsMcpToolConfig =

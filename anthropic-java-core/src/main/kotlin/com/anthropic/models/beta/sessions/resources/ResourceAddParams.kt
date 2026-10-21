@@ -139,17 +139,13 @@ private constructor(
          * Alias for calling [betaManagedAgentsFileResourceParams] with the following:
          * ```java
          * BetaManagedAgentsFileResourceParams.builder()
-         *     .type(BetaManagedAgentsFileResourceParams.Type.FILE)
          *     .fileId(fileId)
          *     .build()
          * ```
          */
         fun fileBetaManagedAgentsFileResourceParams(fileId: String) =
             betaManagedAgentsFileResourceParams(
-                BetaManagedAgentsFileResourceParams.builder()
-                    .type(BetaManagedAgentsFileResourceParams.Type.FILE)
-                    .fileId(fileId)
-                    .build()
+                BetaManagedAgentsFileResourceParams.builder().fileId(fileId).build()
             )
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {

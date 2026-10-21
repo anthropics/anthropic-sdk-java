@@ -155,7 +155,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -200,8 +199,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -294,7 +291,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -339,8 +335,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -433,7 +427,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -478,8 +471,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -572,7 +563,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -617,8 +607,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -711,7 +699,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -756,8 +743,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -850,7 +835,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -895,8 +879,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -989,7 +971,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -1034,8 +1015,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -1128,7 +1107,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -1173,8 +1151,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -1267,7 +1243,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -1312,8 +1287,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -1406,7 +1379,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -1451,8 +1423,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -1545,7 +1515,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -1590,8 +1559,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -1684,7 +1651,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -1729,8 +1695,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -1823,7 +1787,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -1868,8 +1831,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -1962,7 +1923,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -2007,8 +1967,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -2101,7 +2059,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -2146,8 +2103,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -2240,7 +2195,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -2285,8 +2239,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -2377,7 +2329,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -2422,8 +2373,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -2513,7 +2462,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -2558,8 +2506,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -2649,7 +2595,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -2694,8 +2639,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -2785,7 +2728,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -2830,8 +2772,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }
@@ -2921,7 +2861,6 @@ internal class ErrorHandlingTest {
                                     .build()
                             )
                         )
-                        .temperature(1.0)
                         .thinking(
                             ThinkingConfigAdaptive.builder()
                                 .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
@@ -2966,8 +2905,6 @@ internal class ErrorHandlingTest {
                                 .type(Tool.Type.CUSTOM)
                                 .build()
                         )
-                        .topK(5L)
-                        .topP(0.7)
                         .build()
                 )
             }

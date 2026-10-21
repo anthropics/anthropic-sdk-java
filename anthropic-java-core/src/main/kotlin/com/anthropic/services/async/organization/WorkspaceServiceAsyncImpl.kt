@@ -152,7 +152,7 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                             response
                                 .use { createHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -194,7 +194,7 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -231,7 +231,7 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                             response
                                 .use { updateHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -263,7 +263,7 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -309,7 +309,7 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                             response
                                 .use { archiveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

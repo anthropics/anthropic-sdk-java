@@ -41,7 +41,6 @@ internal class CredentialServiceTest {
                         BetaManagedAgentsStaticBearerCreateParams.builder()
                             .token("bearer_exampletoken")
                             .mcpServerUrl("https://example-server.modelcontextprotocol.io/sse")
-                            .type(BetaManagedAgentsStaticBearerCreateParams.Type.STATIC_BEARER)
                             .build()
                     )
                     .displayName("Example credential")
@@ -86,7 +85,6 @@ internal class CredentialServiceTest {
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .auth(
                         BetaManagedAgentsMcpOAuthUpdateParams.builder()
-                            .type(BetaManagedAgentsMcpOAuthUpdateParams.Type.MCP_OAUTH)
                             .accessToken("x")
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .refresh(
@@ -95,11 +93,6 @@ internal class CredentialServiceTest {
                                     .scope("scope")
                                     .tokenEndpointAuth(
                                         BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.builder()
-                                            .type(
-                                                BetaManagedAgentsTokenEndpointAuthBasicUpdateParam
-                                                    .Type
-                                                    .CLIENT_SECRET_BASIC
-                                            )
                                             .clientSecret("x")
                                             .build()
                                     )

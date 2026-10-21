@@ -16,10 +16,6 @@ internal class BetaManagedAgentsSessionThreadStatusRunningEventTest {
                 .agentName("agent_name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
-                .type(
-                    BetaManagedAgentsSessionThreadStatusRunningEvent.Type
-                        .SESSION_THREAD_STATUS_RUNNING
-                )
                 .build()
 
         assertThat(betaManagedAgentsSessionThreadStatusRunningEvent.id()).isEqualTo("id")
@@ -29,10 +25,6 @@ internal class BetaManagedAgentsSessionThreadStatusRunningEventTest {
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsSessionThreadStatusRunningEvent.sessionThreadId())
             .isEqualTo("session_thread_id")
-        assertThat(betaManagedAgentsSessionThreadStatusRunningEvent.type())
-            .isEqualTo(
-                BetaManagedAgentsSessionThreadStatusRunningEvent.Type.SESSION_THREAD_STATUS_RUNNING
-            )
     }
 
     @Test
@@ -44,10 +36,6 @@ internal class BetaManagedAgentsSessionThreadStatusRunningEventTest {
                 .agentName("agent_name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
-                .type(
-                    BetaManagedAgentsSessionThreadStatusRunningEvent.Type
-                        .SESSION_THREAD_STATUS_RUNNING
-                )
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionThreadStatusRunningEvent =

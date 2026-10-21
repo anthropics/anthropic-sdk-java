@@ -99,7 +99,7 @@ class RbacRoleServiceImpl internal constructor(private val clientOptions: Client
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -129,7 +129,7 @@ class RbacRoleServiceImpl internal constructor(private val clientOptions: Client
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

@@ -11,12 +11,9 @@ internal class BetaManagedAgentsContentSha256PreconditionTest {
     fun create() {
         val betaManagedAgentsContentSha256Precondition =
             BetaManagedAgentsContentSha256Precondition.builder()
-                .type(BetaManagedAgentsContentSha256Precondition.Type.CONTENT_SHA256)
                 .contentSha256("content_sha256")
                 .build()
 
-        assertThat(betaManagedAgentsContentSha256Precondition.type())
-            .isEqualTo(BetaManagedAgentsContentSha256Precondition.Type.CONTENT_SHA256)
         assertThat(betaManagedAgentsContentSha256Precondition.contentSha256())
             .contains("content_sha256")
     }
@@ -26,7 +23,6 @@ internal class BetaManagedAgentsContentSha256PreconditionTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsContentSha256Precondition =
             BetaManagedAgentsContentSha256Precondition.builder()
-                .type(BetaManagedAgentsContentSha256Precondition.Type.CONTENT_SHA256)
                 .contentSha256("content_sha256")
                 .build()
 

@@ -18,11 +18,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
         val bash =
             BetaManagedAgentsBashToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofBash(bash)
@@ -44,11 +40,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
             BetaManagedAgentsAgentToolConfig.ofBash(
                 BetaManagedAgentsBashToolConfig.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
 
@@ -67,11 +59,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
         val edit =
             BetaManagedAgentsEditToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofEdit(edit)
@@ -93,11 +81,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
             BetaManagedAgentsAgentToolConfig.ofEdit(
                 BetaManagedAgentsEditToolConfig.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
 
@@ -116,11 +100,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
         val read =
             BetaManagedAgentsReadToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofRead(read)
@@ -142,11 +122,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
             BetaManagedAgentsAgentToolConfig.ofRead(
                 BetaManagedAgentsReadToolConfig.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
 
@@ -165,11 +141,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
         val write =
             BetaManagedAgentsWriteToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofWrite(write)
@@ -191,11 +163,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
             BetaManagedAgentsAgentToolConfig.ofWrite(
                 BetaManagedAgentsWriteToolConfig.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
 
@@ -214,11 +182,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
         val glob =
             BetaManagedAgentsGlobToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofGlob(glob)
@@ -240,11 +204,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
             BetaManagedAgentsAgentToolConfig.ofGlob(
                 BetaManagedAgentsGlobToolConfig.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
 
@@ -263,11 +223,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
         val grep =
             BetaManagedAgentsGrepToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofGrep(grep)
@@ -289,11 +245,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
             BetaManagedAgentsAgentToolConfig.ofGrep(
                 BetaManagedAgentsGrepToolConfig.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
 
@@ -312,11 +264,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
         val webFetch =
             BetaManagedAgentsWebFetchToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .urlSources(
                     BetaManagedAgentsWebFetchUrlSources.builder()
                         .clientToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
@@ -348,11 +296,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
             BetaManagedAgentsAgentToolConfig.ofWebFetch(
                 BetaManagedAgentsWebFetchToolConfig.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .urlSources(
                         BetaManagedAgentsWebFetchUrlSources.builder()
                             .clientToolResults(
@@ -385,11 +329,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
         val webSearch =
             BetaManagedAgentsWebSearchToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .userLocation(
@@ -422,11 +362,7 @@ internal class BetaManagedAgentsAgentToolConfigTest {
             BetaManagedAgentsAgentToolConfig.ofWebSearch(
                 BetaManagedAgentsWebSearchToolConfig.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .addAllowedDomain("string")
                     .addBlockedDomain("string")
                     .userLocation(

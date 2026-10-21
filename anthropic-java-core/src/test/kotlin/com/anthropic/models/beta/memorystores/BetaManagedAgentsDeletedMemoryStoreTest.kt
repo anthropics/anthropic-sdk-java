@@ -9,25 +9,15 @@ internal class BetaManagedAgentsDeletedMemoryStoreTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsDeletedMemoryStore =
-            BetaManagedAgentsDeletedMemoryStore.builder()
-                .id("id")
-                .type(BetaManagedAgentsDeletedMemoryStore.Type.MEMORY_STORE_DELETED)
-                .build()
+        val betaManagedAgentsDeletedMemoryStore = BetaManagedAgentsDeletedMemoryStore.of("id")
 
         assertThat(betaManagedAgentsDeletedMemoryStore.id()).isEqualTo("id")
-        assertThat(betaManagedAgentsDeletedMemoryStore.type())
-            .isEqualTo(BetaManagedAgentsDeletedMemoryStore.Type.MEMORY_STORE_DELETED)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsDeletedMemoryStore =
-            BetaManagedAgentsDeletedMemoryStore.builder()
-                .id("id")
-                .type(BetaManagedAgentsDeletedMemoryStore.Type.MEMORY_STORE_DELETED)
-                .build()
+        val betaManagedAgentsDeletedMemoryStore = BetaManagedAgentsDeletedMemoryStore.of("id")
 
         val roundtrippedBetaManagedAgentsDeletedMemoryStore =
             jsonMapper.readValue(

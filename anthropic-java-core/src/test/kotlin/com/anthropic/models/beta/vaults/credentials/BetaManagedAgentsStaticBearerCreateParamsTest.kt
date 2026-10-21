@@ -13,15 +13,12 @@ internal class BetaManagedAgentsStaticBearerCreateParamsTest {
             BetaManagedAgentsStaticBearerCreateParams.builder()
                 .token("bearer_exampletoken")
                 .mcpServerUrl("https://example-server.modelcontextprotocol.io/sse")
-                .type(BetaManagedAgentsStaticBearerCreateParams.Type.STATIC_BEARER)
                 .build()
 
         assertThat(betaManagedAgentsStaticBearerCreateParams.token())
             .isEqualTo("bearer_exampletoken")
         assertThat(betaManagedAgentsStaticBearerCreateParams.mcpServerUrl())
             .isEqualTo("https://example-server.modelcontextprotocol.io/sse")
-        assertThat(betaManagedAgentsStaticBearerCreateParams.type())
-            .isEqualTo(BetaManagedAgentsStaticBearerCreateParams.Type.STATIC_BEARER)
     }
 
     @Test
@@ -31,7 +28,6 @@ internal class BetaManagedAgentsStaticBearerCreateParamsTest {
             BetaManagedAgentsStaticBearerCreateParams.builder()
                 .token("bearer_exampletoken")
                 .mcpServerUrl("https://example-server.modelcontextprotocol.io/sse")
-                .type(BetaManagedAgentsStaticBearerCreateParams.Type.STATIC_BEARER)
                 .build()
 
         val roundtrippedBetaManagedAgentsStaticBearerCreateParams =

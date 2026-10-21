@@ -10,21 +10,14 @@ internal class BetaManagedAgentsTokenEndpointAuthNoneParamTest {
     @Test
     fun create() {
         val betaManagedAgentsTokenEndpointAuthNoneParam =
-            BetaManagedAgentsTokenEndpointAuthNoneParam.of(
-                BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
-            )
-
-        assertThat(betaManagedAgentsTokenEndpointAuthNoneParam.type())
-            .isEqualTo(BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE)
+            BetaManagedAgentsTokenEndpointAuthNoneParam.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsTokenEndpointAuthNoneParam =
-            BetaManagedAgentsTokenEndpointAuthNoneParam.of(
-                BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
-            )
+            BetaManagedAgentsTokenEndpointAuthNoneParam.builder().build()
 
         val roundtrippedBetaManagedAgentsTokenEndpointAuthNoneParam =
             jsonMapper.readValue(

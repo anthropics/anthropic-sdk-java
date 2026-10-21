@@ -19,7 +19,7 @@ import com.anthropic.models.messages.Model;
  * environment in this order (later sources only fill in if earlier ones are
  * absent):
  * <ol>
- * <li>Env vars: ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN
+ * <li>Env vars: ANTHROPIC_API_KEY, then ANTHROPIC_AUTH_TOKEN
  * <li>Explicit profile: ANTHROPIC_PROFILE env var
  * <li>Env federation vars: ANTHROPIC_FEDERATION_RULE_ID +
  * ANTHROPIC_ORGANIZATION_ID + identity token
@@ -50,7 +50,7 @@ public class CredentialProviderExamples {
     //                                     and ~/.config/anthropic/credentials/my-profile.json)
     //   ANTHROPIC_CONFIG_DIR=/etc/anthropic   (relocates the root; optional)
     //
-    // Or, the existing env vars still work:
+    // Or, one of the existing env vars:
     //   ANTHROPIC_API_KEY=sk-ant-...
     //   ANTHROPIC_AUTH_TOKEN=sk-ant-oat01-...
     public static void zeroConfigExample() {

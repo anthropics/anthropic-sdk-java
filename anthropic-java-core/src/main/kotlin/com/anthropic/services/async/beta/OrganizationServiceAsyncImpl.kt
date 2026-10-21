@@ -305,7 +305,7 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

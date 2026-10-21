@@ -12,15 +12,12 @@ internal class BetaManagedAgentsMemoryStoreResourceConfigTest {
         val betaManagedAgentsMemoryStoreResourceConfig =
             BetaManagedAgentsMemoryStoreResourceConfig.builder()
                 .memoryStoreId("memory_store_id")
-                .type(BetaManagedAgentsMemoryStoreResourceConfig.Type.MEMORY_STORE)
                 .access(BetaManagedAgentsMemoryStoreResourceConfig.Access.READ_WRITE)
                 .instructions("instructions")
                 .build()
 
         assertThat(betaManagedAgentsMemoryStoreResourceConfig.memoryStoreId())
             .isEqualTo("memory_store_id")
-        assertThat(betaManagedAgentsMemoryStoreResourceConfig.type())
-            .isEqualTo(BetaManagedAgentsMemoryStoreResourceConfig.Type.MEMORY_STORE)
         assertThat(betaManagedAgentsMemoryStoreResourceConfig.access())
             .contains(BetaManagedAgentsMemoryStoreResourceConfig.Access.READ_WRITE)
         assertThat(betaManagedAgentsMemoryStoreResourceConfig.instructions())
@@ -33,7 +30,6 @@ internal class BetaManagedAgentsMemoryStoreResourceConfigTest {
         val betaManagedAgentsMemoryStoreResourceConfig =
             BetaManagedAgentsMemoryStoreResourceConfig.builder()
                 .memoryStoreId("memory_store_id")
-                .type(BetaManagedAgentsMemoryStoreResourceConfig.Type.MEMORY_STORE)
                 .access(BetaManagedAgentsMemoryStoreResourceConfig.Access.READ_WRITE)
                 .instructions("instructions")
                 .build()

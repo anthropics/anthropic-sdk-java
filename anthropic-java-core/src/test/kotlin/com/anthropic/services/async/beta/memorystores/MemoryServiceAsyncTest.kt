@@ -76,7 +76,6 @@ internal class MemoryServiceAsyncTest {
                     .path("xx")
                     .precondition(
                         BetaManagedAgentsPrecondition.builder()
-                            .type(BetaManagedAgentsPrecondition.Type.CONTENT_SHA256)
                             .contentSha256("content_sha256")
                             .build()
                     )

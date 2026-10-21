@@ -46,7 +46,6 @@ internal class AgentServiceTest {
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
                             .name("example-mcp")
-                            .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                             .url("https://example-server.modelcontextprotocol.io/sse")
                             .build()
                     )
@@ -61,14 +60,13 @@ internal class AgentServiceTest {
                                 "agent_011CZkYqphY8vELVzwCUpqiQ"
                             ),
                             BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                                BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                                BetaManagedAgentsMultiagentSelfParams.builder().build()
                             ),
                         )
                     )
                     .addSkill(
                         BetaManagedAgentsAnthropicSkillParams.builder()
                             .skillId("xlsx")
-                            .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
                             .version("1")
                             .build()
                     )
@@ -77,17 +75,11 @@ internal class AgentServiceTest {
                     )
                     .addTool(
                         BetaManagedAgentsAgentToolset20260401Params.builder()
-                            .type(
-                                BetaManagedAgentsAgentToolset20260401Params.Type
-                                    .AGENT_TOOLSET_20260401
-                            )
                             .addConfig(
                                 BetaManagedAgentsBashToolConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                     .build()
@@ -96,9 +88,7 @@ internal class AgentServiceTest {
                                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .build()
                             )
@@ -142,7 +132,6 @@ internal class AgentServiceTest {
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
                             .name("example-mcp")
-                            .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                             .url("https://example-server.modelcontextprotocol.io/sse")
                             .build()
                     )
@@ -169,7 +158,7 @@ internal class AgentServiceTest {
                                 "agent_011CZkYqphY8vELVzwCUpqiQ"
                             ),
                             BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                                BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                                BetaManagedAgentsMultiagentSelfParams.builder().build()
                             ),
                         )
                     )
@@ -177,7 +166,6 @@ internal class AgentServiceTest {
                     .addSkill(
                         BetaManagedAgentsAnthropicSkillParams.builder()
                             .skillId("xlsx")
-                            .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
                             .version("1")
                             .build()
                     )
@@ -186,17 +174,11 @@ internal class AgentServiceTest {
                     )
                     .addTool(
                         BetaManagedAgentsAgentToolset20260401Params.builder()
-                            .type(
-                                BetaManagedAgentsAgentToolset20260401Params.Type
-                                    .AGENT_TOOLSET_20260401
-                            )
                             .addConfig(
                                 BetaManagedAgentsBashToolConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                     .build()
@@ -205,9 +187,7 @@ internal class AgentServiceTest {
                                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .build()
                             )

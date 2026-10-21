@@ -122,7 +122,7 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -158,7 +158,7 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
                     response
                         .use { updateHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -189,7 +189,7 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -233,7 +233,7 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
                     response
                         .use { validateArchiveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -270,7 +270,7 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
                     response
                         .use { validateRepositoryHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

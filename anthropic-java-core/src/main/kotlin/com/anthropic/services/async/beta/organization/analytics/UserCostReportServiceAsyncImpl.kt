@@ -78,7 +78,7 @@ internal constructor(private val clientOptions: ClientOptions) : UserCostReportS
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

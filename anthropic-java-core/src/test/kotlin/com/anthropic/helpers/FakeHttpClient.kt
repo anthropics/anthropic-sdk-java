@@ -34,10 +34,10 @@ internal class FakeHttpClient(responses: List<Any>) : HttpClient {
     val issued = mutableListOf<TrackedResponse>()
 
     val jsonBodies: List<ObjectNode>
-        get() = requests.map { it.body!!.json(ObjectNode::class.java) }
+        get() = requests.map { it.body().get().json(ObjectNode::class.java) }
 
     val bodies: List<MessageCreateParams.Body>
-        get() = requests.map { it.body!!.json(MessageCreateParams.Body::class.java) }
+        get() = requests.map { it.body().get().json(MessageCreateParams.Body::class.java) }
 
     fun models(): List<String> = bodies.map { it.model().asString() }
 

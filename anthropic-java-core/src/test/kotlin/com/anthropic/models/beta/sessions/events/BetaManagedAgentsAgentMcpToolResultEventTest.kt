@@ -16,7 +16,6 @@ internal class BetaManagedAgentsAgentMcpToolResultEventTest {
                 .id("id")
                 .mcpToolUseId("mcp_tool_use_id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsAgentMcpToolResultEvent.Type.AGENT_MCP_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .build()
@@ -26,16 +25,9 @@ internal class BetaManagedAgentsAgentMcpToolResultEventTest {
             .isEqualTo("mcp_tool_use_id")
         assertThat(betaManagedAgentsAgentMcpToolResultEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsAgentMcpToolResultEvent.type())
-            .isEqualTo(BetaManagedAgentsAgentMcpToolResultEvent.Type.AGENT_MCP_TOOL_RESULT)
         assertThat(betaManagedAgentsAgentMcpToolResultEvent.content().getOrNull())
             .containsExactly(
-                BetaManagedAgentsAgentMcpToolResultEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
-                )
+                BetaManagedAgentsAgentMcpToolResultEvent.Content.ofText("Where is my order #1234?")
             )
         assertThat(betaManagedAgentsAgentMcpToolResultEvent.isError()).contains(true)
     }
@@ -47,7 +39,6 @@ internal class BetaManagedAgentsAgentMcpToolResultEventTest {
                 .id("id")
                 .mcpToolUseId("mcp_tool_use_id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsAgentMcpToolResultEvent.Type.AGENT_MCP_TOOL_RESULT)
                 .build()
 
         val betaManagedAgentsAgentMcpToolResultEvent =
@@ -55,22 +46,14 @@ internal class BetaManagedAgentsAgentMcpToolResultEventTest {
                 .toBuilder()
                 .addContent(
                     BetaManagedAgentsAgentMcpToolResultEvent.Content.ofText(
-                        BetaManagedAgentsTextBlock.builder()
-                            .text("Where is my order #1234?")
-                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                            .build()
+                        "Where is my order #1234?"
                     )
                 )
                 .build()
 
         assertThat(betaManagedAgentsAgentMcpToolResultEvent.content().getOrNull())
             .containsExactly(
-                BetaManagedAgentsAgentMcpToolResultEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
-                )
+                BetaManagedAgentsAgentMcpToolResultEvent.Content.ofText("Where is my order #1234?")
             )
     }
 
@@ -82,7 +65,6 @@ internal class BetaManagedAgentsAgentMcpToolResultEventTest {
                 .id("id")
                 .mcpToolUseId("mcp_tool_use_id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsAgentMcpToolResultEvent.Type.AGENT_MCP_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .build()

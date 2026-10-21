@@ -16,11 +16,7 @@ internal class BetaManagedAgentsWebFetchToolConfigParamsTest {
                 .addBlockedDomain("string")
                 .enabled(true)
                 .maxContentTokens(0)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsWebFetchToolConfigParams.Type.WEB_FETCH)
                 .urlSources(
                     BetaManagedAgentsWebFetchUrlSourcesParams.builder()
@@ -40,7 +36,7 @@ internal class BetaManagedAgentsWebFetchToolConfigParamsTest {
         assertThat(betaManagedAgentsWebFetchToolConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsWebFetchToolConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
         assertThat(betaManagedAgentsWebFetchToolConfigParams.type())
@@ -82,11 +78,7 @@ internal class BetaManagedAgentsWebFetchToolConfigParamsTest {
                 .addBlockedDomain("string")
                 .enabled(true)
                 .maxContentTokens(0)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsWebFetchToolConfigParams.Type.WEB_FETCH)
                 .urlSources(
                     BetaManagedAgentsWebFetchUrlSourcesParams.builder()

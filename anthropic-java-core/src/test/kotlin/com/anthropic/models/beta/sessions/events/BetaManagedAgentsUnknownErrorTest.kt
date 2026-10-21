@@ -12,23 +12,16 @@ internal class BetaManagedAgentsUnknownErrorTest {
         val betaManagedAgentsUnknownError =
             BetaManagedAgentsUnknownError.builder()
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsUnknownError.message()).isEqualTo("message")
         assertThat(betaManagedAgentsUnknownError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsUnknownError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
             )
-        assertThat(betaManagedAgentsUnknownError.type())
-            .isEqualTo(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
     }
 
     @Test
@@ -37,12 +30,7 @@ internal class BetaManagedAgentsUnknownErrorTest {
         val betaManagedAgentsUnknownError =
             BetaManagedAgentsUnknownError.builder()
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsUnknownError =

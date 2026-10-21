@@ -13,6 +13,7 @@ import java.time.Clock
 import java.time.Instant
 import java.time.ZoneOffset
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.AfterEach
@@ -936,7 +937,7 @@ internal class LoggingHttpClientTest {
                 requestOptions: RequestOptions,
             ): HttpResponse {
                 // Consume the request body if present to trigger logging.
-                request.body?.let {
+                request.body().getOrNull()?.let {
                     val out = ByteArrayOutputStream()
                     it.writeTo(out)
                 }
@@ -958,7 +959,7 @@ internal class LoggingHttpClientTest {
                 request: HttpRequest,
                 requestOptions: RequestOptions,
             ): HttpResponse {
-                request.body?.let {
+                request.body().getOrNull()?.let {
                     val out = ByteArrayOutputStream()
                     it.writeTo(out)
                 }

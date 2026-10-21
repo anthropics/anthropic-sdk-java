@@ -198,14 +198,6 @@ private constructor(
             BetaOutputBehavior(createNew = createNew)
 
         /**
-         * Returns an immutable instance of [BetaOutputBehavior] whose [ofCreateNew] variant is
-         * built from the given required [type].
-         */
-        @JvmStatic
-        fun ofCreateNew(type: BetaOutputBehaviorCreateNew.Type) =
-            ofCreateNew(BetaOutputBehaviorCreateNew.of(type))
-
-        /**
          * Write the result into the input memory store instead of a new memory store.
          *
          * The credential must be allowed to write memory stores, or the request returns a 403
@@ -222,12 +214,7 @@ private constructor(
          */
         @JvmStatic
         fun ofUpdateExisting(memoryStoreId: String) =
-            ofUpdateExisting(
-                BetaOutputBehaviorUpdateExisting.builder()
-                    .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
-                    .memoryStoreId(memoryStoreId)
-                    .build()
-            )
+            ofUpdateExisting(BetaOutputBehaviorUpdateExisting.of(memoryStoreId))
     }
 
     /**

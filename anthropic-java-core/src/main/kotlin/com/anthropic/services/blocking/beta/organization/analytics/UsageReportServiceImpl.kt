@@ -72,7 +72,7 @@ class UsageReportServiceImpl internal constructor(private val clientOptions: Cli
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

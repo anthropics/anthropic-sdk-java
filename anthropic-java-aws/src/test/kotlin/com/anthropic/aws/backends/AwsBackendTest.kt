@@ -450,9 +450,10 @@ internal class AwsBackendTest {
         val authorized = backend.authorizeRequest(request)
 
         assertThat(authorized.headers.values("authorization")[0]).startsWith("AWS4-HMAC-SHA256")
-        val sentBody = ByteArrayOutputStream().also { authorized.body!!.writeTo(it) }.toByteArray()
+        val sentBody =
+            ByteArrayOutputStream().also { authorized.body().get().writeTo(it) }.toByteArray()
         assertThat(sentBody).isEqualTo(bytes)
-        assertThat(authorized.body!!.contentLength()).isEqualTo(bytes.size.toLong())
+        assertThat(authorized.body().get().contentLength()).isEqualTo(bytes.size.toLong())
     }
 
     @Test
@@ -522,20 +523,6 @@ internal class AwsBackendTest {
     }
 
     @Test
-    fun prepareRequestAddsVersionHeader() {
-        val backend =
-            AwsBackend.builder()
-                .apiKey(API_KEY)
-                .region(Region.US_EAST_1)
-                .workspaceId(WORKSPACE_ID)
-                .build()
-        val request = createRequest()
-        val prepared = backend.prepareRequest(request)
-
-        assertThat(prepared.headers.values("anthropic-version")).containsExactly("2023-06-01")
-    }
-
-    @Test
     fun prepareRequestKeepsUserSuppliedHeaders() {
         val backend =
             AwsBackend.builder()
@@ -550,7 +537,8 @@ internal class AwsBackendTest {
                 .putHeader("anthropic-workspace-id", "user-workspace")
                 .build()
 
-        // User-supplied headers (e.g. set by an interceptor) win over the backend's defaults.
+        // The client's "anthropic-version" passes through, and a user-supplied workspace ID (e.g.
+        // set by an interceptor) wins over the backend's default.
         val prepared = backend.prepareRequest(request)
 
         assertThat(prepared.headers.values("anthropic-version")).containsExactly("2024-01-01")
@@ -668,7 +656,6 @@ internal class AwsBackendTest {
         val request = createRequest()
         val prepared = backend.prepareRequest(request)
 
-        assertThat(prepared.headers.values("anthropic-version")).containsExactly("2023-06-01")
         assertThat(prepared.headers.names()).doesNotContain("anthropic-workspace-id")
     }
 

@@ -20,7 +20,6 @@ internal class ResourceRetrieveResponseTest {
                 .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .mountPath("/workspace/example-repo")
-                .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .url("https://github.com/example-org/example-repo")
                 .branchCheckout("main")
@@ -42,7 +41,6 @@ internal class ResourceRetrieveResponseTest {
                     .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .mountPath("/workspace/example-repo")
-                    .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .url("https://github.com/example-org/example-repo")
                     .branchCheckout("main")
@@ -66,7 +64,6 @@ internal class ResourceRetrieveResponseTest {
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .mountPath("/uploads/receipt.pdf")
-                .type(BetaManagedAgentsFileResource.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .build()
 
@@ -87,7 +84,6 @@ internal class ResourceRetrieveResponseTest {
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                     .mountPath("/uploads/receipt.pdf")
-                    .type(BetaManagedAgentsFileResource.Type.FILE)
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .build()
             )
@@ -106,7 +102,6 @@ internal class ResourceRetrieveResponseTest {
         val memoryStore =
             BetaManagedAgentsMemoryStoreResource.builder()
                 .memoryStoreId("memory_store_id")
-                .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
                 .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
                 .description("description")
                 .instructions("instructions")
@@ -128,7 +123,6 @@ internal class ResourceRetrieveResponseTest {
             ResourceRetrieveResponse.ofMemoryStore(
                 BetaManagedAgentsMemoryStoreResource.builder()
                     .memoryStoreId("memory_store_id")
-                    .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
                     .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
                     .description("description")
                     .instructions("instructions")

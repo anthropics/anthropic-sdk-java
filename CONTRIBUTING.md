@@ -96,3 +96,7 @@ $ ./scripts/format
 
 Changes made to this repository via the automated release PR pipeline should publish to Maven Central automatically. If
 the changes aren't made through the automated pipeline, you may want to make releases manually.
+
+## License
+
+By contributing to this repository, you agree that your contributions are licensed under the Apache License, Version 2.0 (see [LICENSE](LICENSE)).

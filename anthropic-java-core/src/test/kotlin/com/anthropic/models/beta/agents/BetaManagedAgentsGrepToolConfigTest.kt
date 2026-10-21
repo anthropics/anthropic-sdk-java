@@ -12,18 +12,14 @@ internal class BetaManagedAgentsGrepToolConfigTest {
         val betaManagedAgentsGrepToolConfig =
             BetaManagedAgentsGrepToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsGrepToolConfig.enabled()).isEqualTo(true)
         assertThat(betaManagedAgentsGrepToolConfig.permissionPolicy())
             .isEqualTo(
                 BetaManagedAgentsGrepToolConfig.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
     }
@@ -34,11 +30,7 @@ internal class BetaManagedAgentsGrepToolConfigTest {
         val betaManagedAgentsGrepToolConfig =
             BetaManagedAgentsGrepToolConfig.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsGrepToolConfig =

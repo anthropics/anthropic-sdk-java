@@ -79,6 +79,21 @@ internal class AnthropicOkHttpClientAsyncTest {
             .hasMessageStartingWith("Default backend already set")
     }
 
+    @Test
+    fun credentialsAfterBackendSet() {
+        val builder = createBuilder().backend(TestBackend())
+
+        assertThatThrownBy { builder.apiKey(API_KEY) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageStartingWith("Backend already set")
+        assertThatThrownBy { builder.authToken(AUTH_TOKEN) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageStartingWith("Backend already set")
+        assertThatThrownBy { builder.fromEnv() }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageStartingWith("Backend already set")
+    }
+
     private fun createBuilder(): AnthropicOkHttpClientAsync.Builder =
         AnthropicOkHttpClientAsync.builder()
 }

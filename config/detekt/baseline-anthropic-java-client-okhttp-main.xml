@@ -3,7 +3,5 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>ExpressionBodySyntax:OkHttpClient.kt$OkHttpClient$return toBuilder().baseUrl(toUrl()).build()</ID>
-    <ID>UnsafeCallOnNullableType:OkHttpClient.kt$baseUrl!!</ID>
-    <ID>UseOrEmpty:OkHttpClient.kt$OkHttpClient$baseUrl ?: ""</ID>
   </CurrentIssues>
 </SmellBaseline>

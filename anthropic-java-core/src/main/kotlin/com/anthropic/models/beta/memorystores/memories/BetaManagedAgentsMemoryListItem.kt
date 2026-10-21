@@ -241,13 +241,7 @@ private constructor(
          * variant is built from the given required [path].
          */
         @JvmStatic
-        fun ofMemoryPrefix(path: String) =
-            ofMemoryPrefix(
-                BetaManagedAgentsMemoryPrefix.builder()
-                    .type(BetaManagedAgentsMemoryPrefix.Type.MEMORY_PREFIX)
-                    .path(path)
-                    .build()
-            )
+        fun ofMemoryPrefix(path: String) = ofMemoryPrefix(BetaManagedAgentsMemoryPrefix.of(path))
     }
 
     /**

@@ -17,7 +17,6 @@ internal class ResourceAddParamsTest {
             .betaManagedAgentsFileResourceParams(
                 BetaManagedAgentsFileResourceParams.builder()
                     .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                    .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                     .mountPath("/uploads/receipt.pdf")
                     .build()
             )
@@ -30,10 +29,7 @@ internal class ResourceAddParamsTest {
             ResourceAddParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                 .betaManagedAgentsFileResourceParams(
-                    BetaManagedAgentsFileResourceParams.builder()
-                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
-                        .build()
+                    BetaManagedAgentsFileResourceParams.of("file_011CNha8iCJcU1wXNR6q4V8w")
                 )
                 .build()
 
@@ -52,7 +48,6 @@ internal class ResourceAddParamsTest {
                 .betaManagedAgentsFileResourceParams(
                     BetaManagedAgentsFileResourceParams.builder()
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                         .mountPath("/uploads/receipt.pdf")
                         .build()
                 )
@@ -79,10 +74,7 @@ internal class ResourceAddParamsTest {
             ResourceAddParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                 .betaManagedAgentsFileResourceParams(
-                    BetaManagedAgentsFileResourceParams.builder()
-                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
-                        .build()
+                    BetaManagedAgentsFileResourceParams.of("file_011CNha8iCJcU1wXNR6q4V8w")
                 )
                 .build()
 
@@ -101,7 +93,6 @@ internal class ResourceAddParamsTest {
                 .betaManagedAgentsFileResourceParams(
                     BetaManagedAgentsFileResourceParams.builder()
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                         .mountPath("/uploads/receipt.pdf")
                         .build()
                 )
@@ -113,7 +104,6 @@ internal class ResourceAddParamsTest {
             .isEqualTo(
                 BetaManagedAgentsFileResourceParams.builder()
                     .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                    .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                     .mountPath("/uploads/receipt.pdf")
                     .build()
             )
@@ -125,21 +115,13 @@ internal class ResourceAddParamsTest {
             ResourceAddParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                 .betaManagedAgentsFileResourceParams(
-                    BetaManagedAgentsFileResourceParams.builder()
-                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
-                        .build()
+                    BetaManagedAgentsFileResourceParams.of("file_011CNha8iCJcU1wXNR6q4V8w")
                 )
                 .build()
 
         val body = params._body()
 
         assertThat(body)
-            .isEqualTo(
-                BetaManagedAgentsFileResourceParams.builder()
-                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                    .type(BetaManagedAgentsFileResourceParams.Type.FILE)
-                    .build()
-            )
+            .isEqualTo(BetaManagedAgentsFileResourceParams.of("file_011CNha8iCJcU1wXNR6q4V8w"))
     }
 }

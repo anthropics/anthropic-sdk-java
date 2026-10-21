@@ -76,7 +76,7 @@ class ProjectServiceAsyncImpl internal constructor(private val clientOptions: Cl
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

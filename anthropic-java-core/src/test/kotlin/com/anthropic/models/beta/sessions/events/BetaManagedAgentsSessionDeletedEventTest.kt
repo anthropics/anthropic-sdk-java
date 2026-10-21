@@ -14,14 +14,11 @@ internal class BetaManagedAgentsSessionDeletedEventTest {
             BetaManagedAgentsSessionDeletedEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionDeletedEvent.Type.SESSION_DELETED)
                 .build()
 
         assertThat(betaManagedAgentsSessionDeletedEvent.id()).isEqualTo("id")
         assertThat(betaManagedAgentsSessionDeletedEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsSessionDeletedEvent.type())
-            .isEqualTo(BetaManagedAgentsSessionDeletedEvent.Type.SESSION_DELETED)
     }
 
     @Test
@@ -31,7 +28,6 @@ internal class BetaManagedAgentsSessionDeletedEventTest {
             BetaManagedAgentsSessionDeletedEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionDeletedEvent.Type.SESSION_DELETED)
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionDeletedEvent =

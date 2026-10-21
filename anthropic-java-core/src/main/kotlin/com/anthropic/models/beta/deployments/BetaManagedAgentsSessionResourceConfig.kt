@@ -210,12 +210,7 @@ private constructor(
          */
         @JvmStatic
         fun ofGitHubRepository(url: String) =
-            ofGitHubRepository(
-                BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
-                    .type(BetaManagedAgentsGitHubRepositoryResourceConfig.Type.GITHUB_REPOSITORY)
-                    .url(url)
-                    .build()
-            )
+            ofGitHubRepository(BetaManagedAgentsGitHubRepositoryResourceConfig.of(url))
 
         /** A file mounted into each session's container. */
         @JvmStatic
@@ -227,13 +222,7 @@ private constructor(
          * variant is built from the given required [fileId].
          */
         @JvmStatic
-        fun ofFile(fileId: String) =
-            ofFile(
-                BetaManagedAgentsFileResourceConfig.builder()
-                    .type(BetaManagedAgentsFileResourceConfig.Type.FILE)
-                    .fileId(fileId)
-                    .build()
-            )
+        fun ofFile(fileId: String) = ofFile(BetaManagedAgentsFileResourceConfig.of(fileId))
 
         /** A memory store attached to each session created from this deployment. */
         @JvmStatic
@@ -246,12 +235,7 @@ private constructor(
          */
         @JvmStatic
         fun ofMemoryStore(memoryStoreId: String) =
-            ofMemoryStore(
-                BetaManagedAgentsMemoryStoreResourceConfig.builder()
-                    .type(BetaManagedAgentsMemoryStoreResourceConfig.Type.MEMORY_STORE)
-                    .memoryStoreId(memoryStoreId)
-                    .build()
-            )
+            ofMemoryStore(BetaManagedAgentsMemoryStoreResourceConfig.of(memoryStoreId))
     }
 
     /**

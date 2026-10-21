@@ -2,7 +2,6 @@ package com.anthropic.services.blocking
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.models.ModelRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -24,7 +23,6 @@ internal class ModelServiceTest {
             modelService.retrieve(
                 ModelRetrieveParams.builder()
                     .modelId("model_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

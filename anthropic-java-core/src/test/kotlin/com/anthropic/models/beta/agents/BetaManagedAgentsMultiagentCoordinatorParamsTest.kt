@@ -13,12 +13,7 @@ internal class BetaManagedAgentsMultiagentCoordinatorParamsTest {
         val betaManagedAgentsMultiagentCoordinatorParams =
             BetaManagedAgentsMultiagentCoordinatorParams.builder()
                 .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                .addAgent(
-                    BetaManagedAgentsMultiagentSelfParams.of(
-                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                    )
-                )
-                .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
+                .addAgent(BetaManagedAgentsMultiagentSelfParams.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsMultiagentCoordinatorParams.agents())
@@ -27,11 +22,9 @@ internal class BetaManagedAgentsMultiagentCoordinatorParamsTest {
                     "agent_011CZkYqphY8vELVzwCUpqiQ"
                 ),
                 BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                    BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                    BetaManagedAgentsMultiagentSelfParams.builder().build()
                 ),
             )
-        assertThat(betaManagedAgentsMultiagentCoordinatorParams.type())
-            .isEqualTo(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
     }
 
     @Test
@@ -40,12 +33,7 @@ internal class BetaManagedAgentsMultiagentCoordinatorParamsTest {
         val betaManagedAgentsMultiagentCoordinatorParams =
             BetaManagedAgentsMultiagentCoordinatorParams.builder()
                 .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                .addAgent(
-                    BetaManagedAgentsMultiagentSelfParams.of(
-                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                    )
-                )
-                .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
+                .addAgent(BetaManagedAgentsMultiagentSelfParams.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsMultiagentCoordinatorParams =

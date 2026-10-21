@@ -99,7 +99,7 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -147,7 +147,7 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
                     response
                         .let { streamStreamingHandler.handle(it) }
                         .let { streamResponse ->
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 streamResponse.map { it.validate() }
                             } else {
                                 streamResponse

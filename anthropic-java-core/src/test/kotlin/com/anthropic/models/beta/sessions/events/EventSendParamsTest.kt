@@ -16,10 +16,7 @@ internal class EventSendParamsTest {
             .addUserMessageEvent(
                 listOf(
                     BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                        BetaManagedAgentsTextBlock.builder()
-                            .text("Where is my order #1234?")
-                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                            .build()
+                        "Where is my order #1234?"
                     )
                 )
             )
@@ -34,10 +31,7 @@ internal class EventSendParamsTest {
                 .addUserMessageEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
+                            "Where is my order #1234?"
                         )
                     )
                 )
@@ -58,10 +52,7 @@ internal class EventSendParamsTest {
                 .addUserMessageEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
+                            "Where is my order #1234?"
                         )
                     )
                 )
@@ -90,10 +81,7 @@ internal class EventSendParamsTest {
                 .addUserMessageEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
+                            "Where is my order #1234?"
                         )
                     )
                 )
@@ -114,10 +102,7 @@ internal class EventSendParamsTest {
                 .addUserMessageEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
+                            "Where is my order #1234?"
                         )
                     )
                 )
@@ -130,7 +115,6 @@ internal class EventSendParamsTest {
                 BetaManagedAgentsEventParams.ofUserMessage(
                     BetaManagedAgentsUserMessageEventParams.builder()
                         .addTextContent("Where is my order #1234?")
-                        .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
                         .build()
                 )
             )
@@ -144,10 +128,7 @@ internal class EventSendParamsTest {
                 .addUserMessageEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
+                            "Where is my order #1234?"
                         )
                     )
                 )
@@ -160,7 +141,6 @@ internal class EventSendParamsTest {
                 BetaManagedAgentsEventParams.ofUserMessage(
                     BetaManagedAgentsUserMessageEventParams.builder()
                         .addTextContent("Where is my order #1234?")
-                        .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
                         .build()
                 )
             )

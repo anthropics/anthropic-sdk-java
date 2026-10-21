@@ -124,7 +124,7 @@ private constructor(
         } catch (e: IOException) {
             throw AnthropicIoException("Request failed", e)
         } finally {
-            preparedRequest.body?.close()
+            preparedRequest.body().getOrNull()?.close()
         }
     }
 
@@ -170,7 +170,7 @@ private constructor(
             if (e is CancellationException) {
                 call.cancel()
             }
-            preparedRequest.body?.close()
+            preparedRequest.body().getOrNull()?.close()
         }
 
         return future
@@ -207,7 +207,7 @@ private constructor(
     private fun newCall(request: HttpRequest, requestOptions: RequestOptions): Call {
         val clientBuilder = okHttpClient.newBuilder()
 
-        requestOptions.timeout?.let {
+        requestOptions.timeout().getOrNull()?.let {
             clientBuilder
                 .connectTimeout(it.connect())
                 .readTimeout(it.read())
@@ -215,7 +215,7 @@ private constructor(
                 .callTimeout(it.request())
         }
 
-        requestOptions.followRedirects?.let { clientBuilder.followRedirects(it) }
+        requestOptions.followRedirects().getOrNull()?.let { clientBuilder.followRedirects(it) }
 
         val client = clientBuilder.build()
         return client.newCall(request.toRequest(client))
@@ -224,11 +224,11 @@ private constructor(
     fun toBuilder(): Builder = Builder().from(this)
 
     private fun HttpRequest.toRequest(client: okhttp3.OkHttpClient): Request {
-        var body: RequestBody? = body?.toRequestBody()
+        var body: RequestBody? = body().getOrNull()?.toRequestBody()
         if (body == null && requiresBody(method)) {
             body = "".toRequestBody()
         }
-        val builder = Request.Builder().url(baseUrl ?: "").method(method.name, body)
+        val builder = Request.Builder().url(baseUrl).method(method.name, body)
         headers.names().forEach { name ->
             headers.values(name).forEach { builder.addHeader(name, it) }
         }
@@ -392,7 +392,7 @@ private constructor(
 }
 
 private fun HttpRequest.toRequest(client: okhttp3.OkHttpClient?): Request {
-    var body: RequestBody? = body?.toRequestBody()
+    var body: RequestBody? = body().getOrNull()?.toRequestBody()
     if (body == null && requiresBody(method)) {
         body = "".toRequestBody()
     }
@@ -430,7 +430,7 @@ private fun requiresBody(method: HttpMethod): Boolean =
     }
 
 private fun HttpRequest.toUrl(): String {
-    val builder = baseUrl!!.toHttpUrl().newBuilder()
+    val builder = baseUrl.toHttpUrl().newBuilder()
     pathSegments.forEach(builder::addPathSegment)
     queryParams.keys().forEach { key ->
         queryParams.values(key).forEach { builder.addQueryParameter(key, it) }

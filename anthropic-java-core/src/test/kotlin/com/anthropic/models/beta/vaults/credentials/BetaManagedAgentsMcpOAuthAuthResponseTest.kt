@@ -13,16 +13,13 @@ internal class BetaManagedAgentsMcpOAuthAuthResponseTest {
         val betaManagedAgentsMcpOAuthAuthResponse =
             BetaManagedAgentsMcpOAuthAuthResponse.builder()
                 .mcpServerUrl("mcp_server_url")
-                .type(BetaManagedAgentsMcpOAuthAuthResponse.Type.MCP_OAUTH)
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .refresh(
                     BetaManagedAgentsMcpOAuthRefreshResponse.builder()
                         .clientId("client_id")
                         .tokenEndpoint("token_endpoint")
                         .tokenEndpointAuth(
-                            BetaManagedAgentsTokenEndpointAuthNoneResponse.of(
-                                BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE
-                            )
+                            BetaManagedAgentsTokenEndpointAuthNoneResponse.builder().build()
                         )
                         .resource("resource")
                         .scope("scope")
@@ -31,8 +28,6 @@ internal class BetaManagedAgentsMcpOAuthAuthResponseTest {
                 .build()
 
         assertThat(betaManagedAgentsMcpOAuthAuthResponse.mcpServerUrl()).isEqualTo("mcp_server_url")
-        assertThat(betaManagedAgentsMcpOAuthAuthResponse.type())
-            .isEqualTo(BetaManagedAgentsMcpOAuthAuthResponse.Type.MCP_OAUTH)
         assertThat(betaManagedAgentsMcpOAuthAuthResponse.expiresAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsMcpOAuthAuthResponse.refresh())
@@ -41,9 +36,7 @@ internal class BetaManagedAgentsMcpOAuthAuthResponseTest {
                     .clientId("client_id")
                     .tokenEndpoint("token_endpoint")
                     .tokenEndpointAuth(
-                        BetaManagedAgentsTokenEndpointAuthNoneResponse.of(
-                            BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE
-                        )
+                        BetaManagedAgentsTokenEndpointAuthNoneResponse.builder().build()
                     )
                     .resource("resource")
                     .scope("scope")
@@ -57,16 +50,13 @@ internal class BetaManagedAgentsMcpOAuthAuthResponseTest {
         val betaManagedAgentsMcpOAuthAuthResponse =
             BetaManagedAgentsMcpOAuthAuthResponse.builder()
                 .mcpServerUrl("mcp_server_url")
-                .type(BetaManagedAgentsMcpOAuthAuthResponse.Type.MCP_OAUTH)
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .refresh(
                     BetaManagedAgentsMcpOAuthRefreshResponse.builder()
                         .clientId("client_id")
                         .tokenEndpoint("token_endpoint")
                         .tokenEndpointAuth(
-                            BetaManagedAgentsTokenEndpointAuthNoneResponse.of(
-                                BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE
-                            )
+                            BetaManagedAgentsTokenEndpointAuthNoneResponse.builder().build()
                         )
                         .resource("resource")
                         .scope("scope")

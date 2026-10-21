@@ -92,7 +92,7 @@ class MemberServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -135,7 +135,7 @@ class MemberServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { addHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -178,7 +178,7 @@ class MemberServiceImpl internal constructor(private val clientOptions: ClientOp
                     response
                         .use { removeHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

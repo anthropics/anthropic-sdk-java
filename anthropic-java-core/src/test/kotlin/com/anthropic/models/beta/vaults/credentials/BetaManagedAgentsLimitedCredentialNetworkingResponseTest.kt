@@ -12,13 +12,10 @@ internal class BetaManagedAgentsLimitedCredentialNetworkingResponseTest {
         val betaManagedAgentsLimitedCredentialNetworkingResponse =
             BetaManagedAgentsLimitedCredentialNetworkingResponse.builder()
                 .addAllowedHost("string")
-                .type(BetaManagedAgentsLimitedCredentialNetworkingResponse.Type.LIMITED)
                 .build()
 
         assertThat(betaManagedAgentsLimitedCredentialNetworkingResponse.allowedHosts())
             .containsExactly("string")
-        assertThat(betaManagedAgentsLimitedCredentialNetworkingResponse.type())
-            .isEqualTo(BetaManagedAgentsLimitedCredentialNetworkingResponse.Type.LIMITED)
     }
 
     @Test
@@ -27,7 +24,6 @@ internal class BetaManagedAgentsLimitedCredentialNetworkingResponseTest {
         val betaManagedAgentsLimitedCredentialNetworkingResponse =
             BetaManagedAgentsLimitedCredentialNetworkingResponse.builder()
                 .addAllowedHost("string")
-                .type(BetaManagedAgentsLimitedCredentialNetworkingResponse.Type.LIMITED)
                 .build()
 
         val roundtrippedBetaManagedAgentsLimitedCredentialNetworkingResponse =

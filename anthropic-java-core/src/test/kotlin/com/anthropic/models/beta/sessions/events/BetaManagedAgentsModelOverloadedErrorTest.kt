@@ -12,23 +12,16 @@ internal class BetaManagedAgentsModelOverloadedErrorTest {
         val betaManagedAgentsModelOverloadedError =
             BetaManagedAgentsModelOverloadedError.builder()
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(BetaManagedAgentsModelOverloadedError.Type.MODEL_OVERLOADED_ERROR)
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsModelOverloadedError.message()).isEqualTo("message")
         assertThat(betaManagedAgentsModelOverloadedError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsModelOverloadedError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
             )
-        assertThat(betaManagedAgentsModelOverloadedError.type())
-            .isEqualTo(BetaManagedAgentsModelOverloadedError.Type.MODEL_OVERLOADED_ERROR)
     }
 
     @Test
@@ -37,12 +30,7 @@ internal class BetaManagedAgentsModelOverloadedErrorTest {
         val betaManagedAgentsModelOverloadedError =
             BetaManagedAgentsModelOverloadedError.builder()
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(BetaManagedAgentsModelOverloadedError.Type.MODEL_OVERLOADED_ERROR)
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsModelOverloadedError =

@@ -12,6 +12,7 @@ import com.anthropic.vertex.backends.VertexBackend.Builder
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.google.auth.oauth2.GoogleCredentials
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * The Google Cloud Vertex AI backend that manages the Google OAuth2 credentials and other
@@ -36,9 +37,9 @@ private constructor(
     private val jsonMapper = jsonMapper()
 
     companion object {
-        private const val ANTHROPIC_VERSION = "vertex-2023-10-16"
         private const val ENV_REGION = "CLOUD_ML_REGION"
         private const val ENV_PROJECT = "ANTHROPIC_VERTEX_PROJECT_ID"
+        private const val HEADER_ANTHROPIC_VERSION = "anthropic-version"
         private const val HEADER_AUTHORIZATION = "Authorization"
 
         @JvmStatic fun builder() = Builder()
@@ -87,17 +88,17 @@ private constructor(
                     } // For now, ignore any other path segments.
                 }
             }
-            "complete" -> {
-                // Do nothing special.
-            }
             else ->
                 throw AnthropicException("Service is not supported for Vertex: ${pathSegments[1]}.")
         }
 
-        val jsonBody: ObjectNode? = bodyToJson(jsonMapper, request.body)
+        val jsonBody: ObjectNode? = bodyToJson(jsonMapper, request.body().getOrNull())
 
         if (jsonBody != null) {
-            jsonBody.put("anthropic_version", ANTHROPIC_VERSION)
+            // An interceptor's `putHeader` adds its value after the client's default.
+            request.headers.values(HEADER_ANTHROPIC_VERSION).lastOrNull()?.let {
+                jsonBody.put("anthropic_version", it)
+            }
         } else {
             throw AnthropicInvalidDataException("Request has no body.")
         }
@@ -132,6 +133,7 @@ private constructor(
                 "models",
                 endpoint,
             )
+            .removeHeaders(HEADER_ANTHROPIC_VERSION)
             .body(json(jsonMapper, jsonBody))
             .build()
     }

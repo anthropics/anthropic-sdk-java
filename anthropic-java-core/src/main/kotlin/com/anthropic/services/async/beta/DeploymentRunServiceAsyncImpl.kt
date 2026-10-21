@@ -99,7 +99,7 @@ class DeploymentRunServiceAsyncImpl internal constructor(private val clientOptio
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -133,7 +133,7 @@ class DeploymentRunServiceAsyncImpl internal constructor(private val clientOptio
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

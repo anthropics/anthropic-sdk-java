@@ -1,9 +1,12 @@
 package com.anthropic.helpers
 
+import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentMessageEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaContent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsStreamSessionEvents
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -45,7 +48,7 @@ internal class BetaManagedAgentsEventAccumulatorTest {
 
         val message = accumulator.agentMessages().getValue("evt_1")
         assertThat(message.id()).isEqualTo("evt_1")
-        assertThat(message.type()).isEqualTo(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
+        assertThat(message._type()).isEqualTo(JsonValue.from("agent.message"))
         assertThat(message.content()).isEmpty()
     }
 
@@ -193,6 +196,44 @@ internal class BetaManagedAgentsEventAccumulatorTest {
         )
 
         assertThat(accumulator.agentMessageText("evt_1")).contains("after")
+    }
+
+    @Test
+    fun unknownFragmentTypeIsNoOp() {
+        val accumulator = BetaManagedAgentsEventAccumulator.create()
+
+        feed(
+            accumulator,
+            eventStart("evt_1"),
+            sseEvent(
+                """{"type":"event_delta","event_id":"evt_1","delta":{"type":"other_delta","index":0,"content":{"type":"text","text":"a"}}}"""
+            ),
+        )
+
+        assertThat(accumulator.agentMessages().getValue("evt_1").content()).isEmpty()
+    }
+
+    @Test
+    fun builderMadeFragmentApplies() {
+        val accumulator = BetaManagedAgentsEventAccumulator.create()
+
+        // The builder fills in the generated `type`, which must stay the one accumulate() matches.
+        feed(
+            accumulator,
+            eventStart("evt_1"),
+            BetaManagedAgentsStreamSessionEvents.ofEventDelta(
+                BetaManagedAgentsDeltaEvent.builder()
+                    .eventId("evt_1")
+                    .delta(
+                        BetaManagedAgentsDeltaContent.builder()
+                            .content(BetaManagedAgentsTextBlock.of("a"))
+                            .build()
+                    )
+                    .build()
+            ),
+        )
+
+        assertThat(accumulator.agentMessageText("evt_1")).contains("a")
     }
 
     @Test

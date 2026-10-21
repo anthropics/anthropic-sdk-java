@@ -19,9 +19,6 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationEndEventTest {
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:31Z"))
                 .result("satisfied")
-                .type(
-                    BetaManagedAgentsSpanOutcomeEvaluationEndEvent.Type.SPAN_OUTCOME_EVALUATION_END
-                )
                 .usage(
                     BetaManagedAgentsSpanModelUsage.builder()
                         .cacheCreationInputTokens(0)
@@ -45,10 +42,6 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationEndEventTest {
         assertThat(betaManagedAgentsSpanOutcomeEvaluationEndEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:02:31Z"))
         assertThat(betaManagedAgentsSpanOutcomeEvaluationEndEvent.result()).isEqualTo("satisfied")
-        assertThat(betaManagedAgentsSpanOutcomeEvaluationEndEvent.type())
-            .isEqualTo(
-                BetaManagedAgentsSpanOutcomeEvaluationEndEvent.Type.SPAN_OUTCOME_EVALUATION_END
-            )
         assertThat(betaManagedAgentsSpanOutcomeEvaluationEndEvent.usage())
             .isEqualTo(
                 BetaManagedAgentsSpanModelUsage.builder()
@@ -73,9 +66,6 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationEndEventTest {
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:31Z"))
                 .result("satisfied")
-                .type(
-                    BetaManagedAgentsSpanOutcomeEvaluationEndEvent.Type.SPAN_OUTCOME_EVALUATION_END
-                )
                 .usage(
                     BetaManagedAgentsSpanModelUsage.builder()
                         .cacheCreationInputTokens(0)

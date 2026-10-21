@@ -13,11 +13,7 @@ internal class BetaManagedAgentsRepositoryNotFoundErrorTest {
             BetaManagedAgentsRepositoryNotFoundError.builder()
                 .message("The repository host reported the repository as not found.")
                 .repositoryUrl("https://github.com/example-org/example-repo")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsRepositoryNotFoundError.message())
@@ -27,7 +23,7 @@ internal class BetaManagedAgentsRepositoryNotFoundErrorTest {
         assertThat(betaManagedAgentsRepositoryNotFoundError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsRepositoryNotFoundError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
             )
     }
@@ -39,11 +35,7 @@ internal class BetaManagedAgentsRepositoryNotFoundErrorTest {
             BetaManagedAgentsRepositoryNotFoundError.builder()
                 .message("The repository host reported the repository as not found.")
                 .repositoryUrl("https://github.com/example-org/example-repo")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsRepositoryNotFoundError =

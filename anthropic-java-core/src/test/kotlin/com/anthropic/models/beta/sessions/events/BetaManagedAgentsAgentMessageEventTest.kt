@@ -15,7 +15,6 @@ internal class BetaManagedAgentsAgentMessageEventTest {
                 .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                 .addTextContent("Let me look up order #1234 for you.")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                 .build()
 
         assertThat(betaManagedAgentsAgentMessageEvent.id())
@@ -23,16 +22,11 @@ internal class BetaManagedAgentsAgentMessageEventTest {
         assertThat(betaManagedAgentsAgentMessageEvent.content())
             .containsExactly(
                 BetaManagedAgentsAgentMessageEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Let me look up order #1234 for you.")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
+                    "Let me look up order #1234 for you."
                 )
             )
         assertThat(betaManagedAgentsAgentMessageEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-        assertThat(betaManagedAgentsAgentMessageEvent.type())
-            .isEqualTo(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
     }
 
     @Test
@@ -43,7 +37,6 @@ internal class BetaManagedAgentsAgentMessageEventTest {
                 .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                 .addTextContent("Let me look up order #1234 for you.")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                 .build()
 
         val roundtrippedBetaManagedAgentsAgentMessageEvent =

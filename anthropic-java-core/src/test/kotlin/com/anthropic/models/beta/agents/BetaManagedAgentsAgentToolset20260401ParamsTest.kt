@@ -12,42 +12,27 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
     fun create() {
         val betaManagedAgentsAgentToolset20260401Params =
             BetaManagedAgentsAgentToolset20260401Params.builder()
-                .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
                 .addConfig(
                     BetaManagedAgentsBashToolConfigParams.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                         .build()
                 )
                 .defaultConfig(
                     BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .build()
 
-        assertThat(betaManagedAgentsAgentToolset20260401Params.type())
-            .isEqualTo(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
         assertThat(betaManagedAgentsAgentToolset20260401Params.configs().getOrNull())
             .containsExactly(
                 BetaManagedAgentsAgentToolConfigParams.ofBash(
                     BetaManagedAgentsBashToolConfigParams.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                         .build()
                 )
@@ -56,11 +41,7 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
             .contains(
                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                     .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
+                    .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                     .build()
             )
     }
@@ -68,9 +49,7 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaManagedAgentsAgentToolset20260401Params =
-            BetaManagedAgentsAgentToolset20260401Params.of(
-                BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-            )
+            BetaManagedAgentsAgentToolset20260401Params.builder().build()
 
         val betaManagedAgentsAgentToolset20260401Params =
             baseBetaManagedAgentsAgentToolset20260401Params
@@ -79,11 +58,7 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
                     BetaManagedAgentsAgentToolConfigParams.ofBash(
                         BetaManagedAgentsBashToolConfigParams.builder()
                             .enabled(true)
-                            .permissionPolicy(
-                                BetaManagedAgentsAlwaysAllowPolicy.of(
-                                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                )
-                            )
+                            .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                             .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                             .build()
                     )
@@ -95,11 +70,7 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
                 BetaManagedAgentsAgentToolConfigParams.ofBash(
                     BetaManagedAgentsBashToolConfigParams.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                         .build()
                 )
@@ -111,26 +82,17 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsAgentToolset20260401Params =
             BetaManagedAgentsAgentToolset20260401Params.builder()
-                .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
                 .addConfig(
                     BetaManagedAgentsBashToolConfigParams.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                         .build()
                 )
                 .defaultConfig(
                     BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                         .enabled(true)
-                        .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                            )
-                        )
+                        .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                         .build()
                 )
                 .build()

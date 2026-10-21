@@ -20,6 +20,7 @@ import java.util.concurrent.CompletionException
 import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.TimeUnit
 import java.util.function.Function
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 import kotlin.math.pow
 
@@ -73,7 +74,7 @@ private constructor(
                 sleeper.sleep(backoffDuration)
             }
         } finally {
-            request.body?.close()
+            request.body().getOrNull()?.close()
         }
     }
 
@@ -145,7 +146,7 @@ private constructor(
         // Not a user callback; the body must be closed whatever the outcome of the attempts.
         @Suppress("ForbiddenMethodCall")
         return executeWithRetries(modifiedRequest, requestOptions).whenComplete { _, _ ->
-            request.body?.close()
+            request.body().getOrNull()?.close()
         }
     }
 
@@ -157,7 +158,7 @@ private constructor(
     private fun isRetryable(request: HttpRequest): Boolean =
         // Some requests, such as when a request body is being streamed, cannot be retried because
         // the body data aren't available on subsequent attempts.
-        request.body?.repeatable() ?: true
+        request.body().getOrNull()?.repeatable() ?: true
 
     /**
      * Returns [request] with a body whose `close()` does nothing, so that [httpClient], which
@@ -165,7 +166,7 @@ private constructor(
      * closes the original body when the attempts are over.
      */
     private fun keepBodyOpen(request: HttpRequest): HttpRequest {
-        val body = request.body ?: return request
+        val body = request.body().getOrNull() ?: return request
         return request
             .toBuilder()
             .body(

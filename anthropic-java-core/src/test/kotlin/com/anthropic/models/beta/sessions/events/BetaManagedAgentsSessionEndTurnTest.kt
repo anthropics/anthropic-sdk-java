@@ -9,18 +9,13 @@ internal class BetaManagedAgentsSessionEndTurnTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsSessionEndTurn =
-            BetaManagedAgentsSessionEndTurn.of(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-
-        assertThat(betaManagedAgentsSessionEndTurn.type())
-            .isEqualTo(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
+        val betaManagedAgentsSessionEndTurn = BetaManagedAgentsSessionEndTurn.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsSessionEndTurn =
-            BetaManagedAgentsSessionEndTurn.of(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
+        val betaManagedAgentsSessionEndTurn = BetaManagedAgentsSessionEndTurn.builder().build()
 
         val roundtrippedBetaManagedAgentsSessionEndTurn =
             jsonMapper.readValue(

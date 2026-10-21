@@ -288,8 +288,6 @@ internal abstract class TracingTestSupport {
         MessageCreateParams.builder()
             .model("claude-requested")
             .maxTokens(100)
-            .temperature(0.5)
-            .topK(3)
             .system("Be brief. SYSTEM-SECRET")
             .addUserMessage("hello USER-SECRET")
             .putAdditionalHeader("anthropic-beta", "beta-one, beta-two")

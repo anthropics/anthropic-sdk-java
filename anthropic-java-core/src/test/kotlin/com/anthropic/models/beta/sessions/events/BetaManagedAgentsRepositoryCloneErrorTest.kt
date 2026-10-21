@@ -13,11 +13,7 @@ internal class BetaManagedAgentsRepositoryCloneErrorTest {
             BetaManagedAgentsRepositoryCloneError.builder()
                 .message("The repository could not be cloned.")
                 .repositoryUrl("https://github.com/example-org/example-repo")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsRepositoryCloneError.message())
@@ -27,7 +23,7 @@ internal class BetaManagedAgentsRepositoryCloneErrorTest {
         assertThat(betaManagedAgentsRepositoryCloneError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsRepositoryCloneError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
             )
     }
@@ -39,11 +35,7 @@ internal class BetaManagedAgentsRepositoryCloneErrorTest {
             BetaManagedAgentsRepositoryCloneError.builder()
                 .message("The repository could not be cloned.")
                 .repositoryUrl("https://github.com/example-org/example-repo")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsRepositoryCloneError =

@@ -10,32 +10,17 @@ internal class BetaManagedAgentsStartEventTest {
     @Test
     fun create() {
         val betaManagedAgentsStartEvent =
-            BetaManagedAgentsStartEvent.builder()
-                .agentMessageEvent("id")
-                .type(BetaManagedAgentsStartEvent.Type.EVENT_START)
-                .build()
+            BetaManagedAgentsStartEvent.builder().agentMessageEvent("id").build()
 
         assertThat(betaManagedAgentsStartEvent.event())
-            .isEqualTo(
-                BetaManagedAgentsStartEventPreview.ofAgentMessage(
-                    BetaManagedAgentsAgentMessagePreview.builder()
-                        .id("id")
-                        .type(BetaManagedAgentsAgentMessagePreview.Type.AGENT_MESSAGE)
-                        .build()
-                )
-            )
-        assertThat(betaManagedAgentsStartEvent.type())
-            .isEqualTo(BetaManagedAgentsStartEvent.Type.EVENT_START)
+            .isEqualTo(BetaManagedAgentsStartEventPreview.ofAgentMessage("id"))
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsStartEvent =
-            BetaManagedAgentsStartEvent.builder()
-                .agentMessageEvent("id")
-                .type(BetaManagedAgentsStartEvent.Type.EVENT_START)
-                .build()
+            BetaManagedAgentsStartEvent.builder().agentMessageEvent("id").build()
 
         val roundtrippedBetaManagedAgentsStartEvent =
             jsonMapper.readValue(

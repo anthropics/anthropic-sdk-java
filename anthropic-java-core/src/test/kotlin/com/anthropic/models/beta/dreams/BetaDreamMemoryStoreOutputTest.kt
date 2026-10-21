@@ -9,25 +9,15 @@ internal class BetaDreamMemoryStoreOutputTest {
 
     @Test
     fun create() {
-        val betaDreamMemoryStoreOutput =
-            BetaDreamMemoryStoreOutput.builder()
-                .memoryStoreId("memory_store_id")
-                .type(BetaDreamMemoryStoreOutput.Type.MEMORY_STORE)
-                .build()
+        val betaDreamMemoryStoreOutput = BetaDreamMemoryStoreOutput.of("memory_store_id")
 
         assertThat(betaDreamMemoryStoreOutput.memoryStoreId()).isEqualTo("memory_store_id")
-        assertThat(betaDreamMemoryStoreOutput.type())
-            .isEqualTo(BetaDreamMemoryStoreOutput.Type.MEMORY_STORE)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaDreamMemoryStoreOutput =
-            BetaDreamMemoryStoreOutput.builder()
-                .memoryStoreId("memory_store_id")
-                .type(BetaDreamMemoryStoreOutput.Type.MEMORY_STORE)
-                .build()
+        val betaDreamMemoryStoreOutput = BetaDreamMemoryStoreOutput.of("memory_store_id")
 
         val roundtrippedBetaDreamMemoryStoreOutput =
             jsonMapper.readValue(

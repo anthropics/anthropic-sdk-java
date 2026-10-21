@@ -10,24 +10,16 @@ internal class BetaManagedAgentsDeletedVaultTest {
     @Test
     fun create() {
         val betaManagedAgentsDeletedVault =
-            BetaManagedAgentsDeletedVault.builder()
-                .id("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                .type(BetaManagedAgentsDeletedVault.Type.VAULT_DELETED)
-                .build()
+            BetaManagedAgentsDeletedVault.of("vlt_011CZkZDLs7fYzm1hXNPeRjv")
 
         assertThat(betaManagedAgentsDeletedVault.id()).isEqualTo("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-        assertThat(betaManagedAgentsDeletedVault.type())
-            .isEqualTo(BetaManagedAgentsDeletedVault.Type.VAULT_DELETED)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeletedVault =
-            BetaManagedAgentsDeletedVault.builder()
-                .id("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                .type(BetaManagedAgentsDeletedVault.Type.VAULT_DELETED)
-                .build()
+            BetaManagedAgentsDeletedVault.of("vlt_011CZkZDLs7fYzm1hXNPeRjv")
 
         val roundtrippedBetaManagedAgentsDeletedVault =
             jsonMapper.readValue(

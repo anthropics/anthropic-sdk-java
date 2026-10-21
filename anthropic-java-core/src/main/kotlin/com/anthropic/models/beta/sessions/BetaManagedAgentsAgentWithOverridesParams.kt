@@ -46,7 +46,7 @@ class BetaManagedAgentsAgentWithOverridesParams
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
-    private val type: JsonField<Type>,
+    private val type: JsonValue,
     private val mcpServers: JsonField<List<BetaManagedAgentsUrlMcpServerParams>>,
     private val model: JsonField<Model>,
     private val skills: JsonField<List<BetaManagedAgentsSkillParams>>,
@@ -59,7 +59,7 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("mcp_servers")
         @ExcludeMissing
         mcpServers: JsonField<List<BetaManagedAgentsUrlMcpServerParams>> = JsonMissing.of(),
@@ -81,10 +81,15 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("agent_with_overrides")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
-    fun type(): Type = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * Replacement MCP server list. Full replacement: the provided array becomes the MCP servers.
@@ -146,13 +151,6 @@ private constructor(
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
-
-    /**
-     * Returns the raw JSON value of [type].
-     *
-     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     /**
      * Returns the raw JSON value of [mcpServers].
@@ -221,17 +219,22 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
-         * .type()
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsAgentWithOverridesParams] with the
+         * required [id] set to the given value.
+         */
+        @JvmStatic fun of(id: String) = builder().id(id).build()
     }
 
     /** A builder for [BetaManagedAgentsAgentWithOverridesParams]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var type: JsonField<Type>? = null
+        private var type: JsonValue = JsonValue.from("agent_with_overrides")
         private var mcpServers: JsonField<MutableList<BetaManagedAgentsUrlMcpServerParams>>? = null
         private var model: JsonField<Model> = JsonMissing.of()
         private var skills: JsonField<MutableList<BetaManagedAgentsSkillParams>>? = null
@@ -276,15 +279,19 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        fun type(type: Type) = type(JsonField.of(type))
-
         /**
-         * Sets [Builder.type] to an arbitrary JSON value.
+         * Sets the field to an arbitrary JSON value.
          *
-         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("agent_with_overrides")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         /**
          * Replacement MCP server list. Full replacement: the provided array becomes the MCP
@@ -380,18 +387,12 @@ private constructor(
          * Alias for calling [addSkill] with the following:
          * ```java
          * BetaManagedAgentsAnthropicSkillParams.builder()
-         *     .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
          *     .skillId(skillId)
          *     .build()
          * ```
          */
         fun addAnthropicSkill(skillId: String) =
-            addSkill(
-                BetaManagedAgentsAnthropicSkillParams.builder()
-                    .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
-                    .skillId(skillId)
-                    .build()
-            )
+            addSkill(BetaManagedAgentsAnthropicSkillParams.builder().skillId(skillId).build())
 
         /** Alias for calling [addSkill] with `BetaManagedAgentsSkillParams.ofCustom(custom)`. */
         fun addSkill(custom: BetaManagedAgentsCustomSkillParams) =
@@ -401,18 +402,12 @@ private constructor(
          * Alias for calling [addSkill] with the following:
          * ```java
          * BetaManagedAgentsCustomSkillParams.builder()
-         *     .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
          *     .skillId(skillId)
          *     .build()
          * ```
          */
         fun addCustomSkill(skillId: String) =
-            addSkill(
-                BetaManagedAgentsCustomSkillParams.builder()
-                    .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
-                    .skillId(skillId)
-                    .build()
-            )
+            addSkill(BetaManagedAgentsCustomSkillParams.builder().skillId(skillId).build())
 
         /**
          * Replacement system prompt. Up to 100,000 characters. Set to null to clear the agent's
@@ -470,17 +465,13 @@ private constructor(
          * Alias for calling [addTool] with the following:
          * ```java
          * BetaManagedAgentsMcpToolsetParams.builder()
-         *     .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
          *     .mcpServerName(mcpServerName)
          *     .build()
          * ```
          */
         fun addMcpToolsetTool(mcpServerName: String) =
             addTool(
-                BetaManagedAgentsMcpToolsetParams.builder()
-                    .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
-                    .mcpServerName(mcpServerName)
-                    .build()
+                BetaManagedAgentsMcpToolsetParams.builder().mcpServerName(mcpServerName).build()
             )
 
         /** Alias for calling [addTool] with `Tool.ofCustom(custom)`. */
@@ -524,7 +515,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
-         * .type()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -532,7 +522,7 @@ private constructor(
         fun build(): BetaManagedAgentsAgentWithOverridesParams =
             BetaManagedAgentsAgentWithOverridesParams(
                 checkRequired("id", id),
-                checkRequired("type", type),
+                type,
                 (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                 model,
                 (skills ?: JsonMissing.of()).map { it.toImmutable() },
@@ -559,7 +549,11 @@ private constructor(
         }
 
         id()
-        type().validate()
+        _type().let {
+            if (it != JsonValue.from("agent_with_overrides")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         mcpServers().ifPresent { it.forEach { it.validate() } }
         model().ifPresent { it.validate() }
         skills().ifPresent { it.forEach { it.validate() } }
@@ -585,154 +579,13 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("agent_with_overrides")) 1 else 0 } +
             (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (model.asKnown().getOrNull()?.validity() ?: 0) +
             (skills.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (system.asKnown().isPresent) 1 else 0) +
             (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (version.asKnown().isPresent) 1 else 0)
-
-    class Type private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val AGENT_WITH_OVERRIDES = Type(JsonField.of("agent_with_overrides"))
-
-            @JvmStatic
-            fun of(value: String): Type =
-                // Intern known values so `==` works
-                when (value) {
-                    "agent_with_overrides" -> AGENT_WITH_OVERRIDES
-                    else -> Type(JsonField.of(value))
-                }
-
-            @JsonCreator
-            @JvmStatic
-            fun of(value: JsonField<String>): Type =
-                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            AGENT_WITH_OVERRIDES
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            AGENT_WITH_OVERRIDES,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                AGENT_WITH_OVERRIDES -> Value.AGENT_WITH_OVERRIDES
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                AGENT_WITH_OVERRIDES -> Known.AGENT_WITH_OVERRIDES
-                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): Type = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Type && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     /**
      * Replacement model. Accepts the model string, e.g. `claude-opus-5-5`, or a `model_config`
@@ -1193,14 +1046,6 @@ private constructor(
                 agentToolset20260401: BetaManagedAgentsAgentToolset20260401Params
             ) = Tool(agentToolset20260401 = agentToolset20260401)
 
-            /**
-             * Returns an immutable instance of [Tool] whose [ofAgentToolset20260401] variant is
-             * built from the given required [type].
-             */
-            @JvmStatic
-            fun ofAgentToolset20260401(type: BetaManagedAgentsAgentToolset20260401Params.Type) =
-                ofAgentToolset20260401(BetaManagedAgentsAgentToolset20260401Params.of(type))
-
             /** Configuration for tools from an MCP server defined in `mcp_servers`. */
             @JvmStatic
             fun ofMcpToolset(mcpToolset: BetaManagedAgentsMcpToolsetParams) =
@@ -1212,12 +1057,7 @@ private constructor(
              */
             @JvmStatic
             fun ofMcpToolset(mcpServerName: String) =
-                ofMcpToolset(
-                    BetaManagedAgentsMcpToolsetParams.builder()
-                        .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
-                        .mcpServerName(mcpServerName)
-                        .build()
-                )
+                ofMcpToolset(BetaManagedAgentsMcpToolsetParams.of(mcpServerName))
 
             /**
              * A custom tool that is executed by the API client rather than the agent. When the

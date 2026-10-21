@@ -8,6 +8,7 @@ import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Middleware [HttpClient] that attaches an authorization token obtained from an
@@ -20,7 +21,6 @@ internal class AuthorizingHttpClient
 private constructor(
     private val httpClient: HttpClient,
     private val tokenCache: CachingAccessTokenProvider,
-    private val defaultBaseUrl: String,
     private val workspaceId: String?,
 ) : HttpClient {
 
@@ -76,12 +76,11 @@ private constructor(
         request.headers.names().contains(HEADER_AUTHORIZATION) ||
             request.headers.names().contains(HEADER_API_KEY)
 
-    private fun isRetryable(request: HttpRequest): Boolean = request.body?.repeatable() ?: true
-
-    private fun getBaseUrl(request: HttpRequest): String = request.baseUrl ?: defaultBaseUrl
+    private fun isRetryable(request: HttpRequest): Boolean =
+        request.body().getOrNull()?.repeatable() ?: true
 
     private fun addAuthorizationHeaders(request: HttpRequest, forceRefresh: Boolean): HttpRequest {
-        val token = tokenCache.get(getBaseUrl(request), forceRefresh)
+        val token = tokenCache.get(request.baseUrl, forceRefresh)
         return buildAuthorizedRequest(request, token.token)
     }
 
@@ -89,7 +88,7 @@ private constructor(
         request: HttpRequest,
         forceRefresh: Boolean,
     ): CompletableFuture<HttpRequest> {
-        return tokenCache.getAsync(getBaseUrl(request), forceRefresh).thenApply { token ->
+        return tokenCache.getAsync(request.baseUrl, forceRefresh).thenApply { token ->
             buildAuthorizedRequest(request, token.token)
         }
     }
@@ -114,7 +113,6 @@ private constructor(
         private const val HEADER_BETA = "anthropic-beta"
         private const val HEADER_WORKSPACE_ID = "anthropic-workspace-id"
         private const val OAUTH_BETA = "oauth-2025-04-20"
-        private const val DEFAULT_BASE_URL = "https://api.anthropic.com"
 
         @JvmStatic fun builder() = Builder()
     }
@@ -123,7 +121,6 @@ private constructor(
 
         private var httpClient: HttpClient? = null
         private var tokenProvider: AccessTokenProvider? = null
-        private var defaultBaseUrl: String = DEFAULT_BASE_URL
         private var workspaceId: String? = null
 
         fun httpClient(httpClient: HttpClient) = apply { this.httpClient = httpClient }
@@ -132,15 +129,12 @@ private constructor(
             this.tokenProvider = tokenProvider
         }
 
-        fun defaultBaseUrl(defaultBaseUrl: String) = apply { this.defaultBaseUrl = defaultBaseUrl }
-
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         fun build(): HttpClient =
             AuthorizingHttpClient(
                 checkRequired("httpClient", httpClient),
                 CachingAccessTokenProvider(checkRequired("tokenProvider", tokenProvider)),
-                defaultBaseUrl,
                 workspaceId,
             )
     }

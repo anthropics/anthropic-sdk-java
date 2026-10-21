@@ -15,34 +15,18 @@ internal class HeaderAuthHttpClientTest {
 
     @ParameterizedTest
     @ValueSource(booleans = [false, true])
-    fun requestWithoutAuthHeadersGetsApiKeyAdded(async: Boolean) {
+    fun requestWithoutAuthHeadersGetsCredentialAdded(async: Boolean) {
         val executedRequests = mutableListOf<HttpRequest>()
         val httpClient = createMockHttpClient(executedRequests)
 
-        val authClient = HeaderAuthHttpClient(httpClient, "sk-test-key", null)
-
-        val response = authClient.execute(createRequest(), async)
-
-        assertThat(response.statusCode()).isEqualTo(200)
-        assertThat(executedRequests).hasSize(1)
-        assertThat(executedRequests[0].headers.values("X-Api-Key")).containsExactly("sk-test-key")
-        assertThat(executedRequests[0].headers.names()).doesNotContain("Authorization")
-    }
-
-    @ParameterizedTest
-    @ValueSource(booleans = [false, true])
-    fun requestWithoutAuthHeadersGetsAuthTokenAdded(async: Boolean) {
-        val executedRequests = mutableListOf<HttpRequest>()
-        val httpClient = createMockHttpClient(executedRequests)
-
-        val authClient = HeaderAuthHttpClient(httpClient, null, "test-token")
+        val authClient = HeaderAuthHttpClient(httpClient, "sk-test-key")
 
         val response = authClient.execute(createRequest(), async)
 
         assertThat(response.statusCode()).isEqualTo(200)
         assertThat(executedRequests).hasSize(1)
         assertThat(executedRequests[0].headers.values("Authorization"))
-            .containsExactly("Bearer test-token")
+            .containsExactly("Bearer sk-test-key")
         assertThat(executedRequests[0].headers.names()).doesNotContain("X-Api-Key")
     }
 
@@ -52,7 +36,7 @@ internal class HeaderAuthHttpClientTest {
         val executedRequests = mutableListOf<HttpRequest>()
         val httpClient = createMockHttpClient(executedRequests)
 
-        val authClient = HeaderAuthHttpClient(httpClient, "sk-test-key", null)
+        val authClient = HeaderAuthHttpClient(httpClient, "sk-test-key")
 
         val request = createRequest().toBuilder().putHeader("X-Api-Key", "sk-existing-key").build()
         authClient.execute(request, async)
@@ -60,6 +44,7 @@ internal class HeaderAuthHttpClientTest {
         assertThat(executedRequests).hasSize(1)
         assertThat(executedRequests[0].headers.values("X-Api-Key"))
             .containsExactly("sk-existing-key")
+        assertThat(executedRequests[0].headers.names()).doesNotContain("Authorization")
     }
 
     @ParameterizedTest
@@ -68,7 +53,7 @@ internal class HeaderAuthHttpClientTest {
         val executedRequests = mutableListOf<HttpRequest>()
         val httpClient = createMockHttpClient(executedRequests)
 
-        val authClient = HeaderAuthHttpClient(httpClient, "sk-test-key", null)
+        val authClient = HeaderAuthHttpClient(httpClient, "sk-test-key")
 
         val request =
             createRequest().toBuilder().putHeader("Authorization", "Bearer existing-token").build()
@@ -100,7 +85,7 @@ internal class HeaderAuthHttpClientTest {
                 }
             }
 
-        HeaderAuthHttpClient(httpClient, "sk-test-key", null).close()
+        HeaderAuthHttpClient(httpClient, "sk-test-key").close()
 
         assertThat(closed.get()).isTrue()
     }

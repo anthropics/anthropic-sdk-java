@@ -77,16 +77,6 @@ internal val GEN_AI_REQUEST_STOP_SEQUENCES: AttributeKey<List<String>> =
 @get:JvmSynthetic
 internal val GEN_AI_REQUEST_STREAM: AttributeKey<Boolean> = booleanKey("gen_ai.request.stream")
 
-@get:JvmSynthetic
-internal val GEN_AI_REQUEST_TEMPERATURE: AttributeKey<Double> =
-    doubleKey("gen_ai.request.temperature")
-
-@get:JvmSynthetic
-internal val GEN_AI_REQUEST_TOP_K: AttributeKey<Long> = longKey("gen_ai.request.top_k")
-
-@get:JvmSynthetic
-internal val GEN_AI_REQUEST_TOP_P: AttributeKey<Double> = doubleKey("gen_ai.request.top_p")
-
 /** The `gen_ai.response.id` attribute: the Message's `id`. */
 @get:JvmSynthetic
 internal val GEN_AI_RESPONSE_ID: AttributeKey<String> = stringKey("gen_ai.response.id")

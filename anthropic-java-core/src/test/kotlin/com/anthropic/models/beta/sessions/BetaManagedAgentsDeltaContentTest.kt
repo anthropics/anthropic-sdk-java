@@ -12,25 +12,12 @@ internal class BetaManagedAgentsDeltaContentTest {
     fun create() {
         val betaManagedAgentsDeltaContent =
             BetaManagedAgentsDeltaContent.builder()
-                .content(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
-                )
-                .type(BetaManagedAgentsDeltaContent.Type.CONTENT_DELTA)
+                .content(BetaManagedAgentsTextBlock.of("Where is my order #1234?"))
                 .index(0L)
                 .build()
 
         assertThat(betaManagedAgentsDeltaContent.content())
-            .isEqualTo(
-                BetaManagedAgentsTextBlock.builder()
-                    .text("Where is my order #1234?")
-                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                    .build()
-            )
-        assertThat(betaManagedAgentsDeltaContent.type())
-            .isEqualTo(BetaManagedAgentsDeltaContent.Type.CONTENT_DELTA)
+            .isEqualTo(BetaManagedAgentsTextBlock.of("Where is my order #1234?"))
         assertThat(betaManagedAgentsDeltaContent.index()).contains(0L)
     }
 
@@ -39,13 +26,7 @@ internal class BetaManagedAgentsDeltaContentTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeltaContent =
             BetaManagedAgentsDeltaContent.builder()
-                .content(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
-                )
-                .type(BetaManagedAgentsDeltaContent.Type.CONTENT_DELTA)
+                .content(BetaManagedAgentsTextBlock.of("Where is my order #1234?"))
                 .index(0L)
                 .build()
 

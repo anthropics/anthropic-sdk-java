@@ -9,25 +9,15 @@ internal class BetaManagedAgentsCommitCheckoutTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsCommitCheckout =
-            BetaManagedAgentsCommitCheckout.builder()
-                .sha("xxxxxxx")
-                .type(BetaManagedAgentsCommitCheckout.Type.COMMIT)
-                .build()
+        val betaManagedAgentsCommitCheckout = BetaManagedAgentsCommitCheckout.of("xxxxxxx")
 
         assertThat(betaManagedAgentsCommitCheckout.sha()).isEqualTo("xxxxxxx")
-        assertThat(betaManagedAgentsCommitCheckout.type())
-            .isEqualTo(BetaManagedAgentsCommitCheckout.Type.COMMIT)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsCommitCheckout =
-            BetaManagedAgentsCommitCheckout.builder()
-                .sha("xxxxxxx")
-                .type(BetaManagedAgentsCommitCheckout.Type.COMMIT)
-                .build()
+        val betaManagedAgentsCommitCheckout = BetaManagedAgentsCommitCheckout.of("xxxxxxx")
 
         val roundtrippedBetaManagedAgentsCommitCheckout =
             jsonMapper.readValue(

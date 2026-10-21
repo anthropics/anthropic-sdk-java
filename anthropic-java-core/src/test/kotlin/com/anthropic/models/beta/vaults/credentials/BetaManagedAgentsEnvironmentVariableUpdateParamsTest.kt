@@ -11,7 +11,6 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
     fun create() {
         val betaManagedAgentsEnvironmentVariableUpdateParams =
             BetaManagedAgentsEnvironmentVariableUpdateParams.builder()
-                .type(BetaManagedAgentsEnvironmentVariableUpdateParams.Type.ENVIRONMENT_VARIABLE)
                 .injectionLocation(
                     BetaManagedAgentsInjectionLocationUpdateParams.builder()
                         .body(true)
@@ -19,15 +18,11 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
                         .build()
                 )
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(
-                        BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
-                    )
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
                 .secretValue("x")
                 .build()
 
-        assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.type())
-            .isEqualTo(BetaManagedAgentsEnvironmentVariableUpdateParams.Type.ENVIRONMENT_VARIABLE)
         assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.injectionLocation())
             .contains(
                 BetaManagedAgentsInjectionLocationUpdateParams.builder()
@@ -38,7 +33,7 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
         assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.networking())
             .contains(
                 BetaManagedAgentsCredentialNetworkingParams.ofUnrestricted(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
             )
         assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.secretValue()).contains("x")
@@ -49,7 +44,6 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsEnvironmentVariableUpdateParams =
             BetaManagedAgentsEnvironmentVariableUpdateParams.builder()
-                .type(BetaManagedAgentsEnvironmentVariableUpdateParams.Type.ENVIRONMENT_VARIABLE)
                 .injectionLocation(
                     BetaManagedAgentsInjectionLocationUpdateParams.builder()
                         .body(true)
@@ -57,9 +51,7 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
                         .build()
                 )
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(
-                        BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
-                    )
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
                 .secretValue("x")
                 .build()

@@ -10,24 +10,16 @@ internal class BetaManagedAgentsDeletedSessionTest {
     @Test
     fun create() {
         val betaManagedAgentsDeletedSession =
-            BetaManagedAgentsDeletedSession.builder()
-                .id("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .type(BetaManagedAgentsDeletedSession.Type.SESSION_DELETED)
-                .build()
+            BetaManagedAgentsDeletedSession.of("sesn_011CZkZAtmR3yMPDzynEDxu7")
 
         assertThat(betaManagedAgentsDeletedSession.id()).isEqualTo("sesn_011CZkZAtmR3yMPDzynEDxu7")
-        assertThat(betaManagedAgentsDeletedSession.type())
-            .isEqualTo(BetaManagedAgentsDeletedSession.Type.SESSION_DELETED)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeletedSession =
-            BetaManagedAgentsDeletedSession.builder()
-                .id("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .type(BetaManagedAgentsDeletedSession.Type.SESSION_DELETED)
-                .build()
+            BetaManagedAgentsDeletedSession.of("sesn_011CZkZAtmR3yMPDzynEDxu7")
 
         val roundtrippedBetaManagedAgentsDeletedSession =
             jsonMapper.readValue(

@@ -20,7 +20,6 @@ internal class RateLimitListPageResponseTest {
                                 .displayName("display_name")
                                 .build()
                         )
-                        .groupType(BetaOrganizationRateLimit.GroupType.BATCH)
                         .addLimit(
                             BetaOrganizationRateLimitValue.builder().type("type").value(0L).build()
                         )
@@ -40,7 +39,6 @@ internal class RateLimitListPageResponseTest {
                             .displayName("display_name")
                             .build()
                     )
-                    .groupType(BetaOrganizationRateLimit.GroupType.BATCH)
                     .addLimit(
                         BetaOrganizationRateLimitValue.builder().type("type").value(0L).build()
                     )
@@ -64,7 +62,6 @@ internal class RateLimitListPageResponseTest {
                                 .displayName("display_name")
                                 .build()
                         )
-                        .groupType(BetaOrganizationRateLimit.GroupType.BATCH)
                         .addLimit(
                             BetaOrganizationRateLimitValue.builder().type("type").value(0L).build()
                         )

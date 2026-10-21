@@ -12,23 +12,16 @@ internal class BetaManagedAgentsModelRateLimitedErrorTest {
         val betaManagedAgentsModelRateLimitedError =
             BetaManagedAgentsModelRateLimitedError.builder()
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(BetaManagedAgentsModelRateLimitedError.Type.MODEL_RATE_LIMITED_ERROR)
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsModelRateLimitedError.message()).isEqualTo("message")
         assertThat(betaManagedAgentsModelRateLimitedError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsModelRateLimitedError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
             )
-        assertThat(betaManagedAgentsModelRateLimitedError.type())
-            .isEqualTo(BetaManagedAgentsModelRateLimitedError.Type.MODEL_RATE_LIMITED_ERROR)
     }
 
     @Test
@@ -37,12 +30,7 @@ internal class BetaManagedAgentsModelRateLimitedErrorTest {
         val betaManagedAgentsModelRateLimitedError =
             BetaManagedAgentsModelRateLimitedError.builder()
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(BetaManagedAgentsModelRateLimitedError.Type.MODEL_RATE_LIMITED_ERROR)
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsModelRateLimitedError =

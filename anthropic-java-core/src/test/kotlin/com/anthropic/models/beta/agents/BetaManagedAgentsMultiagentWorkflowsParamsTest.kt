@@ -23,7 +23,6 @@ internal class BetaManagedAgentsMultiagentWorkflowsParamsTest {
                 .addPredefinedAgent(
                     BetaManagedAgentsAgentParams.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentParams.Type.AGENT)
                         .version(1)
                         .build()
                 )
@@ -48,7 +47,6 @@ internal class BetaManagedAgentsMultiagentWorkflowsParamsTest {
                     .addPredefinedAgent(
                         BetaManagedAgentsAgentParams.builder()
                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                            .type(BetaManagedAgentsAgentParams.Type.AGENT)
                             .version(1)
                             .build()
                     )

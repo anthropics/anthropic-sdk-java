@@ -16,7 +16,6 @@ import com.anthropic.models.beta.deployments.DeploymentUnpauseParams
 import com.anthropic.models.beta.deployments.DeploymentUpdateParams
 import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsFileResourceParams
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -44,24 +43,18 @@ internal class DeploymentServiceTest {
                     .addUserMessageInitialEvent(
                         listOf(
                             BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                                BetaManagedAgentsTextBlock.builder()
-                                    .text("Where is my order #1234?")
-                                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                    .build()
+                                "Where is my order #1234?"
                             )
                         )
                     )
                     .name("x")
                     .budget(
-                        BetaManagedAgentsBudgetLimit.builder()
-                            .maxListCost(
-                                BetaMonetaryAmount.builder()
-                                    .amount("2500")
-                                    .currency(BetaCurrency.USD)
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                            .build()
+                        BetaManagedAgentsBudgetLimit.of(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
                     )
                     .description("description")
                     .metadata(
@@ -72,7 +65,6 @@ internal class DeploymentServiceTest {
                     .addResource(
                         BetaManagedAgentsFileResourceParams.builder()
                             .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                            .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                             .mountPath("/uploads/receipt.pdf")
                             .build()
                     )
@@ -80,7 +72,6 @@ internal class DeploymentServiceTest {
                         BetaManagedAgentsScheduleParams.builder()
                             .expression("0 9 * * 1-5")
                             .timezone("America/Los_Angeles")
-                            .type(BetaManagedAgentsScheduleParams.Type.CRON)
                             .build()
                     )
                     .addVaultId("string")
@@ -118,25 +109,19 @@ internal class DeploymentServiceTest {
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .agent("string")
                     .budget(
-                        BetaManagedAgentsBudgetLimit.builder()
-                            .maxListCost(
-                                BetaMonetaryAmount.builder()
-                                    .amount("2500")
-                                    .currency(BetaCurrency.USD)
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                            .build()
+                        BetaManagedAgentsBudgetLimit.of(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
                     )
                     .description("description")
                     .environmentId("environment_id")
                     .addUserMessageInitialEvent(
                         listOf(
                             BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                                BetaManagedAgentsTextBlock.builder()
-                                    .text("Where is my order #1234?")
-                                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                    .build()
+                                "Where is my order #1234?"
                             )
                         )
                     )
@@ -149,7 +134,6 @@ internal class DeploymentServiceTest {
                     .addResource(
                         BetaManagedAgentsFileResourceParams.builder()
                             .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                            .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                             .mountPath("/uploads/receipt.pdf")
                             .build()
                     )
@@ -157,7 +141,6 @@ internal class DeploymentServiceTest {
                         BetaManagedAgentsScheduleParams.builder()
                             .expression("0 9 * * 1-5")
                             .timezone("America/Los_Angeles")
-                            .type(BetaManagedAgentsScheduleParams.Type.CRON)
                             .build()
                     )
                     .addVaultId("string")

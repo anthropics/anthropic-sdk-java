@@ -13,21 +13,13 @@ internal class BetaManagedAgentsSystemMessageEventTest {
         val betaManagedAgentsSystemMessageEvent =
             BetaManagedAgentsSystemMessageEvent.builder()
                 .id("id")
-                .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
         assertThat(betaManagedAgentsSystemMessageEvent.id()).isEqualTo("id")
         assertThat(betaManagedAgentsSystemMessageEvent.content())
-            .containsExactly(
-                BetaManagedAgentsSystemContentBlock.builder()
-                    .text("Where is my order #1234?")
-                    .type(BetaManagedAgentsSystemContentBlock.Type.TEXT)
-                    .build()
-            )
-        assertThat(betaManagedAgentsSystemMessageEvent.type())
-            .isEqualTo(BetaManagedAgentsSystemMessageEvent.Type.SYSTEM_MESSAGE)
+            .containsExactly(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
         assertThat(betaManagedAgentsSystemMessageEvent.processedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
@@ -38,8 +30,7 @@ internal class BetaManagedAgentsSystemMessageEventTest {
         val betaManagedAgentsSystemMessageEvent =
             BetaManagedAgentsSystemMessageEvent.builder()
                 .id("id")
-                .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 

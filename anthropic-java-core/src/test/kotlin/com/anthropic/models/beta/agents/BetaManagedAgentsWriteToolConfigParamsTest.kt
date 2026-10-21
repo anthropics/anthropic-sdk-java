@@ -12,11 +12,7 @@ internal class BetaManagedAgentsWriteToolConfigParamsTest {
         val betaManagedAgentsWriteToolConfigParams =
             BetaManagedAgentsWriteToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsWriteToolConfigParams.Type.WRITE)
                 .build()
 
@@ -24,7 +20,7 @@ internal class BetaManagedAgentsWriteToolConfigParamsTest {
         assertThat(betaManagedAgentsWriteToolConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsWriteToolConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
         assertThat(betaManagedAgentsWriteToolConfigParams.type())
@@ -37,11 +33,7 @@ internal class BetaManagedAgentsWriteToolConfigParamsTest {
         val betaManagedAgentsWriteToolConfigParams =
             BetaManagedAgentsWriteToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsWriteToolConfigParams.Type.WRITE)
                 .build()
 

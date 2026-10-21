@@ -10,21 +10,14 @@ internal class BetaManagedAgentsManualDeploymentPausedReasonTest {
     @Test
     fun create() {
         val betaManagedAgentsManualDeploymentPausedReason =
-            BetaManagedAgentsManualDeploymentPausedReason.of(
-                BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL
-            )
-
-        assertThat(betaManagedAgentsManualDeploymentPausedReason.type())
-            .isEqualTo(BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL)
+            BetaManagedAgentsManualDeploymentPausedReason.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsManualDeploymentPausedReason =
-            BetaManagedAgentsManualDeploymentPausedReason.of(
-                BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL
-            )
+            BetaManagedAgentsManualDeploymentPausedReason.builder().build()
 
         val roundtrippedBetaManagedAgentsManualDeploymentPausedReason =
             jsonMapper.readValue(

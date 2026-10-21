@@ -221,12 +221,7 @@ private constructor(
          */
         @JvmStatic
         fun ofUserMessage(content: List<BetaManagedAgentsUserMessageEventParams.Content>) =
-            ofUserMessage(
-                BetaManagedAgentsUserMessageEventParams.builder()
-                    .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
-                    .content(content)
-                    .build()
-            )
+            ofUserMessage(BetaManagedAgentsUserMessageEventParams.of(content))
 
         /**
          * Parameters for defining an outcome the agent should work toward. The agent begins work on
@@ -253,12 +248,7 @@ private constructor(
          */
         @JvmStatic
         fun ofSystemMessage(content: List<BetaManagedAgentsSystemContentBlock>) =
-            ofSystemMessage(
-                BetaManagedAgentsSystemMessageEventParams.builder()
-                    .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
-                    .content(content)
-                    .build()
-            )
+            ofSystemMessage(BetaManagedAgentsSystemMessageEventParams.of(content))
     }
 
     /**

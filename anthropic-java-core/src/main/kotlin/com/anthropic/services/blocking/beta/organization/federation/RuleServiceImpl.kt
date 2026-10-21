@@ -117,7 +117,7 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { createHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -157,7 +157,7 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { retrieveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -192,7 +192,7 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { updateHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -222,7 +222,7 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { listHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }
@@ -265,7 +265,7 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
                     response
                         .use { archiveHandler.handle(it) }
                         .also {
-                            if (requestOptions.responseValidation!!) {
+                            if (requestOptions.responseValidation().get()) {
                                 it.validate()
                             }
                         }

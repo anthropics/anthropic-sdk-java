@@ -3,6 +3,7 @@ package com.anthropic.models.beta.deployments
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSystemMessageEventParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserDefineOutcomeEventParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
@@ -20,7 +21,6 @@ internal class BetaManagedAgentsDeploymentInitialEventParamsTest {
         val userMessage =
             BetaManagedAgentsUserMessageEventParams.builder()
                 .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
                 .build()
 
         val betaManagedAgentsDeploymentInitialEventParams =
@@ -39,7 +39,6 @@ internal class BetaManagedAgentsDeploymentInitialEventParamsTest {
             BetaManagedAgentsDeploymentInitialEventParams.ofUserMessage(
                 BetaManagedAgentsUserMessageEventParams.builder()
                     .addTextContent("Where is my order #1234?")
-                    .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
                     .build()
             )
 
@@ -59,7 +58,6 @@ internal class BetaManagedAgentsDeploymentInitialEventParamsTest {
             BetaManagedAgentsUserDefineOutcomeEventParams.builder()
                 .description("Produce a 2-page summary as summary.md")
                 .textRubric("Must cover all five sections; cite sources inline.")
-                .type(BetaManagedAgentsUserDefineOutcomeEventParams.Type.USER_DEFINE_OUTCOME)
                 .maxIterations(3)
                 .build()
 
@@ -80,7 +78,6 @@ internal class BetaManagedAgentsDeploymentInitialEventParamsTest {
                 BetaManagedAgentsUserDefineOutcomeEventParams.builder()
                     .description("Produce a 2-page summary as summary.md")
                     .textRubric("Must cover all five sections; cite sources inline.")
-                    .type(BetaManagedAgentsUserDefineOutcomeEventParams.Type.USER_DEFINE_OUTCOME)
                     .maxIterations(3)
                     .build()
             )
@@ -99,8 +96,7 @@ internal class BetaManagedAgentsDeploymentInitialEventParamsTest {
     fun ofSystemMessage() {
         val systemMessage =
             BetaManagedAgentsSystemMessageEventParams.builder()
-                .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+                .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                 .build()
 
         val betaManagedAgentsDeploymentInitialEventParams =
@@ -118,8 +114,7 @@ internal class BetaManagedAgentsDeploymentInitialEventParamsTest {
         val betaManagedAgentsDeploymentInitialEventParams =
             BetaManagedAgentsDeploymentInitialEventParams.ofSystemMessage(
                 BetaManagedAgentsSystemMessageEventParams.builder()
-                    .addTextContent("Where is my order #1234?")
-                    .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+                    .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                     .build()
             )
 

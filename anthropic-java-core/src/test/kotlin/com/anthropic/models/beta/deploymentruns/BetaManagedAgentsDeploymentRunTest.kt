@@ -17,7 +17,6 @@ internal class BetaManagedAgentsDeploymentRunTest {
                 .agent(
                     BetaManagedAgentsAgentReference.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
                         .version(1)
                         .build()
                 )
@@ -26,7 +25,6 @@ internal class BetaManagedAgentsDeploymentRunTest {
                 .environmentArchivedError("message")
                 .sessionId("session_id")
                 .scheduleTriggerContext(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsDeploymentRun.Type.DEPLOYMENT_RUN)
                 .build()
 
         assertThat(betaManagedAgentsDeploymentRun.id()).isEqualTo("id")
@@ -34,7 +32,6 @@ internal class BetaManagedAgentsDeploymentRunTest {
             .isEqualTo(
                 BetaManagedAgentsAgentReference.builder()
                     .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                    .type(BetaManagedAgentsAgentReference.Type.AGENT)
                     .version(1)
                     .build()
             )
@@ -42,29 +39,14 @@ internal class BetaManagedAgentsDeploymentRunTest {
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsDeploymentRun.deploymentId()).isEqualTo("deployment_id")
         assertThat(betaManagedAgentsDeploymentRun.error())
-            .contains(
-                BetaManagedAgentsDeploymentRun.Error.ofEnvironmentArchived(
-                    BetaManagedAgentsEnvironmentArchivedRunError.builder()
-                        .message("message")
-                        .type(
-                            BetaManagedAgentsEnvironmentArchivedRunError.Type
-                                .ENVIRONMENT_ARCHIVED_ERROR
-                        )
-                        .build()
-                )
-            )
+            .contains(BetaManagedAgentsDeploymentRun.Error.ofEnvironmentArchived("message"))
         assertThat(betaManagedAgentsDeploymentRun.sessionId()).contains("session_id")
         assertThat(betaManagedAgentsDeploymentRun.triggerContext())
             .isEqualTo(
                 BetaManagedAgentsTriggerContext.ofSchedule(
-                    BetaManagedAgentsScheduleTriggerContext.builder()
-                        .scheduledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .type(BetaManagedAgentsScheduleTriggerContext.Type.SCHEDULE)
-                        .build()
+                    OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
                 )
             )
-        assertThat(betaManagedAgentsDeploymentRun.type())
-            .isEqualTo(BetaManagedAgentsDeploymentRun.Type.DEPLOYMENT_RUN)
     }
 
     @Test
@@ -76,7 +58,6 @@ internal class BetaManagedAgentsDeploymentRunTest {
                 .agent(
                     BetaManagedAgentsAgentReference.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
                         .version(1)
                         .build()
                 )
@@ -85,7 +66,6 @@ internal class BetaManagedAgentsDeploymentRunTest {
                 .environmentArchivedError("message")
                 .sessionId("session_id")
                 .scheduleTriggerContext(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsDeploymentRun.Type.DEPLOYMENT_RUN)
                 .build()
 
         val roundtrippedBetaManagedAgentsDeploymentRun =

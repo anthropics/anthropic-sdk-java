@@ -5,14 +5,15 @@ import com.anthropic.helpers.BetaFallbackState
 import com.anthropic.helpers.BetaMessageAccumulator
 import io.opentelemetry.context.Context
 import java.time.Duration
+import java.util.Optional
 
 class RequestOptions
 private constructor(
-    val responseValidation: Boolean?,
-    val timeout: Timeout?,
-    val followRedirects: Boolean?,
-    val fallbackState: BetaFallbackState?,
-    val openTelemetry: OpenTelemetryRequestOptions?,
+    private val responseValidation: Boolean?,
+    private val timeout: Timeout?,
+    private val followRedirects: Boolean?,
+    private val fallbackState: BetaFallbackState?,
+    private val openTelemetry: OpenTelemetryRequestOptions?,
     /**
      * The accumulator that an SDK helper feeds with the events of the API call's streamed Message
      * as the application reads them. The call's span reads the Message from it, in place of an
@@ -22,6 +23,16 @@ private constructor(
     /** The OpenTelemetry context of the API call that sends the request, while its span is open. */
     @get:JvmSynthetic internal val apiCallOtelContext: Context? = null,
 ) {
+
+    fun responseValidation(): Optional<Boolean> = Optional.ofNullable(responseValidation)
+
+    fun timeout(): Optional<Timeout> = Optional.ofNullable(timeout)
+
+    fun followRedirects(): Optional<Boolean> = Optional.ofNullable(followRedirects)
+
+    fun openTelemetry(): Optional<OpenTelemetryRequestOptions> = Optional.ofNullable(openTelemetry)
+
+    fun fallbackState(): Optional<BetaFallbackState> = Optional.ofNullable(fallbackState)
 
     companion object {
 

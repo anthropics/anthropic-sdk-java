@@ -16,7 +16,6 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
     fun ofGitHubRepository() {
         val githubRepository =
             BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
-                .type(BetaManagedAgentsGitHubRepositoryResourceConfig.Type.GITHUB_REPOSITORY)
                 .url("url")
                 .branchCheckout("main")
                 .mountPath("mount_path")
@@ -37,7 +36,6 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
         val betaManagedAgentsSessionResourceConfig =
             BetaManagedAgentsSessionResourceConfig.ofGitHubRepository(
                 BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
-                    .type(BetaManagedAgentsGitHubRepositoryResourceConfig.Type.GITHUB_REPOSITORY)
                     .url("url")
                     .branchCheckout("main")
                     .mountPath("mount_path")
@@ -59,7 +57,6 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
         val file =
             BetaManagedAgentsFileResourceConfig.builder()
                 .fileId("file_id")
-                .type(BetaManagedAgentsFileResourceConfig.Type.FILE)
                 .mountPath("mount_path")
                 .build()
 
@@ -78,7 +75,6 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
             BetaManagedAgentsSessionResourceConfig.ofFile(
                 BetaManagedAgentsFileResourceConfig.builder()
                     .fileId("file_id")
-                    .type(BetaManagedAgentsFileResourceConfig.Type.FILE)
                     .mountPath("mount_path")
                     .build()
             )
@@ -98,7 +94,6 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
         val memoryStore =
             BetaManagedAgentsMemoryStoreResourceConfig.builder()
                 .memoryStoreId("memory_store_id")
-                .type(BetaManagedAgentsMemoryStoreResourceConfig.Type.MEMORY_STORE)
                 .access(BetaManagedAgentsMemoryStoreResourceConfig.Access.READ_WRITE)
                 .instructions("instructions")
                 .build()
@@ -118,7 +113,6 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
             BetaManagedAgentsSessionResourceConfig.ofMemoryStore(
                 BetaManagedAgentsMemoryStoreResourceConfig.builder()
                     .memoryStoreId("memory_store_id")
-                    .type(BetaManagedAgentsMemoryStoreResourceConfig.Type.MEMORY_STORE)
                     .access(BetaManagedAgentsMemoryStoreResourceConfig.Access.READ_WRITE)
                     .instructions("instructions")
                     .build()

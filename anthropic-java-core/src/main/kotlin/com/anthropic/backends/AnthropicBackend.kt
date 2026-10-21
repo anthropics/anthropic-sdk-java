@@ -15,37 +15,24 @@ import com.anthropic.internal.core.http.withStaticAuthHeaders
 import com.anthropic.internal.credentials.WorkloadIdentityCredentials
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.util.Optional
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * The Anthropic backend that manages the API key or authorization token credentials and base URL
  * required to access an Anthropic AI model on the Anthropic service.
  *
- * The [apiKey] or the [authToken] should be set (or resolved from the environment). The default
- * value for the base URL is the normal Anthropic API service base URL, so it only needs to be set
- * if a different base URL is required.
+ * The [apiKey] or the [authToken] should be set (or resolved from the environment), but not both.
+ * Either one is sent as `Authorization: Bearer`. The default value for the base URL is the normal
+ * Anthropic API service base URL, so it only needs to be set if a different base URL is required.
  *
  * The credentials can be resolved from environment variables by calling [Builder.fromEnv].
  * Alternatively, they can be supplied directly to the builder.
  */
 class AnthropicBackend
 private constructor(
-    @get:JvmName("apiKey") val apiKey: String?,
-    @get:JvmName("authToken") val authToken: String?,
-    val baseUrl: String,
+    private val credential: Credential,
+    private val baseUrl: String,
     @get:JvmName("jsonMapper") val jsonMapper: JsonMapper,
-    private val federationConfig: FederationConfig?,
-    private val configurationProvider: ProfileConfigProvider?,
-    /**
-     * Tracks whether [Builder.fromEnv] was called. This enables the full credential resolution
-     * chain (environment variables, profile files, workload identity federation) even when no
-     * static API key or auth token was found.
-     *
-     * Without this flag, we couldn't distinguish between:
-     * - `builder().build()` — no credentials configured, don't attempt resolution
-     * - `builder().fromEnv().build()` — user explicitly requested env-based config, run the full
-     *   credential resolution chain
-     */
-    private val fromEnvCalled: Boolean,
     /**
      * Whether [baseUrl] was set explicitly or from the environment rather than defaulted. A
      * profile's `base_url` applies only when it was not: explicit > environment > profile.
@@ -53,19 +40,45 @@ private constructor(
     private val baseUrlOverridden: Boolean,
 ) : Backend {
 
-    private data class FederationConfig(
-        val identityTokenProvider: IdentityTokenProvider,
-        val federationRuleId: String,
-        val organizationId: String,
-        val serviceAccountId: String?,
-        val workspaceId: String?,
-    )
+    fun apiKey(): Optional<String> = Optional.ofNullable((credential as? Credential.ApiKey)?.value)
+
+    fun authToken(): Optional<String> =
+        Optional.ofNullable((credential as? Credential.AuthToken)?.value)
+
+    private sealed class Credential {
+
+        /** A credential sent as it is, as `Authorization: Bearer`. */
+        sealed class Static(val value: String) : Credential()
+
+        class ApiKey(value: String) : Static(value)
+
+        class AuthToken(value: String) : Static(value)
+
+        class Federation(
+            val identityTokenProvider: IdentityTokenProvider,
+            val federationRuleId: String,
+            val organizationId: String,
+            val serviceAccountId: String?,
+            val workspaceId: String?,
+        ) : Credential()
+
+        class Profile(val provider: ProfileConfigProvider) : Credential()
+
+        /**
+         * [Builder.fromEnv] found no API key and no auth token, so the rest of the credential
+         * resolution chain runs (profile files, workload identity federation).
+         */
+        object EnvChain : Credential()
+
+        /** Nothing was set and [Builder.fromEnv] was not called, so nothing is resolved. */
+        object None : Credential()
+    }
 
     fun applyCredentials(httpClient: HttpClient, clientOptionsBuilder: ClientOptions.Builder) {
-        if (apiKey != null || authToken != null) {
+        if (credential is Credential.Static) {
             // Static credentials are applied by a client-level auth layer that wraps the user's
             // interceptors, so interceptors observe the logical 1p credentials.
-            clientOptionsBuilder.credentials(CredentialResult.staticHeaders(apiKey, authToken))
+            clientOptionsBuilder.credentials(CredentialResult.Static(credential.value))
             return
         }
 
@@ -78,56 +91,46 @@ private constructor(
     }
 
     @JvmSynthetic
-    internal fun resolveCredentials(httpClient: HttpClient): CredentialResult? {
-        if (apiKey != null || authToken != null) {
-            return null
-        }
-
-        val config = federationConfig
-        if (config != null) {
-            val workloadCredentials =
-                WorkloadIdentityCredentials(
-                    config.identityTokenProvider,
-                    config.federationRuleId,
-                    config.organizationId,
-                    config.serviceAccountId,
-                    config.workspaceId,
-                    httpClient,
-                    jsonMapper,
+    internal fun resolveCredentials(httpClient: HttpClient): CredentialResult.Token? =
+        when (credential) {
+            is Credential.Static,
+            Credential.None -> null
+            is Credential.Federation ->
+                CredentialResult.Token(
+                    CachingAccessTokenProvider(
+                        WorkloadIdentityCredentials(
+                            credential.identityTokenProvider,
+                            credential.federationRuleId,
+                            credential.organizationId,
+                            credential.serviceAccountId,
+                            credential.workspaceId,
+                            httpClient,
+                            jsonMapper,
+                        )
+                    )
                 )
-            return CredentialResult.token(CachingAccessTokenProvider(workloadCredentials))
-        }
-
-        val provider = configurationProvider
-        if (provider != null) {
-            return try {
+            is Credential.Profile ->
                 CredentialResolver.builder()
-                    .configurationProvider(provider)
+                    .configurationProvider(credential.provider)
                     .httpClient(httpClient)
                     .build()
-                    .resolve()
-            } catch (e: NoCredentialsException) {
-                null
-            }
+                    .resolveOrNull()
+            Credential.EnvChain -> CredentialResolver.fromEnv(httpClient).resolveOrNull()
         }
 
-        if (fromEnvCalled) {
-            return try {
-                CredentialResolver.fromEnv(httpClient).resolve()
-            } catch (e: NoCredentialsException) {
-                null
-            }
+    private fun CredentialResolver.resolveOrNull(): CredentialResult.Token? =
+        try {
+            resolve()
+        } catch (e: NoCredentialsException) {
+            null
         }
-
-        return null
-    }
 
     companion object {
         private const val PRODUCTION_URL = "https://api.anthropic.com"
-        private const val ANTHROPIC_VERSION = "2023-06-01"
         private const val ENV_API_KEY = "ANTHROPIC_API_KEY"
         private const val ENV_AUTH_TOKEN = "ANTHROPIC_AUTH_TOKEN"
-        private const val HEADER_VERSION = "anthropic-version"
+
+        @get:JvmSynthetic internal val warnedBothEnvCredentials = AtomicBoolean()
 
         @JvmStatic fun builder() = Builder()
 
@@ -136,13 +139,8 @@ private constructor(
 
     override fun baseUrl(): String = baseUrl
 
-    override fun prepareRequest(request: HttpRequest): HttpRequest =
-        // A user-supplied "anthropic-version" (e.g. set by an interceptor) wins over the default.
-        if (request.headers.names().contains(HEADER_VERSION)) request
-        else request.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION).build()
-
     /**
-     * Adds the static credential headers if no auth headers are present.
+     * Adds the static credential header if no auth headers are present.
      *
      * When the client is built via `AnthropicOkHttpClient`/`AnthropicOkHttpClientAsync`, the
      * credentials are already applied by a client-level auth layer that wraps the user's
@@ -150,7 +148,8 @@ private constructor(
      * hand-assembled clients where that layer was never installed.
      */
     override fun authorizeRequest(request: HttpRequest): HttpRequest =
-        request.withStaticAuthHeaders(apiKey, authToken)
+        if (credential is Credential.Static) request.withStaticAuthHeaders(credential.value)
+        else request
 
     override fun close() {}
 
@@ -160,35 +159,50 @@ private constructor(
      *
      * The authorization credentials can be extracted from the environment and set on the builder by
      * calling [fromEnv] before calling [build] to create the [AnthropicBackend]. Alternatively, set
-     * the credentials explicitly via [apiKey] or [authToken] before calling [build].
+     * one credential explicitly via [apiKey], [authToken] or [configurationProvider] before calling
+     * [build]. A credential set explicitly is the only one used: nothing is taken from the
+     * environment, whichever kind it is.
      */
     class Builder internal constructor() {
         private var apiKey: String? = null
         private var authToken: String? = null
-        private var federationConfig: FederationConfig? = null
+        private var federation: Credential.Federation? = null
         private var configurationProvider: ProfileConfigProvider? = null
-        private var fromEnvCalled: Boolean = false
+        /** What [fromEnv] found, or `null` if it was not called. */
+        private var env: EnvCredentials? = null
         private var baseUrl: String? = null
         private var jsonMapper: JsonMapper? = null
 
         fun fromEnv() = apply {
-            fromEnvCalled = true
-            (System.getProperty("anthropic.baseUrl") ?: System.getenv("ANTHROPIC_BASE_URL"))?.let {
+            (System.getProperty("anthropic.baseUrl") ?: getEnv("ANTHROPIC_BASE_URL"))?.let {
                 baseUrl = it
             }
-            (System.getProperty("anthropic.apiKey") ?: System.getenv(ENV_API_KEY))?.let {
-                apiKey(it)
-            }
-            (System.getProperty("anthropic.authToken") ?: System.getenv(ENV_AUTH_TOKEN))?.let {
-                authToken(it)
-            }
+            env =
+                EnvCredentials(
+                    credentialFromEnv("anthropic.apiKey", ENV_API_KEY),
+                    credentialFromEnv("anthropic.authToken", ENV_AUTH_TOKEN),
+                )
         }
 
-        fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }
+        private fun credentialFromEnv(property: String, variable: String): String? =
+            System.getProperty(property)?.takeUnless { it.isEmpty() }
+                ?: getEnv(variable)?.takeUnless { it.isEmpty() }
+
+        @JvmSynthetic internal fun getEnv(name: String): String? = System.getenv(name)
+
+        /** Passing `null` un-sets the API key, including one that an earlier [fromEnv] found. */
+        fun apiKey(apiKey: String?) = apply {
+            this.apiKey = apiKey
+            env = env?.let { EnvCredentials(null, it.authToken) }
+        }
 
         fun apiKey(apiKey: Optional<String>) = apiKey(apiKey.orElse(null))
 
-        fun authToken(authToken: String?) = apply { this.authToken = authToken }
+        /** Passing `null` un-sets the auth token, including one that an earlier [fromEnv] found. */
+        fun authToken(authToken: String?) = apply {
+            this.authToken = authToken
+            env = env?.let { EnvCredentials(it.apiKey, null) }
+        }
 
         fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
@@ -226,9 +240,8 @@ private constructor(
             serviceAccountId: String?,
             workspaceId: String?,
         ) = apply {
-            clearCredentials()
-            federationConfig =
-                FederationConfig(
+            federation =
+                Credential.Federation(
                     identityTokenProvider,
                     federationRuleId,
                     organizationId,
@@ -238,29 +251,54 @@ private constructor(
         }
 
         fun configurationProvider(provider: ProfileConfigProvider) = apply {
-            clearCredentials()
             configurationProvider = provider
         }
 
-        private fun clearCredentials() {
-            apiKey = null
-            authToken = null
-            federationConfig = null
-            configurationProvider = null
-            fromEnvCalled = false
-        }
-
+        /**
+         * @throws IllegalStateException If more than one of [apiKey], [authToken] and
+         *   [configurationProvider] is set.
+         */
         fun build(): AnthropicBackend {
+            val passed =
+                listOfNotNull(
+                    apiKey?.let { "apiKey" to Credential.ApiKey(it) },
+                    authToken?.let { "authToken" to Credential.AuthToken(it) },
+                    configurationProvider?.let {
+                        "configurationProvider" to Credential.Profile(it)
+                    },
+                    federation?.let { "federationTokenProvider" to it },
+                )
+            check(passed.size <= 1) {
+                "Pass at most one of `apiKey`, `authToken`, `configurationProvider`. " +
+                    "Received ${passed.joinToString { (name, _) -> "`$name`" }}."
+            }
+
             return AnthropicBackend(
-                apiKey,
-                authToken,
+                passed.singleOrNull()?.second ?: env?.toCredential() ?: Credential.None,
                 baseUrl ?: PRODUCTION_URL,
                 jsonMapper ?: jsonMapper(),
-                federationConfig,
-                configurationProvider,
-                fromEnvCalled,
                 baseUrl != null,
             )
+        }
+
+        private class EnvCredentials(val apiKey: String?, val authToken: String?) {
+
+            fun toCredential(): Credential {
+                if (
+                    apiKey != null && authToken != null && !warnedBothEnvCredentials.getAndSet(true)
+                ) {
+                    System.err.println(
+                        "Anthropic: $ENV_API_KEY and $ENV_AUTH_TOKEN are both set. " +
+                            "Using $ENV_API_KEY."
+                    )
+                }
+
+                return when {
+                    apiKey != null -> Credential.ApiKey(apiKey)
+                    authToken != null -> Credential.AuthToken(authToken)
+                    else -> Credential.EnvChain
+                }
+            }
         }
     }
 }

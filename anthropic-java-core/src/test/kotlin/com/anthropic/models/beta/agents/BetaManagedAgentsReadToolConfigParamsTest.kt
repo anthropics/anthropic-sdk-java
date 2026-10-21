@@ -12,11 +12,7 @@ internal class BetaManagedAgentsReadToolConfigParamsTest {
         val betaManagedAgentsReadToolConfigParams =
             BetaManagedAgentsReadToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsReadToolConfigParams.Type.READ)
                 .build()
 
@@ -24,7 +20,7 @@ internal class BetaManagedAgentsReadToolConfigParamsTest {
         assertThat(betaManagedAgentsReadToolConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsReadToolConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
         assertThat(betaManagedAgentsReadToolConfigParams.type())
@@ -37,11 +33,7 @@ internal class BetaManagedAgentsReadToolConfigParamsTest {
         val betaManagedAgentsReadToolConfigParams =
             BetaManagedAgentsReadToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsReadToolConfigParams.Type.READ)
                 .build()
 

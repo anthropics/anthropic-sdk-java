@@ -12,30 +12,17 @@ internal class BetaManagedAgentsSearchResultBlockTest {
         val betaManagedAgentsSearchResultBlock =
             BetaManagedAgentsSearchResultBlock.builder()
                 .citations(BetaManagedAgentsSearchResultCitations.of(true))
-                .addContent(
-                    BetaManagedAgentsSearchResultContent.builder()
-                        .text("x")
-                        .type(BetaManagedAgentsSearchResultContent.Type.TEXT)
-                        .build()
-                )
+                .addContent(BetaManagedAgentsSearchResultContent.of("x"))
                 .source("x")
                 .title("x")
-                .type(BetaManagedAgentsSearchResultBlock.Type.SEARCH_RESULT)
                 .build()
 
         assertThat(betaManagedAgentsSearchResultBlock.citations())
             .isEqualTo(BetaManagedAgentsSearchResultCitations.of(true))
         assertThat(betaManagedAgentsSearchResultBlock.content())
-            .containsExactly(
-                BetaManagedAgentsSearchResultContent.builder()
-                    .text("x")
-                    .type(BetaManagedAgentsSearchResultContent.Type.TEXT)
-                    .build()
-            )
+            .containsExactly(BetaManagedAgentsSearchResultContent.of("x"))
         assertThat(betaManagedAgentsSearchResultBlock.source()).isEqualTo("x")
         assertThat(betaManagedAgentsSearchResultBlock.title()).isEqualTo("x")
-        assertThat(betaManagedAgentsSearchResultBlock.type())
-            .isEqualTo(BetaManagedAgentsSearchResultBlock.Type.SEARCH_RESULT)
     }
 
     @Test
@@ -44,15 +31,9 @@ internal class BetaManagedAgentsSearchResultBlockTest {
         val betaManagedAgentsSearchResultBlock =
             BetaManagedAgentsSearchResultBlock.builder()
                 .citations(BetaManagedAgentsSearchResultCitations.of(true))
-                .addContent(
-                    BetaManagedAgentsSearchResultContent.builder()
-                        .text("x")
-                        .type(BetaManagedAgentsSearchResultContent.Type.TEXT)
-                        .build()
-                )
+                .addContent(BetaManagedAgentsSearchResultContent.of("x"))
                 .source("x")
                 .title("x")
-                .type(BetaManagedAgentsSearchResultBlock.Type.SEARCH_RESULT)
                 .build()
 
         val roundtrippedBetaManagedAgentsSearchResultBlock =

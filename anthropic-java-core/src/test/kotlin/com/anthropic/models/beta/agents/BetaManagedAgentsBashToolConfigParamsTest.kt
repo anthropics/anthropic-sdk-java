@@ -12,11 +12,7 @@ internal class BetaManagedAgentsBashToolConfigParamsTest {
         val betaManagedAgentsBashToolConfigParams =
             BetaManagedAgentsBashToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                 .build()
 
@@ -24,7 +20,7 @@ internal class BetaManagedAgentsBashToolConfigParamsTest {
         assertThat(betaManagedAgentsBashToolConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsBashToolConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                 )
             )
         assertThat(betaManagedAgentsBashToolConfigParams.type())
@@ -37,11 +33,7 @@ internal class BetaManagedAgentsBashToolConfigParamsTest {
         val betaManagedAgentsBashToolConfigParams =
             BetaManagedAgentsBashToolConfigParams.builder()
                 .enabled(true)
-                .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                    )
-                )
+                .permissionPolicy(BetaManagedAgentsAlwaysAllowPolicy.builder().build())
                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                 .build()
 

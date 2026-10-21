@@ -120,8 +120,7 @@ private constructor(
      *
      * Note that if you want to include a
      * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
-     * you can use the top-level `system` parameter — there is no `"system"` role for input messages
-     * in the Messages API.
+     * you can use the top-level `system` parameter.
      *
      * There is a limit of 100,000 messages in a single request.
      *
@@ -482,8 +481,7 @@ private constructor(
          *
          * Note that if you want to include a
          * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
-         * you can use the top-level `system` parameter — there is no `"system"` role for input
-         * messages in the Messages API.
+         * you can use the top-level `system` parameter.
          *
          * There is a limit of 100,000 messages in a single request.
          */
@@ -508,74 +506,83 @@ private constructor(
         /** Alias for calling [addMessage] with `message.toParam()`. */
         fun addMessage(message: Message) = apply { body.addMessage(message) }
 
+        /** Alias for calling [addMessage] with `MessageParam.ofUser(user)`. */
+        fun addMessage(user: UserMessageParam) = apply { body.addMessage(user) }
+
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * MessageParam.builder()
-         *     .role(MessageParam.Role.USER)
+         * UserMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addUserMessage(content: MessageParam.Content) = apply { body.addUserMessage(content) }
+        fun addUserMessage(content: MessageContentParam) = apply { body.addUserMessage(content) }
 
-        /** Alias for calling [addUserMessage] with `MessageParam.Content.ofString(string)`. */
+        /** Alias for calling [addUserMessage] with `MessageContentParam.ofString(string)`. */
         fun addUserMessage(string: String) = apply { body.addUserMessage(string) }
 
         /**
          * Alias for calling [addUserMessage] with
-         * `MessageParam.Content.ofBlockParams(blockParams)`.
+         * `MessageContentParam.ofContentBlockParams(contentBlockParams)`.
          */
-        fun addUserMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
-            body.addUserMessageOfBlockParams(blockParams)
-        }
+        fun addUserMessageOfContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
+            apply {
+                body.addUserMessageOfContentBlockParams(contentBlockParams)
+            }
+
+        /** Alias for calling [addMessage] with `MessageParam.ofAssistant(assistant)`. */
+        fun addMessage(assistant: AssistantMessageParam) = apply { body.addMessage(assistant) }
 
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * MessageParam.builder()
-         *     .role(MessageParam.Role.ASSISTANT)
+         * AssistantMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addAssistantMessage(content: MessageParam.Content) = apply {
+        fun addAssistantMessage(content: MessageContentParam) = apply {
             body.addAssistantMessage(content)
         }
 
-        /** Alias for calling [addAssistantMessage] with `MessageParam.Content.ofString(string)`. */
+        /** Alias for calling [addAssistantMessage] with `MessageContentParam.ofString(string)`. */
         fun addAssistantMessage(string: String) = apply { body.addAssistantMessage(string) }
 
         /**
          * Alias for calling [addAssistantMessage] with
-         * `MessageParam.Content.ofBlockParams(blockParams)`.
+         * `MessageContentParam.ofContentBlockParams(contentBlockParams)`.
          */
-        fun addAssistantMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
-            body.addAssistantMessageOfBlockParams(blockParams)
-        }
+        fun addAssistantMessageOfContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
+            apply {
+                body.addAssistantMessageOfContentBlockParams(contentBlockParams)
+            }
+
+        /** Alias for calling [addMessage] with `MessageParam.ofSystem(system)`. */
+        fun addMessage(system: SystemMessageParam) = apply { body.addMessage(system) }
 
         /**
          * Alias for calling [addMessage] with the following:
          * ```java
-         * MessageParam.builder()
-         *     .role(MessageParam.Role.SYSTEM)
+         * SystemMessageParam.builder()
          *     .content(content)
          *     .build()
          * ```
          */
-        fun addSystemMessage(content: MessageParam.Content) = apply {
+        fun addSystemMessage(content: SystemMessageParam.Content) = apply {
             body.addSystemMessage(content)
         }
 
-        /** Alias for calling [addSystemMessage] with `MessageParam.Content.ofString(string)`. */
+        /**
+         * Alias for calling [addSystemMessage] with `SystemMessageParam.Content.ofString(string)`.
+         */
         fun addSystemMessage(string: String) = apply { body.addSystemMessage(string) }
 
         /**
-         * Alias for calling [addSystemMessage] with
-         * `MessageParam.Content.ofBlockParams(blockParams)`.
+         * Alias for calling [addSystemMessage] with `SystemMessageParam.Content.ofBlocks(blocks)`.
          */
-        fun addSystemMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
-            body.addSystemMessageOfBlockParams(blockParams)
+        fun addSystemMessageOfBlocks(blocks: List<TextBlockParam>) = apply {
+            body.addSystemMessageOfBlocks(blocks)
         }
 
         /**
@@ -1283,8 +1290,7 @@ private constructor(
          *
          * Note that if you want to include a
          * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
-         * you can use the top-level `system` parameter — there is no `"system"` role for input
-         * messages in the Messages API.
+         * you can use the top-level `system` parameter.
          *
          * There is a limit of 100,000 messages in a single request.
          *
@@ -1640,8 +1646,7 @@ private constructor(
              *
              * Note that if you want to include a
              * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
-             * you can use the top-level `system` parameter — there is no `"system"` role for input
-             * messages in the Messages API.
+             * you can use the top-level `system` parameter.
              *
              * There is a limit of 100,000 messages in a single request.
              */
@@ -1673,87 +1678,87 @@ private constructor(
             /** Alias for calling [addMessage] with `message.toParam()`. */
             fun addMessage(message: Message) = addMessage(message.toParam())
 
+            /** Alias for calling [addMessage] with `MessageParam.ofUser(user)`. */
+            fun addMessage(user: UserMessageParam) = addMessage(MessageParam.ofUser(user))
+
             /**
              * Alias for calling [addMessage] with the following:
              * ```java
-             * MessageParam.builder()
-             *     .role(MessageParam.Role.USER)
+             * UserMessageParam.builder()
              *     .content(content)
              *     .build()
              * ```
              */
-            fun addUserMessage(content: MessageParam.Content) =
-                addMessage(
-                    MessageParam.builder().role(MessageParam.Role.USER).content(content).build()
-                )
+            fun addUserMessage(content: MessageContentParam) =
+                addMessage(UserMessageParam.builder().content(content).build())
 
-            /** Alias for calling [addUserMessage] with `MessageParam.Content.ofString(string)`. */
+            /** Alias for calling [addUserMessage] with `MessageContentParam.ofString(string)`. */
             fun addUserMessage(string: String) =
-                addUserMessage(MessageParam.Content.ofString(string))
+                addUserMessage(MessageContentParam.ofString(string))
 
             /**
              * Alias for calling [addUserMessage] with
-             * `MessageParam.Content.ofBlockParams(blockParams)`.
+             * `MessageContentParam.ofContentBlockParams(contentBlockParams)`.
              */
-            fun addUserMessageOfBlockParams(blockParams: List<ContentBlockParam>) =
-                addUserMessage(MessageParam.Content.ofBlockParams(blockParams))
+            fun addUserMessageOfContentBlockParams(contentBlockParams: List<ContentBlockParam>) =
+                addUserMessage(MessageContentParam.ofContentBlockParams(contentBlockParams))
+
+            /** Alias for calling [addMessage] with `MessageParam.ofAssistant(assistant)`. */
+            fun addMessage(assistant: AssistantMessageParam) =
+                addMessage(MessageParam.ofAssistant(assistant))
 
             /**
              * Alias for calling [addMessage] with the following:
              * ```java
-             * MessageParam.builder()
-             *     .role(MessageParam.Role.ASSISTANT)
+             * AssistantMessageParam.builder()
              *     .content(content)
              *     .build()
              * ```
              */
-            fun addAssistantMessage(content: MessageParam.Content) =
-                addMessage(
-                    MessageParam.builder()
-                        .role(MessageParam.Role.ASSISTANT)
-                        .content(content)
-                        .build()
-                )
+            fun addAssistantMessage(content: MessageContentParam) =
+                addMessage(AssistantMessageParam.builder().content(content).build())
 
             /**
-             * Alias for calling [addAssistantMessage] with `MessageParam.Content.ofString(string)`.
+             * Alias for calling [addAssistantMessage] with `MessageContentParam.ofString(string)`.
              */
             fun addAssistantMessage(string: String) =
-                addAssistantMessage(MessageParam.Content.ofString(string))
+                addAssistantMessage(MessageContentParam.ofString(string))
 
             /**
              * Alias for calling [addAssistantMessage] with
-             * `MessageParam.Content.ofBlockParams(blockParams)`.
+             * `MessageContentParam.ofContentBlockParams(contentBlockParams)`.
              */
-            fun addAssistantMessageOfBlockParams(blockParams: List<ContentBlockParam>) =
-                addAssistantMessage(MessageParam.Content.ofBlockParams(blockParams))
+            fun addAssistantMessageOfContentBlockParams(
+                contentBlockParams: List<ContentBlockParam>
+            ) = addAssistantMessage(MessageContentParam.ofContentBlockParams(contentBlockParams))
+
+            /** Alias for calling [addMessage] with `MessageParam.ofSystem(system)`. */
+            fun addMessage(system: SystemMessageParam) = addMessage(MessageParam.ofSystem(system))
 
             /**
              * Alias for calling [addMessage] with the following:
              * ```java
-             * MessageParam.builder()
-             *     .role(MessageParam.Role.SYSTEM)
+             * SystemMessageParam.builder()
              *     .content(content)
              *     .build()
              * ```
              */
-            fun addSystemMessage(content: MessageParam.Content) =
-                addMessage(
-                    MessageParam.builder().role(MessageParam.Role.SYSTEM).content(content).build()
-                )
-
-            /**
-             * Alias for calling [addSystemMessage] with `MessageParam.Content.ofString(string)`.
-             */
-            fun addSystemMessage(string: String) =
-                addSystemMessage(MessageParam.Content.ofString(string))
+            fun addSystemMessage(content: SystemMessageParam.Content) =
+                addMessage(SystemMessageParam.builder().content(content).build())
 
             /**
              * Alias for calling [addSystemMessage] with
-             * `MessageParam.Content.ofBlockParams(blockParams)`.
+             * `SystemMessageParam.Content.ofString(string)`.
              */
-            fun addSystemMessageOfBlockParams(blockParams: List<ContentBlockParam>) =
-                addSystemMessage(MessageParam.Content.ofBlockParams(blockParams))
+            fun addSystemMessage(string: String) =
+                addSystemMessage(SystemMessageParam.Content.ofString(string))
+
+            /**
+             * Alias for calling [addSystemMessage] with
+             * `SystemMessageParam.Content.ofBlocks(blocks)`.
+             */
+            fun addSystemMessageOfBlocks(blocks: List<TextBlockParam>) =
+                addSystemMessage(SystemMessageParam.Content.ofBlocks(blocks))
 
             /**
              * The model that will complete your prompt.

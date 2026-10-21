@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream
 import java.nio.file.Path
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -555,7 +556,7 @@ internal class UserOAuthCredentialsTest {
         if (async) getAsync(baseUrl, forceRefresh).get() else get(baseUrl, forceRefresh)
 
     private fun extractBody(request: HttpRequest): String {
-        val body = request.body ?: return ""
+        val body = request.body().getOrNull() ?: return ""
         val outputStream = java.io.ByteArrayOutputStream()
         body.writeTo(outputStream)
         return outputStream.toString("UTF-8")
@@ -576,7 +577,7 @@ internal class UserOAuthCredentialsTest {
     private class MockHttpClient(private val syncHandler: (HttpRequest) -> HttpResponse) :
         HttpClient {
         override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
-            assertThat(requestOptions.followRedirects).isFalse()
+            assertThat(requestOptions.followRedirects()).hasValue(false)
             return syncHandler(request)
         }
 

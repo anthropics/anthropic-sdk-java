@@ -16,10 +16,6 @@ internal class BetaManagedAgentsAgentThreadMessageReceivedEventTest {
                 .addTextContent("Where is my order #1234?")
                 .fromSessionThreadId("from_session_thread_id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(
-                    BetaManagedAgentsAgentThreadMessageReceivedEvent.Type
-                        .AGENT_THREAD_MESSAGE_RECEIVED
-                )
                 .fromAgentName("from_agent_name")
                 .build()
 
@@ -27,20 +23,13 @@ internal class BetaManagedAgentsAgentThreadMessageReceivedEventTest {
         assertThat(betaManagedAgentsAgentThreadMessageReceivedEvent.content())
             .containsExactly(
                 BetaManagedAgentsAgentThreadMessageReceivedEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
+                    "Where is my order #1234?"
                 )
             )
         assertThat(betaManagedAgentsAgentThreadMessageReceivedEvent.fromSessionThreadId())
             .isEqualTo("from_session_thread_id")
         assertThat(betaManagedAgentsAgentThreadMessageReceivedEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsAgentThreadMessageReceivedEvent.type())
-            .isEqualTo(
-                BetaManagedAgentsAgentThreadMessageReceivedEvent.Type.AGENT_THREAD_MESSAGE_RECEIVED
-            )
         assertThat(betaManagedAgentsAgentThreadMessageReceivedEvent.fromAgentName())
             .contains("from_agent_name")
     }
@@ -54,10 +43,6 @@ internal class BetaManagedAgentsAgentThreadMessageReceivedEventTest {
                 .addTextContent("Where is my order #1234?")
                 .fromSessionThreadId("from_session_thread_id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(
-                    BetaManagedAgentsAgentThreadMessageReceivedEvent.Type
-                        .AGENT_THREAD_MESSAGE_RECEIVED
-                )
                 .fromAgentName("from_agent_name")
                 .build()
 

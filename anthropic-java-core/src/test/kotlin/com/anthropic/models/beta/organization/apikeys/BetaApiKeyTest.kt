@@ -26,7 +26,6 @@ internal class BetaApiKeyTest {
                 .userActorPrincipal("user_01WCz1FkmYMm4gnmykNKUu3Q")
                 .workspaceScope("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .status(BetaApiKey.Status.ACTIVE)
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .build()
 
         assertThat(betaApiKey.id()).isEqualTo("apikey_01Rj2N8SVvo6BePZj99NhmiT")
@@ -48,7 +47,6 @@ internal class BetaApiKeyTest {
         assertThat(betaApiKey.scope())
             .isEqualTo(BetaApiKey.Scope.ofWorkspace("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ"))
         assertThat(betaApiKey.status()).isEqualTo(BetaApiKey.Status.ACTIVE)
-        assertThat(betaApiKey.workspaceId()).contains("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
     }
 
     @Test
@@ -70,7 +68,6 @@ internal class BetaApiKeyTest {
                 .userActorPrincipal("user_01WCz1FkmYMm4gnmykNKUu3Q")
                 .workspaceScope("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .status(BetaApiKey.Status.ACTIVE)
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .build()
 
         val roundtrippedBetaApiKey =

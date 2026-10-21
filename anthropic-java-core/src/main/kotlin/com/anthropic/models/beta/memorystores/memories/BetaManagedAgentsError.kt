@@ -477,14 +477,6 @@ private constructor(
         ) = BetaManagedAgentsError(memoryPreconditionFailed = memoryPreconditionFailed)
 
         /**
-         * Returns an immutable instance of [BetaManagedAgentsError] whose
-         * [ofMemoryPreconditionFailed] variant is built from the given required [type].
-         */
-        @JvmStatic
-        fun ofMemoryPreconditionFailed(type: BetaManagedAgentsMemoryPreconditionFailedError.Type) =
-            ofMemoryPreconditionFailed(BetaManagedAgentsMemoryPreconditionFailedError.of(type))
-
-        /**
          * The error returned with HTTP status 409 when you create or rename a memory and the path
          * you give is already used by another memory or overlaps another memory's path.
          *
@@ -497,25 +489,9 @@ private constructor(
         fun ofMemoryPathConflict(memoryPathConflict: BetaManagedAgentsMemoryPathConflictError) =
             BetaManagedAgentsError(memoryPathConflict = memoryPathConflict)
 
-        /**
-         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofMemoryPathConflict]
-         * variant is built from the given required [type].
-         */
-        @JvmStatic
-        fun ofMemoryPathConflict(type: BetaManagedAgentsMemoryPathConflictError.Type) =
-            ofMemoryPathConflict(BetaManagedAgentsMemoryPathConflictError.of(type))
-
         @JvmStatic
         fun ofConflict(conflict: BetaManagedAgentsConflictError) =
             BetaManagedAgentsError(conflict = conflict)
-
-        /**
-         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofConflict] variant is
-         * built from the given required [type].
-         */
-        @JvmStatic
-        fun ofConflict(type: BetaManagedAgentsConflictError.Type) =
-            ofConflict(BetaManagedAgentsConflictError.of(type))
     }
 
     /**

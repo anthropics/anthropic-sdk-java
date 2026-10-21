@@ -9,18 +9,13 @@ internal class BetaManagedAgentsRedactedBlockTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsRedactedBlock =
-            BetaManagedAgentsRedactedBlock.of(BetaManagedAgentsRedactedBlock.Type.REDACTED)
-
-        assertThat(betaManagedAgentsRedactedBlock.type())
-            .isEqualTo(BetaManagedAgentsRedactedBlock.Type.REDACTED)
+        val betaManagedAgentsRedactedBlock = BetaManagedAgentsRedactedBlock.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsRedactedBlock =
-            BetaManagedAgentsRedactedBlock.of(BetaManagedAgentsRedactedBlock.Type.REDACTED)
+        val betaManagedAgentsRedactedBlock = BetaManagedAgentsRedactedBlock.builder().build()
 
         val roundtrippedBetaManagedAgentsRedactedBlock =
             jsonMapper.readValue(

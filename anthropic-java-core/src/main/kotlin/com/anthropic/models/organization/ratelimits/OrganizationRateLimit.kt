@@ -62,7 +62,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * The rate-limit group this entry's limits apply to. Its `type` equals `group_type`.
+     * The rate-limit group this entry's limits apply to.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -78,7 +78,7 @@ private constructor(
     fun limits(): List<OrganizationRateLimitValue> = limits.getRequired("limits")
 
     /**
-     * Model names this entry's limits apply to, including aliases. `null` when `group_type` is not
+     * Model names this entry's limits apply to, including aliases. `null` when `group.type` is not
      * `"model_group"`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -198,7 +198,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** The rate-limit group this entry's limits apply to. Its `type` equals `group_type`. */
+        /** The rate-limit group this entry's limits apply to. */
         fun group(group: Group) = group(JsonField.of(group))
 
         /**
@@ -309,7 +309,7 @@ private constructor(
         }
 
         /**
-         * Model names this entry's limits apply to, including aliases. `null` when `group_type` is
+         * Model names this entry's limits apply to, including aliases. `null` when `group.type` is
          * not `"model_group"`.
          */
         fun models(models: List<String>?) = models(JsonField.ofNullable(models))
@@ -447,7 +447,7 @@ private constructor(
             (models.asKnown().getOrNull()?.size ?: 0) +
             type.let { if (it == JsonValue.from("rate_limit")) 1 else 0 }
 
-    /** The rate-limit group this entry's limits apply to. Its `type` equals `group_type`. */
+    /** The rate-limit group this entry's limits apply to. */
     @JsonDeserialize(using = Group.Deserializer::class)
     @JsonSerialize(using = Group.Serializer::class)
     class Group

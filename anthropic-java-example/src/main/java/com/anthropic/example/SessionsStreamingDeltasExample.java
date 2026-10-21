@@ -80,7 +80,6 @@ public final class SessionsStreamingDeltasExample {
                             .addUserMessageEvent(List.of(BetaManagedAgentsUserMessageEventParams.Content.ofText(
                                     BetaManagedAgentsTextBlock.builder()
                                             .text("Write a short haiku about the ocean.")
-                                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
                                             .build())))
                             .build());
 

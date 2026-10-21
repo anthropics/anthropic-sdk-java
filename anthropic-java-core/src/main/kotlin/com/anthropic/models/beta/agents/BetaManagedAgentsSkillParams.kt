@@ -185,12 +185,7 @@ private constructor(
          */
         @JvmStatic
         fun ofAnthropic(skillId: String) =
-            ofAnthropic(
-                BetaManagedAgentsAnthropicSkillParams.builder()
-                    .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
-                    .skillId(skillId)
-                    .build()
-            )
+            ofAnthropic(BetaManagedAgentsAnthropicSkillParams.of(skillId))
 
         /** A user-created custom skill. */
         @JvmStatic
@@ -202,13 +197,7 @@ private constructor(
          * is built from the given required [skillId].
          */
         @JvmStatic
-        fun ofCustom(skillId: String) =
-            ofCustom(
-                BetaManagedAgentsCustomSkillParams.builder()
-                    .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
-                    .skillId(skillId)
-                    .build()
-            )
+        fun ofCustom(skillId: String) = ofCustom(BetaManagedAgentsCustomSkillParams.of(skillId))
     }
 
     /**

@@ -73,14 +73,14 @@ public final class BetaMessagesToolsRawExample {
                 .flatMap(contentBlock -> contentBlock.toolUse().stream())
                 .forEach(toolUseBlock -> createParamsBuilder
                         // Add a message indicating that the tool use was requested.
-                        .addAssistantMessageOfBetaContentBlockParams(
+                        .addAssistantMessageOfContentBlockParams(
                                 List.of(BetaContentBlockParam.ofToolUse(BetaToolUseBlockParam.builder()
                                         .name(toolUseBlock.name())
                                         .id(toolUseBlock.id())
                                         .input(toolUseBlock._input())
                                         .build())))
                         // Add a message with the result of the requested tool use.
-                        .addUserMessageOfBetaContentBlockParams(
+                        .addUserMessageOfContentBlockParams(
                                 List.of(BetaContentBlockParam.ofToolResult(BetaToolResultBlockParam.builder()
                                         .toolUseId(toolUseBlock.id())
                                         .content(callTool(toolUseBlock))

@@ -5,10 +5,7 @@
     <ID>BuilderEntryPoints:BedrockBackend.kt$BedrockBackend : Backend</ID>
     <ID>BuilderEntryPoints:BedrockMantleBackend.kt$BedrockMantleBackend : Backend</ID>
     <ID>BuilderNullableSetterMissingOptionalOverload:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$fun awsSessionToken(awsSessionToken: String?)</ID>
-    <ID>NullablePublicReturn:BedrockBackend.kt$BedrockBackend$@get:JvmName("apiKey") val apiKey: String?</ID>
-    <ID>NullablePublicReturn:BedrockBackend.kt$BedrockBackend$@get:JvmName("awsCredentialsProvider") val awsCredentialsProvider: AwsCredentialsProvider?</ID>
     <ID>NullableToStringCall:BedrockBackend.kt$BedrockBackend$$apiKey</ID>
-    <ID>UnsafeCallOnNullableType:BedrockBackend.kt$BedrockBackend$request.body!!</ID>
     <ID>UnsafeCallOnNullableType:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$awsAccessKey!!</ID>
     <ID>UnsafeCallOnNullableType:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$awsProfile!!</ID>
     <ID>UnsafeCallOnNullableType:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$awsSecretAccessKey!!</ID>

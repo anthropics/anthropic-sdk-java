@@ -20,22 +20,16 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
-                        .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                         .url("https://example-server.modelcontextprotocol.io/sse")
                         .build()
                 )
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -44,9 +38,7 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -58,7 +50,6 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
-                    .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                     .url("https://example-server.modelcontextprotocol.io/sse")
                     .build()
             )
@@ -66,16 +57,11 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
             .containsExactly(
                 BetaManagedAgentsSessionAgentUpdate.Tool.ofAgentToolset20260401(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -84,9 +70,7 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -106,24 +90,17 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
-                        .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                         .url("https://example-server.modelcontextprotocol.io/sse")
                         .build()
                 )
                 .addTool(
                     BetaManagedAgentsSessionAgentUpdate.Tool.ofAgentToolset20260401(
                         BetaManagedAgentsAgentToolset20260401Params.builder()
-                            .type(
-                                BetaManagedAgentsAgentToolset20260401Params.Type
-                                    .AGENT_TOOLSET_20260401
-                            )
                             .addConfig(
                                 BetaManagedAgentsBashToolConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                     .build()
@@ -132,9 +109,7 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .build()
                             )
@@ -147,7 +122,6 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
-                    .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                     .url("https://example-server.modelcontextprotocol.io/sse")
                     .build()
             )
@@ -155,16 +129,11 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
             .containsExactly(
                 BetaManagedAgentsSessionAgentUpdate.Tool.ofAgentToolset20260401(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -173,9 +142,7 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -192,22 +159,16 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
-                        .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                         .url("https://example-server.modelcontextprotocol.io/sse")
                         .build()
                 )
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -216,9 +177,7 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )

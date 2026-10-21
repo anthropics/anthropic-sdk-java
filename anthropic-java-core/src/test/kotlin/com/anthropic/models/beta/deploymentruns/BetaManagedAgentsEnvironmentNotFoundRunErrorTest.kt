@@ -10,26 +10,16 @@ internal class BetaManagedAgentsEnvironmentNotFoundRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsEnvironmentNotFoundRunError =
-            BetaManagedAgentsEnvironmentNotFoundRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsEnvironmentNotFoundRunError.Type.ENVIRONMENT_NOT_FOUND_ERROR)
-                .build()
+            BetaManagedAgentsEnvironmentNotFoundRunError.of("message")
 
         assertThat(betaManagedAgentsEnvironmentNotFoundRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsEnvironmentNotFoundRunError.type())
-            .isEqualTo(
-                BetaManagedAgentsEnvironmentNotFoundRunError.Type.ENVIRONMENT_NOT_FOUND_ERROR
-            )
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsEnvironmentNotFoundRunError =
-            BetaManagedAgentsEnvironmentNotFoundRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsEnvironmentNotFoundRunError.Type.ENVIRONMENT_NOT_FOUND_ERROR)
-                .build()
+            BetaManagedAgentsEnvironmentNotFoundRunError.of("message")
 
         val roundtrippedBetaManagedAgentsEnvironmentNotFoundRunError =
             jsonMapper.readValue(

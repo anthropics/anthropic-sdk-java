@@ -225,12 +225,7 @@ private constructor(
          */
         @JvmStatic
         fun ofMemoryStore(memoryStoreId: String) =
-            ofMemoryStore(
-                BetaManagedAgentsMemoryStoreResource.builder()
-                    .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
-                    .memoryStoreId(memoryStoreId)
-                    .build()
-            )
+            ofMemoryStore(BetaManagedAgentsMemoryStoreResource.of(memoryStoreId))
     }
 
     /**

@@ -377,7 +377,6 @@ private constructor(
          * Alias for calling [budget] with the following:
          * ```java
          * BetaManagedAgentsBudgetLimit.builder()
-         *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
          *     .maxListCost(maxListCost)
          *     .build()
          * ```
@@ -454,7 +453,6 @@ private constructor(
          * Alias for calling [addInitialEvent] with the following:
          * ```java
          * BetaManagedAgentsUserMessageEventParams.builder()
-         *     .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
          *     .content(content)
          *     .build()
          * ```
@@ -484,7 +482,6 @@ private constructor(
          * Alias for calling [addInitialEvent] with the following:
          * ```java
          * BetaManagedAgentsSystemMessageEventParams.builder()
-         *     .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
          *     .content(content)
          *     .build()
          * ```
@@ -558,7 +555,6 @@ private constructor(
          * Alias for calling [addResource] with the following:
          * ```java
          * BetaManagedAgentsGitHubRepositoryResourceParams.builder()
-         *     .type(BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY)
          *     .url(url)
          *     .build()
          * ```
@@ -576,7 +572,6 @@ private constructor(
          * Alias for calling [addResource] with the following:
          * ```java
          * BetaManagedAgentsFileResourceParams.builder()
-         *     .type(BetaManagedAgentsFileResourceParams.Type.FILE)
          *     .fileId(fileId)
          *     .build()
          * ```
@@ -592,7 +587,6 @@ private constructor(
          * Alias for calling [addResource] with the following:
          * ```java
          * BetaManagedAgentsMemoryStoreResourceParam.builder()
-         *     .type(BetaManagedAgentsMemoryStoreResourceParam.Type.MEMORY_STORE)
          *     .memoryStoreId(memoryStoreId)
          *     .build()
          * ```
@@ -1159,18 +1153,12 @@ private constructor(
              * Alias for calling [budget] with the following:
              * ```java
              * BetaManagedAgentsBudgetLimit.builder()
-             *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
              *     .maxListCost(maxListCost)
              *     .build()
              * ```
              */
             fun limitBudget(maxListCost: BetaMonetaryAmount) =
-                budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .maxListCost(maxListCost)
-                        .build()
-                )
+                budget(BetaManagedAgentsBudgetLimit.builder().maxListCost(maxListCost).build())
 
             /** Description. Omit to preserve; send empty string or null to clear. */
             fun description(description: String?) = description(JsonField.ofNullable(description))
@@ -1247,7 +1235,6 @@ private constructor(
              * Alias for calling [addInitialEvent] with the following:
              * ```java
              * BetaManagedAgentsUserMessageEventParams.builder()
-             *     .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
              *     .content(content)
              *     .build()
              * ```
@@ -1256,10 +1243,7 @@ private constructor(
                 content: List<BetaManagedAgentsUserMessageEventParams.Content>
             ) =
                 addInitialEvent(
-                    BetaManagedAgentsUserMessageEventParams.builder()
-                        .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
-                        .content(content)
-                        .build()
+                    BetaManagedAgentsUserMessageEventParams.builder().content(content).build()
                 )
 
             /**
@@ -1286,17 +1270,13 @@ private constructor(
              * Alias for calling [addInitialEvent] with the following:
              * ```java
              * BetaManagedAgentsSystemMessageEventParams.builder()
-             *     .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
              *     .content(content)
              *     .build()
              * ```
              */
             fun addSystemMessageInitialEvent(content: List<BetaManagedAgentsSystemContentBlock>) =
                 addInitialEvent(
-                    BetaManagedAgentsSystemMessageEventParams.builder()
-                        .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
-                        .content(content)
-                        .build()
+                    BetaManagedAgentsSystemMessageEventParams.builder().content(content).build()
                 )
 
             /**
@@ -1372,19 +1352,13 @@ private constructor(
              * Alias for calling [addResource] with the following:
              * ```java
              * BetaManagedAgentsGitHubRepositoryResourceParams.builder()
-             *     .type(BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY)
              *     .url(url)
              *     .build()
              * ```
              */
             fun addGitHubRepositoryResource(url: String) =
                 addResource(
-                    BetaManagedAgentsGitHubRepositoryResourceParams.builder()
-                        .type(
-                            BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY
-                        )
-                        .url(url)
-                        .build()
+                    BetaManagedAgentsGitHubRepositoryResourceParams.builder().url(url).build()
                 )
 
             /** Alias for calling [addResource] with `Resource.ofFile(file)`. */
@@ -1395,18 +1369,12 @@ private constructor(
              * Alias for calling [addResource] with the following:
              * ```java
              * BetaManagedAgentsFileResourceParams.builder()
-             *     .type(BetaManagedAgentsFileResourceParams.Type.FILE)
              *     .fileId(fileId)
              *     .build()
              * ```
              */
             fun addFileResource(fileId: String) =
-                addResource(
-                    BetaManagedAgentsFileResourceParams.builder()
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
-                        .fileId(fileId)
-                        .build()
-                )
+                addResource(BetaManagedAgentsFileResourceParams.builder().fileId(fileId).build())
 
             /** Alias for calling [addResource] with `Resource.ofMemoryStore(memoryStore)`. */
             fun addResource(memoryStore: BetaManagedAgentsMemoryStoreResourceParam) =
@@ -1416,7 +1384,6 @@ private constructor(
              * Alias for calling [addResource] with the following:
              * ```java
              * BetaManagedAgentsMemoryStoreResourceParam.builder()
-             *     .type(BetaManagedAgentsMemoryStoreResourceParam.Type.MEMORY_STORE)
              *     .memoryStoreId(memoryStoreId)
              *     .build()
              * ```
@@ -1424,7 +1391,6 @@ private constructor(
             fun addMemoryStoreResource(memoryStoreId: String) =
                 addResource(
                     BetaManagedAgentsMemoryStoreResourceParam.builder()
-                        .type(BetaManagedAgentsMemoryStoreResourceParam.Type.MEMORY_STORE)
                         .memoryStoreId(memoryStoreId)
                         .build()
                 )
@@ -1773,6 +1739,14 @@ private constructor(
             fun ofBetaManagedAgentsAgentParams(
                 betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
             ) = Agent(betaManagedAgentsAgentParams = betaManagedAgentsAgentParams)
+
+            /**
+             * Returns an immutable instance of [Agent] whose [ofBetaManagedAgentsAgentParams]
+             * variant is built from the given required [id].
+             */
+            @JvmStatic
+            fun ofBetaManagedAgentsAgentParams(id: String) =
+                ofBetaManagedAgentsAgentParams(BetaManagedAgentsAgentParams.of(id))
         }
 
         /** An interface that defines how to map each variant of [Agent] to a value of type [T]. */
@@ -2141,14 +2115,7 @@ private constructor(
              */
             @JvmStatic
             fun ofGitHubRepository(url: String) =
-                ofGitHubRepository(
-                    BetaManagedAgentsGitHubRepositoryResourceParams.builder()
-                        .type(
-                            BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY
-                        )
-                        .url(url)
-                        .build()
-                )
+                ofGitHubRepository(BetaManagedAgentsGitHubRepositoryResourceParams.of(url))
 
             /** Mount a file uploaded via the Files API into the session. */
             @JvmStatic fun ofFile(file: BetaManagedAgentsFileResourceParams) = Resource(file = file)
@@ -2158,13 +2125,7 @@ private constructor(
              * given required [fileId].
              */
             @JvmStatic
-            fun ofFile(fileId: String) =
-                ofFile(
-                    BetaManagedAgentsFileResourceParams.builder()
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
-                        .fileId(fileId)
-                        .build()
-                )
+            fun ofFile(fileId: String) = ofFile(BetaManagedAgentsFileResourceParams.of(fileId))
 
             /** Parameters for attaching a memory store to an agent session. */
             @JvmStatic
@@ -2177,12 +2138,7 @@ private constructor(
              */
             @JvmStatic
             fun ofMemoryStore(memoryStoreId: String) =
-                ofMemoryStore(
-                    BetaManagedAgentsMemoryStoreResourceParam.builder()
-                        .type(BetaManagedAgentsMemoryStoreResourceParam.Type.MEMORY_STORE)
-                        .memoryStoreId(memoryStoreId)
-                        .build()
-                )
+                ofMemoryStore(BetaManagedAgentsMemoryStoreResourceParam.of(memoryStoreId))
         }
 
         /**

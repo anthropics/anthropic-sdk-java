@@ -220,13 +220,7 @@ private constructor(
          * built from the given required [sessionId].
          */
         @JvmStatic
-        fun ofSession(sessionId: String) =
-            ofSession(
-                BetaManagedAgentsSessionActor.builder()
-                    .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
-                    .sessionId(sessionId)
-                    .build()
-            )
+        fun ofSession(sessionId: String) = ofSession(BetaManagedAgentsSessionActor.of(sessionId))
 
         /**
          * A direct caller of the public API, identified by the API key that authenticated the
@@ -238,14 +232,7 @@ private constructor(
          * Returns an immutable instance of [BetaManagedAgentsActor] whose [ofApi] variant is built
          * from the given required [apiKeyId].
          */
-        @JvmStatic
-        fun ofApi(apiKeyId: String) =
-            ofApi(
-                BetaManagedAgentsApiActor.builder()
-                    .type(BetaManagedAgentsApiActor.Type.API_ACTOR)
-                    .apiKeyId(apiKeyId)
-                    .build()
-            )
+        @JvmStatic fun ofApi(apiKeyId: String) = ofApi(BetaManagedAgentsApiActor.of(apiKeyId))
 
         /** A human user, for example acting through the Anthropic Console. */
         @JvmStatic
@@ -255,14 +242,7 @@ private constructor(
          * Returns an immutable instance of [BetaManagedAgentsActor] whose [ofUser] variant is built
          * from the given required [userId].
          */
-        @JvmStatic
-        fun ofUser(userId: String) =
-            ofUser(
-                BetaManagedAgentsUserActor.builder()
-                    .type(BetaManagedAgentsUserActor.Type.USER_ACTOR)
-                    .userId(userId)
-                    .build()
-            )
+        @JvmStatic fun ofUser(userId: String) = ofUser(BetaManagedAgentsUserActor.of(userId))
 
         /**
          * A workload authenticated as a service account, for example via Workload Identity

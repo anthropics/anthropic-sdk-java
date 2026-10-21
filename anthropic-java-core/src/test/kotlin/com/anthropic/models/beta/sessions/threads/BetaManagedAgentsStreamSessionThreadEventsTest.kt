@@ -28,6 +28,7 @@ import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionMultiagentCoor
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUsageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsStartEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentCustomToolUseEvent
@@ -96,7 +97,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsUserMessageEvent.builder()
                 .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                 .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .build()
 
@@ -160,7 +160,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsUserMessageEvent.builder()
                     .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                     .addTextContent("Where is my order #1234?")
-                    .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .build()
             )
@@ -180,7 +179,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         val userInterrupt =
             BetaManagedAgentsUserInterruptEvent.builder()
                 .id("id")
-                .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
                 .build()
@@ -245,7 +243,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsStreamSessionThreadEvents.ofUserInterrupt(
                 BetaManagedAgentsUserInterruptEvent.builder()
                     .id("id")
-                    .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .sessionThreadId("session_thread_id")
                     .build()
@@ -268,7 +265,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .id("id")
                 .result(BetaManagedAgentsUserToolConfirmationEvent.Result.ALLOW)
                 .toolUseId("tool_use_id")
-                .type(BetaManagedAgentsUserToolConfirmationEvent.Type.USER_TOOL_CONFIRMATION)
                 .denyMessage("deny_message")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
@@ -336,7 +332,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .id("id")
                     .result(BetaManagedAgentsUserToolConfirmationEvent.Result.ALLOW)
                     .toolUseId("tool_use_id")
-                    .type(BetaManagedAgentsUserToolConfirmationEvent.Type.USER_TOOL_CONFIRMATION)
                     .denyMessage("deny_message")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .sessionThreadId("session_thread_id")
@@ -359,7 +354,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsUserCustomToolResultEvent.builder()
                 .id("id")
                 .customToolUseId("custom_tool_use_id")
-                .type(BetaManagedAgentsUserCustomToolResultEvent.Type.USER_CUSTOM_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -427,7 +421,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsUserCustomToolResultEvent.builder()
                     .id("id")
                     .customToolUseId("custom_tool_use_id")
-                    .type(BetaManagedAgentsUserCustomToolResultEvent.Type.USER_CUSTOM_TOOL_RESULT)
                     .addTextContent("Where is my order #1234?")
                     .isError(true)
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -457,7 +450,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 )
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsAgentCustomToolUseEvent.Type.AGENT_CUSTOM_TOOL_USE)
                 .sessionThreadId("session_thread_id")
                 .build()
 
@@ -528,7 +520,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     )
                     .name("name")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsAgentCustomToolUseEvent.Type.AGENT_CUSTOM_TOOL_USE)
                     .sessionThreadId("session_thread_id")
                     .build()
             )
@@ -550,7 +541,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                 .addTextContent("Let me look up order #1234 for you.")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -614,7 +604,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                     .addTextContent("Let me look up order #1234 for you.")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                    .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                     .build()
             )
 
@@ -634,7 +623,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsAgentThinkingEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsAgentThinkingEvent.Type.AGENT_THINKING)
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -698,7 +686,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsAgentThinkingEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsAgentThinkingEvent.Type.AGENT_THINKING)
                     .build()
             )
 
@@ -725,7 +712,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .mcpServerName("mcp_server_name")
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsAgentMcpToolUseEvent.Type.AGENT_MCP_TOOL_USE)
                 .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                 .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
@@ -799,7 +785,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .mcpServerName("mcp_server_name")
                     .name("name")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsAgentMcpToolUseEvent.Type.AGENT_MCP_TOOL_USE)
                     .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                     .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                     .sessionThreadId("session_thread_id")
@@ -823,7 +808,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .id("id")
                 .mcpToolUseId("mcp_tool_use_id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsAgentMcpToolResultEvent.Type.AGENT_MCP_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .build()
@@ -890,7 +874,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .id("id")
                     .mcpToolUseId("mcp_tool_use_id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsAgentMcpToolResultEvent.Type.AGENT_MCP_TOOL_RESULT)
                     .addTextContent("Where is my order #1234?")
                     .isError(true)
                     .build()
@@ -918,7 +901,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 )
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
                 .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                 .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
@@ -990,7 +972,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     )
                     .name("name")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
                     .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                     .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                     .sessionThreadId("session_thread_id")
@@ -1014,7 +995,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .toolUseId("tool_use_id")
-                .type(BetaManagedAgentsAgentToolResultEvent.Type.AGENT_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .build()
@@ -1081,7 +1061,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .toolUseId("tool_use_id")
-                    .type(BetaManagedAgentsAgentToolResultEvent.Type.AGENT_TOOL_RESULT)
                     .addTextContent("Where is my order #1234?")
                     .isError(true)
                     .build()
@@ -1105,10 +1084,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .addTextContent("Where is my order #1234?")
                 .fromSessionThreadId("from_session_thread_id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(
-                    BetaManagedAgentsAgentThreadMessageReceivedEvent.Type
-                        .AGENT_THREAD_MESSAGE_RECEIVED
-                )
                 .fromAgentName("from_agent_name")
                 .build()
 
@@ -1177,10 +1152,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .addTextContent("Where is my order #1234?")
                     .fromSessionThreadId("from_session_thread_id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(
-                        BetaManagedAgentsAgentThreadMessageReceivedEvent.Type
-                            .AGENT_THREAD_MESSAGE_RECEIVED
-                    )
                     .fromAgentName("from_agent_name")
                     .build()
             )
@@ -1203,7 +1174,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .addTextContent("Where is my order #1234?")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .toSessionThreadId("to_session_thread_id")
-                .type(BetaManagedAgentsAgentThreadMessageSentEvent.Type.AGENT_THREAD_MESSAGE_SENT)
                 .toAgentName("to_agent_name")
                 .build()
 
@@ -1272,9 +1242,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .addTextContent("Where is my order #1234?")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .toSessionThreadId("to_session_thread_id")
-                    .type(
-                        BetaManagedAgentsAgentThreadMessageSentEvent.Type.AGENT_THREAD_MESSAGE_SENT
-                    )
                     .toAgentName("to_agent_name")
                     .build()
             )
@@ -1295,10 +1262,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsAgentThreadContextCompactedEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(
-                    BetaManagedAgentsAgentThreadContextCompactedEvent.Type
-                        .AGENT_THREAD_CONTEXT_COMPACTED
-                )
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -1364,10 +1327,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsAgentThreadContextCompactedEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(
-                        BetaManagedAgentsAgentThreadContextCompactedEvent.Type
-                            .AGENT_THREAD_CONTEXT_COMPACTED
-                    )
                     .build()
             )
 
@@ -1392,15 +1351,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             "The repository host rejected the credentials for the repository, or required credentials and received none."
                         )
                         .repositoryUrl("https://github.com/example-org/example-repo")
-                        .retryStatus(
-                            BetaManagedAgentsRetryStatusRetrying.of(
-                                BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                            )
-                        )
+                        .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                         .build()
                 )
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionErrorEvent.Type.SESSION_ERROR)
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -1468,15 +1422,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                 "The repository host rejected the credentials for the repository, or required credentials and received none."
                             )
                             .repositoryUrl("https://github.com/example-org/example-repo")
-                            .retryStatus(
-                                BetaManagedAgentsRetryStatusRetrying.of(
-                                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                                )
-                            )
+                            .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                             .build()
                     )
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsSessionErrorEvent.Type.SESSION_ERROR)
                     .build()
             )
 
@@ -1496,9 +1445,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsSessionStatusRescheduledEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(
-                    BetaManagedAgentsSessionStatusRescheduledEvent.Type.SESSION_STATUS_RESCHEDULED
-                )
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -1564,10 +1510,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsSessionStatusRescheduledEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(
-                        BetaManagedAgentsSessionStatusRescheduledEvent.Type
-                            .SESSION_STATUS_RESCHEDULED
-                    )
                     .build()
             )
 
@@ -1587,7 +1529,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsSessionStatusRunningEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionStatusRunningEvent.Type.SESSION_STATUS_RUNNING)
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -1651,7 +1592,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsSessionStatusRunningEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsSessionStatusRunningEvent.Type.SESSION_STATUS_RUNNING)
                     .build()
             )
 
@@ -1677,12 +1617,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                         .explanation("explanation")
                         .build()
                 )
-                .stopReason(
-                    BetaManagedAgentsSessionEndTurn.of(
-                        BetaManagedAgentsSessionEndTurn.Type.END_TURN
-                    )
-                )
-                .type(BetaManagedAgentsSessionStatusIdleEvent.Type.SESSION_STATUS_IDLE)
+                .stopReason(BetaManagedAgentsSessionEndTurn.builder().build())
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -1752,12 +1687,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             .explanation("explanation")
                             .build()
                     )
-                    .stopReason(
-                        BetaManagedAgentsSessionEndTurn.of(
-                            BetaManagedAgentsSessionEndTurn.Type.END_TURN
-                        )
-                    )
-                    .type(BetaManagedAgentsSessionStatusIdleEvent.Type.SESSION_STATUS_IDLE)
+                    .stopReason(BetaManagedAgentsSessionEndTurn.builder().build())
                     .build()
             )
 
@@ -1777,7 +1707,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsSessionStatusTerminatedEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionStatusTerminatedEvent.Type.SESSION_STATUS_TERMINATED)
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -1843,9 +1772,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsSessionStatusTerminatedEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(
-                        BetaManagedAgentsSessionStatusTerminatedEvent.Type.SESSION_STATUS_TERMINATED
-                    )
                     .build()
             )
 
@@ -1867,7 +1793,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
-                .type(BetaManagedAgentsSessionThreadCreatedEvent.Type.SESSION_THREAD_CREATED)
                 .workflowRunId(null)
                 .build()
 
@@ -1934,7 +1859,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .agentName("Researcher")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
-                    .type(BetaManagedAgentsSessionThreadCreatedEvent.Type.SESSION_THREAD_CREATED)
                     .workflowRunId(null)
                     .build()
             )
@@ -1957,10 +1881,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .iteration(0)
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
-                .type(
-                    BetaManagedAgentsSpanOutcomeEvaluationStartEvent.Type
-                        .SPAN_OUTCOME_EVALUATION_START
-                )
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -2028,10 +1948,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .iteration(0)
                     .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
-                    .type(
-                        BetaManagedAgentsSpanOutcomeEvaluationStartEvent.Type
-                            .SPAN_OUTCOME_EVALUATION_START
-                    )
                     .build()
             )
 
@@ -2056,9 +1972,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:31Z"))
                 .result("satisfied")
-                .type(
-                    BetaManagedAgentsSpanOutcomeEvaluationEndEvent.Type.SPAN_OUTCOME_EVALUATION_END
-                )
                 .usage(
                     BetaManagedAgentsSpanModelUsage.builder()
                         .cacheCreationInputTokens(0)
@@ -2138,10 +2051,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:02:31Z"))
                     .result("satisfied")
-                    .type(
-                        BetaManagedAgentsSpanOutcomeEvaluationEndEvent.Type
-                            .SPAN_OUTCOME_EVALUATION_END
-                    )
                     .usage(
                         BetaManagedAgentsSpanModelUsage.builder()
                             .cacheCreationInputTokens(0)
@@ -2170,7 +2079,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsSpanModelRequestStartEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSpanModelRequestStartEvent.Type.SPAN_MODEL_REQUEST_START)
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -2236,7 +2144,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsSpanModelRequestStartEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsSpanModelRequestStartEvent.Type.SPAN_MODEL_REQUEST_START)
                     .build()
             )
 
@@ -2267,7 +2174,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                         .build()
                 )
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSpanModelRequestEndEvent.Type.SPAN_MODEL_REQUEST_END)
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -2342,7 +2248,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             .build()
                     )
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsSpanModelRequestEndEvent.Type.SPAN_MODEL_REQUEST_END)
                     .build()
             )
 
@@ -2364,10 +2269,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .iteration(0)
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
-                .type(
-                    BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent.Type
-                        .SPAN_OUTCOME_EVALUATION_ONGOING
-                )
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -2434,10 +2335,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .iteration(0)
                     .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
-                    .type(
-                        BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent.Type
-                            .SPAN_OUTCOME_EVALUATION_ONGOING
-                    )
                     .build()
             )
 
@@ -2461,7 +2358,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                 .textRubric("Must cover all five sections; cite sources inline.")
-                .type(BetaManagedAgentsUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -2529,7 +2425,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                     .textRubric("Must cover all five sections; cite sources inline.")
-                    .type(BetaManagedAgentsUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
                     .build()
             )
 
@@ -2549,7 +2444,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsSessionDeletedEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionDeletedEvent.Type.SESSION_DELETED)
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -2613,7 +2507,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsSessionDeletedEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsSessionDeletedEvent.Type.SESSION_DELETED)
                     .build()
             )
 
@@ -2635,10 +2528,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .agentName("agent_name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
-                .type(
-                    BetaManagedAgentsSessionThreadStatusRunningEvent.Type
-                        .SESSION_THREAD_STATUS_RUNNING
-                )
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -2706,10 +2595,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .agentName("agent_name")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .sessionThreadId("session_thread_id")
-                    .type(
-                        BetaManagedAgentsSessionThreadStatusRunningEvent.Type
-                            .SESSION_THREAD_STATUS_RUNNING
-                    )
                     .build()
             )
 
@@ -2737,12 +2622,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                         .explanation("explanation")
                         .build()
                 )
-                .stopReason(
-                    BetaManagedAgentsSessionEndTurn.of(
-                        BetaManagedAgentsSessionEndTurn.Type.END_TURN
-                    )
-                )
-                .type(BetaManagedAgentsSessionThreadStatusIdleEvent.Type.SESSION_THREAD_STATUS_IDLE)
+                .stopReason(BetaManagedAgentsSessionEndTurn.builder().build())
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -2816,15 +2696,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             .explanation("explanation")
                             .build()
                     )
-                    .stopReason(
-                        BetaManagedAgentsSessionEndTurn.of(
-                            BetaManagedAgentsSessionEndTurn.Type.END_TURN
-                        )
-                    )
-                    .type(
-                        BetaManagedAgentsSessionThreadStatusIdleEvent.Type
-                            .SESSION_THREAD_STATUS_IDLE
-                    )
+                    .stopReason(BetaManagedAgentsSessionEndTurn.builder().build())
                     .build()
             )
 
@@ -2846,10 +2718,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .agentName("agent_name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
-                .type(
-                    BetaManagedAgentsSessionThreadStatusTerminatedEvent.Type
-                        .SESSION_THREAD_STATUS_TERMINATED
-                )
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -2916,10 +2784,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .agentName("agent_name")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .sessionThreadId("session_thread_id")
-                    .type(
-                        BetaManagedAgentsSessionThreadStatusTerminatedEvent.Type
-                            .SESSION_THREAD_STATUS_TERMINATED
-                    )
                     .build()
             )
 
@@ -2939,7 +2803,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsUserToolResultEvent.builder()
                 .id("id")
                 .toolUseId("tool_use_id")
-                .type(BetaManagedAgentsUserToolResultEvent.Type.USER_TOOL_RESULT)
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -3007,7 +2870,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsUserToolResultEvent.builder()
                     .id("id")
                     .toolUseId("tool_use_id")
-                    .type(BetaManagedAgentsUserToolResultEvent.Type.USER_TOOL_RESULT)
                     .addTextContent("Where is my order #1234?")
                     .isError(true)
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -3033,10 +2895,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .agentName("agent_name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
-                .type(
-                    BetaManagedAgentsSessionThreadStatusRescheduledEvent.Type
-                        .SESSION_THREAD_STATUS_RESCHEDULED
-                )
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -3103,10 +2961,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .agentName("agent_name")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .sessionThreadId("session_thread_id")
-                    .type(
-                        BetaManagedAgentsSessionThreadStatusRescheduledEvent.Type
-                            .SESSION_THREAD_STATUS_RESCHEDULED
-                    )
                     .build()
             )
 
@@ -3126,7 +2980,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsSessionUpdatedEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionUpdatedEvent.Type.SESSION_UPDATED)
                 .agent(
                     BetaManagedAgentsSessionAgent.builder()
                         .id("agent_011CZkYpogX7uDKUyvBTophP")
@@ -3137,18 +2990,13 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
-                                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                 .url("https://example-server.modelcontextprotocol.io/sse")
                                 .build()
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                .effort(
-                                    BetaManagedAgentsEffortLow.of(
-                                        BetaManagedAgentsEffortLow.Type.LOW
-                                    )
-                                )
+                                .effort(BetaManagedAgentsEffortLow.builder().build())
                                 .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
@@ -3167,9 +3015,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                         .addMcpServer(
                                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                                 .name("example-mcp")
-                                                .type(
-                                                    BetaManagedAgentsMcpServerUrlDefinition.Type.URL
-                                                )
                                                 .url(
                                                     "https://example-server.modelcontextprotocol.io/sse"
                                                 )
@@ -3179,9 +3024,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                             BetaManagedAgentsModelConfig.builder()
                                                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                 .effort(
-                                                    BetaManagedAgentsEffortLow.of(
-                                                        BetaManagedAgentsEffortLow.Type.LOW
-                                                    )
+                                                    BetaManagedAgentsEffortLow.builder().build()
                                                 )
                                                 .inferenceGeo("inference_geo")
                                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -3191,9 +3034,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                         .addSkill(
                                             BetaManagedAgentsAnthropicSkill.builder()
                                                 .skillId("xlsx")
-                                                .type(
-                                                    BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC
-                                                )
                                                 .version("1")
                                                 .build()
                                         )
@@ -3206,11 +3046,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                                     BetaManagedAgentsBashToolConfig.builder()
                                                         .enabled(true)
                                                         .permissionPolicy(
-                                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                                BetaManagedAgentsAlwaysAllowPolicy
-                                                                    .Type
-                                                                    .ALWAYS_ALLOW
-                                                            )
+                                                            BetaManagedAgentsAlwaysAllowPolicy
+                                                                .builder()
+                                                                .build()
                                                         )
                                                         .build()
                                                 )
@@ -3219,21 +3057,14 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                                         .builder()
                                                         .enabled(true)
                                                         .permissionPolicy(
-                                                            BetaManagedAgentsAlwaysAskPolicy.of(
-                                                                BetaManagedAgentsAlwaysAskPolicy
-                                                                    .Type
-                                                                    .ALWAYS_ASK
-                                                            )
+                                                            BetaManagedAgentsAlwaysAskPolicy
+                                                                .builder()
+                                                                .build()
                                                         )
                                                         .build()
                                                 )
-                                                .type(
-                                                    BetaManagedAgentsAgentToolset20260401.Type
-                                                        .AGENT_TOOLSET_20260401
-                                                )
                                                 .build()
                                         )
-                                        .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                                         .version(1)
                                         .build()
                                 )
@@ -3243,14 +3074,12 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                         .addSkill(
                             BetaManagedAgentsAnthropicSkill.builder()
                                 .skillId("xlsx")
-                                .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                 .version("1")
                                 .build()
                         )
                         .addSkill(
                             BetaManagedAgentsCustomSkill.builder()
                                 .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                                .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                 .version("2")
                                 .build()
                         )
@@ -3263,9 +3092,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                     BetaManagedAgentsBashToolConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                         )
                                         .build()
                                 )
@@ -3273,32 +3100,22 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAskPolicy.of(
-                                                BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                            )
+                                            BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                         )
                                         .build()
                                 )
-                                .type(
-                                    BetaManagedAgentsAgentToolset20260401.Type
-                                        .AGENT_TOOLSET_20260401
-                                )
                                 .build()
                         )
-                        .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                         .version(1)
                         .build()
                 )
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .metadata(
                     BetaManagedAgentsSessionUpdatedEvent.Metadata.builder()
@@ -3369,7 +3186,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsSessionUpdatedEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsSessionUpdatedEvent.Type.SESSION_UPDATED)
                     .agent(
                         BetaManagedAgentsSessionAgent.builder()
                             .id("agent_011CZkYpogX7uDKUyvBTophP")
@@ -3380,18 +3196,13 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             .addMcpServer(
                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                     .name("example-mcp")
-                                    .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                                     .url("https://example-server.modelcontextprotocol.io/sse")
                                     .build()
                             )
                             .model(
                                 BetaManagedAgentsModelConfig.builder()
                                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                    .effort(
-                                        BetaManagedAgentsEffortLow.of(
-                                            BetaManagedAgentsEffortLow.Type.LOW
-                                        )
-                                    )
+                                    .effort(BetaManagedAgentsEffortLow.builder().build())
                                     .inferenceGeo("inference_geo")
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                     .build()
@@ -3410,10 +3221,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                             .addMcpServer(
                                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                                     .name("example-mcp")
-                                                    .type(
-                                                        BetaManagedAgentsMcpServerUrlDefinition.Type
-                                                            .URL
-                                                    )
                                                     .url(
                                                         "https://example-server.modelcontextprotocol.io/sse"
                                                     )
@@ -3423,9 +3230,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                                 BetaManagedAgentsModelConfig.builder()
                                                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                     .effort(
-                                                        BetaManagedAgentsEffortLow.of(
-                                                            BetaManagedAgentsEffortLow.Type.LOW
-                                                        )
+                                                        BetaManagedAgentsEffortLow.builder().build()
                                                     )
                                                     .inferenceGeo("inference_geo")
                                                     .speed(
@@ -3437,10 +3242,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                             .addSkill(
                                                 BetaManagedAgentsAnthropicSkill.builder()
                                                     .skillId("xlsx")
-                                                    .type(
-                                                        BetaManagedAgentsAnthropicSkill.Type
-                                                            .ANTHROPIC
-                                                    )
                                                     .version("1")
                                                     .build()
                                             )
@@ -3454,11 +3255,8 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                                             .enabled(true)
                                                             .permissionPolicy(
                                                                 BetaManagedAgentsAlwaysAllowPolicy
-                                                                    .of(
-                                                                        BetaManagedAgentsAlwaysAllowPolicy
-                                                                            .Type
-                                                                            .ALWAYS_ALLOW
-                                                                    )
+                                                                    .builder()
+                                                                    .build()
                                                             )
                                                             .build()
                                                     )
@@ -3467,21 +3265,14 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                                             .builder()
                                                             .enabled(true)
                                                             .permissionPolicy(
-                                                                BetaManagedAgentsAlwaysAskPolicy.of(
-                                                                    BetaManagedAgentsAlwaysAskPolicy
-                                                                        .Type
-                                                                        .ALWAYS_ASK
-                                                                )
+                                                                BetaManagedAgentsAlwaysAskPolicy
+                                                                    .builder()
+                                                                    .build()
                                                             )
                                                             .build()
                                                     )
-                                                    .type(
-                                                        BetaManagedAgentsAgentToolset20260401.Type
-                                                            .AGENT_TOOLSET_20260401
-                                                    )
                                                     .build()
                                             )
-                                            .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
                                             .version(1)
                                             .build()
                                     )
@@ -3491,14 +3282,12 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             .addSkill(
                                 BetaManagedAgentsAnthropicSkill.builder()
                                     .skillId("xlsx")
-                                    .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
                                     .version("1")
                                     .build()
                             )
                             .addSkill(
                                 BetaManagedAgentsCustomSkill.builder()
                                     .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
-                                    .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                     .version("2")
                                     .build()
                             )
@@ -3511,10 +3300,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                         BetaManagedAgentsBashToolConfig.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.of(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
+                                                BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                             )
                                             .build()
                                     )
@@ -3522,32 +3308,22 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                         BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAskPolicy.of(
-                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                                )
+                                                BetaManagedAgentsAlwaysAskPolicy.builder().build()
                                             )
                                             .build()
                                     )
-                                    .type(
-                                        BetaManagedAgentsAgentToolset20260401.Type
-                                            .AGENT_TOOLSET_20260401
-                                    )
                                     .build()
                             )
-                            .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                             .version(1)
                             .build()
                     )
                     .budget(
-                        BetaManagedAgentsBudgetLimit.builder()
-                            .maxListCost(
-                                BetaMonetaryAmount.builder()
-                                    .amount("2500")
-                                    .currency(BetaCurrency.USD)
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                            .build()
+                        BetaManagedAgentsBudgetLimit.of(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
                     )
                     .metadata(
                         BetaManagedAgentsSessionUpdatedEvent.Metadata.builder()
@@ -3570,11 +3346,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
 
     @Test
     fun ofEventStart() {
-        val eventStart =
-            BetaManagedAgentsStartEvent.builder()
-                .agentMessageEvent("id")
-                .type(BetaManagedAgentsStartEvent.Type.EVENT_START)
-                .build()
+        val eventStart = BetaManagedAgentsStartEvent.builder().agentMessageEvent("id").build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
             BetaManagedAgentsStreamSessionThreadEvents.ofEventStart(eventStart)
@@ -3633,10 +3405,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsStreamSessionThreadEvents =
             BetaManagedAgentsStreamSessionThreadEvents.ofEventStart(
-                BetaManagedAgentsStartEvent.builder()
-                    .agentMessageEvent("id")
-                    .type(BetaManagedAgentsStartEvent.Type.EVENT_START)
-                    .build()
+                BetaManagedAgentsStartEvent.builder().agentMessageEvent("id").build()
             )
 
         val roundtrippedBetaManagedAgentsStreamSessionThreadEvents =
@@ -3655,18 +3424,11 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsDeltaEvent.builder()
                 .delta(
                     BetaManagedAgentsDeltaContent.builder()
-                        .content(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsDeltaContent.Type.CONTENT_DELTA)
+                        .content(BetaManagedAgentsTextBlock.of("Where is my order #1234?"))
                         .index(0L)
                         .build()
                 )
                 .eventId("event_id")
-                .type(BetaManagedAgentsDeltaEvent.Type.EVENT_DELTA)
                 .build()
 
         val betaManagedAgentsStreamSessionThreadEvents =
@@ -3729,18 +3491,11 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsDeltaEvent.builder()
                     .delta(
                         BetaManagedAgentsDeltaContent.builder()
-                            .content(
-                                BetaManagedAgentsTextBlock.builder()
-                                    .text("Where is my order #1234?")
-                                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsDeltaContent.Type.CONTENT_DELTA)
+                            .content(BetaManagedAgentsTextBlock.of("Where is my order #1234?"))
                             .index(0L)
                             .build()
                     )
                     .eventId("event_id")
-                    .type(BetaManagedAgentsDeltaEvent.Type.EVENT_DELTA)
                     .build()
             )
 
@@ -3759,8 +3514,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         val systemMessage =
             BetaManagedAgentsSystemMessageEvent.builder()
                 .id("id")
-                .addTextContent("Where is my order #1234?")
-                .type(BetaManagedAgentsSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
@@ -3824,8 +3578,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsStreamSessionThreadEvents.ofSystemMessage(
                 BetaManagedAgentsSystemMessageEvent.builder()
                     .id("id")
-                    .addTextContent("Where is my order #1234?")
-                    .type(BetaManagedAgentsSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                    .addContent(BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?"))
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
@@ -3846,7 +3599,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsSessionUsageEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsSessionUsageEvent.Type.SESSION_USAGE)
                 .usage(
                     BetaManagedAgentsSessionUsageSnapshot.builder()
                         .activeSeconds(0.0)
@@ -3874,15 +3626,12 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                         .build()
                 )
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .build()
 
@@ -3946,7 +3695,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsSessionUsageEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsSessionUsageEvent.Type.SESSION_USAGE)
                     .usage(
                         BetaManagedAgentsSessionUsageSnapshot.builder()
                             .activeSeconds(0.0)
@@ -3974,15 +3722,12 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             .build()
                     )
                     .budget(
-                        BetaManagedAgentsBudgetLimit.builder()
-                            .maxListCost(
-                                BetaMonetaryAmount.builder()
-                                    .amount("2500")
-                                    .currency(BetaCurrency.USD)
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                            .build()
+                        BetaManagedAgentsBudgetLimit.of(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
                     )
                     .build()
             )
@@ -4701,15 +4446,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             .contains("Produce a 2-page summary as summary.md")
         assertThat(betaManagedAgentsStreamSessionThreadEvents.budget())
             .contains(
-                BetaManagedAgentsBudgetLimit.builder()
-                    .maxListCost(
-                        BetaMonetaryAmount.builder()
-                            .amount("2500")
-                            .currency(BetaCurrency.USD)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                    .build()
+                BetaManagedAgentsBudgetLimit.of(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
             )
         assertThat(betaManagedAgentsStreamSessionThreadEvents.workflowRunPhaseId())
             .contains("wrph_011CZm4Kq7RtY2Wn8Vx3LbHd")

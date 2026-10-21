@@ -5,7 +5,6 @@ import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.BetaCurrency
 import com.anthropic.models.beta.BetaMonetaryAmount
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -21,23 +20,14 @@ internal class SessionCreateParamsTest {
             .agent("agent_011CZkYpogX7uDKUyvBTophP")
             .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
             .budget(
-                BetaManagedAgentsBudgetLimit.builder()
-                    .maxListCost(
-                        BetaMonetaryAmount.builder()
-                            .amount("2500")
-                            .currency(BetaCurrency.USD)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                    .build()
+                BetaManagedAgentsBudgetLimit.of(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
             )
             .addUserMessageInitialEvent(
                 listOf(
                     BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                        BetaManagedAgentsTextBlock.builder()
-                            .text("Where is my order #1234?")
-                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                            .build()
+                        "Where is my order #1234?"
                     )
                 )
             )
@@ -49,7 +39,6 @@ internal class SessionCreateParamsTest {
             .addResource(
                 BetaManagedAgentsFileResourceParams.builder()
                     .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                    .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                     .mountPath("/uploads/receipt.pdf")
                     .build()
             )
@@ -67,23 +56,17 @@ internal class SessionCreateParamsTest {
                 .agent("agent_011CZkYpogX7uDKUyvBTophP")
                 .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .addUserMessageInitialEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
+                            "Where is my order #1234?"
                         )
                     )
                 )
@@ -95,7 +78,6 @@ internal class SessionCreateParamsTest {
                 .addResource(
                     BetaManagedAgentsFileResourceParams.builder()
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                         .mountPath("/uploads/receipt.pdf")
                         .build()
                 )
@@ -140,23 +122,17 @@ internal class SessionCreateParamsTest {
                 .agent("agent_011CZkYpogX7uDKUyvBTophP")
                 .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .addUserMessageInitialEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
+                            "Where is my order #1234?"
                         )
                     )
                 )
@@ -168,7 +144,6 @@ internal class SessionCreateParamsTest {
                 .addResource(
                     BetaManagedAgentsFileResourceParams.builder()
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                         .mountPath("/uploads/receipt.pdf")
                         .build()
                 )
@@ -183,22 +158,15 @@ internal class SessionCreateParamsTest {
         assertThat(body.environmentId()).isEqualTo("env_011CZkZ9X2dpNyB7HsEFoRfW")
         assertThat(body.budget())
             .contains(
-                BetaManagedAgentsBudgetLimit.builder()
-                    .maxListCost(
-                        BetaMonetaryAmount.builder()
-                            .amount("2500")
-                            .currency(BetaCurrency.USD)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                    .build()
+                BetaManagedAgentsBudgetLimit.of(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
             )
         assertThat(body.initialEvents().getOrNull())
             .containsExactly(
                 SessionCreateParams.InitialEvent.ofUserMessage(
                     BetaManagedAgentsUserMessageEventParams.builder()
                         .addTextContent("Where is my order #1234?")
-                        .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
                         .build()
                 )
             )
@@ -213,7 +181,6 @@ internal class SessionCreateParamsTest {
                 SessionCreateParams.Resource.ofFile(
                     BetaManagedAgentsFileResourceParams.builder()
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                         .mountPath("/uploads/receipt.pdf")
                         .build()
                 )

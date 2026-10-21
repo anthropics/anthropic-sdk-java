@@ -10,25 +10,21 @@ internal class BetaManagedAgentsStaticBearerAuthResponseTest {
     @Test
     fun create() {
         val betaManagedAgentsStaticBearerAuthResponse =
-            BetaManagedAgentsStaticBearerAuthResponse.builder()
-                .mcpServerUrl("https://example-server.modelcontextprotocol.io/sse")
-                .type(BetaManagedAgentsStaticBearerAuthResponse.Type.STATIC_BEARER)
-                .build()
+            BetaManagedAgentsStaticBearerAuthResponse.of(
+                "https://example-server.modelcontextprotocol.io/sse"
+            )
 
         assertThat(betaManagedAgentsStaticBearerAuthResponse.mcpServerUrl())
             .isEqualTo("https://example-server.modelcontextprotocol.io/sse")
-        assertThat(betaManagedAgentsStaticBearerAuthResponse.type())
-            .isEqualTo(BetaManagedAgentsStaticBearerAuthResponse.Type.STATIC_BEARER)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsStaticBearerAuthResponse =
-            BetaManagedAgentsStaticBearerAuthResponse.builder()
-                .mcpServerUrl("https://example-server.modelcontextprotocol.io/sse")
-                .type(BetaManagedAgentsStaticBearerAuthResponse.Type.STATIC_BEARER)
-                .build()
+            BetaManagedAgentsStaticBearerAuthResponse.of(
+                "https://example-server.modelcontextprotocol.io/sse"
+            )
 
         val roundtrippedBetaManagedAgentsStaticBearerAuthResponse =
             jsonMapper.readValue(

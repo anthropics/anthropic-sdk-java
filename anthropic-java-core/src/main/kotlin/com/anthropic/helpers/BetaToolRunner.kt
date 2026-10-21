@@ -12,6 +12,7 @@ import com.anthropic.internal.telemetry.startToolRunnerSpan
 import com.anthropic.internal.telemetry.startToolUseSpan
 import com.anthropic.internal.telemetry.toolRunOutcome
 import com.anthropic.models.beta.messages.*
+import com.anthropic.models.beta.messages.BetaSystemMessageParam.Content.SystemMessageContentBlock
 import com.anthropic.services.blocking.beta.MessageService
 import io.opentelemetry.api.trace.Span
 import io.opentelemetry.api.trace.StatusCode
@@ -73,7 +74,7 @@ internal constructor(
     private var nextParams: MessageCreateParams? = null
     private var lastToolResponse: BetaMessageParam? = null
 
-    private val pendingToolChanges = mutableListOf<BetaContentBlockParam>()
+    private val pendingToolChanges = mutableListOf<SystemMessageContentBlock>()
 
     /** Applied on top of the params' runnable tools; `null` marks a name [removeTool] took away. */
     private val toolOverrides = mutableMapOf<String, BetaRunnableTool?>()
@@ -221,7 +222,10 @@ internal constructor(
                             clientOptions,
                             modelName(),
                             params.initialMessageParams,
-                            requestOptions.openTelemetry?.conversationId()?.getOrNull(),
+                            requestOptions
+                                .openTelemetry()
+                                .flatMap { it.conversationId() }
+                                .getOrNull(),
                         )
                         ?.let {
                             toolRunnerSpan.set(it)
@@ -378,7 +382,7 @@ internal constructor(
     fun removeTool(name: String) {
         toolOverrides[name] = null
         pendingToolChanges.add(
-            BetaContentBlockParam.ofToolRemoval(
+            SystemMessageContentBlock.ofToolRemoval(
                 BetaRequestToolRemovalBlock.builder().referenceTool(name).build()
             )
         )
@@ -438,7 +442,7 @@ internal constructor(
         val addition = BetaRequestToolAdditionBlock.builder().definitionTool(definition).build()
         val name = tool?.name() ?: addition.tool().referencedToolName()
         name?.let { toolOverrides[it] = tool }
-        pendingToolChanges.add(BetaContentBlockParam.ofToolAddition(addition))
+        pendingToolChanges.add(SystemMessageContentBlock.ofToolAddition(addition))
     }
 
     private fun MessageCreateParams.Builder.buildWithPendingToolChanges(
@@ -449,7 +453,7 @@ internal constructor(
             lastStopReason.getOrNull() != BetaStopReason.PAUSE_TURN &&
                 pendingToolChanges.isNotEmpty()
         ) {
-            addSystemMessageOfBetaContentBlockParams(pendingToolChanges.toList())
+            addSystemMessageOfBlocks(pendingToolChanges.toList())
             pendingToolChanges.clear()
         }
         return build()
@@ -581,9 +585,8 @@ internal constructor(
      * JSON it came as, where [BetaContentBlock.toParam] throws.
      */
     private fun BetaMessage.toParamKeepingUnknownBlocks(): BetaMessageParam =
-        BetaMessageParam.builder()
-            .role(BetaMessageParam.Role.ASSISTANT)
-            .contentOfBetaContentBlockParams(
+        BetaMessageParam.ofAssistant(
+            BetaMessageContentParam.ofContentBlockParams(
                 content().map { block ->
                     block
                         ._json()
@@ -592,7 +595,7 @@ internal constructor(
                         ?.convert(BetaContentBlockParam::class.java) ?: block.toParam()
                 }
             )
-            .build()
+        )
 
     private fun warn(message: String) {
         System.err.println("WARNING: `BetaToolRunner`: $message")
@@ -686,12 +689,13 @@ internal constructor(
      * the application runs the tools while no loop runs, the application's.
      */
     private fun generateToolResponse(lastMessage: BetaMessageParam): BetaMessageParam? {
-        if (lastMessage.roleString() != "assistant") {
+        if (!lastMessage.isAssistant()) {
             return null
         }
 
         val contentBlockParams =
-            lastMessage.content().betaContentBlockParams().getOrNull() ?: return null
+            lastMessage.assistant().getOrNull()?.content()?.contentBlockParams()?.getOrNull()
+                ?: return null
         // Tool calls before the last fallback block belong to the attempt that refused; the
         // fallback interceptor strips them from replayed history, so answering them would orphan
         // the tool_result.
@@ -704,16 +708,15 @@ internal constructor(
 
         val toolsByName = runnableToolsByName()
         val availableToolNames = availableToolNames()
-        return BetaMessageParam.builder()
-            .role(BetaMessageParam.Role.USER)
-            .contentOfBetaContentBlockParams(
-                toolUseBlockParams.map { toolUse ->
-                    BetaContentBlockParam.ofToolResult(
-                        generateToolUseResult(toolUse, toolsByName, availableToolNames)
-                    )
-                }
+        return BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
+                    toolUseBlockParams.map { toolUse ->
+                        BetaContentBlockParam.ofToolResult(
+                            generateToolUseResult(toolUse, toolsByName, availableToolNames)
+                        )
+                    }
+                )
             )
-            .build()
             .also { lastToolResponse = it }
     }
 
@@ -729,11 +732,10 @@ internal constructor(
         val available = runnableToolsByName().keys.toMutableSet()
         // The assistant message being answered is either the last message in the history or hasn't
         // been added to it yet, so every `"system"` message here precedes it.
-        for (message in currentParams.messages().filter { it.isSystem() }) {
-            // A `"system"` message whose content is a plain string carries no blocks.
+        for (message in currentParams.messages().mapNotNull { it.system().getOrNull() }) {
+            // A `"system"` message whose content is a plain string or absent carries no blocks.
             val content =
-                message._content().asKnown().getOrNull()?.betaContentBlockParams()?.getOrNull()
-                    ?: continue
+                message._content().asKnown().getOrNull()?.blocks()?.getOrNull() ?: continue
             for (block in content) {
                 applyToolChange(block, available)
             }
@@ -751,18 +753,7 @@ internal constructor(
         return toolsByName
     }
 
-    /**
-     * A message in the history may carry `role` either as a known [BetaMessageParam.Role] or as a
-     * raw JSON string (e.g. one set via [JsonValue]), so the throwing [BetaMessageParam.role]
-     * accessor can't be used on the history. Both shapes are read back as their non-throwing string
-     * form instead.
-     */
-    private fun BetaMessageParam.roleString(): String? =
-        (_role().asKnown().getOrNull()?._value() ?: _role()).asString().getOrNull()
-
-    private fun BetaMessageParam.isSystem(): Boolean = roleString() == "system"
-
-    private fun applyToolChange(block: BetaContentBlockParam, available: MutableSet<String>) {
+    private fun applyToolChange(block: SystemMessageContentBlock, available: MutableSet<String>) {
         when {
             block.isToolRemoval() ->
                 block.asToolRemoval().tool().referencedToolName()?.let(available::remove)
@@ -854,7 +845,7 @@ internal constructor(
                 kind,
                 toolUse,
                 description,
-                requestOptions.openTelemetry?.conversationId()?.getOrNull(),
+                requestOptions.openTelemetry().flatMap { it.conversationId() }.getOrNull(),
                 parentOtelContext,
             )
         // What the run threw. The result then reports it, and the span tells from it whether the

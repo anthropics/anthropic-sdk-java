@@ -4,6 +4,7 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.internal.telemetry.traceContextHeaderNames
 import java.io.ByteArrayOutputStream
+import kotlin.jvm.optionals.getOrNull
 import software.amazon.awssdk.auth.credentials.AwsCredentials
 import software.amazon.awssdk.http.ContentStreamProvider
 import software.amazon.awssdk.http.SdkHttpMethod
@@ -53,10 +54,10 @@ object AwsAuthUtil {
                 .method(SdkHttpMethod.fromValue(request.method.toString()))
                 .apply {
                     if (request.headers.values(HEADER_CONTENT_TYPE).isEmpty()) {
-                        val contentType = request.body?.contentType()
+                        val contentType = request.body().getOrNull()?.contentType()
                         if (contentType != null) {
                             appendHeader(HEADER_CONTENT_TYPE, contentType)
-                        } else if (request.body != null) {
+                        } else if (request.body().isPresent) {
                             throw AnthropicInvalidDataException(
                                 "Request has a body but no content type."
                             )
@@ -86,7 +87,7 @@ object AwsAuthUtil {
         // (e.g. a file upload) and leave nothing to send.
         val bufferedRequest = request.buffered()
         val bodyData = ByteArrayOutputStream()
-        bufferedRequest.body?.writeTo(bodyData)
+        bufferedRequest.body().getOrNull()?.writeTo(bodyData)
 
         val awsSignedRequest: SdkHttpRequest =
             signer

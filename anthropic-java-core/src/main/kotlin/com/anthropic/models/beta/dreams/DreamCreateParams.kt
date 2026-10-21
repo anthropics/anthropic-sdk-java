@@ -257,7 +257,6 @@ private constructor(
          * Alias for calling [addInput] with the following:
          * ```java
          * BetaDreamMemoryStoreInput.builder()
-         *     .type(BetaDreamMemoryStoreInput.Type.MEMORY_STORE)
          *     .memoryStoreId(memoryStoreId)
          *     .build()
          * ```
@@ -273,7 +272,6 @@ private constructor(
          * Alias for calling [addInput] with the following:
          * ```java
          * BetaDreamSessionsInput.builder()
-         *     .type(BetaDreamSessionsInput.Type.SESSIONS)
          *     .sessionIds(sessionIds)
          *     .build()
          * ```
@@ -370,7 +368,6 @@ private constructor(
          * Alias for calling [outputBehavior] with the following:
          * ```java
          * BetaOutputBehaviorUpdateExisting.builder()
-         *     .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
          *     .memoryStoreId(memoryStoreId)
          *     .build()
          * ```
@@ -731,18 +728,12 @@ private constructor(
              * Alias for calling [addInput] with the following:
              * ```java
              * BetaDreamMemoryStoreInput.builder()
-             *     .type(BetaDreamMemoryStoreInput.Type.MEMORY_STORE)
              *     .memoryStoreId(memoryStoreId)
              *     .build()
              * ```
              */
             fun addMemoryStoreInput(memoryStoreId: String) =
-                addInput(
-                    BetaDreamMemoryStoreInput.builder()
-                        .type(BetaDreamMemoryStoreInput.Type.MEMORY_STORE)
-                        .memoryStoreId(memoryStoreId)
-                        .build()
-                )
+                addInput(BetaDreamMemoryStoreInput.builder().memoryStoreId(memoryStoreId).build())
 
             /** Alias for calling [addInput] with `BetaDreamInput.ofSessions(sessions)`. */
             fun addInput(sessions: BetaDreamSessionsInput) =
@@ -752,18 +743,12 @@ private constructor(
              * Alias for calling [addInput] with the following:
              * ```java
              * BetaDreamSessionsInput.builder()
-             *     .type(BetaDreamSessionsInput.Type.SESSIONS)
              *     .sessionIds(sessionIds)
              *     .build()
              * ```
              */
             fun addSessionsInput(sessionIds: List<String>) =
-                addInput(
-                    BetaDreamSessionsInput.builder()
-                        .type(BetaDreamSessionsInput.Type.SESSIONS)
-                        .sessionIds(sessionIds)
-                        .build()
-                )
+                addInput(BetaDreamSessionsInput.builder().sessionIds(sessionIds).build())
 
             /**
              * The model that runs a dream, given as a model ID or as an object with `id` and
@@ -857,17 +842,13 @@ private constructor(
              * Alias for calling [outputBehavior] with the following:
              * ```java
              * BetaOutputBehaviorUpdateExisting.builder()
-             *     .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
              *     .memoryStoreId(memoryStoreId)
              *     .build()
              * ```
              */
             fun updateExistingOutputBehavior(memoryStoreId: String) =
                 outputBehavior(
-                    BetaOutputBehaviorUpdateExisting.builder()
-                        .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
-                        .memoryStoreId(memoryStoreId)
-                        .build()
+                    BetaOutputBehaviorUpdateExisting.builder().memoryStoreId(memoryStoreId).build()
                 )
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

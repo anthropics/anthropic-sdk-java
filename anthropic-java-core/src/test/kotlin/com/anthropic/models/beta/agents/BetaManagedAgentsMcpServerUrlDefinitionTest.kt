@@ -12,13 +12,10 @@ internal class BetaManagedAgentsMcpServerUrlDefinitionTest {
         val betaManagedAgentsMcpServerUrlDefinition =
             BetaManagedAgentsMcpServerUrlDefinition.builder()
                 .name("example-mcp")
-                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                 .url("https://example-server.modelcontextprotocol.io/sse")
                 .build()
 
         assertThat(betaManagedAgentsMcpServerUrlDefinition.name()).isEqualTo("example-mcp")
-        assertThat(betaManagedAgentsMcpServerUrlDefinition.type())
-            .isEqualTo(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
         assertThat(betaManagedAgentsMcpServerUrlDefinition.url())
             .isEqualTo("https://example-server.modelcontextprotocol.io/sse")
     }
@@ -29,7 +26,6 @@ internal class BetaManagedAgentsMcpServerUrlDefinitionTest {
         val betaManagedAgentsMcpServerUrlDefinition =
             BetaManagedAgentsMcpServerUrlDefinition.builder()
                 .name("example-mcp")
-                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
                 .url("https://example-server.modelcontextprotocol.io/sse")
                 .build()
 

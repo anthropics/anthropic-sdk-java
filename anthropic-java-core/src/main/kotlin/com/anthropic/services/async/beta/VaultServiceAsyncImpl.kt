@@ -144,7 +144,7 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             response
                                 .use { createHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -183,7 +183,7 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -222,7 +222,7 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             response
                                 .use { updateHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -256,7 +256,7 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -303,7 +303,7 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             response
                                 .use { deleteHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -343,7 +343,7 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             response
                                 .use { archiveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

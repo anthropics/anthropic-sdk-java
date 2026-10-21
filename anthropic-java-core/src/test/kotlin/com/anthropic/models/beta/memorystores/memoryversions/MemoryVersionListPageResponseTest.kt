@@ -20,7 +20,6 @@ internal class MemoryVersionListPageResponseTest {
                         .memoryId("mem_011CZkZ9X2dpNyB6YbtxvB6e")
                         .memoryStoreId("memstore_01Wf3kQ8tZxB2mVr7HcJ4aNd")
                         .operation(BetaManagedAgentsMemoryVersionOperation.CREATED)
-                        .type(BetaManagedAgentsMemoryVersion.Type.MEMORY_VERSION)
                         .content(null)
                         .contentSha256(
                             "ba7936d94c84d948a2232088f78228f175df6a8353b2d5bc9228eee5794a0024"
@@ -43,7 +42,6 @@ internal class MemoryVersionListPageResponseTest {
                     .memoryId("mem_011CZkZ9X2dpNyB6YbtxvB6e")
                     .memoryStoreId("memstore_01Wf3kQ8tZxB2mVr7HcJ4aNd")
                     .operation(BetaManagedAgentsMemoryVersionOperation.CREATED)
-                    .type(BetaManagedAgentsMemoryVersion.Type.MEMORY_VERSION)
                     .content(null)
                     .contentSha256(
                         "ba7936d94c84d948a2232088f78228f175df6a8353b2d5bc9228eee5794a0024"
@@ -73,7 +71,6 @@ internal class MemoryVersionListPageResponseTest {
                         .memoryId("mem_011CZkZ9X2dpNyB6YbtxvB6e")
                         .memoryStoreId("memstore_01Wf3kQ8tZxB2mVr7HcJ4aNd")
                         .operation(BetaManagedAgentsMemoryVersionOperation.CREATED)
-                        .type(BetaManagedAgentsMemoryVersion.Type.MEMORY_VERSION)
                         .content(null)
                         .contentSha256(
                             "ba7936d94c84d948a2232088f78228f175df6a8353b2d5bc9228eee5794a0024"
@@ -95,7 +92,6 @@ internal class MemoryVersionListPageResponseTest {
                     .memoryId("mem_011CZkZ9X2dpNyB6YbtxvB6e")
                     .memoryStoreId("memstore_01Wf3kQ8tZxB2mVr7HcJ4aNd")
                     .operation(BetaManagedAgentsMemoryVersionOperation.CREATED)
-                    .type(BetaManagedAgentsMemoryVersion.Type.MEMORY_VERSION)
                     .content(null)
                     .contentSha256(
                         "ba7936d94c84d948a2232088f78228f175df6a8353b2d5bc9228eee5794a0024"
@@ -121,7 +117,6 @@ internal class MemoryVersionListPageResponseTest {
                         .memoryId("mem_011CZkZ9X2dpNyB6YbtxvB6e")
                         .memoryStoreId("memstore_01Wf3kQ8tZxB2mVr7HcJ4aNd")
                         .operation(BetaManagedAgentsMemoryVersionOperation.CREATED)
-                        .type(BetaManagedAgentsMemoryVersion.Type.MEMORY_VERSION)
                         .content(null)
                         .contentSha256(
                             "ba7936d94c84d948a2232088f78228f175df6a8353b2d5bc9228eee5794a0024"

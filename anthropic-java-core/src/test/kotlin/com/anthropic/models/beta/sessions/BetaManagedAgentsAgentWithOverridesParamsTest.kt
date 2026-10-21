@@ -22,11 +22,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
         val betaManagedAgentsAgentWithOverridesParams =
             BetaManagedAgentsAgentWithOverridesParams.builder()
                 .id("x")
-                .type(BetaManagedAgentsAgentWithOverridesParams.Type.AGENT_WITH_OVERRIDES)
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
-                        .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                         .url("https://example-server.modelcontextprotocol.io/sse")
                         .build()
                 )
@@ -44,23 +42,17 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                 .addSkill(
                     BetaManagedAgentsAnthropicSkillParams.builder()
                         .skillId("xlsx")
-                        .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
                         .version("1")
                         .build()
                 )
                 .system("system")
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -69,9 +61,7 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -81,13 +71,10 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                 .build()
 
         assertThat(betaManagedAgentsAgentWithOverridesParams.id()).isEqualTo("x")
-        assertThat(betaManagedAgentsAgentWithOverridesParams.type())
-            .isEqualTo(BetaManagedAgentsAgentWithOverridesParams.Type.AGENT_WITH_OVERRIDES)
         assertThat(betaManagedAgentsAgentWithOverridesParams.mcpServers().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
-                    .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                     .url("https://example-server.modelcontextprotocol.io/sse")
                     .build()
             )
@@ -112,7 +99,6 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                 BetaManagedAgentsSkillParams.ofAnthropic(
                     BetaManagedAgentsAnthropicSkillParams.builder()
                         .skillId("xlsx")
-                        .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
                         .version("1")
                         .build()
                 )
@@ -122,16 +108,11 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
             .containsExactly(
                 BetaManagedAgentsAgentWithOverridesParams.Tool.ofAgentToolset20260401(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -140,9 +121,7 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -155,10 +134,7 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaManagedAgentsAgentWithOverridesParams =
-            BetaManagedAgentsAgentWithOverridesParams.builder()
-                .id("x")
-                .type(BetaManagedAgentsAgentWithOverridesParams.Type.AGENT_WITH_OVERRIDES)
-                .build()
+            BetaManagedAgentsAgentWithOverridesParams.of("x")
 
         val betaManagedAgentsAgentWithOverridesParams =
             baseBetaManagedAgentsAgentWithOverridesParams
@@ -166,7 +142,6 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
-                        .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                         .url("https://example-server.modelcontextprotocol.io/sse")
                         .build()
                 )
@@ -174,7 +149,6 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                     BetaManagedAgentsSkillParams.ofAnthropic(
                         BetaManagedAgentsAnthropicSkillParams.builder()
                             .skillId("xlsx")
-                            .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
                             .version("1")
                             .build()
                     )
@@ -182,17 +156,11 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                 .addTool(
                     BetaManagedAgentsAgentWithOverridesParams.Tool.ofAgentToolset20260401(
                         BetaManagedAgentsAgentToolset20260401Params.builder()
-                            .type(
-                                BetaManagedAgentsAgentToolset20260401Params.Type
-                                    .AGENT_TOOLSET_20260401
-                            )
                             .addConfig(
                                 BetaManagedAgentsBashToolConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                     .build()
@@ -201,9 +169,7 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                        )
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                     )
                                     .build()
                             )
@@ -216,7 +182,6 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
-                    .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                     .url("https://example-server.modelcontextprotocol.io/sse")
                     .build()
             )
@@ -225,7 +190,6 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                 BetaManagedAgentsSkillParams.ofAnthropic(
                     BetaManagedAgentsAnthropicSkillParams.builder()
                         .skillId("xlsx")
-                        .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
                         .version("1")
                         .build()
                 )
@@ -234,16 +198,11 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
             .containsExactly(
                 BetaManagedAgentsAgentWithOverridesParams.Tool.ofAgentToolset20260401(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -252,9 +211,7 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )
@@ -269,11 +226,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
         val betaManagedAgentsAgentWithOverridesParams =
             BetaManagedAgentsAgentWithOverridesParams.builder()
                 .id("x")
-                .type(BetaManagedAgentsAgentWithOverridesParams.Type.AGENT_WITH_OVERRIDES)
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
-                        .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
                         .url("https://example-server.modelcontextprotocol.io/sse")
                         .build()
                 )
@@ -291,23 +246,17 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                 .addSkill(
                     BetaManagedAgentsAnthropicSkillParams.builder()
                         .skillId("xlsx")
-                        .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
                         .version("1")
                         .build()
                 )
                 .system("system")
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401Params.builder()
-                        .type(
-                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
-                        )
                         .addConfig(
                             BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
@@ -316,9 +265,7 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.of(
-                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                    )
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
                                 )
                                 .build()
                         )

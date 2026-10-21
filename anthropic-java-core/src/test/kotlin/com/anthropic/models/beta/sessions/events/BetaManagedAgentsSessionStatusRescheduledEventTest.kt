@@ -14,18 +14,11 @@ internal class BetaManagedAgentsSessionStatusRescheduledEventTest {
             BetaManagedAgentsSessionStatusRescheduledEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(
-                    BetaManagedAgentsSessionStatusRescheduledEvent.Type.SESSION_STATUS_RESCHEDULED
-                )
                 .build()
 
         assertThat(betaManagedAgentsSessionStatusRescheduledEvent.id()).isEqualTo("id")
         assertThat(betaManagedAgentsSessionStatusRescheduledEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsSessionStatusRescheduledEvent.type())
-            .isEqualTo(
-                BetaManagedAgentsSessionStatusRescheduledEvent.Type.SESSION_STATUS_RESCHEDULED
-            )
     }
 
     @Test
@@ -35,9 +28,6 @@ internal class BetaManagedAgentsSessionStatusRescheduledEventTest {
             BetaManagedAgentsSessionStatusRescheduledEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(
-                    BetaManagedAgentsSessionStatusRescheduledEvent.Type.SESSION_STATUS_RESCHEDULED
-                )
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionStatusRescheduledEvent =

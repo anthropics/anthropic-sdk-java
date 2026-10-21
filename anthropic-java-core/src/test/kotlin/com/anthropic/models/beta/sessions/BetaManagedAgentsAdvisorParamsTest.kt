@@ -9,25 +9,15 @@ internal class BetaManagedAgentsAdvisorParamsTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsAdvisorParams =
-            BetaManagedAgentsAdvisorParams.builder()
-                .model("claude-opus-5-5")
-                .type(BetaManagedAgentsAdvisorParams.Type.ADVISOR)
-                .build()
+        val betaManagedAgentsAdvisorParams = BetaManagedAgentsAdvisorParams.of("claude-opus-5-5")
 
         assertThat(betaManagedAgentsAdvisorParams.model()).isEqualTo("claude-opus-5-5")
-        assertThat(betaManagedAgentsAdvisorParams.type())
-            .isEqualTo(BetaManagedAgentsAdvisorParams.Type.ADVISOR)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsAdvisorParams =
-            BetaManagedAgentsAdvisorParams.builder()
-                .model("claude-opus-5-5")
-                .type(BetaManagedAgentsAdvisorParams.Type.ADVISOR)
-                .build()
+        val betaManagedAgentsAdvisorParams = BetaManagedAgentsAdvisorParams.of("claude-opus-5-5")
 
         val roundtrippedBetaManagedAgentsAdvisorParams =
             jsonMapper.readValue(

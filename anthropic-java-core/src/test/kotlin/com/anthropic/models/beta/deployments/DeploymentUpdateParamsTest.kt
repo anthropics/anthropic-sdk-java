@@ -7,7 +7,6 @@ import com.anthropic.models.beta.BetaCurrency
 import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsFileResourceParams
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -23,25 +22,16 @@ internal class DeploymentUpdateParamsTest {
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .agent("string")
             .budget(
-                BetaManagedAgentsBudgetLimit.builder()
-                    .maxListCost(
-                        BetaMonetaryAmount.builder()
-                            .amount("2500")
-                            .currency(BetaCurrency.USD)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                    .build()
+                BetaManagedAgentsBudgetLimit.of(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
             )
             .description("description")
             .environmentId("environment_id")
             .addUserMessageInitialEvent(
                 listOf(
                     BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                        BetaManagedAgentsTextBlock.builder()
-                            .text("Where is my order #1234?")
-                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                            .build()
+                        "Where is my order #1234?"
                     )
                 )
             )
@@ -54,7 +44,6 @@ internal class DeploymentUpdateParamsTest {
             .addResource(
                 BetaManagedAgentsFileResourceParams.builder()
                     .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                    .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                     .mountPath("/uploads/receipt.pdf")
                     .build()
             )
@@ -62,7 +51,6 @@ internal class DeploymentUpdateParamsTest {
                 BetaManagedAgentsScheduleParams.builder()
                     .expression("0 9 * * 1-5")
                     .timezone("America/Los_Angeles")
-                    .type(BetaManagedAgentsScheduleParams.Type.CRON)
                     .build()
             )
             .addVaultId("string")
@@ -88,25 +76,19 @@ internal class DeploymentUpdateParamsTest {
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .agent("string")
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .description("description")
                 .environmentId("environment_id")
                 .addUserMessageInitialEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
+                            "Where is my order #1234?"
                         )
                     )
                 )
@@ -119,7 +101,6 @@ internal class DeploymentUpdateParamsTest {
                 .addResource(
                     BetaManagedAgentsFileResourceParams.builder()
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                         .mountPath("/uploads/receipt.pdf")
                         .build()
                 )
@@ -127,7 +108,6 @@ internal class DeploymentUpdateParamsTest {
                     BetaManagedAgentsScheduleParams.builder()
                         .expression("0 9 * * 1-5")
                         .timezone("America/Los_Angeles")
-                        .type(BetaManagedAgentsScheduleParams.Type.CRON)
                         .build()
                 )
                 .addVaultId("string")
@@ -167,25 +147,19 @@ internal class DeploymentUpdateParamsTest {
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .agent("string")
                 .budget(
-                    BetaManagedAgentsBudgetLimit.builder()
-                        .maxListCost(
-                            BetaMonetaryAmount.builder()
-                                .amount("2500")
-                                .currency(BetaCurrency.USD)
-                                .build()
-                        )
-                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                        .build()
+                    BetaManagedAgentsBudgetLimit.of(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                 )
                 .description("description")
                 .environmentId("environment_id")
                 .addUserMessageInitialEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Where is my order #1234?")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
+                            "Where is my order #1234?"
                         )
                     )
                 )
@@ -198,7 +172,6 @@ internal class DeploymentUpdateParamsTest {
                 .addResource(
                     BetaManagedAgentsFileResourceParams.builder()
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                         .mountPath("/uploads/receipt.pdf")
                         .build()
                 )
@@ -206,7 +179,6 @@ internal class DeploymentUpdateParamsTest {
                     BetaManagedAgentsScheduleParams.builder()
                         .expression("0 9 * * 1-5")
                         .timezone("America/Los_Angeles")
-                        .type(BetaManagedAgentsScheduleParams.Type.CRON)
                         .build()
                 )
                 .addVaultId("string")
@@ -217,15 +189,9 @@ internal class DeploymentUpdateParamsTest {
         assertThat(body.agent()).contains(DeploymentUpdateParams.Agent.ofString("string"))
         assertThat(body.budget())
             .contains(
-                BetaManagedAgentsBudgetLimit.builder()
-                    .maxListCost(
-                        BetaMonetaryAmount.builder()
-                            .amount("2500")
-                            .currency(BetaCurrency.USD)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
-                    .build()
+                BetaManagedAgentsBudgetLimit.of(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
             )
         assertThat(body.description()).contains("description")
         assertThat(body.environmentId()).contains("environment_id")
@@ -234,7 +200,6 @@ internal class DeploymentUpdateParamsTest {
                 BetaManagedAgentsDeploymentInitialEventParams.ofUserMessage(
                     BetaManagedAgentsUserMessageEventParams.builder()
                         .addTextContent("Where is my order #1234?")
-                        .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
                         .build()
                 )
             )
@@ -250,7 +215,6 @@ internal class DeploymentUpdateParamsTest {
                 DeploymentUpdateParams.Resource.ofFile(
                     BetaManagedAgentsFileResourceParams.builder()
                         .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                         .mountPath("/uploads/receipt.pdf")
                         .build()
                 )
@@ -260,7 +224,6 @@ internal class DeploymentUpdateParamsTest {
                 BetaManagedAgentsScheduleParams.builder()
                     .expression("0 9 * * 1-5")
                     .timezone("America/Los_Angeles")
-                    .type(BetaManagedAgentsScheduleParams.Type.CRON)
                     .build()
             )
         assertThat(body.vaultIds().getOrNull()).containsExactly("string")

@@ -12,6 +12,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.core.toolFromClass
 import com.anthropic.errors.AnthropicIoException
 import com.anthropic.models.beta.messages.*
+import com.anthropic.models.beta.messages.BetaSystemMessageParam.Content.SystemMessageContentBlock
 import com.anthropic.models.messages.Model
 import com.anthropic.services.blocking.beta.MessageService
 import com.fasterxml.jackson.annotation.JsonClassDescription
@@ -150,9 +151,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -163,7 +163,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -202,9 +202,9 @@ internal class BetaToolRunnerTest {
         val paramsWithRemoval =
             initialMessageParams
                 .toBuilder()
-                .addSystemMessageOfBetaContentBlockParams(
+                .addSystemMessageOfBlocks(
                     listOf(
-                        BetaContentBlockParam.ofToolRemoval(
+                        SystemMessageContentBlock.ofToolRemoval(
                             BetaRequestToolRemovalBlock.builder()
                                 .referenceTool("get_weather")
                                 .build()
@@ -234,9 +234,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -247,7 +246,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -280,23 +279,78 @@ internal class BetaToolRunnerTest {
         assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
     }
 
+    @ParameterizedTest
+    @ValueSource(
+        strings =
+            [
+                """{"type": "text", "text": "The weather tool is gone."}""",
+                // A block type newer than this SDK.
+                """{"type": "brand_new_block"}""",
+                // A block type that the content of a `"system"` message doesn't allow.
+                """{"type": "image", "source": {"type": "url", "url": "https://example.com/a"}}""",
+            ]
+    )
+    fun iteration_whenToolRemovalIsBesideAnotherBlock_respondsWithNotFoundError(block: String) {
+        val removal = jsonMapper().writeValueAsString(toolRemoval("get_weather"))
+
+        assertToolRemovalIsHonored(
+            jsonMapper()
+                .readValue(
+                    """{"role": "system", "content": [$block, $removal, $block]}""",
+                    jacksonTypeRef<BetaMessageParam>(),
+                ),
+            location = "Removed Beside $block City",
+        )
+    }
+
+    @Test
+    fun iteration_whenSystemMessageHasNoContent_executesTool() {
+        val params =
+            initialMessageParams
+                .toBuilder()
+                .addMessage(
+                    BetaSystemMessageParam.builder()
+                        .outputConfig(
+                            BetaSystemMessageOutputConfig.builder()
+                                .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                                .build()
+                        )
+                        .build()
+                )
+                .build()
+        val toolUseMessage = toolUseMessage("No System Content City")
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(toolUseMessage, finalAssistantMessage())
+
+        newToolRunner(params).toList()
+
+        assertThat(sentRequests(2)[1])
+            .isEqualTo(
+                params
+                    .toBuilder()
+                    .addMessage(toolUseMessage)
+                    .addMessage(getWeatherToolResponse("No System Content City"))
+                    .build()
+            )
+    }
+
     @Test
     fun iteration_whenToolRemovedThenAdded_executesTool() {
         val paramsWithChanges =
             initialMessageParams
                 .toBuilder()
-                .addSystemMessageOfBetaContentBlockParams(
+                .addSystemMessageOfBlocks(
                     listOf(
-                        BetaContentBlockParam.ofToolRemoval(
+                        SystemMessageContentBlock.ofToolRemoval(
                             BetaRequestToolRemovalBlock.builder()
                                 .referenceTool("get_weather")
                                 .build()
                         )
                     )
                 )
-                .addSystemMessageOfBetaContentBlockParams(
+                .addSystemMessageOfBlocks(
                     listOf(
-                        BetaContentBlockParam.ofToolAddition(
+                        SystemMessageContentBlock.ofToolAddition(
                             BetaRequestToolAdditionBlock.builder()
                                 .referenceTool("get_weather")
                                 .build()
@@ -326,9 +380,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -338,7 +391,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -399,7 +452,7 @@ internal class BetaToolRunnerTest {
                 .toBuilder()
                 .addMessage(assistantMessage1)
                 .addMessage(getWeatherToolResponse("Added Tool City"))
-                .addSystemMessageOfBetaContentBlockParams(listOf(toolAddition(GetTime::class.java)))
+                .addSystemMessageOfBlocks(listOf(toolAddition(GetTime::class.java)))
                 .build()
         assertThat(requests[0]).isEqualTo(initialMessageParams)
         assertThat(requests[1]).isEqualTo(requestWithAddition)
@@ -433,9 +486,7 @@ internal class BetaToolRunnerTest {
                     .toBuilder()
                     .addMessage(assistantMessage1)
                     .addMessage(toolResponse("The weather in Swapped Tool City is sunny"))
-                    .addSystemMessageOfBetaContentBlockParams(
-                        listOf(toolAddition(SunnyGetWeather::class.java))
-                    )
+                    .addSystemMessageOfBlocks(listOf(toolAddition(SunnyGetWeather::class.java)))
                     .build()
             )
     }
@@ -478,14 +529,12 @@ internal class BetaToolRunnerTest {
             .isEqualTo(
                 initialMessageParams
                     .toBuilder()
-                    .addSystemMessageOfBetaContentBlockParams(
-                        listOf(toolAddition(GetTime::class.java))
-                    )
+                    .addSystemMessageOfBlocks(listOf(toolAddition(GetTime::class.java)))
                     .addMessage(assistantMessage1)
                     .addMessage(toolResponse("noon in Runnable Tool City"))
                     .addMessage(assistantMessage2)
                     .addMessage(toolNotFoundResponse("get_time"))
-                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_time")))
+                    .addSystemMessageOfBlocks(listOf(toolRemoval("get_time")))
                     .build()
             )
     }
@@ -528,7 +577,7 @@ internal class BetaToolRunnerTest {
                     .toBuilder()
                     .addMessage(assistantMessage1)
                     .addMessage(toolNotFoundResponse("get_time"))
-                    .addSystemMessageOfBetaContentBlockParams(
+                    .addSystemMessageOfBlocks(
                         listOf(
                             toolRemoval("get_time"),
                             toolAddition(BetaToolUnion.ofBetaTool(getDateDefinition)),
@@ -556,7 +605,7 @@ internal class BetaToolRunnerTest {
             .isEqualTo(
                 initialMessageParams
                     .toBuilder()
-                    .addSystemMessageOfBetaContentBlockParams(
+                    .addSystemMessageOfBlocks(
                         listOf(toolAddition(BetaToolUnion.ofBetaTool(definition)))
                     )
                     .build()
@@ -601,7 +650,7 @@ internal class BetaToolRunnerTest {
         val requestWithAddition =
             initialMessageParams
                 .toBuilder()
-                .addSystemMessageOfBetaContentBlockParams(
+                .addSystemMessageOfBlocks(
                     listOf(toolAddition(BetaToolUnion.ofBetaTool(echo.definition)))
                 )
                 .build()
@@ -614,7 +663,7 @@ internal class BetaToolRunnerTest {
                     .addMessage(toolResponse("""echo: {"location":"MCP Tool City"}"""))
                     .addMessage(assistantMessage2)
                     .addMessage(toolNotFoundResponse("echo"))
-                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("echo")))
+                    .addSystemMessageOfBlocks(listOf(toolRemoval("echo")))
                     .build()
             )
     }
@@ -643,7 +692,7 @@ internal class BetaToolRunnerTest {
                     .toBuilder()
                     .addMessage(assistantMessage1)
                     .addMessage(toolNotFoundResponse("get_weather"))
-                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_weather")))
+                    .addSystemMessageOfBlocks(listOf(toolRemoval("get_weather")))
                     .build()
             )
         assertThat(requests.map { it.tools() }).containsOnly(initialMessageParams.tools())
@@ -674,12 +723,10 @@ internal class BetaToolRunnerTest {
                     .toBuilder()
                     .addMessage(assistantMessage1)
                     .addMessage(getWeatherToolResponse("Added Then Removed City"))
-                    .addSystemMessageOfBetaContentBlockParams(
-                        listOf(toolAddition(GetTime::class.java))
-                    )
+                    .addSystemMessageOfBlocks(listOf(toolAddition(GetTime::class.java)))
                     .addMessage(assistantMessage2)
                     .addMessage(toolNotFoundResponse("get_time"))
-                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_time")))
+                    .addSystemMessageOfBlocks(listOf(toolRemoval("get_time")))
                     .build()
             )
     }
@@ -716,7 +763,7 @@ internal class BetaToolRunnerTest {
             .isEqualTo(
                 params
                     .toBuilder()
-                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_time")))
+                    .addSystemMessageOfBlocks(listOf(toolRemoval("get_time")))
                     .addMessage(assistantMessage1)
                     .addMessage(toolNotFoundResponse("get_time"))
                     .build()
@@ -809,12 +856,10 @@ internal class BetaToolRunnerTest {
                     .toBuilder()
                     .addMessage(assistantMessage1)
                     .addMessage(toolNotFoundResponse("get_weather"))
-                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_weather")))
+                    .addSystemMessageOfBlocks(listOf(toolRemoval("get_weather")))
                     .addMessage(assistantMessage2)
                     .addMessage(toolResponse("The weather in Removed Then Added City 2 is sunny"))
-                    .addSystemMessageOfBetaContentBlockParams(
-                        listOf(toolAddition(SunnyGetWeather::class.java))
-                    )
+                    .addSystemMessageOfBlocks(listOf(toolAddition(SunnyGetWeather::class.java)))
                     .addMessage(assistantMessage3)
                     .addMessage(toolResponse("The weather in Removed Then Added City 3 is sunny"))
                     .build()
@@ -854,7 +899,7 @@ internal class BetaToolRunnerTest {
                 .toBuilder()
                 .addMessage(assistantMessage1)
                 .addMessage(getWeatherToolResponse("Call Order City 1"))
-                .addSystemMessageOfBetaContentBlockParams(
+                .addSystemMessageOfBlocks(
                     listOf(
                         toolAddition(GetTime::class.java),
                         toolRemoval("get_time"),
@@ -870,7 +915,7 @@ internal class BetaToolRunnerTest {
                 requestWithChanges
                     .toBuilder()
                     .addMessage(assistantMessage2)
-                    .addUserMessageOfBetaContentBlockParams(
+                    .addUserMessageOfContentBlockParams(
                         listOf(
                             toolNotFoundResult("get_time", id = "toolUseId1"),
                             toolResult(
@@ -915,7 +960,7 @@ internal class BetaToolRunnerTest {
                     .toBuilder()
                     .addMessage(assistantMessage1)
                     .addMessage(toolNotFoundResponse("get_weather"))
-                    .addSystemMessageOfBetaContentBlockParams(
+                    .addSystemMessageOfBlocks(
                         listOf(toolAddition(mcpToolset), toolAddition(rawGetWeather))
                     )
                     .addMessage(assistantMessage2)
@@ -953,7 +998,7 @@ internal class BetaToolRunnerTest {
                     .toBuilder()
                     .addMessage(assistantMessage2)
                     .addMessage(toolNotFoundResponse("get_weather"))
-                    .addSystemMessageOfBetaContentBlockParams(
+                    .addSystemMessageOfBlocks(
                         listOf(toolRemoval("get_weather"), toolAddition(GetTime::class.java))
                     )
                     .build()
@@ -985,9 +1030,7 @@ internal class BetaToolRunnerTest {
                     .toBuilder()
                     .addMessage(toolUseMessage)
                     .addMessage(getWeatherToolResponse("Compacting City"))
-                    .addSystemMessageOfBetaContentBlockParams(
-                        listOf(toolAddition(GetTime::class.java))
-                    )
+                    .addSystemMessageOfBlocks(listOf(toolAddition(GetTime::class.java)))
                     .compaction(BetaCompactionConfig.builder().build())
                     .build()
             )
@@ -996,7 +1039,7 @@ internal class BetaToolRunnerTest {
                 initialMessageParams
                     .toBuilder()
                     .messages(listOf(compactionResponse.toParam()))
-                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_weather")))
+                    .addSystemMessageOfBlocks(listOf(toolRemoval("get_weather")))
                     .build()
             )
     }
@@ -1006,7 +1049,7 @@ internal class BetaToolRunnerTest {
         val params =
             initialMessageParams
                 .toBuilder()
-                .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_weather")))
+                .addSystemMessageOfBlocks(listOf(toolRemoval("get_weather")))
                 .build()
         val toolRunner = newToolRunner(params, maxIterations = 2)
         val compactionResponse = compactionResponse()
@@ -1057,9 +1100,7 @@ internal class BetaToolRunnerTest {
             initialMessageParams
                 .toBuilder()
                 .messages(listOf(compactionResponse.toParam()))
-                .addSystemMessageOfBetaContentBlockParams(
-                    listOf(toolAddition(GetWeather::class.java))
-                )
+                .addSystemMessageOfBlocks(listOf(toolAddition(GetWeather::class.java)))
                 .build()
         assertThat(requests[2]).isEqualTo(requestAfterCompaction)
         assertThat(requests[3])
@@ -1134,7 +1175,7 @@ internal class BetaToolRunnerTest {
                     .toBuilder()
                     .addMessage(accumulator.message())
                     .addMessage(toolNotFoundResponse("get_weather"))
-                    .addSystemMessageOfBetaContentBlockParams(
+                    .addSystemMessageOfBlocks(
                         listOf(toolRemoval("get_weather"), toolAddition(GetTime::class.java))
                     )
                     .build()
@@ -1155,9 +1196,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -1168,7 +1208,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -1214,9 +1254,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -1226,7 +1265,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -1301,9 +1340,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -1313,7 +1351,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -1388,9 +1426,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -1400,7 +1437,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -2022,7 +2059,15 @@ internal class BetaToolRunnerTest {
         assertThat(toolRunner.params().messages()).hasSize(2)
         val resentTurn = toolRunner.params().messages().last()
         assertThat(resentTurn.role()).isEqualTo(BetaMessageParam.Role.ASSISTANT)
-        assertThat(resentTurn.content().betaContentBlockParams().get().single().isServerToolUse())
+        assertThat(
+                resentTurn
+                    .asAssistant()
+                    .content()
+                    .contentBlockParams()
+                    .get()
+                    .single()
+                    .isServerToolUse()
+            )
             .isTrue()
         assertThat(toolRunner.lastToolResponse()).isEmpty
         verify(messageService, times(2)).createStreaming(any<MessageCreateParams>(), any())
@@ -2131,7 +2176,15 @@ internal class BetaToolRunnerTest {
         assertThat(toolRunner.params().messages()).hasSize(2)
         val resentTurn = toolRunner.params().messages().last()
         assertThat(resentTurn.role()).isEqualTo(BetaMessageParam.Role.ASSISTANT)
-        assertThat(resentTurn.content().betaContentBlockParams().get().single().isCompaction())
+        assertThat(
+                resentTurn
+                    .asAssistant()
+                    .content()
+                    .contentBlockParams()
+                    .get()
+                    .single()
+                    .isCompaction()
+            )
             .isTrue()
         assertThat(toolRunner.lastToolResponse()).isEmpty
         verify(messageService, times(2)).createStreaming(any<MessageCreateParams>(), any())
@@ -2240,9 +2293,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -2252,7 +2304,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -2607,7 +2659,9 @@ internal class BetaToolRunnerTest {
         val finalTurn = requests.secondValue.messages().last()
         assertThat(
                 jsonMapper()
-                    .writeValueAsString(finalTurn.content().betaContentBlockParams().get().last())
+                    .writeValueAsString(
+                        finalTurn.asAssistant().content().contentBlockParams().get().last()
+                    )
             )
             .isEqualTo(newerBlock)
     }
@@ -2733,7 +2787,7 @@ internal class BetaToolRunnerTest {
         assertThat(
                 jsonMapper()
                     .writeValueAsString(
-                        history.single().content().betaContentBlockParams().get().last()
+                        history.single().asAssistant().content().contentBlockParams().get().last()
                     )
             )
             .isEqualTo("""{"type":"block_from_the_future","tools":[],"name":"docs"}""")
@@ -3067,7 +3121,9 @@ internal class BetaToolRunnerTest {
             .isEqualTo(
                 initialMessageParams.toBuilder().messages(listOf(messages[1].toParam())).build()
             )
-        assertThat(messages[1].toParam().content().betaContentBlockParams().get().single())
+        assertThat(
+                messages[1].toParam().asAssistant().content().contentBlockParams().get().single()
+            )
             .isEqualTo(
                 BetaContentBlockParam.ofCompaction(
                     BetaCompactionBlockParam.builder()
@@ -3147,9 +3203,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam1 =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -3159,7 +3214,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -3180,9 +3235,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam2 =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -3192,7 +3246,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage3 =
             betaMessageBuilder()
                 .addContent(
@@ -3264,9 +3318,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -3276,7 +3329,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -3314,7 +3367,7 @@ internal class BetaToolRunnerTest {
                                 .params()
                                 .toBuilder()
                                 .addMessage(message)
-                                .addUserMessageOfBetaContentBlockParams(
+                                .addUserMessageOfContentBlockParams(
                                     listOf(
                                         BetaContentBlockParam.ofToolResult(
                                             BetaToolResultBlockParam.builder()
@@ -3347,9 +3400,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -3359,7 +3411,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage2 =
             betaMessageBuilder()
                 .addContent(
@@ -3423,7 +3475,7 @@ internal class BetaToolRunnerTest {
             initialMessageParams
                 .toBuilder()
                 .addMessage(assistantMessage1)
-                .addUserMessageOfBetaContentBlockParams(
+                .addUserMessageOfContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -3433,9 +3485,9 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .addSystemMessageOfBetaContentBlockParams(
+                .addSystemMessageOfBlocks(
                     listOf(
-                        BetaContentBlockParam.ofToolRemoval(
+                        SystemMessageContentBlock.ofToolRemoval(
                             BetaRequestToolRemovalBlock.builder()
                                 .referenceTool("get_weather")
                                 .build()
@@ -3455,9 +3507,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -3468,7 +3519,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage3 =
             betaMessageBuilder()
                 .addContent(
@@ -3544,7 +3595,7 @@ internal class BetaToolRunnerTest {
             initialMessageParams
                 .toBuilder()
                 .addMessage(assistantMessage1)
-                .addUserMessageOfBetaContentBlockParams(
+                .addUserMessageOfContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -3554,18 +3605,18 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .addSystemMessageOfBetaContentBlockParams(
+                .addSystemMessageOfBlocks(
                     listOf(
-                        BetaContentBlockParam.ofToolRemoval(
+                        SystemMessageContentBlock.ofToolRemoval(
                             BetaRequestToolRemovalBlock.builder()
                                 .referenceTool("get_weather")
                                 .build()
                         )
                     )
                 )
-                .addSystemMessageOfBetaContentBlockParams(
+                .addSystemMessageOfBlocks(
                     listOf(
-                        BetaContentBlockParam.ofToolAddition(
+                        SystemMessageContentBlock.ofToolAddition(
                             BetaRequestToolAdditionBlock.builder()
                                 .referenceTool("get_weather")
                                 .build()
@@ -3585,9 +3636,8 @@ internal class BetaToolRunnerTest {
                 .contextManagement(null)
                 .build()
         val expectedToolResponseMessageParam =
-            BetaMessageParam.builder()
-                .role(BetaMessageParam.Role.USER)
-                .contentOfBetaContentBlockParams(
+            BetaMessageParam.ofUser(
+                BetaMessageContentParam.ofContentBlockParams(
                     listOf(
                         BetaContentBlockParam.ofToolResult(
                             BetaToolResultBlockParam.builder()
@@ -3597,7 +3647,7 @@ internal class BetaToolRunnerTest {
                         )
                     )
                 )
-                .build()
+            )
         val assistantMessage3 =
             betaMessageBuilder()
                 .addContent(
@@ -3656,6 +3706,26 @@ internal class BetaToolRunnerTest {
             requestOptions,
         )
 
+    /** Has the model call `get_weather` after [systemMessage], which removes that tool. */
+    private fun assertToolRemovalIsHonored(systemMessage: BetaMessageParam, location: String) {
+        val params = initialMessageParams.toBuilder().addMessage(systemMessage).build()
+        val toolUseMessage = toolUseMessage(location)
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(toolUseMessage, finalAssistantMessage())
+
+        newToolRunner(params).toList()
+
+        assertThat(GetWeather.executions).doesNotContainKey(location)
+        assertThat(sentRequests(2)[1])
+            .isEqualTo(
+                params
+                    .toBuilder()
+                    .addMessage(toolUseMessage)
+                    .addMessage(toolNotFoundResponse("get_weather"))
+                    .build()
+            )
+    }
+
     private fun toolUseMessage(location: String) =
         betaMessageBuilder().addContent(getWeatherToolUse(location)).contextManagement(null).build()
 
@@ -3686,7 +3756,7 @@ internal class BetaToolRunnerTest {
     }
 
     private fun toolAddition(definition: BetaToolUnion) =
-        BetaContentBlockParam.ofToolAddition(
+        SystemMessageContentBlock.ofToolAddition(
             BetaRequestToolAdditionBlock.builder().definitionTool(definition).build()
         )
 
@@ -3694,7 +3764,7 @@ internal class BetaToolRunnerTest {
         toolAddition(BetaToolUnion.ofBetaTool(toolFromClass(toolParametersType)))
 
     private fun toolRemoval(name: String) =
-        BetaContentBlockParam.ofToolRemoval(
+        SystemMessageContentBlock.ofToolRemoval(
             BetaRequestToolRemovalBlock.builder().referenceTool(name).build()
         )
 
@@ -3720,16 +3790,14 @@ internal class BetaToolRunnerTest {
         )
 
     private fun toolResponse(content: String) =
-        BetaMessageParam.builder()
-            .role(BetaMessageParam.Role.USER)
-            .contentOfBetaContentBlockParams(listOf(toolResult(content)))
-            .build()
+        BetaMessageParam.ofUser(
+            BetaMessageContentParam.ofContentBlockParams(listOf(toolResult(content)))
+        )
 
     private fun toolNotFoundResponse(name: String) =
-        BetaMessageParam.builder()
-            .role(BetaMessageParam.Role.USER)
-            .contentOfBetaContentBlockParams(listOf(toolNotFoundResult(name)))
-            .build()
+        BetaMessageParam.ofUser(
+            BetaMessageContentParam.ofContentBlockParams(listOf(toolNotFoundResult(name)))
+        )
 
     private fun getWeatherToolUse(location: String) =
         BetaToolUseBlock.builder()
@@ -3739,9 +3807,8 @@ internal class BetaToolRunnerTest {
             .build()
 
     private fun getWeatherToolResponse(location: String) =
-        BetaMessageParam.builder()
-            .role(BetaMessageParam.Role.USER)
-            .contentOfBetaContentBlockParams(
+        BetaMessageParam.ofUser(
+            BetaMessageContentParam.ofContentBlockParams(
                 listOf(
                     BetaContentBlockParam.ofToolResult(
                         BetaToolResultBlockParam.builder()
@@ -3751,7 +3818,7 @@ internal class BetaToolRunnerTest {
                     )
                 )
             )
-            .build()
+        )
 
     private fun getWeatherToolUseStreamEvents(location: String) =
         listOf(

@@ -12,27 +12,16 @@ internal class BetaManagedAgentsImageBlockTest {
         val betaManagedAgentsImageBlock =
             BetaManagedAgentsImageBlock.builder()
                 .source(
-                    BetaManagedAgentsBase64ImageSource.builder()
-                        .data("x")
-                        .mediaType("x")
-                        .type(BetaManagedAgentsBase64ImageSource.Type.BASE64)
-                        .build()
+                    BetaManagedAgentsBase64ImageSource.builder().data("x").mediaType("x").build()
                 )
-                .type(BetaManagedAgentsImageBlock.Type.IMAGE)
                 .build()
 
         assertThat(betaManagedAgentsImageBlock.source())
             .isEqualTo(
                 BetaManagedAgentsImageBlock.Source.ofBase64(
-                    BetaManagedAgentsBase64ImageSource.builder()
-                        .data("x")
-                        .mediaType("x")
-                        .type(BetaManagedAgentsBase64ImageSource.Type.BASE64)
-                        .build()
+                    BetaManagedAgentsBase64ImageSource.builder().data("x").mediaType("x").build()
                 )
             )
-        assertThat(betaManagedAgentsImageBlock.type())
-            .isEqualTo(BetaManagedAgentsImageBlock.Type.IMAGE)
     }
 
     @Test
@@ -41,13 +30,8 @@ internal class BetaManagedAgentsImageBlockTest {
         val betaManagedAgentsImageBlock =
             BetaManagedAgentsImageBlock.builder()
                 .source(
-                    BetaManagedAgentsBase64ImageSource.builder()
-                        .data("x")
-                        .mediaType("x")
-                        .type(BetaManagedAgentsBase64ImageSource.Type.BASE64)
-                        .build()
+                    BetaManagedAgentsBase64ImageSource.builder().data("x").mediaType("x").build()
                 )
-                .type(BetaManagedAgentsImageBlock.Type.IMAGE)
                 .build()
 
         val roundtrippedBetaManagedAgentsImageBlock =

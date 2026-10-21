@@ -10,26 +10,14 @@ internal class BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonErr
     @Test
     fun create() {
         val betaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError =
-            BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.of(
-                BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.Type
-                    .SESSION_RESOURCE_NOT_FOUND_ERROR
-            )
-
-        assertThat(betaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.type())
-            .isEqualTo(
-                BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.Type
-                    .SESSION_RESOURCE_NOT_FOUND_ERROR
-            )
+            BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.builder().build()
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError =
-            BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.of(
-                BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.Type
-                    .SESSION_RESOURCE_NOT_FOUND_ERROR
-            )
+            BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.builder().build()
 
         val roundtrippedBetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError =
             jsonMapper.readValue(

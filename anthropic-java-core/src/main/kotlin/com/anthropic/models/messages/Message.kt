@@ -75,15 +75,15 @@ private constructor(
     )
 
     fun toParam(): MessageParam =
-        MessageParam.builder()
-            .content(_content().map { MessageParam.Content.ofBlockParams(it.map { it.toParam() }) })
-            .role(
-                _role().let {
-                    if (it.isMissing() || it.isNull()) it
-                    else JsonField.of(MessageParam.Role.of(it))
-                }
-            )
-            .build()
+        MessageParam.ofAssistant(
+            AssistantMessageParam.builder()
+                .content(
+                    _content().map {
+                        MessageContentParam.ofContentBlockParams(it.map { it.toParam() })
+                    }
+                )
+                .build()
+        )
 
     /**
      * Unique object identifier.

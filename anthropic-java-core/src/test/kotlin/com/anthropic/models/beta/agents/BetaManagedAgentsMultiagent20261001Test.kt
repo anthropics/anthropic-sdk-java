@@ -20,7 +20,6 @@ internal class BetaManagedAgentsMultiagent20261001Test {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentReference.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -34,7 +33,6 @@ internal class BetaManagedAgentsMultiagent20261001Test {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentReference.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -58,7 +56,6 @@ internal class BetaManagedAgentsMultiagent20261001Test {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentReference.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -75,7 +72,6 @@ internal class BetaManagedAgentsMultiagent20261001Test {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentReference.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -98,7 +94,6 @@ internal class BetaManagedAgentsMultiagent20261001Test {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentReference.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
@@ -112,7 +107,6 @@ internal class BetaManagedAgentsMultiagent20261001Test {
                         .addPredefinedAgent(
                             BetaManagedAgentsAgentReference.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )

@@ -13,15 +13,7 @@ internal class BetaManagedAgentsCredentialHostUnreachableErrorTest {
             BetaManagedAgentsCredentialHostUnreachableError.builder()
                 .credentialId("credential_id")
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(
-                    BetaManagedAgentsCredentialHostUnreachableError.Type
-                        .CREDENTIAL_HOST_UNREACHABLE_ERROR
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .vaultId("vault_id")
                 .build()
 
@@ -31,13 +23,8 @@ internal class BetaManagedAgentsCredentialHostUnreachableErrorTest {
         assertThat(betaManagedAgentsCredentialHostUnreachableError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsCredentialHostUnreachableError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    BetaManagedAgentsRetryStatusRetrying.builder().build()
                 )
-            )
-        assertThat(betaManagedAgentsCredentialHostUnreachableError.type())
-            .isEqualTo(
-                BetaManagedAgentsCredentialHostUnreachableError.Type
-                    .CREDENTIAL_HOST_UNREACHABLE_ERROR
             )
         assertThat(betaManagedAgentsCredentialHostUnreachableError.vaultId()).isEqualTo("vault_id")
     }
@@ -49,15 +36,7 @@ internal class BetaManagedAgentsCredentialHostUnreachableErrorTest {
             BetaManagedAgentsCredentialHostUnreachableError.builder()
                 .credentialId("credential_id")
                 .message("message")
-                .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.of(
-                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
-                    )
-                )
-                .type(
-                    BetaManagedAgentsCredentialHostUnreachableError.Type
-                        .CREDENTIAL_HOST_UNREACHABLE_ERROR
-                )
+                .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
                 .vaultId("vault_id")
                 .build()
 

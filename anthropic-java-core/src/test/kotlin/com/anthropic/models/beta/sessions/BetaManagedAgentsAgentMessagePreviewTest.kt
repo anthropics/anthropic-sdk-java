@@ -9,25 +9,15 @@ internal class BetaManagedAgentsAgentMessagePreviewTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsAgentMessagePreview =
-            BetaManagedAgentsAgentMessagePreview.builder()
-                .id("id")
-                .type(BetaManagedAgentsAgentMessagePreview.Type.AGENT_MESSAGE)
-                .build()
+        val betaManagedAgentsAgentMessagePreview = BetaManagedAgentsAgentMessagePreview.of("id")
 
         assertThat(betaManagedAgentsAgentMessagePreview.id()).isEqualTo("id")
-        assertThat(betaManagedAgentsAgentMessagePreview.type())
-            .isEqualTo(BetaManagedAgentsAgentMessagePreview.Type.AGENT_MESSAGE)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsAgentMessagePreview =
-            BetaManagedAgentsAgentMessagePreview.builder()
-                .id("id")
-                .type(BetaManagedAgentsAgentMessagePreview.Type.AGENT_MESSAGE)
-                .build()
+        val betaManagedAgentsAgentMessagePreview = BetaManagedAgentsAgentMessagePreview.of("id")
 
         val roundtrippedBetaManagedAgentsAgentMessagePreview =
             jsonMapper.readValue(

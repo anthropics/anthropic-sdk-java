@@ -191,7 +191,6 @@ private constructor(
          * Alias for calling [addEvent] with the following:
          * ```java
          * BetaManagedAgentsUserMessageEventParams.builder()
-         *     .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
          *     .content(content)
          *     .build()
          * ```
@@ -231,7 +230,6 @@ private constructor(
          * Alias for calling [addEvent] with the following:
          * ```java
          * BetaManagedAgentsUserCustomToolResultEventParams.builder()
-         *     .type(BetaManagedAgentsUserCustomToolResultEventParams.Type.USER_CUSTOM_TOOL_RESULT)
          *     .customToolUseId(customToolUseId)
          *     .build()
          * ```
@@ -260,7 +258,6 @@ private constructor(
          * Alias for calling [addEvent] with the following:
          * ```java
          * BetaManagedAgentsUserToolResultEventParams.builder()
-         *     .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
          *     .toolUseId(toolUseId)
          *     .build()
          * ```
@@ -281,7 +278,6 @@ private constructor(
          * Alias for calling [addEvent] with the following:
          * ```java
          * BetaManagedAgentsSystemMessageEventParams.builder()
-         *     .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
          *     .content(content)
          *     .build()
          * ```
@@ -578,20 +574,13 @@ private constructor(
              * Alias for calling [addEvent] with the following:
              * ```java
              * BetaManagedAgentsUserMessageEventParams.builder()
-             *     .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
              *     .content(content)
              *     .build()
              * ```
              */
             fun addUserMessageEvent(
                 content: List<BetaManagedAgentsUserMessageEventParams.Content>
-            ) =
-                addEvent(
-                    BetaManagedAgentsUserMessageEventParams.builder()
-                        .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
-                        .content(content)
-                        .build()
-                )
+            ) = addEvent(BetaManagedAgentsUserMessageEventParams.builder().content(content).build())
 
             /**
              * Alias for calling [addEvent] with
@@ -618,7 +607,6 @@ private constructor(
              * Alias for calling [addEvent] with the following:
              * ```java
              * BetaManagedAgentsUserCustomToolResultEventParams.builder()
-             *     .type(BetaManagedAgentsUserCustomToolResultEventParams.Type.USER_CUSTOM_TOOL_RESULT)
              *     .customToolUseId(customToolUseId)
              *     .build()
              * ```
@@ -626,10 +614,6 @@ private constructor(
             fun addUserCustomToolResultEvent(customToolUseId: String) =
                 addEvent(
                     BetaManagedAgentsUserCustomToolResultEventParams.builder()
-                        .type(
-                            BetaManagedAgentsUserCustomToolResultEventParams.Type
-                                .USER_CUSTOM_TOOL_RESULT
-                        )
                         .customToolUseId(customToolUseId)
                         .build()
                 )
@@ -652,7 +636,6 @@ private constructor(
              * Alias for calling [addEvent] with the following:
              * ```java
              * BetaManagedAgentsUserToolResultEventParams.builder()
-             *     .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
              *     .toolUseId(toolUseId)
              *     .build()
              * ```
@@ -660,7 +643,6 @@ private constructor(
             fun addUserToolResultEvent(toolUseId: String) =
                 addEvent(
                     BetaManagedAgentsUserToolResultEventParams.builder()
-                        .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
                         .toolUseId(toolUseId)
                         .build()
                 )
@@ -676,17 +658,13 @@ private constructor(
              * Alias for calling [addEvent] with the following:
              * ```java
              * BetaManagedAgentsSystemMessageEventParams.builder()
-             *     .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
              *     .content(content)
              *     .build()
              * ```
              */
             fun addSystemMessageEvent(content: List<BetaManagedAgentsSystemContentBlock>) =
                 addEvent(
-                    BetaManagedAgentsSystemMessageEventParams.builder()
-                        .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
-                        .content(content)
-                        .build()
+                    BetaManagedAgentsSystemMessageEventParams.builder().content(content).build()
                 )
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

@@ -11,14 +11,11 @@ internal class BetaManagedAgentsMemoryPathConflictErrorTest {
     fun create() {
         val betaManagedAgentsMemoryPathConflictError =
             BetaManagedAgentsMemoryPathConflictError.builder()
-                .type(BetaManagedAgentsMemoryPathConflictError.Type.MEMORY_PATH_CONFLICT_ERROR)
                 .conflictingMemoryId("conflicting_memory_id")
                 .conflictingPath("conflicting_path")
                 .message("message")
                 .build()
 
-        assertThat(betaManagedAgentsMemoryPathConflictError.type())
-            .isEqualTo(BetaManagedAgentsMemoryPathConflictError.Type.MEMORY_PATH_CONFLICT_ERROR)
         assertThat(betaManagedAgentsMemoryPathConflictError.conflictingMemoryId())
             .contains("conflicting_memory_id")
         assertThat(betaManagedAgentsMemoryPathConflictError.conflictingPath())
@@ -31,7 +28,6 @@ internal class BetaManagedAgentsMemoryPathConflictErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMemoryPathConflictError =
             BetaManagedAgentsMemoryPathConflictError.builder()
-                .type(BetaManagedAgentsMemoryPathConflictError.Type.MEMORY_PATH_CONFLICT_ERROR)
                 .conflictingMemoryId("conflicting_memory_id")
                 .conflictingPath("conflicting_path")
                 .message("message")

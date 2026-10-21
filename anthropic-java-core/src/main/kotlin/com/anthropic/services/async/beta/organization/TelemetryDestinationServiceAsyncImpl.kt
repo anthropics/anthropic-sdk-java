@@ -150,7 +150,7 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                             response
                                 .use { createHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -194,7 +194,7 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -233,7 +233,7 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                             response
                                 .use { updateHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -267,7 +267,7 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -316,7 +316,7 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                             response
                                 .use { deleteHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -356,7 +356,7 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                             response
                                 .use { testHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

@@ -12,7 +12,6 @@ internal class BetaManagedAgentsMcpOAuthUpdateParamsTest {
     fun create() {
         val betaManagedAgentsMcpOAuthUpdateParams =
             BetaManagedAgentsMcpOAuthUpdateParams.builder()
-                .type(BetaManagedAgentsMcpOAuthUpdateParams.Type.MCP_OAUTH)
                 .accessToken("x")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .refresh(
@@ -21,10 +20,6 @@ internal class BetaManagedAgentsMcpOAuthUpdateParamsTest {
                         .scope("scope")
                         .tokenEndpointAuth(
                             BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.builder()
-                                .type(
-                                    BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.Type
-                                        .CLIENT_SECRET_BASIC
-                                )
                                 .clientSecret("x")
                                 .build()
                         )
@@ -32,8 +27,6 @@ internal class BetaManagedAgentsMcpOAuthUpdateParamsTest {
                 )
                 .build()
 
-        assertThat(betaManagedAgentsMcpOAuthUpdateParams.type())
-            .isEqualTo(BetaManagedAgentsMcpOAuthUpdateParams.Type.MCP_OAUTH)
         assertThat(betaManagedAgentsMcpOAuthUpdateParams.accessToken()).contains("x")
         assertThat(betaManagedAgentsMcpOAuthUpdateParams.expiresAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -44,10 +37,6 @@ internal class BetaManagedAgentsMcpOAuthUpdateParamsTest {
                     .scope("scope")
                     .tokenEndpointAuth(
                         BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.builder()
-                            .type(
-                                BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.Type
-                                    .CLIENT_SECRET_BASIC
-                            )
                             .clientSecret("x")
                             .build()
                     )
@@ -60,7 +49,6 @@ internal class BetaManagedAgentsMcpOAuthUpdateParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMcpOAuthUpdateParams =
             BetaManagedAgentsMcpOAuthUpdateParams.builder()
-                .type(BetaManagedAgentsMcpOAuthUpdateParams.Type.MCP_OAUTH)
                 .accessToken("x")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .refresh(
@@ -69,10 +57,6 @@ internal class BetaManagedAgentsMcpOAuthUpdateParamsTest {
                         .scope("scope")
                         .tokenEndpointAuth(
                             BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.builder()
-                                .type(
-                                    BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.Type
-                                        .CLIENT_SECRET_BASIC
-                                )
                                 .clientSecret("x")
                                 .build()
                         )

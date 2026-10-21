@@ -16,11 +16,7 @@ internal class BetaManagedAgentsMultiagentSubagentsEnabledParamsTest {
                     BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder().build()
                 )
                 .addPredefinedAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                .addPredefinedAgent(
-                    BetaManagedAgentsMultiagentSelfParams.of(
-                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                    )
-                )
+                .addPredefinedAgent(BetaManagedAgentsMultiagentSelfParams.builder().build())
                 .build()
 
         assertThat(betaManagedAgentsMultiagentSubagentsEnabledParams.inlineAgents())
@@ -35,7 +31,7 @@ internal class BetaManagedAgentsMultiagentSubagentsEnabledParamsTest {
                     "agent_011CZkYqphY8vELVzwCUpqiQ"
                 ),
                 BetaManagedAgentsMultiagentPredefinedAgentParams.ofSelf(
-                    BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                    BetaManagedAgentsMultiagentSelfParams.builder().build()
                 ),
             )
     }
@@ -55,7 +51,7 @@ internal class BetaManagedAgentsMultiagentSubagentsEnabledParamsTest {
                 )
                 .addPredefinedAgent(
                     BetaManagedAgentsMultiagentPredefinedAgentParams.ofSelf(
-                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                        BetaManagedAgentsMultiagentSelfParams.builder().build()
                     )
                 )
                 .build()
@@ -66,7 +62,7 @@ internal class BetaManagedAgentsMultiagentSubagentsEnabledParamsTest {
                     "agent_011CZkYqphY8vELVzwCUpqiQ"
                 ),
                 BetaManagedAgentsMultiagentPredefinedAgentParams.ofSelf(
-                    BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                    BetaManagedAgentsMultiagentSelfParams.builder().build()
                 ),
             )
     }
@@ -80,11 +76,7 @@ internal class BetaManagedAgentsMultiagentSubagentsEnabledParamsTest {
                     BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder().build()
                 )
                 .addPredefinedAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                .addPredefinedAgent(
-                    BetaManagedAgentsMultiagentSelfParams.of(
-                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                    )
-                )
+                .addPredefinedAgent(BetaManagedAgentsMultiagentSelfParams.builder().build())
                 .build()
 
         val roundtrippedBetaManagedAgentsMultiagentSubagentsEnabledParams =

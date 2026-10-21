@@ -22,7 +22,6 @@ internal class BetaManagedAgentsCredentialTest {
                         .putAdditionalProperty("environment", JsonValue.from("production"))
                         .build()
                 )
-                .type(BetaManagedAgentsCredential.Type.VAULT_CREDENTIAL)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                 .displayName("Example credential")
@@ -33,10 +32,7 @@ internal class BetaManagedAgentsCredentialTest {
         assertThat(betaManagedAgentsCredential.auth())
             .isEqualTo(
                 BetaManagedAgentsCredential.Auth.ofStaticBearer(
-                    BetaManagedAgentsStaticBearerAuthResponse.builder()
-                        .mcpServerUrl("https://example-server.modelcontextprotocol.io/sse")
-                        .type(BetaManagedAgentsStaticBearerAuthResponse.Type.STATIC_BEARER)
-                        .build()
+                    "https://example-server.modelcontextprotocol.io/sse"
                 )
             )
         assertThat(betaManagedAgentsCredential.createdAt())
@@ -47,8 +43,6 @@ internal class BetaManagedAgentsCredentialTest {
                     .putAdditionalProperty("environment", JsonValue.from("production"))
                     .build()
             )
-        assertThat(betaManagedAgentsCredential.type())
-            .isEqualTo(BetaManagedAgentsCredential.Type.VAULT_CREDENTIAL)
         assertThat(betaManagedAgentsCredential.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaManagedAgentsCredential.vaultId()).isEqualTo("vlt_011CZkZDLs7fYzm1hXNPeRjv")
@@ -69,7 +63,6 @@ internal class BetaManagedAgentsCredentialTest {
                         .putAdditionalProperty("environment", JsonValue.from("production"))
                         .build()
                 )
-                .type(BetaManagedAgentsCredential.Type.VAULT_CREDENTIAL)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                 .displayName("Example credential")

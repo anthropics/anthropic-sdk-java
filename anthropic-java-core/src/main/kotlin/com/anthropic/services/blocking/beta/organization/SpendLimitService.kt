@@ -68,10 +68,11 @@ interface SpendLimitService {
     /**
      * List the organization's spend limits.
      *
-     * Limits are grouped by scope type, in the order `organization`, `seat_tier`, `rbac_group`,
-     * `organization_service`, `user`; within a type they come in a fixed order that is not creation
-     * order. Supported for Claude Enterprise organizations only, not for Claude Console
-     * organizations.
+     * A Claude Console organization's limits, including any read-only `usage_tier` limit, come
+     * newest first. Listing them is in an early access preview. To request access, contact your
+     * Anthropic account team. A Claude Enterprise organization's limits are grouped by scope type,
+     * in the order `organization`, `seat_tier`, `rbac_group`, `organization_service`, `user`;
+     * within a type they come in a fixed order that is not creation order.
      */
     fun list(): SpendLimitListPage = list(SpendLimitListParams.none())
 

@@ -20,11 +20,7 @@ internal class BetaManagedAgentsMultiagentSubagentsParamsTest {
                     BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder().build()
                 )
                 .addPredefinedAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                .addPredefinedAgent(
-                    BetaManagedAgentsMultiagentSelfParams.of(
-                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                    )
-                )
+                .addPredefinedAgent(BetaManagedAgentsMultiagentSelfParams.builder().build())
                 .build()
 
         val betaManagedAgentsMultiagentSubagentsParams =
@@ -44,11 +40,7 @@ internal class BetaManagedAgentsMultiagentSubagentsParamsTest {
                         BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder().build()
                     )
                     .addPredefinedAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                    .addPredefinedAgent(
-                        BetaManagedAgentsMultiagentSelfParams.of(
-                            BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                        )
-                    )
+                    .addPredefinedAgent(BetaManagedAgentsMultiagentSelfParams.builder().build())
                     .build()
             )
 

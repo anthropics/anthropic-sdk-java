@@ -11,6 +11,7 @@ import com.anthropic.models.messages.MessageCountTokensParams
 import com.anthropic.models.messages.MessageCreateParams
 import com.anthropic.models.userprofiles.actionurls.ActionUrlCreateParams
 import com.anthropic.models.userprofiles.actionurls.UserProfileEnrollEndUserAction
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -104,8 +105,8 @@ internal class UserProfilesTest {
     private fun assertProfileIdInBody(request: HttpRequest, url: String) {
         assertThat(request.baseUrl).isEqualTo(url)
         assertThat(request.headers.names()).doesNotContain(HEADER_USER_PROFILE_ID)
-        assertThat(bodyToJson(jsonMapper(), request.body)!!.get("user_profile_id").asText())
-            .isEqualTo(USER_PROFILE_ID)
+        val json = bodyToJson(jsonMapper(), request.body().getOrNull())
+        assertThat(json!!.get("user_profile_id").asText()).isEqualTo(USER_PROFILE_ID)
     }
 
     @Test

@@ -10,30 +10,16 @@ internal class BetaManagedAgentsOrganizationDisabledRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsOrganizationDisabledRunError =
-            BetaManagedAgentsOrganizationDisabledRunError.builder()
-                .message("message")
-                .type(
-                    BetaManagedAgentsOrganizationDisabledRunError.Type.ORGANIZATION_DISABLED_ERROR
-                )
-                .build()
+            BetaManagedAgentsOrganizationDisabledRunError.of("message")
 
         assertThat(betaManagedAgentsOrganizationDisabledRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsOrganizationDisabledRunError.type())
-            .isEqualTo(
-                BetaManagedAgentsOrganizationDisabledRunError.Type.ORGANIZATION_DISABLED_ERROR
-            )
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsOrganizationDisabledRunError =
-            BetaManagedAgentsOrganizationDisabledRunError.builder()
-                .message("message")
-                .type(
-                    BetaManagedAgentsOrganizationDisabledRunError.Type.ORGANIZATION_DISABLED_ERROR
-                )
-                .build()
+            BetaManagedAgentsOrganizationDisabledRunError.of("message")
 
         val roundtrippedBetaManagedAgentsOrganizationDisabledRunError =
             jsonMapper.readValue(

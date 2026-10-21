@@ -10,25 +10,17 @@ internal class BetaManagedAgentsDeletedCredentialTest {
     @Test
     fun create() {
         val betaManagedAgentsDeletedCredential =
-            BetaManagedAgentsDeletedCredential.builder()
-                .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
-                .type(BetaManagedAgentsDeletedCredential.Type.VAULT_CREDENTIAL_DELETED)
-                .build()
+            BetaManagedAgentsDeletedCredential.of("vcrd_011CZkZEMt8gZan2iYPQfSkw")
 
         assertThat(betaManagedAgentsDeletedCredential.id())
             .isEqualTo("vcrd_011CZkZEMt8gZan2iYPQfSkw")
-        assertThat(betaManagedAgentsDeletedCredential.type())
-            .isEqualTo(BetaManagedAgentsDeletedCredential.Type.VAULT_CREDENTIAL_DELETED)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeletedCredential =
-            BetaManagedAgentsDeletedCredential.builder()
-                .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
-                .type(BetaManagedAgentsDeletedCredential.Type.VAULT_CREDENTIAL_DELETED)
-                .build()
+            BetaManagedAgentsDeletedCredential.of("vcrd_011CZkZEMt8gZan2iYPQfSkw")
 
         val roundtrippedBetaManagedAgentsDeletedCredential =
             jsonMapper.readValue(

@@ -11,12 +11,9 @@ internal class BetaManagedAgentsUserInterruptEventParamsTest {
     fun create() {
         val betaManagedAgentsUserInterruptEventParams =
             BetaManagedAgentsUserInterruptEventParams.builder()
-                .type(BetaManagedAgentsUserInterruptEventParams.Type.USER_INTERRUPT)
                 .sessionThreadId("session_thread_id")
                 .build()
 
-        assertThat(betaManagedAgentsUserInterruptEventParams.type())
-            .isEqualTo(BetaManagedAgentsUserInterruptEventParams.Type.USER_INTERRUPT)
         assertThat(betaManagedAgentsUserInterruptEventParams.sessionThreadId())
             .contains("session_thread_id")
     }
@@ -26,7 +23,6 @@ internal class BetaManagedAgentsUserInterruptEventParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsUserInterruptEventParams =
             BetaManagedAgentsUserInterruptEventParams.builder()
-                .type(BetaManagedAgentsUserInterruptEventParams.Type.USER_INTERRUPT)
                 .sessionThreadId("session_thread_id")
                 .build()
 

@@ -1087,7 +1087,14 @@ internal class BetaMessageAccumulatorTest {
         // whose `input` is missing is rejected with a 400:
         //   messages.N.content.M.tool_use.input: Field required
         val toolUse =
-            accumulator.message().toParam().content().betaContentBlockParams().get()[0].asToolUse()
+            accumulator
+                .message()
+                .toParam()
+                .asAssistant()
+                .content()
+                .contentBlockParams()
+                .get()[0]
+                .asToolUse()
 
         assertThat(toolUse._input().asObject().get()).isEmpty()
     }

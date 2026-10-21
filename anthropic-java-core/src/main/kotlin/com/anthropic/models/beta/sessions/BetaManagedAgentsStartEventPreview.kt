@@ -177,13 +177,7 @@ private constructor(
          * [ofAgentMessage] variant is built from the given required [id].
          */
         @JvmStatic
-        fun ofAgentMessage(id: String) =
-            ofAgentMessage(
-                BetaManagedAgentsAgentMessagePreview.builder()
-                    .type(BetaManagedAgentsAgentMessagePreview.Type.AGENT_MESSAGE)
-                    .id(id)
-                    .build()
-            )
+        fun ofAgentMessage(id: String) = ofAgentMessage(BetaManagedAgentsAgentMessagePreview.of(id))
 
         @JvmStatic
         fun ofAgentThinking(agentThinking: BetaManagedAgentsAgentThinkingPreview) =
@@ -195,12 +189,7 @@ private constructor(
          */
         @JvmStatic
         fun ofAgentThinking(id: String) =
-            ofAgentThinking(
-                BetaManagedAgentsAgentThinkingPreview.builder()
-                    .type(BetaManagedAgentsAgentThinkingPreview.Type.AGENT_THINKING)
-                    .id(id)
-                    .build()
-            )
+            ofAgentThinking(BetaManagedAgentsAgentThinkingPreview.of(id))
     }
 
     /**

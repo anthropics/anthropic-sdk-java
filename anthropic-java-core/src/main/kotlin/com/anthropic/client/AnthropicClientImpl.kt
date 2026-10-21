@@ -4,8 +4,6 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.getPackageVersion
 import com.anthropic.services.blocking.BetaService
 import com.anthropic.services.blocking.BetaServiceImpl
-import com.anthropic.services.blocking.CompletionService
-import com.anthropic.services.blocking.CompletionServiceImpl
 import com.anthropic.services.blocking.FileService
 import com.anthropic.services.blocking.FileServiceImpl
 import com.anthropic.services.blocking.MessageService
@@ -37,10 +35,6 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
         WithRawResponseImpl(clientOptions)
     }
 
-    private val completions: CompletionService by lazy {
-        CompletionServiceImpl(clientOptionsWithUserAgent)
-    }
-
     private val messages: MessageService by lazy { MessageServiceImpl(clientOptionsWithUserAgent) }
 
     private val models: ModelService by lazy { ModelServiceImpl(clientOptionsWithUserAgent) }
@@ -67,8 +61,6 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AnthropicClient =
         AnthropicClientImpl(clientOptions.toBuilder().apply(modifier::accept).build())
-
-    override fun completions(): CompletionService = completions
 
     override fun messages(): MessageService = messages
 
@@ -97,10 +89,6 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
                     .toBuilder()
                     .putHeader("User-Agent", "AnthropicClientImpl/Java ${getPackageVersion()}")
                     .build()
-
-        private val completions: CompletionService.WithRawResponse by lazy {
-            CompletionServiceImpl.WithRawResponseImpl(clientOptions)
-        }
 
         private val messages: MessageService.WithRawResponse by lazy {
             MessageServiceImpl.WithRawResponseImpl(clientOptions)
@@ -136,8 +124,6 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
             AnthropicClientImpl.WithRawResponseImpl(
                 originalClientOptions.toBuilder().apply(modifier::accept).build()
             )
-
-        override fun completions(): CompletionService.WithRawResponse = completions
 
         override fun messages(): MessageService.WithRawResponse = messages
 

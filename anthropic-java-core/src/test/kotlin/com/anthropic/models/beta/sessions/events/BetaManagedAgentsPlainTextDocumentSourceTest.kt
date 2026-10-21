@@ -10,28 +10,16 @@ internal class BetaManagedAgentsPlainTextDocumentSourceTest {
     @Test
     fun create() {
         val betaManagedAgentsPlainTextDocumentSource =
-            BetaManagedAgentsPlainTextDocumentSource.builder()
-                .data("x")
-                .mediaType(BetaManagedAgentsPlainTextDocumentSource.MediaType.TEXT_PLAIN)
-                .type(BetaManagedAgentsPlainTextDocumentSource.Type.TEXT)
-                .build()
+            BetaManagedAgentsPlainTextDocumentSource.of("x")
 
         assertThat(betaManagedAgentsPlainTextDocumentSource.data()).isEqualTo("x")
-        assertThat(betaManagedAgentsPlainTextDocumentSource.mediaType())
-            .isEqualTo(BetaManagedAgentsPlainTextDocumentSource.MediaType.TEXT_PLAIN)
-        assertThat(betaManagedAgentsPlainTextDocumentSource.type())
-            .isEqualTo(BetaManagedAgentsPlainTextDocumentSource.Type.TEXT)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsPlainTextDocumentSource =
-            BetaManagedAgentsPlainTextDocumentSource.builder()
-                .data("x")
-                .mediaType(BetaManagedAgentsPlainTextDocumentSource.MediaType.TEXT_PLAIN)
-                .type(BetaManagedAgentsPlainTextDocumentSource.Type.TEXT)
-                .build()
+            BetaManagedAgentsPlainTextDocumentSource.of("x")
 
         val roundtrippedBetaManagedAgentsPlainTextDocumentSource =
             jsonMapper.readValue(

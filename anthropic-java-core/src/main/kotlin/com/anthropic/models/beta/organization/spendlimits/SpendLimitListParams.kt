@@ -17,15 +17,18 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * List the organization's spend limits.
  *
- * Limits are grouped by scope type, in the order `organization`, `seat_tier`, `rbac_group`,
- * `organization_service`, `user`; within a type they come in a fixed order that is not creation
- * order. Supported for Claude Enterprise organizations only, not for Claude Console organizations.
+ * A Claude Console organization's limits, including any read-only `usage_tier` limit, come newest
+ * first. Listing them is in an early access preview. To request access, contact your Anthropic
+ * account team. A Claude Enterprise organization's limits are grouped by scope type, in the order
+ * `organization`, `seat_tier`, `rbac_group`, `organization_service`, `user`; within a type they
+ * come in a fixed order that is not creation order.
  */
 class SpendLimitListParams
 private constructor(
     private val limit: Long?,
     private val page: String?,
     private val scopeType: List<ScopeType>?,
+    private val workspaceId: String?,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -37,8 +40,17 @@ private constructor(
     /** Opaque cursor from a previous response's `next_page` field. */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
-    /** Return only limits with these scope types. Omit for all. */
+    /**
+     * Return only limits with these scope types. Omit for all. A scope type that doesn't apply to
+     * the organization gets a 400 error.
+     */
     fun scopeType(): Optional<List<ScopeType>> = Optional.ofNullable(scopeType)
+
+    /**
+     * Return only the limits whose `scope.workspace_id` is this workspace (`wrkspc_...`). Claude
+     * Console organizations only; other organizations get a 400 error.
+     */
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * This endpoint is in beta: requests must send `spend-limit-reads-2026-09-26` in this header.
@@ -67,6 +79,7 @@ private constructor(
         private var limit: Long? = null
         private var page: String? = null
         private var scopeType: MutableList<ScopeType>? = null
+        private var workspaceId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -76,6 +89,7 @@ private constructor(
             limit = spendLimitListParams.limit
             page = spendLimitListParams.page
             scopeType = spendLimitListParams.scopeType?.toMutableList()
+            workspaceId = spendLimitListParams.workspaceId
             betas = spendLimitListParams.betas?.toMutableList()
             additionalHeaders = spendLimitListParams.additionalHeaders.toBuilder()
             additionalQueryParams = spendLimitListParams.additionalQueryParams.toBuilder()
@@ -100,7 +114,10 @@ private constructor(
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
 
-        /** Return only limits with these scope types. Omit for all. */
+        /**
+         * Return only limits with these scope types. Omit for all. A scope type that doesn't apply
+         * to the organization gets a 400 error.
+         */
         fun scopeType(scopeType: List<ScopeType>?) = apply {
             this.scopeType = scopeType?.toMutableList()
         }
@@ -116,6 +133,15 @@ private constructor(
         fun addScopeType(scopeType: ScopeType) = apply {
             this.scopeType = (this.scopeType ?: mutableListOf()).apply { add(scopeType) }
         }
+
+        /**
+         * Return only the limits whose `scope.workspace_id` is this workspace (`wrkspc_...`).
+         * Claude Console organizations only; other organizations get a 400 error.
+         */
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * This endpoint is in beta: requests must send `spend-limit-reads-2026-09-26` in this
@@ -252,6 +278,7 @@ private constructor(
                 limit,
                 page,
                 scopeType?.toImmutable(),
+                workspaceId,
                 betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -281,6 +308,7 @@ private constructor(
                 limit?.let { put("limit", it.toString()) }
                 page?.let { put("page", it) }
                 scopeType?.forEach { put("scope_type[]", it.toString()) }
+                workspaceId?.let { put("workspace_id", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -289,7 +317,7 @@ private constructor(
         SpanData(
             name = "anthropic.organization.spend_limits.list",
             route = "/v1/organizations/spend_limits",
-            queryParams = listOf("limit", "page", "scope_type"),
+            queryParams = listOf("limit", "page", "scope_type", "workspace_id"),
         )
 
     class ScopeType private constructor(private val value: JsonField<String>) : Enum {
@@ -314,6 +342,8 @@ private constructor(
 
             @JvmField val SEAT_TIER = ScopeType(JsonField.of("seat_tier"))
 
+            @JvmField val USAGE_TIER = ScopeType(JsonField.of("usage_tier"))
+
             @JvmField val USER = ScopeType(JsonField.of("user"))
 
             @JvmField val WORKSPACE = ScopeType(JsonField.of("workspace"))
@@ -326,6 +356,7 @@ private constructor(
                     "organization_service" -> ORGANIZATION_SERVICE
                     "rbac_group" -> RBAC_GROUP
                     "seat_tier" -> SEAT_TIER
+                    "usage_tier" -> USAGE_TIER
                     "user" -> USER
                     "workspace" -> WORKSPACE
                     else -> ScopeType(JsonField.of(value))
@@ -343,6 +374,7 @@ private constructor(
             ORGANIZATION_SERVICE,
             RBAC_GROUP,
             SEAT_TIER,
+            USAGE_TIER,
             USER,
             WORKSPACE,
         }
@@ -361,6 +393,7 @@ private constructor(
             ORGANIZATION_SERVICE,
             RBAC_GROUP,
             SEAT_TIER,
+            USAGE_TIER,
             USER,
             WORKSPACE,
             /**
@@ -382,6 +415,7 @@ private constructor(
                 ORGANIZATION_SERVICE -> Value.ORGANIZATION_SERVICE
                 RBAC_GROUP -> Value.RBAC_GROUP
                 SEAT_TIER -> Value.SEAT_TIER
+                USAGE_TIER -> Value.USAGE_TIER
                 USER -> Value.USER
                 WORKSPACE -> Value.WORKSPACE
                 else -> Value._UNKNOWN
@@ -402,6 +436,7 @@ private constructor(
                 ORGANIZATION_SERVICE -> Known.ORGANIZATION_SERVICE
                 RBAC_GROUP -> Known.RBAC_GROUP
                 SEAT_TIER -> Known.SEAT_TIER
+                USAGE_TIER -> Known.USAGE_TIER
                 USER -> Known.USER
                 WORKSPACE -> Known.WORKSPACE
                 else -> throw AnthropicInvalidDataException("Unknown ScopeType: $value")
@@ -479,14 +514,23 @@ private constructor(
             limit == other.limit &&
             page == other.page &&
             scopeType == other.scopeType &&
+            workspaceId == other.workspaceId &&
             betas == other.betas &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(limit, page, scopeType, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            limit,
+            page,
+            scopeType,
+            workspaceId,
+            betas,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "SpendLimitListParams{limit=$limit, page=$page, scopeType=$scopeType, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SpendLimitListParams{limit=$limit, page=$page, scopeType=$scopeType, workspaceId=$workspaceId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

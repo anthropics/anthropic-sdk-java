@@ -19,6 +19,7 @@ import java.time.OffsetDateTime
 import java.util.SortedSet
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionException
+import kotlin.jvm.optionals.getOrNull
 import kotlin.time.toKotlinDuration
 
 /** A wrapper [HttpClient] around [httpClient] that logs request and response information. */
@@ -97,7 +98,7 @@ private constructor(
         System.err.println(
             buildString {
                 append("--> ${request.method} ${request.url()}")
-                request.body?.let {
+                request.body().getOrNull()?.let {
                     val length = it.contentLength()
                     append(if (length >= 0) " ($length-byte body)" else " (unknown-length body)")
                 }
@@ -110,16 +111,14 @@ private constructor(
 
         logHeaders(request.headers)
 
-        if (request.body == null) {
+        val body = request.body().getOrNull()
+        if (body == null) {
             System.err.println("--> END ${request.method}")
             System.err.println()
             return request
         }
 
-        return request
-            .toBuilder()
-            .body(LoggingHttpRequestBody(request.method, request.body))
-            .build()
+        return request.toBuilder().body(LoggingHttpRequestBody(request.method, body)).build()
     }
 
     private fun logResponse(response: HttpResponse, took: Duration): HttpResponse {

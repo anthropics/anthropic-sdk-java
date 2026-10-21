@@ -20,7 +20,6 @@ internal class BetaManagedAgentsSessionResourceTest {
                 .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .mountPath("/workspace/example-repo")
-                .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .url("https://github.com/example-org/example-repo")
                 .branchCheckout("main")
@@ -43,7 +42,6 @@ internal class BetaManagedAgentsSessionResourceTest {
                     .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .mountPath("/workspace/example-repo")
-                    .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .url("https://github.com/example-org/example-repo")
                     .branchCheckout("main")
@@ -68,7 +66,6 @@ internal class BetaManagedAgentsSessionResourceTest {
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .mountPath("/uploads/receipt.pdf")
-                .type(BetaManagedAgentsFileResource.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .build()
 
@@ -89,7 +86,6 @@ internal class BetaManagedAgentsSessionResourceTest {
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                     .mountPath("/uploads/receipt.pdf")
-                    .type(BetaManagedAgentsFileResource.Type.FILE)
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .build()
             )
@@ -109,7 +105,6 @@ internal class BetaManagedAgentsSessionResourceTest {
         val memoryStore =
             BetaManagedAgentsMemoryStoreResource.builder()
                 .memoryStoreId("memory_store_id")
-                .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
                 .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
                 .description("description")
                 .instructions("instructions")
@@ -132,7 +127,6 @@ internal class BetaManagedAgentsSessionResourceTest {
             BetaManagedAgentsSessionResource.ofMemoryStore(
                 BetaManagedAgentsMemoryStoreResource.builder()
                     .memoryStoreId("memory_store_id")
-                    .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
                     .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
                     .description("description")
                     .instructions("instructions")

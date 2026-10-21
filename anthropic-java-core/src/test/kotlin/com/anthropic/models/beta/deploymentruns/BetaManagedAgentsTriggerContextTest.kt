@@ -16,10 +16,9 @@ internal class BetaManagedAgentsTriggerContextTest {
     @Test
     fun ofSchedule() {
         val schedule =
-            BetaManagedAgentsScheduleTriggerContext.builder()
-                .scheduledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(BetaManagedAgentsScheduleTriggerContext.Type.SCHEDULE)
-                .build()
+            BetaManagedAgentsScheduleTriggerContext.of(
+                OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+            )
 
         val betaManagedAgentsTriggerContext = BetaManagedAgentsTriggerContext.ofSchedule(schedule)
 
@@ -32,10 +31,9 @@ internal class BetaManagedAgentsTriggerContextTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsTriggerContext =
             BetaManagedAgentsTriggerContext.ofSchedule(
-                BetaManagedAgentsScheduleTriggerContext.builder()
-                    .scheduledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .type(BetaManagedAgentsScheduleTriggerContext.Type.SCHEDULE)
-                    .build()
+                BetaManagedAgentsScheduleTriggerContext.of(
+                    OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+                )
             )
 
         val roundtrippedBetaManagedAgentsTriggerContext =
@@ -50,10 +48,7 @@ internal class BetaManagedAgentsTriggerContextTest {
 
     @Test
     fun ofManual() {
-        val manual =
-            BetaManagedAgentsManualTriggerContext.of(
-                BetaManagedAgentsManualTriggerContext.Type.MANUAL
-            )
+        val manual = BetaManagedAgentsManualTriggerContext.builder().build()
 
         val betaManagedAgentsTriggerContext = BetaManagedAgentsTriggerContext.ofManual(manual)
 
@@ -66,9 +61,7 @@ internal class BetaManagedAgentsTriggerContextTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsTriggerContext =
             BetaManagedAgentsTriggerContext.ofManual(
-                BetaManagedAgentsManualTriggerContext.of(
-                    BetaManagedAgentsManualTriggerContext.Type.MANUAL
-                )
+                BetaManagedAgentsManualTriggerContext.builder().build()
             )
 
         val roundtrippedBetaManagedAgentsTriggerContext =

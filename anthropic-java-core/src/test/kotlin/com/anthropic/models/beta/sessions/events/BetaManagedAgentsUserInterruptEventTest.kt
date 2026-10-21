@@ -13,14 +13,11 @@ internal class BetaManagedAgentsUserInterruptEventTest {
         val betaManagedAgentsUserInterruptEvent =
             BetaManagedAgentsUserInterruptEvent.builder()
                 .id("id")
-                .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
                 .build()
 
         assertThat(betaManagedAgentsUserInterruptEvent.id()).isEqualTo("id")
-        assertThat(betaManagedAgentsUserInterruptEvent.type())
-            .isEqualTo(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
         assertThat(betaManagedAgentsUserInterruptEvent.processedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsUserInterruptEvent.sessionThreadId())
@@ -33,7 +30,6 @@ internal class BetaManagedAgentsUserInterruptEventTest {
         val betaManagedAgentsUserInterruptEvent =
             BetaManagedAgentsUserInterruptEvent.builder()
                 .id("id")
-                .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .sessionThreadId("session_thread_id")
                 .build()

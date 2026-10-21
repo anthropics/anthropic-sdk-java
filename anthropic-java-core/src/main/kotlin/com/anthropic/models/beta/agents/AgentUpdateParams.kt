@@ -524,7 +524,6 @@ private constructor(
          * Alias for calling [multiagent] with the following:
          * ```java
          * BetaManagedAgentsMultiagentCoordinatorParams.builder()
-         *     .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
          *     .agents(agents)
          *     .build()
          * ```
@@ -589,7 +588,6 @@ private constructor(
          * Alias for calling [addSkill] with the following:
          * ```java
          * BetaManagedAgentsAnthropicSkillParams.builder()
-         *     .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
          *     .skillId(skillId)
          *     .build()
          * ```
@@ -603,7 +601,6 @@ private constructor(
          * Alias for calling [addSkill] with the following:
          * ```java
          * BetaManagedAgentsCustomSkillParams.builder()
-         *     .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
          *     .skillId(skillId)
          *     .build()
          * ```
@@ -663,7 +660,6 @@ private constructor(
          * Alias for calling [addTool] with the following:
          * ```java
          * BetaManagedAgentsMcpToolsetParams.builder()
-         *     .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
          *     .mcpServerName(mcpServerName)
          *     .build()
          * ```
@@ -1359,17 +1355,13 @@ private constructor(
              * Alias for calling [multiagent] with the following:
              * ```java
              * BetaManagedAgentsMultiagentCoordinatorParams.builder()
-             *     .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
              *     .agents(agents)
              *     .build()
              * ```
              */
             fun coordinatorMultiagent(agents: List<BetaManagedAgentsMultiagentRosterEntryParams>) =
                 multiagent(
-                    BetaManagedAgentsMultiagentCoordinatorParams.builder()
-                        .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
-                        .agents(agents)
-                        .build()
+                    BetaManagedAgentsMultiagentCoordinatorParams.builder().agents(agents).build()
                 )
 
             /**
@@ -1435,18 +1427,12 @@ private constructor(
              * Alias for calling [addSkill] with the following:
              * ```java
              * BetaManagedAgentsAnthropicSkillParams.builder()
-             *     .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
              *     .skillId(skillId)
              *     .build()
              * ```
              */
             fun addAnthropicSkill(skillId: String) =
-                addSkill(
-                    BetaManagedAgentsAnthropicSkillParams.builder()
-                        .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
-                        .skillId(skillId)
-                        .build()
-                )
+                addSkill(BetaManagedAgentsAnthropicSkillParams.builder().skillId(skillId).build())
 
             /**
              * Alias for calling [addSkill] with `BetaManagedAgentsSkillParams.ofCustom(custom)`.
@@ -1458,18 +1444,12 @@ private constructor(
              * Alias for calling [addSkill] with the following:
              * ```java
              * BetaManagedAgentsCustomSkillParams.builder()
-             *     .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
              *     .skillId(skillId)
              *     .build()
              * ```
              */
             fun addCustomSkill(skillId: String) =
-                addSkill(
-                    BetaManagedAgentsCustomSkillParams.builder()
-                        .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
-                        .skillId(skillId)
-                        .build()
-                )
+                addSkill(BetaManagedAgentsCustomSkillParams.builder().skillId(skillId).build())
 
             /** System prompt. Omit to preserve; send empty string or null to clear. */
             fun system(system: String?) = system(JsonField.ofNullable(system))
@@ -1532,17 +1512,13 @@ private constructor(
              * Alias for calling [addTool] with the following:
              * ```java
              * BetaManagedAgentsMcpToolsetParams.builder()
-             *     .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
              *     .mcpServerName(mcpServerName)
              *     .build()
              * ```
              */
             fun addMcpToolsetTool(mcpServerName: String) =
                 addTool(
-                    BetaManagedAgentsMcpToolsetParams.builder()
-                        .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
-                        .mcpServerName(mcpServerName)
-                        .build()
+                    BetaManagedAgentsMcpToolsetParams.builder().mcpServerName(mcpServerName).build()
                 )
 
             /** Alias for calling [addTool] with `Tool.ofCustom(custom)`. */
@@ -2281,14 +2257,6 @@ private constructor(
                 agentToolset20260401: BetaManagedAgentsAgentToolset20260401Params
             ) = Tool(agentToolset20260401 = agentToolset20260401)
 
-            /**
-             * Returns an immutable instance of [Tool] whose [ofAgentToolset20260401] variant is
-             * built from the given required [type].
-             */
-            @JvmStatic
-            fun ofAgentToolset20260401(type: BetaManagedAgentsAgentToolset20260401Params.Type) =
-                ofAgentToolset20260401(BetaManagedAgentsAgentToolset20260401Params.of(type))
-
             /** Configuration for tools from an MCP server defined in `mcp_servers`. */
             @JvmStatic
             fun ofMcpToolset(mcpToolset: BetaManagedAgentsMcpToolsetParams) =
@@ -2300,12 +2268,7 @@ private constructor(
              */
             @JvmStatic
             fun ofMcpToolset(mcpServerName: String) =
-                ofMcpToolset(
-                    BetaManagedAgentsMcpToolsetParams.builder()
-                        .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
-                        .mcpServerName(mcpServerName)
-                        .build()
-                )
+                ofMcpToolset(BetaManagedAgentsMcpToolsetParams.of(mcpServerName))
 
             /**
              * A custom tool that is executed by the API client rather than the agent. When the

@@ -10,24 +10,16 @@ internal class BetaManagedAgentsSystemContentBlockTest {
     @Test
     fun create() {
         val betaManagedAgentsSystemContentBlock =
-            BetaManagedAgentsSystemContentBlock.builder()
-                .text("Where is my order #1234?")
-                .type(BetaManagedAgentsSystemContentBlock.Type.TEXT)
-                .build()
+            BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?")
 
         assertThat(betaManagedAgentsSystemContentBlock.text()).isEqualTo("Where is my order #1234?")
-        assertThat(betaManagedAgentsSystemContentBlock.type())
-            .isEqualTo(BetaManagedAgentsSystemContentBlock.Type.TEXT)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSystemContentBlock =
-            BetaManagedAgentsSystemContentBlock.builder()
-                .text("Where is my order #1234?")
-                .type(BetaManagedAgentsSystemContentBlock.Type.TEXT)
-                .build()
+            BetaManagedAgentsSystemContentBlock.of("Where is my order #1234?")
 
         val roundtrippedBetaManagedAgentsSystemContentBlock =
             jsonMapper.readValue(

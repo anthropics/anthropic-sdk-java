@@ -14,20 +14,11 @@ internal class BetaManagedAgentsAgentThreadContextCompactedEventTest {
             BetaManagedAgentsAgentThreadContextCompactedEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(
-                    BetaManagedAgentsAgentThreadContextCompactedEvent.Type
-                        .AGENT_THREAD_CONTEXT_COMPACTED
-                )
                 .build()
 
         assertThat(betaManagedAgentsAgentThreadContextCompactedEvent.id()).isEqualTo("id")
         assertThat(betaManagedAgentsAgentThreadContextCompactedEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaManagedAgentsAgentThreadContextCompactedEvent.type())
-            .isEqualTo(
-                BetaManagedAgentsAgentThreadContextCompactedEvent.Type
-                    .AGENT_THREAD_CONTEXT_COMPACTED
-            )
     }
 
     @Test
@@ -37,10 +28,6 @@ internal class BetaManagedAgentsAgentThreadContextCompactedEventTest {
             BetaManagedAgentsAgentThreadContextCompactedEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(
-                    BetaManagedAgentsAgentThreadContextCompactedEvent.Type
-                        .AGENT_THREAD_CONTEXT_COMPACTED
-                )
                 .build()
 
         val roundtrippedBetaManagedAgentsAgentThreadContextCompactedEvent =

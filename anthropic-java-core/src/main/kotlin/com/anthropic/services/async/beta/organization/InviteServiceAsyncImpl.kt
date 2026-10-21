@@ -106,7 +106,7 @@ class InviteServiceAsyncImpl internal constructor(private val clientOptions: Cli
                             response
                                 .use { createHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -149,7 +149,7 @@ class InviteServiceAsyncImpl internal constructor(private val clientOptions: Cli
                             response
                                 .use { retrieveHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -182,7 +182,7 @@ class InviteServiceAsyncImpl internal constructor(private val clientOptions: Cli
                             response
                                 .use { listHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }
@@ -228,7 +228,7 @@ class InviteServiceAsyncImpl internal constructor(private val clientOptions: Cli
                             response
                                 .use { deleteHandler.handle(it) }
                                 .also {
-                                    if (requestOptions.responseValidation!!) {
+                                    if (requestOptions.responseValidation().get()) {
                                         it.validate()
                                     }
                                 }

@@ -12,13 +12,10 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
         val betaManagedAgentsEnvironmentVariableCreateParams =
             BetaManagedAgentsEnvironmentVariableCreateParams.builder()
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(
-                        BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
-                    )
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
                 .secretName("x")
                 .secretValue("x")
-                .type(BetaManagedAgentsEnvironmentVariableCreateParams.Type.ENVIRONMENT_VARIABLE)
                 .injectionLocation(
                     BetaManagedAgentsInjectionLocationParams.builder()
                         .body(true)
@@ -30,13 +27,11 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
         assertThat(betaManagedAgentsEnvironmentVariableCreateParams.networking())
             .isEqualTo(
                 BetaManagedAgentsCredentialNetworkingParams.ofUnrestricted(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
             )
         assertThat(betaManagedAgentsEnvironmentVariableCreateParams.secretName()).isEqualTo("x")
         assertThat(betaManagedAgentsEnvironmentVariableCreateParams.secretValue()).isEqualTo("x")
-        assertThat(betaManagedAgentsEnvironmentVariableCreateParams.type())
-            .isEqualTo(BetaManagedAgentsEnvironmentVariableCreateParams.Type.ENVIRONMENT_VARIABLE)
         assertThat(betaManagedAgentsEnvironmentVariableCreateParams.injectionLocation())
             .contains(
                 BetaManagedAgentsInjectionLocationParams.builder().body(true).header(true).build()
@@ -49,13 +44,10 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
         val betaManagedAgentsEnvironmentVariableCreateParams =
             BetaManagedAgentsEnvironmentVariableCreateParams.builder()
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(
-                        BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
-                    )
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
                 .secretName("x")
                 .secretValue("x")
-                .type(BetaManagedAgentsEnvironmentVariableCreateParams.Type.ENVIRONMENT_VARIABLE)
                 .injectionLocation(
                     BetaManagedAgentsInjectionLocationParams.builder()
                         .body(true)

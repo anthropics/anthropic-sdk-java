@@ -12,13 +12,10 @@ internal class BetaManagedAgentsFileResourceConfigTest {
         val betaManagedAgentsFileResourceConfig =
             BetaManagedAgentsFileResourceConfig.builder()
                 .fileId("file_id")
-                .type(BetaManagedAgentsFileResourceConfig.Type.FILE)
                 .mountPath("mount_path")
                 .build()
 
         assertThat(betaManagedAgentsFileResourceConfig.fileId()).isEqualTo("file_id")
-        assertThat(betaManagedAgentsFileResourceConfig.type())
-            .isEqualTo(BetaManagedAgentsFileResourceConfig.Type.FILE)
         assertThat(betaManagedAgentsFileResourceConfig.mountPath()).contains("mount_path")
     }
 
@@ -28,7 +25,6 @@ internal class BetaManagedAgentsFileResourceConfigTest {
         val betaManagedAgentsFileResourceConfig =
             BetaManagedAgentsFileResourceConfig.builder()
                 .fileId("file_id")
-                .type(BetaManagedAgentsFileResourceConfig.Type.FILE)
                 .mountPath("mount_path")
                 .build()
 

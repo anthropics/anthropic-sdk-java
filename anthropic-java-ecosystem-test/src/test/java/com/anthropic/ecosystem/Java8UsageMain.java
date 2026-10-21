@@ -18,7 +18,6 @@ public final class Java8UsageMain {
 
         AnthropicClient client =
                 AnthropicOkHttpClient.builder().apiKey("my-anthropic-api-key").build();
-        require(client.completions() != null, "completions");
         require(client.messages() != null, "messages");
         require(client.models() != null, "models");
         require(client.files() != null, "files");

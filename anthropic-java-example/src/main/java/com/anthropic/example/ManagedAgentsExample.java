@@ -58,7 +58,6 @@ public final class ManagedAgentsExample {
                         .addUserMessageEvent(java.util.List.of(BetaManagedAgentsUserMessageEventParams.Content.ofText(
                                 BetaManagedAgentsTextBlock.builder()
                                         .text("Hello Claude!")
-                                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
                                         .build())))
                         .build());
 

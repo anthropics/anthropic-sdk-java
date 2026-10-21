@@ -18,12 +18,9 @@ internal class BetaManagedAgentsEnvironmentVariableAuthResponseTest {
                         .build()
                 )
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.of(
-                        BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type.UNRESTRICTED
-                    )
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.builder().build()
                 )
                 .secretName("secret_name")
-                .type(BetaManagedAgentsEnvironmentVariableAuthResponse.Type.ENVIRONMENT_VARIABLE)
                 .build()
 
         assertThat(betaManagedAgentsEnvironmentVariableAuthResponse.injectionLocation())
@@ -33,13 +30,11 @@ internal class BetaManagedAgentsEnvironmentVariableAuthResponseTest {
         assertThat(betaManagedAgentsEnvironmentVariableAuthResponse.networking())
             .isEqualTo(
                 BetaManagedAgentsEnvironmentVariableAuthResponse.Networking.ofUnrestricted(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type.UNRESTRICTED
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.builder().build()
                 )
             )
         assertThat(betaManagedAgentsEnvironmentVariableAuthResponse.secretName())
             .isEqualTo("secret_name")
-        assertThat(betaManagedAgentsEnvironmentVariableAuthResponse.type())
-            .isEqualTo(BetaManagedAgentsEnvironmentVariableAuthResponse.Type.ENVIRONMENT_VARIABLE)
     }
 
     @Test
@@ -54,12 +49,9 @@ internal class BetaManagedAgentsEnvironmentVariableAuthResponseTest {
                         .build()
                 )
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.of(
-                        BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type.UNRESTRICTED
-                    )
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.builder().build()
                 )
                 .secretName("secret_name")
-                .type(BetaManagedAgentsEnvironmentVariableAuthResponse.Type.ENVIRONMENT_VARIABLE)
                 .build()
 
         val roundtrippedBetaManagedAgentsEnvironmentVariableAuthResponse =

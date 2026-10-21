@@ -16,7 +16,6 @@ internal class BetaManagedAgentsAgentThreadMessageSentEventTest {
                 .addTextContent("Where is my order #1234?")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .toSessionThreadId("to_session_thread_id")
-                .type(BetaManagedAgentsAgentThreadMessageSentEvent.Type.AGENT_THREAD_MESSAGE_SENT)
                 .toAgentName("to_agent_name")
                 .build()
 
@@ -24,18 +23,13 @@ internal class BetaManagedAgentsAgentThreadMessageSentEventTest {
         assertThat(betaManagedAgentsAgentThreadMessageSentEvent.content())
             .containsExactly(
                 BetaManagedAgentsAgentThreadMessageSentEvent.Content.ofText(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Where is my order #1234?")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
+                    "Where is my order #1234?"
                 )
             )
         assertThat(betaManagedAgentsAgentThreadMessageSentEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsAgentThreadMessageSentEvent.toSessionThreadId())
             .isEqualTo("to_session_thread_id")
-        assertThat(betaManagedAgentsAgentThreadMessageSentEvent.type())
-            .isEqualTo(BetaManagedAgentsAgentThreadMessageSentEvent.Type.AGENT_THREAD_MESSAGE_SENT)
         assertThat(betaManagedAgentsAgentThreadMessageSentEvent.toAgentName())
             .contains("to_agent_name")
     }
@@ -49,7 +43,6 @@ internal class BetaManagedAgentsAgentThreadMessageSentEventTest {
                 .addTextContent("Where is my order #1234?")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .toSessionThreadId("to_session_thread_id")
-                .type(BetaManagedAgentsAgentThreadMessageSentEvent.Type.AGENT_THREAD_MESSAGE_SENT)
                 .toAgentName("to_agent_name")
                 .build()
 

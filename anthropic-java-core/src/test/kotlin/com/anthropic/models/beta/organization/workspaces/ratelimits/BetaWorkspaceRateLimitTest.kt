@@ -19,7 +19,6 @@ internal class BetaWorkspaceRateLimitTest {
                         .displayName("display_name")
                         .build()
                 )
-                .groupType(BetaWorkspaceRateLimit.GroupType.BATCH)
                 .addLimit(
                     BetaWorkspaceRateLimitValue.builder()
                         .orgLimit(0L)
@@ -42,8 +41,6 @@ internal class BetaWorkspaceRateLimitTest {
                         .build()
                 )
             )
-        assertThat(betaWorkspaceRateLimit.groupType())
-            .isEqualTo(BetaWorkspaceRateLimit.GroupType.BATCH)
         assertThat(betaWorkspaceRateLimit.limits())
             .containsExactly(
                 BetaWorkspaceRateLimitValue.builder()
@@ -69,7 +66,6 @@ internal class BetaWorkspaceRateLimitTest {
                         .displayName("display_name")
                         .build()
                 )
-                .groupType(BetaWorkspaceRateLimit.GroupType.BATCH)
                 .addLimit(
                     BetaWorkspaceRateLimitValue.builder()
                         .orgLimit(0L)

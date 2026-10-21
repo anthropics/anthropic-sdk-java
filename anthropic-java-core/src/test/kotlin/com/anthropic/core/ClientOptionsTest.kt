@@ -15,6 +15,8 @@ import java.util.concurrent.CompletableFuture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -113,17 +115,17 @@ internal class ClientOptionsTest {
             ClientOptions.builder()
                 .httpClient(rawHttpClient)
                 .addInterceptor(recordingInterceptor(interceptedRequests))
-                .credentials(CredentialResult.staticHeaders("sk-test-key", null))
+                .credentials(CredentialResult.Static("sk-test-key"))
                 .build()
 
         clientOptions.httpClient.execute(simpleGetRequest(), RequestOptions.none()).close()
 
         assertThat(interceptedRequests).hasSize(1)
-        assertThat(interceptedRequests[0].headers.values("X-Api-Key"))
-            .containsExactly("sk-test-key")
+        assertThat(interceptedRequests[0].headers.values("Authorization"))
+            .containsExactly("Bearer sk-test-key")
         assertThat(rawHttpClient.requests).hasSize(1)
-        assertThat(rawHttpClient.requests[0].headers.values("X-Api-Key"))
-            .containsExactly("sk-test-key")
+        assertThat(rawHttpClient.requests[0].headers.values("Authorization"))
+            .containsExactly("Bearer sk-test-key")
     }
 
     @Test
@@ -134,7 +136,7 @@ internal class ClientOptionsTest {
             ClientOptions.builder()
                 .httpClient(rawHttpClient)
                 .addInterceptor(recordingInterceptor(interceptedRequests))
-                .credentials(CredentialResult.token(InMemoryAccessTokenProvider("oauth-token-123")))
+                .credentials(CredentialResult.Token(InMemoryAccessTokenProvider("oauth-token-123")))
                 .build()
 
         clientOptions.httpClient.execute(simpleGetRequest(), RequestOptions.none()).close()
@@ -176,7 +178,7 @@ internal class ClientOptionsTest {
                             .build()
                     }
                 )
-                .credentials(CredentialResult.staticHeaders(null, "original-token"))
+                .credentials(CredentialResult.Static("original-token"))
                 .build()
 
         clientOptions.httpClient.execute(simpleGetRequest(), RequestOptions.none()).close()
@@ -194,7 +196,7 @@ internal class ClientOptionsTest {
         val clientOptions =
             ClientOptions.builder()
                 .httpClient(rawHttpClient)
-                .credentials(CredentialResult.staticHeaders("sk-test-key", null))
+                .credentials(CredentialResult.Static("sk-test-key"))
                 .build()
 
         val request =
@@ -204,6 +206,30 @@ internal class ClientOptionsTest {
         assertThat(rawHttpClient.requests).hasSize(1)
         assertThat(rawHttpClient.requests[0].headers.values("X-Api-Key"))
             .containsExactly("sk-existing-key")
+        assertThat(rawHttpClient.requests[0].headers.names()).doesNotContain("Authorization")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun toBuilder_credentialsReplaceOriginalCredentials(originalIsStatic: Boolean) {
+        val rawHttpClient = FakeHttpClient()
+        val original =
+            if (originalIsStatic) CredentialResult.Static("sk-test-key")
+            else CredentialResult.Token(InMemoryAccessTokenProvider("oauth-token-123"))
+        val clientOptions =
+            ClientOptions.builder()
+                .httpClient(rawHttpClient)
+                .credentials(original)
+                .build()
+                .toBuilder()
+                .credentials(CredentialResult.Static("test-token"))
+                .build()
+
+        clientOptions.httpClient.execute(simpleGetRequest(), RequestOptions.none()).close()
+
+        assertThat(rawHttpClient.requests).hasSize(1)
+        assertThat(rawHttpClient.requests[0].headers.values("Authorization"))
+            .containsExactly("Bearer test-token")
     }
 
     private fun recordingInterceptor(requests: MutableList<HttpRequest>): Interceptor =

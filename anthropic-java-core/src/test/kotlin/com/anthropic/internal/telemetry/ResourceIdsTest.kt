@@ -156,7 +156,6 @@ internal class ResourceIdsTest : TracingTestSupport() {
                     BetaManagedAgentsUserMessageEventParams.Content.ofText(
                         BetaManagedAgentsTextBlock.builder()
                             .text("Where is my order? USER-SECRET")
-                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
                             .build()
                     )
                 )
@@ -237,16 +236,10 @@ internal class ResourceIdsTest : TracingTestSupport() {
     @Test
     fun sessionsCreate_agentGivenAsAnObject_recordsItsId() {
         stubJson(post(urlPathEqualTo("/v1/sessions")), SESSION_JSON)
-        val agent =
-            BetaManagedAgentsAgentParams.builder()
-                .id("agent_pinned")
-                .type(BetaManagedAgentsAgentParams.Type.AGENT)
-                .version(2)
-                .build()
+        val agent = BetaManagedAgentsAgentParams.builder().id("agent_pinned").version(2).build()
         val agentWithOverrides =
             BetaManagedAgentsAgentWithOverridesParams.builder()
                 .id("agent_overridden")
-                .type(BetaManagedAgentsAgentWithOverridesParams.Type.AGENT_WITH_OVERRIDES)
                 .model(BetaManagedAgentsModel.of("claude-requested"))
                 .build()
 
@@ -1047,7 +1040,6 @@ internal class ResourceIdsTest : TracingTestSupport() {
                                 .betaManagedAgentsFileResourceParams(
                                     BetaManagedAgentsFileResourceParams.builder()
                                         .fileId("file_1")
-                                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
                                         .build()
                                 )
                                 .build()

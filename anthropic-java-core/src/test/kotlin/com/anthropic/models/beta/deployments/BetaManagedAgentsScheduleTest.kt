@@ -15,7 +15,6 @@ internal class BetaManagedAgentsScheduleTest {
             BetaManagedAgentsSchedule.builder()
                 .expression("0 9 * * 1-5")
                 .timezone("America/Los_Angeles")
-                .type(BetaManagedAgentsSchedule.Type.CRON)
                 .lastRunAt(OffsetDateTime.parse("2026-03-16T16:00:09Z"))
                 .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-17T16:00:00Z"))
                 .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-18T16:00:00Z"))
@@ -23,7 +22,6 @@ internal class BetaManagedAgentsScheduleTest {
 
         assertThat(betaManagedAgentsSchedule.expression()).isEqualTo("0 9 * * 1-5")
         assertThat(betaManagedAgentsSchedule.timezone()).isEqualTo("America/Los_Angeles")
-        assertThat(betaManagedAgentsSchedule.type()).isEqualTo(BetaManagedAgentsSchedule.Type.CRON)
         assertThat(betaManagedAgentsSchedule.lastRunAt())
             .contains(OffsetDateTime.parse("2026-03-16T16:00:09Z"))
         assertThat(betaManagedAgentsSchedule.upcomingRunsAt().getOrNull())
@@ -39,7 +37,6 @@ internal class BetaManagedAgentsScheduleTest {
             BetaManagedAgentsSchedule.builder()
                 .expression("0 9 * * 1-5")
                 .timezone("America/Los_Angeles")
-                .type(BetaManagedAgentsSchedule.Type.CRON)
                 .build()
 
         val betaManagedAgentsSchedule =
@@ -63,7 +60,6 @@ internal class BetaManagedAgentsScheduleTest {
             BetaManagedAgentsSchedule.builder()
                 .expression("0 9 * * 1-5")
                 .timezone("America/Los_Angeles")
-                .type(BetaManagedAgentsSchedule.Type.CRON)
                 .lastRunAt(OffsetDateTime.parse("2026-03-16T16:00:09Z"))
                 .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-17T16:00:00Z"))
                 .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-18T16:00:00Z"))

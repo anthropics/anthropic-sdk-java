@@ -17,7 +17,6 @@ internal class BetaManagedAgentsMemoryVersionTest {
                 .memoryId("memory_id")
                 .memoryStoreId("memory_store_id")
                 .operation(BetaManagedAgentsMemoryVersionOperation.CREATED)
-                .type(BetaManagedAgentsMemoryVersion.Type.MEMORY_VERSION)
                 .content("content")
                 .contentSha256("content_sha256")
                 .contentSizeBytes(0)
@@ -34,32 +33,16 @@ internal class BetaManagedAgentsMemoryVersionTest {
         assertThat(betaManagedAgentsMemoryVersion.memoryStoreId()).isEqualTo("memory_store_id")
         assertThat(betaManagedAgentsMemoryVersion.operation())
             .isEqualTo(BetaManagedAgentsMemoryVersionOperation.CREATED)
-        assertThat(betaManagedAgentsMemoryVersion.type())
-            .isEqualTo(BetaManagedAgentsMemoryVersion.Type.MEMORY_VERSION)
         assertThat(betaManagedAgentsMemoryVersion.content()).contains("content")
         assertThat(betaManagedAgentsMemoryVersion.contentSha256()).contains("content_sha256")
         assertThat(betaManagedAgentsMemoryVersion.contentSizeBytes()).contains(0)
         assertThat(betaManagedAgentsMemoryVersion.createdBy())
-            .contains(
-                BetaManagedAgentsActor.ofSession(
-                    BetaManagedAgentsSessionActor.builder()
-                        .sessionId("x")
-                        .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
-                        .build()
-                )
-            )
+            .contains(BetaManagedAgentsActor.ofSession("x"))
         assertThat(betaManagedAgentsMemoryVersion.path()).contains("path")
         assertThat(betaManagedAgentsMemoryVersion.redactedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsMemoryVersion.redactedBy())
-            .contains(
-                BetaManagedAgentsActor.ofSession(
-                    BetaManagedAgentsSessionActor.builder()
-                        .sessionId("x")
-                        .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
-                        .build()
-                )
-            )
+            .contains(BetaManagedAgentsActor.ofSession("x"))
     }
 
     @Test
@@ -72,7 +55,6 @@ internal class BetaManagedAgentsMemoryVersionTest {
                 .memoryId("memory_id")
                 .memoryStoreId("memory_store_id")
                 .operation(BetaManagedAgentsMemoryVersionOperation.CREATED)
-                .type(BetaManagedAgentsMemoryVersion.Type.MEMORY_VERSION)
                 .content("content")
                 .contentSha256("content_sha256")
                 .contentSizeBytes(0)

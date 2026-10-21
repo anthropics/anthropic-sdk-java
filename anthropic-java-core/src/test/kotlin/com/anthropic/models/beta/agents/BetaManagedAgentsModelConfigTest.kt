@@ -12,7 +12,7 @@ internal class BetaManagedAgentsModelConfigTest {
         val betaManagedAgentsModelConfig =
             BetaManagedAgentsModelConfig.builder()
                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
+                .effort(BetaManagedAgentsEffortLow.builder().build())
                 .inferenceGeo("inference_geo")
                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                 .build()
@@ -21,7 +21,9 @@ internal class BetaManagedAgentsModelConfigTest {
             .isEqualTo(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
         assertThat(betaManagedAgentsModelConfig.effort())
             .contains(
-                BetaManagedAgentsModelConfig.Effort.ofLow(BetaManagedAgentsEffortLow.Type.LOW)
+                BetaManagedAgentsModelConfig.Effort.ofLow(
+                    BetaManagedAgentsEffortLow.builder().build()
+                )
             )
         assertThat(betaManagedAgentsModelConfig.inferenceGeo()).contains("inference_geo")
         assertThat(betaManagedAgentsModelConfig.speed())
@@ -34,7 +36,7 @@ internal class BetaManagedAgentsModelConfigTest {
         val betaManagedAgentsModelConfig =
             BetaManagedAgentsModelConfig.builder()
                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
+                .effort(BetaManagedAgentsEffortLow.builder().build())
                 .inferenceGeo("inference_geo")
                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                 .build()

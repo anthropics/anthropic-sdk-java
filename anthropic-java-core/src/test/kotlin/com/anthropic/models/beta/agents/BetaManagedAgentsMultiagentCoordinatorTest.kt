@@ -14,11 +14,9 @@ internal class BetaManagedAgentsMultiagentCoordinatorTest {
                 .addAgent(
                     BetaManagedAgentsAgentReference.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
                         .version(1)
                         .build()
                 )
-                .type(BetaManagedAgentsMultiagentCoordinator.Type.COORDINATOR)
                 .build()
 
         assertThat(betaManagedAgentsMultiagentCoordinator.agents())
@@ -26,13 +24,10 @@ internal class BetaManagedAgentsMultiagentCoordinatorTest {
                 BetaManagedAgentsMultiagentCoordinator.Agent.ofAgent(
                     BetaManagedAgentsAgentReference.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
                         .version(1)
                         .build()
                 )
             )
-        assertThat(betaManagedAgentsMultiagentCoordinator.type())
-            .isEqualTo(BetaManagedAgentsMultiagentCoordinator.Type.COORDINATOR)
     }
 
     @Test
@@ -43,11 +38,9 @@ internal class BetaManagedAgentsMultiagentCoordinatorTest {
                 .addAgent(
                     BetaManagedAgentsAgentReference.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
                         .version(1)
                         .build()
                 )
-                .type(BetaManagedAgentsMultiagentCoordinator.Type.COORDINATOR)
                 .build()
 
         val roundtrippedBetaManagedAgentsMultiagentCoordinator =

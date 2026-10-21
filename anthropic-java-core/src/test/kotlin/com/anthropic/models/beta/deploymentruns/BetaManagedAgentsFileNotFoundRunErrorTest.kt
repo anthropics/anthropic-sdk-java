@@ -10,24 +10,16 @@ internal class BetaManagedAgentsFileNotFoundRunErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsFileNotFoundRunError =
-            BetaManagedAgentsFileNotFoundRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsFileNotFoundRunError.Type.FILE_NOT_FOUND_ERROR)
-                .build()
+            BetaManagedAgentsFileNotFoundRunError.of("message")
 
         assertThat(betaManagedAgentsFileNotFoundRunError.message()).isEqualTo("message")
-        assertThat(betaManagedAgentsFileNotFoundRunError.type())
-            .isEqualTo(BetaManagedAgentsFileNotFoundRunError.Type.FILE_NOT_FOUND_ERROR)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsFileNotFoundRunError =
-            BetaManagedAgentsFileNotFoundRunError.builder()
-                .message("message")
-                .type(BetaManagedAgentsFileNotFoundRunError.Type.FILE_NOT_FOUND_ERROR)
-                .build()
+            BetaManagedAgentsFileNotFoundRunError.of("message")
 
         val roundtrippedBetaManagedAgentsFileNotFoundRunError =
             jsonMapper.readValue(
