@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.1.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.0.0...v3.1.0) (2026-10-21)
+
+### Features
+
+* **api:** add enforcement status, actions and filter to user profiles
+
 ## [3.0.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.75.0...v3.0.0) (2026-10-21)
 
 ### ⚠ BREAKING CHANGES
