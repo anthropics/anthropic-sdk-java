@@ -35,7 +35,8 @@ private constructor(
     ) : this(assessment, reason, status, mutableMapOf())
 
     /**
-     * The scan's verdict; set only when `status` is `completed`.
+     * The scan's verdict; set only when `status` is `completed`. A `warn` can mean a `fail` that
+     * was allowed in claude.ai.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -54,7 +55,9 @@ private constructor(
 
     /**
      * `processing` while a scan runs, `completed` when it ran to completion, `errored` when it
-     * could not run or its outcome cannot be read.
+     * could not run. Once a scan of the version has completed, `content_scan` describes the newest
+     * completed scan, even while a later scan runs. While the scan outcome cannot be read, `status`
+     * is `errored` instead.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -127,7 +130,10 @@ private constructor(
             additionalProperties = betaPluginContentScan.additionalProperties.toMutableMap()
         }
 
-        /** The scan's verdict; set only when `status` is `completed`. */
+        /**
+         * The scan's verdict; set only when `status` is `completed`. A `warn` can mean a `fail`
+         * that was allowed in claude.ai.
+         */
         fun assessment(assessment: Assessment?) = assessment(JsonField.ofNullable(assessment))
 
         /** Alias for calling [Builder.assessment] with `assessment.orElse(null)`. */
@@ -162,7 +168,9 @@ private constructor(
 
         /**
          * `processing` while a scan runs, `completed` when it ran to completion, `errored` when it
-         * could not run or its outcome cannot be read.
+         * could not run. Once a scan of the version has completed, `content_scan` describes the
+         * newest completed scan, even while a later scan runs. While the scan outcome cannot be
+         * read, `status` is `errored` instead.
          */
         fun status(status: Status) = status(JsonField.of(status))
 
@@ -256,7 +264,10 @@ private constructor(
             (if (reason.asKnown().isPresent) 1 else 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** The scan's verdict; set only when `status` is `completed`. */
+    /**
+     * The scan's verdict; set only when `status` is `completed`. A `warn` can mean a `fail` that
+     * was allowed in claude.ai.
+     */
     class Assessment private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -423,7 +434,9 @@ private constructor(
 
     /**
      * `processing` while a scan runs, `completed` when it ran to completion, `errored` when it
-     * could not run or its outcome cannot be read.
+     * could not run. Once a scan of the version has completed, `content_scan` describes the newest
+     * completed scan, even while a later scan runs. While the scan outcome cannot be read, `status`
+     * is `errored` instead.
      */
     class Status private constructor(private val value: JsonField<String>) : Enum {
 
