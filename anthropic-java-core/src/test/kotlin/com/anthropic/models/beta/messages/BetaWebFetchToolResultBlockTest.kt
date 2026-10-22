@@ -16,7 +16,7 @@ internal class BetaWebFetchToolResultBlockTest {
                         BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .caller(BetaDirectCaller.builder().build())
                 .build()
 
@@ -26,7 +26,7 @@ internal class BetaWebFetchToolResultBlockTest {
                     BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
-        assertThat(betaWebFetchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaWebFetchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_c")
         assertThat(betaWebFetchToolResultBlock.caller())
             .contains(
                 BetaWebFetchToolResultBlock.Caller.ofDirect(BetaDirectCaller.builder().build())
@@ -43,7 +43,7 @@ internal class BetaWebFetchToolResultBlockTest {
                         BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .caller(BetaDirectCaller.builder().build())
                 .build()
 

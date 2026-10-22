@@ -16,7 +16,7 @@ internal class BetaAdvisorToolResultBlockParamTest {
                         BetaAdvisorToolResultErrorParam.ErrorCode.MAX_USES_EXCEEDED
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -30,7 +30,7 @@ internal class BetaAdvisorToolResultBlockParamTest {
                     BetaAdvisorToolResultErrorParam.ErrorCode.MAX_USES_EXCEEDED
                 )
             )
-        assertThat(betaAdvisorToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaAdvisorToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_c")
         assertThat(betaAdvisorToolResultBlockParam.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
@@ -49,7 +49,7 @@ internal class BetaAdvisorToolResultBlockParamTest {
                         BetaAdvisorToolResultErrorParam.ErrorCode.MAX_USES_EXCEEDED
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)

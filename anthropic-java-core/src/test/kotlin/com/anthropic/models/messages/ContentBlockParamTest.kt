@@ -529,7 +529,7 @@ internal class ContentBlockParamTest {
     fun ofServerToolUse() {
         val serverToolUse =
             ServerToolUseBlockParam.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .input(
                     ServerToolUseBlockParam.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -568,7 +568,7 @@ internal class ContentBlockParamTest {
         val contentBlockParam =
             ContentBlockParam.ofServerToolUse(
                 ServerToolUseBlockParam.builder()
-                    .id("srvtoolu_SQfNkl1n_JR_")
+                    .id("srvtoolu_c")
                     .input(
                         ServerToolUseBlockParam.Input.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -607,7 +607,7 @@ internal class ContentBlockParamTest {
                             .build()
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -650,7 +650,7 @@ internal class ContentBlockParamTest {
                                 .build()
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
@@ -678,7 +678,7 @@ internal class ContentBlockParamTest {
                         WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -716,7 +716,7 @@ internal class ContentBlockParamTest {
                             WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
@@ -744,7 +744,7 @@ internal class ContentBlockParamTest {
                         CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -781,7 +781,7 @@ internal class ContentBlockParamTest {
                             CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
@@ -808,7 +808,7 @@ internal class ContentBlockParamTest {
                         BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -847,7 +847,7 @@ internal class ContentBlockParamTest {
                             BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
@@ -875,7 +875,7 @@ internal class ContentBlockParamTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -917,7 +917,7 @@ internal class ContentBlockParamTest {
                             .errorMessage("error_message")
                             .build()
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
@@ -945,7 +945,7 @@ internal class ContentBlockParamTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -983,7 +983,7 @@ internal class ContentBlockParamTest {
                             .errorMessage("error_message")
                             .build()
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)

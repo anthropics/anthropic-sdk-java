@@ -19,7 +19,7 @@ internal class BetaTextEditorCodeExecutionToolResultBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         assertThat(betaTextEditorCodeExecutionToolResultBlock.content())
@@ -35,8 +35,7 @@ internal class BetaTextEditorCodeExecutionToolResultBlockTest {
                             .build()
                     )
             )
-        assertThat(betaTextEditorCodeExecutionToolResultBlock.toolUseId())
-            .isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaTextEditorCodeExecutionToolResultBlock.toolUseId()).isEqualTo("srvtoolu_c")
     }
 
     @Test
@@ -52,7 +51,7 @@ internal class BetaTextEditorCodeExecutionToolResultBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val roundtrippedBetaTextEditorCodeExecutionToolResultBlock =

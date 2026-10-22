@@ -17,7 +17,7 @@ internal class ToolSearchToolResultBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         assertThat(toolSearchToolResultBlock.content())
@@ -29,7 +29,7 @@ internal class ToolSearchToolResultBlockTest {
                         .build()
                 )
             )
-        assertThat(toolSearchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(toolSearchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_c")
     }
 
     @Test
@@ -43,7 +43,7 @@ internal class ToolSearchToolResultBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val roundtrippedToolSearchToolResultBlock =

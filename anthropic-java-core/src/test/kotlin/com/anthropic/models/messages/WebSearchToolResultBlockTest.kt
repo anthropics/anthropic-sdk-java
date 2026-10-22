@@ -15,7 +15,7 @@ internal class WebSearchToolResultBlockTest {
                 .content(
                     WebSearchToolResultError.of(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         assertThat(webSearchToolResultBlock.caller())
@@ -26,7 +26,7 @@ internal class WebSearchToolResultBlockTest {
                     WebSearchToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
-        assertThat(webSearchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(webSearchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_c")
     }
 
     @Test
@@ -38,7 +38,7 @@ internal class WebSearchToolResultBlockTest {
                 .content(
                     WebSearchToolResultError.of(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val roundtrippedWebSearchToolResultBlock =

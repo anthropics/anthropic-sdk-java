@@ -16,7 +16,7 @@ internal class BetaCodeExecutionToolResultBlockTest {
                         BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         assertThat(betaCodeExecutionToolResultBlock.content())
@@ -25,7 +25,7 @@ internal class BetaCodeExecutionToolResultBlockTest {
                     BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
-        assertThat(betaCodeExecutionToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaCodeExecutionToolResultBlock.toolUseId()).isEqualTo("srvtoolu_c")
     }
 
     @Test
@@ -38,7 +38,7 @@ internal class BetaCodeExecutionToolResultBlockTest {
                         BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val roundtrippedBetaCodeExecutionToolResultBlock =

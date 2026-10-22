@@ -17,7 +17,7 @@ internal class TextEditorCodeExecutionToolResultBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         assertThat(textEditorCodeExecutionToolResultBlock.content())
@@ -32,8 +32,7 @@ internal class TextEditorCodeExecutionToolResultBlockTest {
                             .build()
                     )
             )
-        assertThat(textEditorCodeExecutionToolResultBlock.toolUseId())
-            .isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(textEditorCodeExecutionToolResultBlock.toolUseId()).isEqualTo("srvtoolu_c")
     }
 
     @Test
@@ -47,7 +46,7 @@ internal class TextEditorCodeExecutionToolResultBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val roundtrippedTextEditorCodeExecutionToolResultBlock =

@@ -30,7 +30,7 @@ public final class Java8UsageMain {
         BashCodeExecutionToolResultBlockParam src = BashCodeExecutionToolResultBlockParam.builder()
                 .content(BashCodeExecutionToolResultErrorParam.of(
                         BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT))
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(CacheControlEphemeral.builder()
                         .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                         .build())

@@ -13,6 +13,7 @@
 * **docs:** clarify plugin content scan and validation descriptions
 * **docs:** clarify plugin served_version_pinned and updated_at
 * **docs:** rate limit model lists vary by organization and workspace
+* **tests:** use shorter example values for strings that match a pattern
 
 ## [3.1.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.0.0...v3.1.0) (2026-10-21)
 

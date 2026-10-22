@@ -39,7 +39,7 @@ internal class ToolUseCallerTest {
 
     @Test
     fun ofCodeExecution20250825() {
-        val codeExecution20250825 = ServerToolCaller.of("srvtoolu_SQfNkl1n_JR_")
+        val codeExecution20250825 = ServerToolCaller.of("srvtoolu_c")
 
         val toolUseCaller = ToolUseCaller.ofCodeExecution20250825(codeExecution20250825)
 
@@ -51,8 +51,7 @@ internal class ToolUseCallerTest {
     @Test
     fun ofCodeExecution20250825Roundtrip() {
         val jsonMapper = jsonMapper()
-        val toolUseCaller =
-            ToolUseCaller.ofCodeExecution20250825(ServerToolCaller.of("srvtoolu_SQfNkl1n_JR_"))
+        val toolUseCaller = ToolUseCaller.ofCodeExecution20250825(ServerToolCaller.of("srvtoolu_c"))
 
         val roundtrippedToolUseCaller =
             jsonMapper.readValue(
@@ -65,7 +64,7 @@ internal class ToolUseCallerTest {
 
     @Test
     fun ofCodeExecution20260120() {
-        val codeExecution20260120 = ServerToolCaller20260120.of("srvtoolu_SQfNkl1n_JR_")
+        val codeExecution20260120 = ServerToolCaller20260120.of("srvtoolu_c")
 
         val toolUseCaller = ToolUseCaller.ofCodeExecution20260120(codeExecution20260120)
 
@@ -78,9 +77,7 @@ internal class ToolUseCallerTest {
     fun ofCodeExecution20260120Roundtrip() {
         val jsonMapper = jsonMapper()
         val toolUseCaller =
-            ToolUseCaller.ofCodeExecution20260120(
-                ServerToolCaller20260120.of("srvtoolu_SQfNkl1n_JR_")
-            )
+            ToolUseCaller.ofCodeExecution20260120(ServerToolCaller20260120.of("srvtoolu_c"))
 
         val roundtrippedToolUseCaller =
             jsonMapper.readValue(
@@ -96,16 +93,14 @@ internal class ToolUseCallerTest {
         val toolUseCaller =
             jsonMapper()
                 .convertValue(
-                    JsonValue.from(
-                        mapOf("type" to "unknown_variant", "tool_id" to "srvtoolu_SQfNkl1n_JR_")
-                    ),
+                    JsonValue.from(mapOf("type" to "unknown_variant", "tool_id" to "srvtoolu_c")),
                     jacksonTypeRef<ToolUseCaller>(),
                 )
 
         val e = assertThrows<AnthropicInvalidDataException> { toolUseCaller.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
 
-        assertThat(toolUseCaller.toolId()).contains("srvtoolu_SQfNkl1n_JR_")
+        assertThat(toolUseCaller.toolId()).contains("srvtoolu_c")
 
         val mismatchedToolUseCaller =
             jsonMapper()

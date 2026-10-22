@@ -12,7 +12,7 @@ internal class ServerToolUseBlockParamTest {
     fun create() {
         val serverToolUseBlockParam =
             ServerToolUseBlockParam.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .input(
                     ServerToolUseBlockParam.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -25,7 +25,7 @@ internal class ServerToolUseBlockParamTest {
                 .caller(DirectCaller.builder().build())
                 .build()
 
-        assertThat(serverToolUseBlockParam.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(serverToolUseBlockParam.id()).isEqualTo("srvtoolu_c")
         assertThat(serverToolUseBlockParam.input())
             .isEqualTo(
                 ServerToolUseBlockParam.Input.builder()
@@ -45,7 +45,7 @@ internal class ServerToolUseBlockParamTest {
         val jsonMapper = jsonMapper()
         val serverToolUseBlockParam =
             ServerToolUseBlockParam.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .input(
                     ServerToolUseBlockParam.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))

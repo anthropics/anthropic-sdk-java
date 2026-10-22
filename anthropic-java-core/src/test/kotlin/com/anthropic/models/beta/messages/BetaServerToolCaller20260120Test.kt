@@ -9,15 +9,15 @@ internal class BetaServerToolCaller20260120Test {
 
     @Test
     fun create() {
-        val betaServerToolCaller20260120 = BetaServerToolCaller20260120.of("srvtoolu_SQfNkl1n_JR_")
+        val betaServerToolCaller20260120 = BetaServerToolCaller20260120.of("srvtoolu_c")
 
-        assertThat(betaServerToolCaller20260120.toolId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaServerToolCaller20260120.toolId()).isEqualTo("srvtoolu_c")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaServerToolCaller20260120 = BetaServerToolCaller20260120.of("srvtoolu_SQfNkl1n_JR_")
+        val betaServerToolCaller20260120 = BetaServerToolCaller20260120.of("srvtoolu_c")
 
         val roundtrippedBetaServerToolCaller20260120 =
             jsonMapper.readValue(

@@ -16,7 +16,7 @@ internal class BashCodeExecutionToolResultBlockParamTest {
                         BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -29,8 +29,7 @@ internal class BashCodeExecutionToolResultBlockParamTest {
                         BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
             )
-        assertThat(bashCodeExecutionToolResultBlockParam.toolUseId())
-            .isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(bashCodeExecutionToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_c")
         assertThat(bashCodeExecutionToolResultBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
     }
@@ -45,7 +44,7 @@ internal class BashCodeExecutionToolResultBlockParamTest {
                         BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )

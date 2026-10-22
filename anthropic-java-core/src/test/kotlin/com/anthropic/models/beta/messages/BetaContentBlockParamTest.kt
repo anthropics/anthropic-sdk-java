@@ -606,7 +606,7 @@ internal class BetaContentBlockParamTest {
     fun ofServerToolUse() {
         val serverToolUse =
             BetaServerToolUseBlockParam.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .input(
                     BetaServerToolUseBlockParam.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -655,7 +655,7 @@ internal class BetaContentBlockParamTest {
         val betaContentBlockParam =
             BetaContentBlockParam.ofServerToolUse(
                 BetaServerToolUseBlockParam.builder()
-                    .id("srvtoolu_SQfNkl1n_JR_")
+                    .id("srvtoolu_c")
                     .input(
                         BetaServerToolUseBlockParam.Input.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -694,7 +694,7 @@ internal class BetaContentBlockParamTest {
                             .build()
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -747,7 +747,7 @@ internal class BetaContentBlockParamTest {
                                 .build()
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -775,7 +775,7 @@ internal class BetaContentBlockParamTest {
                         BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -823,7 +823,7 @@ internal class BetaContentBlockParamTest {
                             BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -851,7 +851,7 @@ internal class BetaContentBlockParamTest {
                         BetaAdvisorToolResultErrorParam.ErrorCode.MAX_USES_EXCEEDED
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -898,7 +898,7 @@ internal class BetaContentBlockParamTest {
                             BetaAdvisorToolResultErrorParam.ErrorCode.MAX_USES_EXCEEDED
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -925,7 +925,7 @@ internal class BetaContentBlockParamTest {
                         BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -974,7 +974,7 @@ internal class BetaContentBlockParamTest {
                             BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -1001,7 +1001,7 @@ internal class BetaContentBlockParamTest {
                         BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -1050,7 +1050,7 @@ internal class BetaContentBlockParamTest {
                             BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -1081,7 +1081,7 @@ internal class BetaContentBlockParamTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -1136,7 +1136,7 @@ internal class BetaContentBlockParamTest {
                             .errorMessage("error_message")
                             .build()
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -1164,7 +1164,7 @@ internal class BetaContentBlockParamTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -1215,7 +1215,7 @@ internal class BetaContentBlockParamTest {
                             .errorMessage("error_message")
                             .build()
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)

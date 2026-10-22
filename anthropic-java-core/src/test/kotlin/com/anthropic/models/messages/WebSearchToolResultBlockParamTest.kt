@@ -21,7 +21,7 @@ internal class WebSearchToolResultBlockParamTest {
                             .build()
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -41,7 +41,7 @@ internal class WebSearchToolResultBlockParamTest {
                     )
                 )
             )
-        assertThat(webSearchToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(webSearchToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_c")
         assertThat(webSearchToolResultBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(webSearchToolResultBlockParam.caller())
@@ -63,7 +63,7 @@ internal class WebSearchToolResultBlockParamTest {
                             .build()
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )

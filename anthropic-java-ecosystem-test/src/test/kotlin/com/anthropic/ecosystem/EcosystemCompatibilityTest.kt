@@ -155,7 +155,7 @@ internal class EcosystemCompatibilityTest {
         val jsonMapper = jsonMapper()
         val bashCodeExecutionToolResultBlockParam =
             jsonMapper.readValue(
-                "{\"content\":{\"error_code\":\"invalid_tool_input\",\"type\":\"bash_code_execution_tool_result_error\"},\"tool_use_id\":\"srvtoolu_SQfNkl1n_JR_\",\"type\":\"bash_code_execution_tool_result\",\"cache_control\":{\"type\":\"ephemeral\",\"ttl\":\"5m\"}}",
+                "{\"content\":{\"error_code\":\"invalid_tool_input\",\"type\":\"bash_code_execution_tool_result_error\"},\"tool_use_id\":\"srvtoolu_c\",\"type\":\"bash_code_execution_tool_result\",\"cache_control\":{\"type\":\"ephemeral\",\"ttl\":\"5m\"}}",
                 jacksonTypeRef<BashCodeExecutionToolResultBlockParam>(),
             )
 
@@ -175,7 +175,7 @@ internal class EcosystemCompatibilityTest {
         val jsonMapper = jsonMapper()
         val bashCodeExecutionToolResultBlockParam =
             jsonMapper.readValue(
-                "{\"content\":{\"error_code\":\"invalid_tool_input\",\"type\":\"bash_code_execution_tool_result_error\"},\"tool_use_id\":\"srvtoolu_SQfNkl1n_JR_\",\"type\":\"bash_code_execution_tool_result\",\"cache_control\":{\"type\":\"ephemeral\",\"ttl\":\"5m\"},\"unknown_field\":true}",
+                "{\"content\":{\"error_code\":\"invalid_tool_input\",\"type\":\"bash_code_execution_tool_result_error\"},\"tool_use_id\":\"srvtoolu_c\",\"type\":\"bash_code_execution_tool_result\",\"cache_control\":{\"type\":\"ephemeral\",\"ttl\":\"5m\"},\"unknown_field\":true}",
                 jacksonTypeRef<BashCodeExecutionToolResultBlockParam>(),
             )
 
@@ -197,7 +197,7 @@ internal class EcosystemCompatibilityTest {
         val jsonMapper = jsonMapper()
         val bashCodeExecutionToolResultBlockParam =
             jsonMapper.readValue(
-                "{\"content\":{\"error_code\":\"invalid_tool_input\",\"type\":\"bash_code_execution_tool_result_error\"},\"tool_use_id\":\"srvtoolu_SQfNkl1n_JR_\",\"type\":\"bash_code_execution_tool_result\"}",
+                "{\"content\":{\"error_code\":\"invalid_tool_input\",\"type\":\"bash_code_execution_tool_result_error\"},\"tool_use_id\":\"srvtoolu_c\",\"type\":\"bash_code_execution_tool_result\"}",
                 jacksonTypeRef<BashCodeExecutionToolResultBlockParam>(),
             )
 

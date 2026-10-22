@@ -12,13 +12,13 @@ internal class BetaServerToolUseBlockTest {
     fun create() {
         val betaServerToolUseBlock =
             BetaServerToolUseBlock.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name(BetaServerToolUseBlock.Name.ADVISOR)
                 .caller(BetaDirectCaller.builder().build())
                 .build()
 
-        assertThat(betaServerToolUseBlock.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaServerToolUseBlock.id()).isEqualTo("srvtoolu_c")
         assertThat(betaServerToolUseBlock._input()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
         assertThat(betaServerToolUseBlock.name()).isEqualTo(BetaServerToolUseBlock.Name.ADVISOR)
         assertThat(betaServerToolUseBlock.caller())
@@ -30,7 +30,7 @@ internal class BetaServerToolUseBlockTest {
         val jsonMapper = jsonMapper()
         val betaServerToolUseBlock =
             BetaServerToolUseBlock.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name(BetaServerToolUseBlock.Name.ADVISOR)
                 .caller(BetaDirectCaller.builder().build())

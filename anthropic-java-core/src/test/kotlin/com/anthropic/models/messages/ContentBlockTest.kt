@@ -199,7 +199,7 @@ internal class ContentBlockTest {
     fun ofServerToolUse() {
         val serverToolUse =
             ServerToolUseBlock.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .caller(DirectCaller.builder().build())
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name(ServerToolUseBlock.Name.WEB_SEARCH)
@@ -227,7 +227,7 @@ internal class ContentBlockTest {
         val contentBlock =
             ContentBlock.ofServerToolUse(
                 ServerToolUseBlock.builder()
-                    .id("srvtoolu_SQfNkl1n_JR_")
+                    .id("srvtoolu_c")
                     .caller(DirectCaller.builder().build())
                     .input(JsonValue.from(mapOf<String, Any>()))
                     .name(ServerToolUseBlock.Name.WEB_SEARCH)
@@ -251,7 +251,7 @@ internal class ContentBlockTest {
                 .content(
                     WebSearchToolResultError.of(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val contentBlock = ContentBlock.ofWebSearchToolResult(webSearchToolResult)
@@ -280,7 +280,7 @@ internal class ContentBlockTest {
                     .content(
                         WebSearchToolResultError.of(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -301,7 +301,7 @@ internal class ContentBlockTest {
                 .content(
                     WebFetchToolResultErrorBlock.of(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val contentBlock = ContentBlock.ofWebFetchToolResult(webFetchToolResult)
@@ -332,7 +332,7 @@ internal class ContentBlockTest {
                             WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -354,7 +354,7 @@ internal class ContentBlockTest {
                         CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val contentBlock = ContentBlock.ofCodeExecutionToolResult(codeExecutionToolResult)
@@ -384,7 +384,7 @@ internal class ContentBlockTest {
                             CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -406,7 +406,7 @@ internal class ContentBlockTest {
                         BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val contentBlock = ContentBlock.ofBashCodeExecutionToolResult(bashCodeExecutionToolResult)
@@ -436,7 +436,7 @@ internal class ContentBlockTest {
                             BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -459,7 +459,7 @@ internal class ContentBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val contentBlock =
@@ -494,7 +494,7 @@ internal class ContentBlockTest {
                             .errorMessage("error_message")
                             .build()
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -517,7 +517,7 @@ internal class ContentBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val contentBlock = ContentBlock.ofToolSearchToolResult(toolSearchToolResult)
@@ -548,7 +548,7 @@ internal class ContentBlockTest {
                             .errorMessage("error_message")
                             .build()
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -604,7 +604,7 @@ internal class ContentBlockTest {
                         mapOf(
                             "type" to "unknown_variant",
                             "id" to "id",
-                            "tool_use_id" to "srvtoolu_SQfNkl1n_JR_",
+                            "tool_use_id" to "srvtoolu_c",
                         )
                     ),
                     jacksonTypeRef<ContentBlock>(),
@@ -614,7 +614,7 @@ internal class ContentBlockTest {
         assertThat(e).hasMessageStartingWith("Unknown ")
 
         assertThat(contentBlock.id()).contains("id")
-        assertThat(contentBlock.toolUseId()).contains("srvtoolu_SQfNkl1n_JR_")
+        assertThat(contentBlock.toolUseId()).contains("srvtoolu_c")
 
         val mismatchedContentBlock =
             jsonMapper()
