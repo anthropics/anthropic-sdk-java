@@ -2,6 +2,11 @@
 
 ## [3.1.1](https://github.com/anthropics/anthropic-sdk-java/compare/v3.1.0...v3.1.1) (2026-10-22)
 
+### Bug Fixes
+
+* **client:** write oauth_token as the credentials file type
+
+
 ### Chores
 
 * **docs:** clarify plugin served_version_pinned and updated_at

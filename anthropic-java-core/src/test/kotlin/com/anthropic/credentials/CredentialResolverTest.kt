@@ -26,6 +26,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class CredentialResolverTest {
 
@@ -707,8 +709,9 @@ internal class CredentialResolverTest {
         assertThat(token.token).isEqualTo("cached-token-from-file")
     }
 
-    @Test
-    fun profileResolutionWritesToFileCache(@TempDir tempDir: Path) {
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun profileResolutionWritesToFileCache(async: Boolean, @TempDir tempDir: Path) {
         val configsDir = tempDir.resolve("configs")
         Files.createDirectories(configsDir)
 
@@ -749,7 +752,7 @@ internal class CredentialResolverTest {
 
         val result = resolver.resolve()
         assertThat(result).isNotNull
-        val token = result.provider.get("https://api.anthropic.com", false)
+        val token = result.provider.get("https://api.anthropic.com", false, async)
         assertThat(token.token).isEqualTo("new-wif-token")
 
         val cacheFile = tempDir.resolve("credentials").resolve("write-cache-profile.json")
@@ -757,6 +760,7 @@ internal class CredentialResolverTest {
         val cacheContent = String(Files.readAllBytes(cacheFile))
         assertThat(cacheContent).contains("new-wif-token")
         assertThat(cacheContent).contains("access_token")
+        assertThat(cacheContent).contains("oauth_token")
     }
 
     @Test
@@ -944,6 +948,9 @@ internal class CredentialResolverTest {
             .isInstanceOf(com.anthropic.errors.CredentialResolutionException::class.java)
             .hasMessageContaining("HTTP client required for user_oauth refresh")
     }
+
+    private fun AccessTokenProvider.get(baseUrl: String, forceRefresh: Boolean, async: Boolean) =
+        if (async) getAsync(baseUrl, forceRefresh).get() else get(baseUrl, forceRefresh)
 
     private fun extractBody(request: HttpRequest): String {
         val body = request.body().getOrNull() ?: return ""
