@@ -41,6 +41,7 @@ import com.anthropic.models.beta.messages.BetaMemoryTool20250818
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageContentParam
 import com.anthropic.models.beta.messages.BetaMessageParam
+import com.anthropic.models.beta.messages.BetaMessageThreadParam
 import com.anthropic.models.beta.messages.BetaMetadata
 import com.anthropic.models.beta.messages.BetaOutputConfig
 import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
@@ -53,6 +54,8 @@ import com.anthropic.models.beta.messages.BetaThinkingConfigBetweenTools
 import com.anthropic.models.beta.messages.BetaThinkingConfigDisabled
 import com.anthropic.models.beta.messages.BetaThinkingConfigEnabled
 import com.anthropic.models.beta.messages.BetaThinkingConfigParam
+import com.anthropic.models.beta.messages.BetaThreadContinueParams
+import com.anthropic.models.beta.messages.BetaThreadCreateParams
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.beta.messages.BetaToolBash20241022
 import com.anthropic.models.beta.messages.BetaToolBash20250124
@@ -872,6 +875,7 @@ private constructor(
             private val stream: JsonField<Boolean>,
             private val system: JsonField<System>,
             private val thinking: JsonField<BetaThinkingConfigParam>,
+            private val thread: JsonField<BetaMessageThreadParam>,
             private val toolChoice: JsonField<BetaToolChoice>,
             private val tools: JsonField<List<BetaToolUnion>>,
             private val additionalProperties: MutableMap<String, JsonValue>,
@@ -938,6 +942,9 @@ private constructor(
                 @JsonProperty("thinking")
                 @ExcludeMissing
                 thinking: JsonField<BetaThinkingConfigParam> = JsonMissing.of(),
+                @JsonProperty("thread")
+                @ExcludeMissing
+                thread: JsonField<BetaMessageThreadParam> = JsonMissing.of(),
                 @JsonProperty("tool_choice")
                 @ExcludeMissing
                 toolChoice: JsonField<BetaToolChoice> = JsonMissing.of(),
@@ -966,6 +973,7 @@ private constructor(
                 stream,
                 system,
                 thinking,
+                thread,
                 toolChoice,
                 tools,
                 mutableMapOf(),
@@ -1305,6 +1313,17 @@ private constructor(
             fun thinking(): Optional<BetaThinkingConfigParam> = thinking.getOptional("thinking")
 
             /**
+             * Server-held conversation state (a Thread). `{"type": "create"}` asks the server to
+             * hold this conversation's state under the response's `id`; `{"type": "continue",
+             * "previous_message_id": ...}` resumes from a previous response so only the new turn's
+             * messages are sent. The response shape is unchanged.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun thread(): Optional<BetaMessageThreadParam> = thread.getOptional("thread")
+
+            /**
              * How the model should use the provided tools. The model can use a specific tool, any
              * available tool, decide by itself, or not use tools at all.
              *
@@ -1591,6 +1610,15 @@ private constructor(
             fun _thinking(): JsonField<BetaThinkingConfigParam> = thinking
 
             /**
+             * Returns the raw JSON value of [thread].
+             *
+             * Unlike [thread], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("thread")
+            @ExcludeMissing
+            fun _thread(): JsonField<BetaMessageThreadParam> = thread
+
+            /**
              * Returns the raw JSON value of [toolChoice].
              *
              * Unlike [toolChoice], this method doesn't throw if the JSON field has an unexpected
@@ -1662,6 +1690,7 @@ private constructor(
                 private var stream: JsonField<Boolean> = JsonMissing.of()
                 private var system: JsonField<System> = JsonMissing.of()
                 private var thinking: JsonField<BetaThinkingConfigParam> = JsonMissing.of()
+                private var thread: JsonField<BetaMessageThreadParam> = JsonMissing.of()
                 private var toolChoice: JsonField<BetaToolChoice> = JsonMissing.of()
                 private var tools: JsonField<MutableList<BetaToolUnion>>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -1694,6 +1723,7 @@ private constructor(
                     stream = params.stream
                     system = params.system
                     thinking = params.thinking
+                    thread = params.thread
                     toolChoice = params.toolChoice
                     tools = params.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
                     additionalProperties = params.additionalProperties.toMutableMap()
@@ -2462,6 +2492,53 @@ private constructor(
                     thinking(BetaThinkingConfigParam.ofAdaptive(adaptive))
 
                 /**
+                 * Server-held conversation state (a Thread). `{"type": "create"}` asks the server
+                 * to hold this conversation's state under the response's `id`; `{"type":
+                 * "continue", "previous_message_id": ...}` resumes from a previous response so only
+                 * the new turn's messages are sent. The response shape is unchanged.
+                 */
+                fun thread(thread: BetaMessageThreadParam?) = thread(JsonField.ofNullable(thread))
+
+                /** Alias for calling [Builder.thread] with `thread.orElse(null)`. */
+                fun thread(thread: Optional<BetaMessageThreadParam>) = thread(thread.getOrNull())
+
+                /**
+                 * Sets [Builder.thread] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.thread] with a well-typed
+                 * [BetaMessageThreadParam] value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
+                 */
+                fun thread(thread: JsonField<BetaMessageThreadParam>) = apply {
+                    this.thread = thread
+                }
+
+                /** Alias for calling [thread] with `BetaMessageThreadParam.ofCreate(create)`. */
+                fun thread(create: BetaThreadCreateParams) =
+                    thread(BetaMessageThreadParam.ofCreate(create))
+
+                /**
+                 * Alias for calling [thread] with `BetaMessageThreadParam.ofContinue(continue_)`.
+                 */
+                fun thread(continue_: BetaThreadContinueParams) =
+                    thread(BetaMessageThreadParam.ofContinue(continue_))
+
+                /**
+                 * Alias for calling [thread] with the following:
+                 * ```java
+                 * BetaThreadContinueParams.builder()
+                 *     .previousMessageId(previousMessageId)
+                 *     .build()
+                 * ```
+                 */
+                fun continueThread(previousMessageId: String) =
+                    thread(
+                        BetaThreadContinueParams.builder()
+                            .previousMessageId(previousMessageId)
+                            .build()
+                    )
+
+                /**
                  * How the model should use the provided tools. The model can use a specific tool,
                  * any available tool, decide by itself, or not use tools at all.
                  */
@@ -2885,6 +2962,7 @@ private constructor(
                         stream,
                         system,
                         thinking,
+                        thread,
                         toolChoice,
                         (tools ?: JsonMissing.of()).map { it.toImmutable() },
                         additionalProperties.toMutableMap(),
@@ -2929,6 +3007,7 @@ private constructor(
                 stream()
                 system().ifPresent { it.validate() }
                 thinking().ifPresent { it.validate() }
+                thread().ifPresent { it.validate() }
                 toolChoice().ifPresent { it.validate() }
                 tools().ifPresent { it.forEach { it.validate() } }
                 validated = true
@@ -2971,6 +3050,7 @@ private constructor(
                     (if (stream.asKnown().isPresent) 1 else 0) +
                     (system.asKnown().getOrNull()?.validity() ?: 0) +
                     (thinking.asKnown().getOrNull()?.validity() ?: 0) +
+                    (thread.asKnown().getOrNull()?.validity() ?: 0) +
                     (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
                     (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
@@ -4054,6 +4134,7 @@ private constructor(
                     stream == other.stream &&
                     system == other.system &&
                     thinking == other.thinking &&
+                    thread == other.thread &&
                     toolChoice == other.toolChoice &&
                     tools == other.tools &&
                     additionalProperties == other.additionalProperties
@@ -4082,6 +4163,7 @@ private constructor(
                     stream,
                     system,
                     thinking,
+                    thread,
                     toolChoice,
                     tools,
                     additionalProperties,
@@ -4091,7 +4173,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, compaction=$compaction, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, fallbackCreditToken=$fallbackCreditToken, fallbacks=$fallbacks, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, stream=$stream, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, compaction=$compaction, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, fallbackCreditToken=$fallbackCreditToken, fallbacks=$fallbacks, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, stream=$stream, system=$system, thinking=$thinking, thread=$thread, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

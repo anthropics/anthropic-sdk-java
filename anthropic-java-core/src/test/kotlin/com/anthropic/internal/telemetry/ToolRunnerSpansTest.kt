@@ -21,6 +21,7 @@ import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.beta.messages.BetaToolResultBlockParam
 import com.anthropic.models.beta.messages.BetaToolUseBlockParam
 import com.anthropic.models.beta.messages.MessageCreateParams as BetaMessageCreateParams
+import com.anthropic.models.beta.messages.ThreadCreateParams
 import com.anthropic.models.beta.messages.ToolRunnerCreateParams
 import com.anthropic.services.blocking.beta.MessageService
 import com.fasterxml.jackson.annotation.JsonClassDescription
@@ -146,6 +147,34 @@ internal class ToolRunnerSpansTest : TracingTestSupport() {
                 "anthropic.messages.create",
                 "anthropic.messages.tool_runner",
                 "handle_order",
+            )
+    }
+
+    @Test
+    fun toolRunner_ofAMessageThread_emitsLoopAndToolSpans() {
+        stubToolLoop()
+        val thread =
+            client
+                .beta()
+                .messages()
+                .thread(
+                    ThreadCreateParams.builder()
+                        .model("claude-requested")
+                        .maxTokens(100)
+                        .addUserMessage("Weather in Paris?")
+                        .addTool(GetWeather::class.java)
+                        .build()
+                )
+
+        thread.toolRunner().toList()
+
+        val loop = recorder.named("anthropic.messages.tool_runner")
+        assertThat(loop.status.statusCode).isEqualTo(StatusCode.OK)
+        assertThat(recorder.spans.filter { it.parentSpanId == loop.spanId }.map { it.name })
+            .containsExactly(
+                "anthropic.messages.create",
+                "anthropic.custom_tool_use get_weather",
+                "anthropic.messages.create",
             )
     }
 

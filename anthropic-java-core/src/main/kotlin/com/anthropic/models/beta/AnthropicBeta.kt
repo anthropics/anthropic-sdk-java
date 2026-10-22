@@ -177,6 +177,9 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
 
         @JvmField val WEBHOOKS_2026_10_07 = AnthropicBeta(JsonField.of("webhooks-2026-10-07"))
 
+        @JvmField
+        val MESSAGE_THREADS_2026_08_12 = AnthropicBeta(JsonField.of("message-threads-2026-08-12"))
+
         @JvmStatic
         fun of(value: String): AnthropicBeta =
             // Intern known values so `==` works
@@ -237,6 +240,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
                 "spend-limit-reads-2026-09-26" -> SPEND_LIMIT_READS_2026_09_26
                 "telemetry-destinations-2026-08-11" -> TELEMETRY_DESTINATIONS_2026_08_11
                 "webhooks-2026-10-07" -> WEBHOOKS_2026_10_07
+                "message-threads-2026-08-12" -> MESSAGE_THREADS_2026_08_12
                 else -> AnthropicBeta(JsonField.of(value))
             }
 
@@ -300,6 +304,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         SPEND_LIMIT_READS_2026_09_26,
         TELEMETRY_DESTINATIONS_2026_08_11,
         WEBHOOKS_2026_10_07,
+        MESSAGE_THREADS_2026_08_12,
     }
 
     /**
@@ -364,6 +369,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         SPEND_LIMIT_READS_2026_09_26,
         TELEMETRY_DESTINATIONS_2026_08_11,
         WEBHOOKS_2026_10_07,
+        MESSAGE_THREADS_2026_08_12,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -435,6 +441,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             SPEND_LIMIT_READS_2026_09_26 -> Value.SPEND_LIMIT_READS_2026_09_26
             TELEMETRY_DESTINATIONS_2026_08_11 -> Value.TELEMETRY_DESTINATIONS_2026_08_11
             WEBHOOKS_2026_10_07 -> Value.WEBHOOKS_2026_10_07
+            MESSAGE_THREADS_2026_08_12 -> Value.MESSAGE_THREADS_2026_08_12
             else -> Value._UNKNOWN
         }
 
@@ -504,6 +511,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             SPEND_LIMIT_READS_2026_09_26 -> Known.SPEND_LIMIT_READS_2026_09_26
             TELEMETRY_DESTINATIONS_2026_08_11 -> Known.TELEMETRY_DESTINATIONS_2026_08_11
             WEBHOOKS_2026_10_07 -> Known.WEBHOOKS_2026_10_07
+            MESSAGE_THREADS_2026_08_12 -> Known.MESSAGE_THREADS_2026_08_12
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

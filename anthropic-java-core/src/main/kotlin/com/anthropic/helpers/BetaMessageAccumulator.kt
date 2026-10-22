@@ -66,6 +66,9 @@ class BetaMessageAccumulator private constructor() {
      */
     private val messageContentDeltaText: MutableMap<Long, StringBuilder> = mutableMapOf()
 
+    /** The indexes of the content blocks whose `content_block_stop` event has been accumulated. */
+    private val stoppedContentIndexes: MutableSet<Long> = mutableSetOf()
+
     companion object {
         private val JSON_MAPPER = jsonMapper()
 
@@ -275,6 +278,37 @@ class BetaMessageAccumulator private constructor() {
      *   [outputType] class.
      */
     fun <T : Any> message(outputType: Class<T>) = StructuredMessage(outputType, message())
+
+    /**
+     * Returns the message so far, or `null` before `message_start` and after `message_stop`. It
+     * holds the content blocks that finished and the text of an unfinished text block after them.
+     * Any other unfinished block is left out, so it never holds an unfinished tool call.
+     */
+    @JvmSynthetic
+    internal fun sendablePartialMessage(): BetaMessage? {
+        val builder = messageBuilder ?: return null
+        val usage = messageUsage ?: return null
+
+        val blocks = messageContent.entries.sortedBy { it.key }
+        val finished = blocks.filter { it.key in stoppedContentIndexes }
+        val lastFinished = finished.lastOrNull()?.key ?: -1L
+        val openText =
+            blocks
+                .firstOrNull { it.key !in stoppedContentIndexes }
+                ?.takeIf { it.key > lastFinished && it.value.isText() }
+                ?.let { (index, block) ->
+                    val text = messageContentDeltaText[index]?.toString().orEmpty()
+                    if (text.isEmpty()) block else mergeText(block, text)
+                }
+                ?.takeIf { it.asText().text().isNotEmpty() }
+
+        return builder
+            .build()
+            .toBuilder()
+            .content(finished.map { it.value } + listOfNotNull(openText))
+            .usage(usage)
+            .build()
+    }
 
     /**
      * Accumulates a streamed event and uses it to construct a [BetaMessage]. When all events,
@@ -573,6 +607,7 @@ class BetaMessageAccumulator private constructor() {
                             )
                     val oldContentBlock = foldDeltaText(index, startedContentBlock)
                     messageContent[index] = oldContentBlock
+                    stoppedContentIndexes.add(index)
 
                     // The `content_block_stop` event for most content block types can be ignored,
                     // as it carries no data. Where the `index` corresponds to a `tool_use` content

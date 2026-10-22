@@ -16,7 +16,8 @@ import com.anthropic.core.http.Headers
  */
 internal enum class StainlessHelperHeaderValue(@JvmSynthetic internal val value: String) {
     BETA_TOOL_RUNNER("BetaToolRunner"),
-    FALLBACK_REFUSAL_MIDDLEWARE("fallback-refusal-middleware");
+    FALLBACK_REFUSAL_MIDDLEWARE("fallback-refusal-middleware"),
+    MESSAGE_THREAD("message-thread");
 
     override fun toString(): String = value
 }

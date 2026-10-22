@@ -192,6 +192,13 @@ internal constructor(
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
+     * @see MessageCreateParams.thread
+     */
+    fun thread(): Optional<BetaMessageThreadParam> = delegate.thread()
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      * @see MessageCreateParams.toolChoice
      */
     fun toolChoice(): Optional<BetaToolChoice> = delegate.toolChoice()
@@ -346,6 +353,13 @@ internal constructor(
      * Unlike [thinking], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _thinking(): JsonField<BetaThinkingConfigParam> = delegate._thinking()
+
+    /**
+     * Returns the raw JSON value of [thread].
+     *
+     * Unlike [thread], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _thread(): JsonField<BetaMessageThreadParam> = delegate._thread()
 
     /**
      * Returns the raw JSON value of [toolChoice].
@@ -1047,6 +1061,39 @@ internal constructor(
 
         /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`. */
         fun thinking(adaptive: BetaThinkingConfigAdaptive) = apply { delegate.thinking(adaptive) }
+
+        /** @see MessageCreateParams.Builder.thread */
+        fun thread(thread: BetaMessageThreadParam?) = apply { delegate.thread(thread) }
+
+        /** Alias for calling [Builder.thread] with `thread.orElse(null)`. */
+        fun thread(thread: Optional<BetaMessageThreadParam>) = thread(thread.getOrNull())
+
+        /**
+         * Sets [Builder.thread] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.thread] with a well-typed [BetaMessageThreadParam] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun thread(thread: JsonField<BetaMessageThreadParam>) = apply { delegate.thread(thread) }
+
+        /** Alias for calling [thread] with `BetaMessageThreadParam.ofCreate(create)`. */
+        fun thread(create: BetaThreadCreateParams) = apply { delegate.thread(create) }
+
+        /** Alias for calling [thread] with `BetaMessageThreadParam.ofContinue(continue_)`. */
+        fun thread(continue_: BetaThreadContinueParams) = apply { delegate.thread(continue_) }
+
+        /**
+         * Alias for calling [thread] with the following:
+         * ```java
+         * BetaThreadContinueParams.builder()
+         *     .previousMessageId(previousMessageId)
+         *     .build()
+         * ```
+         */
+        fun continueThread(previousMessageId: String) = apply {
+            delegate.continueThread(previousMessageId)
+        }
 
         /** @see MessageCreateParams.Builder.toolChoice */
         fun toolChoice(toolChoice: BetaToolChoice) = apply { delegate.toolChoice(toolChoice) }

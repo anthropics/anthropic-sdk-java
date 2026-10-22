@@ -108,6 +108,14 @@ internal class BedrockBackendTest {
     }
 
     @Test
+    fun doesNotSupportMessageThreads() {
+        initEnv()
+        val backend = BedrockBackend.builder().withoutApiKeyEnvVar().fromEnv().build()
+
+        assertThat(backend.supportsMessageThreads()).isFalse()
+    }
+
+    @Test
     fun awsSessionCredentialsFromEnv() {
         initEnv()
         val backend = BedrockBackend.builder().withoutApiKeyEnvVar().fromEnv().build()

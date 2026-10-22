@@ -1,5 +1,6 @@
 package com.anthropic.core
 
+import com.anthropic.backends.Backend
 import com.anthropic.core.auth.CredentialResult
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.Headers
@@ -65,6 +66,7 @@ private constructor(
      * the SDK will work correctly when using an incompatible Jackson version.
      */
     @get:JvmName("checkJacksonVersionCompatibility") val checkJacksonVersionCompatibility: Boolean,
+    private val backend: Backend?,
     /**
      * The Jackson JSON mapper to use for serializing and deserializing JSON.
      *
@@ -208,6 +210,7 @@ private constructor(
         private var httpClient: HttpClient? = null
         private var interceptors: MutableList<Interceptor> = mutableListOf()
         private var checkJacksonVersionCompatibility: Boolean = true
+        private var backend: Backend? = null
         private var jsonMapper: JsonMapper = jsonMapper()
         private var streamHandlerExecutor: Executor? = null
         private var sleeper: Sleeper? = null
@@ -230,6 +233,7 @@ private constructor(
             httpClient = clientOptions.originalHttpClient
             interceptors = clientOptions.interceptors.toMutableList()
             checkJacksonVersionCompatibility = clientOptions.checkJacksonVersionCompatibility
+            backend = clientOptions.backend
             jsonMapper = clientOptions.jsonMapper
             streamHandlerExecutor = clientOptions.streamHandlerExecutor
             sleeper = clientOptions.sleeper
@@ -296,6 +300,15 @@ private constructor(
         fun checkJacksonVersionCompatibility(checkJacksonVersionCompatibility: Boolean) = apply {
             this.checkJacksonVersionCompatibility = checkJacksonVersionCompatibility
         }
+
+        /**
+         * The backend that the HTTP client sends through. The client asks it what the service
+         * behind it supports, such as [Backend.supportsMessageThreads].
+         *
+         * A client builder sets it. It does not change where or how requests are sent: that is up
+         * to the HTTP client.
+         */
+        @JvmSynthetic fun backend(backend: Backend) = apply { this.backend = backend }
 
         /**
          * The Jackson JSON mapper to use for serializing and deserializing JSON.
@@ -662,6 +675,7 @@ private constructor(
                     .build(),
                 interceptors.toImmutable(),
                 checkJacksonVersionCompatibility,
+                backend,
                 jsonMapper,
                 streamHandlerExecutor,
                 sleeper,
@@ -681,6 +695,13 @@ private constructor(
             )
         }
     }
+
+    /**
+     * Whether the service that the HTTP client sends to may be sent the `thread` field of the
+     * Messages API. Only a backend says no.
+     */
+    @JvmSynthetic
+    internal fun supportsMessageThreads(): Boolean = backend?.supportsMessageThreads() ?: true
 
     /**
      * Closes these client options, relinquishing any underlying resources.

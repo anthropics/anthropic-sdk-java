@@ -68,6 +68,10 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
         requestOptions: RequestOptions,
     ): BetaToolRunner = BetaToolRunner(this, clientOptions, params, requestOptions)
 
+    /** Whether the service that this client sends to takes a message thread. */
+    @JvmSynthetic
+    internal fun supportsMessageThreads(): Boolean = clientOptions.supportsMessageThreads()
+
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MessageService.WithRawResponse {
 

@@ -1,6 +1,11 @@
 # Changelog
 
-## [3.1.1](https://github.com/anthropics/anthropic-sdk-java/compare/v3.1.0...v3.1.1) (2026-10-22)
+## [3.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.1.0...v3.2.0) (2026-10-22)
+
+### Features
+
+* **api:** add support for message threads
+
 
 ### Bug Fixes
 

@@ -124,6 +124,7 @@ internal class MessageCreateParamsTest {
                     .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                     .build()
             )
+            .thread(BetaThreadCreateParams.builder().build())
             .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
             .addTool(
                 BetaTool.builder()
@@ -279,6 +280,7 @@ internal class MessageCreateParamsTest {
                         .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                         .build()
                 )
+                .thread(BetaThreadCreateParams.builder().build())
                 .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
                     BetaTool.builder()
@@ -459,6 +461,7 @@ internal class MessageCreateParamsTest {
                         .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                         .build()
                 )
+                .thread(BetaThreadCreateParams.builder().build())
                 .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
                 .addTool(
                     BetaTool.builder()
@@ -627,6 +630,8 @@ internal class MessageCreateParamsTest {
                         .build()
                 )
             )
+        assertThat(body.thread())
+            .contains(BetaMessageThreadParam.ofCreate(BetaThreadCreateParams.builder().build()))
         assertThat(body.toolChoice())
             .contains(
                 BetaToolChoice.ofAuto(

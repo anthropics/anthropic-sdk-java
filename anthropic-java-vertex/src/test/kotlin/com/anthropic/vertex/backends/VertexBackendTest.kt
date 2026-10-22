@@ -67,6 +67,11 @@ internal class VertexBackendTest {
     }
 
     @Test
+    fun doesNotSupportMessageThreads() {
+        assertThat(createBackend().supportsMessageThreads()).isFalse()
+    }
+
+    @Test
     fun baseUrl() {
         val backend = createBackend()
 

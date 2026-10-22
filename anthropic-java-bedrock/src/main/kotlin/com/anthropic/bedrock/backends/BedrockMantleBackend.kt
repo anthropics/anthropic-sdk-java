@@ -88,6 +88,8 @@ private constructor(
         awsCredentialsProvider?.resolveCredentials()
             ?: throw IllegalStateException("AWS credentials provider was not set.")
 
+    override fun supportsMessageThreads(): Boolean = false
+
     override fun baseUrl(): String {
         if (baseUrlOverride != null) return baseUrlOverride
         checkNotNull(region) { "No region configured to derive base URL." }

@@ -43,6 +43,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
+/** The tool runner without a message thread. [BetaToolRunnerThreadTest] has the runner on one. */
 internal class BetaToolRunnerTest {
 
     private val messageService = mock<MessageService>()
@@ -68,6 +69,7 @@ internal class BetaToolRunnerTest {
             messageService,
             clientOptions,
             ToolRunnerCreateParams.builder()
+                .thread(false)
                 .initialMessageParams(initialMessageParams)
                 .maxIterations(2)
                 .build(),
@@ -217,6 +219,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(paramsWithRemoval)
                     .maxIterations(2)
                     .build(),
@@ -363,6 +366,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(paramsWithChanges)
                     .maxIterations(2)
                     .build(),
@@ -1323,6 +1327,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(messageParams)
                     .maxIterations(2)
                     .build(),
@@ -1409,6 +1414,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(messageParams)
                     .maxIterations(2)
                     .build(),
@@ -1636,6 +1642,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(
                         initialMessageParams.toBuilder().container("pinned-container-id").build()
                     )
@@ -1673,6 +1680,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(
                         initialMessageParams
                             .toBuilder()
@@ -1808,6 +1816,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(
                         initialMessageParams
                             .toBuilder()
@@ -1851,6 +1860,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(
                         initialMessageParams
                             .toBuilder()
@@ -1925,6 +1935,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(
                         initialMessageParams
                             .toBuilder()
@@ -1972,6 +1983,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(4)
                     .build(),
@@ -2014,6 +2026,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(4)
                     .build(),
@@ -2092,6 +2105,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(4)
                     .build(),
@@ -2134,6 +2148,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(4)
                     .build(),
@@ -3453,6 +3468,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(3)
                     .build(),
@@ -3575,6 +3591,7 @@ internal class BetaToolRunnerTest {
                 messageService,
                 clientOptions,
                 ToolRunnerCreateParams.builder()
+                    .thread(false)
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(3)
                     .build(),
@@ -3700,6 +3717,7 @@ internal class BetaToolRunnerTest {
             messageService,
             clientOptions,
             ToolRunnerCreateParams.builder()
+                .thread(false)
                 .initialMessageParams(params)
                 .maxIterations(maxIterations)
                 .build(),

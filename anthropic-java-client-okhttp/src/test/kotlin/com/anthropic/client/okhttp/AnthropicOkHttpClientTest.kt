@@ -1,6 +1,8 @@
 package com.anthropic.client.okhttp
 
 import com.anthropic.backends.Backend
+import com.anthropic.errors.AnthropicException
+import com.anthropic.models.beta.messages.ThreadCreateParams
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -12,10 +14,33 @@ internal class AnthropicOkHttpClientTest {
         private const val AUTH_TOKEN = "test-auth-token-987654321"
     }
 
-    private class TestBackend : Backend {
+    private class TestBackend(private val supportsMessageThreads: Boolean = true) : Backend {
         override fun baseUrl(): String = BASE_URL
 
+        override fun supportsMessageThreads(): Boolean = supportsMessageThreads
+
         override fun close() {}
+    }
+
+    private val threadParams =
+        ThreadCreateParams.builder().model("claude-sonnet-4-5").maxTokens(1024).build()
+
+    @Test
+    fun messageThreadsFollowTheBackend() {
+        val threaded = createBuilder().backend(TestBackend()).build()
+        val unthreaded =
+            createBuilder().backend(TestBackend(supportsMessageThreads = false)).build()
+
+        assertThatNoException().isThrownBy { threaded.beta().messages().thread(threadParams) }
+        assertThatThrownBy { unthreaded.beta().messages().thread(threadParams) }
+            .isExactlyInstanceOf(AnthropicException::class.java)
+    }
+
+    @Test
+    fun messageThreadsAreAvailableOnTheDefaultBackend() {
+        val client = AnthropicOkHttpClient.builder().apiKey("test-api-key").build()
+
+        assertThatNoException().isThrownBy { client.beta().messages().thread(threadParams) }
     }
 
     @Test
