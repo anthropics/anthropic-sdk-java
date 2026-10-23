@@ -8,9 +8,9 @@ import java.util.Optional
 import java.util.function.Supplier
 
 /**
- * The backend for Claude Platform on Google Cloud that manages the Google OAuth2 credentials
- * required to access Anthropic's AI models via the Google Cloud API gateway and authorizes requests
- * with a Google OAuth2 bearer token.
+ * The backend for Claude Models on Google Cloud (Anthropic managed) that manages the Google OAuth2
+ * credentials required to access Anthropic's AI models via the Google Cloud API gateway and
+ * authorizes requests with a Google OAuth2 bearer token.
  *
  * Google Cloud requires authentication credentials issued by Google. These can be provided via
  * environment variables or other Google facilities such as the Google Cloud CLI. The application
