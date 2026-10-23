@@ -226,7 +226,7 @@ internal class BetaContentBlockTest {
     fun ofServerToolUse() {
         val serverToolUse =
             BetaServerToolUseBlock.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name(BetaServerToolUseBlock.Name.ADVISOR)
                 .caller(BetaDirectCaller.builder().build())
@@ -260,7 +260,7 @@ internal class BetaContentBlockTest {
         val betaContentBlock =
             BetaContentBlock.ofServerToolUse(
                 BetaServerToolUseBlock.builder()
-                    .id("srvtoolu_SQfNkl1n_JR_")
+                    .id("srvtoolu_c")
                     .input(JsonValue.from(mapOf<String, Any>()))
                     .name(BetaServerToolUseBlock.Name.ADVISOR)
                     .caller(BetaDirectCaller.builder().build())
@@ -285,7 +285,7 @@ internal class BetaContentBlockTest {
                         BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .caller(BetaDirectCaller.builder().build())
                 .build()
 
@@ -322,7 +322,7 @@ internal class BetaContentBlockTest {
                             BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .caller(BetaDirectCaller.builder().build())
                     .build()
             )
@@ -345,7 +345,7 @@ internal class BetaContentBlockTest {
                         BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .caller(BetaDirectCaller.builder().build())
                 .build()
 
@@ -382,7 +382,7 @@ internal class BetaContentBlockTest {
                             BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .caller(BetaDirectCaller.builder().build())
                     .build()
             )
@@ -405,7 +405,7 @@ internal class BetaContentBlockTest {
                         BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val betaContentBlock = BetaContentBlock.ofAdvisorToolResult(advisorToolResult)
@@ -441,7 +441,7 @@ internal class BetaContentBlockTest {
                             BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -463,7 +463,7 @@ internal class BetaContentBlockTest {
                         BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val betaContentBlock = BetaContentBlock.ofCodeExecutionToolResult(codeExecutionToolResult)
@@ -499,7 +499,7 @@ internal class BetaContentBlockTest {
                             BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -521,7 +521,7 @@ internal class BetaContentBlockTest {
                         BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val betaContentBlock =
@@ -559,7 +559,7 @@ internal class BetaContentBlockTest {
                             BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
                         )
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -584,7 +584,7 @@ internal class BetaContentBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val betaContentBlock =
@@ -626,7 +626,7 @@ internal class BetaContentBlockTest {
                             .errorMessage("error_message")
                             .build()
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -649,7 +649,7 @@ internal class BetaContentBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val betaContentBlock = BetaContentBlock.ofToolSearchToolResult(toolSearchToolResult)
@@ -686,7 +686,7 @@ internal class BetaContentBlockTest {
                             .errorMessage("error_message")
                             .build()
                     )
-                    .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                    .toolUseId("srvtoolu_c")
                     .build()
             )
 
@@ -1034,7 +1034,7 @@ internal class BetaContentBlockTest {
                             "type" to "unknown_variant",
                             "signature" to "signature",
                             "id" to "id",
-                            "tool_use_id" to "srvtoolu_SQfNkl1n_JR_",
+                            "tool_use_id" to "srvtoolu_c",
                         )
                     ),
                     jacksonTypeRef<BetaContentBlock>(),
@@ -1045,7 +1045,7 @@ internal class BetaContentBlockTest {
 
         assertThat(betaContentBlock.signature()).contains("signature")
         assertThat(betaContentBlock.id()).contains("id")
-        assertThat(betaContentBlock.toolUseId()).contains("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaContentBlock.toolUseId()).contains("srvtoolu_c")
 
         val mismatchedBetaContentBlock =
             jsonMapper()

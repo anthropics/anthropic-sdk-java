@@ -16,7 +16,7 @@ internal class CodeExecutionToolResultBlockParamTest {
                         CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -28,7 +28,7 @@ internal class CodeExecutionToolResultBlockParamTest {
                     CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
-        assertThat(codeExecutionToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(codeExecutionToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_c")
         assertThat(codeExecutionToolResultBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
     }
@@ -43,7 +43,7 @@ internal class CodeExecutionToolResultBlockParamTest {
                         CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )

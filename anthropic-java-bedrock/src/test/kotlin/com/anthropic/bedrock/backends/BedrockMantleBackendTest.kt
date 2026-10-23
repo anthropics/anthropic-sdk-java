@@ -156,6 +156,14 @@ internal class BedrockMantleBackendTest {
     // --- Base URL tests ---
 
     @Test
+    fun doesNotSupportMessageThreads() {
+        initEnv()
+        val backend = BedrockMantleBackend.builder().withoutApiKeyEnvVar().fromEnv().build()
+
+        assertThat(backend.supportsMessageThreads()).isFalse()
+    }
+
+    @Test
     fun baseUrl() {
         initEnv()
         val backend = BedrockMantleBackend.builder().withoutApiKeyEnvVar().fromEnv().build()

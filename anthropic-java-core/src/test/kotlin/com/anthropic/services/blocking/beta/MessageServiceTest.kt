@@ -22,6 +22,7 @@ import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaThinkingBlockBinding
 import com.anthropic.models.beta.messages.BetaThinkingConfigAdaptive
 import com.anthropic.models.beta.messages.BetaThinkingPrefixMismatchBehavior
+import com.anthropic.models.beta.messages.BetaThreadCreateParams
 import com.anthropic.models.beta.messages.BetaTokenTaskBudget
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.beta.messages.BetaToolChoiceAuto
@@ -169,6 +170,7 @@ internal class MessageServiceTest {
                             .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                             .build()
                     )
+                    .thread(BetaThreadCreateParams.builder().build())
                     .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
                     .addTool(
                         BetaTool.builder()
@@ -339,6 +341,7 @@ internal class MessageServiceTest {
                             .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                             .build()
                     )
+                    .thread(BetaThreadCreateParams.builder().build())
                     .toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
                     .addTool(
                         BetaTool.builder()

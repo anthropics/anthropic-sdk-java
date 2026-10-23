@@ -16,7 +16,7 @@ internal class CodeExecutionToolResultBlockTest {
                         CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         assertThat(codeExecutionToolResultBlock.content())
@@ -25,7 +25,7 @@ internal class CodeExecutionToolResultBlockTest {
                     CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
-        assertThat(codeExecutionToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(codeExecutionToolResultBlock.toolUseId()).isEqualTo("srvtoolu_c")
     }
 
     @Test
@@ -38,7 +38,7 @@ internal class CodeExecutionToolResultBlockTest {
                         CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val roundtrippedCodeExecutionToolResultBlock =

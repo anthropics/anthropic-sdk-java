@@ -47,6 +47,8 @@ private constructor(
         @JvmStatic fun fromEnv(): VertexBackend = builder().fromEnv().build()
     }
 
+    override fun supportsMessageThreads(): Boolean = false
+
     override fun baseUrl(): String =
         baseUrlOverride
             ?: when (region) {

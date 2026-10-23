@@ -83,7 +83,8 @@ private constructor(
 
     /**
      * Model names this entry's limits apply to, including aliases. `null` when `group.type` is not
-     * `"model_group"`.
+     * `"model_group"`. The list covers the models this workspace has access to, so it can differ
+     * between workspaces.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -330,7 +331,8 @@ private constructor(
 
         /**
          * Model names this entry's limits apply to, including aliases. `null` when `group.type` is
-         * not `"model_group"`.
+         * not `"model_group"`. The list covers the models this workspace has access to, so it can
+         * differ between workspaces.
          */
         fun models(models: List<String>?) = models(JsonField.ofNullable(models))
 

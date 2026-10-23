@@ -162,6 +162,8 @@ private constructor(
             }
     }
 
+    override fun supportsMessageThreads(): Boolean = false
+
     override fun baseUrl(): String =
         // Could use the AWS "BedrockEndpointProvider" in "fromEnv()", but that is a large
         // dependency that brings in all the competing AWS SDK classes for Bedrock that are not

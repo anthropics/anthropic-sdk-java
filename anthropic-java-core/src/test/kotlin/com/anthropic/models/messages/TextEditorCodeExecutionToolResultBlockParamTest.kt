@@ -17,7 +17,7 @@ internal class TextEditorCodeExecutionToolResultBlockParamTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -35,8 +35,7 @@ internal class TextEditorCodeExecutionToolResultBlockParamTest {
                             .build()
                     )
             )
-        assertThat(textEditorCodeExecutionToolResultBlockParam.toolUseId())
-            .isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(textEditorCodeExecutionToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_c")
         assertThat(textEditorCodeExecutionToolResultBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
     }
@@ -52,7 +51,7 @@ internal class TextEditorCodeExecutionToolResultBlockParamTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )

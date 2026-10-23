@@ -5,10 +5,12 @@ import com.anthropic.services.async.beta.organization.analytics.AppServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.ArtifactServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.ConnectorServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.CostReportServiceAsync
+import com.anthropic.services.async.beta.organization.analytics.CostServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.PluginServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.SkillServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.SummaryServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.UsageReportServiceAsync
+import com.anthropic.services.async.beta.organization.analytics.UsageServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.UserCostReportServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.UserServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.UserUsageReportServiceAsync
@@ -41,6 +43,10 @@ interface AnalyticsServiceAsync {
     fun skills(): SkillServiceAsync
 
     fun artifacts(): ArtifactServiceAsync
+
+    fun usage(): UsageServiceAsync
+
+    fun cost(): CostServiceAsync
 
     fun usageReport(): UsageReportServiceAsync
 
@@ -77,6 +83,10 @@ interface AnalyticsServiceAsync {
         fun skills(): SkillServiceAsync.WithRawResponse
 
         fun artifacts(): ArtifactServiceAsync.WithRawResponse
+
+        fun usage(): UsageServiceAsync.WithRawResponse
+
+        fun cost(): CostServiceAsync.WithRawResponse
 
         fun usageReport(): UsageReportServiceAsync.WithRawResponse
 

@@ -246,6 +246,7 @@ internal class UserOAuthCredentialsTest {
         val roundTrip = cache.readRecord()
         assertThat(roundTrip!!.accessToken).isEqualTo("refreshed")
         assertThat(roundTrip.refreshToken).isEqualTo("rt-new")
+        assertThat(roundTrip.type).isEqualTo("oauth_token")
     }
 
     @Test

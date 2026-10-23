@@ -39,7 +39,7 @@ internal class BetaToolUseCallerTest {
 
     @Test
     fun ofCodeExecution20250825() {
-        val codeExecution20250825 = BetaServerToolCaller.of("srvtoolu_SQfNkl1n_JR_")
+        val codeExecution20250825 = BetaServerToolCaller.of("srvtoolu_c")
 
         val betaToolUseCaller = BetaToolUseCaller.ofCodeExecution20250825(codeExecution20250825)
 
@@ -52,9 +52,7 @@ internal class BetaToolUseCallerTest {
     fun ofCodeExecution20250825Roundtrip() {
         val jsonMapper = jsonMapper()
         val betaToolUseCaller =
-            BetaToolUseCaller.ofCodeExecution20250825(
-                BetaServerToolCaller.of("srvtoolu_SQfNkl1n_JR_")
-            )
+            BetaToolUseCaller.ofCodeExecution20250825(BetaServerToolCaller.of("srvtoolu_c"))
 
         val roundtrippedBetaToolUseCaller =
             jsonMapper.readValue(
@@ -67,7 +65,7 @@ internal class BetaToolUseCallerTest {
 
     @Test
     fun ofCodeExecution20260120() {
-        val codeExecution20260120 = BetaServerToolCaller20260120.of("srvtoolu_SQfNkl1n_JR_")
+        val codeExecution20260120 = BetaServerToolCaller20260120.of("srvtoolu_c")
 
         val betaToolUseCaller = BetaToolUseCaller.ofCodeExecution20260120(codeExecution20260120)
 
@@ -80,9 +78,7 @@ internal class BetaToolUseCallerTest {
     fun ofCodeExecution20260120Roundtrip() {
         val jsonMapper = jsonMapper()
         val betaToolUseCaller =
-            BetaToolUseCaller.ofCodeExecution20260120(
-                BetaServerToolCaller20260120.of("srvtoolu_SQfNkl1n_JR_")
-            )
+            BetaToolUseCaller.ofCodeExecution20260120(BetaServerToolCaller20260120.of("srvtoolu_c"))
 
         val roundtrippedBetaToolUseCaller =
             jsonMapper.readValue(
@@ -98,16 +94,14 @@ internal class BetaToolUseCallerTest {
         val betaToolUseCaller =
             jsonMapper()
                 .convertValue(
-                    JsonValue.from(
-                        mapOf("type" to "unknown_variant", "tool_id" to "srvtoolu_SQfNkl1n_JR_")
-                    ),
+                    JsonValue.from(mapOf("type" to "unknown_variant", "tool_id" to "srvtoolu_c")),
                     jacksonTypeRef<BetaToolUseCaller>(),
                 )
 
         val e = assertThrows<AnthropicInvalidDataException> { betaToolUseCaller.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
 
-        assertThat(betaToolUseCaller.toolId()).contains("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaToolUseCaller.toolId()).contains("srvtoolu_c")
 
         val mismatchedBetaToolUseCaller =
             jsonMapper()

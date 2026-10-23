@@ -21,11 +21,17 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Get token usage over time across a date range.
+ * [Legacy] Get token usage over time across a date range.
  *
- * Returns token usage bucketed by minute, hour, or day, optionally broken down by product, model,
- * context window, inference region, or speed. Available to organizations on a Claude Enterprise
- * plan. Requires an API key with the `read:analytics` scope.
+ * Returns token usage bucketed by minute, hour, or day, optionally broken down by one or more
+ * `group_by[]` dimensions, such as product or model. Available to organizations on a Claude
+ * Enterprise plan. Requires an API key with the `read:analytics` scope.
+ *
+ * This endpoint is one of the legacy Claude Enterprise usage and cost reports. For new
+ * integrations, use
+ * [`GET /v1/organizations/analytics/usage`](/docs/en/api/beta/organization/analytics/usage/list) in
+ * the Usage and Cost Analytics API instead. To move an existing integration, see
+ * [Migrate from the Claude Enterprise usage and cost reports](/docs/en/manage-claude/usage-cost-analytics-api#migrate-from-enterprise-analytics-reports).
  */
 class UsageReportListParams
 private constructor(

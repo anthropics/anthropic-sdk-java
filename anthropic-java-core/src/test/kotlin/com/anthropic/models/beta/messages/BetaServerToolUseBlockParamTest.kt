@@ -12,7 +12,7 @@ internal class BetaServerToolUseBlockParamTest {
     fun create() {
         val betaServerToolUseBlockParam =
             BetaServerToolUseBlockParam.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .input(
                     BetaServerToolUseBlockParam.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -27,7 +27,7 @@ internal class BetaServerToolUseBlockParamTest {
                 .caller(BetaDirectCaller.builder().build())
                 .build()
 
-        assertThat(betaServerToolUseBlockParam.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaServerToolUseBlockParam.id()).isEqualTo("srvtoolu_c")
         assertThat(betaServerToolUseBlockParam.input())
             .isEqualTo(
                 BetaServerToolUseBlockParam.Input.builder()
@@ -53,7 +53,7 @@ internal class BetaServerToolUseBlockParamTest {
         val jsonMapper = jsonMapper()
         val betaServerToolUseBlockParam =
             BetaServerToolUseBlockParam.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .input(
                     BetaServerToolUseBlockParam.Input.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))

@@ -75,6 +75,14 @@ interface Backend {
     }
 
     /**
+     * Returns whether the backend service takes the `thread` field of the Messages API.
+     *
+     * The default implementation returns `true`, so the service answers for itself. Override it to
+     * return `false` for a service that is known to take no message threads.
+     */
+    fun supportsMessageThreads(): Boolean = true
+
+    /**
      * The `gen_ai.provider.name` attribute of the OpenTelemetry spans of a client that uses this
      * backend: the platform that serves the requests. `aws.bedrock` on Amazon Bedrock, including
      * its Mantle endpoint, `gcp.vertex_ai` on Vertex AI, and `anthropic` for every other backend,

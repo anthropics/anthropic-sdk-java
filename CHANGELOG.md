@@ -1,5 +1,30 @@
 # Changelog
 
+## [3.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.1.0...v3.2.0) (2026-10-23)
+
+### Features
+
+* **api:** add support for message threads
+* **api:** add usage and cost reports by dimension, mark older reports legacy
+
+
+### Bug Fixes
+
+* **client:** write oauth_token as the credentials file type
+* **tools:** leave the message being handled out of the tool runner's params()
+* **tools:** send the params given to the tool runner's setNextParams() unchanged, without running tools
+
+
+### Chores
+
+* **ci:** update the runner label for internal CI jobs
+* **docs:** clarify plugin content scan and validation descriptions
+* **docs:** clarify plugin served_version_pinned and updated_at
+* **docs:** fix usage and cost report examples and ending_at docs
+* **docs:** rate limit model lists vary by organization and workspace
+* **docs:** update model line example
+* **tests:** use shorter example values for strings that match a pattern
+
 ## [3.1.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.0.0...v3.1.0) (2026-10-21)
 
 ### Features

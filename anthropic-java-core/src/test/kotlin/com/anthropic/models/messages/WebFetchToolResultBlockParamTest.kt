@@ -16,7 +16,7 @@ internal class WebFetchToolResultBlockParamTest {
                         WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -29,7 +29,7 @@ internal class WebFetchToolResultBlockParamTest {
                     WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
-        assertThat(webFetchToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(webFetchToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_c")
         assertThat(webFetchToolResultBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(webFetchToolResultBlockParam.caller())
@@ -46,7 +46,7 @@ internal class WebFetchToolResultBlockParamTest {
                         WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )

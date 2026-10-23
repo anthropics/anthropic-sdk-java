@@ -20,7 +20,7 @@ internal class BetaTextEditorCodeExecutionToolResultBlockParamTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -42,7 +42,7 @@ internal class BetaTextEditorCodeExecutionToolResultBlockParamTest {
                     )
             )
         assertThat(betaTextEditorCodeExecutionToolResultBlockParam.toolUseId())
-            .isEqualTo("srvtoolu_SQfNkl1n_JR_")
+            .isEqualTo("srvtoolu_c")
         assertThat(betaTextEditorCodeExecutionToolResultBlockParam.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
@@ -65,7 +65,7 @@ internal class BetaTextEditorCodeExecutionToolResultBlockParamTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)

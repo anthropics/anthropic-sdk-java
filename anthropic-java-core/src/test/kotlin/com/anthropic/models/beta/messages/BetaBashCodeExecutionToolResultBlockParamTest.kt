@@ -16,7 +16,7 @@ internal class BetaBashCodeExecutionToolResultBlockParamTest {
                         BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -31,8 +31,7 @@ internal class BetaBashCodeExecutionToolResultBlockParamTest {
                         BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
                     )
             )
-        assertThat(betaBashCodeExecutionToolResultBlockParam.toolUseId())
-            .isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaBashCodeExecutionToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_c")
         assertThat(betaBashCodeExecutionToolResultBlockParam.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
@@ -51,7 +50,7 @@ internal class BetaBashCodeExecutionToolResultBlockParamTest {
                         BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)

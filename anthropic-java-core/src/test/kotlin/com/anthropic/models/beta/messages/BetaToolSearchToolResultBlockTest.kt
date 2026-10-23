@@ -17,7 +17,7 @@ internal class BetaToolSearchToolResultBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         assertThat(betaToolSearchToolResultBlock.content())
@@ -29,7 +29,7 @@ internal class BetaToolSearchToolResultBlockTest {
                         .build()
                 )
             )
-        assertThat(betaToolSearchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaToolSearchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_c")
     }
 
     @Test
@@ -43,7 +43,7 @@ internal class BetaToolSearchToolResultBlockTest {
                         .errorMessage("error_message")
                         .build()
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val roundtrippedBetaToolSearchToolResultBlock =

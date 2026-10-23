@@ -9,6 +9,8 @@ import com.anthropic.services.async.beta.organization.analytics.ConnectorService
 import com.anthropic.services.async.beta.organization.analytics.ConnectorServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.analytics.CostReportServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.CostReportServiceAsyncImpl
+import com.anthropic.services.async.beta.organization.analytics.CostServiceAsync
+import com.anthropic.services.async.beta.organization.analytics.CostServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.analytics.PluginServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.PluginServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.analytics.SkillServiceAsync
@@ -17,6 +19,8 @@ import com.anthropic.services.async.beta.organization.analytics.SummaryServiceAs
 import com.anthropic.services.async.beta.organization.analytics.SummaryServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.analytics.UsageReportServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.UsageReportServiceAsyncImpl
+import com.anthropic.services.async.beta.organization.analytics.UsageServiceAsync
+import com.anthropic.services.async.beta.organization.analytics.UsageServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.analytics.UserCostReportServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.UserCostReportServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.analytics.UserServiceAsync
@@ -47,6 +51,10 @@ class AnalyticsServiceAsyncImpl internal constructor(private val clientOptions: 
     private val skills: SkillServiceAsync by lazy { SkillServiceAsyncImpl(clientOptions) }
 
     private val artifacts: ArtifactServiceAsync by lazy { ArtifactServiceAsyncImpl(clientOptions) }
+
+    private val usage: UsageServiceAsync by lazy { UsageServiceAsyncImpl(clientOptions) }
+
+    private val cost: CostServiceAsync by lazy { CostServiceAsyncImpl(clientOptions) }
 
     private val usageReport: UsageReportServiceAsync by lazy {
         UsageReportServiceAsyncImpl(clientOptions)
@@ -82,6 +90,10 @@ class AnalyticsServiceAsyncImpl internal constructor(private val clientOptions: 
     override fun skills(): SkillServiceAsync = skills
 
     override fun artifacts(): ArtifactServiceAsync = artifacts
+
+    override fun usage(): UsageServiceAsync = usage
+
+    override fun cost(): CostServiceAsync = cost
 
     override fun usageReport(): UsageReportServiceAsync = usageReport
 
@@ -122,6 +134,14 @@ class AnalyticsServiceAsyncImpl internal constructor(private val clientOptions: 
             ArtifactServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val usage: UsageServiceAsync.WithRawResponse by lazy {
+            UsageServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val cost: CostServiceAsync.WithRawResponse by lazy {
+            CostServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val usageReport: UsageReportServiceAsync.WithRawResponse by lazy {
             UsageReportServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -158,6 +178,10 @@ class AnalyticsServiceAsyncImpl internal constructor(private val clientOptions: 
         override fun skills(): SkillServiceAsync.WithRawResponse = skills
 
         override fun artifacts(): ArtifactServiceAsync.WithRawResponse = artifacts
+
+        override fun usage(): UsageServiceAsync.WithRawResponse = usage
+
+        override fun cost(): CostServiceAsync.WithRawResponse = cost
 
         override fun usageReport(): UsageReportServiceAsync.WithRawResponse = usageReport
 

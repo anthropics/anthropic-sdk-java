@@ -12,13 +12,13 @@ internal class ServerToolUseBlockTest {
     fun create() {
         val serverToolUseBlock =
             ServerToolUseBlock.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .caller(DirectCaller.builder().build())
                 .input(JsonValue.from(mapOf("foo" to "bar")))
                 .name(ServerToolUseBlock.Name.WEB_SEARCH)
                 .build()
 
-        assertThat(serverToolUseBlock.id()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(serverToolUseBlock.id()).isEqualTo("srvtoolu_c")
         assertThat(serverToolUseBlock.caller())
             .isEqualTo(ServerToolUseBlock.Caller.ofDirect(DirectCaller.builder().build()))
         assertThat(serverToolUseBlock._input()).isEqualTo(JsonValue.from(mapOf("foo" to "bar")))
@@ -30,7 +30,7 @@ internal class ServerToolUseBlockTest {
         val jsonMapper = jsonMapper()
         val serverToolUseBlock =
             ServerToolUseBlock.builder()
-                .id("srvtoolu_SQfNkl1n_JR_")
+                .id("srvtoolu_c")
                 .caller(DirectCaller.builder().build())
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name(ServerToolUseBlock.Name.WEB_SEARCH)

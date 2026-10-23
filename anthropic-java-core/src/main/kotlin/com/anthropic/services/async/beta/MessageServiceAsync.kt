@@ -5,6 +5,9 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
+import com.anthropic.errors.AnthropicException
+import com.anthropic.helpers.BetaMessageThreadAsync
+import com.anthropic.helpers.StructuredBetaMessageThreadAsync
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageTokensCount
 import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent
@@ -12,6 +15,8 @@ import com.anthropic.models.beta.messages.MessageCountTokensParams
 import com.anthropic.models.beta.messages.MessageCreateParams
 import com.anthropic.models.beta.messages.StructuredMessage
 import com.anthropic.models.beta.messages.StructuredMessageCreateParams
+import com.anthropic.models.beta.messages.StructuredThreadCreateParams
+import com.anthropic.models.beta.messages.ThreadCreateParams
 import com.anthropic.services.async.beta.messages.BatchServiceAsync
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
@@ -118,6 +123,42 @@ interface MessageServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AsyncStreamResponse<BetaRawMessageStreamEvent> =
         createStreaming(params.rawParams, requestOptions)
+
+    /**
+     * Creates a message thread: a conversation that the API keeps, so that each turn sends only its
+     * new messages instead of the whole conversation.
+     *
+     * Nothing is sent by this call. The messages of [params], if any, are sent with the first turn.
+     * See [BetaMessageThreadAsync] for how turns are sent.
+     *
+     * @throws AnthropicException if the service that this client sends to takes no message threads,
+     *   as on Amazon Bedrock and Vertex AI.
+     */
+    fun thread(params: ThreadCreateParams): BetaMessageThreadAsync =
+        thread(params, RequestOptions.none())
+
+    /** @see thread */
+    fun thread(params: ThreadCreateParams, requestOptions: RequestOptions): BetaMessageThreadAsync =
+        BetaMessageThreadAsync.create(this, params, requestOptions)
+
+    /**
+     * Creates a message thread like [thread], whose replies are in the JSON schema derived from the
+     * output type of [params] and are returned with their text converted to instances of that
+     * class. See [StructuredBetaMessageThreadAsync].
+     */
+    fun <T : Any> thread(
+        params: StructuredThreadCreateParams<T>
+    ): StructuredBetaMessageThreadAsync<T> = thread(params, RequestOptions.none())
+
+    /** @see thread */
+    fun <T : Any> thread(
+        params: StructuredThreadCreateParams<T>,
+        requestOptions: RequestOptions,
+    ): StructuredBetaMessageThreadAsync<T> =
+        StructuredBetaMessageThreadAsync(
+            params.outputType,
+            thread(params.rawParams, requestOptions),
+        )
 
     /**
      * Count the number of tokens in a Message.

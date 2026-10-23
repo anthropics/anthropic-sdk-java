@@ -26,10 +26,11 @@ import kotlin.jvm.optionals.asSequence
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Makes one request, yields it in the form the caller iterates over, and returns the assistant
- * message once the caller has moved on.
+ * Makes one request, on the thread if there is one, yields it in the form the caller iterates over,
+ * and returns the assistant message once the caller has moved on.
  */
-private typealias Send<T> = suspend SequenceScope<T>.(MessageCreateParams) -> BetaMessage
+private typealias Send<T> =
+    suspend SequenceScope<T>.(BetaMessageThread?, MessageCreateParams) -> BetaMessage
 
 /** The open tool runner span. It does not refer to the runner, so it can outlive it. */
 private class ToolRunnerSpanEnd(private val clientOptions: ClientOptions) : AutoCloseable {
@@ -57,6 +58,11 @@ private class ToolRunnerSpanEnd(private val clientOptions: ClientOptions) : Auto
  * It's an [Iterable] that yields either [BetaMessage] objects by default or [StreamResponse]
  * objects when calling [streaming].
  *
+ * The runner keeps its conversation in a message thread by default, so each request sends only the
+ * new messages. To send the whole conversation on every request instead, set
+ * [ToolRunnerCreateParams.Builder.thread] to `false`. Unless that is set, `system` and `tools`
+ * cannot change during a run.
+ *
  * Tools can be added and removed during a run, without missing the prompt cache, with [addTool] and
  * [removeTool].
  */
@@ -66,7 +72,31 @@ internal constructor(
     private val clientOptions: ClientOptions,
     private val params: ToolRunnerCreateParams,
     private val requestOptions: RequestOptions,
+    thread: BetaMessageThread? = null,
 ) : Iterable<BetaMessage> {
+
+    init {
+        rejectCompactionParam(params.initialMessageParams)
+        rejectThreadParam(params.initialMessageParams)
+        require(thread == null || params.thread()) {
+            "`thread(false)` cannot be set on a tool runner that a message thread created. To run " +
+                "without a message thread, create the runner with `messages().toolRunner()`."
+        }
+    }
+
+    /** The thread the runner sends through, or `null` when it sends the conversation itself. */
+    private val thread: BetaMessageThread? =
+        thread
+            ?: if (params.thread() && BetaMessageThread.isSupportedBy(messageService))
+                BetaMessageThread(
+                    messageService,
+                    MessageThreadState(
+                        params.initialMessageParams,
+                        ThreadCreateParams.UnsupportedRequestBehavior.CONTINUE_UNTHREADED,
+                    ),
+                    requestOptions,
+                )
+            else null
 
     private var consumed = AtomicBoolean()
     private val toolRunnerSpan = ToolRunnerSpanEnd(clientOptions)
@@ -87,8 +117,8 @@ internal constructor(
     //   3. While that request is out, `compaction` is `InFlight`: `setNextParams()` refuses
     //      different messages, and further `compactBeforeNextTurn()` calls are ignored. A request
     //      that throws puts it back to `Idle`; nothing is retried.
-    //   4. The response is yielded, then `compact()` makes it the whole history (or keeps the
-    //      history and warns if there was no summary), and the loop carries on.
+    //   4. The response is yielded, then `compact()` puts it in place of the messages it summarizes
+    //      (or keeps the history and warns if there was no summary), and the loop carries on.
     //   5. If the run is ending, `compactionToSendAfterFinalTurn()` decides whether 2-4 happen
     //      once more before stopping: not when the last turn was cut off with tool calls never run.
     // From 1 to 4, `compactBeforeNextTurn()` and `setNextParams()` refuse a compaction edit.
@@ -102,12 +132,10 @@ internal constructor(
         object InFlight : Compaction
     }
 
-    init {
-        rejectCompactionParam(params.initialMessageParams)
-    }
-
-    override fun iterator(): Iterator<BetaMessage> = runLoop { requestParams ->
-        messageService.create(requestParams, requestOptions).also { yield(it) }
+    override fun iterator(): Iterator<BetaMessage> = runLoop { thread, requestParams ->
+        (thread?.send { it.wrap(requestParams.toBuilder()) }
+                ?: messageService.create(requestParams, requestOptions))
+            .also { yield(it) }
     }
 
     /** Returns an [Iterable] that yields streamed assistant messages instead of buffered ones. */
@@ -115,16 +143,20 @@ internal constructor(
         object : Iterable<StreamResponse<BetaRawMessageStreamEvent>> {
 
             override fun iterator(): Iterator<StreamResponse<BetaRawMessageStreamEvent>> =
-                runLoop { requestParams ->
+                runLoop { thread, requestParams ->
                     val accumulator = BetaMessageAccumulator.create()
                     val streamResponse =
                         object : StreamResponse<BetaRawMessageStreamEvent> {
 
                             private val delegate =
-                                messageService.createStreaming(
-                                    requestParams,
-                                    requestOptions.withStreamAccumulator(accumulator),
+                                thread?.sendStreaming(
+                                    { it.wrap(requestParams.toBuilder()) },
+                                    RequestOptions.none().withStreamAccumulator(accumulator),
                                 )
+                                    ?: messageService.createStreaming(
+                                        requestParams,
+                                        requestOptions.withStreamAccumulator(accumulator),
+                                    )
 
                             override fun stream(): Stream<BetaRawMessageStreamEvent> =
                                 delegate.stream().peek(accumulator::accumulate)
@@ -145,10 +177,12 @@ internal constructor(
 
         return inToolRunnerSpan(
             iterator {
-                var paramsBuilder = params.initialMessageParams.toBuilderWithToolRunnerHeader()
+                var paramsBuilder = firstParams().toBuilderWithToolRunnerHeader()
                 val maxIterations = params.maxIterations().orElse(Long.MAX_VALUE)
                 var iteration = 0L
                 var lastStopReason = Optional.empty<BetaStopReason>()
+                val givenBeforeRun = nextParams
+                var takesOver = false
 
                 try {
                     while (iteration < maxIterations) {
@@ -156,24 +190,33 @@ internal constructor(
                         val compactionConfig = compactionToSend(lastStopReason)
                         if (compactionConfig != null) {
                             paramsBuilder = compact(send, compactionConfig)
+                            takesOver = false
                             continue
                         }
                         iteration++
 
-                        val message = send(currentParams)
+                        // Messages that start a new thread would take the change with them.
+                        if (takesOver) {
+                            thread?.state?.checkUnchanged(currentParams)
+                            takesOver = false
+                        }
+                        // The thread goes on from the run's messages when the request fails, too.
+                        thread?.state?.replaceMessages(currentParams.messages())
+                        val message = send(thread, currentParams)
                         val nextStep = determineNextStepFromStopReason(message.stopReason())
                         lastStopReason = message.stopReason()
 
                         val nextParams = nextParams
                         if (nextParams != null) {
                             paramsBuilder = nextParams.toBuilderWithToolRunnerHeader()
+                            takesOver = nextParams !== givenBeforeRun
                             this@BetaToolRunner.nextParams = null
                             continue
                         }
 
                         val toolResponse =
                             if (nextStep == NextStep.RUN_TOOLS)
-                                generateToolResponse(message.toParam())
+                                answerToolCalls(message.toParamKeepingUnknownBlocks())
                             else null
                         if (
                             nextStep == NextStep.STOP ||
@@ -184,14 +227,23 @@ internal constructor(
                                 currentParams =
                                     paramsBuilder
                                         .addMessage(message.toParamKeepingUnknownBlocks())
+                                        // The thread also holds what was appended since the turn.
+                                        .apply { thread?.let { messages(it.messages()) } }
                                         .adoptContainer(message)
                                         .build()
                                 currentParams = compact(send, finalCompactionConfig).build()
                             }
                             break
                         }
-                        paramsBuilder.addMessage(message).adoptContainer(message)
-                        toolResponse?.let { paramsBuilder.addMessage(it) }
+                        if (thread == null) {
+                            paramsBuilder.addMessage(message.toParamKeepingUnknownBlocks())
+                            toolResponse?.let { paramsBuilder.addMessage(it) }
+                        } else {
+                            // The thread holds the conversation as it was sent, the message and the
+                            // results.
+                            paramsBuilder.messages(thread.messages())
+                        }
+                        paramsBuilder.adoptContainer(message)
                     }
                     toolRunnerSpan.get()?.setStatus(StatusCode.OK)
                 } catch (e: Throwable) {
@@ -260,9 +312,18 @@ internal constructor(
     /** Returns the current params being used by [BetaToolRunner]. */
     fun params(): MessageCreateParams = currentParams
 
-    /** Sets the parameters for the next API call, invalidating any cached tool response. */
+    /**
+     * Sets the parameters for the next API call, invalidating any cached tool response.
+     *
+     * On a message thread, `system` and `tools` cannot change: use [addTool] and [removeTool], or
+     * set [ToolRunnerCreateParams.Builder.thread] to `false` when you create the runner.
+     *
+     * @throws IllegalArgumentException if [nextParams] set a `thread`, which the runner sets
+     *   itself.
+     */
     fun setNextParams(nextParams: MessageCreateParams) {
         rejectCompactionParam(nextParams)
+        rejectThreadParam(nextParams)
         if (compaction !is Compaction.Idle) {
             checkCanCompact(nextParams)
         }
@@ -459,12 +520,44 @@ internal constructor(
         return build()
     }
 
+    /**
+     * The params of the first request, with the messages that [thread] was given since [params].
+     */
+    private fun firstParams(): MessageCreateParams {
+        val messages = thread?.messages() ?: return currentParams
+        val given = currentParams.messages()
+        return if (messages.take(given.size) == given)
+            currentParams.toBuilder().messages(messages).build()
+        else currentParams
+    }
+
+    /**
+     * Runs the tools that [message] calls. The results go onto the thread at once, because the run
+     * can end before another request, and the thread goes on from them.
+     */
+    private fun answerToolCalls(message: BetaMessageParam): BetaMessageParam? =
+        generateToolResponse(message)?.also { thread?.state?.answerLastReply(it) }
+
+    /** A runner like this one, which has not run, whose turns are turns of [thread]. */
+    @JvmSynthetic
+    internal fun onThread(thread: BetaMessageThread): BetaToolRunner =
+        BetaToolRunner(messageService, clientOptions, params, requestOptions, thread)
+
     private fun rejectCompactionParam(params: MessageCreateParams) {
         val compaction = params._compaction()
         require(compaction.isMissing() || compaction.isNull()) {
             "`compaction` cannot be set on a tool runner: every request in the loop would " +
                 "compact again. Call `compactBeforeNextTurn()` on the tool runner when the " +
                 "conversation should be compacted instead."
+        }
+    }
+
+    private fun rejectThreadParam(params: MessageCreateParams) {
+        val thread = params._thread()
+        require(thread.isMissing() || thread.isNull()) {
+            "`thread` cannot be set in the params of a tool runner. The runner sets it for each " +
+                "request itself. To run without a message thread, set `thread(false)` on the " +
+                "`ToolRunnerCreateParams`."
         }
     }
 
@@ -507,9 +600,12 @@ internal constructor(
                 .build()
 
         compaction = Compaction.InFlight
+        // On a fork, so that the thread changes only when there is a summary to go on from.
+        val fork = thread?.fork()
+        val compacted = fork?.messages().orEmpty().size
         val message =
             try {
-                send(request)
+                send(fork, request)
             } finally {
                 compaction = Compaction.Idle
             }
@@ -522,13 +618,18 @@ internal constructor(
             }
         if (!hasSummary) {
             warn("Compaction produced no summary; keeping the conversation as it is.")
-            return paramsBuilder
+            val appended = thread?.messages().orEmpty().drop(compacted)
+            return paramsBuilder.messages(currentParams.messages() + appended)
         }
+        // The run can end here, and the thread goes on from the summary.
+        fork?.let { thread?.state?.compactTo(it.state, compacted) }
         // The messages that recorded a removal are about to be replaced.
         (runnableToolsByName().keys - availableToolNames()).forEach { toolOverrides[it] = null }
         lastToolResponse = null
         // The response has to be sent back as it came, first, replacing the messages it summarizes.
-        return paramsBuilder.messages(listOf(message.toParamKeepingUnknownBlocks()))
+        return paramsBuilder.messages(
+            thread?.messages() ?: listOf(message.toParamKeepingUnknownBlocks())
+        )
     }
 
     /**
@@ -579,23 +680,6 @@ internal constructor(
         }
         return scheduled.config
     }
-
-    /**
-     * [BetaMessage.toParam], except that a block of a type newer than this SDK goes back as the raw
-     * JSON it came as, where [BetaContentBlock.toParam] throws.
-     */
-    private fun BetaMessage.toParamKeepingUnknownBlocks(): BetaMessageParam =
-        BetaMessageParam.ofAssistant(
-            BetaMessageContentParam.ofContentBlockParams(
-                content().map { block ->
-                    block
-                        ._json()
-                        .getOrNull()
-                        ?.takeIf { block.type().value() == BetaContentBlock.Type.Value._UNKNOWN }
-                        ?.convert(BetaContentBlockParam::class.java) ?: block.toParam()
-                }
-            )
-        )
 
     private fun warn(message: String) {
         System.err.println("WARNING: `BetaToolRunner`: $message")

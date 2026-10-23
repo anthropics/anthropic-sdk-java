@@ -89,7 +89,7 @@ internal class UserOAuthCredentials(
 
         credentialsCache.writeRecord(
             CachedTokenData(
-                type = "access_token",
+                type = "oauth_token",
                 accessToken = refreshed.accessToken,
                 expiresAt = newExpiresAt.epochSecond,
                 refreshToken = newRefreshToken,
@@ -144,7 +144,7 @@ internal class UserOAuthCredentials(
             val newRefreshToken = refreshed.refreshToken ?: refreshToken
             credentialsCache.writeRecord(
                 CachedTokenData(
-                    type = "access_token",
+                    type = "oauth_token",
                     accessToken = refreshed.accessToken,
                     expiresAt = newExpiresAt.epochSecond,
                     refreshToken = newRefreshToken,

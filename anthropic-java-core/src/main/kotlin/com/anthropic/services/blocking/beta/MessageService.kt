@@ -4,7 +4,10 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.StreamResponse
+import com.anthropic.errors.AnthropicException
+import com.anthropic.helpers.BetaMessageThread
 import com.anthropic.helpers.BetaToolRunner
+import com.anthropic.helpers.StructuredBetaMessageThread
 import com.anthropic.models.beta.messages.*
 import com.anthropic.services.blocking.beta.messages.BatchService
 import com.google.errorprone.annotations.MustBeClosed
@@ -142,6 +145,38 @@ interface MessageService {
     /** @see toolRunner */
     fun toolRunner(params: ToolRunnerCreateParams): BetaToolRunner =
         toolRunner(params, RequestOptions.none())
+
+    /**
+     * Creates a message thread: a conversation that the API keeps, so that each turn sends only its
+     * new messages instead of the whole conversation.
+     *
+     * Nothing is sent by this call. The messages of [params], if any, are sent with the first turn.
+     * See [BetaMessageThread] for how turns are sent.
+     *
+     * @throws AnthropicException if the service that this client sends to takes no message threads,
+     *   as on Amazon Bedrock and Vertex AI.
+     */
+    fun thread(params: ThreadCreateParams): BetaMessageThread =
+        thread(params, RequestOptions.none())
+
+    /** @see thread */
+    fun thread(params: ThreadCreateParams, requestOptions: RequestOptions): BetaMessageThread =
+        BetaMessageThread.create(this, params, requestOptions)
+
+    /**
+     * Creates a message thread like [thread], whose replies are in the JSON schema derived from the
+     * output type of [params] and are returned with their text converted to instances of that
+     * class. See [StructuredBetaMessageThread].
+     */
+    fun <T : Any> thread(params: StructuredThreadCreateParams<T>): StructuredBetaMessageThread<T> =
+        thread(params, RequestOptions.none())
+
+    /** @see thread */
+    fun <T : Any> thread(
+        params: StructuredThreadCreateParams<T>,
+        requestOptions: RequestOptions,
+    ): StructuredBetaMessageThread<T> =
+        StructuredBetaMessageThread(params.outputType, thread(params.rawParams, requestOptions))
 
     /** @see toolRunner */
     fun toolRunner(

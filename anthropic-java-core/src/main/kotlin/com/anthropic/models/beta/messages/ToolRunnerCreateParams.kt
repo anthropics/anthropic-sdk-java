@@ -12,7 +12,14 @@ private constructor(
     @get:JvmName("initialMessageParams") val initialMessageParams: MessageCreateParams,
     private val maxIterations: Long?,
     private val betaMemoryToolHandler: BetaMemoryToolHandler?,
+    private val thread: Boolean,
 ) {
+
+    /**
+     * Whether the tool runner keeps its conversation in a message thread, so that each request
+     * sends only the new messages. Defaults to `true`.
+     */
+    fun thread(): Boolean = thread
 
     fun maxIterations(): Optional<Long> = Optional.ofNullable(maxIterations)
 
@@ -40,12 +47,14 @@ private constructor(
         private var initialMessageParams: MessageCreateParams? = null
         private var maxIterations: Long? = null
         private var betaMemoryToolHandler: BetaMemoryToolHandler? = null
+        private var thread: Boolean = true
 
         @JvmSynthetic
         internal fun from(toolRunnerCreateParams: ToolRunnerCreateParams) = apply {
             initialMessageParams = toolRunnerCreateParams.initialMessageParams
             maxIterations = toolRunnerCreateParams.maxIterations
             betaMemoryToolHandler = toolRunnerCreateParams.betaMemoryToolHandler
+            thread = toolRunnerCreateParams.thread
         }
 
         fun initialMessageParams(initialMessageParams: MessageCreateParams) = apply {
@@ -62,6 +71,17 @@ private constructor(
         fun betaMemoryToolHandler(betaMemoryToolHandler: BetaMemoryToolHandler) = apply {
             this.betaMemoryToolHandler = betaMemoryToolHandler
         }
+
+        /**
+         * Sets whether the tool runner keeps its conversation in a message thread. Defaults to
+         * `true`: the first request starts a thread, and each later request sends only the new
+         * messages, such as the tool results.
+         *
+         * With `false` the runner sends no thread, and sends the whole conversation on every
+         * request. The runner also does that, whatever is set here, on a client for Amazon Bedrock
+         * or Vertex AI, which take no message threads.
+         */
+        fun thread(thread: Boolean) = apply { this.thread = thread }
 
         /**
          * Returns an immutable instance of [ToolRunnerCreateParams].
@@ -95,6 +115,7 @@ private constructor(
                 initialMessageParams,
                 maxIterations,
                 betaMemoryToolHandler,
+                thread,
             )
         }
     }

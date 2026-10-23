@@ -21,7 +21,7 @@ internal class BetaWebSearchToolResultBlockParamTest {
                             .build()
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -43,7 +43,7 @@ internal class BetaWebSearchToolResultBlockParamTest {
                     )
                 )
             )
-        assertThat(betaWebSearchToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaWebSearchToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_c")
         assertThat(betaWebSearchToolResultBlockParam.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
@@ -73,7 +73,7 @@ internal class BetaWebSearchToolResultBlockParamTest {
                             .build()
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)

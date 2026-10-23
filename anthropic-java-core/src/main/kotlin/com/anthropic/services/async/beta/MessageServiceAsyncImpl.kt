@@ -76,6 +76,8 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
         // post /v1/messages/count_tokens?beta=true
         withRawResponse().countTokens(params, requestOptions).thenParse()
 
+    @JvmSynthetic internal fun clientOptions(): ClientOptions = clientOptions
+
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MessageServiceAsync.WithRawResponse {
 

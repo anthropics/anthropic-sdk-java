@@ -654,7 +654,7 @@ private constructor(
             val token = delegate.get(baseUrl, forceRefresh)
             cache.writeRecord(
                 CachedTokenData(
-                    type = "access_token",
+                    type = "oauth_token",
                     accessToken = token.token,
                     expiresAt = token.expiresAt?.epochSecond,
                     refreshToken = null,
@@ -675,7 +675,7 @@ private constructor(
             return delegate.getAsync(baseUrl, forceRefresh).thenApplyAsync { token ->
                 cache.writeRecord(
                     CachedTokenData(
-                        type = "access_token",
+                        type = "oauth_token",
                         accessToken = token.token,
                         expiresAt = token.expiresAt?.epochSecond,
                         refreshToken = null,

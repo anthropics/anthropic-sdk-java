@@ -9,6 +9,8 @@ import com.anthropic.services.blocking.beta.organization.analytics.ConnectorServ
 import com.anthropic.services.blocking.beta.organization.analytics.ConnectorServiceImpl
 import com.anthropic.services.blocking.beta.organization.analytics.CostReportService
 import com.anthropic.services.blocking.beta.organization.analytics.CostReportServiceImpl
+import com.anthropic.services.blocking.beta.organization.analytics.CostService
+import com.anthropic.services.blocking.beta.organization.analytics.CostServiceImpl
 import com.anthropic.services.blocking.beta.organization.analytics.PluginService
 import com.anthropic.services.blocking.beta.organization.analytics.PluginServiceImpl
 import com.anthropic.services.blocking.beta.organization.analytics.SkillService
@@ -17,6 +19,8 @@ import com.anthropic.services.blocking.beta.organization.analytics.SummaryServic
 import com.anthropic.services.blocking.beta.organization.analytics.SummaryServiceImpl
 import com.anthropic.services.blocking.beta.organization.analytics.UsageReportService
 import com.anthropic.services.blocking.beta.organization.analytics.UsageReportServiceImpl
+import com.anthropic.services.blocking.beta.organization.analytics.UsageService
+import com.anthropic.services.blocking.beta.organization.analytics.UsageServiceImpl
 import com.anthropic.services.blocking.beta.organization.analytics.UserCostReportService
 import com.anthropic.services.blocking.beta.organization.analytics.UserCostReportServiceImpl
 import com.anthropic.services.blocking.beta.organization.analytics.UserService
@@ -45,6 +49,10 @@ class AnalyticsServiceImpl internal constructor(private val clientOptions: Clien
     private val skills: SkillService by lazy { SkillServiceImpl(clientOptions) }
 
     private val artifacts: ArtifactService by lazy { ArtifactServiceImpl(clientOptions) }
+
+    private val usage: UsageService by lazy { UsageServiceImpl(clientOptions) }
+
+    private val cost: CostService by lazy { CostServiceImpl(clientOptions) }
 
     private val usageReport: UsageReportService by lazy { UsageReportServiceImpl(clientOptions) }
 
@@ -76,6 +84,10 @@ class AnalyticsServiceImpl internal constructor(private val clientOptions: Clien
     override fun skills(): SkillService = skills
 
     override fun artifacts(): ArtifactService = artifacts
+
+    override fun usage(): UsageService = usage
+
+    override fun cost(): CostService = cost
 
     override fun usageReport(): UsageReportService = usageReport
 
@@ -116,6 +128,14 @@ class AnalyticsServiceImpl internal constructor(private val clientOptions: Clien
             ArtifactServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val usage: UsageService.WithRawResponse by lazy {
+            UsageServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val cost: CostService.WithRawResponse by lazy {
+            CostServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val usageReport: UsageReportService.WithRawResponse by lazy {
             UsageReportServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -152,6 +172,10 @@ class AnalyticsServiceImpl internal constructor(private val clientOptions: Clien
         override fun skills(): SkillService.WithRawResponse = skills
 
         override fun artifacts(): ArtifactService.WithRawResponse = artifacts
+
+        override fun usage(): UsageService.WithRawResponse = usage
+
+        override fun cost(): CostService.WithRawResponse = cost
 
         override fun usageReport(): UsageReportService.WithRawResponse = usageReport
 

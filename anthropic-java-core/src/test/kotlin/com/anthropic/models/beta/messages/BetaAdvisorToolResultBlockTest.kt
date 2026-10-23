@@ -16,7 +16,7 @@ internal class BetaAdvisorToolResultBlockTest {
                         BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         assertThat(betaAdvisorToolResultBlock.content())
@@ -25,7 +25,7 @@ internal class BetaAdvisorToolResultBlockTest {
                     BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED
                 )
             )
-        assertThat(betaAdvisorToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
+        assertThat(betaAdvisorToolResultBlock.toolUseId()).isEqualTo("srvtoolu_c")
     }
 
     @Test
@@ -38,7 +38,7 @@ internal class BetaAdvisorToolResultBlockTest {
                         BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED
                     )
                 )
-                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .toolUseId("srvtoolu_c")
                 .build()
 
         val roundtrippedBetaAdvisorToolResultBlock =

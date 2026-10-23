@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.PrintStream
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -28,10 +29,13 @@ internal class FakeHttpClient(responses: List<Any>) : HttpClient {
     private val remaining = responses.toMutableList()
 
     /** The requests executed so far, buffered for repeated reads. */
-    val requests = mutableListOf<HttpRequest>()
+    val requests = CopyOnWriteArrayList<HttpRequest>()
+
+    /** The options that each of the [requests] was executed with. */
+    val requestOptions = mutableListOf<RequestOptions>()
 
     /** The responses issued so far, exposing whether each has been closed. */
-    val issued = mutableListOf<TrackedResponse>()
+    val issued = CopyOnWriteArrayList<TrackedResponse>()
 
     val jsonBodies: List<ObjectNode>
         get() = requests.map { it.body().get().json(ObjectNode::class.java) }
@@ -43,6 +47,7 @@ internal class FakeHttpClient(responses: List<Any>) : HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
         requests.add(request.buffered())
+        this.requestOptions.add(requestOptions)
         return materialize(remaining.removeAt(0))
     }
 
