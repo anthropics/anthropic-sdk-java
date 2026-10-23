@@ -18,7 +18,7 @@ private constructor(
      * The query pairs that tell the operation apart from the others with its path in the OpenAPI
      * document. Set by the SDK method that makes the request.
      */
-    @get:JvmSynthetic internal val qualifiers: Map<String, String>? = null,
+    @get:JvmSynthetic val qualifiers: Map<String, String>? = null,
     /**
      * The accumulator that an SDK helper feeds with the events of the API call's streamed Message
      * as the application reads them. The call's span reads the Message from it, in place of an
