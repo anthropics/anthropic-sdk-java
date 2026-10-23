@@ -1,6 +1,6 @@
 allprojects {
     group = "com.anthropic"
-    version = "3.2.0" // x-release-please-version
+    version = "3.3.0" // x-release-please-version
 }
 
 // Modules get these from `anthropic.java`; the root project applies no convention, so register
