@@ -4,6 +4,7 @@
 
 ### Chores
 
+* **docs:** fix the usage and cost report examples' token total and data_refreshed_at
 * **internal:** carry endpoint path query params to the request layer
 
 ## [3.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.1.0...v3.2.0) (2026-10-23)
