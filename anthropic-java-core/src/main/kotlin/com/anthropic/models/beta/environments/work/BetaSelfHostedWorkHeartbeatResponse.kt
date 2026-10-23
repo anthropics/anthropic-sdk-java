@@ -41,7 +41,8 @@ private constructor(
     ) : this(lastHeartbeat, leaseExtended, state, ttlSeconds, type, mutableMapOf())
 
     /**
-     * RFC 3339 timestamp of the actual heartbeat from DB
+     * RFC 3339 timestamp of the most recent heartbeat recorded for this work item, or an empty
+     * string if none has been recorded
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -169,7 +170,10 @@ private constructor(
                 betaSelfHostedWorkHeartbeatResponse.additionalProperties.toMutableMap()
         }
 
-        /** RFC 3339 timestamp of the actual heartbeat from DB */
+        /**
+         * RFC 3339 timestamp of the most recent heartbeat recorded for this work item, or an empty
+         * string if none has been recorded
+         */
         fun lastHeartbeat(lastHeartbeat: String) = lastHeartbeat(JsonField.of(lastHeartbeat))
 
         /**

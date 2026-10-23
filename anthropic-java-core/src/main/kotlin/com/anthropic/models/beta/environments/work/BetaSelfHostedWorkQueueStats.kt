@@ -15,11 +15,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Statistics about the work queue for an environment.
- *
- * Uses Redis Stream consumer group metrics for O(1) queries.
- */
+/** Statistics about the work queue for an environment. */
 class BetaSelfHostedWorkQueueStats
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -45,7 +41,7 @@ private constructor(
     ) : this(depth, oldestQueuedAt, pending, type, workersPolling, mutableMapOf())
 
     /**
-     * Number of work items waiting to be picked up (lag from consumer group)
+     * Number of work items waiting to be picked up
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -171,7 +167,7 @@ private constructor(
             additionalProperties = betaSelfHostedWorkQueueStats.additionalProperties.toMutableMap()
         }
 
-        /** Number of work items waiting to be picked up (lag from consumer group) */
+        /** Number of work items waiting to be picked up */
         fun depth(depth: Long) = depth(JsonField.of(depth))
 
         /**
