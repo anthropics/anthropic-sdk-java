@@ -177,10 +177,12 @@ internal constructor(
 
         return inToolRunnerSpan(
             iterator {
-                var paramsBuilder = params().toBuilderWithToolRunnerHeader()
+                var paramsBuilder = firstParams().toBuilderWithToolRunnerHeader()
                 val maxIterations = params.maxIterations().orElse(Long.MAX_VALUE)
                 var iteration = 0L
                 var lastStopReason = Optional.empty<BetaStopReason>()
+                val givenBeforeRun = nextParams
+                var takesOver = false
 
                 try {
                     while (iteration < maxIterations) {
@@ -188,10 +190,16 @@ internal constructor(
                         val compactionConfig = compactionToSend(lastStopReason)
                         if (compactionConfig != null) {
                             paramsBuilder = compact(send, compactionConfig)
+                            takesOver = false
                             continue
                         }
                         iteration++
 
+                        // Messages that start a new thread would take the change with them.
+                        if (takesOver) {
+                            thread?.state?.checkUnchanged(currentParams)
+                            takesOver = false
+                        }
                         // The thread goes on from the run's messages when the request fails, too.
                         thread?.state?.replaceMessages(currentParams.messages())
                         val message = send(thread, currentParams)
@@ -200,10 +208,8 @@ internal constructor(
 
                         val nextParams = nextParams
                         if (nextParams != null) {
-                            paramsBuilder =
-                                nextParams
-                                    .withToolResponseTo(message)
-                                    .toBuilderWithToolRunnerHeader()
+                            paramsBuilder = nextParams.toBuilderWithToolRunnerHeader()
+                            takesOver = nextParams !== givenBeforeRun
                             this@BetaToolRunner.nextParams = null
                             continue
                         }
@@ -303,17 +309,8 @@ internal constructor(
         return Context.current().with(openToolRunnerSpan).makeCurrent().use { run() }
     }
 
-    /**
-     * Returns the current params being used by [BetaToolRunner]. On a message thread, the messages
-     * also hold the message being handled.
-     */
-    fun params(): MessageCreateParams {
-        val messages = thread?.messages() ?: return currentParams
-        val sent = currentParams.messages()
-        return if (messages.take(sent.size) == sent)
-            currentParams.toBuilder().messages(messages).build()
-        else currentParams
-    }
+    /** Returns the current params being used by [BetaToolRunner]. */
+    fun params(): MessageCreateParams = currentParams
 
     /**
      * Sets the parameters for the next API call, invalidating any cached tool response.
@@ -331,7 +328,8 @@ internal constructor(
             checkCanCompact(nextParams)
         }
         check(
-            compaction !is Compaction.InFlight || nextParams._messages() == params()._messages()
+            compaction !is Compaction.InFlight ||
+                nextParams._messages() == currentParams._messages()
         ) {
             "The messages can't be changed while the conversation is being compacted, because " +
                 "the compaction response replaces them. Make the change on the next iteration."
@@ -523,26 +521,14 @@ internal constructor(
     }
 
     /**
-     * On a message thread, these params with the results of the tool calls of [message] right after
-     * it, when the messages hold it.
+     * The params of the first request, with the messages that [thread] was given since [params].
      */
-    private fun MessageCreateParams.withToolResponseTo(message: BetaMessage): MessageCreateParams {
-        if (
-            thread == null ||
-                determineNextStepFromStopReason(message.stopReason()) != NextStep.RUN_TOOLS
-        ) {
-            return this
-        }
-        val index = messages().lastIndexOf(message.toParamKeepingUnknownBlocks())
-        if (index < 0) {
-            return this
-        }
-
-        thread.state.check(this)
-        val toolResponse = answerToolCalls(message.toParamKeepingUnknownBlocks()) ?: return this
-        return toBuilder()
-            .messages(messages().take(index + 1) + toolResponse + messages().drop(index + 1))
-            .build()
+    private fun firstParams(): MessageCreateParams {
+        val messages = thread?.messages() ?: return currentParams
+        val given = currentParams.messages()
+        return if (messages.take(given.size) == given)
+            currentParams.toBuilder().messages(messages).build()
+        else currentParams
     }
 
     /**

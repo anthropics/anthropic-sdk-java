@@ -35,8 +35,11 @@ import com.anthropic.helpers.BetaMessageThreadTest.Companion.tool
 import com.anthropic.helpers.BetaMessageThreadTest.Companion.user
 import com.anthropic.helpers.BetaMessageThreadTest.Companion.userParam
 import com.anthropic.helpers.BetaMessageThreadTest.Companion.wire
+import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaFallbackParam
 import com.anthropic.models.beta.messages.BetaMessage
+import com.anthropic.models.beta.messages.BetaMessageParam
+import com.anthropic.models.beta.messages.BetaStopReason
 import com.anthropic.models.beta.messages.BetaToolResultBlockParam
 import com.anthropic.models.beta.messages.BetaToolUnion
 import com.anthropic.models.beta.messages.MessageCreateParams
@@ -61,8 +64,10 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.junit.jupiter.api.parallel.Resources
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.any
@@ -528,7 +533,14 @@ internal class BetaToolRunnerThreadTest {
             assertThat(runner.params().model().asString()).isEqualTo("claude-sonnet-4-5")
             assertThat(runner.params().fallbacks().get().asFallbackParams()).isEqualTo(fallbacks)
             if (setsNextParams && reply.id() == "msg_a") {
-                runner.setNextParams(runner.params())
+                runner.setNextParams(
+                    runner
+                        .params()
+                        .toBuilder()
+                        .addMessage(reply)
+                        .addMessage(resultParam("toolu_1", "Sunny"))
+                        .build()
+                )
             }
         }
 
@@ -658,11 +670,8 @@ internal class BetaToolRunnerThreadTest {
         assertThat(http.jsonBodies[1]["container"].asText()).isEqualTo("container_1")
     }
 
-    @ParameterizedTest
-    @ValueSource(booleans = [false, true])
-    fun `a run that stops at its limit leaves the tool results and the container on the thread`(
-        setsNextParams: Boolean
-    ) {
+    @Test
+    fun `a run that stops at its limit leaves the tool results and the container on the thread`() {
         val http =
             FakeHttpClient(
                 toolUse("msg_a", "toolu_1", container = "container_1"),
@@ -671,14 +680,7 @@ internal class BetaToolRunnerThreadTest {
         val thread = thread(http)
         thread.append(userParam("What is the weather in Paris?"))
 
-        val runner = thread.toolRunner { it.maxIterations(1) }
-        for (reply in runner) {
-            if (setsNextParams) {
-                runner.setNextParams(
-                    runner.params().toBuilder().addUserMessage("In one word.").build()
-                )
-            }
-        }
+        thread.toolRunner { it.maxIterations(1) }.toList()
         assertThat(wire(thread.messages()))
             .isEqualTo(json("""[$QUESTION,${call("toolu_1")},${result("toolu_1")}]"""))
         thread.send("And in Lyon?")
@@ -715,22 +717,282 @@ internal class BetaToolRunnerThreadTest {
             )
     }
 
-    @Test
-    fun `messages added to the params continue the thread, after the tool results`() {
-        val http = FakeHttpClient(toolUse("msg_a", "toolu_1"), message("msg_b", "Sunny"))
-        val runner = runner(http)
+    @ParameterizedTest
+    @MethodSource("nextParamsInBothModes")
+    fun `the next params are the next request unchanged, and no tool runs`(
+        next: NextParams,
+        threaded: Boolean,
+        streaming: Boolean,
+    ) {
+        val http =
+            FakeHttpClient(
+                toolUse("msg_a", "toolu_1", streaming),
+                reply("msg_b", "Sunny", streaming),
+            )
+        val runner = runner(http, thread = threaded)
 
-        for (reply in runner) {
+        val replies =
+            runner.run(streaming) { reply ->
+                if (reply.id() == "msg_a") {
+                    runner.setNextParams(next.of(runner.params(), reply))
+                }
+            }
+
+        assertThat(replies).containsExactly("msg_a", "msg_b")
+        assertThat(http.requests).hasSize(2)
+        assertThat(runs.get()).isEqualTo(0)
+        assertThat(conversations(http, "msg_a" to call("toolu_1"))[1])
+            .isEqualTo(json(next.conversation))
+        assertThat(http.jsonBodies[1]["max_tokens"].asInt()).isEqualTo(2048)
+        assertThat(http.jsonBodies[1]["thread"])
+            .isEqualTo(if (!threaded) null else if (next.goesOn) continues("msg_a") else CREATE)
+    }
+
+    /** What the caller makes of `params()` while it handles `msg_a`, which calls a tool. */
+    internal enum class NextParams(
+        private val messages: MessageCreateParams.Builder.(BetaMessage) -> Unit,
+        /** The conversation of the next request. */
+        val conversation: String,
+        /** Whether that conversation starts with the one so far, `msg_a` included. */
+        val goesOn: Boolean,
+    ) {
+        THE_CALL_AND_AN_OWN_RESULT(
+            { addMessage(it).addMessage(resultParam("toolu_1", "Mine")) },
+            """[$QUESTION,${call("toolu_1")},${result("toolu_1", "Mine")}]""",
+            goesOn = true,
+        ),
+        A_WHOLE_LIST_WITH_THE_CALL_AND_AN_OWN_RESULT(
+            {
+                messages(
+                    listOf(
+                        userParam("What is the weather in Paris?"),
+                        it.toParam(),
+                        resultParam("toolu_1", "Mine"),
+                    )
+                )
+            },
+            """[$QUESTION,${call("toolu_1")},${result("toolu_1", "Mine")}]""",
+            goesOn = true,
+        ),
+        THE_CALL_AND_A_USER_MESSAGE(
+            { addMessage(it).addUserMessage("Well?") },
+            """[$QUESTION,${call("toolu_1")},${user("Well?")}]""",
+            goesOn = true,
+        ),
+        THE_CALL_ALONE({ addMessage(it) }, """[$QUESTION,${call("toolu_1")}]""", goesOn = true),
+        AN_OWN_RESULT_ALONE(
+            { addMessage(resultParam("toolu_1", "Mine")) },
+            """[$QUESTION,${result("toolu_1", "Mine")}]""",
+            goesOn = false,
+        ),
+        A_USER_MESSAGE_ALONE(
+            { addUserMessage("In one word.") },
+            """[$QUESTION,${user("In one word.")}]""",
+            goesOn = false,
+        ),
+        NO_MESSAGE({}, """[$QUESTION]""", goesOn = false);
+
+        fun of(params: MessageCreateParams, reply: BetaMessage): MessageCreateParams =
+            params.toBuilder().maxTokens(2048).apply { messages(reply) }.build()
+    }
+
+    @ParameterizedTest
+    @CsvSource("true,false", "true,true", "false,false", "false,true")
+    fun `next params that answer one of two tool calls are sent unchanged, and no tool runs`(
+        threaded: Boolean,
+        streaming: Boolean,
+    ) {
+        val calls =
+            listOf("toolu_1" to "get_weather", "toolu_2" to "lookup").map { (id, name) ->
+                """{"type":"tool_use","id":"$id","name":"$name","input":"""
+            }
+        val http =
+            FakeHttpClient(
+                if (streaming)
+                    sse(
+                        start("msg_a"),
+                        *calls
+                            .flatMapIndexed { index, call ->
+                                listOf(
+                                    blockStart(index, "$call{}}"),
+                                    inputDelta(index, """{\"city\":\"Paris\"}"""),
+                                    blockStop(index),
+                                )
+                            }
+                            .toTypedArray(),
+                        *stop("tool_use"),
+                    )
+                else
+                    withContent(
+                        message("msg_a", "", "tool_use"),
+                        calls.joinToString(",") { "$it$INPUT}" },
+                    ),
+                reply("msg_b", "Sunny", streaming),
+            )
+        val runner = runner(http, thread = threaded) { addTool(lookup) }
+
+        runner.run(streaming) { reply ->
             if (reply.id() == "msg_a") {
                 runner.setNextParams(
-                    runner.params().toBuilder().addUserMessage("In one word.").build()
+                    runner
+                        .params()
+                        .toBuilder()
+                        .addMessage(reply)
+                        .addMessage(resultParam("toolu_1", "Mine"))
+                        .build()
                 )
             }
         }
 
-        assertThat(http.jsonBodies[1]["thread"]).isEqualTo(continues("msg_a"))
-        assertThat(http.jsonBodies[1]["messages"])
-            .isEqualTo(json("""[${result("toolu_1")},${user("In one word.")}]"""))
+        val bothCalls =
+            """{"content":[${calls.joinToString(",") { "$it$INPUT}" }}],"role":"assistant"}"""
+        assertThat(http.requests).hasSize(2)
+        assertThat(runs.get()).isEqualTo(0)
+        assertThat(lookups.get()).isEqualTo(0)
+        assertThat(conversations(http, "msg_a" to bothCalls)[1])
+            .isEqualTo(json("""[$QUESTION,$bothCalls,${result("toolu_1", "Mine")}]"""))
+    }
+
+    @ParameterizedTest
+    @MethodSource("cutOffsInBothModes")
+    fun `next params with a larger max_tokens send the messages of the cut off turn again`(
+        cutOff: CutOff,
+        threaded: Boolean,
+        streaming: Boolean,
+    ) {
+        val http =
+            FakeHttpClient(
+                listOfNotNull(
+                    toolUse("msg_a", "toolu_1", streaming).takeIf {
+                        cutOff == CutOff.TEXT_AFTER_A_TOOL_TURN
+                    },
+                    if (cutOff == CutOff.A_TOOL_CALL)
+                        toolUse("msg_b", "toolu_2", streaming, stopReason = "max_tokens")
+                    else reply("msg_b", "Sun", streaming, "max_tokens"),
+                    reply("msg_c", "Sunny", streaming),
+                )
+            )
+        val runner = runner(http, thread = threaded)
+
+        runner.run(streaming) { reply ->
+            if (reply.stopReason().get() == BetaStopReason.MAX_TOKENS) {
+                val params = runner.params()
+                runner.setNextParams(params.toBuilder().maxTokens(params.maxTokens() * 2).build())
+            }
+        }
+
+        val afterATool = cutOff == CutOff.TEXT_AFTER_A_TOOL_TURN
+        val (cut, again) = conversations(http, "msg_a" to call("toolu_1")).takeLast(2)
+        assertThat(http.requests).hasSize(if (afterATool) 3 else 2)
+        assertThat(runs.get()).isEqualTo(if (afterATool) 1 else 0)
+        assertThat(again).isEqualTo(cut)
+        assertThat(again)
+            .isEqualTo(
+                json(
+                    if (afterATool) """[$QUESTION,${call("toolu_1")},${result("toolu_1")}]"""
+                    else """[$QUESTION]"""
+                )
+            )
+        assertThat(http.jsonBodies.last()["max_tokens"].asInt()).isEqualTo(2048)
+        assertThat(http.jsonBodies.last()["thread"]).isEqualTo(if (threaded) CREATE else null)
+    }
+
+    /** What `max_tokens` cuts off. */
+    internal enum class CutOff {
+        TEXT,
+        A_TOOL_CALL,
+        TEXT_AFTER_A_TOOL_TURN,
+    }
+
+    @ParameterizedTest
+    @CsvSource("true,false", "true,true", "false,false", "false,true")
+    fun `the params hold the messages of the last request, without the reply to it`(
+        threaded: Boolean,
+        streaming: Boolean,
+    ) {
+        val http =
+            FakeHttpClient(
+                toolUse("msg_a", "toolu_1", streaming),
+                reply("msg_b", "Sunny", streaming),
+            )
+        val runner = runner(http, thread = threaded)
+        val held = mutableListOf<JsonNode>()
+
+        held.add(wire(runner.params().messages()))
+        runner.run(streaming) { held.add(wire(runner.params().messages())) }
+        held.add(wire(runner.params().messages()))
+
+        val afterTheTool = json("""[$QUESTION,${call("toolu_1")},${result("toolu_1")}]""")
+        assertThat(held)
+            .containsExactly(json("[$QUESTION]"), json("[$QUESTION]"), afterTheTool, afterTheTool)
+    }
+
+    @ParameterizedTest
+    @CsvSource("true,false", "true,true", "false,false", "false,true")
+    fun `the params of a run that ends early hold the messages of the last request`(
+        threaded: Boolean,
+        streaming: Boolean,
+    ) {
+        val replies =
+            listOf(toolUse("msg_a", "toolu_1", streaming), toolUse("msg_b", "toolu_2", streaming))
+        val left = runner(FakeHttpClient(replies), thread = threaded)
+        val limited = runner(FakeHttpClient(replies), thread = threaded, maxIterations = 2)
+
+        if (streaming) left.streaming().first().use { it.stream().forEach {} } else left.first()
+        limited.run(streaming)
+
+        assertThat(wire(left.params().messages())).isEqualTo(json("[$QUESTION]"))
+        assertThat(wire(limited.params().messages()))
+            .isEqualTo(json("""[$QUESTION,${call("toolu_1")},${result("toolu_1")}]"""))
+        assertThat(runs.get()).isEqualTo(2)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `the next params invalidate the last tool response`(threaded: Boolean) {
+        val http = FakeHttpClient(toolUse("msg_a", "toolu_1"), message("msg_b", "Sunny"))
+        val runner = runner(http, thread = threaded)
+
+        runner.toList()
+
+        assertThat(wire(runner.lastToolResponse().get())).isEqualTo(json(result("toolu_1")))
+        runner.setNextParams(runner.params())
+        assertThat(runner.lastToolResponse()).isEmpty
+        assertThat(runs.get()).isEqualTo(1)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `next params set while the runner compacts change the fields and not the messages`(
+        threaded: Boolean
+    ) {
+        val http =
+            FakeHttpClient(
+                toolUse("msg_a", "toolu_1"),
+                compaction("msg_b"),
+                message("msg_c", "Sunny"),
+            )
+        val runner = runner(http, thread = threaded)
+
+        for (reply in runner) {
+            when (reply.id()) {
+                "msg_a" -> runner.compactBeforeNextTurn()
+                "msg_b" -> {
+                    assertThrows<IllegalStateException> {
+                        runner.setNextParams(
+                            runner.params().toBuilder().addUserMessage("And in Rome?").build()
+                        )
+                    }
+                    runner.setNextParams(
+                        runner.params().toBuilder().maxTokens(2048).system("Be long.").build()
+                    )
+                }
+            }
+        }
+
+        assertThat(http.jsonBodies[2]["messages"]).isEqualTo(json("""[$SUMMARY]"""))
+        assertThat(http.jsonBodies[2]["max_tokens"].asInt()).isEqualTo(2048)
+        assertThat(http.jsonBodies[2]["system"].asText()).isEqualTo("Be long.")
         assertThat(runs.get()).isEqualTo(1)
     }
 
@@ -746,36 +1008,15 @@ internal class BetaToolRunnerThreadTest {
                         .params()
                         .toBuilder()
                         .messages(listOf(userParam("And in Lyon?"), reply.toParam()))
-                        // A new thread takes a new `system`.
-                        .system("Be long.")
                         .build()
                 )
             }
         }
 
         assertThat(http.jsonBodies[1]["thread"]).isEqualTo(CREATE)
-        assertThat(http.jsonBodies[1]["system"].asText()).isEqualTo("Be long.")
+        assertThat(http.jsonBodies[1]["system"].asText()).isEqualTo("Be brief.")
         assertThat(http.jsonBodies[1]["messages"])
-            .isEqualTo(
-                json("""[${user("And in Lyon?")},${call("toolu_1")},${result("toolu_1")}]""")
-            )
-    }
-
-    @Test
-    fun `a runner without a thread sends the messages of the next params as they are`() {
-        val http = FakeHttpClient(toolUse("msg_a", "toolu_1"), message("msg_b", "Sunny"))
-        val runner = runner(http, thread = false)
-
-        for (reply in runner) {
-            if (reply.id() == "msg_a") {
-                runner.setNextParams(
-                    runner.params().toBuilder().addMessage(reply).addUserMessage("Well?").build()
-                )
-            }
-        }
-
-        assertThat(http.jsonBodies[1]["messages"])
-            .isEqualTo(json("""[$QUESTION,${call("toolu_1")},${user("Well?")}]"""))
+            .isEqualTo(json("""[${user("And in Lyon?")},${call("toolu_1")}]"""))
         assertThat(runs.get()).isEqualTo(0)
     }
 
@@ -794,6 +1035,94 @@ internal class BetaToolRunnerThreadTest {
         assertThat(refused).hasMessage(refusal(listOf("system")))
         assertThat(http.requests).hasSize(1)
         assertThat(runs.get()).isEqualTo(0)
+    }
+
+    @ParameterizedTest
+    @MethodSource("changedFieldsInBothModes")
+    fun `next params that change the system or the tools are refused, unless thread is false`(
+        changed: ChangedField,
+        threaded: Boolean,
+        streaming: Boolean,
+    ) {
+        val http =
+            FakeHttpClient(
+                toolUse("msg_a", "toolu_1", streaming),
+                reply("msg_b", "Sunny", streaming),
+            )
+        val runner = runner(http, thread = threaded)
+        val run = {
+            runner.run(streaming) { reply ->
+                if (reply.id() == "msg_a") {
+                    runner.setNextParams(changed.of(runner.params(), reply))
+                }
+            }
+        }
+
+        if (threaded) {
+            assertThat(assertThrows<IllegalStateException> { run() })
+                .hasMessage(refusal(listOf(changed.field)))
+        } else {
+            assertThat(run()).containsExactly("msg_a", "msg_b")
+            assertThat(http.jsonBodies[1][changed.field])
+                .isNotEqualTo(http.jsonBodies[0][changed.field])
+        }
+        assertThat(http.requests).hasSize(if (threaded) 1 else 2)
+        assertThat(runs.get()).isEqualTo(0)
+    }
+
+    /** What the caller changes in `params()` while it handles `msg_a`, which calls a tool. */
+    internal enum class ChangedField(
+        val field: String,
+        private val change: MessageCreateParams.Builder.(BetaMessage) -> Unit,
+    ) {
+        THE_SYSTEM_ALONE("system", { system("Be long.") }),
+        THE_TOOLS_ALONE("tools", { addTool(timeTool()) }),
+        THE_SYSTEM_AFTER_THE_CALL("system", { addMessage(it).system("Be long.") }),
+        THE_TOOLS_AFTER_THE_CALL("tools", { addMessage(it).addTool(timeTool()) }),
+        THE_SYSTEM_AND_THE_HISTORY(
+            "system",
+            { messages(listOf(userParam("And in Lyon?"), it.toParam())).system("Be long.") },
+        );
+
+        fun of(params: MessageCreateParams, reply: BetaMessage): MessageCreateParams =
+            params.toBuilder().apply { change(reply) }.build()
+    }
+
+    @Test
+    fun `next params given before the run take a new system`() {
+        val http = FakeHttpClient(toolUse("msg_a", "toolu_1"), message("msg_b", "Sunny"))
+        val runner = runner(http)
+
+        runner.setNextParams(runner.params().toBuilder().system("Be long.").build())
+        runner.toList()
+
+        assertThat(http.jsonBodies.map { it["thread"] }).containsExactly(CREATE, CREATE)
+        assertThat(http.jsonBodies.map { it["system"].asText() })
+            .containsExactly("Be brief.", "Be long.")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun `next params that a compaction comes before take a new system`(hasSummary: Boolean) {
+        val http =
+            FakeHttpClient(
+                toolUse("msg_a", "toolu_1"),
+                compaction("msg_b", "A summary.".takeIf { hasSummary }),
+                message("msg_c", "Sunny"),
+            )
+        val runner = runner(http)
+
+        for (reply in runner) {
+            if (reply.id() == "msg_a") {
+                runner.compactBeforeNextTurn()
+                runner.setNextParams(runner.params().toBuilder().system("Be long.").build())
+            }
+        }
+
+        assertThat(http.jsonBodies[2]["thread"]).isEqualTo(CREATE)
+        assertThat(http.jsonBodies.map { it["system"].asText() })
+            .containsExactly("Be brief.", "Be long.", "Be long.")
     }
 
     @Test
@@ -1391,6 +1720,7 @@ internal class BetaToolRunnerThreadTest {
     private fun runner(
         http: FakeHttpClient,
         thread: Boolean = true,
+        maxIterations: Long = 5,
         requestOptions: RequestOptions = RequestOptions.none(),
         configure: ClientOptions.Builder.() -> Unit = {},
         params: MessageCreateParams.Builder.() -> Unit = {},
@@ -1401,7 +1731,7 @@ internal class BetaToolRunnerThreadTest {
             .toolRunner(
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(params(params))
-                    .maxIterations(5)
+                    .maxIterations(maxIterations)
                     .thread(thread)
                     .build(),
                 requestOptions,
@@ -1409,6 +1739,44 @@ internal class BetaToolRunnerThreadTest {
 
     private fun thread(http: FakeHttpClient): BetaMessageThread =
         BetaMessageThreadTest.thread(http) { addTool(weather) }
+
+    /** Has [handle] handle each reply of the run, and returns the IDs of the replies. */
+    private fun BetaToolRunner.run(
+        streaming: Boolean,
+        handle: (BetaMessage) -> Unit = {},
+    ): List<String> {
+        val replies =
+            if (streaming)
+                streaming().asSequence().map { stream ->
+                    val accumulator = BetaMessageAccumulator.create()
+                    stream.stream().forEach(accumulator::accumulate)
+                    accumulator.message()
+                }
+            else asSequence()
+        return replies.onEach(handle).map { it.id() }.toList()
+    }
+
+    /**
+     * The conversation that the model sees in each request of [http]. A request that goes on from
+     * one of [replies], the ID and the message of the reply to each request, has its messages after
+     * that reply.
+     */
+    private fun conversations(
+        http: FakeHttpClient,
+        vararg replies: Pair<String, String>,
+    ): List<JsonNode> {
+        val conversations = mutableListOf<List<JsonNode>>()
+        for (body in http.jsonBodies) {
+            val previousId = body["thread"]?.get("previous_message_id")?.asText()
+            val previous = replies.indexOfFirst { (id, _) -> id == previousId }
+            assertThat(previous >= 0).isEqualTo(previousId != null)
+            val held =
+                if (previous < 0) emptyList()
+                else conversations[previous] + listOf(json(replies[previous].second))
+            conversations.add(held + body["messages"].toList())
+        }
+        return conversations.map { jsonMapper().valueToTree(it) }
+    }
 
     /** Adds [lookup] while the first reply is handled, and removes [weather] during the second. */
     private fun changeTools(runner: BetaToolRunner, reply: BetaMessage) {
@@ -1439,6 +1807,16 @@ internal class BetaToolRunnerThreadTest {
             """{"content":[{"content":"$content","tool_use_id":"$id",""" +
                 """"type":"tool_result"}],"role":"user"}"""
 
+        /** What [result] gives, as a caller gives it. */
+        fun resultParam(id: String, content: String): BetaMessageParam =
+            BetaMessageParam.ofUserOfContentBlockParams(
+                listOf(
+                    BetaContentBlockParam.ofToolResult(
+                        BetaToolResultBlockParam.builder().toolUseId(id).content(content).build()
+                    )
+                )
+            )
+
         const val LOOKUP_ADDED =
             """{"content":[{"tool":{"definition":{"input_schema":{"type":"object"},""" +
                 """"name":"lookup"},"type":"tool_definition"},"type":"tool_addition"}],""" +
@@ -1453,13 +1831,24 @@ internal class BetaToolRunnerThreadTest {
             call: String,
             container: String? = null,
             name: String = "get_weather",
+            stopReason: String = "tool_use",
         ): String =
             withContent(
-                message(id, "", "tool_use", container),
+                message(id, "", stopReason, container),
                 """{"type":"tool_use","id":"$call","name":"$name","input":$INPUT}""",
             )
 
-        fun streamedToolUse(id: String, call: String): String =
+        /** A tool call, as the body of a response or as the events of a stream. */
+        fun toolUse(
+            id: String,
+            call: String,
+            streaming: Boolean,
+            stopReason: String = "tool_use",
+        ): String =
+            if (streaming) streamedToolUse(id, call, stopReason)
+            else toolUse(id, call, stopReason = stopReason)
+
+        fun streamedToolUse(id: String, call: String, stopReason: String = "tool_use"): String =
             sse(
                 start(id),
                 blockStart(
@@ -1468,7 +1857,7 @@ internal class BetaToolRunnerThreadTest {
                 ),
                 inputDelta(0, """{\"city\":\"Paris\"}"""),
                 blockStop(0),
-                *stop("tool_use"),
+                *stop(stopReason),
             )
 
         fun compaction(id: String, summary: String? = "A summary."): String =
@@ -1479,5 +1868,20 @@ internal class BetaToolRunnerThreadTest {
 
         private fun withContent(message: String, block: String): String =
             (json(message) as ObjectNode).set<JsonNode>("content", json("[$block]")).toString()
+
+        @JvmStatic fun nextParamsInBothModes(): List<Arguments> = inBothModes(NextParams.values())
+
+        @JvmStatic fun cutOffsInBothModes(): List<Arguments> = inBothModes(CutOff.values())
+
+        @JvmStatic
+        fun changedFieldsInBothModes(): List<Arguments> = inBothModes(ChangedField.values())
+
+        /** Each of [cases] in both runner modes, buffered and streaming. */
+        private fun inBothModes(cases: Array<out Enum<*>>): List<Arguments> =
+            cases.flatMap { case ->
+                listOf(true, false).flatMap { threaded ->
+                    listOf(false, true).map { streaming -> Arguments.of(case, threaded, streaming) }
+                }
+            }
     }
 }

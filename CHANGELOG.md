@@ -11,6 +11,8 @@
 ### Bug Fixes
 
 * **client:** write oauth_token as the credentials file type
+* **tools:** leave the message being handled out of the tool runner's params()
+* **tools:** send the params given to the tool runner's setNextParams() unchanged, without running tools
 
 
 ### Chores

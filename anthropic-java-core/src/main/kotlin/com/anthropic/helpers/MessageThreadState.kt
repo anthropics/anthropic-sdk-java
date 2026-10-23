@@ -203,7 +203,8 @@ internal class MessageThreadState(
                 "its stream."
         }
 
-        val shared = sharedWith(messages)
+        val shared =
+            history.zip(messages).takeWhile { (entry, message) -> entry.param == message }.size
         if (shared < ((link as? Link.Continue)?.held ?: 0)) {
             link = Link.Create()
         }
@@ -236,17 +237,11 @@ internal class MessageThreadState(
             .build()
             .messageParams
 
-    /** Throws what [plan] throws for a turn whose edit leaves [params]. */
+    /** Throws what [plan] throws for the fields of [params] while the thread can be continued. */
     @Synchronized
-    fun check(params: MessageCreateParams) {
-        (link as? Link.Continue)
-            ?.takeIf { sharedWith(messagesOf(params)) >= it.held }
-            ?.checkUnchanged(params)
+    fun checkUnchanged(params: MessageCreateParams) {
+        (link as? Link.Continue)?.checkUnchanged(params)
     }
-
-    /** How many messages the history and [messages] start with in common. */
-    private fun sharedWith(messages: List<BetaMessageParam>): Int =
-        history.zip(messages).takeWhile { (entry, message) -> entry.param == message }.size
 
     /**
      * Ends [turn], however it went. A turn that no reply started takes back the messages that it
