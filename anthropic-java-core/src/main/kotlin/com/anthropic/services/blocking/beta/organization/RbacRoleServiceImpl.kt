@@ -92,7 +92,10 @@ class RbacRoleServiceImpl internal constructor(private val clientOptions: Client
                     .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -122,7 +125,10 @@ class RbacRoleServiceImpl internal constructor(private val clientOptions: Client
                     .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

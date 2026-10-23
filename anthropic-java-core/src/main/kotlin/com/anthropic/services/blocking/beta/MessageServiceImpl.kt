@@ -117,6 +117,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                         isStreaming = false,
                         model = params.model().toString(),
                     )
+                    .withQualifiers(mapOf("beta" to "true"))
             val recording =
                 startMessagesCreate(clientOptions, requestOptions, params, stream = false)
             return traceApiCall(clientOptions, recording?.call) { client ->
@@ -170,6 +171,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                         isStreaming = true,
                         model = params.model().toString(),
                     )
+                    .withQualifiers(mapOf("beta" to "true"))
             val recording =
                 startMessagesCreate(clientOptions, requestOptions, params, stream = true)
             return traceApiCall(clientOptions, recording?.call) { client ->
@@ -207,7 +209,10 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             val call = startCountTokens(clientOptions, requestOptions, params)
             return traceApiCall(clientOptions, call) { client ->
                 val response = client.execute(request, requestOptions)

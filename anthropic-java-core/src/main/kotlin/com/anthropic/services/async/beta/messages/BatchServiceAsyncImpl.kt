@@ -131,7 +131,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             val call = startBatchesCreate(clientOptions, requestOptions, params)
             return traceApiCallAsync(clientOptions, call) { client ->
                 request
@@ -173,7 +176,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -207,7 +213,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -254,7 +263,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -294,7 +306,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -335,7 +350,10 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putHeader("Accept", "application/x-jsonl")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

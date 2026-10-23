@@ -122,7 +122,10 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -158,7 +161,10 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -189,7 +195,10 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -233,7 +242,10 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -270,7 +282,10 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -307,7 +322,10 @@ class TunnelServiceImpl internal constructor(private val clientOptions: ClientOp
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

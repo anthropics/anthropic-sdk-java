@@ -73,7 +73,10 @@ class ComplianceSettingServiceImpl internal constructor(private val clientOption
                     .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -104,7 +107,10 @@ class ComplianceSettingServiceImpl internal constructor(private val clientOption
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

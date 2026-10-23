@@ -69,7 +69,10 @@ internal constructor(private val clientOptions: ClientOptions) : UserUsageReport
                     .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

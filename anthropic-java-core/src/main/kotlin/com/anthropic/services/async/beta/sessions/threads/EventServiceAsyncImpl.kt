@@ -102,7 +102,10 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -156,7 +159,10 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .putHeader("Accept", "text/event-stream")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

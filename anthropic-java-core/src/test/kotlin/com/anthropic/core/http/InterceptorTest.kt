@@ -195,6 +195,30 @@ internal class InterceptorTest {
         assertThat(order).containsExactly("interceptor", "underlying", "interceptor", "underlying")
     }
 
+    @Test
+    fun retryingHttpClient_everyAttemptHasTheQualifiers() {
+        val qualifiers = mapOf("variant" to "b")
+        val seen = mutableListOf<Map<String, String>?>()
+        val retryingClient =
+            RetryingHttpClient.builder()
+                .httpClient(
+                    listOf(
+                            Interceptor.syncOnly { nextClient, request, requestOptions ->
+                                seen.add(requestOptions.qualifiers)
+                                nextClient.execute(request, requestOptions)
+                            }
+                        )
+                        .intercept(FakeHttpClient(statusCodes = listOf(503, 200)))
+                )
+                .sleeper(NoOpSleeper())
+                .maxRetries(1)
+                .build()
+
+        retryingClient.execute(simpleGetRequest(), RequestOptions.none().withQualifiers(qualifiers))
+
+        assertThat(seen).containsExactly(qualifiers, qualifiers)
+    }
+
     private fun interceptor(onRequest: (HttpRequest) -> HttpRequest): Interceptor =
         Interceptor { client ->
             object : HttpClient {

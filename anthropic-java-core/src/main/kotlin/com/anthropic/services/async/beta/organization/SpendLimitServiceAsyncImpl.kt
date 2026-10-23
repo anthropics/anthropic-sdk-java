@@ -129,7 +129,10 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -163,7 +166,10 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .replaceHeaders("anthropic-beta", "spend-limit-reads-2026-09-26")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -209,7 +215,10 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -243,7 +252,10 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

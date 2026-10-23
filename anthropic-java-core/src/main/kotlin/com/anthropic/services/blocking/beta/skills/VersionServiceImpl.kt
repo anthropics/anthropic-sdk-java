@@ -107,7 +107,10 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -144,7 +147,10 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -179,7 +185,10 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -223,7 +232,10 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -258,7 +270,10 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .putHeader("Accept", "application/binary")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceRawApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response)
