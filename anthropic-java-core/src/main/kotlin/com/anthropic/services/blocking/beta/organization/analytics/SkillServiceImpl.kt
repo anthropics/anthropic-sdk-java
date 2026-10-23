@@ -31,7 +31,7 @@ class SkillServiceImpl internal constructor(private val clientOptions: ClientOpt
         SkillServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: SkillListParams, requestOptions: RequestOptions): SkillListPage =
-        // get /v1/organizations/analytics/skills?beta=true
+        // get /v1/organizations/analytics/skills
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -59,7 +59,6 @@ class SkillServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "skills")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =

@@ -238,8 +238,8 @@ interface ExternalKeyServiceAsync {
         ): ExternalKeyServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/external_keys?beta=true`, but is
-         * otherwise the same as [ExternalKeyServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/external_keys`, but is otherwise
+         * the same as [ExternalKeyServiceAsync.create].
          */
         fun create(
             params: ExternalKeyCreateParams
@@ -253,9 +253,8 @@ interface ExternalKeyServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaExternalKey>>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/external_keys/{external_key_id}?beta=true`, but is otherwise the same
-         * as [ExternalKeyServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/external_keys/{external_key_id}`,
+         * but is otherwise the same as [ExternalKeyServiceAsync.retrieve].
          */
         fun retrieve(externalKeyId: String): CompletableFuture<HttpResponseFor<BetaExternalKey>> =
             retrieve(externalKeyId, ExternalKeyRetrieveParams.none())
@@ -295,9 +294,8 @@ interface ExternalKeyServiceAsync {
             retrieve(externalKeyId, ExternalKeyRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/external_keys/{external_key_id}?beta=true`, but is otherwise the same
-         * as [ExternalKeyServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/organizations/external_keys/{external_key_id}`,
+         * but is otherwise the same as [ExternalKeyServiceAsync.update].
          */
         fun update(externalKeyId: String): CompletableFuture<HttpResponseFor<BetaExternalKey>> =
             update(externalKeyId, ExternalKeyUpdateParams.none())
@@ -337,8 +335,8 @@ interface ExternalKeyServiceAsync {
             update(externalKeyId, ExternalKeyUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/external_keys?beta=true`, but is
-         * otherwise the same as [ExternalKeyServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/external_keys`, but is otherwise
+         * the same as [ExternalKeyServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<ExternalKeyListPageAsync>> =
             list(ExternalKeyListParams.none())
@@ -363,8 +361,8 @@ interface ExternalKeyServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/external_keys/{external_key_id}?beta=true`, but is otherwise the same
-         * as [ExternalKeyServiceAsync.delete].
+         * /v1/organizations/external_keys/{external_key_id}`, but is otherwise the same as
+         * [ExternalKeyServiceAsync.delete].
          */
         fun delete(
             externalKeyId: String
@@ -407,8 +405,8 @@ interface ExternalKeyServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/external_keys/{external_key_id}/validate?beta=true`, but is otherwise
-         * the same as [ExternalKeyServiceAsync.validate].
+         * /v1/organizations/external_keys/{external_key_id}/validate`, but is otherwise the same as
+         * [ExternalKeyServiceAsync.validate].
          */
         fun validate(
             externalKeyId: String

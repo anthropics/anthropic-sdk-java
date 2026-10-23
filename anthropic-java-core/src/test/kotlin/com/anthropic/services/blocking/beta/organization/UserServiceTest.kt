@@ -17,7 +17,8 @@ internal class UserServiceTest {
 
     @Test
     fun retrieve() {
-        val userService = client.beta().organization().users()
+        val userService =
+            client.beta().organization().users().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationUser = userService.retrieve("user_id")
 
@@ -26,7 +27,8 @@ internal class UserServiceTest {
 
     @Test
     fun update() {
-        val userService = client.beta().organization().users()
+        val userService =
+            client.beta().organization().users().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationUser =
             userService.update(
@@ -41,7 +43,8 @@ internal class UserServiceTest {
 
     @Test
     fun list() {
-        val userService = client.beta().organization().users()
+        val userService =
+            client.beta().organization().users().withOptions { it.putQueryParam("beta", "true") }
 
         val page = userService.list()
 
@@ -50,7 +53,8 @@ internal class UserServiceTest {
 
     @Test
     fun remove() {
-        val userService = client.beta().organization().users()
+        val userService =
+            client.beta().organization().users().withOptions { it.putQueryParam("beta", "true") }
 
         val user = userService.remove("user_id")
 

@@ -269,8 +269,8 @@ interface BatchServiceAsync {
         ): BatchServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/messages/batches?beta=true`, but is otherwise
-         * the same as [BatchServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/messages/batches`, but is otherwise the same as
+         * [BatchServiceAsync.create].
          */
         fun create(
             params: BatchCreateParams
@@ -284,8 +284,8 @@ interface BatchServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaMessageBatch>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}?beta=true`,
-         * but is otherwise the same as [BatchServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}`, but is
+         * otherwise the same as [BatchServiceAsync.retrieve].
          */
         fun retrieve(messageBatchId: String): CompletableFuture<HttpResponseFor<BetaMessageBatch>> =
             retrieve(messageBatchId, BatchRetrieveParams.none())
@@ -325,8 +325,8 @@ interface BatchServiceAsync {
             retrieve(messageBatchId, BatchRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/messages/batches?beta=true`, but is otherwise
-         * the same as [BatchServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
+         * [BatchServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<BatchListPageAsync>> =
             list(BatchListParams.none())
@@ -350,9 +350,8 @@ interface BatchServiceAsync {
             list(BatchListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete
-         * /v1/messages/batches/{message_batch_id}?beta=true`, but is otherwise the same as
-         * [BatchServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/messages/batches/{message_batch_id}`, but is
+         * otherwise the same as [BatchServiceAsync.delete].
          */
         fun delete(
             messageBatchId: String
@@ -394,9 +393,8 @@ interface BatchServiceAsync {
             delete(messageBatchId, BatchDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/messages/batches/{message_batch_id}/cancel?beta=true`, but is otherwise the same as
-         * [BatchServiceAsync.cancel].
+         * Returns a raw HTTP response for `post /v1/messages/batches/{message_batch_id}/cancel`,
+         * but is otherwise the same as [BatchServiceAsync.cancel].
          */
         fun cancel(messageBatchId: String): CompletableFuture<HttpResponseFor<BetaMessageBatch>> =
             cancel(messageBatchId, BatchCancelParams.none())
@@ -436,9 +434,8 @@ interface BatchServiceAsync {
             cancel(messageBatchId, BatchCancelParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/messages/batches/{message_batch_id}/results?beta=true`, but is otherwise the same as
-         * [BatchServiceAsync.resultsStreaming].
+         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}/results`,
+         * but is otherwise the same as [BatchServiceAsync.resultsStreaming].
          */
         @MustBeClosed
         fun resultsStreaming(

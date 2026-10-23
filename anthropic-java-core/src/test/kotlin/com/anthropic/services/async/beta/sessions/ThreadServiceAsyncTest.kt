@@ -19,7 +19,8 @@ internal class ThreadServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val threadServiceAsync = client.beta().sessions().threads()
+        val threadServiceAsync =
+            client.beta().sessions().threads().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSessionThreadFuture =
             threadServiceAsync.retrieve(
@@ -37,7 +38,8 @@ internal class ThreadServiceAsyncTest {
 
     @Test
     fun list() {
-        val threadServiceAsync = client.beta().sessions().threads()
+        val threadServiceAsync =
+            client.beta().sessions().threads().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = threadServiceAsync.list("sesn_011CZkZAtmR3yMPDzynEDxu7")
 
@@ -47,7 +49,8 @@ internal class ThreadServiceAsyncTest {
 
     @Test
     fun archive() {
-        val threadServiceAsync = client.beta().sessions().threads()
+        val threadServiceAsync =
+            client.beta().sessions().threads().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSessionThreadFuture =
             threadServiceAsync.archive(

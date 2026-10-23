@@ -18,7 +18,10 @@ internal class UsageServiceTest {
 
     @Test
     fun list() {
-        val usageService = client.beta().organization().analytics().usage()
+        val usageService =
+            client.beta().organization().analytics().usage().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page =
             usageService.list(

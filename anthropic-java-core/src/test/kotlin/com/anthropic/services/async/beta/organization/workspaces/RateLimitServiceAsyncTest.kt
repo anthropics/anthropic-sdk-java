@@ -19,7 +19,10 @@ internal class RateLimitServiceAsyncTest {
 
     @Test
     fun update() {
-        val rateLimitServiceAsync = client.beta().organization().workspaces().rateLimits()
+        val rateLimitServiceAsync =
+            client.beta().organization().workspaces().rateLimits().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceRateLimitFuture =
             rateLimitServiceAsync.update(
@@ -41,7 +44,10 @@ internal class RateLimitServiceAsyncTest {
 
     @Test
     fun list() {
-        val rateLimitServiceAsync = client.beta().organization().workspaces().rateLimits()
+        val rateLimitServiceAsync =
+            client.beta().organization().workspaces().rateLimits().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = rateLimitServiceAsync.list("workspace_id")
 

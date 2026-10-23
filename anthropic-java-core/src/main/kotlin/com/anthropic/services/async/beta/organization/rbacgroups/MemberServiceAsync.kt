@@ -139,8 +139,8 @@ interface MemberServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/rbac_groups/{rbac_group_id}/members?beta=true`, but is otherwise the
-         * same as [MemberServiceAsync.list].
+         * /v1/organizations/rbac_groups/{rbac_group_id}/members`, but is otherwise the same as
+         * [MemberServiceAsync.list].
          */
         fun list(rbacGroupId: String): CompletableFuture<HttpResponseFor<MemberListPageAsync>> =
             list(rbacGroupId, MemberListParams.none())
@@ -181,8 +181,8 @@ interface MemberServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/rbac_groups/{rbac_group_id}/members?beta=true`, but is otherwise the
-         * same as [MemberServiceAsync.add].
+         * /v1/organizations/rbac_groups/{rbac_group_id}/members`, but is otherwise the same as
+         * [MemberServiceAsync.add].
          */
         fun add(
             rbacGroupId: String,
@@ -210,8 +210,8 @@ interface MemberServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/rbac_groups/{rbac_group_id}/members/{user_id}?beta=true`, but is
-         * otherwise the same as [MemberServiceAsync.remove].
+         * /v1/organizations/rbac_groups/{rbac_group_id}/members/{user_id}`, but is otherwise the
+         * same as [MemberServiceAsync.remove].
          */
         fun remove(
             userId: String,

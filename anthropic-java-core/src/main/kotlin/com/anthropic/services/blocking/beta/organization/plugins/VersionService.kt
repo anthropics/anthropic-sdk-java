@@ -207,9 +207,8 @@ interface VersionService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/plugins/{plugin_id}/versions?beta=true`, but is otherwise the same as
-         * [VersionService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/plugins/{plugin_id}/versions`,
+         * but is otherwise the same as [VersionService.create].
          */
         @MustBeClosed
         fun create(
@@ -240,8 +239,8 @@ interface VersionService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/plugins/{plugin_id}/versions/{version}?beta=true`, but is otherwise the
-         * same as [VersionService.retrieve].
+         * /v1/organizations/plugins/{plugin_id}/versions/{version}`, but is otherwise the same as
+         * [VersionService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -271,9 +270,8 @@ interface VersionService {
         ): HttpResponseFor<BetaPluginVersion>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/plugins/{plugin_id}/versions?beta=true`, but is otherwise the same as
-         * [VersionService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/plugins/{plugin_id}/versions`, but
+         * is otherwise the same as [VersionService.list].
          */
         @MustBeClosed
         fun list(pluginId: String): HttpResponseFor<VersionListPage> =
@@ -317,8 +315,8 @@ interface VersionService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/plugins/{plugin_id}/versions/{version}/content?beta=true`, but is
-         * otherwise the same as [VersionService.download].
+         * /v1/organizations/plugins/{plugin_id}/versions/{version}/content`, but is otherwise the
+         * same as [VersionService.download].
          */
         @MustBeClosed
         fun download(version: String, params: VersionDownloadParams): HttpResponse =

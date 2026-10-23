@@ -46,21 +46,21 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
     override fun batches(): BatchService = batches
 
     override fun create(params: MessageCreateParams, requestOptions: RequestOptions): BetaMessage =
-        // post /v1/messages?beta=true
+        // post /v1/messages
         withRawResponse().create(params, requestOptions).parse()
 
     override fun createStreaming(
         params: MessageCreateParams,
         requestOptions: RequestOptions,
     ): StreamResponse<BetaRawMessageStreamEvent> =
-        // post /v1/messages?beta=true
+        // post /v1/messages
         withRawResponse().createStreaming(params, requestOptions).parse()
 
     override fun countTokens(
         params: MessageCountTokensParams,
         requestOptions: RequestOptions,
     ): BetaMessageTokensCount =
-        // post /v1/messages/count_tokens?beta=true
+        // post /v1/messages/count_tokens
         withRawResponse().countTokens(params, requestOptions).parse()
 
     override fun toolRunner(
@@ -105,7 +105,6 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -149,7 +148,6 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
-                    .putQueryParam("beta", "true")
                     .putHeader("Accept", "text/event-stream")
                     .body(
                         json(
@@ -205,7 +203,6 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "count_tokens")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)

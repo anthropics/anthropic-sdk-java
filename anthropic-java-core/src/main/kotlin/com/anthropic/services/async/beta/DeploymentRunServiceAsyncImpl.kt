@@ -47,14 +47,14 @@ class DeploymentRunServiceAsyncImpl internal constructor(private val clientOptio
         params: DeploymentRunRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeploymentRun> =
-        // get /v1/deployment_runs/{deployment_run_id}?beta=true
+        // get /v1/deployment_runs/{deployment_run_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: DeploymentRunListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<DeploymentRunListPageAsync> =
-        // get /v1/deployment_runs?beta=true
+        // get /v1/deployment_runs
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -86,7 +86,6 @@ class DeploymentRunServiceAsyncImpl internal constructor(private val clientOptio
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployment_runs")
                     .addPathParam("deploymentRunId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -123,7 +122,6 @@ class DeploymentRunServiceAsyncImpl internal constructor(private val clientOptio
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployment_runs")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)

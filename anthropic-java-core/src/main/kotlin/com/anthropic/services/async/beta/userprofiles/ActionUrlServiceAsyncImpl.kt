@@ -45,7 +45,7 @@ class ActionUrlServiceAsyncImpl internal constructor(private val clientOptions: 
         params: ActionUrlCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaUserProfileActionUrl> =
-        // post /v1/user_profiles/{user_profile_id}/action_urls?beta=true
+        // post /v1/user_profiles/{user_profile_id}/action_urls
         withRawResponse().create(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -78,7 +78,6 @@ class ActionUrlServiceAsyncImpl internal constructor(private val clientOptions: 
                     .addPathSegments("v1", "user_profiles")
                     .addPathParam("userProfileId", params._pathParam(0))
                     .addPathSegments("action_urls")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()

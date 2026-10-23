@@ -159,7 +159,7 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
         params: OrganizationRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaOrganization> =
-        // get /v1/organizations/me?beta=true
+        // get /v1/organizations/me
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -293,7 +293,6 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "me")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =

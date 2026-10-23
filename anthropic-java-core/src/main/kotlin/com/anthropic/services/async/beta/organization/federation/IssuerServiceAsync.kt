@@ -228,8 +228,8 @@ interface IssuerServiceAsync {
         ): IssuerServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/federation_issuers?beta=true`,
-         * but is otherwise the same as [IssuerServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/federation_issuers`, but is
+         * otherwise the same as [IssuerServiceAsync.create].
          */
         fun create(
             params: IssuerCreateParams
@@ -244,8 +244,8 @@ interface IssuerServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/federation_issuers/{federation_issuer_id}?beta=true`, but is otherwise
-         * the same as [IssuerServiceAsync.retrieve].
+         * /v1/organizations/federation_issuers/{federation_issuer_id}`, but is otherwise the same
+         * as [IssuerServiceAsync.retrieve].
          */
         fun retrieve(
             federationIssuerId: String
@@ -291,8 +291,8 @@ interface IssuerServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/federation_issuers/{federation_issuer_id}?beta=true`, but is otherwise
-         * the same as [IssuerServiceAsync.update].
+         * /v1/organizations/federation_issuers/{federation_issuer_id}`, but is otherwise the same
+         * as [IssuerServiceAsync.update].
          */
         fun update(
             federationIssuerId: String
@@ -337,8 +337,8 @@ interface IssuerServiceAsync {
             update(federationIssuerId, IssuerUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/federation_issuers?beta=true`, but
-         * is otherwise the same as [IssuerServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/federation_issuers`, but is
+         * otherwise the same as [IssuerServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<IssuerListPageAsync>> =
             list(IssuerListParams.none())
@@ -363,8 +363,8 @@ interface IssuerServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/federation_issuers/{federation_issuer_id}/archive?beta=true`, but is
-         * otherwise the same as [IssuerServiceAsync.archive].
+         * /v1/organizations/federation_issuers/{federation_issuer_id}/archive`, but is otherwise
+         * the same as [IssuerServiceAsync.archive].
          */
         fun archive(
             federationIssuerId: String

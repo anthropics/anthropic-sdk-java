@@ -45,42 +45,42 @@ class ExternalKeyServiceImpl internal constructor(private val clientOptions: Cli
         params: ExternalKeyCreateParams,
         requestOptions: RequestOptions,
     ): BetaExternalKey =
-        // post /v1/organizations/external_keys?beta=true
+        // post /v1/organizations/external_keys
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: ExternalKeyRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaExternalKey =
-        // get /v1/organizations/external_keys/{external_key_id}?beta=true
+        // get /v1/organizations/external_keys/{external_key_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: ExternalKeyUpdateParams,
         requestOptions: RequestOptions,
     ): BetaExternalKey =
-        // post /v1/organizations/external_keys/{external_key_id}?beta=true
+        // post /v1/organizations/external_keys/{external_key_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: ExternalKeyListParams,
         requestOptions: RequestOptions,
     ): ExternalKeyListPage =
-        // get /v1/organizations/external_keys?beta=true
+        // get /v1/organizations/external_keys
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: ExternalKeyDeleteParams,
         requestOptions: RequestOptions,
     ): ExternalKeyDeleteResponse =
-        // delete /v1/organizations/external_keys/{external_key_id}?beta=true
+        // delete /v1/organizations/external_keys/{external_key_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun validate(
         params: ExternalKeyValidateParams,
         requestOptions: RequestOptions,
     ): ExternalKeyValidateResponse =
-        // post /v1/organizations/external_keys/{external_key_id}/validate?beta=true
+        // post /v1/organizations/external_keys/{external_key_id}/validate
         withRawResponse().validate(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -108,7 +108,6 @@ class ExternalKeyServiceImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "external_keys")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -152,7 +151,6 @@ class ExternalKeyServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "external_keys")
                     .addPathParam("externalKeyId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -189,7 +187,6 @@ class ExternalKeyServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "external_keys")
                     .addPathParam("externalKeyId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -223,7 +220,6 @@ class ExternalKeyServiceImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "external_keys")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -267,7 +263,6 @@ class ExternalKeyServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "external_keys")
                     .addPathParam("externalKeyId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
@@ -306,7 +301,6 @@ class ExternalKeyServiceImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "organizations", "external_keys")
                     .addPathParam("externalKeyId", params._pathParam(0))
                     .addPathSegments("validate")
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)

@@ -59,42 +59,42 @@ class EnvironmentServiceAsyncImpl internal constructor(private val clientOptions
         params: EnvironmentCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaEnvironment> =
-        // post /v1/environments?beta=true
+        // post /v1/environments
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: EnvironmentRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaEnvironment> =
-        // get /v1/environments/{environment_id}?beta=true
+        // get /v1/environments/{environment_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: EnvironmentUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaEnvironment> =
-        // post /v1/environments/{environment_id}?beta=true
+        // post /v1/environments/{environment_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: EnvironmentListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<EnvironmentListPageAsync> =
-        // get /v1/environments?beta=true
+        // get /v1/environments
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: EnvironmentDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaEnvironmentDeleteResponse> =
-        // delete /v1/environments/{environment_id}?beta=true
+        // delete /v1/environments/{environment_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun archive(
         params: EnvironmentArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaEnvironment> =
-        // post /v1/environments/{environment_id}/archive?beta=true
+        // post /v1/environments/{environment_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -128,7 +128,6 @@ class EnvironmentServiceAsyncImpl internal constructor(private val clientOptions
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "environments")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -173,7 +172,6 @@ class EnvironmentServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -214,7 +212,6 @@ class EnvironmentServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -252,7 +249,6 @@ class EnvironmentServiceAsyncImpl internal constructor(private val clientOptions
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "environments")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -301,7 +297,6 @@ class EnvironmentServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -344,7 +339,6 @@ class EnvironmentServiceAsyncImpl internal constructor(private val clientOptions
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

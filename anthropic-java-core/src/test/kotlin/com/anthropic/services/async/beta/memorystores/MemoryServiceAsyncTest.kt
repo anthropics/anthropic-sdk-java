@@ -23,7 +23,8 @@ internal class MemoryServiceAsyncTest {
 
     @Test
     fun create() {
-        val memoryServiceAsync = client.beta().memoryStores().memories()
+        val memoryServiceAsync =
+            client.beta().memoryStores().memories().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryFuture =
             memoryServiceAsync.create(
@@ -43,7 +44,8 @@ internal class MemoryServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val memoryServiceAsync = client.beta().memoryStores().memories()
+        val memoryServiceAsync =
+            client.beta().memoryStores().memories().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryFuture =
             memoryServiceAsync.retrieve(
@@ -62,7 +64,8 @@ internal class MemoryServiceAsyncTest {
 
     @Test
     fun update() {
-        val memoryServiceAsync = client.beta().memoryStores().memories()
+        val memoryServiceAsync =
+            client.beta().memoryStores().memories().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryFuture =
             memoryServiceAsync.update(
@@ -88,7 +91,8 @@ internal class MemoryServiceAsyncTest {
 
     @Test
     fun list() {
-        val memoryServiceAsync = client.beta().memoryStores().memories()
+        val memoryServiceAsync =
+            client.beta().memoryStores().memories().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = memoryServiceAsync.list("memory_store_id")
 
@@ -98,7 +102,8 @@ internal class MemoryServiceAsyncTest {
 
     @Test
     fun delete() {
-        val memoryServiceAsync = client.beta().memoryStores().memories()
+        val memoryServiceAsync =
+            client.beta().memoryStores().memories().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeletedMemoryFuture =
             memoryServiceAsync.delete(

@@ -57,8 +57,8 @@ interface SkillService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): SkillService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/skills?beta=true`, but
-         * is otherwise the same as [SkillService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/skills`, but is
+         * otherwise the same as [SkillService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<SkillListPage> = list(SkillListParams.none())
 

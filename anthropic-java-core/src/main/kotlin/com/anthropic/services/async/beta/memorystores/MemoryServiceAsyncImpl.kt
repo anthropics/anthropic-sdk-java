@@ -52,35 +52,35 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: MemoryCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsMemory> =
-        // post /v1/memory_stores/{memory_store_id}/memories?beta=true
+        // post /v1/memory_stores/{memory_store_id}/memories
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: MemoryRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsMemory> =
-        // get /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true
+        // get /v1/memory_stores/{memory_store_id}/memories/{memory_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: MemoryUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsMemory> =
-        // post /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true
+        // post /v1/memory_stores/{memory_store_id}/memories/{memory_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: MemoryListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MemoryListPageAsync> =
-        // get /v1/memory_stores/{memory_store_id}/memories?beta=true
+        // get /v1/memory_stores/{memory_store_id}/memories
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: MemoryDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeletedMemory> =
-        // delete /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true
+        // delete /v1/memory_stores/{memory_store_id}/memories/{memory_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -113,7 +113,6 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memories")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -160,7 +159,6 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memories")
                     .addPathParam("memoryId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -203,7 +201,6 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memories")
                     .addPathParam("memoryId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -246,7 +243,6 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memories")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -297,7 +293,6 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memories")
                     .addPathParam("memoryId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

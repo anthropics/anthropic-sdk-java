@@ -54,35 +54,35 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
         params: ServiceAccountCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaServiceAccount> =
-        // post /v1/organizations/service_accounts?beta=true
+        // post /v1/organizations/service_accounts
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: ServiceAccountRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaServiceAccount> =
-        // get /v1/organizations/service_accounts/{service_account_id}?beta=true
+        // get /v1/organizations/service_accounts/{service_account_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: ServiceAccountUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaServiceAccount> =
-        // post /v1/organizations/service_accounts/{service_account_id}?beta=true
+        // post /v1/organizations/service_accounts/{service_account_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: ServiceAccountListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ServiceAccountListPageAsync> =
-        // get /v1/organizations/service_accounts?beta=true
+        // get /v1/organizations/service_accounts
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: ServiceAccountArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaServiceAccount> =
-        // post /v1/organizations/service_accounts/{service_account_id}/archive?beta=true
+        // post /v1/organizations/service_accounts/{service_account_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -116,7 +116,6 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "service_accounts")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -163,7 +162,6 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "service_accounts")
                     .addPathParam("serviceAccountId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -203,7 +201,6 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "service_accounts")
                     .addPathParam("serviceAccountId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -240,7 +237,6 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "service_accounts")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -289,7 +285,6 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                     .addPathSegments("v1", "organizations", "service_accounts")
                     .addPathParam("serviceAccountId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

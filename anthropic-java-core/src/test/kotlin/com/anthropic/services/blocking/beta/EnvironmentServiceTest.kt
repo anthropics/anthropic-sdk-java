@@ -26,7 +26,8 @@ internal class EnvironmentServiceTest {
 
     @Test
     fun create() {
-        val environmentService = client.beta().environments()
+        val environmentService =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaEnvironment =
             environmentService.create(
@@ -72,7 +73,8 @@ internal class EnvironmentServiceTest {
 
     @Test
     fun retrieve() {
-        val environmentService = client.beta().environments()
+        val environmentService =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaEnvironment =
             environmentService.retrieve(
@@ -88,7 +90,8 @@ internal class EnvironmentServiceTest {
 
     @Test
     fun update() {
-        val environmentService = client.beta().environments()
+        val environmentService =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaEnvironment =
             environmentService.update(
@@ -135,7 +138,8 @@ internal class EnvironmentServiceTest {
 
     @Test
     fun list() {
-        val environmentService = client.beta().environments()
+        val environmentService =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val page = environmentService.list()
 
@@ -144,7 +148,8 @@ internal class EnvironmentServiceTest {
 
     @Test
     fun delete() {
-        val environmentService = client.beta().environments()
+        val environmentService =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaEnvironmentDeleteResponse =
             environmentService.delete(
@@ -160,7 +165,8 @@ internal class EnvironmentServiceTest {
 
     @Test
     fun archive() {
-        val environmentService = client.beta().environments()
+        val environmentService =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaEnvironment =
             environmentService.archive(

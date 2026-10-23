@@ -34,7 +34,7 @@ class ConnectorServiceImpl internal constructor(private val clientOptions: Clien
         params: ConnectorListParams,
         requestOptions: RequestOptions,
     ): ConnectorListPage =
-        // get /v1/organizations/analytics/connectors?beta=true
+        // get /v1/organizations/analytics/connectors
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -62,7 +62,6 @@ class ConnectorServiceImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "connectors")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =

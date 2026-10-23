@@ -43,7 +43,7 @@ class CostServiceAsyncImpl internal constructor(private val clientOptions: Clien
         params: CostListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<CostListPageAsync> =
-        // get /v1/organizations/analytics/cost?beta=true
+        // get /v1/organizations/analytics/cost
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -71,7 +71,6 @@ class CostServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "cost")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)

@@ -31,7 +31,7 @@ class PluginServiceImpl internal constructor(private val clientOptions: ClientOp
         PluginServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: PluginListParams, requestOptions: RequestOptions): PluginListPage =
-        // get /v1/organizations/analytics/plugins?beta=true
+        // get /v1/organizations/analytics/plugins
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -59,7 +59,6 @@ class PluginServiceImpl internal constructor(private val clientOptions: ClientOp
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "plugins")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =

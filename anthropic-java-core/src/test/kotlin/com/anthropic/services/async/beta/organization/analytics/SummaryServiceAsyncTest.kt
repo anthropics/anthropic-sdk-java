@@ -18,7 +18,10 @@ internal class SummaryServiceAsyncTest {
 
     @Test
     fun list() {
-        val summaryServiceAsync = client.beta().organization().analytics().summaries()
+        val summaryServiceAsync =
+            client.beta().organization().analytics().summaries().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture =
             summaryServiceAsync.list(

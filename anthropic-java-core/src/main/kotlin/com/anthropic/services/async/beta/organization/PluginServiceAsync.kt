@@ -280,8 +280,8 @@ interface PluginServiceAsync {
         fun shares(): ShareServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/plugins?beta=true`, but is
-         * otherwise the same as [PluginServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/plugins`, but is otherwise the
+         * same as [PluginServiceAsync.create].
          */
         fun create(params: PluginCreateParams): CompletableFuture<HttpResponseFor<BetaPlugin>> =
             create(params, RequestOptions.none())
@@ -293,8 +293,8 @@ interface PluginServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaPlugin>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/plugins/{plugin_id}?beta=true`,
-         * but is otherwise the same as [PluginServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/plugins/{plugin_id}`, but is
+         * otherwise the same as [PluginServiceAsync.retrieve].
          */
         fun retrieve(pluginId: String): CompletableFuture<HttpResponseFor<BetaPlugin>> =
             retrieve(pluginId, PluginRetrieveParams.none())
@@ -332,8 +332,8 @@ interface PluginServiceAsync {
             retrieve(pluginId, PluginRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/plugins/{plugin_id}?beta=true`,
-         * but is otherwise the same as [PluginServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/organizations/plugins/{plugin_id}`, but is
+         * otherwise the same as [PluginServiceAsync.update].
          */
         fun update(
             pluginId: String,
@@ -360,8 +360,8 @@ interface PluginServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaPlugin>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/plugins?beta=true`, but is
-         * otherwise the same as [PluginServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/plugins`, but is otherwise the
+         * same as [PluginServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<PluginListPageAsync>> =
             list(PluginListParams.none())
@@ -385,8 +385,8 @@ interface PluginServiceAsync {
             list(PluginListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/organizations/plugins/{plugin_id}?beta=true`,
-         * but is otherwise the same as [PluginServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/organizations/plugins/{plugin_id}`, but is
+         * otherwise the same as [PluginServiceAsync.delete].
          */
         fun delete(pluginId: String): CompletableFuture<HttpResponseFor<BetaDeletedPlugin>> =
             delete(pluginId, PluginDeleteParams.none())

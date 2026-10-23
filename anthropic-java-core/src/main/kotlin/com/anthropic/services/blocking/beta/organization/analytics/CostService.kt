@@ -51,8 +51,8 @@ interface CostService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): CostService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/cost?beta=true`, but is
-         * otherwise the same as [CostService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/cost`, but is otherwise
+         * the same as [CostService.list].
          */
         @MustBeClosed
         fun list(params: CostListParams): HttpResponseFor<CostListPage> =

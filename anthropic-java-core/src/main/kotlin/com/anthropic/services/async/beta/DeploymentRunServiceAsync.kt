@@ -95,8 +95,8 @@ interface DeploymentRunServiceAsync {
         ): DeploymentRunServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/deployment_runs/{deployment_run_id}?beta=true`,
-         * but is otherwise the same as [DeploymentRunServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/deployment_runs/{deployment_run_id}`, but is
+         * otherwise the same as [DeploymentRunServiceAsync.retrieve].
          */
         fun retrieve(
             deploymentRunId: String
@@ -138,8 +138,8 @@ interface DeploymentRunServiceAsync {
             retrieve(deploymentRunId, DeploymentRunRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/deployment_runs?beta=true`, but is otherwise the
-         * same as [DeploymentRunServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/deployment_runs`, but is otherwise the same as
+         * [DeploymentRunServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<DeploymentRunListPageAsync>> =
             list(DeploymentRunListParams.none())

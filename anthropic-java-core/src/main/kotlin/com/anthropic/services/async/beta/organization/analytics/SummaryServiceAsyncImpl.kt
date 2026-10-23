@@ -36,7 +36,7 @@ class SummaryServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: SummaryListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<SummaryListPageAsync> =
-        // get /v1/organizations/analytics/summaries?beta=true
+        // get /v1/organizations/analytics/summaries
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -64,7 +64,6 @@ class SummaryServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "summaries")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =

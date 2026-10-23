@@ -171,8 +171,8 @@ interface MemberServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}?beta=true`, but is
-         * otherwise the same as [MemberServiceAsync.retrieve].
+         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}`, but is otherwise the same
+         * as [MemberServiceAsync.retrieve].
          */
         fun retrieve(
             userId: String,
@@ -202,8 +202,8 @@ interface MemberServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}?beta=true`, but is
-         * otherwise the same as [MemberServiceAsync.update].
+         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}`, but is otherwise the same
+         * as [MemberServiceAsync.update].
          */
         fun update(
             userId: String,
@@ -233,8 +233,8 @@ interface MemberServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}/members?beta=true`, but is otherwise the same
-         * as [MemberServiceAsync.list].
+         * /v1/organizations/workspaces/{workspace_id}/members`, but is otherwise the same as
+         * [MemberServiceAsync.list].
          */
         fun list(workspaceId: String): CompletableFuture<HttpResponseFor<MemberListPageAsync>> =
             list(workspaceId, MemberListParams.none())
@@ -275,8 +275,8 @@ interface MemberServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/members?beta=true`, but is otherwise the same
-         * as [MemberServiceAsync.add].
+         * /v1/organizations/workspaces/{workspace_id}/members`, but is otherwise the same as
+         * [MemberServiceAsync.add].
          */
         fun add(
             workspaceId: String,
@@ -304,8 +304,8 @@ interface MemberServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}?beta=true`, but is
-         * otherwise the same as [MemberServiceAsync.remove].
+         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}`, but is otherwise the same
+         * as [MemberServiceAsync.remove].
          */
         fun remove(
             userId: String,

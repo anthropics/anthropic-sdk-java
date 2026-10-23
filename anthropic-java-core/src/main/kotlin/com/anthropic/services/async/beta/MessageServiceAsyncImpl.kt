@@ -56,14 +56,14 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: MessageCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessage> =
-        // post /v1/messages?beta=true
+        // post /v1/messages
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun createStreaming(
         params: MessageCreateParams,
         requestOptions: RequestOptions,
     ): AsyncStreamResponse<BetaRawMessageStreamEvent> =
-        // post /v1/messages?beta=true
+        // post /v1/messages
         withRawResponse()
             .createStreaming(params, requestOptions)
             .thenApply { it.parse() }
@@ -73,7 +73,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: MessageCountTokensParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessageTokensCount> =
-        // post /v1/messages/count_tokens?beta=true
+        // post /v1/messages/count_tokens
         withRawResponse().countTokens(params, requestOptions).thenParse()
 
     @JvmSynthetic internal fun clientOptions(): ClientOptions = clientOptions
@@ -111,7 +111,6 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -158,7 +157,6 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
-                    .putQueryParam("beta", "true")
                     .putHeader("Accept", "text/event-stream")
                     .body(
                         json(
@@ -219,7 +217,6 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "count_tokens")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)

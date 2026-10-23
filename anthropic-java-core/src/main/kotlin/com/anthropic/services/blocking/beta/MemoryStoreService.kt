@@ -221,8 +221,8 @@ interface MemoryStoreService {
         fun memoryVersions(): MemoryVersionService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/memory_stores?beta=true`, but is otherwise the
-         * same as [MemoryStoreService.create].
+         * Returns a raw HTTP response for `post /v1/memory_stores`, but is otherwise the same as
+         * [MemoryStoreService.create].
          */
         @MustBeClosed
         fun create(params: MemoryStoreCreateParams): HttpResponseFor<BetaManagedAgentsMemoryStore> =
@@ -236,8 +236,8 @@ interface MemoryStoreService {
         ): HttpResponseFor<BetaManagedAgentsMemoryStore>
 
         /**
-         * Returns a raw HTTP response for `get /v1/memory_stores/{memory_store_id}?beta=true`, but
-         * is otherwise the same as [MemoryStoreService.retrieve].
+         * Returns a raw HTTP response for `get /v1/memory_stores/{memory_store_id}`, but is
+         * otherwise the same as [MemoryStoreService.retrieve].
          */
         @MustBeClosed
         fun retrieve(memoryStoreId: String): HttpResponseFor<BetaManagedAgentsMemoryStore> =
@@ -282,8 +282,8 @@ interface MemoryStoreService {
             retrieve(memoryStoreId, MemoryStoreRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/memory_stores/{memory_store_id}?beta=true`, but
-         * is otherwise the same as [MemoryStoreService.update].
+         * Returns a raw HTTP response for `post /v1/memory_stores/{memory_store_id}`, but is
+         * otherwise the same as [MemoryStoreService.update].
          */
         @MustBeClosed
         fun update(memoryStoreId: String): HttpResponseFor<BetaManagedAgentsMemoryStore> =
@@ -327,8 +327,8 @@ interface MemoryStoreService {
             update(memoryStoreId, MemoryStoreUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/memory_stores?beta=true`, but is otherwise the
-         * same as [MemoryStoreService.list].
+         * Returns a raw HTTP response for `get /v1/memory_stores`, but is otherwise the same as
+         * [MemoryStoreService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<MemoryStoreListPage> = list(MemoryStoreListParams.none())
@@ -352,8 +352,8 @@ interface MemoryStoreService {
             list(MemoryStoreListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/memory_stores/{memory_store_id}?beta=true`,
-         * but is otherwise the same as [MemoryStoreService.delete].
+         * Returns a raw HTTP response for `delete /v1/memory_stores/{memory_store_id}`, but is
+         * otherwise the same as [MemoryStoreService.delete].
          */
         @MustBeClosed
         fun delete(memoryStoreId: String): HttpResponseFor<BetaManagedAgentsDeletedMemoryStore> =
@@ -399,9 +399,8 @@ interface MemoryStoreService {
             delete(memoryStoreId, MemoryStoreDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/memory_stores/{memory_store_id}/archive?beta=true`, but is otherwise the same as
-         * [MemoryStoreService.archive].
+         * Returns a raw HTTP response for `post /v1/memory_stores/{memory_store_id}/archive`, but
+         * is otherwise the same as [MemoryStoreService.archive].
          */
         @MustBeClosed
         fun archive(memoryStoreId: String): HttpResponseFor<BetaManagedAgentsMemoryStore> =

@@ -53,49 +53,49 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
         params: CredentialCreateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsCredential =
-        // post /v1/vaults/{vault_id}/credentials?beta=true
+        // post /v1/vaults/{vault_id}/credentials
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: CredentialRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsCredential =
-        // get /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true
+        // get /v1/vaults/{vault_id}/credentials/{credential_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: CredentialUpdateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsCredential =
-        // post /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true
+        // post /v1/vaults/{vault_id}/credentials/{credential_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: CredentialListParams,
         requestOptions: RequestOptions,
     ): CredentialListPage =
-        // get /v1/vaults/{vault_id}/credentials?beta=true
+        // get /v1/vaults/{vault_id}/credentials
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: CredentialDeleteParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeletedCredential =
-        // delete /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true
+        // delete /v1/vaults/{vault_id}/credentials/{credential_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun archive(
         params: CredentialArchiveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsCredential =
-        // post /v1/vaults/{vault_id}/credentials/{credential_id}/archive?beta=true
+        // post /v1/vaults/{vault_id}/credentials/{credential_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     override fun mcpOAuthValidate(
         params: CredentialMcpOAuthValidateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsCredentialValidation =
-        // post /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate?beta=true
+        // post /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate
         withRawResponse().mcpOAuthValidate(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -128,7 +128,6 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("credentials")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -170,7 +169,6 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("credentials")
                     .addPathParam("credentialId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -210,7 +208,6 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("credentials")
                     .addPathParam("credentialId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -250,7 +247,6 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("credentials")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -297,7 +293,6 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("credentials")
                     .addPathParam("credentialId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -339,7 +334,6 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("credentials")
                     .addPathParam("credentialId", params._pathParam(1))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -381,7 +375,6 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("credentials")
                     .addPathParam("credentialId", params._pathParam(1))
                     .addPathSegments("mcp_oauth_validate")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

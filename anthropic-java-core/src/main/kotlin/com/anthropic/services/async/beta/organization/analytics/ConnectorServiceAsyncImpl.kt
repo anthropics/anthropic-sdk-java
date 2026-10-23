@@ -36,7 +36,7 @@ class ConnectorServiceAsyncImpl internal constructor(private val clientOptions: 
         params: ConnectorListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ConnectorListPageAsync> =
-        // get /v1/organizations/analytics/connectors?beta=true
+        // get /v1/organizations/analytics/connectors
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -64,7 +64,6 @@ class ConnectorServiceAsyncImpl internal constructor(private val clientOptions: 
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "connectors")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =

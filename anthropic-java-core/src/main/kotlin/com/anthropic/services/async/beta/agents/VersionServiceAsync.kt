@@ -72,8 +72,8 @@ interface VersionServiceAsync {
         ): VersionServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/agents/{agent_id}/versions?beta=true`, but is
-         * otherwise the same as [VersionServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/agents/{agent_id}/versions`, but is otherwise
+         * the same as [VersionServiceAsync.list].
          */
         fun list(agentId: String): CompletableFuture<HttpResponseFor<VersionListPageAsync>> =
             list(agentId, VersionListParams.none())

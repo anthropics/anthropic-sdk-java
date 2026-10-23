@@ -210,8 +210,8 @@ interface SessionService {
         fun threads(): ThreadService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/sessions?beta=true`, but is otherwise the same
-         * as [SessionService.create].
+         * Returns a raw HTTP response for `post /v1/sessions`, but is otherwise the same as
+         * [SessionService.create].
          */
         @MustBeClosed
         fun create(params: SessionCreateParams): HttpResponseFor<BetaManagedAgentsSession> =
@@ -225,8 +225,8 @@ interface SessionService {
         ): HttpResponseFor<BetaManagedAgentsSession>
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions/{session_id}?beta=true`, but is
-         * otherwise the same as [SessionService.retrieve].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}`, but is otherwise the
+         * same as [SessionService.retrieve].
          */
         @MustBeClosed
         fun retrieve(sessionId: String): HttpResponseFor<BetaManagedAgentsSession> =
@@ -270,8 +270,8 @@ interface SessionService {
             retrieve(sessionId, SessionRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/sessions/{session_id}?beta=true`, but is
-         * otherwise the same as [SessionService.update].
+         * Returns a raw HTTP response for `post /v1/sessions/{session_id}`, but is otherwise the
+         * same as [SessionService.update].
          */
         @MustBeClosed
         fun update(sessionId: String): HttpResponseFor<BetaManagedAgentsSession> =
@@ -315,8 +315,8 @@ interface SessionService {
             update(sessionId, SessionUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions?beta=true`, but is otherwise the same
-         * as [SessionService.list].
+         * Returns a raw HTTP response for `get /v1/sessions`, but is otherwise the same as
+         * [SessionService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<SessionListPage> = list(SessionListParams.none())
 
@@ -339,8 +339,8 @@ interface SessionService {
             list(SessionListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/sessions/{session_id}?beta=true`, but is
-         * otherwise the same as [SessionService.delete].
+         * Returns a raw HTTP response for `delete /v1/sessions/{session_id}`, but is otherwise the
+         * same as [SessionService.delete].
          */
         @MustBeClosed
         fun delete(sessionId: String): HttpResponseFor<BetaManagedAgentsDeletedSession> =
@@ -384,8 +384,8 @@ interface SessionService {
             delete(sessionId, SessionDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/archive?beta=true`, but
-         * is otherwise the same as [SessionService.archive].
+         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/archive`, but is
+         * otherwise the same as [SessionService.archive].
          */
         @MustBeClosed
         fun archive(sessionId: String): HttpResponseFor<BetaManagedAgentsSession> =

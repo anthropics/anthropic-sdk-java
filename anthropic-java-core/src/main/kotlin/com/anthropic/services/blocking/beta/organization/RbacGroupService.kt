@@ -187,8 +187,8 @@ interface RbacGroupService {
         fun members(): MemberService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/rbac_groups?beta=true`, but is
-         * otherwise the same as [RbacGroupService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/rbac_groups`, but is otherwise
+         * the same as [RbacGroupService.create].
          */
         @MustBeClosed
         fun create(params: RbacGroupCreateParams): HttpResponseFor<BetaRbacGroup> =
@@ -202,9 +202,8 @@ interface RbacGroupService {
         ): HttpResponseFor<BetaRbacGroup>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/rbac_groups/{rbac_group_id}?beta=true`, but is otherwise the same as
-         * [RbacGroupService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/rbac_groups/{rbac_group_id}`, but
+         * is otherwise the same as [RbacGroupService.retrieve].
          */
         @MustBeClosed
         fun retrieve(rbacGroupId: String): HttpResponseFor<BetaRbacGroup> =
@@ -247,9 +246,8 @@ interface RbacGroupService {
             retrieve(rbacGroupId, RbacGroupRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/rbac_groups/{rbac_group_id}?beta=true`, but is otherwise the same as
-         * [RbacGroupService.update].
+         * Returns a raw HTTP response for `post /v1/organizations/rbac_groups/{rbac_group_id}`, but
+         * is otherwise the same as [RbacGroupService.update].
          */
         @MustBeClosed
         fun update(rbacGroupId: String): HttpResponseFor<BetaRbacGroup> =
@@ -292,8 +290,8 @@ interface RbacGroupService {
             update(rbacGroupId, RbacGroupUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/rbac_groups?beta=true`, but is
-         * otherwise the same as [RbacGroupService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/rbac_groups`, but is otherwise the
+         * same as [RbacGroupService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<RbacGroupListPage> = list(RbacGroupListParams.none())
@@ -317,9 +315,8 @@ interface RbacGroupService {
             list(RbacGroupListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete
-         * /v1/organizations/rbac_groups/{rbac_group_id}?beta=true`, but is otherwise the same as
-         * [RbacGroupService.delete].
+         * Returns a raw HTTP response for `delete /v1/organizations/rbac_groups/{rbac_group_id}`,
+         * but is otherwise the same as [RbacGroupService.delete].
          */
         @MustBeClosed
         fun delete(rbacGroupId: String): HttpResponseFor<RbacGroupDeleteResponse> =

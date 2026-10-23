@@ -18,7 +18,10 @@ internal class CostServiceAsyncTest {
 
     @Test
     fun list() {
-        val costServiceAsync = client.beta().organization().analytics().cost()
+        val costServiceAsync =
+            client.beta().organization().analytics().cost().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture =
             costServiceAsync.list(

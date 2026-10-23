@@ -20,7 +20,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun list() {
-        val workspaceService = client.beta().organization().serviceAccounts().workspaces()
+        val workspaceService =
+            client.beta().organization().serviceAccounts().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = workspaceService.list("service_account_id")
 
@@ -29,7 +32,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun add() {
-        val workspaceService = client.beta().organization().serviceAccounts().workspaces()
+        val workspaceService =
+            client.beta().organization().serviceAccounts().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountWorkspaceMember =
             workspaceService.add(
@@ -46,7 +52,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun remove() {
-        val workspaceService = client.beta().organization().serviceAccounts().workspaces()
+        val workspaceService =
+            client.beta().organization().serviceAccounts().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val workspace =
             workspaceService.remove(

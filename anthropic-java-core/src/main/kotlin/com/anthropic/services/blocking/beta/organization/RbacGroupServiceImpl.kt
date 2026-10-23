@@ -49,35 +49,35 @@ class RbacGroupServiceImpl internal constructor(private val clientOptions: Clien
         params: RbacGroupCreateParams,
         requestOptions: RequestOptions,
     ): BetaRbacGroup =
-        // post /v1/organizations/rbac_groups?beta=true
+        // post /v1/organizations/rbac_groups
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: RbacGroupRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaRbacGroup =
-        // get /v1/organizations/rbac_groups/{rbac_group_id}?beta=true
+        // get /v1/organizations/rbac_groups/{rbac_group_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: RbacGroupUpdateParams,
         requestOptions: RequestOptions,
     ): BetaRbacGroup =
-        // post /v1/organizations/rbac_groups/{rbac_group_id}?beta=true
+        // post /v1/organizations/rbac_groups/{rbac_group_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: RbacGroupListParams,
         requestOptions: RequestOptions,
     ): RbacGroupListPage =
-        // get /v1/organizations/rbac_groups?beta=true
+        // get /v1/organizations/rbac_groups
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: RbacGroupDeleteParams,
         requestOptions: RequestOptions,
     ): RbacGroupDeleteResponse =
-        // delete /v1/organizations/rbac_groups/{rbac_group_id}?beta=true
+        // delete /v1/organizations/rbac_groups/{rbac_group_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -111,7 +111,6 @@ class RbacGroupServiceImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_groups")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -152,7 +151,6 @@ class RbacGroupServiceImpl internal constructor(private val clientOptions: Clien
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_groups")
                     .addPathParam("rbacGroupId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -189,7 +187,6 @@ class RbacGroupServiceImpl internal constructor(private val clientOptions: Clien
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_groups")
                     .addPathParam("rbacGroupId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -223,7 +220,6 @@ class RbacGroupServiceImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_groups")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -267,7 +263,6 @@ class RbacGroupServiceImpl internal constructor(private val clientOptions: Clien
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_groups")
                     .addPathParam("rbacGroupId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)

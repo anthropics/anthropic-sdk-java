@@ -19,7 +19,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun list() {
-        val workspaceServiceAsync = client.beta().organization().federation().rules().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().federation().rules().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = workspaceServiceAsync.list("federation_rule_id")
 
@@ -29,7 +32,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun add() {
-        val workspaceServiceAsync = client.beta().organization().federation().rules().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().federation().rules().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationRuleWorkspaceFuture =
             workspaceServiceAsync.add(
@@ -46,7 +52,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun remove() {
-        val workspaceServiceAsync = client.beta().organization().federation().rules().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().federation().rules().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val workspaceFuture =
             workspaceServiceAsync.remove(

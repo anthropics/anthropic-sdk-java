@@ -16,7 +16,10 @@ internal class PermissionServiceTest {
 
     @Test
     fun list() {
-        val permissionService = client.beta().organization().rbacRoles().permissions()
+        val permissionService =
+            client.beta().organization().rbacRoles().permissions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = permissionService.list("rbac_role_id")
 

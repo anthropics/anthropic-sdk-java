@@ -26,7 +26,8 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun create() {
-        val environmentServiceAsync = client.beta().environments()
+        val environmentServiceAsync =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaEnvironmentFuture =
             environmentServiceAsync.create(
@@ -73,7 +74,8 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val environmentServiceAsync = client.beta().environments()
+        val environmentServiceAsync =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaEnvironmentFuture =
             environmentServiceAsync.retrieve(
@@ -90,7 +92,8 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun update() {
-        val environmentServiceAsync = client.beta().environments()
+        val environmentServiceAsync =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaEnvironmentFuture =
             environmentServiceAsync.update(
@@ -138,7 +141,8 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun list() {
-        val environmentServiceAsync = client.beta().environments()
+        val environmentServiceAsync =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = environmentServiceAsync.list()
 
@@ -148,7 +152,8 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun delete() {
-        val environmentServiceAsync = client.beta().environments()
+        val environmentServiceAsync =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaEnvironmentDeleteResponseFuture =
             environmentServiceAsync.delete(
@@ -165,7 +170,8 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun archive() {
-        val environmentServiceAsync = client.beta().environments()
+        val environmentServiceAsync =
+            client.beta().environments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaEnvironmentFuture =
             environmentServiceAsync.archive(

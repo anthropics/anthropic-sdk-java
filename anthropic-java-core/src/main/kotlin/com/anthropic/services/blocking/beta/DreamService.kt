@@ -195,7 +195,7 @@ interface DreamService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): DreamService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/dreams?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `post /v1/dreams`, but is otherwise the same as
          * [DreamService.create].
          */
         @MustBeClosed
@@ -210,8 +210,8 @@ interface DreamService {
         ): HttpResponseFor<BetaDream>
 
         /**
-         * Returns a raw HTTP response for `get /v1/dreams/{dream_id}?beta=true`, but is otherwise
-         * the same as [DreamService.retrieve].
+         * Returns a raw HTTP response for `get /v1/dreams/{dream_id}`, but is otherwise the same as
+         * [DreamService.retrieve].
          */
         @MustBeClosed
         fun retrieve(dreamId: String): HttpResponseFor<BetaDream> =
@@ -251,7 +251,7 @@ interface DreamService {
             retrieve(dreamId, DreamRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/dreams?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/dreams`, but is otherwise the same as
          * [DreamService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<DreamListPage> = list(DreamListParams.none())
@@ -274,8 +274,8 @@ interface DreamService {
             list(DreamListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/dreams/{dream_id}/archive?beta=true`, but is
-         * otherwise the same as [DreamService.archive].
+         * Returns a raw HTTP response for `post /v1/dreams/{dream_id}/archive`, but is otherwise
+         * the same as [DreamService.archive].
          */
         @MustBeClosed
         fun archive(dreamId: String): HttpResponseFor<BetaDream> =
@@ -315,8 +315,8 @@ interface DreamService {
             archive(dreamId, DreamArchiveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/dreams/{dream_id}/cancel?beta=true`, but is
-         * otherwise the same as [DreamService.cancel].
+         * Returns a raw HTTP response for `post /v1/dreams/{dream_id}/cancel`, but is otherwise the
+         * same as [DreamService.cancel].
          */
         @MustBeClosed
         fun cancel(dreamId: String): HttpResponseFor<BetaDream> =

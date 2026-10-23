@@ -45,35 +45,35 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: MemberRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaWorkspaceMember> =
-        // get /v1/organizations/workspaces/{workspace_id}/members/{user_id}?beta=true
+        // get /v1/organizations/workspaces/{workspace_id}/members/{user_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: MemberUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaWorkspaceMember> =
-        // post /v1/organizations/workspaces/{workspace_id}/members/{user_id}?beta=true
+        // post /v1/organizations/workspaces/{workspace_id}/members/{user_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: MemberListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MemberListPageAsync> =
-        // get /v1/organizations/workspaces/{workspace_id}/members?beta=true
+        // get /v1/organizations/workspaces/{workspace_id}/members
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun add(
         params: MemberAddParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaWorkspaceMember> =
-        // post /v1/organizations/workspaces/{workspace_id}/members?beta=true
+        // post /v1/organizations/workspaces/{workspace_id}/members
         withRawResponse().add(params, requestOptions).thenParse()
 
     override fun remove(
         params: MemberRemoveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MemberRemoveResponse> =
-        // delete /v1/organizations/workspaces/{workspace_id}/members/{user_id}?beta=true
+        // delete /v1/organizations/workspaces/{workspace_id}/members/{user_id}
         withRawResponse().remove(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -107,7 +107,6 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("members")
                     .addPathParam("userId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -149,7 +148,6 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("members")
                     .addPathParam("userId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -191,7 +189,6 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("members")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -240,7 +237,6 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("members")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -289,7 +285,6 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("members")
                     .addPathParam("userId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

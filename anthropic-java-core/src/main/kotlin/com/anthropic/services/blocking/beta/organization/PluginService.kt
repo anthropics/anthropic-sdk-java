@@ -264,8 +264,8 @@ interface PluginService {
         fun shares(): ShareService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/plugins?beta=true`, but is
-         * otherwise the same as [PluginService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/plugins`, but is otherwise the
+         * same as [PluginService.create].
          */
         @MustBeClosed
         fun create(params: PluginCreateParams): HttpResponseFor<BetaPlugin> =
@@ -279,8 +279,8 @@ interface PluginService {
         ): HttpResponseFor<BetaPlugin>
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/plugins/{plugin_id}?beta=true`,
-         * but is otherwise the same as [PluginService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/plugins/{plugin_id}`, but is
+         * otherwise the same as [PluginService.retrieve].
          */
         @MustBeClosed
         fun retrieve(pluginId: String): HttpResponseFor<BetaPlugin> =
@@ -323,8 +323,8 @@ interface PluginService {
             retrieve(pluginId, PluginRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/plugins/{plugin_id}?beta=true`,
-         * but is otherwise the same as [PluginService.update].
+         * Returns a raw HTTP response for `post /v1/organizations/plugins/{plugin_id}`, but is
+         * otherwise the same as [PluginService.update].
          */
         @MustBeClosed
         fun update(pluginId: String, params: PluginUpdateParams): HttpResponseFor<BetaPlugin> =
@@ -352,8 +352,8 @@ interface PluginService {
         ): HttpResponseFor<BetaPlugin>
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/plugins?beta=true`, but is
-         * otherwise the same as [PluginService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/plugins`, but is otherwise the
+         * same as [PluginService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<PluginListPage> = list(PluginListParams.none())
 
@@ -376,8 +376,8 @@ interface PluginService {
             list(PluginListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/organizations/plugins/{plugin_id}?beta=true`,
-         * but is otherwise the same as [PluginService.delete].
+         * Returns a raw HTTP response for `delete /v1/organizations/plugins/{plugin_id}`, but is
+         * otherwise the same as [PluginService.delete].
          */
         @MustBeClosed
         fun delete(pluginId: String): HttpResponseFor<BetaDeletedPlugin> =

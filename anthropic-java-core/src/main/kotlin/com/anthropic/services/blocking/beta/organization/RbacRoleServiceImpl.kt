@@ -44,14 +44,14 @@ class RbacRoleServiceImpl internal constructor(private val clientOptions: Client
         params: RbacRoleRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaRbacRole =
-        // get /v1/organizations/rbac_roles/{rbac_role_id}?beta=true
+        // get /v1/organizations/rbac_roles/{rbac_role_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(
         params: RbacRoleListParams,
         requestOptions: RequestOptions,
     ): RbacRoleListPage =
-        // get /v1/organizations/rbac_roles?beta=true
+        // get /v1/organizations/rbac_roles
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -89,7 +89,6 @@ class RbacRoleServiceImpl internal constructor(private val clientOptions: Client
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_roles")
                     .addPathParam("rbacRoleId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -122,7 +121,6 @@ class RbacRoleServiceImpl internal constructor(private val clientOptions: Client
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_roles")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =

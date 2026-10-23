@@ -143,7 +143,7 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
         params: OrganizationRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaOrganization =
-        // get /v1/organizations/me?beta=true
+        // get /v1/organizations/me
         withRawResponse().retrieve(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -276,7 +276,6 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "me")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =

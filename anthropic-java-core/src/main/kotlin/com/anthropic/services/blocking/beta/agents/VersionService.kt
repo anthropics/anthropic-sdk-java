@@ -62,8 +62,8 @@ interface VersionService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/agents/{agent_id}/versions?beta=true`, but is
-         * otherwise the same as [VersionService.list].
+         * Returns a raw HTTP response for `get /v1/agents/{agent_id}/versions`, but is otherwise
+         * the same as [VersionService.list].
          */
         @MustBeClosed
         fun list(agentId: String): HttpResponseFor<VersionListPage> =

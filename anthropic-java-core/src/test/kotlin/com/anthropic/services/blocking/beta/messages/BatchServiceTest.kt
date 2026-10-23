@@ -47,7 +47,8 @@ internal class BatchServiceTest {
 
     @Test
     fun create() {
-        val batchService = client.beta().messages().batches()
+        val batchService =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageBatch =
             batchService.create(
@@ -254,7 +255,8 @@ internal class BatchServiceTest {
 
     @Test
     fun retrieve() {
-        val batchService = client.beta().messages().batches()
+        val batchService =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageBatch =
             batchService.retrieve(
@@ -270,7 +272,8 @@ internal class BatchServiceTest {
 
     @Test
     fun list() {
-        val batchService = client.beta().messages().batches()
+        val batchService =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val page = batchService.list()
 
@@ -279,7 +282,8 @@ internal class BatchServiceTest {
 
     @Test
     fun delete() {
-        val batchService = client.beta().messages().batches()
+        val batchService =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedMessageBatch =
             batchService.delete(
@@ -295,7 +299,8 @@ internal class BatchServiceTest {
 
     @Test
     fun cancel() {
-        val batchService = client.beta().messages().batches()
+        val batchService =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageBatch =
             batchService.cancel(
@@ -311,7 +316,8 @@ internal class BatchServiceTest {
 
     @Test
     fun resultsStreaming() {
-        val batchService = client.beta().messages().batches()
+        val batchService =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageBatchIndividualResponseStreamResponse =
             batchService.resultsStreaming(

@@ -16,7 +16,10 @@ internal class PluginServiceTest {
 
     @Test
     fun list() {
-        val pluginService = client.beta().organization().analytics().plugins()
+        val pluginService =
+            client.beta().organization().analytics().plugins().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = pluginService.list()
 

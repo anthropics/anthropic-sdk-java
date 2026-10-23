@@ -17,7 +17,8 @@ internal class InviteServiceAsyncTest {
 
     @Test
     fun create() {
-        val inviteServiceAsync = client.beta().organization().invites()
+        val inviteServiceAsync =
+            client.beta().organization().invites().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationInviteFuture =
             inviteServiceAsync.create(
@@ -34,7 +35,8 @@ internal class InviteServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val inviteServiceAsync = client.beta().organization().invites()
+        val inviteServiceAsync =
+            client.beta().organization().invites().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationInviteFuture = inviteServiceAsync.retrieve("invite_id")
 
@@ -44,7 +46,8 @@ internal class InviteServiceAsyncTest {
 
     @Test
     fun list() {
-        val inviteServiceAsync = client.beta().organization().invites()
+        val inviteServiceAsync =
+            client.beta().organization().invites().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = inviteServiceAsync.list()
 
@@ -54,7 +57,8 @@ internal class InviteServiceAsyncTest {
 
     @Test
     fun delete() {
-        val inviteServiceAsync = client.beta().organization().invites()
+        val inviteServiceAsync =
+            client.beta().organization().invites().withOptions { it.putQueryParam("beta", "true") }
 
         val inviteFuture = inviteServiceAsync.delete("invite_id")
 

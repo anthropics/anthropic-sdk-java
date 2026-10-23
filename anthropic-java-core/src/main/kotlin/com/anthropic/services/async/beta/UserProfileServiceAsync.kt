@@ -237,8 +237,8 @@ interface UserProfileServiceAsync {
         fun actionUrls(): ActionUrlServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/user_profiles?beta=true`, but is otherwise the
-         * same as [UserProfileServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/user_profiles`, but is otherwise the same as
+         * [UserProfileServiceAsync.create].
          */
         fun create(): CompletableFuture<HttpResponseFor<BetaUserProfile>> =
             create(UserProfileCreateParams.none())
@@ -262,8 +262,8 @@ interface UserProfileServiceAsync {
             create(UserProfileCreateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/user_profiles/{user_profile_id}?beta=true`, but
-         * is otherwise the same as [UserProfileServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/user_profiles/{user_profile_id}`, but is
+         * otherwise the same as [UserProfileServiceAsync.retrieve].
          */
         fun retrieve(userProfileId: String): CompletableFuture<HttpResponseFor<BetaUserProfile>> =
             retrieve(userProfileId, UserProfileRetrieveParams.none())
@@ -303,8 +303,8 @@ interface UserProfileServiceAsync {
             retrieve(userProfileId, UserProfileRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/user_profiles/{user_profile_id}?beta=true`, but
-         * is otherwise the same as [UserProfileServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/user_profiles/{user_profile_id}`, but is
+         * otherwise the same as [UserProfileServiceAsync.update].
          */
         fun update(userProfileId: String): CompletableFuture<HttpResponseFor<BetaUserProfile>> =
             update(userProfileId, UserProfileUpdateParams.none())
@@ -344,8 +344,8 @@ interface UserProfileServiceAsync {
             update(userProfileId, UserProfileUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/user_profiles?beta=true`, but is otherwise the
-         * same as [UserProfileServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/user_profiles`, but is otherwise the same as
+         * [UserProfileServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<UserProfileListPageAsync>> =
             list(UserProfileListParams.none())
@@ -369,8 +369,8 @@ interface UserProfileServiceAsync {
             list(UserProfileListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/user_profiles/{user_profile_id}?beta=true`,
-         * but is otherwise the same as [UserProfileServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/user_profiles/{user_profile_id}`, but is
+         * otherwise the same as [UserProfileServiceAsync.delete].
          */
         fun delete(
             userProfileId: String
@@ -413,8 +413,8 @@ interface UserProfileServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/user_profiles/{user_profile_id}/enrollment_url?beta=true`, but is otherwise the same
-         * as [UserProfileServiceAsync.createEnrollmentUrl].
+         * /v1/user_profiles/{user_profile_id}/enrollment_url`, but is otherwise the same as
+         * [UserProfileServiceAsync.createEnrollmentUrl].
          */
         fun createEnrollmentUrl(
             userProfileId: String

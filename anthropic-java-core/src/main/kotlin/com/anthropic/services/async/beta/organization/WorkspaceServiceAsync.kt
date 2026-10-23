@@ -190,8 +190,8 @@ interface WorkspaceServiceAsync {
         fun serviceAccounts(): ServiceAccountServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/workspaces?beta=true`, but is
-         * otherwise the same as [WorkspaceServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/workspaces`, but is otherwise the
+         * same as [WorkspaceServiceAsync.create].
          */
         fun create(
             params: WorkspaceCreateParams
@@ -204,9 +204,8 @@ interface WorkspaceServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaWorkspace>>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}?beta=true`, but is otherwise the same as
-         * [WorkspaceServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/workspaces/{workspace_id}`, but is
+         * otherwise the same as [WorkspaceServiceAsync.retrieve].
          */
         fun retrieve(workspaceId: String): CompletableFuture<HttpResponseFor<BetaWorkspace>> =
             retrieve(workspaceId, WorkspaceRetrieveParams.none())
@@ -246,9 +245,8 @@ interface WorkspaceServiceAsync {
             retrieve(workspaceId, WorkspaceRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}?beta=true`, but is otherwise the same as
-         * [WorkspaceServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/organizations/workspaces/{workspace_id}`, but
+         * is otherwise the same as [WorkspaceServiceAsync.update].
          */
         fun update(workspaceId: String): CompletableFuture<HttpResponseFor<BetaWorkspace>> =
             update(workspaceId, WorkspaceUpdateParams.none())
@@ -287,8 +285,8 @@ interface WorkspaceServiceAsync {
             update(workspaceId, WorkspaceUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/workspaces?beta=true`, but is
-         * otherwise the same as [WorkspaceServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/workspaces`, but is otherwise the
+         * same as [WorkspaceServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<WorkspaceListPageAsync>> =
             list(WorkspaceListParams.none())
@@ -313,8 +311,8 @@ interface WorkspaceServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/archive?beta=true`, but is otherwise the same
-         * as [WorkspaceServiceAsync.archive].
+         * /v1/organizations/workspaces/{workspace_id}/archive`, but is otherwise the same as
+         * [WorkspaceServiceAsync.archive].
          */
         fun archive(workspaceId: String): CompletableFuture<HttpResponseFor<BetaWorkspace>> =
             archive(workspaceId, WorkspaceArchiveParams.none())

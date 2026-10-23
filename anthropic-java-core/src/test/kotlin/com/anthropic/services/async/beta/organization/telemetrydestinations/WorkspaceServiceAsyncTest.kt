@@ -20,7 +20,9 @@ internal class WorkspaceServiceAsyncTest {
     @Test
     fun list() {
         val workspaceServiceAsync =
-            client.beta().organization().telemetryDestinations().workspaces()
+            client.beta().organization().telemetryDestinations().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = workspaceServiceAsync.list("destination_id")
 
@@ -31,7 +33,9 @@ internal class WorkspaceServiceAsyncTest {
     @Test
     fun add() {
         val workspaceServiceAsync =
-            client.beta().organization().telemetryDestinations().workspaces()
+            client.beta().organization().telemetryDestinations().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaTelemetryDestinationWorkspaceFuture =
             workspaceServiceAsync.add(
@@ -49,7 +53,9 @@ internal class WorkspaceServiceAsyncTest {
     @Test
     fun remove() {
         val workspaceServiceAsync =
-            client.beta().organization().telemetryDestinations().workspaces()
+            client.beta().organization().telemetryDestinations().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaDeletedTelemetryDestinationWorkspaceFuture =
             workspaceServiceAsync.remove(

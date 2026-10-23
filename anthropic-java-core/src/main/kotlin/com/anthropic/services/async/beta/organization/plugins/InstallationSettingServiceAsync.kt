@@ -191,8 +191,8 @@ interface InstallationSettingServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/plugins/{plugin_id}/installation_settings?beta=true`, but is otherwise
-         * the same as [InstallationSettingServiceAsync.list].
+         * /v1/organizations/plugins/{plugin_id}/installation_settings`, but is otherwise the same
+         * as [InstallationSettingServiceAsync.list].
          */
         fun list(
             pluginId: String
@@ -235,8 +235,8 @@ interface InstallationSettingServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/plugins/{plugin_id}/installation_settings/{target}?beta=true`, but is
-         * otherwise the same as [InstallationSettingServiceAsync.remove].
+         * /v1/organizations/plugins/{plugin_id}/installation_settings/{target}`, but is otherwise
+         * the same as [InstallationSettingServiceAsync.remove].
          */
         fun remove(
             target: String,
@@ -266,8 +266,8 @@ interface InstallationSettingServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/plugins/{plugin_id}/installation_settings/{target}?beta=true`, but is
-         * otherwise the same as [InstallationSettingServiceAsync.set].
+         * /v1/organizations/plugins/{plugin_id}/installation_settings/{target}`, but is otherwise
+         * the same as [InstallationSettingServiceAsync.set].
          */
         fun set(
             target: String,

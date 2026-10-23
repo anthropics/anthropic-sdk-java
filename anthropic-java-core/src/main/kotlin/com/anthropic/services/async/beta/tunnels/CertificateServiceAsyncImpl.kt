@@ -50,28 +50,28 @@ class CertificateServiceAsyncImpl internal constructor(private val clientOptions
         params: CertificateCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTunnelCertificate> =
-        // post /v1/tunnels/{tunnel_id}/certificates?beta=true
+        // post /v1/tunnels/{tunnel_id}/certificates
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: CertificateRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTunnelCertificate> =
-        // get /v1/tunnels/{tunnel_id}/certificates/{certificate_id}?beta=true
+        // get /v1/tunnels/{tunnel_id}/certificates/{certificate_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: CertificateListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<CertificateListPageAsync> =
-        // get /v1/tunnels/{tunnel_id}/certificates?beta=true
+        // get /v1/tunnels/{tunnel_id}/certificates
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: CertificateArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTunnelCertificate> =
-        // post /v1/tunnels/{tunnel_id}/certificates/{certificate_id}/archive?beta=true
+        // post /v1/tunnels/{tunnel_id}/certificates/{certificate_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -104,7 +104,6 @@ class CertificateServiceAsyncImpl internal constructor(private val clientOptions
                     .addPathSegments("v1", "tunnels")
                     .addPathParam("tunnelId", params._pathParam(0))
                     .addPathSegments("certificates")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -154,7 +153,6 @@ class CertificateServiceAsyncImpl internal constructor(private val clientOptions
                     .addPathParam("tunnelId", params._pathParam(0))
                     .addPathSegments("certificates")
                     .addPathParam("certificateId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -196,7 +194,6 @@ class CertificateServiceAsyncImpl internal constructor(private val clientOptions
                     .addPathSegments("v1", "tunnels")
                     .addPathParam("tunnelId", params._pathParam(0))
                     .addPathSegments("certificates")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -248,7 +245,6 @@ class CertificateServiceAsyncImpl internal constructor(private val clientOptions
                     .addPathSegments("certificates")
                     .addPathParam("certificateId", params._pathParam(1))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

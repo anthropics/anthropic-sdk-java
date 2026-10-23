@@ -96,9 +96,8 @@ interface RbacRoleService {
         fun permissions(): PermissionService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/rbac_roles/{rbac_role_id}?beta=true`, but is otherwise the same as
-         * [RbacRoleService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/rbac_roles/{rbac_role_id}`, but is
+         * otherwise the same as [RbacRoleService.retrieve].
          */
         @MustBeClosed
         fun retrieve(rbacRoleId: String): HttpResponseFor<BetaRbacRole> =
@@ -141,8 +140,8 @@ interface RbacRoleService {
             retrieve(rbacRoleId, RbacRoleRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/rbac_roles?beta=true`, but is
-         * otherwise the same as [RbacRoleService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/rbac_roles`, but is otherwise the
+         * same as [RbacRoleService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<RbacRoleListPage> = list(RbacRoleListParams.none())

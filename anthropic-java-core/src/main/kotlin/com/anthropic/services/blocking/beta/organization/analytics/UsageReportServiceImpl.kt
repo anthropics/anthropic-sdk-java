@@ -34,7 +34,7 @@ class UsageReportServiceImpl internal constructor(private val clientOptions: Cli
         params: UsageReportListParams,
         requestOptions: RequestOptions,
     ): UsageReportListPage =
-        // get /v1/organizations/analytics/usage_report?beta=true
+        // get /v1/organizations/analytics/usage_report
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -62,7 +62,6 @@ class UsageReportServiceImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "usage_report")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =

@@ -44,7 +44,8 @@ internal class MessageServiceAsyncTest {
 
     @Test
     fun create() {
-        val messageServiceAsync = client.beta().messages()
+        val messageServiceAsync =
+            client.beta().messages().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageFuture =
             messageServiceAsync.create(
@@ -216,7 +217,8 @@ internal class MessageServiceAsyncTest {
 
     @Test
     fun createStreaming() {
-        val messageServiceAsync = client.beta().messages()
+        val messageServiceAsync =
+            client.beta().messages().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageStreamResponse =
             messageServiceAsync.createStreaming(
@@ -391,7 +393,8 @@ internal class MessageServiceAsyncTest {
 
     @Test
     fun countTokens() {
-        val messageServiceAsync = client.beta().messages()
+        val messageServiceAsync =
+            client.beta().messages().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageTokensCountFuture =
             messageServiceAsync.countTokens(

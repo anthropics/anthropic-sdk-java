@@ -30,7 +30,10 @@ internal class VersionServiceTest {
 
     @Test
     fun create() {
-        val versionService = client.beta().organization().plugins().versions()
+        val versionService =
+            client.beta().organization().plugins().versions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginVersion =
             versionService.create(
@@ -47,7 +50,10 @@ internal class VersionServiceTest {
 
     @Test
     fun retrieve() {
-        val versionService = client.beta().organization().plugins().versions()
+        val versionService =
+            client.beta().organization().plugins().versions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginVersion =
             versionService.retrieve(
@@ -64,7 +70,10 @@ internal class VersionServiceTest {
 
     @Test
     fun list() {
-        val versionService = client.beta().organization().plugins().versions()
+        val versionService =
+            client.beta().organization().plugins().versions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = versionService.list("plugin_id")
 
@@ -74,9 +83,13 @@ internal class VersionServiceTest {
     @Test
     fun download(wmRuntimeInfo: WireMockRuntimeInfo) {
         val versionService =
-            client.beta().organization().plugins().versions().withOptions {
-                it.baseUrl(wmRuntimeInfo.httpBaseUrl)
-            }
+            client
+                .beta()
+                .organization()
+                .plugins()
+                .versions()
+                .withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
+                .withOptions { it.putQueryParam("beta", "true") }
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
         val response =

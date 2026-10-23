@@ -43,7 +43,7 @@ class ActionUrlServiceImpl internal constructor(private val clientOptions: Clien
         params: ActionUrlCreateParams,
         requestOptions: RequestOptions,
     ): BetaUserProfileActionUrl =
-        // post /v1/user_profiles/{user_profile_id}/action_urls?beta=true
+        // post /v1/user_profiles/{user_profile_id}/action_urls
         withRawResponse().create(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -76,7 +76,6 @@ class ActionUrlServiceImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("v1", "user_profiles")
                     .addPathParam("userProfileId", params._pathParam(0))
                     .addPathSegments("action_urls")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()

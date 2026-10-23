@@ -55,32 +55,32 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
         params: AgentCreateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsAgent =
-        // post /v1/agents?beta=true
+        // post /v1/agents
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: AgentRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsAgent =
-        // get /v1/agents/{agent_id}?beta=true
+        // get /v1/agents/{agent_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: AgentUpdateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsAgent =
-        // post /v1/agents/{agent_id}?beta=true
+        // post /v1/agents/{agent_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: AgentListParams, requestOptions: RequestOptions): AgentListPage =
-        // get /v1/agents?beta=true
+        // get /v1/agents
         withRawResponse().list(params, requestOptions).parse()
 
     override fun archive(
         params: AgentArchiveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsAgent =
-        // post /v1/agents/{agent_id}/archive?beta=true
+        // post /v1/agents/{agent_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -114,7 +114,6 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "agents")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -154,7 +153,6 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "agents")
                     .addPathParam("agentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -192,7 +190,6 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "agents")
                     .addPathParam("agentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -227,7 +224,6 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "agents")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -273,7 +269,6 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "agents")
                     .addPathParam("agentId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

@@ -38,7 +38,7 @@ class UsageServiceImpl internal constructor(private val clientOptions: ClientOpt
         UsageServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: UsageListParams, requestOptions: RequestOptions): UsageListPage =
-        // get /v1/organizations/analytics/usage?beta=true
+        // get /v1/organizations/analytics/usage
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -66,7 +66,6 @@ class UsageServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "usage")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)

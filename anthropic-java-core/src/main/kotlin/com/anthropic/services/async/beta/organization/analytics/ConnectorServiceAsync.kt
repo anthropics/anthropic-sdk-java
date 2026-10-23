@@ -64,8 +64,8 @@ interface ConnectorServiceAsync {
         ): ConnectorServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/connectors?beta=true`,
-         * but is otherwise the same as [ConnectorServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/connectors`, but is
+         * otherwise the same as [ConnectorServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<ConnectorListPageAsync>> =
             list(ConnectorListParams.none())

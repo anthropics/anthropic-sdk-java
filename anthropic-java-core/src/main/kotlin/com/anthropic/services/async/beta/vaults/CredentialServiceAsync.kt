@@ -235,8 +235,8 @@ interface CredentialServiceAsync {
         ): CredentialServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}/credentials?beta=true`, but
-         * is otherwise the same as [CredentialServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}/credentials`, but is
+         * otherwise the same as [CredentialServiceAsync.create].
          */
         fun create(
             vaultId: String,
@@ -265,9 +265,8 @@ interface CredentialServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsCredential>>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true`, but is otherwise the same
-         * as [CredentialServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/vaults/{vault_id}/credentials/{credential_id}`,
+         * but is otherwise the same as [CredentialServiceAsync.retrieve].
          */
         fun retrieve(
             credentialId: String,
@@ -296,9 +295,8 @@ interface CredentialServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsCredential>>
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true`, but is otherwise the same
-         * as [CredentialServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}/credentials/{credential_id}`,
+         * but is otherwise the same as [CredentialServiceAsync.update].
          */
         fun update(
             credentialId: String,
@@ -327,8 +325,8 @@ interface CredentialServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsCredential>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/vaults/{vault_id}/credentials?beta=true`, but is
-         * otherwise the same as [CredentialServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/vaults/{vault_id}/credentials`, but is otherwise
+         * the same as [CredentialServiceAsync.list].
          */
         fun list(vaultId: String): CompletableFuture<HttpResponseFor<CredentialListPageAsync>> =
             list(vaultId, CredentialListParams.none())
@@ -369,8 +367,8 @@ interface CredentialServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true`, but is otherwise the same
-         * as [CredentialServiceAsync.delete].
+         * /v1/vaults/{vault_id}/credentials/{credential_id}`, but is otherwise the same as
+         * [CredentialServiceAsync.delete].
          */
         fun delete(
             credentialId: String,
@@ -400,8 +398,8 @@ interface CredentialServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/vaults/{vault_id}/credentials/{credential_id}/archive?beta=true`, but is otherwise
-         * the same as [CredentialServiceAsync.archive].
+         * /v1/vaults/{vault_id}/credentials/{credential_id}/archive`, but is otherwise the same as
+         * [CredentialServiceAsync.archive].
          */
         fun archive(
             credentialId: String,
@@ -431,8 +429,8 @@ interface CredentialServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate?beta=true`, but is
-         * otherwise the same as [CredentialServiceAsync.mcpOAuthValidate].
+         * /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate`, but is otherwise
+         * the same as [CredentialServiceAsync.mcpOAuthValidate].
          */
         fun mcpOAuthValidate(
             credentialId: String,

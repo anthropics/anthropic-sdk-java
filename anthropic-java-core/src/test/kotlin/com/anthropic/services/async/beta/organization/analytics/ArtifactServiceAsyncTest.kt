@@ -18,7 +18,10 @@ internal class ArtifactServiceAsyncTest {
 
     @Test
     fun list() {
-        val artifactServiceAsync = client.beta().organization().analytics().artifacts()
+        val artifactServiceAsync =
+            client.beta().organization().analytics().artifacts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture =
             artifactServiceAsync.list(

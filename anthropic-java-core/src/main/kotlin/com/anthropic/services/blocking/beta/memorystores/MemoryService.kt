@@ -157,9 +157,8 @@ interface MemoryService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): MemoryService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/memory_stores/{memory_store_id}/memories?beta=true`, but is otherwise the same as
-         * [MemoryService.create].
+         * Returns a raw HTTP response for `post /v1/memory_stores/{memory_store_id}/memories`, but
+         * is otherwise the same as [MemoryService.create].
          */
         @MustBeClosed
         fun create(
@@ -191,8 +190,8 @@ interface MemoryService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true`, but is otherwise the
-         * same as [MemoryService.retrieve].
+         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}`, but is otherwise the same as
+         * [MemoryService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -224,8 +223,8 @@ interface MemoryService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true`, but is otherwise the
-         * same as [MemoryService.update].
+         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}`, but is otherwise the same as
+         * [MemoryService.update].
          */
         @MustBeClosed
         fun update(
@@ -256,9 +255,8 @@ interface MemoryService {
         ): HttpResponseFor<BetaManagedAgentsMemory>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/memory_stores/{memory_store_id}/memories?beta=true`, but is otherwise the same as
-         * [MemoryService.list].
+         * Returns a raw HTTP response for `get /v1/memory_stores/{memory_store_id}/memories`, but
+         * is otherwise the same as [MemoryService.list].
          */
         @MustBeClosed
         fun list(memoryStoreId: String): HttpResponseFor<MemoryListPage> =
@@ -302,8 +300,8 @@ interface MemoryService {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true`, but is otherwise the
-         * same as [MemoryService.delete].
+         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}`, but is otherwise the same as
+         * [MemoryService.delete].
          */
         @MustBeClosed
         fun delete(

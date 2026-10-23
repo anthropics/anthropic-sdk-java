@@ -20,7 +20,9 @@ internal class InstallationSettingServiceAsyncTest {
     @Test
     fun list() {
         val installationSettingServiceAsync =
-            client.beta().organization().plugins().installationSettings()
+            client.beta().organization().plugins().installationSettings().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = installationSettingServiceAsync.list("plugin_id")
 
@@ -31,7 +33,9 @@ internal class InstallationSettingServiceAsyncTest {
     @Test
     fun remove() {
         val installationSettingServiceAsync =
-            client.beta().organization().plugins().installationSettings()
+            client.beta().organization().plugins().installationSettings().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaDeletedPluginInstallationSettingFuture =
             installationSettingServiceAsync.remove(
@@ -49,7 +53,9 @@ internal class InstallationSettingServiceAsyncTest {
     @Test
     fun set() {
         val installationSettingServiceAsync =
-            client.beta().organization().plugins().installationSettings()
+            client.beta().organization().plugins().installationSettings().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginInstallationSettingFuture =
             installationSettingServiceAsync.set(

@@ -60,8 +60,8 @@ interface SkillServiceAsync {
         ): SkillServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/skills?beta=true`, but
-         * is otherwise the same as [SkillServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/skills`, but is
+         * otherwise the same as [SkillServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<SkillListPageAsync>> =
             list(SkillListParams.none())

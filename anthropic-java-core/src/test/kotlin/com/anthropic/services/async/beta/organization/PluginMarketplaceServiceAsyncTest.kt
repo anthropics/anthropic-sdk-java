@@ -21,7 +21,10 @@ internal class PluginMarketplaceServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val pluginMarketplaceServiceAsync = client.beta().organization().pluginMarketplaces()
+        val pluginMarketplaceServiceAsync =
+            client.beta().organization().pluginMarketplaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginMarketplaceFuture =
             pluginMarketplaceServiceAsync.retrieve(
@@ -38,7 +41,10 @@ internal class PluginMarketplaceServiceAsyncTest {
 
     @Test
     fun update() {
-        val pluginMarketplaceServiceAsync = client.beta().organization().pluginMarketplaces()
+        val pluginMarketplaceServiceAsync =
+            client.beta().organization().pluginMarketplaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginMarketplaceFuture =
             pluginMarketplaceServiceAsync.update(
@@ -57,7 +63,10 @@ internal class PluginMarketplaceServiceAsyncTest {
 
     @Test
     fun list() {
-        val pluginMarketplaceServiceAsync = client.beta().organization().pluginMarketplaces()
+        val pluginMarketplaceServiceAsync =
+            client.beta().organization().pluginMarketplaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = pluginMarketplaceServiceAsync.list()
 
@@ -67,7 +76,10 @@ internal class PluginMarketplaceServiceAsyncTest {
 
     @Test
     fun validateArchive() {
-        val pluginMarketplaceServiceAsync = client.beta().organization().pluginMarketplaces()
+        val pluginMarketplaceServiceAsync =
+            client.beta().organization().pluginMarketplaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginMarketplaceValidationReportFuture =
             pluginMarketplaceServiceAsync.validateArchive(
@@ -84,7 +96,10 @@ internal class PluginMarketplaceServiceAsyncTest {
 
     @Test
     fun validateRepository() {
-        val pluginMarketplaceServiceAsync = client.beta().organization().pluginMarketplaces()
+        val pluginMarketplaceServiceAsync =
+            client.beta().organization().pluginMarketplaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginMarketplaceValidationReportFuture =
             pluginMarketplaceServiceAsync.validateRepository(

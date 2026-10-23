@@ -127,7 +127,7 @@ interface SkillService {
         fun versions(): VersionService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/skills?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `post /v1/skills`, but is otherwise the same as
          * [SkillService.create].
          */
         @MustBeClosed
@@ -142,8 +142,8 @@ interface SkillService {
         ): HttpResponseFor<BetaSkill>
 
         /**
-         * Returns a raw HTTP response for `get /v1/skills/{skill_id}?beta=true`, but is otherwise
-         * the same as [SkillService.retrieve].
+         * Returns a raw HTTP response for `get /v1/skills/{skill_id}`, but is otherwise the same as
+         * [SkillService.retrieve].
          */
         @MustBeClosed
         fun retrieve(skillId: String): HttpResponseFor<BetaSkill> =
@@ -183,7 +183,7 @@ interface SkillService {
             retrieve(skillId, SkillRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/skills?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/skills`, but is otherwise the same as
          * [SkillService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<SkillListPage> = list(SkillListParams.none())
@@ -206,8 +206,8 @@ interface SkillService {
             list(SkillListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/skills/{skill_id}?beta=true`, but is
-         * otherwise the same as [SkillService.delete].
+         * Returns a raw HTTP response for `delete /v1/skills/{skill_id}`, but is otherwise the same
+         * as [SkillService.delete].
          */
         @MustBeClosed
         fun delete(skillId: String): HttpResponseFor<BetaDeletedSkill> =

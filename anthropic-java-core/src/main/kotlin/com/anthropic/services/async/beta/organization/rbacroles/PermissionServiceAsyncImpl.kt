@@ -38,7 +38,7 @@ class PermissionServiceAsyncImpl internal constructor(private val clientOptions:
         params: PermissionListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PermissionListPageAsync> =
-        // get /v1/organizations/rbac_roles/{rbac_role_id}/permissions?beta=true
+        // get /v1/organizations/rbac_roles/{rbac_role_id}/permissions
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -71,7 +71,6 @@ class PermissionServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathSegments("v1", "organizations", "rbac_roles")
                     .addPathParam("rbacRoleId", params._pathParam(0))
                     .addPathSegments("permissions")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =

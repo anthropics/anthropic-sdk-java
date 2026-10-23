@@ -40,14 +40,14 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: ModelRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaModelInfo> =
-        // get /v1/models/{model_id}?beta=true
+        // get /v1/models/{model_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: ModelListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ModelListPageAsync> =
-        // get /v1/models?beta=true
+        // get /v1/models
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -79,7 +79,6 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "models")
                     .addPathParam("modelId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -115,7 +114,6 @@ class ModelServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "models")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =

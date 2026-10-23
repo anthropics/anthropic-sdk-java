@@ -231,8 +231,8 @@ interface SessionServiceAsync {
         fun threads(): ThreadServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/sessions?beta=true`, but is otherwise the same
-         * as [SessionServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/sessions`, but is otherwise the same as
+         * [SessionServiceAsync.create].
          */
         fun create(
             params: SessionCreateParams
@@ -246,8 +246,8 @@ interface SessionServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsSession>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions/{session_id}?beta=true`, but is
-         * otherwise the same as [SessionServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}`, but is otherwise the
+         * same as [SessionServiceAsync.retrieve].
          */
         fun retrieve(
             sessionId: String
@@ -289,8 +289,8 @@ interface SessionServiceAsync {
             retrieve(sessionId, SessionRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/sessions/{session_id}?beta=true`, but is
-         * otherwise the same as [SessionServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/sessions/{session_id}`, but is otherwise the
+         * same as [SessionServiceAsync.update].
          */
         fun update(
             sessionId: String
@@ -332,8 +332,8 @@ interface SessionServiceAsync {
             update(sessionId, SessionUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions?beta=true`, but is otherwise the same
-         * as [SessionServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/sessions`, but is otherwise the same as
+         * [SessionServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<SessionListPageAsync>> =
             list(SessionListParams.none())
@@ -357,8 +357,8 @@ interface SessionServiceAsync {
             list(SessionListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/sessions/{session_id}?beta=true`, but is
-         * otherwise the same as [SessionServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/sessions/{session_id}`, but is otherwise the
+         * same as [SessionServiceAsync.delete].
          */
         fun delete(
             sessionId: String
@@ -400,8 +400,8 @@ interface SessionServiceAsync {
             delete(sessionId, SessionDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/archive?beta=true`, but
-         * is otherwise the same as [SessionServiceAsync.archive].
+         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/archive`, but is
+         * otherwise the same as [SessionServiceAsync.archive].
          */
         fun archive(
             sessionId: String

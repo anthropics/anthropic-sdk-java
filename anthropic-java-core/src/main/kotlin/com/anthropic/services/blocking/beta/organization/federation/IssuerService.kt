@@ -211,8 +211,8 @@ interface IssuerService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): IssuerService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/federation_issuers?beta=true`,
-         * but is otherwise the same as [IssuerService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/federation_issuers`, but is
+         * otherwise the same as [IssuerService.create].
          */
         @MustBeClosed
         fun create(params: IssuerCreateParams): HttpResponseFor<BetaFederationIssuer> =
@@ -227,8 +227,8 @@ interface IssuerService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/federation_issuers/{federation_issuer_id}?beta=true`, but is otherwise
-         * the same as [IssuerService.retrieve].
+         * /v1/organizations/federation_issuers/{federation_issuer_id}`, but is otherwise the same
+         * as [IssuerService.retrieve].
          */
         @MustBeClosed
         fun retrieve(federationIssuerId: String): HttpResponseFor<BetaFederationIssuer> =
@@ -276,8 +276,8 @@ interface IssuerService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/federation_issuers/{federation_issuer_id}?beta=true`, but is otherwise
-         * the same as [IssuerService.update].
+         * /v1/organizations/federation_issuers/{federation_issuer_id}`, but is otherwise the same
+         * as [IssuerService.update].
          */
         @MustBeClosed
         fun update(federationIssuerId: String): HttpResponseFor<BetaFederationIssuer> =
@@ -324,8 +324,8 @@ interface IssuerService {
             update(federationIssuerId, IssuerUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/federation_issuers?beta=true`, but
-         * is otherwise the same as [IssuerService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/federation_issuers`, but is
+         * otherwise the same as [IssuerService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<IssuerListPage> = list(IssuerListParams.none())
 
@@ -349,8 +349,8 @@ interface IssuerService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/federation_issuers/{federation_issuer_id}/archive?beta=true`, but is
-         * otherwise the same as [IssuerService.archive].
+         * /v1/organizations/federation_issuers/{federation_issuer_id}/archive`, but is otherwise
+         * the same as [IssuerService.archive].
          */
         @MustBeClosed
         fun archive(federationIssuerId: String): HttpResponseFor<BetaFederationIssuer> =

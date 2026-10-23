@@ -62,42 +62,42 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
         params: UserProfileCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaUserProfile> =
-        // post /v1/user_profiles?beta=true
+        // post /v1/user_profiles
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: UserProfileRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaUserProfile> =
-        // get /v1/user_profiles/{user_profile_id}?beta=true
+        // get /v1/user_profiles/{user_profile_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: UserProfileUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaUserProfile> =
-        // post /v1/user_profiles/{user_profile_id}?beta=true
+        // post /v1/user_profiles/{user_profile_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: UserProfileListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<UserProfileListPageAsync> =
-        // get /v1/user_profiles?beta=true
+        // get /v1/user_profiles
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: UserProfileDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDeletedUserProfile> =
-        // delete /v1/user_profiles/{user_profile_id}?beta=true
+        // delete /v1/user_profiles/{user_profile_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun createEnrollmentUrl(
         params: UserProfileCreateEnrollmentUrlParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaUserProfileEnrollmentUrl> =
-        // post /v1/user_profiles/{user_profile_id}/enrollment_url?beta=true
+        // post /v1/user_profiles/{user_profile_id}/enrollment_url
         withRawResponse().createEnrollmentUrl(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -131,7 +131,6 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "user_profiles")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -176,7 +175,6 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "user_profiles")
                     .addPathParam("userProfileId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -217,7 +215,6 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "user_profiles")
                     .addPathParam("userProfileId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -255,7 +252,6 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "user_profiles")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -304,7 +300,6 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "user_profiles")
                     .addPathParam("userProfileId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -347,7 +342,6 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
                     .addPathSegments("v1", "user_profiles")
                     .addPathParam("userProfileId", params._pathParam(0))
                     .addPathSegments("enrollment_url")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

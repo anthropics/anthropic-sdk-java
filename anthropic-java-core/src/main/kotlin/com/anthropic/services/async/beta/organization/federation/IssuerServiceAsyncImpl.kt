@@ -44,35 +44,35 @@ class IssuerServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: IssuerCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFederationIssuer> =
-        // post /v1/organizations/federation_issuers?beta=true
+        // post /v1/organizations/federation_issuers
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: IssuerRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFederationIssuer> =
-        // get /v1/organizations/federation_issuers/{federation_issuer_id}?beta=true
+        // get /v1/organizations/federation_issuers/{federation_issuer_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: IssuerUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFederationIssuer> =
-        // post /v1/organizations/federation_issuers/{federation_issuer_id}?beta=true
+        // post /v1/organizations/federation_issuers/{federation_issuer_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: IssuerListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<IssuerListPageAsync> =
-        // get /v1/organizations/federation_issuers?beta=true
+        // get /v1/organizations/federation_issuers
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: IssuerArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFederationIssuer> =
-        // post /v1/organizations/federation_issuers/{federation_issuer_id}/archive?beta=true
+        // post /v1/organizations/federation_issuers/{federation_issuer_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -100,7 +100,6 @@ class IssuerServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_issuers")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -147,7 +146,6 @@ class IssuerServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_issuers")
                     .addPathParam("federationIssuerId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -187,7 +185,6 @@ class IssuerServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_issuers")
                     .addPathParam("federationIssuerId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -224,7 +221,6 @@ class IssuerServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_issuers")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -273,7 +269,6 @@ class IssuerServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "organizations", "federation_issuers")
                     .addPathParam("federationIssuerId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

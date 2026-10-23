@@ -19,7 +19,8 @@ internal class ThreadServiceTest {
 
     @Test
     fun retrieve() {
-        val threadService = client.beta().sessions().threads()
+        val threadService =
+            client.beta().sessions().threads().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSessionThread =
             threadService.retrieve(
@@ -36,7 +37,8 @@ internal class ThreadServiceTest {
 
     @Test
     fun list() {
-        val threadService = client.beta().sessions().threads()
+        val threadService =
+            client.beta().sessions().threads().withOptions { it.putQueryParam("beta", "true") }
 
         val page = threadService.list("sesn_011CZkZAtmR3yMPDzynEDxu7")
 
@@ -45,7 +47,8 @@ internal class ThreadServiceTest {
 
     @Test
     fun archive() {
-        val threadService = client.beta().sessions().threads()
+        val threadService =
+            client.beta().sessions().threads().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSessionThread =
             threadService.archive(

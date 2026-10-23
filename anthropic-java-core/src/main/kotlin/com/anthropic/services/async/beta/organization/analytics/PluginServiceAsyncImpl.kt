@@ -36,7 +36,7 @@ class PluginServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: PluginListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PluginListPageAsync> =
-        // get /v1/organizations/analytics/plugins?beta=true
+        // get /v1/organizations/analytics/plugins
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -64,7 +64,6 @@ class PluginServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "plugins")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =

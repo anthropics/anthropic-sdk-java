@@ -44,28 +44,28 @@ class InviteServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: InviteCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaOrganizationInvite> =
-        // post /v1/organizations/invites?beta=true
+        // post /v1/organizations/invites
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: InviteRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaOrganizationInvite> =
-        // get /v1/organizations/invites/{invite_id}?beta=true
+        // get /v1/organizations/invites/{invite_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: InviteListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<InviteListPageAsync> =
-        // get /v1/organizations/invites?beta=true
+        // get /v1/organizations/invites
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: InviteDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<InviteDeleteResponse> =
-        // delete /v1/organizations/invites/{invite_id}?beta=true
+        // delete /v1/organizations/invites/{invite_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -93,7 +93,6 @@ class InviteServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "invites")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -140,7 +139,6 @@ class InviteServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "invites")
                     .addPathParam("inviteId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -176,7 +174,6 @@ class InviteServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "invites")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -224,7 +221,6 @@ class InviteServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "invites")
                     .addPathParam("inviteId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

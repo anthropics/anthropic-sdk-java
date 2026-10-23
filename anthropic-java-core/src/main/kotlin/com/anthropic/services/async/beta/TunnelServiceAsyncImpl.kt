@@ -61,42 +61,42 @@ class TunnelServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: TunnelCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTunnel> =
-        // post /v1/tunnels?beta=true
+        // post /v1/tunnels
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: TunnelRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTunnel> =
-        // get /v1/tunnels/{tunnel_id}?beta=true
+        // get /v1/tunnels/{tunnel_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: TunnelListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TunnelListPageAsync> =
-        // get /v1/tunnels?beta=true
+        // get /v1/tunnels
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: TunnelArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTunnel> =
-        // post /v1/tunnels/{tunnel_id}/archive?beta=true
+        // post /v1/tunnels/{tunnel_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     override fun revealToken(
         params: TunnelRevealTokenParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTunnelToken> =
-        // post /v1/tunnels/{tunnel_id}/reveal_token?beta=true
+        // post /v1/tunnels/{tunnel_id}/reveal_token
         withRawResponse().revealToken(params, requestOptions).thenParse()
 
     override fun rotateToken(
         params: TunnelRotateTokenParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTunnelToken> =
-        // post /v1/tunnels/{tunnel_id}/rotate_token?beta=true
+        // post /v1/tunnels/{tunnel_id}/rotate_token
         withRawResponse().rotateToken(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -130,7 +130,6 @@ class TunnelServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "tunnels")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -173,7 +172,6 @@ class TunnelServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "tunnels")
                     .addPathParam("tunnelId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -210,7 +208,6 @@ class TunnelServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "tunnels")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -260,7 +257,6 @@ class TunnelServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "tunnels")
                     .addPathParam("tunnelId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -303,7 +299,6 @@ class TunnelServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "tunnels")
                     .addPathParam("tunnelId", params._pathParam(0))
                     .addPathSegments("reveal_token")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -346,7 +341,6 @@ class TunnelServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "tunnels")
                     .addPathParam("tunnelId", params._pathParam(0))
                     .addPathSegments("rotate_token")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()

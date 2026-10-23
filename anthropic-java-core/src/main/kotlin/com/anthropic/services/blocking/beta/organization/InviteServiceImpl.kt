@@ -42,25 +42,25 @@ class InviteServiceImpl internal constructor(private val clientOptions: ClientOp
         params: InviteCreateParams,
         requestOptions: RequestOptions,
     ): BetaOrganizationInvite =
-        // post /v1/organizations/invites?beta=true
+        // post /v1/organizations/invites
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: InviteRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaOrganizationInvite =
-        // get /v1/organizations/invites/{invite_id}?beta=true
+        // get /v1/organizations/invites/{invite_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(params: InviteListParams, requestOptions: RequestOptions): InviteListPage =
-        // get /v1/organizations/invites?beta=true
+        // get /v1/organizations/invites
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: InviteDeleteParams,
         requestOptions: RequestOptions,
     ): InviteDeleteResponse =
-        // delete /v1/organizations/invites/{invite_id}?beta=true
+        // delete /v1/organizations/invites/{invite_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -88,7 +88,6 @@ class InviteServiceImpl internal constructor(private val clientOptions: ClientOp
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "invites")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -129,7 +128,6 @@ class InviteServiceImpl internal constructor(private val clientOptions: ClientOp
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "invites")
                     .addPathParam("inviteId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -162,7 +160,6 @@ class InviteServiceImpl internal constructor(private val clientOptions: ClientOp
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "invites")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -206,7 +203,6 @@ class InviteServiceImpl internal constructor(private val clientOptions: ClientOp
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "invites")
                     .addPathParam("inviteId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)

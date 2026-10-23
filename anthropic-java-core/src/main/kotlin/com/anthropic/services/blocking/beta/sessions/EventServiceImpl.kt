@@ -49,21 +49,21 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
         EventServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: EventListParams, requestOptions: RequestOptions): EventListPage =
-        // get /v1/sessions/{session_id}/events?beta=true
+        // get /v1/sessions/{session_id}/events
         withRawResponse().list(params, requestOptions).parse()
 
     override fun send(
         params: EventSendParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsSendSessionEvents =
-        // post /v1/sessions/{session_id}/events?beta=true
+        // post /v1/sessions/{session_id}/events
         withRawResponse().send(params, requestOptions).parse()
 
     override fun streamStreaming(
         params: EventStreamParams,
         requestOptions: RequestOptions,
     ): StreamResponse<BetaManagedAgentsStreamSessionEvents> =
-        // get /v1/sessions/{session_id}/events/stream?beta=true
+        // get /v1/sessions/{session_id}/events/stream
         withRawResponse().streamStreaming(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -96,7 +96,6 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("events")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -142,7 +141,6 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("events")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -183,7 +181,6 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("events", "stream")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "text/event-stream")
                     .build()

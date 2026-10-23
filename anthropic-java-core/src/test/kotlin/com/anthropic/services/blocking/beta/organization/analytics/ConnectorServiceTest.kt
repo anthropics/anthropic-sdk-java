@@ -16,7 +16,10 @@ internal class ConnectorServiceTest {
 
     @Test
     fun list() {
-        val connectorService = client.beta().organization().analytics().connectors()
+        val connectorService =
+            client.beta().organization().analytics().connectors().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = connectorService.list()
 

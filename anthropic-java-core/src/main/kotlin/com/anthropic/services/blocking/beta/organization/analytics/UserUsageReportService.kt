@@ -62,9 +62,8 @@ interface UserUsageReportService {
         ): UserUsageReportService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/analytics/user_usage_report?beta=true`, but is otherwise the same as
-         * [UserUsageReportService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/user_usage_report`, but
+         * is otherwise the same as [UserUsageReportService.list].
          */
         @MustBeClosed
         fun list(params: UserUsageReportListParams): HttpResponseFor<UserUsageReportListPage> =

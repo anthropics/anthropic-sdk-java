@@ -38,18 +38,18 @@ class MemberServiceImpl internal constructor(private val clientOptions: ClientOp
         MemberServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: MemberListParams, requestOptions: RequestOptions): MemberListPage =
-        // get /v1/organizations/rbac_groups/{rbac_group_id}/members?beta=true
+        // get /v1/organizations/rbac_groups/{rbac_group_id}/members
         withRawResponse().list(params, requestOptions).parse()
 
     override fun add(params: MemberAddParams, requestOptions: RequestOptions): BetaRbacGroupMember =
-        // post /v1/organizations/rbac_groups/{rbac_group_id}/members?beta=true
+        // post /v1/organizations/rbac_groups/{rbac_group_id}/members
         withRawResponse().add(params, requestOptions).parse()
 
     override fun remove(
         params: MemberRemoveParams,
         requestOptions: RequestOptions,
     ): MemberRemoveResponse =
-        // delete /v1/organizations/rbac_groups/{rbac_group_id}/members/{user_id}?beta=true
+        // delete /v1/organizations/rbac_groups/{rbac_group_id}/members/{user_id}
         withRawResponse().remove(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -82,7 +82,6 @@ class MemberServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathSegments("v1", "organizations", "rbac_groups")
                     .addPathParam("rbacGroupId", params._pathParam(0))
                     .addPathSegments("members")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -127,7 +126,6 @@ class MemberServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathSegments("v1", "organizations", "rbac_groups")
                     .addPathParam("rbacGroupId", params._pathParam(0))
                     .addPathSegments("members")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -173,7 +171,6 @@ class MemberServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathParam("rbacGroupId", params._pathParam(0))
                     .addPathSegments("members")
                     .addPathParam("userId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)

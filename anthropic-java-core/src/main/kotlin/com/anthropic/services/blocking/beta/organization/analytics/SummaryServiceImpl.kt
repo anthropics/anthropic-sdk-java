@@ -31,7 +31,7 @@ class SummaryServiceImpl internal constructor(private val clientOptions: ClientO
         SummaryServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: SummaryListParams, requestOptions: RequestOptions): SummaryListPage =
-        // get /v1/organizations/analytics/summaries?beta=true
+        // get /v1/organizations/analytics/summaries
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -59,7 +59,6 @@ class SummaryServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "summaries")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =

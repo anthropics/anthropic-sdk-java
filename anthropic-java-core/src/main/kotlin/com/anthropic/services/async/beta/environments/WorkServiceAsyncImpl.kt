@@ -57,56 +57,56 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
         params: WorkRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSelfHostedWork> =
-        // get /v1/environments/{environment_id}/work/{work_id}?beta=true
+        // get /v1/environments/{environment_id}/work/{work_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: WorkUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSelfHostedWork> =
-        // post /v1/environments/{environment_id}/work/{work_id}?beta=true
+        // post /v1/environments/{environment_id}/work/{work_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: WorkListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WorkListPageAsync> =
-        // get /v1/environments/{environment_id}/work?beta=true
+        // get /v1/environments/{environment_id}/work
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun ack(
         params: WorkAckParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSelfHostedWork> =
-        // post /v1/environments/{environment_id}/work/{work_id}/ack?beta=true
+        // post /v1/environments/{environment_id}/work/{work_id}/ack
         withRawResponse().ack(params, requestOptions).thenParse()
 
     override fun heartbeat(
         params: WorkHeartbeatParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSelfHostedWorkHeartbeatResponse> =
-        // post /v1/environments/{environment_id}/work/{work_id}/heartbeat?beta=true
+        // post /v1/environments/{environment_id}/work/{work_id}/heartbeat
         withRawResponse().heartbeat(params, requestOptions).thenParse()
 
     override fun poll(
         params: WorkPollParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<Optional<BetaSelfHostedWork>> =
-        // get /v1/environments/{environment_id}/work/poll?beta=true
+        // get /v1/environments/{environment_id}/work/poll
         withRawResponse().poll(params, requestOptions).thenParse()
 
     override fun stats(
         params: WorkStatsParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSelfHostedWorkQueueStats> =
-        // get /v1/environments/{environment_id}/work/stats?beta=true
+        // get /v1/environments/{environment_id}/work/stats
         withRawResponse().stats(params, requestOptions).thenParse()
 
     override fun stop(
         params: WorkStopParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSelfHostedWork> =
-        // post /v1/environments/{environment_id}/work/{work_id}/stop?beta=true
+        // post /v1/environments/{environment_id}/work/{work_id}/stop
         withRawResponse().stop(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -140,7 +140,6 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("work")
                     .addPathParam("workId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -183,7 +182,6 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("work")
                     .addPathParam("workId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -226,7 +224,6 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("work")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -278,7 +275,6 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("work")
                     .addPathParam("workId", params._pathParam(1))
                     .addPathSegments("ack")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -323,7 +319,6 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("work")
                     .addPathParam("workId", params._pathParam(1))
                     .addPathSegments("heartbeat")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -366,7 +361,6 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("work", "poll")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -408,7 +402,6 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("work", "stats")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -452,7 +445,6 @@ class WorkServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("work")
                     .addPathParam("workId", params._pathParam(1))
                     .addPathSegments("stop")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()

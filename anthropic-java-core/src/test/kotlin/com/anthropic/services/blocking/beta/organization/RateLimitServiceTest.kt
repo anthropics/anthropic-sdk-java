@@ -16,7 +16,10 @@ internal class RateLimitServiceTest {
 
     @Test
     fun list() {
-        val rateLimitService = client.beta().organization().rateLimits()
+        val rateLimitService =
+            client.beta().organization().rateLimits().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = rateLimitService.list()
 

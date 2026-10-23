@@ -18,7 +18,10 @@ internal class CostServiceTest {
 
     @Test
     fun list() {
-        val costService = client.beta().organization().analytics().cost()
+        val costService =
+            client.beta().organization().analytics().cost().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page =
             costService.list(

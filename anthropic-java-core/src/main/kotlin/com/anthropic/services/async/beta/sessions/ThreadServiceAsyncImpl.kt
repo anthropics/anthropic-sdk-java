@@ -55,21 +55,21 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: ThreadRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsSessionThread> =
-        // get /v1/sessions/{session_id}/threads/{thread_id}?beta=true
+        // get /v1/sessions/{session_id}/threads/{thread_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: ThreadListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ThreadListPageAsync> =
-        // get /v1/sessions/{session_id}/threads?beta=true
+        // get /v1/sessions/{session_id}/threads
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: ThreadArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsSessionThread> =
-        // post /v1/sessions/{session_id}/threads/{thread_id}/archive?beta=true
+        // post /v1/sessions/{session_id}/threads/{thread_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -109,7 +109,6 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("threads")
                     .addPathParam("threadId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -151,7 +150,6 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("threads")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -203,7 +201,6 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("threads")
                     .addPathParam("threadId", params._pathParam(1))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

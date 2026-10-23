@@ -140,8 +140,8 @@ interface OrganizationService {
         fun webhooks(): WebhookService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/me?beta=true`, but is otherwise
-         * the same as [OrganizationService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/me`, but is otherwise the same as
+         * [OrganizationService.retrieve].
          */
         @MustBeClosed
         fun retrieve(): HttpResponseFor<BetaOrganization> =

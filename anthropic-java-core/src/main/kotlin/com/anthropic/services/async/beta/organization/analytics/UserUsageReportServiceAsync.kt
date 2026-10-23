@@ -62,9 +62,8 @@ interface UserUsageReportServiceAsync {
         ): UserUsageReportServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/analytics/user_usage_report?beta=true`, but is otherwise the same as
-         * [UserUsageReportServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/user_usage_report`, but
+         * is otherwise the same as [UserUsageReportServiceAsync.list].
          */
         fun list(
             params: UserUsageReportListParams

@@ -18,7 +18,7 @@ internal class ModelServiceTest {
 
     @Test
     fun retrieve() {
-        val modelService = client.beta().models()
+        val modelService = client.beta().models().withOptions { it.putQueryParam("beta", "true") }
 
         val betaModelInfo =
             modelService.retrieve(
@@ -34,7 +34,7 @@ internal class ModelServiceTest {
 
     @Test
     fun list() {
-        val modelService = client.beta().models()
+        val modelService = client.beta().models().withOptions { it.putQueryParam("beta", "true") }
 
         val page = modelService.list()
 

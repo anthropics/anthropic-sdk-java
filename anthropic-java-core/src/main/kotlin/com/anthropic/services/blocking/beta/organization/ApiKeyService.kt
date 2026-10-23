@@ -111,8 +111,8 @@ interface ApiKeyService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ApiKeyService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/api_keys/{api_key_id}?beta=true`,
-         * but is otherwise the same as [ApiKeyService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/api_keys/{api_key_id}`, but is
+         * otherwise the same as [ApiKeyService.retrieve].
          */
         @MustBeClosed
         fun retrieve(apiKeyId: String): HttpResponseFor<BetaApiKey> =
@@ -155,8 +155,8 @@ interface ApiKeyService {
             retrieve(apiKeyId, ApiKeyRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/api_keys/{api_key_id}?beta=true`,
-         * but is otherwise the same as [ApiKeyService.update].
+         * Returns a raw HTTP response for `post /v1/organizations/api_keys/{api_key_id}`, but is
+         * otherwise the same as [ApiKeyService.update].
          */
         @MustBeClosed
         fun update(apiKeyId: String): HttpResponseFor<BetaApiKey> =
@@ -196,8 +196,8 @@ interface ApiKeyService {
             update(apiKeyId, ApiKeyUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/api_keys?beta=true`, but is
-         * otherwise the same as [ApiKeyService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/api_keys`, but is otherwise the
+         * same as [ApiKeyService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<ApiKeyListPage> = list(ApiKeyListParams.none())
 

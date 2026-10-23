@@ -43,22 +43,21 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
         params: WorkspaceListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WorkspaceListPageAsync> =
-        // get /v1/organizations/federation_rules/{federation_rule_id}/workspaces?beta=true
+        // get /v1/organizations/federation_rules/{federation_rule_id}/workspaces
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun add(
         params: WorkspaceAddParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFederationRuleWorkspace> =
-        // post /v1/organizations/federation_rules/{federation_rule_id}/workspaces?beta=true
+        // post /v1/organizations/federation_rules/{federation_rule_id}/workspaces
         withRawResponse().add(params, requestOptions).thenParse()
 
     override fun remove(
         params: WorkspaceRemoveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WorkspaceRemoveResponse> =
-        // delete
-        // /v1/organizations/federation_rules/{federation_rule_id}/workspaces/{workspace_id}?beta=true
+        // delete /v1/organizations/federation_rules/{federation_rule_id}/workspaces/{workspace_id}
         withRawResponse().remove(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -91,7 +90,6 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .addPathSegments("v1", "organizations", "federation_rules")
                     .addPathParam("federationRuleId", params._pathParam(0))
                     .addPathSegments("workspaces")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -140,7 +138,6 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .addPathSegments("v1", "organizations", "federation_rules")
                     .addPathParam("federationRuleId", params._pathParam(0))
                     .addPathSegments("workspaces")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -189,7 +186,6 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .addPathParam("federationRuleId", params._pathParam(0))
                     .addPathSegments("workspaces")
                     .addPathParam("workspaceId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

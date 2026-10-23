@@ -25,7 +25,8 @@ internal class UserProfileServiceTest {
 
     @Test
     fun create() {
-        val userProfileService = client.beta().userProfiles()
+        val userProfileService =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val betaUserProfile =
             userProfileService.create(
@@ -60,7 +61,8 @@ internal class UserProfileServiceTest {
 
     @Test
     fun retrieve() {
-        val userProfileService = client.beta().userProfiles()
+        val userProfileService =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val betaUserProfile =
             userProfileService.retrieve(
@@ -76,7 +78,8 @@ internal class UserProfileServiceTest {
 
     @Test
     fun update() {
-        val userProfileService = client.beta().userProfiles()
+        val userProfileService =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val betaUserProfile =
             userProfileService.update(
@@ -116,7 +119,8 @@ internal class UserProfileServiceTest {
 
     @Test
     fun list() {
-        val userProfileService = client.beta().userProfiles()
+        val userProfileService =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val page = userProfileService.list()
 
@@ -125,7 +129,8 @@ internal class UserProfileServiceTest {
 
     @Test
     fun delete() {
-        val userProfileService = client.beta().userProfiles()
+        val userProfileService =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedUserProfile =
             userProfileService.delete(
@@ -141,7 +146,8 @@ internal class UserProfileServiceTest {
 
     @Test
     fun createEnrollmentUrl() {
-        val userProfileService = client.beta().userProfiles()
+        val userProfileService =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val betaUserProfileEnrollmentUrl =
             userProfileService.createEnrollmentUrl(

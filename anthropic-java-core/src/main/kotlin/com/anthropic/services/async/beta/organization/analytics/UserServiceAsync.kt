@@ -57,8 +57,8 @@ interface UserServiceAsync {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/users?beta=true`, but is
-         * otherwise the same as [UserServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/users`, but is otherwise
+         * the same as [UserServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<UserListPageAsync>> =
             list(UserListParams.none())

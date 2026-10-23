@@ -60,42 +60,42 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: BatchCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessageBatch> =
-        // post /v1/messages/batches?beta=true
+        // post /v1/messages/batches
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: BatchRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessageBatch> =
-        // get /v1/messages/batches/{message_batch_id}?beta=true
+        // get /v1/messages/batches/{message_batch_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: BatchListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BatchListPageAsync> =
-        // get /v1/messages/batches?beta=true
+        // get /v1/messages/batches
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: BatchDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDeletedMessageBatch> =
-        // delete /v1/messages/batches/{message_batch_id}?beta=true
+        // delete /v1/messages/batches/{message_batch_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun cancel(
         params: BatchCancelParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessageBatch> =
-        // post /v1/messages/batches/{message_batch_id}/cancel?beta=true
+        // post /v1/messages/batches/{message_batch_id}/cancel
         withRawResponse().cancel(params, requestOptions).thenParse()
 
     override fun resultsStreaming(
         params: BatchResultsParams,
         requestOptions: RequestOptions,
     ): AsyncStreamResponse<BetaMessageBatchIndividualResponse> =
-        // get /v1/messages/batches/{message_batch_id}/results?beta=true
+        // get /v1/messages/batches/{message_batch_id}/results
         withRawResponse()
             .resultsStreaming(params, requestOptions)
             .thenApply { it.parse() }
@@ -126,7 +126,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -172,7 +171,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -209,7 +207,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -258,7 +255,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -301,7 +297,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
                     .addPathSegments("cancel")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -345,7 +340,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
                     .addPathSegments("results")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "application/x-jsonl")
                     .build()

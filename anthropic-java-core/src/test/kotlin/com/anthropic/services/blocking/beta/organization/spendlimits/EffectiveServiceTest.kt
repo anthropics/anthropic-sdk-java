@@ -16,7 +16,10 @@ internal class EffectiveServiceTest {
 
     @Test
     fun list() {
-        val effectiveService = client.beta().organization().spendLimits().effective()
+        val effectiveService =
+            client.beta().organization().spendLimits().effective().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = effectiveService.list()
 

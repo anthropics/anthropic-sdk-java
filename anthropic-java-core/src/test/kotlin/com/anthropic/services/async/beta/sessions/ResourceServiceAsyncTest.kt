@@ -22,7 +22,8 @@ internal class ResourceServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val resourceServiceAsync = client.beta().sessions().resources()
+        val resourceServiceAsync =
+            client.beta().sessions().resources().withOptions { it.putQueryParam("beta", "true") }
 
         val resourceFuture =
             resourceServiceAsync.retrieve(
@@ -40,7 +41,8 @@ internal class ResourceServiceAsyncTest {
 
     @Test
     fun update() {
-        val resourceServiceAsync = client.beta().sessions().resources()
+        val resourceServiceAsync =
+            client.beta().sessions().resources().withOptions { it.putQueryParam("beta", "true") }
 
         val resourceFuture =
             resourceServiceAsync.update(
@@ -59,7 +61,8 @@ internal class ResourceServiceAsyncTest {
 
     @Test
     fun list() {
-        val resourceServiceAsync = client.beta().sessions().resources()
+        val resourceServiceAsync =
+            client.beta().sessions().resources().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = resourceServiceAsync.list("sesn_011CZkZAtmR3yMPDzynEDxu7")
 
@@ -69,7 +72,8 @@ internal class ResourceServiceAsyncTest {
 
     @Test
     fun delete() {
-        val resourceServiceAsync = client.beta().sessions().resources()
+        val resourceServiceAsync =
+            client.beta().sessions().resources().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeleteSessionResourceFuture =
             resourceServiceAsync.delete(
@@ -88,7 +92,8 @@ internal class ResourceServiceAsyncTest {
 
     @Test
     fun add() {
-        val resourceServiceAsync = client.beta().sessions().resources()
+        val resourceServiceAsync =
+            client.beta().sessions().resources().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsFileResourceFuture =
             resourceServiceAsync.add(

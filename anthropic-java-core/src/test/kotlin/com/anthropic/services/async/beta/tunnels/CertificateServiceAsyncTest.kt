@@ -20,7 +20,8 @@ internal class CertificateServiceAsyncTest {
 
     @Test
     fun create() {
-        val certificateServiceAsync = client.beta().tunnels().certificates()
+        val certificateServiceAsync =
+            client.beta().tunnels().certificates().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnelCertificateFuture =
             certificateServiceAsync.create(
@@ -38,7 +39,8 @@ internal class CertificateServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val certificateServiceAsync = client.beta().tunnels().certificates()
+        val certificateServiceAsync =
+            client.beta().tunnels().certificates().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnelCertificateFuture =
             certificateServiceAsync.retrieve(
@@ -56,7 +58,8 @@ internal class CertificateServiceAsyncTest {
 
     @Test
     fun list() {
-        val certificateServiceAsync = client.beta().tunnels().certificates()
+        val certificateServiceAsync =
+            client.beta().tunnels().certificates().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = certificateServiceAsync.list("tunnel_id")
 
@@ -66,7 +69,8 @@ internal class CertificateServiceAsyncTest {
 
     @Test
     fun archive() {
-        val certificateServiceAsync = client.beta().tunnels().certificates()
+        val certificateServiceAsync =
+            client.beta().tunnels().certificates().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnelCertificateFuture =
             certificateServiceAsync.archive(

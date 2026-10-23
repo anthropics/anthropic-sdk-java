@@ -24,7 +24,10 @@ internal class RuleServiceTest {
 
     @Test
     fun create() {
-        val ruleService = client.beta().organization().federation().rules()
+        val ruleService =
+            client.beta().organization().federation().rules().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationRule =
             ruleService.create(
@@ -68,7 +71,10 @@ internal class RuleServiceTest {
 
     @Test
     fun retrieve() {
-        val ruleService = client.beta().organization().federation().rules()
+        val ruleService =
+            client.beta().organization().federation().rules().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationRule =
             ruleService.retrieve(
@@ -83,7 +89,10 @@ internal class RuleServiceTest {
 
     @Test
     fun update() {
-        val ruleService = client.beta().organization().federation().rules()
+        val ruleService =
+            client.beta().organization().federation().rules().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationRule =
             ruleService.update(
@@ -127,7 +136,10 @@ internal class RuleServiceTest {
 
     @Test
     fun list() {
-        val ruleService = client.beta().organization().federation().rules()
+        val ruleService =
+            client.beta().organization().federation().rules().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = ruleService.list()
 
@@ -136,7 +148,10 @@ internal class RuleServiceTest {
 
     @Test
     fun archive() {
-        val ruleService = client.beta().organization().federation().rules()
+        val ruleService =
+            client.beta().organization().federation().rules().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationRule =
             ruleService.archive(

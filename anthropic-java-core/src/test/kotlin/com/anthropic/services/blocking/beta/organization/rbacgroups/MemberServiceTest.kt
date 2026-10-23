@@ -18,7 +18,10 @@ internal class MemberServiceTest {
 
     @Test
     fun list() {
-        val memberService = client.beta().organization().rbacGroups().members()
+        val memberService =
+            client.beta().organization().rbacGroups().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = memberService.list("rbac_group_id")
 
@@ -27,7 +30,10 @@ internal class MemberServiceTest {
 
     @Test
     fun add() {
-        val memberService = client.beta().organization().rbacGroups().members()
+        val memberService =
+            client.beta().organization().rbacGroups().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaRbacGroupMember =
             memberService.add(
@@ -42,7 +48,10 @@ internal class MemberServiceTest {
 
     @Test
     fun remove() {
-        val memberService = client.beta().organization().rbacGroups().members()
+        val memberService =
+            client.beta().organization().rbacGroups().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val member =
             memberService.remove(

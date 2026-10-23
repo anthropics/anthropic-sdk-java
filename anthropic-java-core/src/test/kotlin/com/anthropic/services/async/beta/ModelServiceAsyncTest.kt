@@ -18,7 +18,8 @@ internal class ModelServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val modelServiceAsync = client.beta().models()
+        val modelServiceAsync =
+            client.beta().models().withOptions { it.putQueryParam("beta", "true") }
 
         val betaModelInfoFuture =
             modelServiceAsync.retrieve(
@@ -35,7 +36,8 @@ internal class ModelServiceAsyncTest {
 
     @Test
     fun list() {
-        val modelServiceAsync = client.beta().models()
+        val modelServiceAsync =
+            client.beta().models().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = modelServiceAsync.list()
 

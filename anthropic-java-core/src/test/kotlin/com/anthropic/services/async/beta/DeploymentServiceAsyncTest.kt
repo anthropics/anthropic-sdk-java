@@ -31,7 +31,8 @@ internal class DeploymentServiceAsyncTest {
 
     @Test
     fun create() {
-        val deploymentServiceAsync = client.beta().deployments()
+        val deploymentServiceAsync =
+            client.beta().deployments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.create(
@@ -84,7 +85,8 @@ internal class DeploymentServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val deploymentServiceAsync = client.beta().deployments()
+        val deploymentServiceAsync =
+            client.beta().deployments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.retrieve(
@@ -101,7 +103,8 @@ internal class DeploymentServiceAsyncTest {
 
     @Test
     fun update() {
-        val deploymentServiceAsync = client.beta().deployments()
+        val deploymentServiceAsync =
+            client.beta().deployments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.update(
@@ -155,7 +158,8 @@ internal class DeploymentServiceAsyncTest {
 
     @Test
     fun list() {
-        val deploymentServiceAsync = client.beta().deployments()
+        val deploymentServiceAsync =
+            client.beta().deployments().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = deploymentServiceAsync.list()
 
@@ -165,7 +169,8 @@ internal class DeploymentServiceAsyncTest {
 
     @Test
     fun archive() {
-        val deploymentServiceAsync = client.beta().deployments()
+        val deploymentServiceAsync =
+            client.beta().deployments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.archive(
@@ -182,7 +187,8 @@ internal class DeploymentServiceAsyncTest {
 
     @Test
     fun pause() {
-        val deploymentServiceAsync = client.beta().deployments()
+        val deploymentServiceAsync =
+            client.beta().deployments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.pause(
@@ -199,7 +205,8 @@ internal class DeploymentServiceAsyncTest {
 
     @Test
     fun run() {
-        val deploymentServiceAsync = client.beta().deployments()
+        val deploymentServiceAsync =
+            client.beta().deployments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeploymentRunFuture =
             deploymentServiceAsync.run(
@@ -216,7 +223,8 @@ internal class DeploymentServiceAsyncTest {
 
     @Test
     fun unpause() {
-        val deploymentServiceAsync = client.beta().deployments()
+        val deploymentServiceAsync =
+            client.beta().deployments().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.unpause(

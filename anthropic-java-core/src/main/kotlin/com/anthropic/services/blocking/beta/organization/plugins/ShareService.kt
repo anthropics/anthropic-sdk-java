@@ -76,9 +76,8 @@ interface ShareService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ShareService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/plugins/{plugin_id}/shares?beta=true`, but is otherwise the same as
-         * [ShareService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/plugins/{plugin_id}/shares`, but
+         * is otherwise the same as [ShareService.list].
          */
         @MustBeClosed
         fun list(pluginId: String): HttpResponseFor<ShareListPage> =

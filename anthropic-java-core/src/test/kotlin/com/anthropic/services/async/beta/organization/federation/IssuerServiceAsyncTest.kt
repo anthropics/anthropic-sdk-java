@@ -22,7 +22,10 @@ internal class IssuerServiceAsyncTest {
 
     @Test
     fun create() {
-        val issuerServiceAsync = client.beta().organization().federation().issuers()
+        val issuerServiceAsync =
+            client.beta().organization().federation().issuers().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationIssuerFuture =
             issuerServiceAsync.create(
@@ -47,7 +50,10 @@ internal class IssuerServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val issuerServiceAsync = client.beta().organization().federation().issuers()
+        val issuerServiceAsync =
+            client.beta().organization().federation().issuers().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationIssuerFuture =
             issuerServiceAsync.retrieve(
@@ -63,7 +69,10 @@ internal class IssuerServiceAsyncTest {
 
     @Test
     fun update() {
-        val issuerServiceAsync = client.beta().organization().federation().issuers()
+        val issuerServiceAsync =
+            client.beta().organization().federation().issuers().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationIssuerFuture =
             issuerServiceAsync.update(
@@ -90,7 +99,10 @@ internal class IssuerServiceAsyncTest {
 
     @Test
     fun list() {
-        val issuerServiceAsync = client.beta().organization().federation().issuers()
+        val issuerServiceAsync =
+            client.beta().organization().federation().issuers().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = issuerServiceAsync.list()
 
@@ -100,7 +112,10 @@ internal class IssuerServiceAsyncTest {
 
     @Test
     fun archive() {
-        val issuerServiceAsync = client.beta().organization().federation().issuers()
+        val issuerServiceAsync =
+            client.beta().organization().federation().issuers().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationIssuerFuture =
             issuerServiceAsync.archive(

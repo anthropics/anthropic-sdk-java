@@ -163,7 +163,7 @@ interface AgentService {
         fun versions(): VersionService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/agents?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `post /v1/agents`, but is otherwise the same as
          * [AgentService.create].
          */
         @MustBeClosed
@@ -178,8 +178,8 @@ interface AgentService {
         ): HttpResponseFor<BetaManagedAgentsAgent>
 
         /**
-         * Returns a raw HTTP response for `get /v1/agents/{agent_id}?beta=true`, but is otherwise
-         * the same as [AgentService.retrieve].
+         * Returns a raw HTTP response for `get /v1/agents/{agent_id}`, but is otherwise the same as
+         * [AgentService.retrieve].
          */
         @MustBeClosed
         fun retrieve(agentId: String): HttpResponseFor<BetaManagedAgentsAgent> =
@@ -223,8 +223,8 @@ interface AgentService {
             retrieve(agentId, AgentRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/agents/{agent_id}?beta=true`, but is otherwise
-         * the same as [AgentService.update].
+         * Returns a raw HTTP response for `post /v1/agents/{agent_id}`, but is otherwise the same
+         * as [AgentService.update].
          */
         @MustBeClosed
         fun update(agentId: String): HttpResponseFor<BetaManagedAgentsAgent> =
@@ -267,7 +267,7 @@ interface AgentService {
             update(agentId, AgentUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/agents?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/agents`, but is otherwise the same as
          * [AgentService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<AgentListPage> = list(AgentListParams.none())
@@ -290,8 +290,8 @@ interface AgentService {
             list(AgentListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/agents/{agent_id}/archive?beta=true`, but is
-         * otherwise the same as [AgentService.archive].
+         * Returns a raw HTTP response for `post /v1/agents/{agent_id}/archive`, but is otherwise
+         * the same as [AgentService.archive].
          */
         @MustBeClosed
         fun archive(agentId: String): HttpResponseFor<BetaManagedAgentsAgent> =

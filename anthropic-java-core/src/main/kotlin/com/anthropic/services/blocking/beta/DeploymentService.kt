@@ -266,8 +266,8 @@ interface DeploymentService {
         ): DeploymentService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments?beta=true`, but is otherwise the
-         * same as [DeploymentService.create].
+         * Returns a raw HTTP response for `post /v1/deployments`, but is otherwise the same as
+         * [DeploymentService.create].
          */
         @MustBeClosed
         fun create(params: DeploymentCreateParams): HttpResponseFor<BetaManagedAgentsDeployment> =
@@ -281,8 +281,8 @@ interface DeploymentService {
         ): HttpResponseFor<BetaManagedAgentsDeployment>
 
         /**
-         * Returns a raw HTTP response for `get /v1/deployments/{deployment_id}?beta=true`, but is
-         * otherwise the same as [DeploymentService.retrieve].
+         * Returns a raw HTTP response for `get /v1/deployments/{deployment_id}`, but is otherwise
+         * the same as [DeploymentService.retrieve].
          */
         @MustBeClosed
         fun retrieve(deploymentId: String): HttpResponseFor<BetaManagedAgentsDeployment> =
@@ -327,8 +327,8 @@ interface DeploymentService {
             retrieve(deploymentId, DeploymentRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}?beta=true`, but is
-         * otherwise the same as [DeploymentService.update].
+         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}`, but is otherwise
+         * the same as [DeploymentService.update].
          */
         @MustBeClosed
         fun update(deploymentId: String): HttpResponseFor<BetaManagedAgentsDeployment> =
@@ -372,8 +372,8 @@ interface DeploymentService {
             update(deploymentId, DeploymentUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/deployments?beta=true`, but is otherwise the
-         * same as [DeploymentService.list].
+         * Returns a raw HTTP response for `get /v1/deployments`, but is otherwise the same as
+         * [DeploymentService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<DeploymentListPage> = list(DeploymentListParams.none())
@@ -397,8 +397,8 @@ interface DeploymentService {
             list(DeploymentListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/archive?beta=true`,
-         * but is otherwise the same as [DeploymentService.archive].
+         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/archive`, but is
+         * otherwise the same as [DeploymentService.archive].
          */
         @MustBeClosed
         fun archive(deploymentId: String): HttpResponseFor<BetaManagedAgentsDeployment> =
@@ -442,8 +442,8 @@ interface DeploymentService {
             archive(deploymentId, DeploymentArchiveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/pause?beta=true`,
-         * but is otherwise the same as [DeploymentService.pause].
+         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/pause`, but is
+         * otherwise the same as [DeploymentService.pause].
          */
         @MustBeClosed
         fun pause(deploymentId: String): HttpResponseFor<BetaManagedAgentsDeployment> =
@@ -487,8 +487,8 @@ interface DeploymentService {
             pause(deploymentId, DeploymentPauseParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/run?beta=true`, but
-         * is otherwise the same as [DeploymentService.run].
+         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/run`, but is
+         * otherwise the same as [DeploymentService.run].
          */
         @MustBeClosed
         fun run(deploymentId: String): HttpResponseFor<BetaManagedAgentsDeploymentRun> =
@@ -532,8 +532,8 @@ interface DeploymentService {
             run(deploymentId, DeploymentRunParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/unpause?beta=true`,
-         * but is otherwise the same as [DeploymentService.unpause].
+         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/unpause`, but is
+         * otherwise the same as [DeploymentService.unpause].
          */
         @MustBeClosed
         fun unpause(deploymentId: String): HttpResponseFor<BetaManagedAgentsDeployment> =

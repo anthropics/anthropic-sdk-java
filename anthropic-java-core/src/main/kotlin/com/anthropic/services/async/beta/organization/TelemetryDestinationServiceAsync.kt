@@ -283,9 +283,8 @@ interface TelemetryDestinationServiceAsync {
         fun workspaces(): WorkspaceServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/telemetry_destinations?beta=true`, but is otherwise the same as
-         * [TelemetryDestinationServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/telemetry_destinations`, but is
+         * otherwise the same as [TelemetryDestinationServiceAsync.create].
          */
         fun create(
             params: TelemetryDestinationCreateParams
@@ -300,8 +299,8 @@ interface TelemetryDestinationServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/telemetry_destinations/{destination_id}?beta=true`, but is otherwise
-         * the same as [TelemetryDestinationServiceAsync.retrieve].
+         * /v1/organizations/telemetry_destinations/{destination_id}`, but is otherwise the same as
+         * [TelemetryDestinationServiceAsync.retrieve].
          */
         fun retrieve(
             destinationId: String
@@ -344,8 +343,8 @@ interface TelemetryDestinationServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/telemetry_destinations/{destination_id}?beta=true`, but is otherwise
-         * the same as [TelemetryDestinationServiceAsync.update].
+         * /v1/organizations/telemetry_destinations/{destination_id}`, but is otherwise the same as
+         * [TelemetryDestinationServiceAsync.update].
          */
         fun update(
             destinationId: String
@@ -387,8 +386,8 @@ interface TelemetryDestinationServiceAsync {
             update(destinationId, TelemetryDestinationUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/telemetry_destinations?beta=true`,
-         * but is otherwise the same as [TelemetryDestinationServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/telemetry_destinations`, but is
+         * otherwise the same as [TelemetryDestinationServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<TelemetryDestinationListPageAsync>> =
             list(TelemetryDestinationListParams.none())
@@ -413,8 +412,8 @@ interface TelemetryDestinationServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/telemetry_destinations/{destination_id}?beta=true`, but is otherwise
-         * the same as [TelemetryDestinationServiceAsync.delete].
+         * /v1/organizations/telemetry_destinations/{destination_id}`, but is otherwise the same as
+         * [TelemetryDestinationServiceAsync.delete].
          */
         fun delete(
             destinationId: String
@@ -457,8 +456,8 @@ interface TelemetryDestinationServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/telemetry_destinations/{destination_id}/test?beta=true`, but is
-         * otherwise the same as [TelemetryDestinationServiceAsync.test].
+         * /v1/organizations/telemetry_destinations/{destination_id}/test`, but is otherwise the
+         * same as [TelemetryDestinationServiceAsync.test].
          */
         fun test(
             destinationId: String

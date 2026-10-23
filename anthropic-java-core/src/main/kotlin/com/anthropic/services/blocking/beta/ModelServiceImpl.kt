@@ -38,11 +38,11 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
         params: ModelRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaModelInfo =
-        // get /v1/models/{model_id}?beta=true
+        // get /v1/models/{model_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(params: ModelListParams, requestOptions: RequestOptions): ModelListPage =
-        // get /v1/models?beta=true
+        // get /v1/models
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -74,7 +74,6 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "models")
                     .addPathParam("modelId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -107,7 +106,6 @@ class ModelServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "models")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =

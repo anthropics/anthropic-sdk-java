@@ -22,7 +22,8 @@ internal class WebhookServiceAsyncTest {
 
     @Test
     fun create() {
-        val webhookServiceAsync = client.beta().organization().webhooks()
+        val webhookServiceAsync =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val betaNewOrganizationWebhookEndpointFuture =
             webhookServiceAsync.create(
@@ -43,7 +44,8 @@ internal class WebhookServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val webhookServiceAsync = client.beta().organization().webhooks()
+        val webhookServiceAsync =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationWebhookEndpointFuture =
             webhookServiceAsync.retrieve(
@@ -59,7 +61,8 @@ internal class WebhookServiceAsyncTest {
 
     @Test
     fun update() {
-        val webhookServiceAsync = client.beta().organization().webhooks()
+        val webhookServiceAsync =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationWebhookEndpointFuture =
             webhookServiceAsync.update(
@@ -82,7 +85,8 @@ internal class WebhookServiceAsyncTest {
 
     @Test
     fun list() {
-        val webhookServiceAsync = client.beta().organization().webhooks()
+        val webhookServiceAsync =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = webhookServiceAsync.list()
 
@@ -92,7 +96,8 @@ internal class WebhookServiceAsyncTest {
 
     @Test
     fun delete() {
-        val webhookServiceAsync = client.beta().organization().webhooks()
+        val webhookServiceAsync =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedOrganizationWebhookEndpointFuture =
             webhookServiceAsync.delete(
@@ -109,7 +114,8 @@ internal class WebhookServiceAsyncTest {
 
     @Test
     fun regenerateSigningSecret() {
-        val webhookServiceAsync = client.beta().organization().webhooks()
+        val webhookServiceAsync =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationWebhookEndpointSigningSecretFuture =
             webhookServiceAsync.regenerateSigningSecret(

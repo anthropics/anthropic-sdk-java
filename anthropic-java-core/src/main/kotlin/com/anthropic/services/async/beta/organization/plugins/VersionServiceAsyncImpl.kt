@@ -51,28 +51,28 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: VersionCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginVersion> =
-        // post /v1/organizations/plugins/{plugin_id}/versions?beta=true
+        // post /v1/organizations/plugins/{plugin_id}/versions
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: VersionRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginVersion> =
-        // get /v1/organizations/plugins/{plugin_id}/versions/{version}?beta=true
+        // get /v1/organizations/plugins/{plugin_id}/versions/{version}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: VersionListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<VersionListPageAsync> =
-        // get /v1/organizations/plugins/{plugin_id}/versions?beta=true
+        // get /v1/organizations/plugins/{plugin_id}/versions
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun download(
         params: VersionDownloadParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> =
-        // get /v1/organizations/plugins/{plugin_id}/versions/{version}/content?beta=true
+        // get /v1/organizations/plugins/{plugin_id}/versions/{version}/content
         withRawResponse().download(params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -105,7 +105,6 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("v1", "organizations", "plugins")
                     .addPathParam("pluginId", params._pathParam(0))
                     .addPathSegments("versions")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -155,7 +154,6 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathParam("pluginId", params._pathParam(0))
                     .addPathSegments("versions")
                     .addPathParam("version", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -197,7 +195,6 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("v1", "organizations", "plugins")
                     .addPathParam("pluginId", params._pathParam(0))
                     .addPathSegments("versions")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -246,7 +243,6 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("versions")
                     .addPathParam("version", params._pathParam(1))
                     .addPathSegments("content")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "application/binary")
                     .build()

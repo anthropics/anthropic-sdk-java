@@ -28,7 +28,8 @@ internal class WorkServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val workServiceAsync = client.beta().environments().work()
+        val workServiceAsync =
+            client.beta().environments().work().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSelfHostedWorkFuture =
             workServiceAsync.retrieve(
@@ -46,7 +47,8 @@ internal class WorkServiceAsyncTest {
 
     @Test
     fun update() {
-        val workServiceAsync = client.beta().environments().work()
+        val workServiceAsync =
+            client.beta().environments().work().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSelfHostedWorkFuture =
             workServiceAsync.update(
@@ -71,7 +73,8 @@ internal class WorkServiceAsyncTest {
 
     @Test
     fun list() {
-        val workServiceAsync = client.beta().environments().work()
+        val workServiceAsync =
+            client.beta().environments().work().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = workServiceAsync.list("env_011CZkZ9X2dpNyB7HsEFoRfW")
 
@@ -81,7 +84,8 @@ internal class WorkServiceAsyncTest {
 
     @Test
     fun ack() {
-        val workServiceAsync = client.beta().environments().work()
+        val workServiceAsync =
+            client.beta().environments().work().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSelfHostedWorkFuture =
             workServiceAsync.ack(
@@ -98,7 +102,8 @@ internal class WorkServiceAsyncTest {
 
     @Test
     fun heartbeat() {
-        val workServiceAsync = client.beta().environments().work()
+        val workServiceAsync =
+            client.beta().environments().work().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSelfHostedWorkHeartbeatResponseFuture =
             workServiceAsync.heartbeat(
@@ -117,7 +122,8 @@ internal class WorkServiceAsyncTest {
 
     @Test
     fun poll() {
-        val workServiceAsync = client.beta().environments().work()
+        val workServiceAsync =
+            client.beta().environments().work().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSelfHostedWorkFuture =
             workServiceAsync.poll(
@@ -137,7 +143,8 @@ internal class WorkServiceAsyncTest {
 
     @Test
     fun stats() {
-        val workServiceAsync = client.beta().environments().work()
+        val workServiceAsync =
+            client.beta().environments().work().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSelfHostedWorkQueueStatsFuture =
             workServiceAsync.stats(
@@ -154,7 +161,8 @@ internal class WorkServiceAsyncTest {
 
     @Test
     fun stop() {
-        val workServiceAsync = client.beta().environments().work()
+        val workServiceAsync =
+            client.beta().environments().work().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSelfHostedWorkFuture =
             workServiceAsync.stop(

@@ -34,7 +34,8 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun create() {
-        val sessionServiceAsync = client.beta().sessions()
+        val sessionServiceAsync =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSessionFuture =
             sessionServiceAsync.create(
@@ -80,7 +81,8 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val sessionServiceAsync = client.beta().sessions()
+        val sessionServiceAsync =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSessionFuture =
             sessionServiceAsync.retrieve(
@@ -97,7 +99,8 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun update() {
-        val sessionServiceAsync = client.beta().sessions()
+        val sessionServiceAsync =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSessionFuture =
             sessionServiceAsync.update(
@@ -160,7 +163,8 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun list() {
-        val sessionServiceAsync = client.beta().sessions()
+        val sessionServiceAsync =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = sessionServiceAsync.list()
 
@@ -170,7 +174,8 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun delete() {
-        val sessionServiceAsync = client.beta().sessions()
+        val sessionServiceAsync =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeletedSessionFuture =
             sessionServiceAsync.delete(
@@ -187,7 +192,8 @@ internal class SessionServiceAsyncTest {
 
     @Test
     fun archive() {
-        val sessionServiceAsync = client.beta().sessions()
+        val sessionServiceAsync =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSessionFuture =
             sessionServiceAsync.archive(

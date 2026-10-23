@@ -68,29 +68,29 @@ class PluginServiceImpl internal constructor(private val clientOptions: ClientOp
     override fun shares(): ShareService = shares
 
     override fun create(params: PluginCreateParams, requestOptions: RequestOptions): BetaPlugin =
-        // post /v1/organizations/plugins?beta=true
+        // post /v1/organizations/plugins
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: PluginRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaPlugin =
-        // get /v1/organizations/plugins/{plugin_id}?beta=true
+        // get /v1/organizations/plugins/{plugin_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(params: PluginUpdateParams, requestOptions: RequestOptions): BetaPlugin =
-        // post /v1/organizations/plugins/{plugin_id}?beta=true
+        // post /v1/organizations/plugins/{plugin_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: PluginListParams, requestOptions: RequestOptions): PluginListPage =
-        // get /v1/organizations/plugins?beta=true
+        // get /v1/organizations/plugins
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: PluginDeleteParams,
         requestOptions: RequestOptions,
     ): BetaDeletedPlugin =
-        // delete /v1/organizations/plugins/{plugin_id}?beta=true
+        // delete /v1/organizations/plugins/{plugin_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -137,7 +137,6 @@ class PluginServiceImpl internal constructor(private val clientOptions: ClientOp
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugins")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -179,7 +178,6 @@ class PluginServiceImpl internal constructor(private val clientOptions: ClientOp
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugins")
                     .addPathParam("pluginId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -217,7 +215,6 @@ class PluginServiceImpl internal constructor(private val clientOptions: ClientOp
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugins")
                     .addPathParam("pluginId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -252,7 +249,6 @@ class PluginServiceImpl internal constructor(private val clientOptions: ClientOp
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugins")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -297,7 +293,6 @@ class PluginServiceImpl internal constructor(private val clientOptions: ClientOp
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugins")
                     .addPathParam("pluginId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

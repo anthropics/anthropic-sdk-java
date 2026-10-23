@@ -51,35 +51,35 @@ class RbacGroupServiceAsyncImpl internal constructor(private val clientOptions: 
         params: RbacGroupCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaRbacGroup> =
-        // post /v1/organizations/rbac_groups?beta=true
+        // post /v1/organizations/rbac_groups
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: RbacGroupRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaRbacGroup> =
-        // get /v1/organizations/rbac_groups/{rbac_group_id}?beta=true
+        // get /v1/organizations/rbac_groups/{rbac_group_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: RbacGroupUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaRbacGroup> =
-        // post /v1/organizations/rbac_groups/{rbac_group_id}?beta=true
+        // post /v1/organizations/rbac_groups/{rbac_group_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: RbacGroupListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<RbacGroupListPageAsync> =
-        // get /v1/organizations/rbac_groups?beta=true
+        // get /v1/organizations/rbac_groups
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: RbacGroupDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<RbacGroupDeleteResponse> =
-        // delete /v1/organizations/rbac_groups/{rbac_group_id}?beta=true
+        // delete /v1/organizations/rbac_groups/{rbac_group_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -113,7 +113,6 @@ class RbacGroupServiceAsyncImpl internal constructor(private val clientOptions: 
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_groups")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -160,7 +159,6 @@ class RbacGroupServiceAsyncImpl internal constructor(private val clientOptions: 
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_groups")
                     .addPathParam("rbacGroupId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -200,7 +198,6 @@ class RbacGroupServiceAsyncImpl internal constructor(private val clientOptions: 
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_groups")
                     .addPathParam("rbacGroupId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -237,7 +234,6 @@ class RbacGroupServiceAsyncImpl internal constructor(private val clientOptions: 
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_groups")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -285,7 +281,6 @@ class RbacGroupServiceAsyncImpl internal constructor(private val clientOptions: 
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_groups")
                     .addPathParam("rbacGroupId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

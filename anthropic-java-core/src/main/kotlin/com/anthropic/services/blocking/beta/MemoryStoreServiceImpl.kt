@@ -65,42 +65,42 @@ class MemoryStoreServiceImpl internal constructor(private val clientOptions: Cli
         params: MemoryStoreCreateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsMemoryStore =
-        // post /v1/memory_stores?beta=true
+        // post /v1/memory_stores
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: MemoryStoreRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsMemoryStore =
-        // get /v1/memory_stores/{memory_store_id}?beta=true
+        // get /v1/memory_stores/{memory_store_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: MemoryStoreUpdateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsMemoryStore =
-        // post /v1/memory_stores/{memory_store_id}?beta=true
+        // post /v1/memory_stores/{memory_store_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: MemoryStoreListParams,
         requestOptions: RequestOptions,
     ): MemoryStoreListPage =
-        // get /v1/memory_stores?beta=true
+        // get /v1/memory_stores
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: MemoryStoreDeleteParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeletedMemoryStore =
-        // delete /v1/memory_stores/{memory_store_id}?beta=true
+        // delete /v1/memory_stores/{memory_store_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun archive(
         params: MemoryStoreArchiveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsMemoryStore =
-        // post /v1/memory_stores/{memory_store_id}/archive?beta=true
+        // post /v1/memory_stores/{memory_store_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -140,7 +140,6 @@ class MemoryStoreServiceImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "memory_stores")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -180,7 +179,6 @@ class MemoryStoreServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -218,7 +216,6 @@ class MemoryStoreServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -253,7 +250,6 @@ class MemoryStoreServiceImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "memory_stores")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -298,7 +294,6 @@ class MemoryStoreServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -338,7 +333,6 @@ class MemoryStoreServiceImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

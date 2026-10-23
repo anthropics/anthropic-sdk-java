@@ -19,7 +19,10 @@ internal class ActionUrlServiceTest {
 
     @Test
     fun create() {
-        val actionUrlService = client.beta().userProfiles().actionUrls()
+        val actionUrlService =
+            client.beta().userProfiles().actionUrls().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaUserProfileActionUrl =
             actionUrlService.create(

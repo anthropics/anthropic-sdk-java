@@ -181,9 +181,8 @@ interface ResourceServiceAsync {
         ): ResourceServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/sessions/{session_id}/resources/{resource_id}?beta=true`, but is otherwise the same
-         * as [ResourceServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/resources/{resource_id}`,
+         * but is otherwise the same as [ResourceServiceAsync.retrieve].
          */
         fun retrieve(
             resourceId: String,
@@ -212,9 +211,8 @@ interface ResourceServiceAsync {
         ): CompletableFuture<HttpResponseFor<ResourceRetrieveResponse>>
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/sessions/{session_id}/resources/{resource_id}?beta=true`, but is otherwise the same
-         * as [ResourceServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/resources/{resource_id}`,
+         * but is otherwise the same as [ResourceServiceAsync.update].
          */
         fun update(
             resourceId: String,
@@ -243,8 +241,8 @@ interface ResourceServiceAsync {
         ): CompletableFuture<HttpResponseFor<ResourceUpdateResponse>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/resources?beta=true`, but
-         * is otherwise the same as [ResourceServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/resources`, but is
+         * otherwise the same as [ResourceServiceAsync.list].
          */
         fun list(sessionId: String): CompletableFuture<HttpResponseFor<ResourceListPageAsync>> =
             list(sessionId, ResourceListParams.none())
@@ -285,8 +283,8 @@ interface ResourceServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/sessions/{session_id}/resources/{resource_id}?beta=true`, but is otherwise the same
-         * as [ResourceServiceAsync.delete].
+         * /v1/sessions/{session_id}/resources/{resource_id}`, but is otherwise the same as
+         * [ResourceServiceAsync.delete].
          */
         fun delete(
             resourceId: String,
@@ -315,8 +313,8 @@ interface ResourceServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsDeleteSessionResource>>
 
         /**
-         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/resources?beta=true`, but
-         * is otherwise the same as [ResourceServiceAsync.add].
+         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/resources`, but is
+         * otherwise the same as [ResourceServiceAsync.add].
          */
         fun add(
             sessionId: String,

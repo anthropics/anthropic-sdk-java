@@ -36,7 +36,7 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: SkillListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<SkillListPageAsync> =
-        // get /v1/organizations/analytics/skills?beta=true
+        // get /v1/organizations/analytics/skills
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -64,7 +64,6 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "skills")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =

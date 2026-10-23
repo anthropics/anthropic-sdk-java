@@ -178,7 +178,7 @@ interface AgentServiceAsync {
         fun versions(): VersionServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/agents?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `post /v1/agents`, but is otherwise the same as
          * [AgentServiceAsync.create].
          */
         fun create(
@@ -193,8 +193,8 @@ interface AgentServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/agents/{agent_id}?beta=true`, but is otherwise
-         * the same as [AgentServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/agents/{agent_id}`, but is otherwise the same as
+         * [AgentServiceAsync.retrieve].
          */
         fun retrieve(agentId: String): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>> =
             retrieve(agentId, AgentRetrieveParams.none())
@@ -234,8 +234,8 @@ interface AgentServiceAsync {
             retrieve(agentId, AgentRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/agents/{agent_id}?beta=true`, but is otherwise
-         * the same as [AgentServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/agents/{agent_id}`, but is otherwise the same
+         * as [AgentServiceAsync.update].
          */
         fun update(agentId: String): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>> =
             update(agentId, AgentUpdateParams.none())
@@ -275,7 +275,7 @@ interface AgentServiceAsync {
             update(agentId, AgentUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/agents?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/agents`, but is otherwise the same as
          * [AgentServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<AgentListPageAsync>> =
@@ -300,8 +300,8 @@ interface AgentServiceAsync {
             list(AgentListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/agents/{agent_id}/archive?beta=true`, but is
-         * otherwise the same as [AgentServiceAsync.archive].
+         * Returns a raw HTTP response for `post /v1/agents/{agent_id}/archive`, but is otherwise
+         * the same as [AgentServiceAsync.archive].
          */
         fun archive(agentId: String): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>> =
             archive(agentId, AgentArchiveParams.none())

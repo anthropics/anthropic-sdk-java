@@ -22,7 +22,7 @@ internal class DreamServiceTest {
 
     @Test
     fun create() {
-        val dreamService = client.beta().dreams()
+        val dreamService = client.beta().dreams().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDream =
             dreamService.create(
@@ -41,7 +41,7 @@ internal class DreamServiceTest {
 
     @Test
     fun retrieve() {
-        val dreamService = client.beta().dreams()
+        val dreamService = client.beta().dreams().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDream =
             dreamService.retrieve(
@@ -57,7 +57,7 @@ internal class DreamServiceTest {
 
     @Test
     fun list() {
-        val dreamService = client.beta().dreams()
+        val dreamService = client.beta().dreams().withOptions { it.putQueryParam("beta", "true") }
 
         val page = dreamService.list()
 
@@ -66,7 +66,7 @@ internal class DreamServiceTest {
 
     @Test
     fun archive() {
-        val dreamService = client.beta().dreams()
+        val dreamService = client.beta().dreams().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDream =
             dreamService.archive(
@@ -82,7 +82,7 @@ internal class DreamServiceTest {
 
     @Test
     fun cancel() {
-        val dreamService = client.beta().dreams()
+        val dreamService = client.beta().dreams().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDream =
             dreamService.cancel(

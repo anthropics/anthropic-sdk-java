@@ -177,9 +177,8 @@ interface MemoryServiceAsync {
         ): MemoryServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/memory_stores/{memory_store_id}/memories?beta=true`, but is otherwise the same as
-         * [MemoryServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/memory_stores/{memory_store_id}/memories`, but
+         * is otherwise the same as [MemoryServiceAsync.create].
          */
         fun create(
             memoryStoreId: String,
@@ -209,8 +208,8 @@ interface MemoryServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true`, but is otherwise the
-         * same as [MemoryServiceAsync.retrieve].
+         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}`, but is otherwise the same as
+         * [MemoryServiceAsync.retrieve].
          */
         fun retrieve(
             memoryId: String,
@@ -240,8 +239,8 @@ interface MemoryServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true`, but is otherwise the
-         * same as [MemoryServiceAsync.update].
+         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}`, but is otherwise the same as
+         * [MemoryServiceAsync.update].
          */
         fun update(
             memoryId: String,
@@ -270,9 +269,8 @@ interface MemoryServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsMemory>>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/memory_stores/{memory_store_id}/memories?beta=true`, but is otherwise the same as
-         * [MemoryServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/memory_stores/{memory_store_id}/memories`, but
+         * is otherwise the same as [MemoryServiceAsync.list].
          */
         fun list(memoryStoreId: String): CompletableFuture<HttpResponseFor<MemoryListPageAsync>> =
             list(memoryStoreId, MemoryListParams.none())
@@ -313,8 +311,8 @@ interface MemoryServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true`, but is otherwise the
-         * same as [MemoryServiceAsync.delete].
+         * /v1/memory_stores/{memory_store_id}/memories/{memory_id}`, but is otherwise the same as
+         * [MemoryServiceAsync.delete].
          */
         fun delete(
             memoryId: String,

@@ -18,7 +18,10 @@ internal class SummaryServiceTest {
 
     @Test
     fun list() {
-        val summaryService = client.beta().organization().analytics().summaries()
+        val summaryService =
+            client.beta().organization().analytics().summaries().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page =
             summaryService.list(

@@ -21,7 +21,8 @@ internal class PluginServiceAsyncTest {
 
     @Test
     fun create() {
-        val pluginServiceAsync = client.beta().organization().plugins()
+        val pluginServiceAsync =
+            client.beta().organization().plugins().withOptions { it.putQueryParam("beta", "true") }
 
         val betaPluginFuture =
             pluginServiceAsync.create(
@@ -39,7 +40,8 @@ internal class PluginServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val pluginServiceAsync = client.beta().organization().plugins()
+        val pluginServiceAsync =
+            client.beta().organization().plugins().withOptions { it.putQueryParam("beta", "true") }
 
         val betaPluginFuture =
             pluginServiceAsync.retrieve(
@@ -56,7 +58,8 @@ internal class PluginServiceAsyncTest {
 
     @Test
     fun update() {
-        val pluginServiceAsync = client.beta().organization().plugins()
+        val pluginServiceAsync =
+            client.beta().organization().plugins().withOptions { it.putQueryParam("beta", "true") }
 
         val betaPluginFuture =
             pluginServiceAsync.update(
@@ -73,7 +76,8 @@ internal class PluginServiceAsyncTest {
 
     @Test
     fun list() {
-        val pluginServiceAsync = client.beta().organization().plugins()
+        val pluginServiceAsync =
+            client.beta().organization().plugins().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = pluginServiceAsync.list()
 
@@ -83,7 +87,8 @@ internal class PluginServiceAsyncTest {
 
     @Test
     fun delete() {
-        val pluginServiceAsync = client.beta().organization().plugins()
+        val pluginServiceAsync =
+            client.beta().organization().plugins().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedPluginFuture =
             pluginServiceAsync.delete(

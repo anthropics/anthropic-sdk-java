@@ -243,8 +243,8 @@ interface ServiceAccountServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true`,
-         * but is otherwise the same as [ServiceAccountServiceAsync.retrieve].
+         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}`, but
+         * is otherwise the same as [ServiceAccountServiceAsync.retrieve].
          */
         fun retrieve(
             serviceAccountId: String,
@@ -274,8 +274,8 @@ interface ServiceAccountServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true`,
-         * but is otherwise the same as [ServiceAccountServiceAsync.update].
+         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}`, but
+         * is otherwise the same as [ServiceAccountServiceAsync.update].
          */
         fun update(
             serviceAccountId: String,
@@ -305,8 +305,8 @@ interface ServiceAccountServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}/service_accounts?beta=true`, but is otherwise
-         * the same as [ServiceAccountServiceAsync.list].
+         * /v1/organizations/workspaces/{workspace_id}/service_accounts`, but is otherwise the same
+         * as [ServiceAccountServiceAsync.list].
          */
         fun list(
             workspaceId: String
@@ -349,8 +349,8 @@ interface ServiceAccountServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/service_accounts?beta=true`, but is otherwise
-         * the same as [ServiceAccountServiceAsync.add].
+         * /v1/organizations/workspaces/{workspace_id}/service_accounts`, but is otherwise the same
+         * as [ServiceAccountServiceAsync.add].
          */
         fun add(
             workspaceId: String,
@@ -380,8 +380,8 @@ interface ServiceAccountServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true`,
-         * but is otherwise the same as [ServiceAccountServiceAsync.remove].
+         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}`, but
+         * is otherwise the same as [ServiceAccountServiceAsync.remove].
          */
         fun remove(
             serviceAccountId: String,

@@ -19,7 +19,10 @@ internal class ExternalKeyServiceTest {
 
     @Test
     fun create() {
-        val externalKeyService = client.beta().organization().externalKeys()
+        val externalKeyService =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaExternalKey =
             externalKeyService.create(
@@ -43,7 +46,10 @@ internal class ExternalKeyServiceTest {
 
     @Test
     fun retrieve() {
-        val externalKeyService = client.beta().organization().externalKeys()
+        val externalKeyService =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaExternalKey = externalKeyService.retrieve("external_key_id")
 
@@ -52,7 +58,10 @@ internal class ExternalKeyServiceTest {
 
     @Test
     fun update() {
-        val externalKeyService = client.beta().organization().externalKeys()
+        val externalKeyService =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaExternalKey =
             externalKeyService.update(
@@ -77,7 +86,10 @@ internal class ExternalKeyServiceTest {
 
     @Test
     fun list() {
-        val externalKeyService = client.beta().organization().externalKeys()
+        val externalKeyService =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = externalKeyService.list()
 
@@ -86,7 +98,10 @@ internal class ExternalKeyServiceTest {
 
     @Test
     fun delete() {
-        val externalKeyService = client.beta().organization().externalKeys()
+        val externalKeyService =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val externalKey = externalKeyService.delete("external_key_id")
 
@@ -95,7 +110,10 @@ internal class ExternalKeyServiceTest {
 
     @Test
     fun validate() {
-        val externalKeyService = client.beta().organization().externalKeys()
+        val externalKeyService =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val response = externalKeyService.validate("external_key_id")
 

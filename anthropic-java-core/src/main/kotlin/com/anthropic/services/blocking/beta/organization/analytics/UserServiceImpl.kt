@@ -30,7 +30,7 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         UserServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: UserListParams, requestOptions: RequestOptions): UserListPage =
-        // get /v1/organizations/analytics/users?beta=true
+        // get /v1/organizations/analytics/users
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -58,7 +58,6 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "users")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =

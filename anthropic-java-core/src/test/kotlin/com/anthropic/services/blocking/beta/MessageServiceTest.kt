@@ -44,7 +44,8 @@ internal class MessageServiceTest {
 
     @Test
     fun create() {
-        val messageService = client.beta().messages()
+        val messageService =
+            client.beta().messages().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessage =
             messageService.create(
@@ -215,7 +216,8 @@ internal class MessageServiceTest {
 
     @Test
     fun createStreaming() {
-        val messageService = client.beta().messages()
+        val messageService =
+            client.beta().messages().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageStreamResponse =
             messageService.createStreaming(
@@ -388,7 +390,8 @@ internal class MessageServiceTest {
 
     @Test
     fun countTokens() {
-        val messageService = client.beta().messages()
+        val messageService =
+            client.beta().messages().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageTokensCount =
             messageService.countTokens(

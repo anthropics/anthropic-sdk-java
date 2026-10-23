@@ -57,39 +57,39 @@ class VaultServiceImpl internal constructor(private val clientOptions: ClientOpt
         params: VaultCreateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsVault =
-        // post /v1/vaults?beta=true
+        // post /v1/vaults
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: VaultRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsVault =
-        // get /v1/vaults/{vault_id}?beta=true
+        // get /v1/vaults/{vault_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: VaultUpdateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsVault =
-        // post /v1/vaults/{vault_id}?beta=true
+        // post /v1/vaults/{vault_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: VaultListParams, requestOptions: RequestOptions): VaultListPage =
-        // get /v1/vaults?beta=true
+        // get /v1/vaults
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: VaultDeleteParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeletedVault =
-        // delete /v1/vaults/{vault_id}?beta=true
+        // delete /v1/vaults/{vault_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun archive(
         params: VaultArchiveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsVault =
-        // post /v1/vaults/{vault_id}/archive?beta=true
+        // post /v1/vaults/{vault_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -123,7 +123,6 @@ class VaultServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "vaults")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -163,7 +162,6 @@ class VaultServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -201,7 +199,6 @@ class VaultServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -236,7 +233,6 @@ class VaultServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "vaults")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -281,7 +277,6 @@ class VaultServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -321,7 +316,6 @@ class VaultServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

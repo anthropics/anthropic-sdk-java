@@ -267,9 +267,8 @@ interface TelemetryDestinationService {
         fun workspaces(): WorkspaceService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/telemetry_destinations?beta=true`, but is otherwise the same as
-         * [TelemetryDestinationService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/telemetry_destinations`, but is
+         * otherwise the same as [TelemetryDestinationService.create].
          */
         @MustBeClosed
         fun create(
@@ -285,8 +284,8 @@ interface TelemetryDestinationService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/telemetry_destinations/{destination_id}?beta=true`, but is otherwise
-         * the same as [TelemetryDestinationService.retrieve].
+         * /v1/organizations/telemetry_destinations/{destination_id}`, but is otherwise the same as
+         * [TelemetryDestinationService.retrieve].
          */
         @MustBeClosed
         fun retrieve(destinationId: String): HttpResponseFor<BetaTelemetryDestination> =
@@ -332,8 +331,8 @@ interface TelemetryDestinationService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/telemetry_destinations/{destination_id}?beta=true`, but is otherwise
-         * the same as [TelemetryDestinationService.update].
+         * /v1/organizations/telemetry_destinations/{destination_id}`, but is otherwise the same as
+         * [TelemetryDestinationService.update].
          */
         @MustBeClosed
         fun update(destinationId: String): HttpResponseFor<BetaTelemetryDestination> =
@@ -378,8 +377,8 @@ interface TelemetryDestinationService {
             update(destinationId, TelemetryDestinationUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/telemetry_destinations?beta=true`,
-         * but is otherwise the same as [TelemetryDestinationService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/telemetry_destinations`, but is
+         * otherwise the same as [TelemetryDestinationService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<TelemetryDestinationListPage> =
@@ -405,8 +404,8 @@ interface TelemetryDestinationService {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/telemetry_destinations/{destination_id}?beta=true`, but is otherwise
-         * the same as [TelemetryDestinationService.delete].
+         * /v1/organizations/telemetry_destinations/{destination_id}`, but is otherwise the same as
+         * [TelemetryDestinationService.delete].
          */
         @MustBeClosed
         fun delete(destinationId: String): HttpResponseFor<BetaDeletedTelemetryDestination> =
@@ -452,8 +451,8 @@ interface TelemetryDestinationService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/telemetry_destinations/{destination_id}/test?beta=true`, but is
-         * otherwise the same as [TelemetryDestinationService.test].
+         * /v1/organizations/telemetry_destinations/{destination_id}/test`, but is otherwise the
+         * same as [TelemetryDestinationService.test].
          */
         @MustBeClosed
         fun test(destinationId: String): HttpResponseFor<BetaTelemetryDestinationTestResponse> =

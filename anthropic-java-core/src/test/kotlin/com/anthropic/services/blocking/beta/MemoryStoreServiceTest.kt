@@ -23,7 +23,8 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun create() {
-        val memoryStoreService = client.beta().memoryStores()
+        val memoryStoreService =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryStore =
             memoryStoreService.create(
@@ -45,7 +46,8 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun retrieve() {
-        val memoryStoreService = client.beta().memoryStores()
+        val memoryStoreService =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryStore =
             memoryStoreService.retrieve(
@@ -61,7 +63,8 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun update() {
-        val memoryStoreService = client.beta().memoryStores()
+        val memoryStoreService =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryStore =
             memoryStoreService.update(
@@ -84,7 +87,8 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun list() {
-        val memoryStoreService = client.beta().memoryStores()
+        val memoryStoreService =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val page = memoryStoreService.list()
 
@@ -93,7 +97,8 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun delete() {
-        val memoryStoreService = client.beta().memoryStores()
+        val memoryStoreService =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeletedMemoryStore =
             memoryStoreService.delete(
@@ -109,7 +114,8 @@ internal class MemoryStoreServiceTest {
 
     @Test
     fun archive() {
-        val memoryStoreService = client.beta().memoryStores()
+        val memoryStoreService =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryStore =
             memoryStoreService.archive(

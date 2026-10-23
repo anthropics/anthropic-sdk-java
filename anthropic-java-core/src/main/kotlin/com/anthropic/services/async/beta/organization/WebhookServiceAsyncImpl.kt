@@ -55,42 +55,42 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: WebhookCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaNewOrganizationWebhookEndpoint> =
-        // post /v1/organizations/webhooks?beta=true
+        // post /v1/organizations/webhooks
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: WebhookRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaOrganizationWebhookEndpoint> =
-        // get /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true
+        // get /v1/organizations/webhooks/{webhook_endpoint_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: WebhookUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaOrganizationWebhookEndpoint> =
-        // post /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true
+        // post /v1/organizations/webhooks/{webhook_endpoint_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: WebhookListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WebhookListPageAsync> =
-        // get /v1/organizations/webhooks?beta=true
+        // get /v1/organizations/webhooks
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: WebhookDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDeletedOrganizationWebhookEndpoint> =
-        // delete /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true
+        // delete /v1/organizations/webhooks/{webhook_endpoint_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun regenerateSigningSecret(
         params: WebhookRegenerateSigningSecretParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaOrganizationWebhookEndpointSigningSecret> =
-        // post /v1/organizations/webhooks/{webhook_endpoint_id}/regenerate_signing_secret?beta=true
+        // post /v1/organizations/webhooks/{webhook_endpoint_id}/regenerate_signing_secret
         withRawResponse().regenerateSigningSecret(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -118,7 +118,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "webhooks")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -166,7 +165,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "webhooks")
                     .addPathParam("webhookEndpointId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -207,7 +205,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "webhooks")
                     .addPathParam("webhookEndpointId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -245,7 +242,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "webhooks")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -294,7 +290,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "webhooks")
                     .addPathParam("webhookEndpointId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -338,7 +333,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("v1", "organizations", "webhooks")
                     .addPathParam("webhookEndpointId", params._pathParam(0))
                     .addPathSegments("regenerate_signing_secret")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

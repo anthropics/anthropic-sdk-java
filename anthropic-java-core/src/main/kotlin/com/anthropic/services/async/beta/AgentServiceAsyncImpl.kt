@@ -57,35 +57,35 @@ class AgentServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: AgentCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsAgent> =
-        // post /v1/agents?beta=true
+        // post /v1/agents
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: AgentRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsAgent> =
-        // get /v1/agents/{agent_id}?beta=true
+        // get /v1/agents/{agent_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: AgentUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsAgent> =
-        // post /v1/agents/{agent_id}?beta=true
+        // post /v1/agents/{agent_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: AgentListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<AgentListPageAsync> =
-        // get /v1/agents?beta=true
+        // get /v1/agents
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: AgentArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsAgent> =
-        // post /v1/agents/{agent_id}/archive?beta=true
+        // post /v1/agents/{agent_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -119,7 +119,6 @@ class AgentServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "agents")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -162,7 +161,6 @@ class AgentServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "agents")
                     .addPathParam("agentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -203,7 +201,6 @@ class AgentServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "agents")
                     .addPathParam("agentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -241,7 +238,6 @@ class AgentServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "agents")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -291,7 +287,6 @@ class AgentServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "agents")
                     .addPathParam("agentId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

@@ -53,56 +53,56 @@ class DeploymentServiceImpl internal constructor(private val clientOptions: Clie
         params: DeploymentCreateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeployment =
-        // post /v1/deployments?beta=true
+        // post /v1/deployments
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: DeploymentRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeployment =
-        // get /v1/deployments/{deployment_id}?beta=true
+        // get /v1/deployments/{deployment_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: DeploymentUpdateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeployment =
-        // post /v1/deployments/{deployment_id}?beta=true
+        // post /v1/deployments/{deployment_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: DeploymentListParams,
         requestOptions: RequestOptions,
     ): DeploymentListPage =
-        // get /v1/deployments?beta=true
+        // get /v1/deployments
         withRawResponse().list(params, requestOptions).parse()
 
     override fun archive(
         params: DeploymentArchiveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeployment =
-        // post /v1/deployments/{deployment_id}/archive?beta=true
+        // post /v1/deployments/{deployment_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     override fun pause(
         params: DeploymentPauseParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeployment =
-        // post /v1/deployments/{deployment_id}/pause?beta=true
+        // post /v1/deployments/{deployment_id}/pause
         withRawResponse().pause(params, requestOptions).parse()
 
     override fun run(
         params: DeploymentRunParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeploymentRun =
-        // post /v1/deployments/{deployment_id}/run?beta=true
+        // post /v1/deployments/{deployment_id}/run
         withRawResponse().run(params, requestOptions).parse()
 
     override fun unpause(
         params: DeploymentUnpauseParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeployment =
-        // post /v1/deployments/{deployment_id}/unpause?beta=true
+        // post /v1/deployments/{deployment_id}/unpause
         withRawResponse().unpause(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -130,7 +130,6 @@ class DeploymentServiceImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployments")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -170,7 +169,6 @@ class DeploymentServiceImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -208,7 +206,6 @@ class DeploymentServiceImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -243,7 +240,6 @@ class DeploymentServiceImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployments")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -289,7 +285,6 @@ class DeploymentServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -329,7 +324,6 @@ class DeploymentServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
                     .addPathSegments("pause")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -369,7 +363,6 @@ class DeploymentServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
                     .addPathSegments("run")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -409,7 +402,6 @@ class DeploymentServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
                     .addPathSegments("unpause")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

@@ -22,7 +22,8 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun create() {
-        val tunnelServiceAsync = client.beta().tunnels()
+        val tunnelServiceAsync =
+            client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnelFuture =
             tunnelServiceAsync.create(
@@ -39,7 +40,8 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val tunnelServiceAsync = client.beta().tunnels()
+        val tunnelServiceAsync =
+            client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnelFuture =
             tunnelServiceAsync.retrieve(
@@ -56,7 +58,8 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun list() {
-        val tunnelServiceAsync = client.beta().tunnels()
+        val tunnelServiceAsync =
+            client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = tunnelServiceAsync.list()
 
@@ -66,7 +69,8 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun archive() {
-        val tunnelServiceAsync = client.beta().tunnels()
+        val tunnelServiceAsync =
+            client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnelFuture =
             tunnelServiceAsync.archive(
@@ -83,7 +87,8 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun revealToken() {
-        val tunnelServiceAsync = client.beta().tunnels()
+        val tunnelServiceAsync =
+            client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnelTokenFuture =
             tunnelServiceAsync.revealToken(
@@ -100,7 +105,8 @@ internal class TunnelServiceAsyncTest {
 
     @Test
     fun rotateToken() {
-        val tunnelServiceAsync = client.beta().tunnels()
+        val tunnelServiceAsync =
+            client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnelTokenFuture =
             tunnelServiceAsync.rotateToken(

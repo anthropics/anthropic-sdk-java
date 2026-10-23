@@ -58,42 +58,42 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
         params: UserProfileCreateParams,
         requestOptions: RequestOptions,
     ): BetaUserProfile =
-        // post /v1/user_profiles?beta=true
+        // post /v1/user_profiles
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: UserProfileRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaUserProfile =
-        // get /v1/user_profiles/{user_profile_id}?beta=true
+        // get /v1/user_profiles/{user_profile_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: UserProfileUpdateParams,
         requestOptions: RequestOptions,
     ): BetaUserProfile =
-        // post /v1/user_profiles/{user_profile_id}?beta=true
+        // post /v1/user_profiles/{user_profile_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: UserProfileListParams,
         requestOptions: RequestOptions,
     ): UserProfileListPage =
-        // get /v1/user_profiles?beta=true
+        // get /v1/user_profiles
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: UserProfileDeleteParams,
         requestOptions: RequestOptions,
     ): BetaDeletedUserProfile =
-        // delete /v1/user_profiles/{user_profile_id}?beta=true
+        // delete /v1/user_profiles/{user_profile_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun createEnrollmentUrl(
         params: UserProfileCreateEnrollmentUrlParams,
         requestOptions: RequestOptions,
     ): BetaUserProfileEnrollmentUrl =
-        // post /v1/user_profiles/{user_profile_id}/enrollment_url?beta=true
+        // post /v1/user_profiles/{user_profile_id}/enrollment_url
         withRawResponse().createEnrollmentUrl(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -127,7 +127,6 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "user_profiles")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -167,7 +166,6 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "user_profiles")
                     .addPathParam("userProfileId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -205,7 +203,6 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "user_profiles")
                     .addPathParam("userProfileId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -240,7 +237,6 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "user_profiles")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -285,7 +281,6 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "user_profiles")
                     .addPathParam("userProfileId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -325,7 +320,6 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "user_profiles")
                     .addPathParam("userProfileId", params._pathParam(0))
                     .addPathSegments("enrollment_url")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

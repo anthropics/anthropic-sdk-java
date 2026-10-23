@@ -19,7 +19,10 @@ internal class IncreaseRequestServiceTest {
 
     @Test
     fun retrieve() {
-        val increaseRequestService = client.beta().organization().spendLimits().increaseRequests()
+        val increaseRequestService =
+            client.beta().organization().spendLimits().increaseRequests().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaSpendLimitIncreaseRequest =
             increaseRequestService.retrieve("spend_limit_increase_request_id")
@@ -29,7 +32,10 @@ internal class IncreaseRequestServiceTest {
 
     @Test
     fun list() {
-        val increaseRequestService = client.beta().organization().spendLimits().increaseRequests()
+        val increaseRequestService =
+            client.beta().organization().spendLimits().increaseRequests().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = increaseRequestService.list()
 
@@ -38,7 +44,10 @@ internal class IncreaseRequestServiceTest {
 
     @Test
     fun approve() {
-        val increaseRequestService = client.beta().organization().spendLimits().increaseRequests()
+        val increaseRequestService =
+            client.beta().organization().spendLimits().increaseRequests().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val response =
             increaseRequestService.approve(
@@ -55,7 +64,10 @@ internal class IncreaseRequestServiceTest {
 
     @Test
     fun deny() {
-        val increaseRequestService = client.beta().organization().spendLimits().increaseRequests()
+        val increaseRequestService =
+            client.beta().organization().spendLimits().increaseRequests().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaSpendLimitIncreaseRequest =
             increaseRequestService.deny(

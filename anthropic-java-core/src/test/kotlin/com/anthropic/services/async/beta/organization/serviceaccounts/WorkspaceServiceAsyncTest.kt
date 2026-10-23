@@ -20,7 +20,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun list() {
-        val workspaceServiceAsync = client.beta().organization().serviceAccounts().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().serviceAccounts().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = workspaceServiceAsync.list("service_account_id")
 
@@ -30,7 +33,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun add() {
-        val workspaceServiceAsync = client.beta().organization().serviceAccounts().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().serviceAccounts().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountWorkspaceMemberFuture =
             workspaceServiceAsync.add(
@@ -48,7 +54,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun remove() {
-        val workspaceServiceAsync = client.beta().organization().serviceAccounts().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().serviceAccounts().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val workspaceFuture =
             workspaceServiceAsync.remove(

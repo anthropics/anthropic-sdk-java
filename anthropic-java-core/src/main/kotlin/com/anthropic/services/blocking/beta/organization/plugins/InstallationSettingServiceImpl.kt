@@ -50,21 +50,21 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
         params: InstallationSettingListParams,
         requestOptions: RequestOptions,
     ): InstallationSettingListPage =
-        // get /v1/organizations/plugins/{plugin_id}/installation_settings?beta=true
+        // get /v1/organizations/plugins/{plugin_id}/installation_settings
         withRawResponse().list(params, requestOptions).parse()
 
     override fun remove(
         params: InstallationSettingRemoveParams,
         requestOptions: RequestOptions,
     ): BetaDeletedPluginInstallationSetting =
-        // delete /v1/organizations/plugins/{plugin_id}/installation_settings/{target}?beta=true
+        // delete /v1/organizations/plugins/{plugin_id}/installation_settings/{target}
         withRawResponse().remove(params, requestOptions).parse()
 
     override fun set(
         params: InstallationSettingSetParams,
         requestOptions: RequestOptions,
     ): BetaPluginInstallationSetting =
-        // post /v1/organizations/plugins/{plugin_id}/installation_settings/{target}?beta=true
+        // post /v1/organizations/plugins/{plugin_id}/installation_settings/{target}
         withRawResponse().set(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -97,7 +97,6 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                     .addPathSegments("v1", "organizations", "plugins")
                     .addPathParam("pluginId", params._pathParam(0))
                     .addPathSegments("installation_settings")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -144,7 +143,6 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                     .addPathParam("pluginId", params._pathParam(0))
                     .addPathSegments("installation_settings")
                     .addPathParam("target", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -185,7 +183,6 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                     .addPathParam("pluginId", params._pathParam(0))
                     .addPathSegments("installation_settings")
                     .addPathParam("target", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()

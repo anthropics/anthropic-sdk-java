@@ -37,7 +37,7 @@ class CostServiceImpl internal constructor(private val clientOptions: ClientOpti
         CostServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: CostListParams, requestOptions: RequestOptions): CostListPage =
-        // get /v1/organizations/analytics/cost?beta=true
+        // get /v1/organizations/analytics/cost
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -65,7 +65,6 @@ class CostServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "cost")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)

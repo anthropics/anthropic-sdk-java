@@ -121,8 +121,8 @@ interface RateLimitServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}?beta=true`, but
-         * is otherwise the same as [RateLimitServiceAsync.update].
+         * /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}`, but is
+         * otherwise the same as [RateLimitServiceAsync.update].
          */
         fun update(
             rateLimitId: String,
@@ -152,8 +152,8 @@ interface RateLimitServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}/rate_limits?beta=true`, but is otherwise the
-         * same as [RateLimitServiceAsync.list].
+         * /v1/organizations/workspaces/{workspace_id}/rate_limits`, but is otherwise the same as
+         * [RateLimitServiceAsync.list].
          */
         fun list(workspaceId: String): CompletableFuture<HttpResponseFor<RateLimitListPageAsync>> =
             list(workspaceId, RateLimitListParams.none())

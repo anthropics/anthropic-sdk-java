@@ -32,7 +32,8 @@ internal class AgentServiceAsyncTest {
 
     @Test
     fun create() {
-        val agentServiceAsync = client.beta().agents()
+        val agentServiceAsync =
+            client.beta().agents().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsAgentFuture =
             agentServiceAsync.create(
@@ -103,7 +104,8 @@ internal class AgentServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val agentServiceAsync = client.beta().agents()
+        val agentServiceAsync =
+            client.beta().agents().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsAgentFuture =
             agentServiceAsync.retrieve(
@@ -121,7 +123,8 @@ internal class AgentServiceAsyncTest {
 
     @Test
     fun update() {
-        val agentServiceAsync = client.beta().agents()
+        val agentServiceAsync =
+            client.beta().agents().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsAgentFuture =
             agentServiceAsync.update(
@@ -205,7 +208,8 @@ internal class AgentServiceAsyncTest {
 
     @Test
     fun list() {
-        val agentServiceAsync = client.beta().agents()
+        val agentServiceAsync =
+            client.beta().agents().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = agentServiceAsync.list()
 
@@ -215,7 +219,8 @@ internal class AgentServiceAsyncTest {
 
     @Test
     fun archive() {
-        val agentServiceAsync = client.beta().agents()
+        val agentServiceAsync =
+            client.beta().agents().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsAgentFuture =
             agentServiceAsync.archive(

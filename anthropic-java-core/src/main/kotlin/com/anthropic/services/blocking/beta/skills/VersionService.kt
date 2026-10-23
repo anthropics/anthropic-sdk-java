@@ -157,8 +157,8 @@ interface VersionService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/skills/{skill_id}/versions?beta=true`, but is
-         * otherwise the same as [VersionService.create].
+         * Returns a raw HTTP response for `post /v1/skills/{skill_id}/versions`, but is otherwise
+         * the same as [VersionService.create].
          */
         @MustBeClosed
         fun create(
@@ -188,8 +188,8 @@ interface VersionService {
         ): HttpResponseFor<BetaSkillVersion>
 
         /**
-         * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}?beta=true`,
-         * but is otherwise the same as [VersionService.retrieve].
+         * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}`, but is
+         * otherwise the same as [VersionService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -219,8 +219,8 @@ interface VersionService {
         ): HttpResponseFor<BetaSkillVersion>
 
         /**
-         * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions?beta=true`, but is
-         * otherwise the same as [VersionService.list].
+         * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions`, but is otherwise
+         * the same as [VersionService.list].
          */
         @MustBeClosed
         fun list(skillId: String): HttpResponseFor<VersionListPage> =
@@ -263,9 +263,8 @@ interface VersionService {
             list(skillId, VersionListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete
-         * /v1/skills/{skill_id}/versions/{version}?beta=true`, but is otherwise the same as
-         * [VersionService.delete].
+         * Returns a raw HTTP response for `delete /v1/skills/{skill_id}/versions/{version}`, but is
+         * otherwise the same as [VersionService.delete].
          */
         @MustBeClosed
         fun delete(
@@ -295,9 +294,8 @@ interface VersionService {
         ): HttpResponseFor<BetaDeletedSkillVersion>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/skills/{skill_id}/versions/{version}/content?beta=true`, but is otherwise the same as
-         * [VersionService.download].
+         * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}/content`,
+         * but is otherwise the same as [VersionService.download].
          */
         @MustBeClosed
         fun download(version: String, params: VersionDownloadParams): HttpResponse =

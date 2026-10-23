@@ -47,32 +47,32 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
         params: RuleCreateParams,
         requestOptions: RequestOptions,
     ): BetaFederationRule =
-        // post /v1/organizations/federation_rules?beta=true
+        // post /v1/organizations/federation_rules
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: RuleRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaFederationRule =
-        // get /v1/organizations/federation_rules/{federation_rule_id}?beta=true
+        // get /v1/organizations/federation_rules/{federation_rule_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: RuleUpdateParams,
         requestOptions: RequestOptions,
     ): BetaFederationRule =
-        // post /v1/organizations/federation_rules/{federation_rule_id}?beta=true
+        // post /v1/organizations/federation_rules/{federation_rule_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: RuleListParams, requestOptions: RequestOptions): RuleListPage =
-        // get /v1/organizations/federation_rules?beta=true
+        // get /v1/organizations/federation_rules
         withRawResponse().list(params, requestOptions).parse()
 
     override fun archive(
         params: RuleArchiveParams,
         requestOptions: RequestOptions,
     ): BetaFederationRule =
-        // post /v1/organizations/federation_rules/{federation_rule_id}/archive?beta=true
+        // post /v1/organizations/federation_rules/{federation_rule_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -106,7 +106,6 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_rules")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -150,7 +149,6 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_rules")
                     .addPathParam("federationRuleId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -187,7 +185,6 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_rules")
                     .addPathParam("federationRuleId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -221,7 +218,6 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_rules")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -266,7 +262,6 @@ class RuleServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathSegments("v1", "organizations", "federation_rules")
                     .addPathParam("federationRuleId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)

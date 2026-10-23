@@ -39,14 +39,14 @@ internal constructor(private val clientOptions: ClientOptions) : ComplianceSetti
         params: ComplianceSettingRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaComplianceSettings> =
-        // get /v1/organizations/compliance_settings?beta=true
+        // get /v1/organizations/compliance_settings
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: ComplianceSettingUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaComplianceSettings> =
-        // post /v1/organizations/compliance_settings?beta=true
+        // post /v1/organizations/compliance_settings
         withRawResponse().update(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -74,7 +74,6 @@ internal constructor(private val clientOptions: ClientOptions) : ComplianceSetti
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "compliance_settings")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -110,7 +109,6 @@ internal constructor(private val clientOptions: ClientOptions) : ComplianceSetti
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "compliance_settings")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)

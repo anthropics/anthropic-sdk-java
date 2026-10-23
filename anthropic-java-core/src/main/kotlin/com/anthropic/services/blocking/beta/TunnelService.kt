@@ -250,8 +250,8 @@ interface TunnelService {
         fun certificates(): CertificateService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/tunnels?beta=true`, but is otherwise the same
-         * as [TunnelService.create].
+         * Returns a raw HTTP response for `post /v1/tunnels`, but is otherwise the same as
+         * [TunnelService.create].
          */
         @MustBeClosed fun create(): HttpResponseFor<BetaTunnel> = create(TunnelCreateParams.none())
 
@@ -274,8 +274,8 @@ interface TunnelService {
             create(TunnelCreateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/tunnels/{tunnel_id}?beta=true`, but is otherwise
-         * the same as [TunnelService.retrieve].
+         * Returns a raw HTTP response for `get /v1/tunnels/{tunnel_id}`, but is otherwise the same
+         * as [TunnelService.retrieve].
          */
         @MustBeClosed
         fun retrieve(tunnelId: String): HttpResponseFor<BetaTunnel> =
@@ -318,7 +318,7 @@ interface TunnelService {
             retrieve(tunnelId, TunnelRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/tunnels?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/tunnels`, but is otherwise the same as
          * [TunnelService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<TunnelListPage> = list(TunnelListParams.none())
@@ -342,8 +342,8 @@ interface TunnelService {
             list(TunnelListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/archive?beta=true`, but is
-         * otherwise the same as [TunnelService.archive].
+         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/archive`, but is otherwise
+         * the same as [TunnelService.archive].
          */
         @MustBeClosed
         fun archive(tunnelId: String): HttpResponseFor<BetaTunnel> =
@@ -383,8 +383,8 @@ interface TunnelService {
             archive(tunnelId, TunnelArchiveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/reveal_token?beta=true`,
-         * but is otherwise the same as [TunnelService.revealToken].
+         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/reveal_token`, but is
+         * otherwise the same as [TunnelService.revealToken].
          */
         @MustBeClosed
         fun revealToken(tunnelId: String): HttpResponseFor<BetaTunnelToken> =
@@ -427,8 +427,8 @@ interface TunnelService {
             revealToken(tunnelId, TunnelRevealTokenParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/rotate_token?beta=true`,
-         * but is otherwise the same as [TunnelService.rotateToken].
+         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/rotate_token`, but is
+         * otherwise the same as [TunnelService.rotateToken].
          */
         @MustBeClosed
         fun rotateToken(tunnelId: String): HttpResponseFor<BetaTunnelToken> =

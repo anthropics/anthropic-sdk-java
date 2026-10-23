@@ -16,7 +16,10 @@ internal class ConnectorServiceAsyncTest {
 
     @Test
     fun list() {
-        val connectorServiceAsync = client.beta().organization().analytics().connectors()
+        val connectorServiceAsync =
+            client.beta().organization().analytics().connectors().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = connectorServiceAsync.list()
 

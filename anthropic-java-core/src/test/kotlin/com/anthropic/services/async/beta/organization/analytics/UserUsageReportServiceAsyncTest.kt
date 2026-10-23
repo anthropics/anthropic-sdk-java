@@ -18,7 +18,10 @@ internal class UserUsageReportServiceAsyncTest {
 
     @Test
     fun list() {
-        val userUsageReportServiceAsync = client.beta().organization().analytics().userUsageReport()
+        val userUsageReportServiceAsync =
+            client.beta().organization().analytics().userUsageReport().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture =
             userUsageReportServiceAsync.list(

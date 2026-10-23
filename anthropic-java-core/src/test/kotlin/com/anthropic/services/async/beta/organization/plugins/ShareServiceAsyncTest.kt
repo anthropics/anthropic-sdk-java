@@ -16,7 +16,10 @@ internal class ShareServiceAsyncTest {
 
     @Test
     fun list() {
-        val shareServiceAsync = client.beta().organization().plugins().shares()
+        val shareServiceAsync =
+            client.beta().organization().plugins().shares().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = shareServiceAsync.list("plugin_id")
 

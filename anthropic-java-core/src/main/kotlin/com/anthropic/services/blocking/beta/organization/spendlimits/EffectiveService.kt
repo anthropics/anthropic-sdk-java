@@ -57,8 +57,8 @@ interface EffectiveService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): EffectiveService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/spend_limits/effective?beta=true`,
-         * but is otherwise the same as [EffectiveService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/spend_limits/effective`, but is
+         * otherwise the same as [EffectiveService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<EffectiveListPage> = list(EffectiveListParams.none())

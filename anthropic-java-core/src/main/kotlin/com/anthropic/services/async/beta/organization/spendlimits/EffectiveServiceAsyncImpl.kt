@@ -36,7 +36,7 @@ class EffectiveServiceAsyncImpl internal constructor(private val clientOptions: 
         params: EffectiveListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<EffectiveListPageAsync> =
-        // get /v1/organizations/spend_limits/effective?beta=true
+        // get /v1/organizations/spend_limits/effective
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -64,7 +64,6 @@ class EffectiveServiceAsyncImpl internal constructor(private val clientOptions: 
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limits", "effective")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =

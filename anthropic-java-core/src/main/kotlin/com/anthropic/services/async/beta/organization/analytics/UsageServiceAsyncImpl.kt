@@ -43,7 +43,7 @@ class UsageServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: UsageListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<UsageListPageAsync> =
-        // get /v1/organizations/analytics/usage?beta=true
+        // get /v1/organizations/analytics/usage
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -71,7 +71,6 @@ class UsageServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "usage")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)

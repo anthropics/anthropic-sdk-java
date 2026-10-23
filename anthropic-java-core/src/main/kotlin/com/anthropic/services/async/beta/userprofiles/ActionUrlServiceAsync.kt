@@ -62,9 +62,8 @@ interface ActionUrlServiceAsync {
         ): ActionUrlServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/user_profiles/{user_profile_id}/action_urls?beta=true`, but is otherwise the same as
-         * [ActionUrlServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/user_profiles/{user_profile_id}/action_urls`,
+         * but is otherwise the same as [ActionUrlServiceAsync.create].
          */
         fun create(
             userProfileId: String,

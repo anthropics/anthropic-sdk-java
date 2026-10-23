@@ -23,7 +23,8 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun create() {
-        val vaultServiceAsync = client.beta().vaults()
+        val vaultServiceAsync =
+            client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsVaultFuture =
             vaultServiceAsync.create(
@@ -45,7 +46,8 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val vaultServiceAsync = client.beta().vaults()
+        val vaultServiceAsync =
+            client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsVaultFuture =
             vaultServiceAsync.retrieve(
@@ -62,7 +64,8 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun update() {
-        val vaultServiceAsync = client.beta().vaults()
+        val vaultServiceAsync =
+            client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsVaultFuture =
             vaultServiceAsync.update(
@@ -85,7 +88,8 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun list() {
-        val vaultServiceAsync = client.beta().vaults()
+        val vaultServiceAsync =
+            client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = vaultServiceAsync.list()
 
@@ -95,7 +99,8 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun delete() {
-        val vaultServiceAsync = client.beta().vaults()
+        val vaultServiceAsync =
+            client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeletedVaultFuture =
             vaultServiceAsync.delete(
@@ -112,7 +117,8 @@ internal class VaultServiceAsyncTest {
 
     @Test
     fun archive() {
-        val vaultServiceAsync = client.beta().vaults()
+        val vaultServiceAsync =
+            client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsVaultFuture =
             vaultServiceAsync.archive(

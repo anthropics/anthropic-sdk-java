@@ -53,18 +53,18 @@ class ThreadServiceImpl internal constructor(private val clientOptions: ClientOp
         params: ThreadRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsSessionThread =
-        // get /v1/sessions/{session_id}/threads/{thread_id}?beta=true
+        // get /v1/sessions/{session_id}/threads/{thread_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(params: ThreadListParams, requestOptions: RequestOptions): ThreadListPage =
-        // get /v1/sessions/{session_id}/threads?beta=true
+        // get /v1/sessions/{session_id}/threads
         withRawResponse().list(params, requestOptions).parse()
 
     override fun archive(
         params: ThreadArchiveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsSessionThread =
-        // post /v1/sessions/{session_id}/threads/{thread_id}/archive?beta=true
+        // post /v1/sessions/{session_id}/threads/{thread_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -104,7 +104,6 @@ class ThreadServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("threads")
                     .addPathParam("threadId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -143,7 +142,6 @@ class ThreadServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("threads")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -191,7 +189,6 @@ class ThreadServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathSegments("threads")
                     .addPathParam("threadId", params._pathParam(1))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

@@ -25,7 +25,8 @@ internal class UserProfileServiceAsyncTest {
 
     @Test
     fun create() {
-        val userProfileServiceAsync = client.beta().userProfiles()
+        val userProfileServiceAsync =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val betaUserProfileFuture =
             userProfileServiceAsync.create(
@@ -61,7 +62,8 @@ internal class UserProfileServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val userProfileServiceAsync = client.beta().userProfiles()
+        val userProfileServiceAsync =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val betaUserProfileFuture =
             userProfileServiceAsync.retrieve(
@@ -78,7 +80,8 @@ internal class UserProfileServiceAsyncTest {
 
     @Test
     fun update() {
-        val userProfileServiceAsync = client.beta().userProfiles()
+        val userProfileServiceAsync =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val betaUserProfileFuture =
             userProfileServiceAsync.update(
@@ -119,7 +122,8 @@ internal class UserProfileServiceAsyncTest {
 
     @Test
     fun list() {
-        val userProfileServiceAsync = client.beta().userProfiles()
+        val userProfileServiceAsync =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = userProfileServiceAsync.list()
 
@@ -129,7 +133,8 @@ internal class UserProfileServiceAsyncTest {
 
     @Test
     fun delete() {
-        val userProfileServiceAsync = client.beta().userProfiles()
+        val userProfileServiceAsync =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedUserProfileFuture =
             userProfileServiceAsync.delete(
@@ -146,7 +151,8 @@ internal class UserProfileServiceAsyncTest {
 
     @Test
     fun createEnrollmentUrl() {
-        val userProfileServiceAsync = client.beta().userProfiles()
+        val userProfileServiceAsync =
+            client.beta().userProfiles().withOptions { it.putQueryParam("beta", "true") }
 
         val betaUserProfileEnrollmentUrlFuture =
             userProfileServiceAsync.createEnrollmentUrl(

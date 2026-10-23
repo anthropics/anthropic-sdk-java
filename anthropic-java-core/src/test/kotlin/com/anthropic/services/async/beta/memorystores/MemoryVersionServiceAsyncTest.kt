@@ -20,7 +20,10 @@ internal class MemoryVersionServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val memoryVersionServiceAsync = client.beta().memoryStores().memoryVersions()
+        val memoryVersionServiceAsync =
+            client.beta().memoryStores().memoryVersions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaManagedAgentsMemoryVersionFuture =
             memoryVersionServiceAsync.retrieve(
@@ -39,7 +42,10 @@ internal class MemoryVersionServiceAsyncTest {
 
     @Test
     fun list() {
-        val memoryVersionServiceAsync = client.beta().memoryStores().memoryVersions()
+        val memoryVersionServiceAsync =
+            client.beta().memoryStores().memoryVersions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = memoryVersionServiceAsync.list("memory_store_id")
 
@@ -49,7 +55,10 @@ internal class MemoryVersionServiceAsyncTest {
 
     @Test
     fun redact() {
-        val memoryVersionServiceAsync = client.beta().memoryStores().memoryVersions()
+        val memoryVersionServiceAsync =
+            client.beta().memoryStores().memoryVersions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaManagedAgentsMemoryVersionFuture =
             memoryVersionServiceAsync.redact(

@@ -22,7 +22,10 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val serviceAccountServiceAsync = client.beta().organization().workspaces().serviceAccounts()
+        val serviceAccountServiceAsync =
+            client.beta().organization().workspaces().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountWorkspaceMemberFuture =
             serviceAccountServiceAsync.retrieve(
@@ -39,7 +42,10 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun update() {
-        val serviceAccountServiceAsync = client.beta().organization().workspaces().serviceAccounts()
+        val serviceAccountServiceAsync =
+            client.beta().organization().workspaces().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountWorkspaceMemberFuture =
             serviceAccountServiceAsync.update(
@@ -57,7 +63,10 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun list() {
-        val serviceAccountServiceAsync = client.beta().organization().workspaces().serviceAccounts()
+        val serviceAccountServiceAsync =
+            client.beta().organization().workspaces().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = serviceAccountServiceAsync.list("workspace_id")
 
@@ -67,7 +76,10 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun add() {
-        val serviceAccountServiceAsync = client.beta().organization().workspaces().serviceAccounts()
+        val serviceAccountServiceAsync =
+            client.beta().organization().workspaces().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountWorkspaceMemberFuture =
             serviceAccountServiceAsync.add(
@@ -85,7 +97,10 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun remove() {
-        val serviceAccountServiceAsync = client.beta().organization().workspaces().serviceAccounts()
+        val serviceAccountServiceAsync =
+            client.beta().organization().workspaces().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val serviceAccountFuture =
             serviceAccountServiceAsync.remove(

@@ -22,7 +22,10 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val memberServiceAsync = client.beta().organization().workspaces().members()
+        val memberServiceAsync =
+            client.beta().organization().workspaces().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceMemberFuture =
             memberServiceAsync.retrieve(
@@ -35,7 +38,10 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun update() {
-        val memberServiceAsync = client.beta().organization().workspaces().members()
+        val memberServiceAsync =
+            client.beta().organization().workspaces().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceMemberFuture =
             memberServiceAsync.update(
@@ -52,7 +58,10 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun list() {
-        val memberServiceAsync = client.beta().organization().workspaces().members()
+        val memberServiceAsync =
+            client.beta().organization().workspaces().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = memberServiceAsync.list("workspace_id")
 
@@ -62,7 +71,10 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun add() {
-        val memberServiceAsync = client.beta().organization().workspaces().members()
+        val memberServiceAsync =
+            client.beta().organization().workspaces().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceMemberFuture =
             memberServiceAsync.add(
@@ -79,7 +91,10 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun remove() {
-        val memberServiceAsync = client.beta().organization().workspaces().members()
+        val memberServiceAsync =
+            client.beta().organization().workspaces().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val memberFuture =
             memberServiceAsync.remove(

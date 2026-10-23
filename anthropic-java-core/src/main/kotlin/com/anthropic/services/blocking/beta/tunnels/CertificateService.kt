@@ -169,8 +169,8 @@ interface CertificateService {
         ): CertificateService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/certificates?beta=true`,
-         * but is otherwise the same as [CertificateService.create].
+         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/certificates`, but is
+         * otherwise the same as [CertificateService.create].
          */
         @MustBeClosed
         fun create(
@@ -201,8 +201,8 @@ interface CertificateService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/tunnels/{tunnel_id}/certificates/{certificate_id}?beta=true`, but is otherwise the
-         * same as [CertificateService.retrieve].
+         * /v1/tunnels/{tunnel_id}/certificates/{certificate_id}`, but is otherwise the same as
+         * [CertificateService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -233,8 +233,8 @@ interface CertificateService {
         ): HttpResponseFor<BetaTunnelCertificate>
 
         /**
-         * Returns a raw HTTP response for `get /v1/tunnels/{tunnel_id}/certificates?beta=true`, but
-         * is otherwise the same as [CertificateService.list].
+         * Returns a raw HTTP response for `get /v1/tunnels/{tunnel_id}/certificates`, but is
+         * otherwise the same as [CertificateService.list].
          */
         @MustBeClosed
         fun list(tunnelId: String): HttpResponseFor<CertificateListPage> =
@@ -278,8 +278,8 @@ interface CertificateService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/tunnels/{tunnel_id}/certificates/{certificate_id}/archive?beta=true`, but is
-         * otherwise the same as [CertificateService.archive].
+         * /v1/tunnels/{tunnel_id}/certificates/{certificate_id}/archive`, but is otherwise the same
+         * as [CertificateService.archive].
          */
         @MustBeClosed
         fun archive(

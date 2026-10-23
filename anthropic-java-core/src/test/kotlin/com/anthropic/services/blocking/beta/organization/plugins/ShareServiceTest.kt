@@ -16,7 +16,10 @@ internal class ShareServiceTest {
 
     @Test
     fun list() {
-        val shareService = client.beta().organization().plugins().shares()
+        val shareService =
+            client.beta().organization().plugins().shares().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = shareService.list("plugin_id")
 

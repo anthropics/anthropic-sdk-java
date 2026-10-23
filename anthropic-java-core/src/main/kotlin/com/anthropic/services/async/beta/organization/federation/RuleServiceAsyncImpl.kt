@@ -52,35 +52,35 @@ class RuleServiceAsyncImpl internal constructor(private val clientOptions: Clien
         params: RuleCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFederationRule> =
-        // post /v1/organizations/federation_rules?beta=true
+        // post /v1/organizations/federation_rules
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: RuleRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFederationRule> =
-        // get /v1/organizations/federation_rules/{federation_rule_id}?beta=true
+        // get /v1/organizations/federation_rules/{federation_rule_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: RuleUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFederationRule> =
-        // post /v1/organizations/federation_rules/{federation_rule_id}?beta=true
+        // post /v1/organizations/federation_rules/{federation_rule_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: RuleListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<RuleListPageAsync> =
-        // get /v1/organizations/federation_rules?beta=true
+        // get /v1/organizations/federation_rules
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: RuleArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFederationRule> =
-        // post /v1/organizations/federation_rules/{federation_rule_id}/archive?beta=true
+        // post /v1/organizations/federation_rules/{federation_rule_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -114,7 +114,6 @@ class RuleServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_rules")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -161,7 +160,6 @@ class RuleServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_rules")
                     .addPathParam("federationRuleId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -201,7 +199,6 @@ class RuleServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_rules")
                     .addPathParam("federationRuleId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -238,7 +235,6 @@ class RuleServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_rules")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -287,7 +283,6 @@ class RuleServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("v1", "organizations", "federation_rules")
                     .addPathParam("federationRuleId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

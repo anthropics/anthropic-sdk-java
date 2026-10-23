@@ -31,7 +31,8 @@ internal class FileServiceAsyncTest {
 
     @Test
     fun list() {
-        val fileServiceAsync = client.beta().files()
+        val fileServiceAsync =
+            client.beta().files().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = fileServiceAsync.list()
 
@@ -41,7 +42,8 @@ internal class FileServiceAsyncTest {
 
     @Test
     fun delete() {
-        val fileServiceAsync = client.beta().files()
+        val fileServiceAsync =
+            client.beta().files().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedFileFuture =
             fileServiceAsync.delete(
@@ -59,7 +61,11 @@ internal class FileServiceAsyncTest {
     @Test
     fun download(wmRuntimeInfo: WireMockRuntimeInfo) {
         val fileServiceAsync =
-            client.beta().files().withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
+            client
+                .beta()
+                .files()
+                .withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
+                .withOptions { it.putQueryParam("beta", "true") }
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
         val responseFuture =
@@ -77,7 +83,8 @@ internal class FileServiceAsyncTest {
 
     @Test
     fun retrieveMetadata() {
-        val fileServiceAsync = client.beta().files()
+        val fileServiceAsync =
+            client.beta().files().withOptions { it.putQueryParam("beta", "true") }
 
         val betaFileMetadataFuture =
             fileServiceAsync.retrieveMetadata(
@@ -94,7 +101,8 @@ internal class FileServiceAsyncTest {
 
     @Test
     fun upload() {
-        val fileServiceAsync = client.beta().files()
+        val fileServiceAsync =
+            client.beta().files().withOptions { it.putQueryParam("beta", "true") }
 
         val betaFileMetadataFuture =
             fileServiceAsync.upload(

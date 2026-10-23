@@ -67,42 +67,42 @@ class MemoryStoreServiceAsyncImpl internal constructor(private val clientOptions
         params: MemoryStoreCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsMemoryStore> =
-        // post /v1/memory_stores?beta=true
+        // post /v1/memory_stores
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: MemoryStoreRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsMemoryStore> =
-        // get /v1/memory_stores/{memory_store_id}?beta=true
+        // get /v1/memory_stores/{memory_store_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: MemoryStoreUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsMemoryStore> =
-        // post /v1/memory_stores/{memory_store_id}?beta=true
+        // post /v1/memory_stores/{memory_store_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: MemoryStoreListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MemoryStoreListPageAsync> =
-        // get /v1/memory_stores?beta=true
+        // get /v1/memory_stores
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: MemoryStoreDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeletedMemoryStore> =
-        // delete /v1/memory_stores/{memory_store_id}?beta=true
+        // delete /v1/memory_stores/{memory_store_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun archive(
         params: MemoryStoreArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsMemoryStore> =
-        // post /v1/memory_stores/{memory_store_id}/archive?beta=true
+        // post /v1/memory_stores/{memory_store_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -142,7 +142,6 @@ class MemoryStoreServiceAsyncImpl internal constructor(private val clientOptions
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "memory_stores")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -185,7 +184,6 @@ class MemoryStoreServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -226,7 +224,6 @@ class MemoryStoreServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -264,7 +261,6 @@ class MemoryStoreServiceAsyncImpl internal constructor(private val clientOptions
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "memory_stores")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -313,7 +309,6 @@ class MemoryStoreServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -356,7 +351,6 @@ class MemoryStoreServiceAsyncImpl internal constructor(private val clientOptions
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

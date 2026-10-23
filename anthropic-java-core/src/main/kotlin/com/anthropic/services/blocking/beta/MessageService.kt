@@ -197,8 +197,8 @@ interface MessageService {
         fun batches(): BatchService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
-         * as [MessageService.create].
+         * Returns a raw HTTP response for `post /v1/messages`, but is otherwise the same as
+         * [MessageService.create].
          */
         @MustBeClosed
         fun create(params: MessageCreateParams): HttpResponseFor<BetaMessage> =
@@ -212,8 +212,8 @@ interface MessageService {
         ): HttpResponseFor<BetaMessage>
 
         /**
-         * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
-         * as [MessageService.createStreaming].
+         * Returns a raw HTTP response for `post /v1/messages`, but is otherwise the same as
+         * [MessageService.createStreaming].
          */
         @MustBeClosed
         fun createStreaming(
@@ -229,8 +229,8 @@ interface MessageService {
         ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>>
 
         /**
-         * Returns a raw HTTP response for `post /v1/messages/count_tokens?beta=true`, but is
-         * otherwise the same as [MessageService.countTokens].
+         * Returns a raw HTTP response for `post /v1/messages/count_tokens`, but is otherwise the
+         * same as [MessageService.countTokens].
          */
         @MustBeClosed
         fun countTokens(params: MessageCountTokensParams): HttpResponseFor<BetaMessageTokensCount> =

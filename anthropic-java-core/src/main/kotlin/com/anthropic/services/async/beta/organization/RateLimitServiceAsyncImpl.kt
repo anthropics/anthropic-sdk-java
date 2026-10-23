@@ -36,7 +36,7 @@ class RateLimitServiceAsyncImpl internal constructor(private val clientOptions: 
         params: RateLimitListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<RateLimitListPageAsync> =
-        // get /v1/organizations/rate_limits?beta=true
+        // get /v1/organizations/rate_limits
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -64,7 +64,6 @@ class RateLimitServiceAsyncImpl internal constructor(private val clientOptions: 
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rate_limits")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =

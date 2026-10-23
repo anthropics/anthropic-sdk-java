@@ -177,9 +177,8 @@ interface SpendLimitServiceAsync {
         fun increaseRequests(): IncreaseRequestServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/spend_limits/{spend_limit_id}?beta=true`, but is otherwise the same as
-         * [SpendLimitServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/spend_limits/{spend_limit_id}`,
+         * but is otherwise the same as [SpendLimitServiceAsync.retrieve].
          */
         fun retrieve(spendLimitId: String): CompletableFuture<HttpResponseFor<BetaSpendLimit>> =
             retrieve(spendLimitId, SpendLimitRetrieveParams.none())
@@ -219,8 +218,8 @@ interface SpendLimitServiceAsync {
             retrieve(spendLimitId, SpendLimitRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/spend_limits?beta=true`, but is
-         * otherwise the same as [SpendLimitServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/spend_limits`, but is otherwise
+         * the same as [SpendLimitServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<SpendLimitListPageAsync>> =
             list(SpendLimitListParams.none())
@@ -244,9 +243,8 @@ interface SpendLimitServiceAsync {
             list(SpendLimitListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete
-         * /v1/organizations/spend_limits/{spend_limit_id}?beta=true`, but is otherwise the same as
-         * [SpendLimitServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/organizations/spend_limits/{spend_limit_id}`,
+         * but is otherwise the same as [SpendLimitServiceAsync.delete].
          */
         fun delete(
             spendLimitId: String
@@ -288,8 +286,8 @@ interface SpendLimitServiceAsync {
             delete(spendLimitId, SpendLimitDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/spend_limits?beta=true`, but is
-         * otherwise the same as [SpendLimitServiceAsync.set].
+         * Returns a raw HTTP response for `post /v1/organizations/spend_limits`, but is otherwise
+         * the same as [SpendLimitServiceAsync.set].
          */
         fun set(params: SpendLimitSetParams): CompletableFuture<HttpResponseFor<BetaSpendLimit>> =
             set(params, RequestOptions.none())

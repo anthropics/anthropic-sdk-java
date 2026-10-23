@@ -51,28 +51,28 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: SkillCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSkill> =
-        // post /v1/skills?beta=true
+        // post /v1/skills
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: SkillRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSkill> =
-        // get /v1/skills/{skill_id}?beta=true
+        // get /v1/skills/{skill_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: SkillListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<SkillListPageAsync> =
-        // get /v1/skills?beta=true
+        // get /v1/skills
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: SkillDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDeletedSkill> =
-        // delete /v1/skills/{skill_id}?beta=true
+        // delete /v1/skills/{skill_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -106,7 +106,6 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "skills")
-                    .putQueryParam("beta", "true")
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -148,7 +147,6 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "skills")
                     .addPathParam("skillId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -184,7 +182,6 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "skills")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -232,7 +229,6 @@ class SkillServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "skills")
                     .addPathParam("skillId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

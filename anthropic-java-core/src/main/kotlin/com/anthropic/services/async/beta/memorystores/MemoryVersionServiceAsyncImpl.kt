@@ -49,22 +49,21 @@ class MemoryVersionServiceAsyncImpl internal constructor(private val clientOptio
         params: MemoryVersionRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsMemoryVersion> =
-        // get /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}?beta=true
+        // get /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: MemoryVersionListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MemoryVersionListPageAsync> =
-        // get /v1/memory_stores/{memory_store_id}/memory_versions?beta=true
+        // get /v1/memory_stores/{memory_store_id}/memory_versions
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun redact(
         params: MemoryVersionRedactParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsMemoryVersion> =
-        // post
-        // /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}/redact?beta=true
+        // post /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}/redact
         withRawResponse().redact(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -98,7 +97,6 @@ class MemoryVersionServiceAsyncImpl internal constructor(private val clientOptio
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memory_versions")
                     .addPathParam("memoryVersionId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -140,7 +138,6 @@ class MemoryVersionServiceAsyncImpl internal constructor(private val clientOptio
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memory_versions")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -192,7 +189,6 @@ class MemoryVersionServiceAsyncImpl internal constructor(private val clientOptio
                     .addPathSegments("memory_versions")
                     .addPathParam("memoryVersionId", params._pathParam(1))
                     .addPathSegments("redact")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

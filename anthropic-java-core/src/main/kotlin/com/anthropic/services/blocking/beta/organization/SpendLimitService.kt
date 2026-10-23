@@ -165,9 +165,8 @@ interface SpendLimitService {
         fun increaseRequests(): IncreaseRequestService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/spend_limits/{spend_limit_id}?beta=true`, but is otherwise the same as
-         * [SpendLimitService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/spend_limits/{spend_limit_id}`,
+         * but is otherwise the same as [SpendLimitService.retrieve].
          */
         @MustBeClosed
         fun retrieve(spendLimitId: String): HttpResponseFor<BetaSpendLimit> =
@@ -210,8 +209,8 @@ interface SpendLimitService {
             retrieve(spendLimitId, SpendLimitRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/spend_limits?beta=true`, but is
-         * otherwise the same as [SpendLimitService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/spend_limits`, but is otherwise
+         * the same as [SpendLimitService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<SpendLimitListPage> = list(SpendLimitListParams.none())
@@ -235,9 +234,8 @@ interface SpendLimitService {
             list(SpendLimitListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete
-         * /v1/organizations/spend_limits/{spend_limit_id}?beta=true`, but is otherwise the same as
-         * [SpendLimitService.delete].
+         * Returns a raw HTTP response for `delete /v1/organizations/spend_limits/{spend_limit_id}`,
+         * but is otherwise the same as [SpendLimitService.delete].
          */
         @MustBeClosed
         fun delete(spendLimitId: String): HttpResponseFor<SpendLimitDeleteResponse> =
@@ -281,8 +279,8 @@ interface SpendLimitService {
             delete(spendLimitId, SpendLimitDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/spend_limits?beta=true`, but is
-         * otherwise the same as [SpendLimitService.set].
+         * Returns a raw HTTP response for `post /v1/organizations/spend_limits`, but is otherwise
+         * the same as [SpendLimitService.set].
          */
         @MustBeClosed
         fun set(params: SpendLimitSetParams): HttpResponseFor<BetaSpendLimit> =

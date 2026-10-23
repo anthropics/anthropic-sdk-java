@@ -147,8 +147,8 @@ interface UserServiceAsync {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/users/{user_id}?beta=true`, but is
-         * otherwise the same as [UserServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/users/{user_id}`, but is otherwise
+         * the same as [UserServiceAsync.retrieve].
          */
         fun retrieve(userId: String): CompletableFuture<HttpResponseFor<BetaOrganizationUser>> =
             retrieve(userId, UserRetrieveParams.none())
@@ -188,8 +188,8 @@ interface UserServiceAsync {
             retrieve(userId, UserRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/users/{user_id}?beta=true`, but
-         * is otherwise the same as [UserServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/organizations/users/{user_id}`, but is
+         * otherwise the same as [UserServiceAsync.update].
          */
         fun update(
             userId: String,
@@ -218,8 +218,8 @@ interface UserServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaOrganizationUser>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/users?beta=true`, but is otherwise
-         * the same as [UserServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/users`, but is otherwise the same
+         * as [UserServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<UserListPageAsync>> =
             list(UserListParams.none())
@@ -243,8 +243,8 @@ interface UserServiceAsync {
             list(UserListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/organizations/users/{user_id}?beta=true`, but
-         * is otherwise the same as [UserServiceAsync.remove].
+         * Returns a raw HTTP response for `delete /v1/organizations/users/{user_id}`, but is
+         * otherwise the same as [UserServiceAsync.remove].
          */
         fun remove(userId: String): CompletableFuture<HttpResponseFor<UserRemoveResponse>> =
             remove(userId, UserRemoveParams.none())

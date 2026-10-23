@@ -16,7 +16,10 @@ internal class PluginServiceAsyncTest {
 
     @Test
     fun list() {
-        val pluginServiceAsync = client.beta().organization().analytics().plugins()
+        val pluginServiceAsync =
+            client.beta().organization().analytics().plugins().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = pluginServiceAsync.list()
 

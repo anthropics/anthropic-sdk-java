@@ -41,14 +41,14 @@ class RateLimitServiceAsyncImpl internal constructor(private val clientOptions: 
         params: RateLimitUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaWorkspaceRateLimit> =
-        // post /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}?beta=true
+        // post /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: RateLimitListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<RateLimitListPageAsync> =
-        // get /v1/organizations/workspaces/{workspace_id}/rate_limits?beta=true
+        // get /v1/organizations/workspaces/{workspace_id}/rate_limits
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -82,7 +82,6 @@ class RateLimitServiceAsyncImpl internal constructor(private val clientOptions: 
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("rate_limits")
                     .addPathParam("rateLimitId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -124,7 +123,6 @@ class RateLimitServiceAsyncImpl internal constructor(private val clientOptions: 
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("rate_limits")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =

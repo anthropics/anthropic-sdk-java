@@ -166,7 +166,7 @@ interface FileServiceAsync {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/files?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/files`, but is otherwise the same as
          * [FileServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<FileListPageAsync>> =
@@ -191,8 +191,8 @@ interface FileServiceAsync {
             list(FileListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/files/{file_id}?beta=true`, but is otherwise
-         * the same as [FileServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/files/{file_id}`, but is otherwise the same
+         * as [FileServiceAsync.delete].
          */
         fun delete(fileId: String): CompletableFuture<HttpResponseFor<BetaDeletedFile>> =
             delete(fileId, FileDeleteParams.none())
@@ -230,8 +230,8 @@ interface FileServiceAsync {
             delete(fileId, FileDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/files/{file_id}/content?beta=true`, but is
-         * otherwise the same as [FileServiceAsync.download].
+         * Returns a raw HTTP response for `get /v1/files/{file_id}/content`, but is otherwise the
+         * same as [FileServiceAsync.download].
          */
         fun download(fileId: String): CompletableFuture<HttpResponse> =
             download(fileId, FileDownloadParams.none())
@@ -268,8 +268,8 @@ interface FileServiceAsync {
             download(fileId, FileDownloadParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/files/{file_id}?beta=true`, but is otherwise the
-         * same as [FileServiceAsync.retrieveMetadata].
+         * Returns a raw HTTP response for `get /v1/files/{file_id}`, but is otherwise the same as
+         * [FileServiceAsync.retrieveMetadata].
          */
         fun retrieveMetadata(fileId: String): CompletableFuture<HttpResponseFor<BetaFileMetadata>> =
             retrieveMetadata(fileId, FileRetrieveMetadataParams.none())
@@ -309,7 +309,7 @@ interface FileServiceAsync {
             retrieveMetadata(fileId, FileRetrieveMetadataParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/files?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `post /v1/files`, but is otherwise the same as
          * [FileServiceAsync.upload].
          */
         fun upload(params: FileUploadParams): CompletableFuture<HttpResponseFor<BetaFileMetadata>> =

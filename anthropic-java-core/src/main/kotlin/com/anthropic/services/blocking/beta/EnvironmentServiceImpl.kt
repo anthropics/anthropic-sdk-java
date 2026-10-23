@@ -57,42 +57,42 @@ class EnvironmentServiceImpl internal constructor(private val clientOptions: Cli
         params: EnvironmentCreateParams,
         requestOptions: RequestOptions,
     ): BetaEnvironment =
-        // post /v1/environments?beta=true
+        // post /v1/environments
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: EnvironmentRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaEnvironment =
-        // get /v1/environments/{environment_id}?beta=true
+        // get /v1/environments/{environment_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: EnvironmentUpdateParams,
         requestOptions: RequestOptions,
     ): BetaEnvironment =
-        // post /v1/environments/{environment_id}?beta=true
+        // post /v1/environments/{environment_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: EnvironmentListParams,
         requestOptions: RequestOptions,
     ): EnvironmentListPage =
-        // get /v1/environments?beta=true
+        // get /v1/environments
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: EnvironmentDeleteParams,
         requestOptions: RequestOptions,
     ): BetaEnvironmentDeleteResponse =
-        // delete /v1/environments/{environment_id}?beta=true
+        // delete /v1/environments/{environment_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun archive(
         params: EnvironmentArchiveParams,
         requestOptions: RequestOptions,
     ): BetaEnvironment =
-        // post /v1/environments/{environment_id}/archive?beta=true
+        // post /v1/environments/{environment_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -126,7 +126,6 @@ class EnvironmentServiceImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "environments")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -166,7 +165,6 @@ class EnvironmentServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -204,7 +202,6 @@ class EnvironmentServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -239,7 +236,6 @@ class EnvironmentServiceImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "environments")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -284,7 +280,6 @@ class EnvironmentServiceImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -324,7 +319,6 @@ class EnvironmentServiceImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

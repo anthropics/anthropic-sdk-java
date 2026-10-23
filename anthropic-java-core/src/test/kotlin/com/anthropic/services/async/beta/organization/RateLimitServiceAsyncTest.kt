@@ -16,7 +16,10 @@ internal class RateLimitServiceAsyncTest {
 
     @Test
     fun list() {
-        val rateLimitServiceAsync = client.beta().organization().rateLimits()
+        val rateLimitServiceAsync =
+            client.beta().organization().rateLimits().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = rateLimitServiceAsync.list()
 

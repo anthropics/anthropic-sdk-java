@@ -49,8 +49,8 @@ interface ArtifactService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ArtifactService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/artifacts?beta=true`,
-         * but is otherwise the same as [ArtifactService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/artifacts`, but is
+         * otherwise the same as [ArtifactService.list].
          */
         @MustBeClosed
         fun list(params: ArtifactListParams): HttpResponseFor<ArtifactListPage> =

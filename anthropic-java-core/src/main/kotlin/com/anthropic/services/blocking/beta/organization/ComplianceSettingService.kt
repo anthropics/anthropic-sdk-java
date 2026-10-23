@@ -87,8 +87,8 @@ interface ComplianceSettingService {
         ): ComplianceSettingService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/compliance_settings?beta=true`,
-         * but is otherwise the same as [ComplianceSettingService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/compliance_settings`, but is
+         * otherwise the same as [ComplianceSettingService.retrieve].
          */
         @MustBeClosed
         fun retrieve(): HttpResponseFor<BetaComplianceSettings> =
@@ -113,8 +113,8 @@ interface ComplianceSettingService {
             retrieve(ComplianceSettingRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/compliance_settings?beta=true`,
-         * but is otherwise the same as [ComplianceSettingService.update].
+         * Returns a raw HTTP response for `post /v1/organizations/compliance_settings`, but is
+         * otherwise the same as [ComplianceSettingService.update].
          */
         @MustBeClosed
         fun update(params: ComplianceSettingUpdateParams): HttpResponseFor<BetaComplianceSettings> =

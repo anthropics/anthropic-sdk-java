@@ -291,8 +291,8 @@ interface DeploymentServiceAsync {
         ): DeploymentServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments?beta=true`, but is otherwise the
-         * same as [DeploymentServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/deployments`, but is otherwise the same as
+         * [DeploymentServiceAsync.create].
          */
         fun create(
             params: DeploymentCreateParams
@@ -306,8 +306,8 @@ interface DeploymentServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsDeployment>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/deployments/{deployment_id}?beta=true`, but is
-         * otherwise the same as [DeploymentServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/deployments/{deployment_id}`, but is otherwise
+         * the same as [DeploymentServiceAsync.retrieve].
          */
         fun retrieve(
             deploymentId: String
@@ -349,8 +349,8 @@ interface DeploymentServiceAsync {
             retrieve(deploymentId, DeploymentRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}?beta=true`, but is
-         * otherwise the same as [DeploymentServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}`, but is otherwise
+         * the same as [DeploymentServiceAsync.update].
          */
         fun update(
             deploymentId: String
@@ -392,8 +392,8 @@ interface DeploymentServiceAsync {
             update(deploymentId, DeploymentUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/deployments?beta=true`, but is otherwise the
-         * same as [DeploymentServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/deployments`, but is otherwise the same as
+         * [DeploymentServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<DeploymentListPageAsync>> =
             list(DeploymentListParams.none())
@@ -417,8 +417,8 @@ interface DeploymentServiceAsync {
             list(DeploymentListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/archive?beta=true`,
-         * but is otherwise the same as [DeploymentServiceAsync.archive].
+         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/archive`, but is
+         * otherwise the same as [DeploymentServiceAsync.archive].
          */
         fun archive(
             deploymentId: String
@@ -460,8 +460,8 @@ interface DeploymentServiceAsync {
             archive(deploymentId, DeploymentArchiveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/pause?beta=true`,
-         * but is otherwise the same as [DeploymentServiceAsync.pause].
+         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/pause`, but is
+         * otherwise the same as [DeploymentServiceAsync.pause].
          */
         fun pause(
             deploymentId: String
@@ -503,8 +503,8 @@ interface DeploymentServiceAsync {
             pause(deploymentId, DeploymentPauseParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/run?beta=true`, but
-         * is otherwise the same as [DeploymentServiceAsync.run].
+         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/run`, but is
+         * otherwise the same as [DeploymentServiceAsync.run].
          */
         fun run(
             deploymentId: String
@@ -546,8 +546,8 @@ interface DeploymentServiceAsync {
             run(deploymentId, DeploymentRunParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/unpause?beta=true`,
-         * but is otherwise the same as [DeploymentServiceAsync.unpause].
+         * Returns a raw HTTP response for `post /v1/deployments/{deployment_id}/unpause`, but is
+         * otherwise the same as [DeploymentServiceAsync.unpause].
          */
         fun unpause(
             deploymentId: String

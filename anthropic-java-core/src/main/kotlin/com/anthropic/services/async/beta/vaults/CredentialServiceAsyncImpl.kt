@@ -55,49 +55,49 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
         params: CredentialCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsCredential> =
-        // post /v1/vaults/{vault_id}/credentials?beta=true
+        // post /v1/vaults/{vault_id}/credentials
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: CredentialRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsCredential> =
-        // get /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true
+        // get /v1/vaults/{vault_id}/credentials/{credential_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: CredentialUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsCredential> =
-        // post /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true
+        // post /v1/vaults/{vault_id}/credentials/{credential_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: CredentialListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<CredentialListPageAsync> =
-        // get /v1/vaults/{vault_id}/credentials?beta=true
+        // get /v1/vaults/{vault_id}/credentials
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: CredentialDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeletedCredential> =
-        // delete /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true
+        // delete /v1/vaults/{vault_id}/credentials/{credential_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun archive(
         params: CredentialArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsCredential> =
-        // post /v1/vaults/{vault_id}/credentials/{credential_id}/archive?beta=true
+        // post /v1/vaults/{vault_id}/credentials/{credential_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     override fun mcpOAuthValidate(
         params: CredentialMcpOAuthValidateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsCredentialValidation> =
-        // post /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate?beta=true
+        // post /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate
         withRawResponse().mcpOAuthValidate(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -130,7 +130,6 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("credentials")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -180,7 +179,6 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("credentials")
                     .addPathParam("credentialId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -223,7 +221,6 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("credentials")
                     .addPathParam("credentialId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -266,7 +263,6 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("credentials")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -317,7 +313,6 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("credentials")
                     .addPathParam("credentialId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -362,7 +357,6 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathSegments("credentials")
                     .addPathParam("credentialId", params._pathParam(1))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -407,7 +401,6 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathSegments("credentials")
                     .addPathParam("credentialId", params._pathParam(1))
                     .addPathSegments("mcp_oauth_validate")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

@@ -46,14 +46,14 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
         EventServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: EventListParams, requestOptions: RequestOptions): EventListPage =
-        // get /v1/sessions/{session_id}/threads/{thread_id}/events?beta=true
+        // get /v1/sessions/{session_id}/threads/{thread_id}/events
         withRawResponse().list(params, requestOptions).parse()
 
     override fun streamStreaming(
         params: EventStreamParams,
         requestOptions: RequestOptions,
     ): StreamResponse<BetaManagedAgentsStreamSessionThreadEvents> =
-        // get /v1/sessions/{session_id}/threads/{thread_id}/stream?beta=true
+        // get /v1/sessions/{session_id}/threads/{thread_id}/stream
         withRawResponse().streamStreaming(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -88,7 +88,6 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("threads")
                     .addPathParam("threadId", params._pathParam(1))
                     .addPathSegments("events")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
@@ -138,7 +137,6 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("threads")
                     .addPathParam("threadId", params._pathParam(1))
                     .addPathSegments("stream")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "text/event-stream")
                     .build()
