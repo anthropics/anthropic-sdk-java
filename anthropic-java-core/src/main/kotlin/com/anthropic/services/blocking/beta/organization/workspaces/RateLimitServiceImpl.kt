@@ -39,14 +39,14 @@ class RateLimitServiceImpl internal constructor(private val clientOptions: Clien
         params: RateLimitUpdateParams,
         requestOptions: RequestOptions,
     ): BetaWorkspaceRateLimit =
-        // post /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}?beta=true
+        // post /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: RateLimitListParams,
         requestOptions: RequestOptions,
     ): RateLimitListPage =
-        // get /v1/organizations/workspaces/{workspace_id}/rate_limits?beta=true
+        // get /v1/organizations/workspaces/{workspace_id}/rate_limits
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -80,11 +80,13 @@ class RateLimitServiceImpl internal constructor(private val clientOptions: Clien
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("rate_limits")
                     .addPathParam("rateLimitId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -116,10 +118,12 @@ class RateLimitServiceImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("rate_limits")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

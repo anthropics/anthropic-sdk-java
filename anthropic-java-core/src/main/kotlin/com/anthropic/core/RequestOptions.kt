@@ -15,6 +15,11 @@ private constructor(
     private val fallbackState: BetaFallbackState?,
     private val openTelemetry: OpenTelemetryRequestOptions?,
     /**
+     * The query pairs that tell the operation apart from the others with its path in the OpenAPI
+     * document. Set by the SDK method that makes the request.
+     */
+    @get:JvmSynthetic val qualifiers: Map<String, String>? = null,
+    /**
      * The accumulator that an SDK helper feeds with the events of the API call's streamed Message
      * as the application reads them. The call's span reads the Message from it, in place of an
      * accumulator of its own, so that the stream is accumulated once.
@@ -94,7 +99,7 @@ private constructor(
             """
             Streaming is required for operations that may take longer than 10 minutes.
 
-            See https://github.com/anthropics/anthropic-sdk-java#streaming for more details.
+            See https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/java#streaming for more details.
             """
                 .trimIndent()
         }
@@ -113,9 +118,15 @@ private constructor(
             followRedirects = followRedirects ?: options.followRedirects,
             fallbackState = fallbackState ?: options.fallbackState,
             openTelemetry = openTelemetry ?: options.openTelemetry,
+            qualifiers = qualifiers ?: options.qualifiers,
             streamAccumulator = streamAccumulator ?: options.streamAccumulator,
             apiCallOtelContext = apiCallOtelContext ?: options.apiCallOtelContext,
         )
+
+    /** These options for a request to the operation that [qualifiers] tell apart. */
+    @JvmSynthetic
+    internal fun withQualifiers(qualifiers: Map<String, String>): RequestOptions =
+        copy(qualifiers = qualifiers)
 
     /**
      * These options for an API call whose streamed Message an SDK helper accumulates in
@@ -131,6 +142,7 @@ private constructor(
         copy(apiCallOtelContext = apiCallOtelContext)
 
     private fun copy(
+        qualifiers: Map<String, String>? = this.qualifiers,
         streamAccumulator: BetaMessageAccumulator? = this.streamAccumulator,
         apiCallOtelContext: Context? = this.apiCallOtelContext,
     ): RequestOptions =
@@ -140,6 +152,7 @@ private constructor(
             followRedirects,
             fallbackState,
             openTelemetry,
+            qualifiers,
             streamAccumulator,
             apiCallOtelContext,
         )
@@ -151,6 +164,7 @@ private constructor(
         private var followRedirects: Boolean? = null
         private var fallbackState: BetaFallbackState? = null
         private var openTelemetry: OpenTelemetryRequestOptions? = null
+        private var qualifiers: Map<String, String>? = null
         private var streamAccumulator: BetaMessageAccumulator? = null
         private var apiCallOtelContext: Context? = null
 
@@ -161,6 +175,7 @@ private constructor(
             followRedirects = requestOptions.followRedirects
             fallbackState = requestOptions.fallbackState
             openTelemetry = requestOptions.openTelemetry
+            qualifiers = requestOptions.qualifiers
             streamAccumulator = requestOptions.streamAccumulator
             apiCallOtelContext = requestOptions.apiCallOtelContext
         }
@@ -248,6 +263,7 @@ private constructor(
                 followRedirects,
                 fallbackState,
                 openTelemetry,
+                qualifiers,
                 streamAccumulator,
                 apiCallOtelContext,
             )

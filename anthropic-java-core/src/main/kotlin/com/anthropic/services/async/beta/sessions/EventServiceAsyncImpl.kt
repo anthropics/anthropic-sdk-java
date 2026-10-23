@@ -56,21 +56,21 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: EventListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<EventListPageAsync> =
-        // get /v1/sessions/{session_id}/events?beta=true
+        // get /v1/sessions/{session_id}/events
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun send(
         params: EventSendParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsSendSessionEvents> =
-        // post /v1/sessions/{session_id}/events?beta=true
+        // post /v1/sessions/{session_id}/events
         withRawResponse().send(params, requestOptions).thenParse()
 
     override fun streamStreaming(
         params: EventStreamParams,
         requestOptions: RequestOptions,
     ): AsyncStreamResponse<BetaManagedAgentsStreamSessionEvents> =
-        // get /v1/sessions/{session_id}/events/stream?beta=true
+        // get /v1/sessions/{session_id}/events/stream
         withRawResponse()
             .streamStreaming(params, requestOptions)
             .thenApply { it.parse() }
@@ -106,11 +106,13 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("events")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -153,12 +155,14 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("events")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -196,12 +200,14 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("events", "stream")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "text/event-stream")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

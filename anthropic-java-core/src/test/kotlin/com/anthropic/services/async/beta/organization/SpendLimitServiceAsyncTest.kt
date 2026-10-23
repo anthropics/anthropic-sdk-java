@@ -19,7 +19,10 @@ internal class SpendLimitServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val spendLimitServiceAsync = client.beta().organization().spendLimits()
+        val spendLimitServiceAsync =
+            client.beta().organization().spendLimits().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaSpendLimitFuture = spendLimitServiceAsync.retrieve("spend_limit_id")
 
@@ -29,7 +32,10 @@ internal class SpendLimitServiceAsyncTest {
 
     @Test
     fun list() {
-        val spendLimitServiceAsync = client.beta().organization().spendLimits()
+        val spendLimitServiceAsync =
+            client.beta().organization().spendLimits().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = spendLimitServiceAsync.list()
 
@@ -39,7 +45,10 @@ internal class SpendLimitServiceAsyncTest {
 
     @Test
     fun delete() {
-        val spendLimitServiceAsync = client.beta().organization().spendLimits()
+        val spendLimitServiceAsync =
+            client.beta().organization().spendLimits().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val spendLimitFuture = spendLimitServiceAsync.delete("spend_limit_id")
 
@@ -49,7 +58,10 @@ internal class SpendLimitServiceAsyncTest {
 
     @Test
     fun set() {
-        val spendLimitServiceAsync = client.beta().organization().spendLimits()
+        val spendLimitServiceAsync =
+            client.beta().organization().spendLimits().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaSpendLimitFuture =
             spendLimitServiceAsync.set(

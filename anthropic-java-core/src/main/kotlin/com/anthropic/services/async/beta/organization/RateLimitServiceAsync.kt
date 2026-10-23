@@ -64,8 +64,8 @@ interface RateLimitServiceAsync {
         ): RateLimitServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/rate_limits?beta=true`, but is
-         * otherwise the same as [RateLimitServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/rate_limits`, but is otherwise the
+         * same as [RateLimitServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<RateLimitListPageAsync>> =
             list(RateLimitListParams.none())

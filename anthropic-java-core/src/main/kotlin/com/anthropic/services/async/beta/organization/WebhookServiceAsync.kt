@@ -293,8 +293,8 @@ interface WebhookServiceAsync {
         ): WebhookServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/webhooks?beta=true`, but is
-         * otherwise the same as [WebhookServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/webhooks`, but is otherwise the
+         * same as [WebhookServiceAsync.create].
          */
         fun create(
             params: WebhookCreateParams
@@ -308,9 +308,8 @@ interface WebhookServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaNewOrganizationWebhookEndpoint>>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true`, but is otherwise the same as
-         * [WebhookServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/webhooks/{webhook_endpoint_id}`,
+         * but is otherwise the same as [WebhookServiceAsync.retrieve].
          */
         fun retrieve(
             webhookEndpointId: String
@@ -355,9 +354,8 @@ interface WebhookServiceAsync {
             retrieve(webhookEndpointId, WebhookRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true`, but is otherwise the same as
-         * [WebhookServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/organizations/webhooks/{webhook_endpoint_id}`,
+         * but is otherwise the same as [WebhookServiceAsync.update].
          */
         fun update(
             webhookEndpointId: String
@@ -399,8 +397,8 @@ interface WebhookServiceAsync {
             update(webhookEndpointId, WebhookUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/webhooks?beta=true`, but is
-         * otherwise the same as [WebhookServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/webhooks`, but is otherwise the
+         * same as [WebhookServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<WebhookListPageAsync>> =
             list(WebhookListParams.none())
@@ -425,7 +423,7 @@ interface WebhookServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true`, but is otherwise the same as
+         * /v1/organizations/webhooks/{webhook_endpoint_id}`, but is otherwise the same as
          * [WebhookServiceAsync.delete].
          */
         fun delete(
@@ -469,8 +467,8 @@ interface WebhookServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/webhooks/{webhook_endpoint_id}/regenerate_signing_secret?beta=true`,
-         * but is otherwise the same as [WebhookServiceAsync.regenerateSigningSecret].
+         * /v1/organizations/webhooks/{webhook_endpoint_id}/regenerate_signing_secret`, but is
+         * otherwise the same as [WebhookServiceAsync.regenerateSigningSecret].
          */
         fun regenerateSigningSecret(
             webhookEndpointId: String

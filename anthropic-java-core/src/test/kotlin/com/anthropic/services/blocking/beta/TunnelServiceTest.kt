@@ -22,7 +22,7 @@ internal class TunnelServiceTest {
 
     @Test
     fun create() {
-        val tunnelService = client.beta().tunnels()
+        val tunnelService = client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnel =
             tunnelService.create(
@@ -38,7 +38,7 @@ internal class TunnelServiceTest {
 
     @Test
     fun retrieve() {
-        val tunnelService = client.beta().tunnels()
+        val tunnelService = client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnel =
             tunnelService.retrieve(
@@ -54,7 +54,7 @@ internal class TunnelServiceTest {
 
     @Test
     fun list() {
-        val tunnelService = client.beta().tunnels()
+        val tunnelService = client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val page = tunnelService.list()
 
@@ -63,7 +63,7 @@ internal class TunnelServiceTest {
 
     @Test
     fun archive() {
-        val tunnelService = client.beta().tunnels()
+        val tunnelService = client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnel =
             tunnelService.archive(
@@ -79,7 +79,7 @@ internal class TunnelServiceTest {
 
     @Test
     fun revealToken() {
-        val tunnelService = client.beta().tunnels()
+        val tunnelService = client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnelToken =
             tunnelService.revealToken(
@@ -95,7 +95,7 @@ internal class TunnelServiceTest {
 
     @Test
     fun rotateToken() {
-        val tunnelService = client.beta().tunnels()
+        val tunnelService = client.beta().tunnels().withOptions { it.putQueryParam("beta", "true") }
 
         val betaTunnelToken =
             tunnelService.rotateToken(

@@ -16,7 +16,10 @@ internal class SkillServiceAsyncTest {
 
     @Test
     fun list() {
-        val skillServiceAsync = client.beta().organization().analytics().skills()
+        val skillServiceAsync =
+            client.beta().organization().analytics().skills().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = skillServiceAsync.list()
 

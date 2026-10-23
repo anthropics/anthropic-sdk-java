@@ -362,6 +362,11 @@ anthropic:
     active: true
     excludes: *api_excludes
 
+  # The caller opts into environment reads by calling `fromEnv()`.
+  EnvironmentReadOutsideFromEnv:
+    active: true
+    excludes: *api_excludes
+
   # Test classes are `internal class`.
   TestClassMustBeInternal:
     active: true

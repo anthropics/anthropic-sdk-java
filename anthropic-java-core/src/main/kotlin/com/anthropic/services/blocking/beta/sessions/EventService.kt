@@ -131,8 +131,8 @@ interface EventService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): EventService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/events?beta=true`, but is
-         * otherwise the same as [EventService.list].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/events`, but is otherwise
+         * the same as [EventService.list].
          */
         @MustBeClosed
         fun list(sessionId: String): HttpResponseFor<EventListPage> =
@@ -174,8 +174,8 @@ interface EventService {
         ): HttpResponseFor<EventListPage> = list(sessionId, EventListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/events?beta=true`, but is
-         * otherwise the same as [EventService.send].
+         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/events`, but is otherwise
+         * the same as [EventService.send].
          */
         @MustBeClosed
         fun send(
@@ -206,8 +206,8 @@ interface EventService {
         ): HttpResponseFor<BetaManagedAgentsSendSessionEvents>
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/events/stream?beta=true`,
-         * but is otherwise the same as [EventService.streamStreaming].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/events/stream`, but is
+         * otherwise the same as [EventService.streamStreaming].
          */
         @MustBeClosed
         fun streamStreaming(

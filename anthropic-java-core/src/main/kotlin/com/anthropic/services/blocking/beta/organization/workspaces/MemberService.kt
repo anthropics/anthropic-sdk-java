@@ -153,8 +153,8 @@ interface MemberService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}?beta=true`, but is
-         * otherwise the same as [MemberService.retrieve].
+         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}`, but is otherwise the same
+         * as [MemberService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -185,8 +185,8 @@ interface MemberService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}?beta=true`, but is
-         * otherwise the same as [MemberService.update].
+         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}`, but is otherwise the same
+         * as [MemberService.update].
          */
         @MustBeClosed
         fun update(
@@ -217,8 +217,8 @@ interface MemberService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}/members?beta=true`, but is otherwise the same
-         * as [MemberService.list].
+         * /v1/organizations/workspaces/{workspace_id}/members`, but is otherwise the same as
+         * [MemberService.list].
          */
         @MustBeClosed
         fun list(workspaceId: String): HttpResponseFor<MemberListPage> =
@@ -262,8 +262,8 @@ interface MemberService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/members?beta=true`, but is otherwise the same
-         * as [MemberService.add].
+         * /v1/organizations/workspaces/{workspace_id}/members`, but is otherwise the same as
+         * [MemberService.add].
          */
         @MustBeClosed
         fun add(
@@ -294,8 +294,8 @@ interface MemberService {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}?beta=true`, but is
-         * otherwise the same as [MemberService.remove].
+         * /v1/organizations/workspaces/{workspace_id}/members/{user_id}`, but is otherwise the same
+         * as [MemberService.remove].
          */
         @MustBeClosed
         fun remove(

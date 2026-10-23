@@ -62,8 +62,8 @@ interface EffectiveServiceAsync {
         ): EffectiveServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/spend_limits/effective?beta=true`,
-         * but is otherwise the same as [EffectiveServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/spend_limits/effective`, but is
+         * otherwise the same as [EffectiveServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<EffectiveListPageAsync>> =
             list(EffectiveListParams.none())

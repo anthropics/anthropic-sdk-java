@@ -22,7 +22,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun create() {
-        val workspaceServiceAsync = client.beta().organization().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceFuture =
             workspaceServiceAsync.create(
@@ -55,7 +58,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val workspaceServiceAsync = client.beta().organization().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceFuture = workspaceServiceAsync.retrieve("workspace_id")
 
@@ -65,7 +71,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun update() {
-        val workspaceServiceAsync = client.beta().organization().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceFuture =
             workspaceServiceAsync.update(
@@ -97,7 +106,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun list() {
-        val workspaceServiceAsync = client.beta().organization().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = workspaceServiceAsync.list()
 
@@ -107,7 +119,10 @@ internal class WorkspaceServiceAsyncTest {
 
     @Test
     fun archive() {
-        val workspaceServiceAsync = client.beta().organization().workspaces()
+        val workspaceServiceAsync =
+            client.beta().organization().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceFuture = workspaceServiceAsync.archive("workspace_id")
 

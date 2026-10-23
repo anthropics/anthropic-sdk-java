@@ -197,7 +197,7 @@ interface VaultService {
         fun credentials(): CredentialService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/vaults?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `post /v1/vaults`, but is otherwise the same as
          * [VaultService.create].
          */
         @MustBeClosed
@@ -212,8 +212,8 @@ interface VaultService {
         ): HttpResponseFor<BetaManagedAgentsVault>
 
         /**
-         * Returns a raw HTTP response for `get /v1/vaults/{vault_id}?beta=true`, but is otherwise
-         * the same as [VaultService.retrieve].
+         * Returns a raw HTTP response for `get /v1/vaults/{vault_id}`, but is otherwise the same as
+         * [VaultService.retrieve].
          */
         @MustBeClosed
         fun retrieve(vaultId: String): HttpResponseFor<BetaManagedAgentsVault> =
@@ -257,8 +257,8 @@ interface VaultService {
             retrieve(vaultId, VaultRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}?beta=true`, but is otherwise
-         * the same as [VaultService.update].
+         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}`, but is otherwise the same
+         * as [VaultService.update].
          */
         @MustBeClosed
         fun update(vaultId: String): HttpResponseFor<BetaManagedAgentsVault> =
@@ -301,7 +301,7 @@ interface VaultService {
             update(vaultId, VaultUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/vaults?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/vaults`, but is otherwise the same as
          * [VaultService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<VaultListPage> = list(VaultListParams.none())
@@ -324,8 +324,8 @@ interface VaultService {
             list(VaultListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/vaults/{vault_id}?beta=true`, but is
-         * otherwise the same as [VaultService.delete].
+         * Returns a raw HTTP response for `delete /v1/vaults/{vault_id}`, but is otherwise the same
+         * as [VaultService.delete].
          */
         @MustBeClosed
         fun delete(vaultId: String): HttpResponseFor<BetaManagedAgentsDeletedVault> =
@@ -369,8 +369,8 @@ interface VaultService {
             delete(vaultId, VaultDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}/archive?beta=true`, but is
-         * otherwise the same as [VaultService.archive].
+         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}/archive`, but is otherwise
+         * the same as [VaultService.archive].
          */
         @MustBeClosed
         fun archive(vaultId: String): HttpResponseFor<BetaManagedAgentsVault> =

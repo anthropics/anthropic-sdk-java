@@ -33,7 +33,8 @@ internal class VersionServiceAsyncTest {
 
     @Test
     fun create() {
-        val versionServiceAsync = client.beta().skills().versions()
+        val versionServiceAsync =
+            client.beta().skills().versions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSkillVersionFuture =
             versionServiceAsync.create(
@@ -51,7 +52,8 @@ internal class VersionServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val versionServiceAsync = client.beta().skills().versions()
+        val versionServiceAsync =
+            client.beta().skills().versions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSkillVersionFuture =
             versionServiceAsync.retrieve(
@@ -69,7 +71,8 @@ internal class VersionServiceAsyncTest {
 
     @Test
     fun list() {
-        val versionServiceAsync = client.beta().skills().versions()
+        val versionServiceAsync =
+            client.beta().skills().versions().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = versionServiceAsync.list("skill_id")
 
@@ -79,7 +82,8 @@ internal class VersionServiceAsyncTest {
 
     @Test
     fun delete() {
-        val versionServiceAsync = client.beta().skills().versions()
+        val versionServiceAsync =
+            client.beta().skills().versions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedSkillVersionFuture =
             versionServiceAsync.delete(
@@ -98,7 +102,12 @@ internal class VersionServiceAsyncTest {
     @Test
     fun download(wmRuntimeInfo: WireMockRuntimeInfo) {
         val versionServiceAsync =
-            client.beta().skills().versions().withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
+            client
+                .beta()
+                .skills()
+                .versions()
+                .withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
+                .withOptions { it.putQueryParam("beta", "true") }
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
         val responseFuture =

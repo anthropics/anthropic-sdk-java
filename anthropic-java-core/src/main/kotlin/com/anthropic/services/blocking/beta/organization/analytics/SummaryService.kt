@@ -53,8 +53,8 @@ interface SummaryService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): SummaryService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/summaries?beta=true`,
-         * but is otherwise the same as [SummaryService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/summaries`, but is
+         * otherwise the same as [SummaryService.list].
          */
         @MustBeClosed
         fun list(params: SummaryListParams): HttpResponseFor<SummaryListPage> =

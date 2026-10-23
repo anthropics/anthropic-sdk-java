@@ -89,7 +89,7 @@ private constructor(
 
         // For Foundry, the `"model"` property remains in the body, unlike for other backends where
         // it is moved to a path segment. The value of the `"model"` property is the name of the
-        // Magma deployment, not the name of the Anthropic model. The default name of the Magma
+        // Foundry deployment, not the name of the Anthropic model. The default name of the Foundry
         // deployment is the same as the model name, but it may be changed to an arbitrary value,
         // so do _not_ validate the model name against the enum of known model names.
 
@@ -182,7 +182,9 @@ private constructor(
          * Wraps access to system environment variables to allow mocking of environment variables
          * when testing.
          */
-        @JvmSynthetic internal fun getEnv(name: String): String? = System.getenv(name)
+        @Suppress("EnvironmentReadOutsideFromEnv")
+        @JvmSynthetic
+        internal fun getEnv(name: String): String? = System.getenv(name)
 
         fun apiKey(apiKey: String) = apply { this.apiKey = apiKey }
 

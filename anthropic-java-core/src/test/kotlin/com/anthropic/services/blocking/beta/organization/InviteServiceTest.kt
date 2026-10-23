@@ -17,7 +17,8 @@ internal class InviteServiceTest {
 
     @Test
     fun create() {
-        val inviteService = client.beta().organization().invites()
+        val inviteService =
+            client.beta().organization().invites().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationInvite =
             inviteService.create(
@@ -33,7 +34,8 @@ internal class InviteServiceTest {
 
     @Test
     fun retrieve() {
-        val inviteService = client.beta().organization().invites()
+        val inviteService =
+            client.beta().organization().invites().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationInvite = inviteService.retrieve("invite_id")
 
@@ -42,7 +44,8 @@ internal class InviteServiceTest {
 
     @Test
     fun list() {
-        val inviteService = client.beta().organization().invites()
+        val inviteService =
+            client.beta().organization().invites().withOptions { it.putQueryParam("beta", "true") }
 
         val page = inviteService.list()
 
@@ -51,7 +54,8 @@ internal class InviteServiceTest {
 
     @Test
     fun delete() {
-        val inviteService = client.beta().organization().invites()
+        val inviteService =
+            client.beta().organization().invites().withOptions { it.putQueryParam("beta", "true") }
 
         val invite = inviteService.delete("invite_id")
 

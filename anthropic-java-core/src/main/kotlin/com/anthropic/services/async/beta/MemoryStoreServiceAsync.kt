@@ -230,8 +230,8 @@ interface MemoryStoreServiceAsync {
         fun memoryVersions(): MemoryVersionServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/memory_stores?beta=true`, but is otherwise the
-         * same as [MemoryStoreServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/memory_stores`, but is otherwise the same as
+         * [MemoryStoreServiceAsync.create].
          */
         fun create(
             params: MemoryStoreCreateParams
@@ -245,8 +245,8 @@ interface MemoryStoreServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsMemoryStore>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/memory_stores/{memory_store_id}?beta=true`, but
-         * is otherwise the same as [MemoryStoreServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/memory_stores/{memory_store_id}`, but is
+         * otherwise the same as [MemoryStoreServiceAsync.retrieve].
          */
         fun retrieve(
             memoryStoreId: String
@@ -288,8 +288,8 @@ interface MemoryStoreServiceAsync {
             retrieve(memoryStoreId, MemoryStoreRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/memory_stores/{memory_store_id}?beta=true`, but
-         * is otherwise the same as [MemoryStoreServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/memory_stores/{memory_store_id}`, but is
+         * otherwise the same as [MemoryStoreServiceAsync.update].
          */
         fun update(
             memoryStoreId: String
@@ -331,8 +331,8 @@ interface MemoryStoreServiceAsync {
             update(memoryStoreId, MemoryStoreUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/memory_stores?beta=true`, but is otherwise the
-         * same as [MemoryStoreServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/memory_stores`, but is otherwise the same as
+         * [MemoryStoreServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<MemoryStoreListPageAsync>> =
             list(MemoryStoreListParams.none())
@@ -356,8 +356,8 @@ interface MemoryStoreServiceAsync {
             list(MemoryStoreListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/memory_stores/{memory_store_id}?beta=true`,
-         * but is otherwise the same as [MemoryStoreServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/memory_stores/{memory_store_id}`, but is
+         * otherwise the same as [MemoryStoreServiceAsync.delete].
          */
         fun delete(
             memoryStoreId: String
@@ -399,9 +399,8 @@ interface MemoryStoreServiceAsync {
             delete(memoryStoreId, MemoryStoreDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/memory_stores/{memory_store_id}/archive?beta=true`, but is otherwise the same as
-         * [MemoryStoreServiceAsync.archive].
+         * Returns a raw HTTP response for `post /v1/memory_stores/{memory_store_id}/archive`, but
+         * is otherwise the same as [MemoryStoreServiceAsync.archive].
          */
         fun archive(
             memoryStoreId: String

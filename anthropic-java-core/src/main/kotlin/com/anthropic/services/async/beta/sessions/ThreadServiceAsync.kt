@@ -130,9 +130,8 @@ interface ThreadServiceAsync {
         fun events(): EventServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/sessions/{session_id}/threads/{thread_id}?beta=true`, but is otherwise the same as
-         * [ThreadServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/threads/{thread_id}`, but
+         * is otherwise the same as [ThreadServiceAsync.retrieve].
          */
         fun retrieve(
             threadId: String,
@@ -161,8 +160,8 @@ interface ThreadServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsSessionThread>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/threads?beta=true`, but is
-         * otherwise the same as [ThreadServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/threads`, but is otherwise
+         * the same as [ThreadServiceAsync.list].
          */
         fun list(sessionId: String): CompletableFuture<HttpResponseFor<ThreadListPageAsync>> =
             list(sessionId, ThreadListParams.none())
@@ -203,8 +202,8 @@ interface ThreadServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/sessions/{session_id}/threads/{thread_id}/archive?beta=true`, but is otherwise the
-         * same as [ThreadServiceAsync.archive].
+         * /v1/sessions/{session_id}/threads/{thread_id}/archive`, but is otherwise the same as
+         * [ThreadServiceAsync.archive].
          */
         fun archive(
             threadId: String,

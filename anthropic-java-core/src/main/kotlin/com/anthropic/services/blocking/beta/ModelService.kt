@@ -92,8 +92,8 @@ interface ModelService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ModelService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/models/{model_id}?beta=true`, but is otherwise
-         * the same as [ModelService.retrieve].
+         * Returns a raw HTTP response for `get /v1/models/{model_id}`, but is otherwise the same as
+         * [ModelService.retrieve].
          */
         @MustBeClosed
         fun retrieve(modelId: String): HttpResponseFor<BetaModelInfo> =
@@ -136,7 +136,7 @@ interface ModelService {
             retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/models?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/models`, but is otherwise the same as
          * [ModelService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<ModelListPage> = list(ModelListParams.none())

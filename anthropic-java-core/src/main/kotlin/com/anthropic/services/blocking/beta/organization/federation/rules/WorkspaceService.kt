@@ -147,8 +147,8 @@ interface WorkspaceService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/federation_rules/{federation_rule_id}/workspaces?beta=true`, but is
-         * otherwise the same as [WorkspaceService.list].
+         * /v1/organizations/federation_rules/{federation_rule_id}/workspaces`, but is otherwise the
+         * same as [WorkspaceService.list].
          */
         @MustBeClosed
         fun list(federationRuleId: String): HttpResponseFor<WorkspaceListPage> =
@@ -193,8 +193,8 @@ interface WorkspaceService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/federation_rules/{federation_rule_id}/workspaces?beta=true`, but is
-         * otherwise the same as [WorkspaceService.add].
+         * /v1/organizations/federation_rules/{federation_rule_id}/workspaces`, but is otherwise the
+         * same as [WorkspaceService.add].
          */
         @MustBeClosed
         fun add(
@@ -226,8 +226,8 @@ interface WorkspaceService {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/federation_rules/{federation_rule_id}/workspaces/{workspace_id}?beta=true`,
-         * but is otherwise the same as [WorkspaceService.remove].
+         * /v1/organizations/federation_rules/{federation_rule_id}/workspaces/{workspace_id}`, but
+         * is otherwise the same as [WorkspaceService.remove].
          */
         @MustBeClosed
         fun remove(

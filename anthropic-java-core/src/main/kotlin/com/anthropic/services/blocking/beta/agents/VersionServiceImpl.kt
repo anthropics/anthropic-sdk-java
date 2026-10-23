@@ -40,7 +40,7 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
         VersionServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: VersionListParams, requestOptions: RequestOptions): VersionListPage =
-        // get /v1/agents/{agent_id}/versions?beta=true
+        // get /v1/agents/{agent_id}/versions
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -73,11 +73,13 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathSegments("v1", "agents")
                     .addPathParam("agentId", params._pathParam(0))
                     .addPathSegments("versions")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

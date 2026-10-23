@@ -135,8 +135,8 @@ interface UserService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/users/{user_id}?beta=true`, but is
-         * otherwise the same as [UserService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/users/{user_id}`, but is otherwise
+         * the same as [UserService.retrieve].
          */
         @MustBeClosed
         fun retrieve(userId: String): HttpResponseFor<BetaOrganizationUser> =
@@ -179,8 +179,8 @@ interface UserService {
             retrieve(userId, UserRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/users/{user_id}?beta=true`, but
-         * is otherwise the same as [UserService.update].
+         * Returns a raw HTTP response for `post /v1/organizations/users/{user_id}`, but is
+         * otherwise the same as [UserService.update].
          */
         @MustBeClosed
         fun update(
@@ -210,8 +210,8 @@ interface UserService {
         ): HttpResponseFor<BetaOrganizationUser>
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/users?beta=true`, but is otherwise
-         * the same as [UserService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/users`, but is otherwise the same
+         * as [UserService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<UserListPage> = list(UserListParams.none())
 
@@ -233,8 +233,8 @@ interface UserService {
             list(UserListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/organizations/users/{user_id}?beta=true`, but
-         * is otherwise the same as [UserService.remove].
+         * Returns a raw HTTP response for `delete /v1/organizations/users/{user_id}`, but is
+         * otherwise the same as [UserService.remove].
          */
         @MustBeClosed
         fun remove(userId: String): HttpResponseFor<UserRemoveResponse> =

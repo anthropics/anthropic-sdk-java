@@ -19,7 +19,10 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun create() {
-        val externalKeyServiceAsync = client.beta().organization().externalKeys()
+        val externalKeyServiceAsync =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaExternalKeyFuture =
             externalKeyServiceAsync.create(
@@ -44,7 +47,10 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val externalKeyServiceAsync = client.beta().organization().externalKeys()
+        val externalKeyServiceAsync =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaExternalKeyFuture = externalKeyServiceAsync.retrieve("external_key_id")
 
@@ -54,7 +60,10 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun update() {
-        val externalKeyServiceAsync = client.beta().organization().externalKeys()
+        val externalKeyServiceAsync =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaExternalKeyFuture =
             externalKeyServiceAsync.update(
@@ -80,7 +89,10 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun list() {
-        val externalKeyServiceAsync = client.beta().organization().externalKeys()
+        val externalKeyServiceAsync =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = externalKeyServiceAsync.list()
 
@@ -90,7 +102,10 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun delete() {
-        val externalKeyServiceAsync = client.beta().organization().externalKeys()
+        val externalKeyServiceAsync =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val externalKeyFuture = externalKeyServiceAsync.delete("external_key_id")
 
@@ -100,7 +115,10 @@ internal class ExternalKeyServiceAsyncTest {
 
     @Test
     fun validate() {
-        val externalKeyServiceAsync = client.beta().organization().externalKeys()
+        val externalKeyServiceAsync =
+            client.beta().organization().externalKeys().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val responseFuture = externalKeyServiceAsync.validate("external_key_id")
 

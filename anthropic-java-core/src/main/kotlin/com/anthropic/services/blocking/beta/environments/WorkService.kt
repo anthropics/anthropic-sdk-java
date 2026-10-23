@@ -283,9 +283,8 @@ interface WorkService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): WorkService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/environments/{environment_id}/work/{work_id}?beta=true`, but is otherwise the same as
-         * [WorkService.retrieve].
+         * Returns a raw HTTP response for `get /v1/environments/{environment_id}/work/{work_id}`,
+         * but is otherwise the same as [WorkService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -315,9 +314,8 @@ interface WorkService {
         ): HttpResponseFor<BetaSelfHostedWork>
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/environments/{environment_id}/work/{work_id}?beta=true`, but is otherwise the same as
-         * [WorkService.update].
+         * Returns a raw HTTP response for `post /v1/environments/{environment_id}/work/{work_id}`,
+         * but is otherwise the same as [WorkService.update].
          */
         @MustBeClosed
         fun update(workId: String, params: WorkUpdateParams): HttpResponseFor<BetaSelfHostedWork> =
@@ -345,8 +343,8 @@ interface WorkService {
         ): HttpResponseFor<BetaSelfHostedWork>
 
         /**
-         * Returns a raw HTTP response for `get /v1/environments/{environment_id}/work?beta=true`,
-         * but is otherwise the same as [WorkService.list].
+         * Returns a raw HTTP response for `get /v1/environments/{environment_id}/work`, but is
+         * otherwise the same as [WorkService.list].
          */
         @MustBeClosed
         fun list(environmentId: String): HttpResponseFor<WorkListPage> =
@@ -390,8 +388,8 @@ interface WorkService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/environments/{environment_id}/work/{work_id}/ack?beta=true`, but is otherwise the
-         * same as [WorkService.ack].
+         * /v1/environments/{environment_id}/work/{work_id}/ack`, but is otherwise the same as
+         * [WorkService.ack].
          */
         @MustBeClosed
         fun ack(workId: String, params: WorkAckParams): HttpResponseFor<BetaSelfHostedWork> =
@@ -420,8 +418,8 @@ interface WorkService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/environments/{environment_id}/work/{work_id}/heartbeat?beta=true`, but is otherwise
-         * the same as [WorkService.heartbeat].
+         * /v1/environments/{environment_id}/work/{work_id}/heartbeat`, but is otherwise the same as
+         * [WorkService.heartbeat].
          */
         @MustBeClosed
         fun heartbeat(
@@ -454,9 +452,8 @@ interface WorkService {
         ): HttpResponseFor<BetaSelfHostedWorkHeartbeatResponse>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/environments/{environment_id}/work/poll?beta=true`, but is otherwise the same as
-         * [WorkService.poll].
+         * Returns a raw HTTP response for `get /v1/environments/{environment_id}/work/poll`, but is
+         * otherwise the same as [WorkService.poll].
          */
         @MustBeClosed
         fun poll(environmentId: String): HttpResponseFor<Optional<BetaSelfHostedWork>> =
@@ -500,9 +497,8 @@ interface WorkService {
             poll(environmentId, WorkPollParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/environments/{environment_id}/work/stats?beta=true`, but is otherwise the same as
-         * [WorkService.stats].
+         * Returns a raw HTTP response for `get /v1/environments/{environment_id}/work/stats`, but
+         * is otherwise the same as [WorkService.stats].
          */
         @MustBeClosed
         fun stats(environmentId: String): HttpResponseFor<BetaSelfHostedWorkQueueStats> =
@@ -547,8 +543,8 @@ interface WorkService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/environments/{environment_id}/work/{work_id}/stop?beta=true`, but is otherwise the
-         * same as [WorkService.stop].
+         * /v1/environments/{environment_id}/work/{work_id}/stop`, but is otherwise the same as
+         * [WorkService.stop].
          */
         @MustBeClosed
         fun stop(workId: String, params: WorkStopParams): HttpResponseFor<BetaSelfHostedWork> =

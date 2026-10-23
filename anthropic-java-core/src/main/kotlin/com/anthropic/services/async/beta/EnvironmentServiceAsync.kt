@@ -221,8 +221,8 @@ interface EnvironmentServiceAsync {
         fun work(): WorkServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/environments?beta=true`, but is otherwise the
-         * same as [EnvironmentServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/environments`, but is otherwise the same as
+         * [EnvironmentServiceAsync.create].
          */
         fun create(
             params: EnvironmentCreateParams
@@ -236,8 +236,8 @@ interface EnvironmentServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaEnvironment>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/environments/{environment_id}?beta=true`, but is
-         * otherwise the same as [EnvironmentServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/environments/{environment_id}`, but is otherwise
+         * the same as [EnvironmentServiceAsync.retrieve].
          */
         fun retrieve(environmentId: String): CompletableFuture<HttpResponseFor<BetaEnvironment>> =
             retrieve(environmentId, EnvironmentRetrieveParams.none())
@@ -277,8 +277,8 @@ interface EnvironmentServiceAsync {
             retrieve(environmentId, EnvironmentRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/environments/{environment_id}?beta=true`, but
-         * is otherwise the same as [EnvironmentServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/environments/{environment_id}`, but is
+         * otherwise the same as [EnvironmentServiceAsync.update].
          */
         fun update(environmentId: String): CompletableFuture<HttpResponseFor<BetaEnvironment>> =
             update(environmentId, EnvironmentUpdateParams.none())
@@ -318,8 +318,8 @@ interface EnvironmentServiceAsync {
             update(environmentId, EnvironmentUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/environments?beta=true`, but is otherwise the
-         * same as [EnvironmentServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/environments`, but is otherwise the same as
+         * [EnvironmentServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<EnvironmentListPageAsync>> =
             list(EnvironmentListParams.none())
@@ -343,8 +343,8 @@ interface EnvironmentServiceAsync {
             list(EnvironmentListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/environments/{environment_id}?beta=true`, but
-         * is otherwise the same as [EnvironmentServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/environments/{environment_id}`, but is
+         * otherwise the same as [EnvironmentServiceAsync.delete].
          */
         fun delete(
             environmentId: String
@@ -386,9 +386,8 @@ interface EnvironmentServiceAsync {
             delete(environmentId, EnvironmentDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/environments/{environment_id}/archive?beta=true`, but is otherwise the same as
-         * [EnvironmentServiceAsync.archive].
+         * Returns a raw HTTP response for `post /v1/environments/{environment_id}/archive`, but is
+         * otherwise the same as [EnvironmentServiceAsync.archive].
          */
         fun archive(environmentId: String): CompletableFuture<HttpResponseFor<BetaEnvironment>> =
             archive(environmentId, EnvironmentArchiveParams.none())

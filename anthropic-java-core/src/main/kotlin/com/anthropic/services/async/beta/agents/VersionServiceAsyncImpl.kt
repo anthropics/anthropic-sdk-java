@@ -45,7 +45,7 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: VersionListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<VersionListPageAsync> =
-        // get /v1/agents/{agent_id}/versions?beta=true
+        // get /v1/agents/{agent_id}/versions
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -78,11 +78,13 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("v1", "agents")
                     .addPathParam("agentId", params._pathParam(0))
                     .addPathSegments("versions")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

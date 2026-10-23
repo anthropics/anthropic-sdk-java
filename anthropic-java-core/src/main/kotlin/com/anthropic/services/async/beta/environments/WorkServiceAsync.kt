@@ -311,9 +311,8 @@ interface WorkServiceAsync {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): WorkServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/environments/{environment_id}/work/{work_id}?beta=true`, but is otherwise the same as
-         * [WorkServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/environments/{environment_id}/work/{work_id}`,
+         * but is otherwise the same as [WorkServiceAsync.retrieve].
          */
         fun retrieve(
             workId: String,
@@ -342,9 +341,8 @@ interface WorkServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaSelfHostedWork>>
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/environments/{environment_id}/work/{work_id}?beta=true`, but is otherwise the same as
-         * [WorkServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/environments/{environment_id}/work/{work_id}`,
+         * but is otherwise the same as [WorkServiceAsync.update].
          */
         fun update(
             workId: String,
@@ -373,8 +371,8 @@ interface WorkServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaSelfHostedWork>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/environments/{environment_id}/work?beta=true`,
-         * but is otherwise the same as [WorkServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/environments/{environment_id}/work`, but is
+         * otherwise the same as [WorkServiceAsync.list].
          */
         fun list(environmentId: String): CompletableFuture<HttpResponseFor<WorkListPageAsync>> =
             list(environmentId, WorkListParams.none())
@@ -413,8 +411,8 @@ interface WorkServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/environments/{environment_id}/work/{work_id}/ack?beta=true`, but is otherwise the
-         * same as [WorkServiceAsync.ack].
+         * /v1/environments/{environment_id}/work/{work_id}/ack`, but is otherwise the same as
+         * [WorkServiceAsync.ack].
          */
         fun ack(
             workId: String,
@@ -442,8 +440,8 @@ interface WorkServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/environments/{environment_id}/work/{work_id}/heartbeat?beta=true`, but is otherwise
-         * the same as [WorkServiceAsync.heartbeat].
+         * /v1/environments/{environment_id}/work/{work_id}/heartbeat`, but is otherwise the same as
+         * [WorkServiceAsync.heartbeat].
          */
         fun heartbeat(
             workId: String,
@@ -472,9 +470,8 @@ interface WorkServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaSelfHostedWorkHeartbeatResponse>>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/environments/{environment_id}/work/poll?beta=true`, but is otherwise the same as
-         * [WorkServiceAsync.poll].
+         * Returns a raw HTTP response for `get /v1/environments/{environment_id}/work/poll`, but is
+         * otherwise the same as [WorkServiceAsync.poll].
          */
         fun poll(
             environmentId: String
@@ -516,9 +513,8 @@ interface WorkServiceAsync {
             poll(environmentId, WorkPollParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/environments/{environment_id}/work/stats?beta=true`, but is otherwise the same as
-         * [WorkServiceAsync.stats].
+         * Returns a raw HTTP response for `get /v1/environments/{environment_id}/work/stats`, but
+         * is otherwise the same as [WorkServiceAsync.stats].
          */
         fun stats(
             environmentId: String
@@ -561,8 +557,8 @@ interface WorkServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/environments/{environment_id}/work/{work_id}/stop?beta=true`, but is otherwise the
-         * same as [WorkServiceAsync.stop].
+         * /v1/environments/{environment_id}/work/{work_id}/stop`, but is otherwise the same as
+         * [WorkServiceAsync.stop].
          */
         fun stop(
             workId: String,

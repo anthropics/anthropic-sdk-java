@@ -12,7 +12,6 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsStreamSessionE
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock;
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams;
 import com.anthropic.models.beta.sessions.events.EventSendParams;
-import java.util.Iterator;
 
 public final class ManagedAgentsExample {
     private ManagedAgentsExample() {}
@@ -65,10 +64,7 @@ public final class ManagedAgentsExample {
         System.out.println("Streaming events:");
         try (StreamResponse<BetaManagedAgentsStreamSessionEvents> streamResponse =
                 client.beta().sessions().events().streamStreaming(session.id())) {
-            Iterator<BetaManagedAgentsStreamSessionEvents> it =
-                    streamResponse.stream().iterator();
-            while (it.hasNext()) {
-                BetaManagedAgentsStreamSessionEvents event = it.next();
+            for (BetaManagedAgentsStreamSessionEvents event : streamResponse) {
                 System.out.println(event);
                 if (event.isSessionStatusIdle()) {
                     break;

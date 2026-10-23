@@ -22,7 +22,10 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun retrieve() {
-        val serviceAccountService = client.beta().organization().workspaces().serviceAccounts()
+        val serviceAccountService =
+            client.beta().organization().workspaces().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountWorkspaceMember =
             serviceAccountService.retrieve(
@@ -38,7 +41,10 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun update() {
-        val serviceAccountService = client.beta().organization().workspaces().serviceAccounts()
+        val serviceAccountService =
+            client.beta().organization().workspaces().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountWorkspaceMember =
             serviceAccountService.update(
@@ -55,7 +61,10 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun list() {
-        val serviceAccountService = client.beta().organization().workspaces().serviceAccounts()
+        val serviceAccountService =
+            client.beta().organization().workspaces().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = serviceAccountService.list("workspace_id")
 
@@ -64,7 +73,10 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun add() {
-        val serviceAccountService = client.beta().organization().workspaces().serviceAccounts()
+        val serviceAccountService =
+            client.beta().organization().workspaces().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountWorkspaceMember =
             serviceAccountService.add(
@@ -81,7 +93,10 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun remove() {
-        val serviceAccountService = client.beta().organization().workspaces().serviceAccounts()
+        val serviceAccountService =
+            client.beta().organization().workspaces().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val serviceAccount =
             serviceAccountService.remove(

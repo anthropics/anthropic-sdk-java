@@ -47,38 +47,35 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
         params: ServiceAccountRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaServiceAccountWorkspaceMember> =
-        // get
-        // /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true
+        // get /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: ServiceAccountUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaServiceAccountWorkspaceMember> =
-        // post
-        // /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true
+        // post /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: ServiceAccountListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ServiceAccountListPageAsync> =
-        // get /v1/organizations/workspaces/{workspace_id}/service_accounts?beta=true
+        // get /v1/organizations/workspaces/{workspace_id}/service_accounts
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun add(
         params: ServiceAccountAddParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaServiceAccountWorkspaceMember> =
-        // post /v1/organizations/workspaces/{workspace_id}/service_accounts?beta=true
+        // post /v1/organizations/workspaces/{workspace_id}/service_accounts
         withRawResponse().add(params, requestOptions).thenParse()
 
     override fun remove(
         params: ServiceAccountRemoveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ServiceAccountRemoveResponse> =
-        // delete
-        // /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true
+        // delete /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}
         withRawResponse().remove(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -112,10 +109,12 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("service_accounts")
                     .addPathParam("serviceAccountId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -151,11 +150,13 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("service_accounts")
                     .addPathParam("serviceAccountId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -190,10 +191,12 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("service_accounts")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -236,11 +239,13 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("service_accounts")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -282,11 +287,13 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("service_accounts")
                     .addPathParam("serviceAccountId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

@@ -227,8 +227,8 @@ interface RuleService {
         fun workspaces(): WorkspaceService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/federation_rules?beta=true`, but
-         * is otherwise the same as [RuleService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/federation_rules`, but is
+         * otherwise the same as [RuleService.create].
          */
         @MustBeClosed
         fun create(params: RuleCreateParams): HttpResponseFor<BetaFederationRule> =
@@ -243,8 +243,8 @@ interface RuleService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/federation_rules/{federation_rule_id}?beta=true`, but is otherwise the
-         * same as [RuleService.retrieve].
+         * /v1/organizations/federation_rules/{federation_rule_id}`, but is otherwise the same as
+         * [RuleService.retrieve].
          */
         @MustBeClosed
         fun retrieve(federationRuleId: String): HttpResponseFor<BetaFederationRule> =
@@ -289,8 +289,8 @@ interface RuleService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/federation_rules/{federation_rule_id}?beta=true`, but is otherwise the
-         * same as [RuleService.update].
+         * /v1/organizations/federation_rules/{federation_rule_id}`, but is otherwise the same as
+         * [RuleService.update].
          */
         @MustBeClosed
         fun update(federationRuleId: String): HttpResponseFor<BetaFederationRule> =
@@ -334,8 +334,8 @@ interface RuleService {
             update(federationRuleId, RuleUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/federation_rules?beta=true`, but
-         * is otherwise the same as [RuleService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/federation_rules`, but is
+         * otherwise the same as [RuleService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<RuleListPage> = list(RuleListParams.none())
 
@@ -358,8 +358,8 @@ interface RuleService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/federation_rules/{federation_rule_id}/archive?beta=true`, but is
-         * otherwise the same as [RuleService.archive].
+         * /v1/organizations/federation_rules/{federation_rule_id}/archive`, but is otherwise the
+         * same as [RuleService.archive].
          */
         @MustBeClosed
         fun archive(federationRuleId: String): HttpResponseFor<BetaFederationRule> =

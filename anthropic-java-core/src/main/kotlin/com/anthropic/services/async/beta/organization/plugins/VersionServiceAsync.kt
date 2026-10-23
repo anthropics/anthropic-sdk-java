@@ -220,9 +220,8 @@ interface VersionServiceAsync {
         ): VersionServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/plugins/{plugin_id}/versions?beta=true`, but is otherwise the same as
-         * [VersionServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/plugins/{plugin_id}/versions`,
+         * but is otherwise the same as [VersionServiceAsync.create].
          */
         fun create(
             pluginId: String,
@@ -252,8 +251,8 @@ interface VersionServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/plugins/{plugin_id}/versions/{version}?beta=true`, but is otherwise the
-         * same as [VersionServiceAsync.retrieve].
+         * /v1/organizations/plugins/{plugin_id}/versions/{version}`, but is otherwise the same as
+         * [VersionServiceAsync.retrieve].
          */
         fun retrieve(
             version: String,
@@ -282,9 +281,8 @@ interface VersionServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaPluginVersion>>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/plugins/{plugin_id}/versions?beta=true`, but is otherwise the same as
-         * [VersionServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/plugins/{plugin_id}/versions`, but
+         * is otherwise the same as [VersionServiceAsync.list].
          */
         fun list(pluginId: String): CompletableFuture<HttpResponseFor<VersionListPageAsync>> =
             list(pluginId, VersionListParams.none())
@@ -325,8 +323,8 @@ interface VersionServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/plugins/{plugin_id}/versions/{version}/content?beta=true`, but is
-         * otherwise the same as [VersionServiceAsync.download].
+         * /v1/organizations/plugins/{plugin_id}/versions/{version}/content`, but is otherwise the
+         * same as [VersionServiceAsync.download].
          */
         fun download(
             version: String,

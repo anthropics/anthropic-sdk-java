@@ -42,32 +42,32 @@ class IssuerServiceImpl internal constructor(private val clientOptions: ClientOp
         params: IssuerCreateParams,
         requestOptions: RequestOptions,
     ): BetaFederationIssuer =
-        // post /v1/organizations/federation_issuers?beta=true
+        // post /v1/organizations/federation_issuers
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: IssuerRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaFederationIssuer =
-        // get /v1/organizations/federation_issuers/{federation_issuer_id}?beta=true
+        // get /v1/organizations/federation_issuers/{federation_issuer_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: IssuerUpdateParams,
         requestOptions: RequestOptions,
     ): BetaFederationIssuer =
-        // post /v1/organizations/federation_issuers/{federation_issuer_id}?beta=true
+        // post /v1/organizations/federation_issuers/{federation_issuer_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: IssuerListParams, requestOptions: RequestOptions): IssuerListPage =
-        // get /v1/organizations/federation_issuers?beta=true
+        // get /v1/organizations/federation_issuers
         withRawResponse().list(params, requestOptions).parse()
 
     override fun archive(
         params: IssuerArchiveParams,
         requestOptions: RequestOptions,
     ): BetaFederationIssuer =
-        // post /v1/organizations/federation_issuers/{federation_issuer_id}/archive?beta=true
+        // post /v1/organizations/federation_issuers/{federation_issuer_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -95,11 +95,13 @@ class IssuerServiceImpl internal constructor(private val clientOptions: ClientOp
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_issuers")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -136,10 +138,12 @@ class IssuerServiceImpl internal constructor(private val clientOptions: ClientOp
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_issuers")
                     .addPathParam("federationIssuerId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -170,11 +174,13 @@ class IssuerServiceImpl internal constructor(private val clientOptions: ClientOp
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_issuers")
                     .addPathParam("federationIssuerId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -201,10 +207,12 @@ class IssuerServiceImpl internal constructor(private val clientOptions: ClientOp
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "federation_issuers")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -243,11 +251,13 @@ class IssuerServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathSegments("v1", "organizations", "federation_issuers")
                     .addPathParam("federationIssuerId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

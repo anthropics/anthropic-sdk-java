@@ -221,8 +221,8 @@ interface UserProfileService {
         fun actionUrls(): ActionUrlService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/user_profiles?beta=true`, but is otherwise the
-         * same as [UserProfileService.create].
+         * Returns a raw HTTP response for `post /v1/user_profiles`, but is otherwise the same as
+         * [UserProfileService.create].
          */
         @MustBeClosed
         fun create(): HttpResponseFor<BetaUserProfile> = create(UserProfileCreateParams.none())
@@ -246,8 +246,8 @@ interface UserProfileService {
             create(UserProfileCreateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/user_profiles/{user_profile_id}?beta=true`, but
-         * is otherwise the same as [UserProfileService.retrieve].
+         * Returns a raw HTTP response for `get /v1/user_profiles/{user_profile_id}`, but is
+         * otherwise the same as [UserProfileService.retrieve].
          */
         @MustBeClosed
         fun retrieve(userProfileId: String): HttpResponseFor<BetaUserProfile> =
@@ -290,8 +290,8 @@ interface UserProfileService {
             retrieve(userProfileId, UserProfileRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/user_profiles/{user_profile_id}?beta=true`, but
-         * is otherwise the same as [UserProfileService.update].
+         * Returns a raw HTTP response for `post /v1/user_profiles/{user_profile_id}`, but is
+         * otherwise the same as [UserProfileService.update].
          */
         @MustBeClosed
         fun update(userProfileId: String): HttpResponseFor<BetaUserProfile> =
@@ -334,8 +334,8 @@ interface UserProfileService {
             update(userProfileId, UserProfileUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/user_profiles?beta=true`, but is otherwise the
-         * same as [UserProfileService.list].
+         * Returns a raw HTTP response for `get /v1/user_profiles`, but is otherwise the same as
+         * [UserProfileService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<UserProfileListPage> = list(UserProfileListParams.none())
@@ -359,8 +359,8 @@ interface UserProfileService {
             list(UserProfileListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/user_profiles/{user_profile_id}?beta=true`,
-         * but is otherwise the same as [UserProfileService.delete].
+         * Returns a raw HTTP response for `delete /v1/user_profiles/{user_profile_id}`, but is
+         * otherwise the same as [UserProfileService.delete].
          */
         @MustBeClosed
         fun delete(userProfileId: String): HttpResponseFor<BetaDeletedUserProfile> =
@@ -405,8 +405,8 @@ interface UserProfileService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/user_profiles/{user_profile_id}/enrollment_url?beta=true`, but is otherwise the same
-         * as [UserProfileService.createEnrollmentUrl].
+         * /v1/user_profiles/{user_profile_id}/enrollment_url`, but is otherwise the same as
+         * [UserProfileService.createEnrollmentUrl].
          */
         @MustBeClosed
         fun createEnrollmentUrl(

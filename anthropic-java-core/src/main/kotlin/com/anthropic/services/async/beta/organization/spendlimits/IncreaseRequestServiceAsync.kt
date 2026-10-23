@@ -196,8 +196,8 @@ interface IncreaseRequestServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}?beta=true`,
-         * but is otherwise the same as [IncreaseRequestServiceAsync.retrieve].
+         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}`, but
+         * is otherwise the same as [IncreaseRequestServiceAsync.retrieve].
          */
         fun retrieve(
             spendLimitIncreaseRequestId: String
@@ -246,9 +246,8 @@ interface IncreaseRequestServiceAsync {
             )
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/spend_limit_increase_requests?beta=true`, but is otherwise the same as
-         * [IncreaseRequestServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/spend_limit_increase_requests`,
+         * but is otherwise the same as [IncreaseRequestServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<IncreaseRequestListPageAsync>> =
             list(IncreaseRequestListParams.none())
@@ -273,7 +272,7 @@ interface IncreaseRequestServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/approve?beta=true`,
+         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/approve`,
          * but is otherwise the same as [IncreaseRequestServiceAsync.approve].
          */
         fun approve(
@@ -307,7 +306,7 @@ interface IncreaseRequestServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/deny?beta=true`,
+         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/deny`,
          * but is otherwise the same as [IncreaseRequestServiceAsync.deny].
          */
         fun deny(

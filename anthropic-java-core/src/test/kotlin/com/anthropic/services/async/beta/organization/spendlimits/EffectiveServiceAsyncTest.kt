@@ -16,7 +16,10 @@ internal class EffectiveServiceAsyncTest {
 
     @Test
     fun list() {
-        val effectiveServiceAsync = client.beta().organization().spendLimits().effective()
+        val effectiveServiceAsync =
+            client.beta().organization().spendLimits().effective().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = effectiveServiceAsync.list()
 

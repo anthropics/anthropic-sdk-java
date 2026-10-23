@@ -216,7 +216,7 @@ interface VaultServiceAsync {
         fun credentials(): CredentialServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/vaults?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `post /v1/vaults`, but is otherwise the same as
          * [VaultServiceAsync.create].
          */
         fun create(
@@ -231,8 +231,8 @@ interface VaultServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsVault>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/vaults/{vault_id}?beta=true`, but is otherwise
-         * the same as [VaultServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/vaults/{vault_id}`, but is otherwise the same as
+         * [VaultServiceAsync.retrieve].
          */
         fun retrieve(vaultId: String): CompletableFuture<HttpResponseFor<BetaManagedAgentsVault>> =
             retrieve(vaultId, VaultRetrieveParams.none())
@@ -272,8 +272,8 @@ interface VaultServiceAsync {
             retrieve(vaultId, VaultRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}?beta=true`, but is otherwise
-         * the same as [VaultServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}`, but is otherwise the same
+         * as [VaultServiceAsync.update].
          */
         fun update(vaultId: String): CompletableFuture<HttpResponseFor<BetaManagedAgentsVault>> =
             update(vaultId, VaultUpdateParams.none())
@@ -313,7 +313,7 @@ interface VaultServiceAsync {
             update(vaultId, VaultUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/vaults?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/vaults`, but is otherwise the same as
          * [VaultServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<VaultListPageAsync>> =
@@ -338,8 +338,8 @@ interface VaultServiceAsync {
             list(VaultListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/vaults/{vault_id}?beta=true`, but is
-         * otherwise the same as [VaultServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/vaults/{vault_id}`, but is otherwise the same
+         * as [VaultServiceAsync.delete].
          */
         fun delete(
             vaultId: String
@@ -381,8 +381,8 @@ interface VaultServiceAsync {
             delete(vaultId, VaultDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}/archive?beta=true`, but is
-         * otherwise the same as [VaultServiceAsync.archive].
+         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}/archive`, but is otherwise
+         * the same as [VaultServiceAsync.archive].
          */
         fun archive(vaultId: String): CompletableFuture<HttpResponseFor<BetaManagedAgentsVault>> =
             archive(vaultId, VaultArchiveParams.none())

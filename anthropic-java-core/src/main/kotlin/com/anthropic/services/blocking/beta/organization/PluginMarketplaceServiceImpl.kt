@@ -51,35 +51,35 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
         params: PluginMarketplaceRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaPluginMarketplace =
-        // get /v1/organizations/plugin_marketplaces/{marketplace_id}?beta=true
+        // get /v1/organizations/plugin_marketplaces/{marketplace_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: PluginMarketplaceUpdateParams,
         requestOptions: RequestOptions,
     ): BetaPluginMarketplace =
-        // post /v1/organizations/plugin_marketplaces/{marketplace_id}?beta=true
+        // post /v1/organizations/plugin_marketplaces/{marketplace_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: PluginMarketplaceListParams,
         requestOptions: RequestOptions,
     ): PluginMarketplaceListPage =
-        // get /v1/organizations/plugin_marketplaces?beta=true
+        // get /v1/organizations/plugin_marketplaces
         withRawResponse().list(params, requestOptions).parse()
 
     override fun validateArchive(
         params: PluginMarketplaceValidateArchiveParams,
         requestOptions: RequestOptions,
     ): BetaPluginMarketplaceValidationReport =
-        // post /v1/organizations/plugin_marketplaces/validate_archive?beta=true
+        // post /v1/organizations/plugin_marketplaces/validate_archive
         withRawResponse().validateArchive(params, requestOptions).parse()
 
     override fun validateRepository(
         params: PluginMarketplaceValidateRepositoryParams,
         requestOptions: RequestOptions,
     ): BetaPluginMarketplaceValidationReport =
-        // post /v1/organizations/plugin_marketplaces/validate_repository?beta=true
+        // post /v1/organizations/plugin_marketplaces/validate_repository
         withRawResponse().validateRepository(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -111,11 +111,13 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugin_marketplaces")
                     .addPathParam("marketplaceId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -146,12 +148,14 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugin_marketplaces")
                     .addPathParam("marketplaceId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -178,11 +182,13 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugin_marketplaces")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -221,12 +227,14 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
                         "plugin_marketplaces",
                         "validate_archive",
                     )
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -258,12 +266,14 @@ class PluginMarketplaceServiceImpl internal constructor(private val clientOption
                         "plugin_marketplaces",
                         "validate_repository",
                     )
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

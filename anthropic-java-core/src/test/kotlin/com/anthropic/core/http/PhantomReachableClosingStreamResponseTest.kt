@@ -24,6 +24,20 @@ internal class PhantomReachableClosingStreamResponseTest {
     }
 
     @Test
+    fun iterator_whenOnlyIteratorIsReachable_keepsWrapperReachable() {
+        val (wrapper, iterator) = iteratorWithoutWrapper(FakeStreamResponse())
+
+        val elements = mutableListOf<Int>()
+        iterator.forEach {
+            elements.add(it)
+            assumeTrue(collectGarbage(), "Garbage collection didn't run")
+            assertThat(wrapper.get()).isNotNull()
+        }
+
+        assertThat(elements).containsExactly(0, 1, 2)
+    }
+
+    @Test
     fun stream_whenConsumed_closesResponse() {
         val streamResponse = FakeStreamResponse()
 
@@ -48,6 +62,11 @@ internal class PhantomReachableClosingStreamResponseTest {
     private fun streamWithoutWrapper(streamResponse: StreamResponse<Int>) =
         PhantomReachableClosingStreamResponse(streamResponse).let {
             WeakReference(it) to it.stream()
+        }
+
+    private fun iteratorWithoutWrapper(streamResponse: StreamResponse<Int>) =
+        PhantomReachableClosingStreamResponse(streamResponse).let {
+            WeakReference(it) to it.iterator()
         }
 
     /**

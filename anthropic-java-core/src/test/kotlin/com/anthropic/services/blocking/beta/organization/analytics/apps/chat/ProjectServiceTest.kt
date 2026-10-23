@@ -16,7 +16,10 @@ internal class ProjectServiceTest {
 
     @Test
     fun list() {
-        val projectService = client.beta().organization().analytics().apps().chat().projects()
+        val projectService =
+            client.beta().organization().analytics().apps().chat().projects().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = projectService.list()
 

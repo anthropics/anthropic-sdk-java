@@ -34,7 +34,7 @@ class CostReportServiceImpl internal constructor(private val clientOptions: Clie
         params: CostReportListParams,
         requestOptions: RequestOptions,
     ): CostReportListPage =
-        // get /v1/organizations/analytics/cost_report?beta=true
+        // get /v1/organizations/analytics/cost_report
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -62,10 +62,12 @@ class CostReportServiceImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "cost_report")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

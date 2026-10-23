@@ -215,8 +215,8 @@ interface CredentialService {
         ): CredentialService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}/credentials?beta=true`, but
-         * is otherwise the same as [CredentialService.create].
+         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}/credentials`, but is
+         * otherwise the same as [CredentialService.create].
          */
         @MustBeClosed
         fun create(
@@ -247,9 +247,8 @@ interface CredentialService {
         ): HttpResponseFor<BetaManagedAgentsCredential>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true`, but is otherwise the same
-         * as [CredentialService.retrieve].
+         * Returns a raw HTTP response for `get /v1/vaults/{vault_id}/credentials/{credential_id}`,
+         * but is otherwise the same as [CredentialService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -281,9 +280,8 @@ interface CredentialService {
         ): HttpResponseFor<BetaManagedAgentsCredential>
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true`, but is otherwise the same
-         * as [CredentialService.update].
+         * Returns a raw HTTP response for `post /v1/vaults/{vault_id}/credentials/{credential_id}`,
+         * but is otherwise the same as [CredentialService.update].
          */
         @MustBeClosed
         fun update(
@@ -314,8 +312,8 @@ interface CredentialService {
         ): HttpResponseFor<BetaManagedAgentsCredential>
 
         /**
-         * Returns a raw HTTP response for `get /v1/vaults/{vault_id}/credentials?beta=true`, but is
-         * otherwise the same as [CredentialService.list].
+         * Returns a raw HTTP response for `get /v1/vaults/{vault_id}/credentials`, but is otherwise
+         * the same as [CredentialService.list].
          */
         @MustBeClosed
         fun list(vaultId: String): HttpResponseFor<CredentialListPage> =
@@ -359,8 +357,8 @@ interface CredentialService {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true`, but is otherwise the same
-         * as [CredentialService.delete].
+         * /v1/vaults/{vault_id}/credentials/{credential_id}`, but is otherwise the same as
+         * [CredentialService.delete].
          */
         @MustBeClosed
         fun delete(
@@ -394,8 +392,8 @@ interface CredentialService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/vaults/{vault_id}/credentials/{credential_id}/archive?beta=true`, but is otherwise
-         * the same as [CredentialService.archive].
+         * /v1/vaults/{vault_id}/credentials/{credential_id}/archive`, but is otherwise the same as
+         * [CredentialService.archive].
          */
         @MustBeClosed
         fun archive(
@@ -427,8 +425,8 @@ interface CredentialService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate?beta=true`, but is
-         * otherwise the same as [CredentialService.mcpOAuthValidate].
+         * /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate`, but is otherwise
+         * the same as [CredentialService.mcpOAuthValidate].
          */
         @MustBeClosed
         fun mcpOAuthValidate(

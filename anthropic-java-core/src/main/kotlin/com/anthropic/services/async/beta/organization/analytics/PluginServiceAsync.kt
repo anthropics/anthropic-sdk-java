@@ -66,8 +66,8 @@ interface PluginServiceAsync {
         ): PluginServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/plugins?beta=true`, but
-         * is otherwise the same as [PluginServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/plugins`, but is
+         * otherwise the same as [PluginServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<PluginListPageAsync>> =
             list(PluginListParams.none())

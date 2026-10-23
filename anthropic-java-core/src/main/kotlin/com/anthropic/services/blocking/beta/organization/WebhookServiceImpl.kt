@@ -53,39 +53,39 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
         params: WebhookCreateParams,
         requestOptions: RequestOptions,
     ): BetaNewOrganizationWebhookEndpoint =
-        // post /v1/organizations/webhooks?beta=true
+        // post /v1/organizations/webhooks
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: WebhookRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaOrganizationWebhookEndpoint =
-        // get /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true
+        // get /v1/organizations/webhooks/{webhook_endpoint_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: WebhookUpdateParams,
         requestOptions: RequestOptions,
     ): BetaOrganizationWebhookEndpoint =
-        // post /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true
+        // post /v1/organizations/webhooks/{webhook_endpoint_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: WebhookListParams, requestOptions: RequestOptions): WebhookListPage =
-        // get /v1/organizations/webhooks?beta=true
+        // get /v1/organizations/webhooks
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: WebhookDeleteParams,
         requestOptions: RequestOptions,
     ): BetaDeletedOrganizationWebhookEndpoint =
-        // delete /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true
+        // delete /v1/organizations/webhooks/{webhook_endpoint_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun regenerateSigningSecret(
         params: WebhookRegenerateSigningSecretParams,
         requestOptions: RequestOptions,
     ): BetaOrganizationWebhookEndpointSigningSecret =
-        // post /v1/organizations/webhooks/{webhook_endpoint_id}/regenerate_signing_secret?beta=true
+        // post /v1/organizations/webhooks/{webhook_endpoint_id}/regenerate_signing_secret
         withRawResponse().regenerateSigningSecret(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -113,12 +113,14 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "webhooks")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -152,11 +154,13 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "webhooks")
                     .addPathParam("webhookEndpointId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -187,12 +191,14 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "webhooks")
                     .addPathParam("webhookEndpointId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -219,11 +225,13 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "webhooks")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -261,12 +269,14 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "webhooks")
                     .addPathParam("webhookEndpointId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -299,12 +309,14 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathSegments("v1", "organizations", "webhooks")
                     .addPathParam("webhookEndpointId", params._pathParam(0))
                     .addPathSegments("regenerate_signing_secret")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

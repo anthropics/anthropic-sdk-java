@@ -210,7 +210,7 @@ interface DreamServiceAsync {
         ): DreamServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/dreams?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `post /v1/dreams`, but is otherwise the same as
          * [DreamServiceAsync.create].
          */
         fun create(params: DreamCreateParams): CompletableFuture<HttpResponseFor<BetaDream>> =
@@ -223,8 +223,8 @@ interface DreamServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaDream>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/dreams/{dream_id}?beta=true`, but is otherwise
-         * the same as [DreamServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/dreams/{dream_id}`, but is otherwise the same as
+         * [DreamServiceAsync.retrieve].
          */
         fun retrieve(dreamId: String): CompletableFuture<HttpResponseFor<BetaDream>> =
             retrieve(dreamId, DreamRetrieveParams.none())
@@ -262,7 +262,7 @@ interface DreamServiceAsync {
             retrieve(dreamId, DreamRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/dreams?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/dreams`, but is otherwise the same as
          * [DreamServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<DreamListPageAsync>> =
@@ -287,8 +287,8 @@ interface DreamServiceAsync {
             list(DreamListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/dreams/{dream_id}/archive?beta=true`, but is
-         * otherwise the same as [DreamServiceAsync.archive].
+         * Returns a raw HTTP response for `post /v1/dreams/{dream_id}/archive`, but is otherwise
+         * the same as [DreamServiceAsync.archive].
          */
         fun archive(dreamId: String): CompletableFuture<HttpResponseFor<BetaDream>> =
             archive(dreamId, DreamArchiveParams.none())
@@ -326,8 +326,8 @@ interface DreamServiceAsync {
             archive(dreamId, DreamArchiveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/dreams/{dream_id}/cancel?beta=true`, but is
-         * otherwise the same as [DreamServiceAsync.cancel].
+         * Returns a raw HTTP response for `post /v1/dreams/{dream_id}/cancel`, but is otherwise the
+         * same as [DreamServiceAsync.cancel].
          */
         fun cancel(dreamId: String): CompletableFuture<HttpResponseFor<BetaDream>> =
             cancel(dreamId, DreamCancelParams.none())

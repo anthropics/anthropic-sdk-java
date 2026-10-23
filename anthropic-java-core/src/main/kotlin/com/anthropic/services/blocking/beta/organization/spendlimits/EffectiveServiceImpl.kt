@@ -34,7 +34,7 @@ class EffectiveServiceImpl internal constructor(private val clientOptions: Clien
         params: EffectiveListParams,
         requestOptions: RequestOptions,
     ): EffectiveListPage =
-        // get /v1/organizations/spend_limits/effective?beta=true
+        // get /v1/organizations/spend_limits/effective
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -62,10 +62,12 @@ class EffectiveServiceImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limits", "effective")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

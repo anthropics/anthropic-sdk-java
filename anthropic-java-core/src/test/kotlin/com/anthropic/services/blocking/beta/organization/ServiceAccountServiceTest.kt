@@ -21,7 +21,10 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun create() {
-        val serviceAccountService = client.beta().organization().serviceAccounts()
+        val serviceAccountService =
+            client.beta().organization().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccount =
             serviceAccountService.create(
@@ -38,7 +41,10 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun retrieve() {
-        val serviceAccountService = client.beta().organization().serviceAccounts()
+        val serviceAccountService =
+            client.beta().organization().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccount =
             serviceAccountService.retrieve(
@@ -53,7 +59,10 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun update() {
-        val serviceAccountService = client.beta().organization().serviceAccounts()
+        val serviceAccountService =
+            client.beta().organization().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccount =
             serviceAccountService.update(
@@ -70,7 +79,10 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun list() {
-        val serviceAccountService = client.beta().organization().serviceAccounts()
+        val serviceAccountService =
+            client.beta().organization().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = serviceAccountService.list()
 
@@ -79,7 +91,10 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun archive() {
-        val serviceAccountService = client.beta().organization().serviceAccounts()
+        val serviceAccountService =
+            client.beta().organization().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccount =
             serviceAccountService.archive(

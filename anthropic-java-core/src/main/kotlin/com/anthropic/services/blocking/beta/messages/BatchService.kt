@@ -258,8 +258,8 @@ interface BatchService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): BatchService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/messages/batches?beta=true`, but is otherwise
-         * the same as [BatchService.create].
+         * Returns a raw HTTP response for `post /v1/messages/batches`, but is otherwise the same as
+         * [BatchService.create].
          */
         @MustBeClosed
         fun create(params: BatchCreateParams): HttpResponseFor<BetaMessageBatch> =
@@ -273,8 +273,8 @@ interface BatchService {
         ): HttpResponseFor<BetaMessageBatch>
 
         /**
-         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}?beta=true`,
-         * but is otherwise the same as [BatchService.retrieve].
+         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}`, but is
+         * otherwise the same as [BatchService.retrieve].
          */
         @MustBeClosed
         fun retrieve(messageBatchId: String): HttpResponseFor<BetaMessageBatch> =
@@ -318,8 +318,8 @@ interface BatchService {
             retrieve(messageBatchId, BatchRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/messages/batches?beta=true`, but is otherwise
-         * the same as [BatchService.list].
+         * Returns a raw HTTP response for `get /v1/messages/batches`, but is otherwise the same as
+         * [BatchService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<BatchListPage> = list(BatchListParams.none())
 
@@ -341,9 +341,8 @@ interface BatchService {
             list(BatchListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete
-         * /v1/messages/batches/{message_batch_id}?beta=true`, but is otherwise the same as
-         * [BatchService.delete].
+         * Returns a raw HTTP response for `delete /v1/messages/batches/{message_batch_id}`, but is
+         * otherwise the same as [BatchService.delete].
          */
         @MustBeClosed
         fun delete(messageBatchId: String): HttpResponseFor<BetaDeletedMessageBatch> =
@@ -387,9 +386,8 @@ interface BatchService {
             delete(messageBatchId, BatchDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/messages/batches/{message_batch_id}/cancel?beta=true`, but is otherwise the same as
-         * [BatchService.cancel].
+         * Returns a raw HTTP response for `post /v1/messages/batches/{message_batch_id}/cancel`,
+         * but is otherwise the same as [BatchService.cancel].
          */
         @MustBeClosed
         fun cancel(messageBatchId: String): HttpResponseFor<BetaMessageBatch> =
@@ -432,9 +430,8 @@ interface BatchService {
             cancel(messageBatchId, BatchCancelParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/messages/batches/{message_batch_id}/results?beta=true`, but is otherwise the same as
-         * [BatchService.resultsStreaming].
+         * Returns a raw HTTP response for `get /v1/messages/batches/{message_batch_id}/results`,
+         * but is otherwise the same as [BatchService.resultsStreaming].
          */
         @MustBeClosed
         fun resultsStreaming(

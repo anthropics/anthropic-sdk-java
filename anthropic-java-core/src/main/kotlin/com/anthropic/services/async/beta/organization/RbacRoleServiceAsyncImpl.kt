@@ -48,14 +48,14 @@ class RbacRoleServiceAsyncImpl internal constructor(private val clientOptions: C
         params: RbacRoleRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaRbacRole> =
-        // get /v1/organizations/rbac_roles/{rbac_role_id}?beta=true
+        // get /v1/organizations/rbac_roles/{rbac_role_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: RbacRoleListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<RbacRoleListPageAsync> =
-        // get /v1/organizations/rbac_roles?beta=true
+        // get /v1/organizations/rbac_roles
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -93,10 +93,12 @@ class RbacRoleServiceAsyncImpl internal constructor(private val clientOptions: C
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_roles")
                     .addPathParam("rbacRoleId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -126,10 +128,12 @@ class RbacRoleServiceAsyncImpl internal constructor(private val clientOptions: C
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "rbac_roles")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

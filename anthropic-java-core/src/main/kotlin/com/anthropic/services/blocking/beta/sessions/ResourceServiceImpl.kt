@@ -52,35 +52,35 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
         params: ResourceRetrieveParams,
         requestOptions: RequestOptions,
     ): ResourceRetrieveResponse =
-        // get /v1/sessions/{session_id}/resources/{resource_id}?beta=true
+        // get /v1/sessions/{session_id}/resources/{resource_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: ResourceUpdateParams,
         requestOptions: RequestOptions,
     ): ResourceUpdateResponse =
-        // post /v1/sessions/{session_id}/resources/{resource_id}?beta=true
+        // post /v1/sessions/{session_id}/resources/{resource_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: ResourceListParams,
         requestOptions: RequestOptions,
     ): ResourceListPage =
-        // get /v1/sessions/{session_id}/resources?beta=true
+        // get /v1/sessions/{session_id}/resources
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: ResourceDeleteParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeleteSessionResource =
-        // delete /v1/sessions/{session_id}/resources/{resource_id}?beta=true
+        // delete /v1/sessions/{session_id}/resources/{resource_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun add(
         params: ResourceAddParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsFileResource =
-        // post /v1/sessions/{session_id}/resources?beta=true
+        // post /v1/sessions/{session_id}/resources
         withRawResponse().add(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -114,11 +114,13 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("resources")
                     .addPathParam("resourceId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -151,12 +153,14 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("resources")
                     .addPathParam("resourceId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -188,11 +192,13 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("resources")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -232,12 +238,14 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("resources")
                     .addPathParam("resourceId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -269,12 +277,14 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("resources")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

@@ -57,9 +57,8 @@ interface ProjectService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProjectService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/analytics/apps/chat/projects?beta=true`, but is otherwise the same as
-         * [ProjectService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/apps/chat/projects`, but
+         * is otherwise the same as [ProjectService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<ProjectListPage> = list(ProjectListParams.none())
 

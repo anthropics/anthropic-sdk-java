@@ -221,6 +221,32 @@ internal class AnthropicRulesTest(private val env: KotlinCoreEnvironment) {
     }
 
     @Test
+    fun environmentReadOutsideFromEnv() {
+        val findings =
+            EnvironmentReadOutsideFromEnv(Config.empty)
+                .lint(
+                    """
+                    val topLevel = System.getenv("TOP_LEVEL")
+                    class Thing {
+                        val property = System.getenv("PROPERTY")
+                        fun build() = System.getenv("OTHER_FUNCTION")
+                        fun osName() = System.getProperty("os.name")
+                        fun fromEnv() = System.getenv("DIRECT")
+                        class Builder {
+                            fun fromEnv() = apply { System.getenv("LAMBDA") }
+                        }
+                    }
+                    """
+                        .trimIndent()
+                )
+        assertThat(findings.map { it.message })
+            .hasSize(3)
+            .anyMatch { it.contains("TOP_LEVEL") }
+            .anyMatch { it.contains("PROPERTY") }
+            .anyMatch { it.contains("OTHER_FUNCTION") }
+    }
+
+    @Test
     fun fileJvmSynthetic() {
         val findings =
             FileJvmSynthetic(Config.empty)

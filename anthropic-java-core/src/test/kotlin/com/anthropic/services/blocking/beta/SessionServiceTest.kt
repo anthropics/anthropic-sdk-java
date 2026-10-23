@@ -34,7 +34,8 @@ internal class SessionServiceTest {
 
     @Test
     fun create() {
-        val sessionService = client.beta().sessions()
+        val sessionService =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSession =
             sessionService.create(
@@ -79,7 +80,8 @@ internal class SessionServiceTest {
 
     @Test
     fun retrieve() {
-        val sessionService = client.beta().sessions()
+        val sessionService =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSession =
             sessionService.retrieve(
@@ -95,7 +97,8 @@ internal class SessionServiceTest {
 
     @Test
     fun update() {
-        val sessionService = client.beta().sessions()
+        val sessionService =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSession =
             sessionService.update(
@@ -157,7 +160,8 @@ internal class SessionServiceTest {
 
     @Test
     fun list() {
-        val sessionService = client.beta().sessions()
+        val sessionService =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val page = sessionService.list()
 
@@ -166,7 +170,8 @@ internal class SessionServiceTest {
 
     @Test
     fun delete() {
-        val sessionService = client.beta().sessions()
+        val sessionService =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeletedSession =
             sessionService.delete(
@@ -182,7 +187,8 @@ internal class SessionServiceTest {
 
     @Test
     fun archive() {
-        val sessionService = client.beta().sessions()
+        val sessionService =
+            client.beta().sessions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSession =
             sessionService.archive(

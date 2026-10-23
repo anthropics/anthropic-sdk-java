@@ -45,32 +45,32 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
         params: VersionCreateParams,
         requestOptions: RequestOptions,
     ): BetaSkillVersion =
-        // post /v1/skills/{skill_id}/versions?beta=true
+        // post /v1/skills/{skill_id}/versions
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: VersionRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaSkillVersion =
-        // get /v1/skills/{skill_id}/versions/{version}?beta=true
+        // get /v1/skills/{skill_id}/versions/{version}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(params: VersionListParams, requestOptions: RequestOptions): VersionListPage =
-        // get /v1/skills/{skill_id}/versions?beta=true
+        // get /v1/skills/{skill_id}/versions
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: VersionDeleteParams,
         requestOptions: RequestOptions,
     ): BetaDeletedSkillVersion =
-        // delete /v1/skills/{skill_id}/versions/{version}?beta=true
+        // delete /v1/skills/{skill_id}/versions/{version}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun download(
         params: VersionDownloadParams,
         requestOptions: RequestOptions,
     ): HttpResponse =
-        // get /v1/skills/{skill_id}/versions/{version}/content?beta=true
+        // get /v1/skills/{skill_id}/versions/{version}/content
         withRawResponse().download(params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -103,11 +103,13 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathSegments("v1", "skills")
                     .addPathParam("skillId", params._pathParam(0))
                     .addPathSegments("versions")
-                    .putQueryParam("beta", "true")
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -141,10 +143,12 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathParam("skillId", params._pathParam(0))
                     .addPathSegments("versions")
                     .addPathParam("version", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -176,10 +180,12 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathSegments("v1", "skills")
                     .addPathParam("skillId", params._pathParam(0))
                     .addPathSegments("versions")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -219,11 +225,13 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathParam("skillId", params._pathParam(0))
                     .addPathSegments("versions")
                     .addPathParam("version", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -254,11 +262,13 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathSegments("versions")
                     .addPathParam("version", params._pathParam(1))
                     .addPathSegments("content")
-                    .putQueryParam("beta", "true")
                     .putHeader("Accept", "application/binary")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceRawApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response)

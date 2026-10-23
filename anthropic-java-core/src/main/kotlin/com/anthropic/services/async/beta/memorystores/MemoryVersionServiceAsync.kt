@@ -130,8 +130,8 @@ interface MemoryVersionServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}?beta=true`, but
-         * is otherwise the same as [MemoryVersionServiceAsync.retrieve].
+         * /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}`, but is
+         * otherwise the same as [MemoryVersionServiceAsync.retrieve].
          */
         fun retrieve(
             memoryVersionId: String,
@@ -161,8 +161,8 @@ interface MemoryVersionServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/memory_stores/{memory_store_id}/memory_versions?beta=true`, but is otherwise the same
-         * as [MemoryVersionServiceAsync.list].
+         * /v1/memory_stores/{memory_store_id}/memory_versions`, but is otherwise the same as
+         * [MemoryVersionServiceAsync.list].
          */
         fun list(
             memoryStoreId: String
@@ -205,8 +205,8 @@ interface MemoryVersionServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}/redact?beta=true`,
-         * but is otherwise the same as [MemoryVersionServiceAsync.redact].
+         * /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}/redact`, but is
+         * otherwise the same as [MemoryVersionServiceAsync.redact].
          */
         fun redact(
             memoryVersionId: String,

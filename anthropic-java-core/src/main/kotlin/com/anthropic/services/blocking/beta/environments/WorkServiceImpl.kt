@@ -54,47 +54,47 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
         params: WorkRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaSelfHostedWork =
-        // get /v1/environments/{environment_id}/work/{work_id}?beta=true
+        // get /v1/environments/{environment_id}/work/{work_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: WorkUpdateParams,
         requestOptions: RequestOptions,
     ): BetaSelfHostedWork =
-        // post /v1/environments/{environment_id}/work/{work_id}?beta=true
+        // post /v1/environments/{environment_id}/work/{work_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: WorkListParams, requestOptions: RequestOptions): WorkListPage =
-        // get /v1/environments/{environment_id}/work?beta=true
+        // get /v1/environments/{environment_id}/work
         withRawResponse().list(params, requestOptions).parse()
 
     override fun ack(params: WorkAckParams, requestOptions: RequestOptions): BetaSelfHostedWork =
-        // post /v1/environments/{environment_id}/work/{work_id}/ack?beta=true
+        // post /v1/environments/{environment_id}/work/{work_id}/ack
         withRawResponse().ack(params, requestOptions).parse()
 
     override fun heartbeat(
         params: WorkHeartbeatParams,
         requestOptions: RequestOptions,
     ): BetaSelfHostedWorkHeartbeatResponse =
-        // post /v1/environments/{environment_id}/work/{work_id}/heartbeat?beta=true
+        // post /v1/environments/{environment_id}/work/{work_id}/heartbeat
         withRawResponse().heartbeat(params, requestOptions).parse()
 
     override fun poll(
         params: WorkPollParams,
         requestOptions: RequestOptions,
     ): Optional<BetaSelfHostedWork> =
-        // get /v1/environments/{environment_id}/work/poll?beta=true
+        // get /v1/environments/{environment_id}/work/poll
         withRawResponse().poll(params, requestOptions).parse()
 
     override fun stats(
         params: WorkStatsParams,
         requestOptions: RequestOptions,
     ): BetaSelfHostedWorkQueueStats =
-        // get /v1/environments/{environment_id}/work/stats?beta=true
+        // get /v1/environments/{environment_id}/work/stats
         withRawResponse().stats(params, requestOptions).parse()
 
     override fun stop(params: WorkStopParams, requestOptions: RequestOptions): BetaSelfHostedWork =
-        // post /v1/environments/{environment_id}/work/{work_id}/stop?beta=true
+        // post /v1/environments/{environment_id}/work/{work_id}/stop
         withRawResponse().stop(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -128,11 +128,13 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("work")
                     .addPathParam("workId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -165,12 +167,14 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("work")
                     .addPathParam("workId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -202,11 +206,13 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("work")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -247,12 +253,14 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathSegments("work")
                     .addPathParam("workId", params._pathParam(1))
                     .addPathSegments("ack")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -286,12 +294,14 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathSegments("work")
                     .addPathParam("workId", params._pathParam(1))
                     .addPathSegments("heartbeat")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -323,11 +333,13 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("work", "poll")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -359,11 +371,13 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathSegments("v1", "environments")
                     .addPathParam("environmentId", params._pathParam(0))
                     .addPathSegments("work", "stats")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -397,12 +411,14 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathSegments("work")
                     .addPathParam("workId", params._pathParam(1))
                     .addPathSegments("stop")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

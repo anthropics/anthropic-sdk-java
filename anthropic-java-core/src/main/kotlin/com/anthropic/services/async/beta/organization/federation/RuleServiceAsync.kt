@@ -241,8 +241,8 @@ interface RuleServiceAsync {
         fun workspaces(): WorkspaceServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/federation_rules?beta=true`, but
-         * is otherwise the same as [RuleServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/federation_rules`, but is
+         * otherwise the same as [RuleServiceAsync.create].
          */
         fun create(
             params: RuleCreateParams
@@ -257,8 +257,8 @@ interface RuleServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/federation_rules/{federation_rule_id}?beta=true`, but is otherwise the
-         * same as [RuleServiceAsync.retrieve].
+         * /v1/organizations/federation_rules/{federation_rule_id}`, but is otherwise the same as
+         * [RuleServiceAsync.retrieve].
          */
         fun retrieve(
             federationRuleId: String
@@ -301,8 +301,8 @@ interface RuleServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/federation_rules/{federation_rule_id}?beta=true`, but is otherwise the
-         * same as [RuleServiceAsync.update].
+         * /v1/organizations/federation_rules/{federation_rule_id}`, but is otherwise the same as
+         * [RuleServiceAsync.update].
          */
         fun update(
             federationRuleId: String
@@ -344,8 +344,8 @@ interface RuleServiceAsync {
             update(federationRuleId, RuleUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/federation_rules?beta=true`, but
-         * is otherwise the same as [RuleServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/federation_rules`, but is
+         * otherwise the same as [RuleServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<RuleListPageAsync>> =
             list(RuleListParams.none())
@@ -370,8 +370,8 @@ interface RuleServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/federation_rules/{federation_rule_id}/archive?beta=true`, but is
-         * otherwise the same as [RuleServiceAsync.archive].
+         * /v1/organizations/federation_rules/{federation_rule_id}/archive`, but is otherwise the
+         * same as [RuleServiceAsync.archive].
          */
         fun archive(
             federationRuleId: String

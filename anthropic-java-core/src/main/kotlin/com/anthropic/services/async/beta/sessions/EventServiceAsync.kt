@@ -142,8 +142,8 @@ interface EventServiceAsync {
         ): EventServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/events?beta=true`, but is
-         * otherwise the same as [EventServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/events`, but is otherwise
+         * the same as [EventServiceAsync.list].
          */
         fun list(sessionId: String): CompletableFuture<HttpResponseFor<EventListPageAsync>> =
             list(sessionId, EventListParams.none())
@@ -181,8 +181,8 @@ interface EventServiceAsync {
             list(sessionId, EventListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/events?beta=true`, but is
-         * otherwise the same as [EventServiceAsync.send].
+         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/events`, but is otherwise
+         * the same as [EventServiceAsync.send].
          */
         fun send(
             sessionId: String,
@@ -211,8 +211,8 @@ interface EventServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsSendSessionEvents>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/events/stream?beta=true`,
-         * but is otherwise the same as [EventServiceAsync.streamStreaming].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/events/stream`, but is
+         * otherwise the same as [EventServiceAsync.streamStreaming].
          */
         @MustBeClosed
         fun streamStreaming(

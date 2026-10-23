@@ -18,7 +18,10 @@ internal class UsageServiceAsyncTest {
 
     @Test
     fun list() {
-        val usageServiceAsync = client.beta().organization().analytics().usage()
+        val usageServiceAsync =
+            client.beta().organization().analytics().usage().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture =
             usageServiceAsync.list(

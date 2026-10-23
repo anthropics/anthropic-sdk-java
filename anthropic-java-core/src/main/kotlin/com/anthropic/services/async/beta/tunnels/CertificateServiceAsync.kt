@@ -184,8 +184,8 @@ interface CertificateServiceAsync {
         ): CertificateServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/certificates?beta=true`,
-         * but is otherwise the same as [CertificateServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/certificates`, but is
+         * otherwise the same as [CertificateServiceAsync.create].
          */
         fun create(
             tunnelId: String,
@@ -215,8 +215,8 @@ interface CertificateServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/tunnels/{tunnel_id}/certificates/{certificate_id}?beta=true`, but is otherwise the
-         * same as [CertificateServiceAsync.retrieve].
+         * /v1/tunnels/{tunnel_id}/certificates/{certificate_id}`, but is otherwise the same as
+         * [CertificateServiceAsync.retrieve].
          */
         fun retrieve(
             certificateId: String,
@@ -245,8 +245,8 @@ interface CertificateServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaTunnelCertificate>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/tunnels/{tunnel_id}/certificates?beta=true`, but
-         * is otherwise the same as [CertificateServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/tunnels/{tunnel_id}/certificates`, but is
+         * otherwise the same as [CertificateServiceAsync.list].
          */
         fun list(tunnelId: String): CompletableFuture<HttpResponseFor<CertificateListPageAsync>> =
             list(tunnelId, CertificateListParams.none())
@@ -287,8 +287,8 @@ interface CertificateServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/tunnels/{tunnel_id}/certificates/{certificate_id}/archive?beta=true`, but is
-         * otherwise the same as [CertificateServiceAsync.archive].
+         * /v1/tunnels/{tunnel_id}/certificates/{certificate_id}/archive`, but is otherwise the same
+         * as [CertificateServiceAsync.archive].
          */
         fun archive(
             certificateId: String,

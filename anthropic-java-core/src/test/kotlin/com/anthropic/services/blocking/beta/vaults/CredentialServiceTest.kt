@@ -29,7 +29,8 @@ internal class CredentialServiceTest {
 
     @Test
     fun create() {
-        val credentialService = client.beta().vaults().credentials()
+        val credentialService =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsCredential =
             credentialService.create(
@@ -57,7 +58,8 @@ internal class CredentialServiceTest {
 
     @Test
     fun retrieve() {
-        val credentialService = client.beta().vaults().credentials()
+        val credentialService =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsCredential =
             credentialService.retrieve(
@@ -74,7 +76,8 @@ internal class CredentialServiceTest {
 
     @Test
     fun update() {
-        val credentialService = client.beta().vaults().credentials()
+        val credentialService =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsCredential =
             credentialService.update(
@@ -114,7 +117,8 @@ internal class CredentialServiceTest {
 
     @Test
     fun list() {
-        val credentialService = client.beta().vaults().credentials()
+        val credentialService =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val page = credentialService.list("vlt_011CZkZDLs7fYzm1hXNPeRjv")
 
@@ -123,7 +127,8 @@ internal class CredentialServiceTest {
 
     @Test
     fun delete() {
-        val credentialService = client.beta().vaults().credentials()
+        val credentialService =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeletedCredential =
             credentialService.delete(
@@ -140,7 +145,8 @@ internal class CredentialServiceTest {
 
     @Test
     fun archive() {
-        val credentialService = client.beta().vaults().credentials()
+        val credentialService =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsCredential =
             credentialService.archive(
@@ -157,7 +163,8 @@ internal class CredentialServiceTest {
 
     @Test
     fun mcpOAuthValidate() {
-        val credentialService = client.beta().vaults().credentials()
+        val credentialService =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsCredentialValidation =
             credentialService.mcpOAuthValidate(

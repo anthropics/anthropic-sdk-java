@@ -224,8 +224,8 @@ interface ExternalKeyService {
         ): ExternalKeyService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/external_keys?beta=true`, but is
-         * otherwise the same as [ExternalKeyService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/external_keys`, but is otherwise
+         * the same as [ExternalKeyService.create].
          */
         @MustBeClosed
         fun create(params: ExternalKeyCreateParams): HttpResponseFor<BetaExternalKey> =
@@ -239,9 +239,8 @@ interface ExternalKeyService {
         ): HttpResponseFor<BetaExternalKey>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/external_keys/{external_key_id}?beta=true`, but is otherwise the same
-         * as [ExternalKeyService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/external_keys/{external_key_id}`,
+         * but is otherwise the same as [ExternalKeyService.retrieve].
          */
         @MustBeClosed
         fun retrieve(externalKeyId: String): HttpResponseFor<BetaExternalKey> =
@@ -284,9 +283,8 @@ interface ExternalKeyService {
             retrieve(externalKeyId, ExternalKeyRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/external_keys/{external_key_id}?beta=true`, but is otherwise the same
-         * as [ExternalKeyService.update].
+         * Returns a raw HTTP response for `post /v1/organizations/external_keys/{external_key_id}`,
+         * but is otherwise the same as [ExternalKeyService.update].
          */
         @MustBeClosed
         fun update(externalKeyId: String): HttpResponseFor<BetaExternalKey> =
@@ -329,8 +327,8 @@ interface ExternalKeyService {
             update(externalKeyId, ExternalKeyUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/external_keys?beta=true`, but is
-         * otherwise the same as [ExternalKeyService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/external_keys`, but is otherwise
+         * the same as [ExternalKeyService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<ExternalKeyListPage> = list(ExternalKeyListParams.none())
@@ -355,8 +353,8 @@ interface ExternalKeyService {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/external_keys/{external_key_id}?beta=true`, but is otherwise the same
-         * as [ExternalKeyService.delete].
+         * /v1/organizations/external_keys/{external_key_id}`, but is otherwise the same as
+         * [ExternalKeyService.delete].
          */
         @MustBeClosed
         fun delete(externalKeyId: String): HttpResponseFor<ExternalKeyDeleteResponse> =
@@ -401,8 +399,8 @@ interface ExternalKeyService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/external_keys/{external_key_id}/validate?beta=true`, but is otherwise
-         * the same as [ExternalKeyService.validate].
+         * /v1/organizations/external_keys/{external_key_id}/validate`, but is otherwise the same as
+         * [ExternalKeyService.validate].
          */
         @MustBeClosed
         fun validate(externalKeyId: String): HttpResponseFor<ExternalKeyValidateResponse> =

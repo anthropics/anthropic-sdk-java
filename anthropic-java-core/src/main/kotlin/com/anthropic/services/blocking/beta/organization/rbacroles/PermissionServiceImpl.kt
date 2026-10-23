@@ -36,7 +36,7 @@ class PermissionServiceImpl internal constructor(private val clientOptions: Clie
         params: PermissionListParams,
         requestOptions: RequestOptions,
     ): PermissionListPage =
-        // get /v1/organizations/rbac_roles/{rbac_role_id}/permissions?beta=true
+        // get /v1/organizations/rbac_roles/{rbac_role_id}/permissions
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -69,10 +69,12 @@ class PermissionServiceImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "organizations", "rbac_roles")
                     .addPathParam("rbacRoleId", params._pathParam(0))
                     .addPathSegments("permissions")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

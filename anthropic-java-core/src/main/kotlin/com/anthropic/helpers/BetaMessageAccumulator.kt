@@ -267,7 +267,7 @@ class BetaMessageAccumulator private constructor() {
      * has been accumulated, a [StructuredMessage] will not be available. Wait until all events have
      * been handled by [accumulate] before calling this method. See that method for more details on
      * how the last event is detected. See the
-     * [SDK documentation](https://github.com/anthropics/anthropic-sdk-java/#usage-with-streaming)
+     * [SDK documentation](https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/java#structured-outputs)
      * for more details and example code.
      *
      * @param outputType The Java class from which the JSON schema in the request was derived. The

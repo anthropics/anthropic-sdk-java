@@ -146,8 +146,8 @@ interface InviteServiceAsync {
         ): InviteServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/invites?beta=true`, but is
-         * otherwise the same as [InviteServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/invites`, but is otherwise the
+         * same as [InviteServiceAsync.create].
          */
         fun create(
             params: InviteCreateParams
@@ -161,8 +161,8 @@ interface InviteServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaOrganizationInvite>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/invites/{invite_id}?beta=true`,
-         * but is otherwise the same as [InviteServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/invites/{invite_id}`, but is
+         * otherwise the same as [InviteServiceAsync.retrieve].
          */
         fun retrieve(inviteId: String): CompletableFuture<HttpResponseFor<BetaOrganizationInvite>> =
             retrieve(inviteId, InviteRetrieveParams.none())
@@ -202,8 +202,8 @@ interface InviteServiceAsync {
             retrieve(inviteId, InviteRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/invites?beta=true`, but is
-         * otherwise the same as [InviteServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/invites`, but is otherwise the
+         * same as [InviteServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<InviteListPageAsync>> =
             list(InviteListParams.none())
@@ -227,8 +227,8 @@ interface InviteServiceAsync {
             list(InviteListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/organizations/invites/{invite_id}?beta=true`,
-         * but is otherwise the same as [InviteServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/organizations/invites/{invite_id}`, but is
+         * otherwise the same as [InviteServiceAsync.delete].
          */
         fun delete(inviteId: String): CompletableFuture<HttpResponseFor<InviteDeleteResponse>> =
             delete(inviteId, InviteDeleteParams.none())

@@ -41,25 +41,25 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         params: UserRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaOrganizationUser =
-        // get /v1/organizations/users/{user_id}?beta=true
+        // get /v1/organizations/users/{user_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: UserUpdateParams,
         requestOptions: RequestOptions,
     ): BetaOrganizationUser =
-        // post /v1/organizations/users/{user_id}?beta=true
+        // post /v1/organizations/users/{user_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: UserListParams, requestOptions: RequestOptions): UserListPage =
-        // get /v1/organizations/users?beta=true
+        // get /v1/organizations/users
         withRawResponse().list(params, requestOptions).parse()
 
     override fun remove(
         params: UserRemoveParams,
         requestOptions: RequestOptions,
     ): UserRemoveResponse =
-        // delete /v1/organizations/users/{user_id}?beta=true
+        // delete /v1/organizations/users/{user_id}
         withRawResponse().remove(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -91,10 +91,12 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "users")
                     .addPathParam("userId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -125,11 +127,13 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "users")
                     .addPathParam("userId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -156,10 +160,12 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "users")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -197,11 +203,13 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "users")
                     .addPathParam("userId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

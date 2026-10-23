@@ -18,7 +18,10 @@ internal class RbacGroupServiceAsyncTest {
 
     @Test
     fun create() {
-        val rbacGroupServiceAsync = client.beta().organization().rbacGroups()
+        val rbacGroupServiceAsync =
+            client.beta().organization().rbacGroups().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaRbacGroupFuture =
             rbacGroupServiceAsync.create(
@@ -31,7 +34,10 @@ internal class RbacGroupServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val rbacGroupServiceAsync = client.beta().organization().rbacGroups()
+        val rbacGroupServiceAsync =
+            client.beta().organization().rbacGroups().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaRbacGroupFuture = rbacGroupServiceAsync.retrieve("rbac_group_id")
 
@@ -41,7 +47,10 @@ internal class RbacGroupServiceAsyncTest {
 
     @Test
     fun update() {
-        val rbacGroupServiceAsync = client.beta().organization().rbacGroups()
+        val rbacGroupServiceAsync =
+            client.beta().organization().rbacGroups().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaRbacGroupFuture =
             rbacGroupServiceAsync.update(
@@ -57,7 +66,10 @@ internal class RbacGroupServiceAsyncTest {
 
     @Test
     fun list() {
-        val rbacGroupServiceAsync = client.beta().organization().rbacGroups()
+        val rbacGroupServiceAsync =
+            client.beta().organization().rbacGroups().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = rbacGroupServiceAsync.list()
 
@@ -67,7 +79,10 @@ internal class RbacGroupServiceAsyncTest {
 
     @Test
     fun delete() {
-        val rbacGroupServiceAsync = client.beta().organization().rbacGroups()
+        val rbacGroupServiceAsync =
+            client.beta().organization().rbacGroups().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val rbacGroupFuture = rbacGroupServiceAsync.delete("rbac_group_id")
 

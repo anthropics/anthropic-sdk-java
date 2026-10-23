@@ -131,6 +131,7 @@ private constructor(
      * variable sets (see [fromEnv]). The others stay as they are.
      */
     @JvmSynthetic
+    @Suppress("EnvironmentReadOutsideFromEnv") // Only the fromEnv() functions call this.
     internal fun withEnv(): OpenTelemetryOptions {
         val enabled =
             System.getProperty("anthropic.openTelemetry")

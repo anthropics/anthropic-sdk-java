@@ -36,7 +36,7 @@ class CostReportServiceAsyncImpl internal constructor(private val clientOptions:
         params: CostReportListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<CostReportListPageAsync> =
-        // get /v1/organizations/analytics/cost_report?beta=true
+        // get /v1/organizations/analytics/cost_report
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -64,10 +64,12 @@ class CostReportServiceAsyncImpl internal constructor(private val clientOptions:
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "cost_report")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

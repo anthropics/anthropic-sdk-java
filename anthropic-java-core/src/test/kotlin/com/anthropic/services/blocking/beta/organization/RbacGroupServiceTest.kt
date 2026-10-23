@@ -18,7 +18,10 @@ internal class RbacGroupServiceTest {
 
     @Test
     fun create() {
-        val rbacGroupService = client.beta().organization().rbacGroups()
+        val rbacGroupService =
+            client.beta().organization().rbacGroups().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaRbacGroup =
             rbacGroupService.create(RbacGroupCreateParams.builder().name("Engineering").build())
@@ -28,7 +31,10 @@ internal class RbacGroupServiceTest {
 
     @Test
     fun retrieve() {
-        val rbacGroupService = client.beta().organization().rbacGroups()
+        val rbacGroupService =
+            client.beta().organization().rbacGroups().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaRbacGroup = rbacGroupService.retrieve("rbac_group_id")
 
@@ -37,7 +43,10 @@ internal class RbacGroupServiceTest {
 
     @Test
     fun update() {
-        val rbacGroupService = client.beta().organization().rbacGroups()
+        val rbacGroupService =
+            client.beta().organization().rbacGroups().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaRbacGroup =
             rbacGroupService.update(
@@ -52,7 +61,10 @@ internal class RbacGroupServiceTest {
 
     @Test
     fun list() {
-        val rbacGroupService = client.beta().organization().rbacGroups()
+        val rbacGroupService =
+            client.beta().organization().rbacGroups().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = rbacGroupService.list()
 
@@ -61,7 +73,10 @@ internal class RbacGroupServiceTest {
 
     @Test
     fun delete() {
-        val rbacGroupService = client.beta().organization().rbacGroups()
+        val rbacGroupService =
+            client.beta().organization().rbacGroups().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val rbacGroup = rbacGroupService.delete("rbac_group_id")
 

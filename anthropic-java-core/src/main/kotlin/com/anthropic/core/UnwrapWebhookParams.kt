@@ -100,5 +100,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UnwrapWebhookParams{body=$body, headers=$headers, secret=${secret.contentToString()}}"
+        "UnwrapWebhookParams{body=$body, headers=$headers, secret=${if (secret == null) "null" else "<set>"}}"
 }

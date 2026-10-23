@@ -16,7 +16,8 @@ internal class OrganizationServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val organizationServiceAsync = client.beta().organization()
+        val organizationServiceAsync =
+            client.beta().organization().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationFuture = organizationServiceAsync.retrieve()
 

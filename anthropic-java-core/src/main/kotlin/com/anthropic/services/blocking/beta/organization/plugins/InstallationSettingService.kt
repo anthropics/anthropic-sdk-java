@@ -180,8 +180,8 @@ interface InstallationSettingService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/plugins/{plugin_id}/installation_settings?beta=true`, but is otherwise
-         * the same as [InstallationSettingService.list].
+         * /v1/organizations/plugins/{plugin_id}/installation_settings`, but is otherwise the same
+         * as [InstallationSettingService.list].
          */
         @MustBeClosed
         fun list(pluginId: String): HttpResponseFor<InstallationSettingListPage> =
@@ -227,8 +227,8 @@ interface InstallationSettingService {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/plugins/{plugin_id}/installation_settings/{target}?beta=true`, but is
-         * otherwise the same as [InstallationSettingService.remove].
+         * /v1/organizations/plugins/{plugin_id}/installation_settings/{target}`, but is otherwise
+         * the same as [InstallationSettingService.remove].
          */
         @MustBeClosed
         fun remove(
@@ -262,8 +262,8 @@ interface InstallationSettingService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/plugins/{plugin_id}/installation_settings/{target}?beta=true`, but is
-         * otherwise the same as [InstallationSettingService.set].
+         * /v1/organizations/plugins/{plugin_id}/installation_settings/{target}`, but is otherwise
+         * the same as [InstallationSettingService.set].
          */
         @MustBeClosed
         fun set(

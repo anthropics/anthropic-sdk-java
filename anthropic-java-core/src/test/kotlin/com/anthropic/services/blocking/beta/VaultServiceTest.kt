@@ -23,7 +23,7 @@ internal class VaultServiceTest {
 
     @Test
     fun create() {
-        val vaultService = client.beta().vaults()
+        val vaultService = client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsVault =
             vaultService.create(
@@ -44,7 +44,7 @@ internal class VaultServiceTest {
 
     @Test
     fun retrieve() {
-        val vaultService = client.beta().vaults()
+        val vaultService = client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsVault =
             vaultService.retrieve(
@@ -60,7 +60,7 @@ internal class VaultServiceTest {
 
     @Test
     fun update() {
-        val vaultService = client.beta().vaults()
+        val vaultService = client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsVault =
             vaultService.update(
@@ -82,7 +82,7 @@ internal class VaultServiceTest {
 
     @Test
     fun list() {
-        val vaultService = client.beta().vaults()
+        val vaultService = client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val page = vaultService.list()
 
@@ -91,7 +91,7 @@ internal class VaultServiceTest {
 
     @Test
     fun delete() {
-        val vaultService = client.beta().vaults()
+        val vaultService = client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeletedVault =
             vaultService.delete(
@@ -107,7 +107,7 @@ internal class VaultServiceTest {
 
     @Test
     fun archive() {
-        val vaultService = client.beta().vaults()
+        val vaultService = client.beta().vaults().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsVault =
             vaultService.archive(

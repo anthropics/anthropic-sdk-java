@@ -55,9 +55,8 @@ interface ActionUrlService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ActionUrlService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/user_profiles/{user_profile_id}/action_urls?beta=true`, but is otherwise the same as
-         * [ActionUrlService.create].
+         * Returns a raw HTTP response for `post /v1/user_profiles/{user_profile_id}/action_urls`,
+         * but is otherwise the same as [ActionUrlService.create].
          */
         @MustBeClosed
         fun create(

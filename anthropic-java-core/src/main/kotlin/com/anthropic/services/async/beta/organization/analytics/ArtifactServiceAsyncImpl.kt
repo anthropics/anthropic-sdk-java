@@ -36,7 +36,7 @@ class ArtifactServiceAsyncImpl internal constructor(private val clientOptions: C
         params: ArtifactListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ArtifactListPageAsync> =
-        // get /v1/organizations/analytics/artifacts?beta=true
+        // get /v1/organizations/analytics/artifacts
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -64,10 +64,12 @@ class ArtifactServiceAsyncImpl internal constructor(private val clientOptions: C
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "artifacts")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

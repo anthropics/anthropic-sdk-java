@@ -41,22 +41,21 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
         params: WorkspaceListParams,
         requestOptions: RequestOptions,
     ): WorkspaceListPage =
-        // get /v1/organizations/federation_rules/{federation_rule_id}/workspaces?beta=true
+        // get /v1/organizations/federation_rules/{federation_rule_id}/workspaces
         withRawResponse().list(params, requestOptions).parse()
 
     override fun add(
         params: WorkspaceAddParams,
         requestOptions: RequestOptions,
     ): BetaFederationRuleWorkspace =
-        // post /v1/organizations/federation_rules/{federation_rule_id}/workspaces?beta=true
+        // post /v1/organizations/federation_rules/{federation_rule_id}/workspaces
         withRawResponse().add(params, requestOptions).parse()
 
     override fun remove(
         params: WorkspaceRemoveParams,
         requestOptions: RequestOptions,
     ): WorkspaceRemoveResponse =
-        // delete
-        // /v1/organizations/federation_rules/{federation_rule_id}/workspaces/{workspace_id}?beta=true
+        // delete /v1/organizations/federation_rules/{federation_rule_id}/workspaces/{workspace_id}
         withRawResponse().remove(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -89,10 +88,12 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("v1", "organizations", "federation_rules")
                     .addPathParam("federationRuleId", params._pathParam(0))
                     .addPathSegments("workspaces")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -131,11 +132,13 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("v1", "organizations", "federation_rules")
                     .addPathParam("federationRuleId", params._pathParam(0))
                     .addPathSegments("workspaces")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -174,11 +177,13 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                     .addPathParam("federationRuleId", params._pathParam(0))
                     .addPathSegments("workspaces")
                     .addPathParam("workspaceId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

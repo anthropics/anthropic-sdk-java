@@ -96,7 +96,7 @@ interface MessageService {
      * not be deserialized automatically into an instance of that class. To deserialize the output,
      * first use a helper class to accumulate the stream of events into a single output value. See
      * the
-     * [SDK documentation](https://github.com/anthropics/anthropic-sdk-java/#usage-with-streaming)
+     * [SDK documentation](https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/java#structured-outputs)
      * for full details.
      */
     @MustBeClosed
@@ -197,8 +197,8 @@ interface MessageService {
         fun batches(): BatchService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
-         * as [MessageService.create].
+         * Returns a raw HTTP response for `post /v1/messages`, but is otherwise the same as
+         * [MessageService.create].
          */
         @MustBeClosed
         fun create(params: MessageCreateParams): HttpResponseFor<BetaMessage> =
@@ -212,8 +212,8 @@ interface MessageService {
         ): HttpResponseFor<BetaMessage>
 
         /**
-         * Returns a raw HTTP response for `post /v1/messages?beta=true`, but is otherwise the same
-         * as [MessageService.createStreaming].
+         * Returns a raw HTTP response for `post /v1/messages`, but is otherwise the same as
+         * [MessageService.createStreaming].
          */
         @MustBeClosed
         fun createStreaming(
@@ -229,8 +229,8 @@ interface MessageService {
         ): HttpResponseFor<StreamResponse<BetaRawMessageStreamEvent>>
 
         /**
-         * Returns a raw HTTP response for `post /v1/messages/count_tokens?beta=true`, but is
-         * otherwise the same as [MessageService.countTokens].
+         * Returns a raw HTTP response for `post /v1/messages/count_tokens`, but is otherwise the
+         * same as [MessageService.countTokens].
          */
         @MustBeClosed
         fun countTokens(params: MessageCountTokensParams): HttpResponseFor<BetaMessageTokensCount> =

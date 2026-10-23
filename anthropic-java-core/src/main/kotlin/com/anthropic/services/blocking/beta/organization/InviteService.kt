@@ -133,8 +133,8 @@ interface InviteService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): InviteService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/invites?beta=true`, but is
-         * otherwise the same as [InviteService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/invites`, but is otherwise the
+         * same as [InviteService.create].
          */
         @MustBeClosed
         fun create(params: InviteCreateParams): HttpResponseFor<BetaOrganizationInvite> =
@@ -148,8 +148,8 @@ interface InviteService {
         ): HttpResponseFor<BetaOrganizationInvite>
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/invites/{invite_id}?beta=true`,
-         * but is otherwise the same as [InviteService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/invites/{invite_id}`, but is
+         * otherwise the same as [InviteService.retrieve].
          */
         @MustBeClosed
         fun retrieve(inviteId: String): HttpResponseFor<BetaOrganizationInvite> =
@@ -193,8 +193,8 @@ interface InviteService {
             retrieve(inviteId, InviteRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/invites?beta=true`, but is
-         * otherwise the same as [InviteService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/invites`, but is otherwise the
+         * same as [InviteService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<InviteListPage> = list(InviteListParams.none())
 
@@ -217,8 +217,8 @@ interface InviteService {
             list(InviteListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/organizations/invites/{invite_id}?beta=true`,
-         * but is otherwise the same as [InviteService.delete].
+         * Returns a raw HTTP response for `delete /v1/organizations/invites/{invite_id}`, but is
+         * otherwise the same as [InviteService.delete].
          */
         @MustBeClosed
         fun delete(inviteId: String): HttpResponseFor<InviteDeleteResponse> =

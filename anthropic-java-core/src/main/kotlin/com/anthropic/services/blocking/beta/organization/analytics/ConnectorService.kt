@@ -59,8 +59,8 @@ interface ConnectorService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ConnectorService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/connectors?beta=true`,
-         * but is otherwise the same as [ConnectorService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/connectors`, but is
+         * otherwise the same as [ConnectorService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<ConnectorListPage> = list(ConnectorListParams.none())

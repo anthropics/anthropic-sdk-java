@@ -61,8 +61,8 @@ interface PluginService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): PluginService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/plugins?beta=true`, but
-         * is otherwise the same as [PluginService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/plugins`, but is
+         * otherwise the same as [PluginService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<PluginListPage> = list(PluginListParams.none())
 

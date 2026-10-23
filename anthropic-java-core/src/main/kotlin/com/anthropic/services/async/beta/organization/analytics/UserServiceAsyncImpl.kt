@@ -36,7 +36,7 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
         params: UserListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<UserListPageAsync> =
-        // get /v1/organizations/analytics/users?beta=true
+        // get /v1/organizations/analytics/users
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -64,10 +64,12 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "users")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

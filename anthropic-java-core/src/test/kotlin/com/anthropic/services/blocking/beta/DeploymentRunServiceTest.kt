@@ -18,7 +18,8 @@ internal class DeploymentRunServiceTest {
 
     @Test
     fun retrieve() {
-        val deploymentRunService = client.beta().deploymentRuns()
+        val deploymentRunService =
+            client.beta().deploymentRuns().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeploymentRun =
             deploymentRunService.retrieve(
@@ -34,7 +35,8 @@ internal class DeploymentRunServiceTest {
 
     @Test
     fun list() {
-        val deploymentRunService = client.beta().deploymentRuns()
+        val deploymentRunService =
+            client.beta().deploymentRuns().withOptions { it.putQueryParam("beta", "true") }
 
         val page = deploymentRunService.list()
 

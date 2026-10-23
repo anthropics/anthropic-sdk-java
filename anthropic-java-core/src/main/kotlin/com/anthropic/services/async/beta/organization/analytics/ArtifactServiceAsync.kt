@@ -54,8 +54,8 @@ interface ArtifactServiceAsync {
         ): ArtifactServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/artifacts?beta=true`,
-         * but is otherwise the same as [ArtifactServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/artifacts`, but is
+         * otherwise the same as [ArtifactServiceAsync.list].
          */
         fun list(
             params: ArtifactListParams

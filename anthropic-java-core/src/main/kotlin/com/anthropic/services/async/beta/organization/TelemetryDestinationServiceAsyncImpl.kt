@@ -67,42 +67,42 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
         params: TelemetryDestinationCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTelemetryDestination> =
-        // post /v1/organizations/telemetry_destinations?beta=true
+        // post /v1/organizations/telemetry_destinations
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: TelemetryDestinationRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTelemetryDestination> =
-        // get /v1/organizations/telemetry_destinations/{destination_id}?beta=true
+        // get /v1/organizations/telemetry_destinations/{destination_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: TelemetryDestinationUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTelemetryDestination> =
-        // post /v1/organizations/telemetry_destinations/{destination_id}?beta=true
+        // post /v1/organizations/telemetry_destinations/{destination_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: TelemetryDestinationListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TelemetryDestinationListPageAsync> =
-        // get /v1/organizations/telemetry_destinations?beta=true
+        // get /v1/organizations/telemetry_destinations
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: TelemetryDestinationDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDeletedTelemetryDestination> =
-        // delete /v1/organizations/telemetry_destinations/{destination_id}?beta=true
+        // delete /v1/organizations/telemetry_destinations/{destination_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun test(
         params: TelemetryDestinationTestParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaTelemetryDestinationTestResponse> =
-        // post /v1/organizations/telemetry_destinations/{destination_id}/test?beta=true
+        // post /v1/organizations/telemetry_destinations/{destination_id}/test
         withRawResponse().test(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -136,12 +136,14 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -181,11 +183,13 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
                     .addPathParam("destinationId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -219,12 +223,14 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
                     .addPathParam("destinationId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -254,11 +260,13 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -302,12 +310,14 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
                     .addPathParam("destinationId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -342,12 +352,14 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
                     .addPathParam("destinationId", params._pathParam(0))
                     .addPathSegments("test")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

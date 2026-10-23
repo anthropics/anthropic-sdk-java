@@ -41,32 +41,32 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
         FileServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: FileListParams, requestOptions: RequestOptions): FileListPage =
-        // get /v1/files?beta=true
+        // get /v1/files
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(params: FileDeleteParams, requestOptions: RequestOptions): BetaDeletedFile =
-        // delete /v1/files/{file_id}?beta=true
+        // delete /v1/files/{file_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun download(
         params: FileDownloadParams,
         requestOptions: RequestOptions,
     ): HttpResponse =
-        // get /v1/files/{file_id}/content?beta=true
+        // get /v1/files/{file_id}/content
         withRawResponse().download(params, requestOptions)
 
     override fun retrieveMetadata(
         params: FileRetrieveMetadataParams,
         requestOptions: RequestOptions,
     ): BetaFileMetadata =
-        // get /v1/files/{file_id}?beta=true
+        // get /v1/files/{file_id}
         withRawResponse().retrieveMetadata(params, requestOptions).parse()
 
     override fun upload(
         params: FileUploadParams,
         requestOptions: RequestOptions,
     ): BetaFileMetadata =
-        // post /v1/files?beta=true
+        // post /v1/files
         withRawResponse().upload(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -94,10 +94,12 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -135,11 +137,13 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
                     .addPathParam("fileId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -168,11 +172,13 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .addPathSegments("v1", "files")
                     .addPathParam("fileId", params._pathParam(0))
                     .addPathSegments("content")
-                    .putQueryParam("beta", "true")
                     .putHeader("Accept", "application/binary")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceRawApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response)
@@ -195,10 +201,12 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
                     .addPathParam("fileId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -225,11 +233,13 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
-                    .putQueryParam("beta", "true")
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

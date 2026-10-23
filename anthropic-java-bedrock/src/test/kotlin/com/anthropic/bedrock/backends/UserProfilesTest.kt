@@ -155,7 +155,7 @@ internal class UserProfilesTest {
                 )
         }
 
-        assertProfileIdInBody(request, "$MANTLE_HOST/v1/messages?beta=true")
+        assertProfileIdInBody(request, "$MANTLE_HOST/v1/messages")
     }
 
     @Test

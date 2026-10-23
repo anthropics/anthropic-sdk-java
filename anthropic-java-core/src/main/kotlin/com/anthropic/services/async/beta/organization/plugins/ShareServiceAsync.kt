@@ -86,9 +86,8 @@ interface ShareServiceAsync {
         ): ShareServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/plugins/{plugin_id}/shares?beta=true`, but is otherwise the same as
-         * [ShareServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/plugins/{plugin_id}/shares`, but
+         * is otherwise the same as [ShareServiceAsync.list].
          */
         fun list(pluginId: String): CompletableFuture<HttpResponseFor<ShareListPageAsync>> =
             list(pluginId, ShareListParams.none())

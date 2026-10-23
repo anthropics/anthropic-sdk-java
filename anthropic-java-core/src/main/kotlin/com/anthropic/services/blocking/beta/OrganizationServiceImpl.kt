@@ -19,6 +19,8 @@ import com.anthropic.services.blocking.beta.organization.AnalyticsService
 import com.anthropic.services.blocking.beta.organization.AnalyticsServiceImpl
 import com.anthropic.services.blocking.beta.organization.ApiKeyService
 import com.anthropic.services.blocking.beta.organization.ApiKeyServiceImpl
+import com.anthropic.services.blocking.beta.organization.ClaudeTagService
+import com.anthropic.services.blocking.beta.organization.ClaudeTagServiceImpl
 import com.anthropic.services.blocking.beta.organization.ComplianceSettingService
 import com.anthropic.services.blocking.beta.organization.ComplianceSettingServiceImpl
 import com.anthropic.services.blocking.beta.organization.ExternalKeyService
@@ -100,6 +102,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
     private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptions) }
 
+    private val claudeTag: ClaudeTagService by lazy { ClaudeTagServiceImpl(clientOptions) }
+
     override fun withRawResponse(): OrganizationService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrganizationService =
@@ -139,11 +143,13 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
     override fun webhooks(): WebhookService = webhooks
 
+    override fun claudeTag(): ClaudeTagService = claudeTag
+
     override fun retrieve(
         params: OrganizationRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaOrganization =
-        // get /v1/organizations/me?beta=true
+        // get /v1/organizations/me
         withRawResponse().retrieve(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -220,6 +226,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
             WebhookServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val claudeTag: ClaudeTagService.WithRawResponse by lazy {
+            ClaudeTagServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): OrganizationService.WithRawResponse =
@@ -264,6 +274,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
         override fun webhooks(): WebhookService.WithRawResponse = webhooks
 
+        override fun claudeTag(): ClaudeTagService.WithRawResponse = claudeTag
+
         private val retrieveHandler: Handler<BetaOrganization> =
             jsonHandler<BetaOrganization>(clientOptions.jsonMapper)
 
@@ -276,10 +288,12 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "me")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

@@ -57,8 +57,8 @@ interface UserService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/users?beta=true`, but is
-         * otherwise the same as [UserService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/users`, but is otherwise
+         * the same as [UserService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<UserListPage> = list(UserListParams.none())
 

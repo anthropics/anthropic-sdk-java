@@ -35,14 +35,14 @@ class ComplianceSettingServiceImpl internal constructor(private val clientOption
         params: ComplianceSettingRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaComplianceSettings =
-        // get /v1/organizations/compliance_settings?beta=true
+        // get /v1/organizations/compliance_settings
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: ComplianceSettingUpdateParams,
         requestOptions: RequestOptions,
     ): BetaComplianceSettings =
-        // post /v1/organizations/compliance_settings?beta=true
+        // post /v1/organizations/compliance_settings
         withRawResponse().update(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -70,10 +70,12 @@ class ComplianceSettingServiceImpl internal constructor(private val clientOption
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "compliance_settings")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -100,11 +102,13 @@ class ComplianceSettingServiceImpl internal constructor(private val clientOption
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "compliance_settings")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

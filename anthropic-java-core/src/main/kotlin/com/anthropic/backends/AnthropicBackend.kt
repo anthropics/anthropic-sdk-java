@@ -188,7 +188,9 @@ private constructor(
             System.getProperty(property)?.takeUnless { it.isEmpty() }
                 ?: getEnv(variable)?.takeUnless { it.isEmpty() }
 
-        @JvmSynthetic internal fun getEnv(name: String): String? = System.getenv(name)
+        @Suppress("EnvironmentReadOutsideFromEnv")
+        @JvmSynthetic
+        internal fun getEnv(name: String): String? = System.getenv(name)
 
         /** Passing `null` un-sets the API key, including one that an earlier [fromEnv] found. */
         fun apiKey(apiKey: String?) = apply {

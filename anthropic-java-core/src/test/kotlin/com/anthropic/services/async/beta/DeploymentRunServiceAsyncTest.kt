@@ -18,7 +18,8 @@ internal class DeploymentRunServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val deploymentRunServiceAsync = client.beta().deploymentRuns()
+        val deploymentRunServiceAsync =
+            client.beta().deploymentRuns().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeploymentRunFuture =
             deploymentRunServiceAsync.retrieve(
@@ -35,7 +36,8 @@ internal class DeploymentRunServiceAsyncTest {
 
     @Test
     fun list() {
-        val deploymentRunServiceAsync = client.beta().deploymentRuns()
+        val deploymentRunServiceAsync =
+            client.beta().deploymentRuns().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = deploymentRunServiceAsync.list()
 

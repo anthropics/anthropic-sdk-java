@@ -18,7 +18,7 @@ internal class JsonSchemaValidator private constructor() {
 
     companion object {
         private const val NO_PROPERTIES_DOC =
-            "https://github.com/anthropics/anthropic-sdk-java#defining-json-schema-properties"
+            "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/java#structured-outputs"
 
         // The names of the supported schema keywords. All other keywords will be rejected.
         private const val SCHEMA = "\$schema"

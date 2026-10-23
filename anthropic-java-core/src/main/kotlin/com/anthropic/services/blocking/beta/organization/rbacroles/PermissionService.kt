@@ -69,8 +69,8 @@ interface PermissionService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/rbac_roles/{rbac_role_id}/permissions?beta=true`, but is otherwise the
-         * same as [PermissionService.list].
+         * /v1/organizations/rbac_roles/{rbac_role_id}/permissions`, but is otherwise the same as
+         * [PermissionService.list].
          */
         @MustBeClosed
         fun list(rbacRoleId: String): HttpResponseFor<PermissionListPage> =

@@ -270,8 +270,8 @@ interface TunnelServiceAsync {
         fun certificates(): CertificateServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/tunnels?beta=true`, but is otherwise the same
-         * as [TunnelServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/tunnels`, but is otherwise the same as
+         * [TunnelServiceAsync.create].
          */
         fun create(): CompletableFuture<HttpResponseFor<BetaTunnel>> =
             create(TunnelCreateParams.none())
@@ -292,8 +292,8 @@ interface TunnelServiceAsync {
             create(TunnelCreateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/tunnels/{tunnel_id}?beta=true`, but is otherwise
-         * the same as [TunnelServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/tunnels/{tunnel_id}`, but is otherwise the same
+         * as [TunnelServiceAsync.retrieve].
          */
         fun retrieve(tunnelId: String): CompletableFuture<HttpResponseFor<BetaTunnel>> =
             retrieve(tunnelId, TunnelRetrieveParams.none())
@@ -331,7 +331,7 @@ interface TunnelServiceAsync {
             retrieve(tunnelId, TunnelRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/tunnels?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/tunnels`, but is otherwise the same as
          * [TunnelServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<TunnelListPageAsync>> =
@@ -356,8 +356,8 @@ interface TunnelServiceAsync {
             list(TunnelListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/archive?beta=true`, but is
-         * otherwise the same as [TunnelServiceAsync.archive].
+         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/archive`, but is otherwise
+         * the same as [TunnelServiceAsync.archive].
          */
         fun archive(tunnelId: String): CompletableFuture<HttpResponseFor<BetaTunnel>> =
             archive(tunnelId, TunnelArchiveParams.none())
@@ -395,8 +395,8 @@ interface TunnelServiceAsync {
             archive(tunnelId, TunnelArchiveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/reveal_token?beta=true`,
-         * but is otherwise the same as [TunnelServiceAsync.revealToken].
+         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/reveal_token`, but is
+         * otherwise the same as [TunnelServiceAsync.revealToken].
          */
         fun revealToken(tunnelId: String): CompletableFuture<HttpResponseFor<BetaTunnelToken>> =
             revealToken(tunnelId, TunnelRevealTokenParams.none())
@@ -436,8 +436,8 @@ interface TunnelServiceAsync {
             revealToken(tunnelId, TunnelRevealTokenParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/rotate_token?beta=true`,
-         * but is otherwise the same as [TunnelServiceAsync.rotateToken].
+         * Returns a raw HTTP response for `post /v1/tunnels/{tunnel_id}/rotate_token`, but is
+         * otherwise the same as [TunnelServiceAsync.rotateToken].
          */
         fun rotateToken(tunnelId: String): CompletableFuture<HttpResponseFor<BetaTunnelToken>> =
             rotateToken(tunnelId, TunnelRotateTokenParams.none())

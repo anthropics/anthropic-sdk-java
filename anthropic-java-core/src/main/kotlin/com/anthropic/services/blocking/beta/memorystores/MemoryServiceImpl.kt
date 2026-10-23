@@ -50,32 +50,32 @@ class MemoryServiceImpl internal constructor(private val clientOptions: ClientOp
         params: MemoryCreateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsMemory =
-        // post /v1/memory_stores/{memory_store_id}/memories?beta=true
+        // post /v1/memory_stores/{memory_store_id}/memories
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: MemoryRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsMemory =
-        // get /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true
+        // get /v1/memory_stores/{memory_store_id}/memories/{memory_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: MemoryUpdateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsMemory =
-        // post /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true
+        // post /v1/memory_stores/{memory_store_id}/memories/{memory_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: MemoryListParams, requestOptions: RequestOptions): MemoryListPage =
-        // get /v1/memory_stores/{memory_store_id}/memories?beta=true
+        // get /v1/memory_stores/{memory_store_id}/memories
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: MemoryDeleteParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeletedMemory =
-        // delete /v1/memory_stores/{memory_store_id}/memories/{memory_id}?beta=true
+        // delete /v1/memory_stores/{memory_store_id}/memories/{memory_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -108,12 +108,14 @@ class MemoryServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memories")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -147,11 +149,13 @@ class MemoryServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memories")
                     .addPathParam("memoryId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -184,12 +188,14 @@ class MemoryServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memories")
                     .addPathParam("memoryId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -221,11 +227,13 @@ class MemoryServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memories")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -265,12 +273,14 @@ class MemoryServiceImpl internal constructor(private val clientOptions: ClientOp
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memories")
                     .addPathParam("memoryId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

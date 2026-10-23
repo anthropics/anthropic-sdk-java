@@ -281,8 +281,8 @@ interface WebhookService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/webhooks?beta=true`, but is
-         * otherwise the same as [WebhookService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/webhooks`, but is otherwise the
+         * same as [WebhookService.create].
          */
         @MustBeClosed
         fun create(
@@ -298,9 +298,8 @@ interface WebhookService {
         ): HttpResponseFor<BetaNewOrganizationWebhookEndpoint>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true`, but is otherwise the same as
-         * [WebhookService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/webhooks/{webhook_endpoint_id}`,
+         * but is otherwise the same as [WebhookService.retrieve].
          */
         @MustBeClosed
         fun retrieve(webhookEndpointId: String): HttpResponseFor<BetaOrganizationWebhookEndpoint> =
@@ -349,9 +348,8 @@ interface WebhookService {
             retrieve(webhookEndpointId, WebhookRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true`, but is otherwise the same as
-         * [WebhookService.update].
+         * Returns a raw HTTP response for `post /v1/organizations/webhooks/{webhook_endpoint_id}`,
+         * but is otherwise the same as [WebhookService.update].
          */
         @MustBeClosed
         fun update(webhookEndpointId: String): HttpResponseFor<BetaOrganizationWebhookEndpoint> =
@@ -395,8 +393,8 @@ interface WebhookService {
             update(webhookEndpointId, WebhookUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/webhooks?beta=true`, but is
-         * otherwise the same as [WebhookService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/webhooks`, but is otherwise the
+         * same as [WebhookService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<WebhookListPage> = list(WebhookListParams.none())
 
@@ -420,7 +418,7 @@ interface WebhookService {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/webhooks/{webhook_endpoint_id}?beta=true`, but is otherwise the same as
+         * /v1/organizations/webhooks/{webhook_endpoint_id}`, but is otherwise the same as
          * [WebhookService.delete].
          */
         @MustBeClosed
@@ -470,8 +468,8 @@ interface WebhookService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/webhooks/{webhook_endpoint_id}/regenerate_signing_secret?beta=true`,
-         * but is otherwise the same as [WebhookService.regenerateSigningSecret].
+         * /v1/organizations/webhooks/{webhook_endpoint_id}/regenerate_signing_secret`, but is
+         * otherwise the same as [WebhookService.regenerateSigningSecret].
          */
         @MustBeClosed
         fun regenerateSigningSecret(

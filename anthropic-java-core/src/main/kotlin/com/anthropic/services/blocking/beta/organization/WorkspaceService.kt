@@ -171,8 +171,8 @@ interface WorkspaceService {
         fun serviceAccounts(): ServiceAccountService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/workspaces?beta=true`, but is
-         * otherwise the same as [WorkspaceService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/workspaces`, but is otherwise the
+         * same as [WorkspaceService.create].
          */
         @MustBeClosed
         fun create(params: WorkspaceCreateParams): HttpResponseFor<BetaWorkspace> =
@@ -186,9 +186,8 @@ interface WorkspaceService {
         ): HttpResponseFor<BetaWorkspace>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}?beta=true`, but is otherwise the same as
-         * [WorkspaceService.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/workspaces/{workspace_id}`, but is
+         * otherwise the same as [WorkspaceService.retrieve].
          */
         @MustBeClosed
         fun retrieve(workspaceId: String): HttpResponseFor<BetaWorkspace> =
@@ -231,9 +230,8 @@ interface WorkspaceService {
             retrieve(workspaceId, WorkspaceRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}?beta=true`, but is otherwise the same as
-         * [WorkspaceService.update].
+         * Returns a raw HTTP response for `post /v1/organizations/workspaces/{workspace_id}`, but
+         * is otherwise the same as [WorkspaceService.update].
          */
         @MustBeClosed
         fun update(workspaceId: String): HttpResponseFor<BetaWorkspace> =
@@ -276,8 +274,8 @@ interface WorkspaceService {
             update(workspaceId, WorkspaceUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/workspaces?beta=true`, but is
-         * otherwise the same as [WorkspaceService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/workspaces`, but is otherwise the
+         * same as [WorkspaceService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<WorkspaceListPage> = list(WorkspaceListParams.none())
@@ -302,8 +300,8 @@ interface WorkspaceService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/archive?beta=true`, but is otherwise the same
-         * as [WorkspaceService.archive].
+         * /v1/organizations/workspaces/{workspace_id}/archive`, but is otherwise the same as
+         * [WorkspaceService.archive].
          */
         @MustBeClosed
         fun archive(workspaceId: String): HttpResponseFor<BetaWorkspace> =

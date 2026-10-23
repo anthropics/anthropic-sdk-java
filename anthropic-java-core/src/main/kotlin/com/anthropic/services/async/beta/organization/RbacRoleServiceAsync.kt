@@ -105,9 +105,8 @@ interface RbacRoleServiceAsync {
         fun permissions(): PermissionServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/rbac_roles/{rbac_role_id}?beta=true`, but is otherwise the same as
-         * [RbacRoleServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/rbac_roles/{rbac_role_id}`, but is
+         * otherwise the same as [RbacRoleServiceAsync.retrieve].
          */
         fun retrieve(rbacRoleId: String): CompletableFuture<HttpResponseFor<BetaRbacRole>> =
             retrieve(rbacRoleId, RbacRoleRetrieveParams.none())
@@ -147,8 +146,8 @@ interface RbacRoleServiceAsync {
             retrieve(rbacRoleId, RbacRoleRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/rbac_roles?beta=true`, but is
-         * otherwise the same as [RbacRoleServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/rbac_roles`, but is otherwise the
+         * same as [RbacRoleServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<RbacRoleListPageAsync>> =
             list(RbacRoleListParams.none())

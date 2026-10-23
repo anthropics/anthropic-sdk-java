@@ -55,35 +55,35 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
         params: PluginMarketplaceRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginMarketplace> =
-        // get /v1/organizations/plugin_marketplaces/{marketplace_id}?beta=true
+        // get /v1/organizations/plugin_marketplaces/{marketplace_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: PluginMarketplaceUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginMarketplace> =
-        // post /v1/organizations/plugin_marketplaces/{marketplace_id}?beta=true
+        // post /v1/organizations/plugin_marketplaces/{marketplace_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: PluginMarketplaceListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PluginMarketplaceListPageAsync> =
-        // get /v1/organizations/plugin_marketplaces?beta=true
+        // get /v1/organizations/plugin_marketplaces
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun validateArchive(
         params: PluginMarketplaceValidateArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginMarketplaceValidationReport> =
-        // post /v1/organizations/plugin_marketplaces/validate_archive?beta=true
+        // post /v1/organizations/plugin_marketplaces/validate_archive
         withRawResponse().validateArchive(params, requestOptions).thenParse()
 
     override fun validateRepository(
         params: PluginMarketplaceValidateRepositoryParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginMarketplaceValidationReport> =
-        // post /v1/organizations/plugin_marketplaces/validate_repository?beta=true
+        // post /v1/organizations/plugin_marketplaces/validate_repository
         withRawResponse().validateRepository(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -115,11 +115,13 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugin_marketplaces")
                     .addPathParam("marketplaceId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -153,12 +155,14 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugin_marketplaces")
                     .addPathParam("marketplaceId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -188,11 +192,13 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "plugin_marketplaces")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -235,12 +241,14 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                         "plugin_marketplaces",
                         "validate_archive",
                     )
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -275,12 +283,14 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                         "plugin_marketplaces",
                         "validate_repository",
                     )
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

@@ -16,7 +16,10 @@ internal class SkillServiceTest {
 
     @Test
     fun list() {
-        val skillService = client.beta().organization().analytics().skills()
+        val skillService =
+            client.beta().organization().analytics().skills().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = skillService.list()
 

@@ -47,42 +47,42 @@ class ExternalKeyServiceAsyncImpl internal constructor(private val clientOptions
         params: ExternalKeyCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaExternalKey> =
-        // post /v1/organizations/external_keys?beta=true
+        // post /v1/organizations/external_keys
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: ExternalKeyRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaExternalKey> =
-        // get /v1/organizations/external_keys/{external_key_id}?beta=true
+        // get /v1/organizations/external_keys/{external_key_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: ExternalKeyUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaExternalKey> =
-        // post /v1/organizations/external_keys/{external_key_id}?beta=true
+        // post /v1/organizations/external_keys/{external_key_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: ExternalKeyListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ExternalKeyListPageAsync> =
-        // get /v1/organizations/external_keys?beta=true
+        // get /v1/organizations/external_keys
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: ExternalKeyDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ExternalKeyDeleteResponse> =
-        // delete /v1/organizations/external_keys/{external_key_id}?beta=true
+        // delete /v1/organizations/external_keys/{external_key_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun validate(
         params: ExternalKeyValidateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ExternalKeyValidateResponse> =
-        // post /v1/organizations/external_keys/{external_key_id}/validate?beta=true
+        // post /v1/organizations/external_keys/{external_key_id}/validate
         withRawResponse().validate(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -110,11 +110,13 @@ class ExternalKeyServiceAsyncImpl internal constructor(private val clientOptions
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "external_keys")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -154,10 +156,12 @@ class ExternalKeyServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "external_keys")
                     .addPathParam("externalKeyId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -191,11 +195,13 @@ class ExternalKeyServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "external_keys")
                     .addPathParam("externalKeyId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -225,10 +231,12 @@ class ExternalKeyServiceAsyncImpl internal constructor(private val clientOptions
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "external_keys")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -270,11 +278,13 @@ class ExternalKeyServiceAsyncImpl internal constructor(private val clientOptions
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "external_keys")
                     .addPathParam("externalKeyId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -309,11 +319,13 @@ class ExternalKeyServiceAsyncImpl internal constructor(private val clientOptions
                     .addPathSegments("v1", "organizations", "external_keys")
                     .addPathParam("externalKeyId", params._pathParam(0))
                     .addPathSegments("validate")
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

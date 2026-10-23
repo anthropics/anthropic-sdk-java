@@ -21,7 +21,10 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun create() {
-        val serviceAccountServiceAsync = client.beta().organization().serviceAccounts()
+        val serviceAccountServiceAsync =
+            client.beta().organization().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountFuture =
             serviceAccountServiceAsync.create(
@@ -39,7 +42,10 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val serviceAccountServiceAsync = client.beta().organization().serviceAccounts()
+        val serviceAccountServiceAsync =
+            client.beta().organization().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountFuture =
             serviceAccountServiceAsync.retrieve(
@@ -55,7 +61,10 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun update() {
-        val serviceAccountServiceAsync = client.beta().organization().serviceAccounts()
+        val serviceAccountServiceAsync =
+            client.beta().organization().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountFuture =
             serviceAccountServiceAsync.update(
@@ -73,7 +82,10 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun list() {
-        val serviceAccountServiceAsync = client.beta().organization().serviceAccounts()
+        val serviceAccountServiceAsync =
+            client.beta().organization().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = serviceAccountServiceAsync.list()
 
@@ -83,7 +95,10 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun archive() {
-        val serviceAccountServiceAsync = client.beta().organization().serviceAccounts()
+        val serviceAccountServiceAsync =
+            client.beta().organization().serviceAccounts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaServiceAccountFuture =
             serviceAccountServiceAsync.archive(

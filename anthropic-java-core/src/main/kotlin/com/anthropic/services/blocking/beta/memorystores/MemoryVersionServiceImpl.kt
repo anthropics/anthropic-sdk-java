@@ -47,22 +47,21 @@ class MemoryVersionServiceImpl internal constructor(private val clientOptions: C
         params: MemoryVersionRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsMemoryVersion =
-        // get /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}?beta=true
+        // get /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(
         params: MemoryVersionListParams,
         requestOptions: RequestOptions,
     ): MemoryVersionListPage =
-        // get /v1/memory_stores/{memory_store_id}/memory_versions?beta=true
+        // get /v1/memory_stores/{memory_store_id}/memory_versions
         withRawResponse().list(params, requestOptions).parse()
 
     override fun redact(
         params: MemoryVersionRedactParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsMemoryVersion =
-        // post
-        // /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}/redact?beta=true
+        // post /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}/redact
         withRawResponse().redact(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -96,11 +95,13 @@ class MemoryVersionServiceImpl internal constructor(private val clientOptions: C
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memory_versions")
                     .addPathParam("memoryVersionId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -132,11 +133,13 @@ class MemoryVersionServiceImpl internal constructor(private val clientOptions: C
                     .addPathSegments("v1", "memory_stores")
                     .addPathParam("memoryStoreId", params._pathParam(0))
                     .addPathSegments("memory_versions")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -177,12 +180,14 @@ class MemoryVersionServiceImpl internal constructor(private val clientOptions: C
                     .addPathSegments("memory_versions")
                     .addPathParam("memoryVersionId", params._pathParam(1))
                     .addPathSegments("redact")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

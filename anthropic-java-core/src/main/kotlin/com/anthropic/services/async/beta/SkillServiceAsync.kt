@@ -140,7 +140,7 @@ interface SkillServiceAsync {
         fun versions(): VersionServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/skills?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `post /v1/skills`, but is otherwise the same as
          * [SkillServiceAsync.create].
          */
         fun create(params: SkillCreateParams): CompletableFuture<HttpResponseFor<BetaSkill>> =
@@ -153,8 +153,8 @@ interface SkillServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaSkill>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/skills/{skill_id}?beta=true`, but is otherwise
-         * the same as [SkillServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/skills/{skill_id}`, but is otherwise the same as
+         * [SkillServiceAsync.retrieve].
          */
         fun retrieve(skillId: String): CompletableFuture<HttpResponseFor<BetaSkill>> =
             retrieve(skillId, SkillRetrieveParams.none())
@@ -192,7 +192,7 @@ interface SkillServiceAsync {
             retrieve(skillId, SkillRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/skills?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/skills`, but is otherwise the same as
          * [SkillServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<SkillListPageAsync>> =
@@ -217,8 +217,8 @@ interface SkillServiceAsync {
             list(SkillListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/skills/{skill_id}?beta=true`, but is
-         * otherwise the same as [SkillServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/skills/{skill_id}`, but is otherwise the same
+         * as [SkillServiceAsync.delete].
          */
         fun delete(skillId: String): CompletableFuture<HttpResponseFor<BetaDeletedSkill>> =
             delete(skillId, SkillDeleteParams.none())

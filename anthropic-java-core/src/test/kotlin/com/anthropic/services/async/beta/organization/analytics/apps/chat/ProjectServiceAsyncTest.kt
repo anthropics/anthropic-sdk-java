@@ -16,7 +16,10 @@ internal class ProjectServiceAsyncTest {
 
     @Test
     fun list() {
-        val projectServiceAsync = client.beta().organization().analytics().apps().chat().projects()
+        val projectServiceAsync =
+            client.beta().organization().analytics().apps().chat().projects().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = projectServiceAsync.list()
 

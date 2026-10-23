@@ -114,9 +114,8 @@ interface ThreadService {
         fun events(): EventService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/sessions/{session_id}/threads/{thread_id}?beta=true`, but is otherwise the same as
-         * [ThreadService.retrieve].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/threads/{thread_id}`, but
+         * is otherwise the same as [ThreadService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -148,8 +147,8 @@ interface ThreadService {
         ): HttpResponseFor<BetaManagedAgentsSessionThread>
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/threads?beta=true`, but is
-         * otherwise the same as [ThreadService.list].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/threads`, but is otherwise
+         * the same as [ThreadService.list].
          */
         @MustBeClosed
         fun list(sessionId: String): HttpResponseFor<ThreadListPage> =
@@ -193,8 +192,8 @@ interface ThreadService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/sessions/{session_id}/threads/{thread_id}/archive?beta=true`, but is otherwise the
-         * same as [ThreadService.archive].
+         * /v1/sessions/{session_id}/threads/{thread_id}/archive`, but is otherwise the same as
+         * [ThreadService.archive].
          */
         @MustBeClosed
         fun archive(

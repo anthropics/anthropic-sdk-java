@@ -21,7 +21,8 @@ internal class EventServiceTest {
 
     @Test
     fun list() {
-        val eventService = client.beta().sessions().events()
+        val eventService =
+            client.beta().sessions().events().withOptions { it.putQueryParam("beta", "true") }
 
         val page = eventService.list("sesn_011CZkZAtmR3yMPDzynEDxu7")
 
@@ -30,7 +31,8 @@ internal class EventServiceTest {
 
     @Test
     fun send() {
-        val eventService = client.beta().sessions().events()
+        val eventService =
+            client.beta().sessions().events().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsSendSessionEvents =
             eventService.send(
@@ -53,7 +55,8 @@ internal class EventServiceTest {
 
     @Test
     fun streamStreaming() {
-        val eventService = client.beta().sessions().events()
+        val eventService =
+            client.beta().sessions().events().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsStreamSessionEventsStreamResponse =
             eventService.streamStreaming(

@@ -19,7 +19,10 @@ internal class ActionUrlServiceAsyncTest {
 
     @Test
     fun create() {
-        val actionUrlServiceAsync = client.beta().userProfiles().actionUrls()
+        val actionUrlServiceAsync =
+            client.beta().userProfiles().actionUrls().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaUserProfileActionUrlFuture =
             actionUrlServiceAsync.create(

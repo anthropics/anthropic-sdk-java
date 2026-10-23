@@ -16,7 +16,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Specification for a skill to be loaded in a container (request model). */
+/** Specification for a skill to be loaded in a container. */
 class SkillParams
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

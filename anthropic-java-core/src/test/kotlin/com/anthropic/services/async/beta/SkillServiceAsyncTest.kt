@@ -22,7 +22,8 @@ internal class SkillServiceAsyncTest {
 
     @Test
     fun create() {
-        val skillServiceAsync = client.beta().skills()
+        val skillServiceAsync =
+            client.beta().skills().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSkillFuture =
             skillServiceAsync.create(
@@ -40,7 +41,8 @@ internal class SkillServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val skillServiceAsync = client.beta().skills()
+        val skillServiceAsync =
+            client.beta().skills().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSkillFuture =
             skillServiceAsync.retrieve(
@@ -57,7 +59,8 @@ internal class SkillServiceAsyncTest {
 
     @Test
     fun list() {
-        val skillServiceAsync = client.beta().skills()
+        val skillServiceAsync =
+            client.beta().skills().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = skillServiceAsync.list()
 
@@ -67,7 +70,8 @@ internal class SkillServiceAsyncTest {
 
     @Test
     fun delete() {
-        val skillServiceAsync = client.beta().skills()
+        val skillServiceAsync =
+            client.beta().skills().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedSkillFuture =
             skillServiceAsync.delete(

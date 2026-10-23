@@ -160,9 +160,8 @@ interface ResourceService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ResourceService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/sessions/{session_id}/resources/{resource_id}?beta=true`, but is otherwise the same
-         * as [ResourceService.retrieve].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/resources/{resource_id}`,
+         * but is otherwise the same as [ResourceService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -193,9 +192,8 @@ interface ResourceService {
         ): HttpResponseFor<ResourceRetrieveResponse>
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/sessions/{session_id}/resources/{resource_id}?beta=true`, but is otherwise the same
-         * as [ResourceService.update].
+         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/resources/{resource_id}`,
+         * but is otherwise the same as [ResourceService.update].
          */
         @MustBeClosed
         fun update(
@@ -226,8 +224,8 @@ interface ResourceService {
         ): HttpResponseFor<ResourceUpdateResponse>
 
         /**
-         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/resources?beta=true`, but
-         * is otherwise the same as [ResourceService.list].
+         * Returns a raw HTTP response for `get /v1/sessions/{session_id}/resources`, but is
+         * otherwise the same as [ResourceService.list].
          */
         @MustBeClosed
         fun list(sessionId: String): HttpResponseFor<ResourceListPage> =
@@ -271,8 +269,8 @@ interface ResourceService {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/sessions/{session_id}/resources/{resource_id}?beta=true`, but is otherwise the same
-         * as [ResourceService.delete].
+         * /v1/sessions/{session_id}/resources/{resource_id}`, but is otherwise the same as
+         * [ResourceService.delete].
          */
         @MustBeClosed
         fun delete(
@@ -305,8 +303,8 @@ interface ResourceService {
         ): HttpResponseFor<BetaManagedAgentsDeleteSessionResource>
 
         /**
-         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/resources?beta=true`, but
-         * is otherwise the same as [ResourceService.add].
+         * Returns a raw HTTP response for `post /v1/sessions/{session_id}/resources`, but is
+         * otherwise the same as [ResourceService.add].
          */
         @MustBeClosed
         fun add(

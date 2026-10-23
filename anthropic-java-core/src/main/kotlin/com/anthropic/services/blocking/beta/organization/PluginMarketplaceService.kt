@@ -236,8 +236,8 @@ interface PluginMarketplaceService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/plugin_marketplaces/{marketplace_id}?beta=true`, but is otherwise the
-         * same as [PluginMarketplaceService.retrieve].
+         * /v1/organizations/plugin_marketplaces/{marketplace_id}`, but is otherwise the same as
+         * [PluginMarketplaceService.retrieve].
          */
         @MustBeClosed
         fun retrieve(marketplaceId: String): HttpResponseFor<BetaPluginMarketplace> =
@@ -283,8 +283,8 @@ interface PluginMarketplaceService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/plugin_marketplaces/{marketplace_id}?beta=true`, but is otherwise the
-         * same as [PluginMarketplaceService.update].
+         * /v1/organizations/plugin_marketplaces/{marketplace_id}`, but is otherwise the same as
+         * [PluginMarketplaceService.update].
          */
         @MustBeClosed
         fun update(
@@ -315,8 +315,8 @@ interface PluginMarketplaceService {
         ): HttpResponseFor<BetaPluginMarketplace>
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/plugin_marketplaces?beta=true`,
-         * but is otherwise the same as [PluginMarketplaceService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/plugin_marketplaces`, but is
+         * otherwise the same as [PluginMarketplaceService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<PluginMarketplaceListPage> =
@@ -342,8 +342,8 @@ interface PluginMarketplaceService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/plugin_marketplaces/validate_archive?beta=true`, but is otherwise the
-         * same as [PluginMarketplaceService.validateArchive].
+         * /v1/organizations/plugin_marketplaces/validate_archive`, but is otherwise the same as
+         * [PluginMarketplaceService.validateArchive].
          */
         @MustBeClosed
         fun validateArchive(
@@ -360,8 +360,8 @@ interface PluginMarketplaceService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/plugin_marketplaces/validate_repository?beta=true`, but is otherwise
-         * the same as [PluginMarketplaceService.validateRepository].
+         * /v1/organizations/plugin_marketplaces/validate_repository`, but is otherwise the same as
+         * [PluginMarketplaceService.validateRepository].
          */
         @MustBeClosed
         fun validateRepository(

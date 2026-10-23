@@ -45,7 +45,7 @@ class ShareServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: ShareListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ShareListPageAsync> =
-        // get /v1/organizations/plugins/{plugin_id}/shares?beta=true
+        // get /v1/organizations/plugins/{plugin_id}/shares
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -78,11 +78,13 @@ class ShareServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "organizations", "plugins")
                     .addPathParam("pluginId", params._pathParam(0))
                     .addPathSegments("shares")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

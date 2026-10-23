@@ -32,7 +32,7 @@ internal class AgentServiceTest {
 
     @Test
     fun create() {
-        val agentService = client.beta().agents()
+        val agentService = client.beta().agents().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsAgent =
             agentService.create(
@@ -102,7 +102,7 @@ internal class AgentServiceTest {
 
     @Test
     fun retrieve() {
-        val agentService = client.beta().agents()
+        val agentService = client.beta().agents().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsAgent =
             agentService.retrieve(
@@ -119,7 +119,7 @@ internal class AgentServiceTest {
 
     @Test
     fun update() {
-        val agentService = client.beta().agents()
+        val agentService = client.beta().agents().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsAgent =
             agentService.update(
@@ -202,7 +202,7 @@ internal class AgentServiceTest {
 
     @Test
     fun list() {
-        val agentService = client.beta().agents()
+        val agentService = client.beta().agents().withOptions { it.putQueryParam("beta", "true") }
 
         val page = agentService.list()
 
@@ -211,7 +211,7 @@ internal class AgentServiceTest {
 
     @Test
     fun archive() {
-        val agentService = client.beta().agents()
+        val agentService = client.beta().agents().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsAgent =
             agentService.archive(

@@ -111,10 +111,16 @@ internal fun captureStderr(block: () -> Unit): String {
     return stderr.toString()
 }
 
-/** Executes [request] through the sync or async path, joining the async result. */
+/**
+ * Executes [request] through the sync or async path, joining the async result. It passes
+ * [qualifiers] with the request, by default those of a beta service.
+ */
 internal fun HttpClient.execute(
     request: HttpRequest,
     requestOptions: RequestOptions,
     async: Boolean,
-): HttpResponse =
-    if (async) executeAsync(request, requestOptions).get() else execute(request, requestOptions)
+    qualifiers: Map<String, String> = mapOf("beta" to "true"),
+): HttpResponse {
+    val options = requestOptions.withQualifiers(qualifiers)
+    return if (async) executeAsync(request, options).get() else execute(request, options)
+}

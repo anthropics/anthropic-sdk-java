@@ -45,6 +45,15 @@ internal class StreamHandlerTest {
     }
 
     @Test
+    fun streamHandler_whenIteratedTwice_throws() {
+        val handler = streamHandler { _, lines -> yieldAll(lines) }
+        val streamResponse = handler.handle(httpResponse("a\nbb".byteInputStream()))
+        streamResponse.forEach {}
+
+        assertThrows<IllegalStateException> { streamResponse.forEach {} }
+    }
+
+    @Test
     fun streamHandler_whenClosedEarly_stopsYielding() {
         val handler = streamHandler { _, lines -> yieldAll(lines) }
         val streamResponse = handler.handle(httpResponse("a\nbb\nccc\ndddd".byteInputStream()))

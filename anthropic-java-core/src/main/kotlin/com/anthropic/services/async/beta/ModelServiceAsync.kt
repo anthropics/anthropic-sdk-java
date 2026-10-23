@@ -100,8 +100,8 @@ interface ModelServiceAsync {
         ): ModelServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/models/{model_id}?beta=true`, but is otherwise
-         * the same as [ModelServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/models/{model_id}`, but is otherwise the same as
+         * [ModelServiceAsync.retrieve].
          */
         fun retrieve(modelId: String): CompletableFuture<HttpResponseFor<BetaModelInfo>> =
             retrieve(modelId, ModelRetrieveParams.none())
@@ -141,7 +141,7 @@ interface ModelServiceAsync {
             retrieve(modelId, ModelRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/models?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/models`, but is otherwise the same as
          * [ModelServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<ModelListPageAsync>> =

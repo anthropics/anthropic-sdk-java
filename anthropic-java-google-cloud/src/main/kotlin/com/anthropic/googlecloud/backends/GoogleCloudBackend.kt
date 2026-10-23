@@ -8,9 +8,9 @@ import java.util.Optional
 import java.util.function.Supplier
 
 /**
- * The backend for Claude Platform on Google Cloud that manages the Google OAuth2 credentials
- * required to access Anthropic's AI models via the Google Cloud API gateway and authorizes requests
- * with a Google OAuth2 bearer token.
+ * The backend for Claude Models on Google Cloud (Anthropic managed) that manages the Google OAuth2
+ * credentials required to access Anthropic's AI models via the Google Cloud API gateway and
+ * authorizes requests with a Google OAuth2 bearer token.
  *
  * Google Cloud requires authentication credentials issued by Google. These can be provided via
  * environment variables or other Google facilities such as the Google Cloud CLI. The application
@@ -20,8 +20,8 @@ import java.util.function.Supplier
  *
  * When the base URL is derived, a workspace ID set via [Builder.workspaceId] or the
  * `ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID` environment variable is required for every route outside
- * `/v1/organizations`. Those organization-level routes are sent to the project's organization
- * endpoint and need none.
+ * `/v1/organizations` and `/v1/user_profiles`. Those organization-level routes are sent to the
+ * project's organization endpoint and need none.
  *
  * See the Google Cloud documentation for details on how to configure Google credentials.
  */
@@ -78,6 +78,8 @@ private constructor(
 
         private const val ORGANIZATION_PATH_PREFIX = "/v1/organizations/"
 
+        private const val USER_PROFILES_PATH = "/v1/user_profiles"
+
         @JvmStatic fun builder() = Builder()
 
         /**
@@ -109,10 +111,12 @@ private constructor(
         return template.replace("{project}", project).replace("{location}", location)
     }
 
-    private fun isOrganizationRoute(request: HttpRequest): Boolean =
-        request.pathSegments
-            .joinToString(separator = "/", prefix = "/")
-            .startsWith(ORGANIZATION_PATH_PREFIX)
+    private fun isOrganizationRoute(request: HttpRequest): Boolean {
+        val path = request.pathSegments.joinToString(separator = "/", prefix = "/")
+        return path.startsWith(ORGANIZATION_PATH_PREFIX) ||
+            path == USER_PROFILES_PATH ||
+            path.startsWith("$USER_PROFILES_PATH/")
+    }
 
     override fun openTelemetryPlatform(): Optional<String> = Optional.of("googlecloud")
 
@@ -238,7 +242,9 @@ private constructor(
          * Wraps access to system environment variables to allow mocking of environment variables
          * when testing.
          */
-        @JvmSynthetic internal fun getEnv(name: String): String? = System.getenv(name)
+        @Suppress("EnvironmentReadOutsideFromEnv")
+        @JvmSynthetic
+        internal fun getEnv(name: String): String? = System.getenv(name)
 
         /**
          * Wraps resolution of Google application default credentials to allow mocking when testing.

@@ -121,8 +121,8 @@ interface MemoryVersionService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}?beta=true`, but
-         * is otherwise the same as [MemoryVersionService.retrieve].
+         * /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}`, but is
+         * otherwise the same as [MemoryVersionService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -155,8 +155,8 @@ interface MemoryVersionService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/memory_stores/{memory_store_id}/memory_versions?beta=true`, but is otherwise the same
-         * as [MemoryVersionService.list].
+         * /v1/memory_stores/{memory_store_id}/memory_versions`, but is otherwise the same as
+         * [MemoryVersionService.list].
          */
         @MustBeClosed
         fun list(memoryStoreId: String): HttpResponseFor<MemoryVersionListPage> =
@@ -201,8 +201,8 @@ interface MemoryVersionService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}/redact?beta=true`,
-         * but is otherwise the same as [MemoryVersionService.redact].
+         * /v1/memory_stores/{memory_store_id}/memory_versions/{memory_version_id}/redact`, but is
+         * otherwise the same as [MemoryVersionService.redact].
          */
         @MustBeClosed
         fun redact(

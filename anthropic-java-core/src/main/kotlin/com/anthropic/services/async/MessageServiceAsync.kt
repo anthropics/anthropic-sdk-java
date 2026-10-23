@@ -102,7 +102,7 @@ interface MessageServiceAsync {
      * not be deserialized automatically into an instance of that class. To deserialize the output,
      * first use a helper class to accumulate the stream of events into a single output value. See
      * the
-     * [SDK documentation](https://github.com/anthropics/anthropic-sdk-java/#usage-with-streaming)
+     * [SDK documentation](https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/java#structured-outputs)
      * for full details.
      */
     fun createStreaming(

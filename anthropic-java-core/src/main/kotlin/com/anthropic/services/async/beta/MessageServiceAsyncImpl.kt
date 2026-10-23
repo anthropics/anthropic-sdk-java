@@ -56,14 +56,14 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: MessageCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessage> =
-        // post /v1/messages?beta=true
+        // post /v1/messages
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun createStreaming(
         params: MessageCreateParams,
         requestOptions: RequestOptions,
     ): AsyncStreamResponse<BetaRawMessageStreamEvent> =
-        // post /v1/messages?beta=true
+        // post /v1/messages
         withRawResponse()
             .createStreaming(params, requestOptions)
             .thenApply { it.parse() }
@@ -73,7 +73,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: MessageCountTokensParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaMessageTokensCount> =
-        // post /v1/messages/count_tokens?beta=true
+        // post /v1/messages/count_tokens
         withRawResponse().countTokens(params, requestOptions).thenParse()
 
     @JvmSynthetic internal fun clientOptions(): ClientOptions = clientOptions
@@ -111,7 +111,6 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -123,6 +122,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                         isStreaming = false,
                         model = params.model().toString(),
                     )
+                    .withQualifiers(mapOf("beta" to "true"))
             val recording =
                 startMessagesCreate(clientOptions, requestOptions, params, stream = false)
             return traceApiCallAsync(clientOptions, recording?.call) { client ->
@@ -157,7 +157,6 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages")
-                    .putQueryParam("beta", "true")
                     .putHeader("Accept", "text/event-stream")
                     .body(
                         json(
@@ -179,6 +178,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                         isStreaming = true,
                         model = params.model().toString(),
                     )
+                    .withQualifiers(mapOf("beta" to "true"))
             val recording =
                 startMessagesCreate(clientOptions, requestOptions, params, stream = true)
             return traceApiCallAsync(clientOptions, recording?.call) { client ->
@@ -217,11 +217,13 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "count_tokens")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             val call = startCountTokens(clientOptions, requestOptions, params)
             return traceApiCallAsync(clientOptions, call) { client ->
                 request

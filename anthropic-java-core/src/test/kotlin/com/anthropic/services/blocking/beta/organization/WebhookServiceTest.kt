@@ -22,7 +22,8 @@ internal class WebhookServiceTest {
 
     @Test
     fun create() {
-        val webhookService = client.beta().organization().webhooks()
+        val webhookService =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val betaNewOrganizationWebhookEndpoint =
             webhookService.create(
@@ -42,7 +43,8 @@ internal class WebhookServiceTest {
 
     @Test
     fun retrieve() {
-        val webhookService = client.beta().organization().webhooks()
+        val webhookService =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationWebhookEndpoint =
             webhookService.retrieve(
@@ -57,7 +59,8 @@ internal class WebhookServiceTest {
 
     @Test
     fun update() {
-        val webhookService = client.beta().organization().webhooks()
+        val webhookService =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationWebhookEndpoint =
             webhookService.update(
@@ -79,7 +82,8 @@ internal class WebhookServiceTest {
 
     @Test
     fun list() {
-        val webhookService = client.beta().organization().webhooks()
+        val webhookService =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val page = webhookService.list()
 
@@ -88,7 +92,8 @@ internal class WebhookServiceTest {
 
     @Test
     fun delete() {
-        val webhookService = client.beta().organization().webhooks()
+        val webhookService =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedOrganizationWebhookEndpoint =
             webhookService.delete(
@@ -103,7 +108,8 @@ internal class WebhookServiceTest {
 
     @Test
     fun regenerateSigningSecret() {
-        val webhookService = client.beta().organization().webhooks()
+        val webhookService =
+            client.beta().organization().webhooks().withOptions { it.putQueryParam("beta", "true") }
 
         val betaOrganizationWebhookEndpointSigningSecret =
             webhookService.regenerateSigningSecret(

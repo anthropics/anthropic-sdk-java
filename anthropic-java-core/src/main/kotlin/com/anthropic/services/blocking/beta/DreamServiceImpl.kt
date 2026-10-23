@@ -46,23 +46,23 @@ class DreamServiceImpl internal constructor(private val clientOptions: ClientOpt
         DreamServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(params: DreamCreateParams, requestOptions: RequestOptions): BetaDream =
-        // post /v1/dreams?beta=true
+        // post /v1/dreams
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(params: DreamRetrieveParams, requestOptions: RequestOptions): BetaDream =
-        // get /v1/dreams/{dream_id}?beta=true
+        // get /v1/dreams/{dream_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(params: DreamListParams, requestOptions: RequestOptions): DreamListPage =
-        // get /v1/dreams?beta=true
+        // get /v1/dreams
         withRawResponse().list(params, requestOptions).parse()
 
     override fun archive(params: DreamArchiveParams, requestOptions: RequestOptions): BetaDream =
-        // post /v1/dreams/{dream_id}/archive?beta=true
+        // post /v1/dreams/{dream_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     override fun cancel(params: DreamCancelParams, requestOptions: RequestOptions): BetaDream =
-        // post /v1/dreams/{dream_id}/cancel?beta=true
+        // post /v1/dreams/{dream_id}/cancel
         withRawResponse().cancel(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -90,12 +90,14 @@ class DreamServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "dreams")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -127,11 +129,13 @@ class DreamServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "dreams")
                     .addPathParam("dreamId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -158,11 +162,13 @@ class DreamServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "dreams")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -201,12 +207,14 @@ class DreamServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "dreams")
                     .addPathParam("dreamId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -238,12 +246,14 @@ class DreamServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "dreams")
                     .addPathParam("dreamId", params._pathParam(0))
                     .addPathSegments("cancel")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

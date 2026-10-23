@@ -22,7 +22,7 @@ internal class SkillServiceTest {
 
     @Test
     fun create() {
-        val skillService = client.beta().skills()
+        val skillService = client.beta().skills().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSkill =
             skillService.create(
@@ -39,7 +39,7 @@ internal class SkillServiceTest {
 
     @Test
     fun retrieve() {
-        val skillService = client.beta().skills()
+        val skillService = client.beta().skills().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSkill =
             skillService.retrieve(
@@ -55,7 +55,7 @@ internal class SkillServiceTest {
 
     @Test
     fun list() {
-        val skillService = client.beta().skills()
+        val skillService = client.beta().skills().withOptions { it.putQueryParam("beta", "true") }
 
         val page = skillService.list()
 
@@ -64,7 +64,7 @@ internal class SkillServiceTest {
 
     @Test
     fun delete() {
-        val skillService = client.beta().skills()
+        val skillService = client.beta().skills().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedSkill =
             skillService.delete(

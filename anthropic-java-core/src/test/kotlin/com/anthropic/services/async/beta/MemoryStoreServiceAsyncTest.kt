@@ -23,7 +23,8 @@ internal class MemoryStoreServiceAsyncTest {
 
     @Test
     fun create() {
-        val memoryStoreServiceAsync = client.beta().memoryStores()
+        val memoryStoreServiceAsync =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryStoreFuture =
             memoryStoreServiceAsync.create(
@@ -46,7 +47,8 @@ internal class MemoryStoreServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val memoryStoreServiceAsync = client.beta().memoryStores()
+        val memoryStoreServiceAsync =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryStoreFuture =
             memoryStoreServiceAsync.retrieve(
@@ -63,7 +65,8 @@ internal class MemoryStoreServiceAsyncTest {
 
     @Test
     fun update() {
-        val memoryStoreServiceAsync = client.beta().memoryStores()
+        val memoryStoreServiceAsync =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryStoreFuture =
             memoryStoreServiceAsync.update(
@@ -87,7 +90,8 @@ internal class MemoryStoreServiceAsyncTest {
 
     @Test
     fun list() {
-        val memoryStoreServiceAsync = client.beta().memoryStores()
+        val memoryStoreServiceAsync =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = memoryStoreServiceAsync.list()
 
@@ -97,7 +101,8 @@ internal class MemoryStoreServiceAsyncTest {
 
     @Test
     fun delete() {
-        val memoryStoreServiceAsync = client.beta().memoryStores()
+        val memoryStoreServiceAsync =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeletedMemoryStoreFuture =
             memoryStoreServiceAsync.delete(
@@ -114,7 +119,8 @@ internal class MemoryStoreServiceAsyncTest {
 
     @Test
     fun archive() {
-        val memoryStoreServiceAsync = client.beta().memoryStores()
+        val memoryStoreServiceAsync =
+            client.beta().memoryStores().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsMemoryStoreFuture =
             memoryStoreServiceAsync.archive(

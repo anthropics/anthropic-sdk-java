@@ -19,7 +19,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun list() {
-        val workspaceService = client.beta().organization().federation().rules().workspaces()
+        val workspaceService =
+            client.beta().organization().federation().rules().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = workspaceService.list("federation_rule_id")
 
@@ -28,7 +31,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun add() {
-        val workspaceService = client.beta().organization().federation().rules().workspaces()
+        val workspaceService =
+            client.beta().organization().federation().rules().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationRuleWorkspace =
             workspaceService.add(
@@ -44,7 +50,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun remove() {
-        val workspaceService = client.beta().organization().federation().rules().workspaces()
+        val workspaceService =
+            client.beta().organization().federation().rules().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val workspace =
             workspaceService.remove(

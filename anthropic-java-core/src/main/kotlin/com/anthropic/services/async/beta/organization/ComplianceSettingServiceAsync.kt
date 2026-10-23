@@ -88,8 +88,8 @@ interface ComplianceSettingServiceAsync {
         ): ComplianceSettingServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/compliance_settings?beta=true`,
-         * but is otherwise the same as [ComplianceSettingServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/compliance_settings`, but is
+         * otherwise the same as [ComplianceSettingServiceAsync.retrieve].
          */
         fun retrieve(): CompletableFuture<HttpResponseFor<BetaComplianceSettings>> =
             retrieve(ComplianceSettingRetrieveParams.none())
@@ -113,8 +113,8 @@ interface ComplianceSettingServiceAsync {
             retrieve(ComplianceSettingRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/compliance_settings?beta=true`,
-         * but is otherwise the same as [ComplianceSettingServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/organizations/compliance_settings`, but is
+         * otherwise the same as [ComplianceSettingServiceAsync.update].
          */
         fun update(
             params: ComplianceSettingUpdateParams

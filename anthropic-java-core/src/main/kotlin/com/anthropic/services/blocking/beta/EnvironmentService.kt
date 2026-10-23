@@ -209,8 +209,8 @@ interface EnvironmentService {
         fun work(): WorkService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/environments?beta=true`, but is otherwise the
-         * same as [EnvironmentService.create].
+         * Returns a raw HTTP response for `post /v1/environments`, but is otherwise the same as
+         * [EnvironmentService.create].
          */
         @MustBeClosed
         fun create(params: EnvironmentCreateParams): HttpResponseFor<BetaEnvironment> =
@@ -224,8 +224,8 @@ interface EnvironmentService {
         ): HttpResponseFor<BetaEnvironment>
 
         /**
-         * Returns a raw HTTP response for `get /v1/environments/{environment_id}?beta=true`, but is
-         * otherwise the same as [EnvironmentService.retrieve].
+         * Returns a raw HTTP response for `get /v1/environments/{environment_id}`, but is otherwise
+         * the same as [EnvironmentService.retrieve].
          */
         @MustBeClosed
         fun retrieve(environmentId: String): HttpResponseFor<BetaEnvironment> =
@@ -268,8 +268,8 @@ interface EnvironmentService {
             retrieve(environmentId, EnvironmentRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/environments/{environment_id}?beta=true`, but
-         * is otherwise the same as [EnvironmentService.update].
+         * Returns a raw HTTP response for `post /v1/environments/{environment_id}`, but is
+         * otherwise the same as [EnvironmentService.update].
          */
         @MustBeClosed
         fun update(environmentId: String): HttpResponseFor<BetaEnvironment> =
@@ -312,8 +312,8 @@ interface EnvironmentService {
             update(environmentId, EnvironmentUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/environments?beta=true`, but is otherwise the
-         * same as [EnvironmentService.list].
+         * Returns a raw HTTP response for `get /v1/environments`, but is otherwise the same as
+         * [EnvironmentService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<EnvironmentListPage> = list(EnvironmentListParams.none())
@@ -337,8 +337,8 @@ interface EnvironmentService {
             list(EnvironmentListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/environments/{environment_id}?beta=true`, but
-         * is otherwise the same as [EnvironmentService.delete].
+         * Returns a raw HTTP response for `delete /v1/environments/{environment_id}`, but is
+         * otherwise the same as [EnvironmentService.delete].
          */
         @MustBeClosed
         fun delete(environmentId: String): HttpResponseFor<BetaEnvironmentDeleteResponse> =
@@ -383,9 +383,8 @@ interface EnvironmentService {
             delete(environmentId, EnvironmentDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/environments/{environment_id}/archive?beta=true`, but is otherwise the same as
-         * [EnvironmentService.archive].
+         * Returns a raw HTTP response for `post /v1/environments/{environment_id}/archive`, but is
+         * otherwise the same as [EnvironmentService.archive].
          */
         @MustBeClosed
         fun archive(environmentId: String): HttpResponseFor<BetaEnvironment> =

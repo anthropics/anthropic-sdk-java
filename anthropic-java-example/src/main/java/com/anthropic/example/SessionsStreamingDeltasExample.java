@@ -15,7 +15,6 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock;
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams;
 import com.anthropic.models.beta.sessions.events.EventSendParams;
 import com.anthropic.models.beta.sessions.events.EventStreamParams;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -84,10 +83,8 @@ public final class SessionsStreamingDeltasExample {
                             .build());
 
             System.out.println("Streaming:");
-            Iterator<BetaManagedAgentsStreamSessionEvents> it =
-                    streamResponse.stream().iterator();
-            while (it.hasNext()) {
-                BetaManagedAgentsStreamSessionEvents event = accumulator.accumulate(it.next());
+            for (BetaManagedAgentsStreamSessionEvents event : streamResponse) {
+                accumulator.accumulate(event);
 
                 if (event.isEventDelta()) {
                     // Redraw the in-progress preview text as each fragment arrives

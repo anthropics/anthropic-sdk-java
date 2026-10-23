@@ -20,7 +20,9 @@ internal class InstallationSettingServiceTest {
     @Test
     fun list() {
         val installationSettingService =
-            client.beta().organization().plugins().installationSettings()
+            client.beta().organization().plugins().installationSettings().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = installationSettingService.list("plugin_id")
 
@@ -30,7 +32,9 @@ internal class InstallationSettingServiceTest {
     @Test
     fun remove() {
         val installationSettingService =
-            client.beta().organization().plugins().installationSettings()
+            client.beta().organization().plugins().installationSettings().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaDeletedPluginInstallationSetting =
             installationSettingService.remove(
@@ -47,7 +51,9 @@ internal class InstallationSettingServiceTest {
     @Test
     fun set() {
         val installationSettingService =
-            client.beta().organization().plugins().installationSettings()
+            client.beta().organization().plugins().installationSettings().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginInstallationSetting =
             installationSettingService.set(

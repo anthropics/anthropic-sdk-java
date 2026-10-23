@@ -54,8 +54,8 @@ interface UsageServiceAsync {
         ): UsageServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/usage?beta=true`, but is
-         * otherwise the same as [UsageServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/usage`, but is otherwise
+         * the same as [UsageServiceAsync.list].
          */
         fun list(params: UsageListParams): CompletableFuture<HttpResponseFor<UsageListPageAsync>> =
             list(params, RequestOptions.none())

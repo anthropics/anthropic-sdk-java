@@ -31,7 +31,7 @@ class ProjectServiceImpl internal constructor(private val clientOptions: ClientO
         ProjectServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: ProjectListParams, requestOptions: RequestOptions): ProjectListPage =
-        // get /v1/organizations/analytics/apps/chat/projects?beta=true
+        // get /v1/organizations/analytics/apps/chat/projects
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -59,10 +59,12 @@ class ProjectServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "apps", "chat", "projects")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

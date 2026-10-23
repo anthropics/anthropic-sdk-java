@@ -33,7 +33,8 @@ internal class VersionServiceTest {
 
     @Test
     fun create() {
-        val versionService = client.beta().skills().versions()
+        val versionService =
+            client.beta().skills().versions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSkillVersion =
             versionService.create(
@@ -50,7 +51,8 @@ internal class VersionServiceTest {
 
     @Test
     fun retrieve() {
-        val versionService = client.beta().skills().versions()
+        val versionService =
+            client.beta().skills().versions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaSkillVersion =
             versionService.retrieve(
@@ -67,7 +69,8 @@ internal class VersionServiceTest {
 
     @Test
     fun list() {
-        val versionService = client.beta().skills().versions()
+        val versionService =
+            client.beta().skills().versions().withOptions { it.putQueryParam("beta", "true") }
 
         val page = versionService.list("skill_id")
 
@@ -76,7 +79,8 @@ internal class VersionServiceTest {
 
     @Test
     fun delete() {
-        val versionService = client.beta().skills().versions()
+        val versionService =
+            client.beta().skills().versions().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedSkillVersion =
             versionService.delete(
@@ -94,7 +98,12 @@ internal class VersionServiceTest {
     @Test
     fun download(wmRuntimeInfo: WireMockRuntimeInfo) {
         val versionService =
-            client.beta().skills().versions().withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
+            client
+                .beta()
+                .skills()
+                .versions()
+                .withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
+                .withOptions { it.putQueryParam("beta", "true") }
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
         val response =

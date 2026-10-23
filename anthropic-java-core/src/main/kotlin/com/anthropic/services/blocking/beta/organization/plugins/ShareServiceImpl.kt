@@ -40,7 +40,7 @@ class ShareServiceImpl internal constructor(private val clientOptions: ClientOpt
         ShareServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: ShareListParams, requestOptions: RequestOptions): ShareListPage =
-        // get /v1/organizations/plugins/{plugin_id}/shares?beta=true
+        // get /v1/organizations/plugins/{plugin_id}/shares
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -73,11 +73,13 @@ class ShareServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "organizations", "plugins")
                     .addPathParam("pluginId", params._pathParam(0))
                     .addPathSegments("shares")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

@@ -56,8 +56,8 @@ interface CostReportService {
         ): CostReportService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/cost_report?beta=true`,
-         * but is otherwise the same as [CostReportService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/cost_report`, but is
+         * otherwise the same as [CostReportService.list].
          */
         @MustBeClosed
         fun list(params: CostReportListParams): HttpResponseFor<CostReportListPage> =

@@ -20,7 +20,9 @@ internal class IncreaseRequestServiceAsyncTest {
     @Test
     fun retrieve() {
         val increaseRequestServiceAsync =
-            client.beta().organization().spendLimits().increaseRequests()
+            client.beta().organization().spendLimits().increaseRequests().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaSpendLimitIncreaseRequestFuture =
             increaseRequestServiceAsync.retrieve("spend_limit_increase_request_id")
@@ -32,7 +34,9 @@ internal class IncreaseRequestServiceAsyncTest {
     @Test
     fun list() {
         val increaseRequestServiceAsync =
-            client.beta().organization().spendLimits().increaseRequests()
+            client.beta().organization().spendLimits().increaseRequests().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = increaseRequestServiceAsync.list()
 
@@ -43,7 +47,9 @@ internal class IncreaseRequestServiceAsyncTest {
     @Test
     fun approve() {
         val increaseRequestServiceAsync =
-            client.beta().organization().spendLimits().increaseRequests()
+            client.beta().organization().spendLimits().increaseRequests().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val responseFuture =
             increaseRequestServiceAsync.approve(
@@ -62,7 +68,9 @@ internal class IncreaseRequestServiceAsyncTest {
     @Test
     fun deny() {
         val increaseRequestServiceAsync =
-            client.beta().organization().spendLimits().increaseRequests()
+            client.beta().organization().spendLimits().increaseRequests().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaSpendLimitIncreaseRequestFuture =
             increaseRequestServiceAsync.deny(

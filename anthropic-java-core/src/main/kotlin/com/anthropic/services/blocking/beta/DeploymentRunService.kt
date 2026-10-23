@@ -92,8 +92,8 @@ interface DeploymentRunService {
         ): DeploymentRunService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/deployment_runs/{deployment_run_id}?beta=true`,
-         * but is otherwise the same as [DeploymentRunService.retrieve].
+         * Returns a raw HTTP response for `get /v1/deployment_runs/{deployment_run_id}`, but is
+         * otherwise the same as [DeploymentRunService.retrieve].
          */
         @MustBeClosed
         fun retrieve(deploymentRunId: String): HttpResponseFor<BetaManagedAgentsDeploymentRun> =
@@ -138,8 +138,8 @@ interface DeploymentRunService {
             retrieve(deploymentRunId, DeploymentRunRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/deployment_runs?beta=true`, but is otherwise the
-         * same as [DeploymentRunService.list].
+         * Returns a raw HTTP response for `get /v1/deployment_runs`, but is otherwise the same as
+         * [DeploymentRunService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<DeploymentRunListPage> = list(DeploymentRunListParams.none())

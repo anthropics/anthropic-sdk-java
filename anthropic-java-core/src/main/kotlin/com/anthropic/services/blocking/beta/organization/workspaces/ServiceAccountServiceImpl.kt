@@ -43,38 +43,35 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
         params: ServiceAccountRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaServiceAccountWorkspaceMember =
-        // get
-        // /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true
+        // get /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: ServiceAccountUpdateParams,
         requestOptions: RequestOptions,
     ): BetaServiceAccountWorkspaceMember =
-        // post
-        // /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true
+        // post /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: ServiceAccountListParams,
         requestOptions: RequestOptions,
     ): ServiceAccountListPage =
-        // get /v1/organizations/workspaces/{workspace_id}/service_accounts?beta=true
+        // get /v1/organizations/workspaces/{workspace_id}/service_accounts
         withRawResponse().list(params, requestOptions).parse()
 
     override fun add(
         params: ServiceAccountAddParams,
         requestOptions: RequestOptions,
     ): BetaServiceAccountWorkspaceMember =
-        // post /v1/organizations/workspaces/{workspace_id}/service_accounts?beta=true
+        // post /v1/organizations/workspaces/{workspace_id}/service_accounts
         withRawResponse().add(params, requestOptions).parse()
 
     override fun remove(
         params: ServiceAccountRemoveParams,
         requestOptions: RequestOptions,
     ): ServiceAccountRemoveResponse =
-        // delete
-        // /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true
+        // delete /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}
         withRawResponse().remove(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -108,10 +105,12 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("service_accounts")
                     .addPathParam("serviceAccountId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -144,11 +143,13 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("service_accounts")
                     .addPathParam("serviceAccountId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -180,10 +181,12 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("service_accounts")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -222,11 +225,13 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("service_accounts")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -265,11 +270,13 @@ class ServiceAccountServiceImpl internal constructor(private val clientOptions: 
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("service_accounts")
                     .addPathParam("serviceAccountId", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

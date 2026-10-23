@@ -245,8 +245,8 @@ interface PluginMarketplaceServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/plugin_marketplaces/{marketplace_id}?beta=true`, but is otherwise the
-         * same as [PluginMarketplaceServiceAsync.retrieve].
+         * /v1/organizations/plugin_marketplaces/{marketplace_id}`, but is otherwise the same as
+         * [PluginMarketplaceServiceAsync.retrieve].
          */
         fun retrieve(
             marketplaceId: String
@@ -289,8 +289,8 @@ interface PluginMarketplaceServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/plugin_marketplaces/{marketplace_id}?beta=true`, but is otherwise the
-         * same as [PluginMarketplaceServiceAsync.update].
+         * /v1/organizations/plugin_marketplaces/{marketplace_id}`, but is otherwise the same as
+         * [PluginMarketplaceServiceAsync.update].
          */
         fun update(
             marketplaceId: String,
@@ -319,8 +319,8 @@ interface PluginMarketplaceServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaPluginMarketplace>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/plugin_marketplaces?beta=true`,
-         * but is otherwise the same as [PluginMarketplaceServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/plugin_marketplaces`, but is
+         * otherwise the same as [PluginMarketplaceServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<PluginMarketplaceListPageAsync>> =
             list(PluginMarketplaceListParams.none())
@@ -345,8 +345,8 @@ interface PluginMarketplaceServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/plugin_marketplaces/validate_archive?beta=true`, but is otherwise the
-         * same as [PluginMarketplaceServiceAsync.validateArchive].
+         * /v1/organizations/plugin_marketplaces/validate_archive`, but is otherwise the same as
+         * [PluginMarketplaceServiceAsync.validateArchive].
          */
         fun validateArchive(
             params: PluginMarketplaceValidateArchiveParams
@@ -361,8 +361,8 @@ interface PluginMarketplaceServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/plugin_marketplaces/validate_repository?beta=true`, but is otherwise
-         * the same as [PluginMarketplaceServiceAsync.validateRepository].
+         * /v1/organizations/plugin_marketplaces/validate_repository`, but is otherwise the same as
+         * [PluginMarketplaceServiceAsync.validateRepository].
          */
         fun validateRepository(
             params: PluginMarketplaceValidateRepositoryParams

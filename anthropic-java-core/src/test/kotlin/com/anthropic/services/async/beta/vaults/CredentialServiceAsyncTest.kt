@@ -29,7 +29,8 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun create() {
-        val credentialServiceAsync = client.beta().vaults().credentials()
+        val credentialServiceAsync =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsCredentialFuture =
             credentialServiceAsync.create(
@@ -58,7 +59,8 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val credentialServiceAsync = client.beta().vaults().credentials()
+        val credentialServiceAsync =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsCredentialFuture =
             credentialServiceAsync.retrieve(
@@ -76,7 +78,8 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun update() {
-        val credentialServiceAsync = client.beta().vaults().credentials()
+        val credentialServiceAsync =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsCredentialFuture =
             credentialServiceAsync.update(
@@ -117,7 +120,8 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun list() {
-        val credentialServiceAsync = client.beta().vaults().credentials()
+        val credentialServiceAsync =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = credentialServiceAsync.list("vlt_011CZkZDLs7fYzm1hXNPeRjv")
 
@@ -127,7 +131,8 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun delete() {
-        val credentialServiceAsync = client.beta().vaults().credentials()
+        val credentialServiceAsync =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsDeletedCredentialFuture =
             credentialServiceAsync.delete(
@@ -145,7 +150,8 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun archive() {
-        val credentialServiceAsync = client.beta().vaults().credentials()
+        val credentialServiceAsync =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsCredentialFuture =
             credentialServiceAsync.archive(
@@ -163,7 +169,8 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun mcpOAuthValidate() {
-        val credentialServiceAsync = client.beta().vaults().credentials()
+        val credentialServiceAsync =
+            client.beta().vaults().credentials().withOptions { it.putQueryParam("beta", "true") }
 
         val betaManagedAgentsCredentialValidationFuture =
             credentialServiceAsync.mcpOAuthValidate(

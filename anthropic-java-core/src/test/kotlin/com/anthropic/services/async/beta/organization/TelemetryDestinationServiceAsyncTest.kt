@@ -27,7 +27,10 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun create() {
-        val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
+        val telemetryDestinationServiceAsync =
+            client.beta().organization().telemetryDestinations().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaTelemetryDestinationFuture =
             telemetryDestinationServiceAsync.create(
@@ -58,7 +61,10 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
+        val telemetryDestinationServiceAsync =
+            client.beta().organization().telemetryDestinations().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaTelemetryDestinationFuture =
             telemetryDestinationServiceAsync.retrieve(
@@ -74,7 +80,10 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun update() {
-        val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
+        val telemetryDestinationServiceAsync =
+            client.beta().organization().telemetryDestinations().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaTelemetryDestinationFuture =
             telemetryDestinationServiceAsync.update(
@@ -107,7 +116,10 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun list() {
-        val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
+        val telemetryDestinationServiceAsync =
+            client.beta().organization().telemetryDestinations().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = telemetryDestinationServiceAsync.list()
 
@@ -117,7 +129,10 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun delete() {
-        val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
+        val telemetryDestinationServiceAsync =
+            client.beta().organization().telemetryDestinations().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaDeletedTelemetryDestinationFuture =
             telemetryDestinationServiceAsync.delete(
@@ -133,7 +148,10 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun test() {
-        val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
+        val telemetryDestinationServiceAsync =
+            client.beta().organization().telemetryDestinations().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaTelemetryDestinationTestResponseFuture =
             telemetryDestinationServiceAsync.test(

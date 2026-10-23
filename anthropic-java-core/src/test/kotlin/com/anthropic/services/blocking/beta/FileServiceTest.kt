@@ -31,7 +31,7 @@ internal class FileServiceTest {
 
     @Test
     fun list() {
-        val fileService = client.beta().files()
+        val fileService = client.beta().files().withOptions { it.putQueryParam("beta", "true") }
 
         val page = fileService.list()
 
@@ -40,7 +40,7 @@ internal class FileServiceTest {
 
     @Test
     fun delete() {
-        val fileService = client.beta().files()
+        val fileService = client.beta().files().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedFile =
             fileService.delete(
@@ -57,7 +57,11 @@ internal class FileServiceTest {
     @Test
     fun download(wmRuntimeInfo: WireMockRuntimeInfo) {
         val fileService =
-            client.beta().files().withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
+            client
+                .beta()
+                .files()
+                .withOptions { it.baseUrl(wmRuntimeInfo.httpBaseUrl) }
+                .withOptions { it.putQueryParam("beta", "true") }
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
         val response =
@@ -74,7 +78,7 @@ internal class FileServiceTest {
 
     @Test
     fun retrieveMetadata() {
-        val fileService = client.beta().files()
+        val fileService = client.beta().files().withOptions { it.putQueryParam("beta", "true") }
 
         val betaFileMetadata =
             fileService.retrieveMetadata(
@@ -90,7 +94,7 @@ internal class FileServiceTest {
 
     @Test
     fun upload() {
-        val fileService = client.beta().files()
+        val fileService = client.beta().files().withOptions { it.putQueryParam("beta", "true") }
 
         val betaFileMetadata =
             fileService.upload(

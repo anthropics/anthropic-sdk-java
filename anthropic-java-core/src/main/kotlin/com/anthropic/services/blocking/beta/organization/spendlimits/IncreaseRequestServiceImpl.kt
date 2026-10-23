@@ -42,15 +42,14 @@ class IncreaseRequestServiceImpl internal constructor(private val clientOptions:
         params: IncreaseRequestRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaSpendLimitIncreaseRequest =
-        // get
-        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}?beta=true
+        // get /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(
         params: IncreaseRequestListParams,
         requestOptions: RequestOptions,
     ): IncreaseRequestListPage =
-        // get /v1/organizations/spend_limit_increase_requests?beta=true
+        // get /v1/organizations/spend_limit_increase_requests
         withRawResponse().list(params, requestOptions).parse()
 
     override fun approve(
@@ -58,7 +57,7 @@ class IncreaseRequestServiceImpl internal constructor(private val clientOptions:
         requestOptions: RequestOptions,
     ): IncreaseRequestApproveResponse =
         // post
-        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/approve?beta=true
+        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/approve
         withRawResponse().approve(params, requestOptions).parse()
 
     override fun deny(
@@ -66,7 +65,7 @@ class IncreaseRequestServiceImpl internal constructor(private val clientOptions:
         requestOptions: RequestOptions,
     ): BetaSpendLimitIncreaseRequest =
         // post
-        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/deny?beta=true
+        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/deny
         withRawResponse().deny(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -101,10 +100,12 @@ class IncreaseRequestServiceImpl internal constructor(private val clientOptions:
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
                     .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -131,10 +132,12 @@ class IncreaseRequestServiceImpl internal constructor(private val clientOptions:
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -176,11 +179,13 @@ class IncreaseRequestServiceImpl internal constructor(private val clientOptions:
                     .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
                     .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
                     .addPathSegments("approve")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -215,11 +220,13 @@ class IncreaseRequestServiceImpl internal constructor(private val clientOptions:
                     .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
                     .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
                     .addPathSegments("deny")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

@@ -47,35 +47,35 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: VersionCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSkillVersion> =
-        // post /v1/skills/{skill_id}/versions?beta=true
+        // post /v1/skills/{skill_id}/versions
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: VersionRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSkillVersion> =
-        // get /v1/skills/{skill_id}/versions/{version}?beta=true
+        // get /v1/skills/{skill_id}/versions/{version}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: VersionListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<VersionListPageAsync> =
-        // get /v1/skills/{skill_id}/versions?beta=true
+        // get /v1/skills/{skill_id}/versions
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: VersionDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDeletedSkillVersion> =
-        // delete /v1/skills/{skill_id}/versions/{version}?beta=true
+        // delete /v1/skills/{skill_id}/versions/{version}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun download(
         params: VersionDownloadParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> =
-        // get /v1/skills/{skill_id}/versions/{version}/content?beta=true
+        // get /v1/skills/{skill_id}/versions/{version}/content
         withRawResponse().download(params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -108,11 +108,13 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("v1", "skills")
                     .addPathParam("skillId", params._pathParam(0))
                     .addPathSegments("versions")
-                    .putQueryParam("beta", "true")
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -151,10 +153,12 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathParam("skillId", params._pathParam(0))
                     .addPathSegments("versions")
                     .addPathParam("version", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -189,10 +193,12 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("v1", "skills")
                     .addPathParam("skillId", params._pathParam(0))
                     .addPathSegments("versions")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -236,11 +242,13 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathParam("skillId", params._pathParam(0))
                     .addPathSegments("versions")
                     .addPathParam("version", params._pathParam(1))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -274,11 +282,13 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("versions")
                     .addPathParam("version", params._pathParam(1))
                     .addPathSegments("content")
-                    .putQueryParam("beta", "true")
                     .putHeader("Accept", "application/binary")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceRawApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

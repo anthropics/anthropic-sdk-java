@@ -22,7 +22,10 @@ internal class IssuerServiceTest {
 
     @Test
     fun create() {
-        val issuerService = client.beta().organization().federation().issuers()
+        val issuerService =
+            client.beta().organization().federation().issuers().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationIssuer =
             issuerService.create(
@@ -46,7 +49,10 @@ internal class IssuerServiceTest {
 
     @Test
     fun retrieve() {
-        val issuerService = client.beta().organization().federation().issuers()
+        val issuerService =
+            client.beta().organization().federation().issuers().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationIssuer =
             issuerService.retrieve(
@@ -61,7 +67,10 @@ internal class IssuerServiceTest {
 
     @Test
     fun update() {
-        val issuerService = client.beta().organization().federation().issuers()
+        val issuerService =
+            client.beta().organization().federation().issuers().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationIssuer =
             issuerService.update(
@@ -87,7 +96,10 @@ internal class IssuerServiceTest {
 
     @Test
     fun list() {
-        val issuerService = client.beta().organization().federation().issuers()
+        val issuerService =
+            client.beta().organization().federation().issuers().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = issuerService.list()
 
@@ -96,7 +108,10 @@ internal class IssuerServiceTest {
 
     @Test
     fun archive() {
-        val issuerService = client.beta().organization().federation().issuers()
+        val issuerService =
+            client.beta().organization().federation().issuers().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationIssuer =
             issuerService.archive(

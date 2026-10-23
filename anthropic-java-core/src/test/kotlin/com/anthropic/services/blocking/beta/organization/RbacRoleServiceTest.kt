@@ -16,7 +16,10 @@ internal class RbacRoleServiceTest {
 
     @Test
     fun retrieve() {
-        val rbacRoleService = client.beta().organization().rbacRoles()
+        val rbacRoleService =
+            client.beta().organization().rbacRoles().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaRbacRole = rbacRoleService.retrieve("rbac_role_id")
 
@@ -25,7 +28,10 @@ internal class RbacRoleServiceTest {
 
     @Test
     fun list() {
-        val rbacRoleService = client.beta().organization().rbacRoles()
+        val rbacRoleService =
+            client.beta().organization().rbacRoles().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = rbacRoleService.list()
 

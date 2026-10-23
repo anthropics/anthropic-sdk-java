@@ -23,7 +23,7 @@ internal class BetaAnalyticsUsageMetricsTest {
                 .outputTokens(891000L)
                 .requests(128L)
                 .serverToolUse(BetaAnalyticsServerToolUse.of(10L))
-                .totalTokens(5377000L)
+                .totalTokens(5375500L)
                 .uncachedInputTokens(1284500L)
                 .build()
 
@@ -39,7 +39,7 @@ internal class BetaAnalyticsUsageMetricsTest {
         assertThat(betaAnalyticsUsageMetrics.requests()).contains(128L)
         assertThat(betaAnalyticsUsageMetrics.serverToolUse())
             .isEqualTo(BetaAnalyticsServerToolUse.of(10L))
-        assertThat(betaAnalyticsUsageMetrics.totalTokens()).isEqualTo(5377000L)
+        assertThat(betaAnalyticsUsageMetrics.totalTokens()).isEqualTo(5375500L)
         assertThat(betaAnalyticsUsageMetrics.uncachedInputTokens()).isEqualTo(1284500L)
     }
 
@@ -58,7 +58,7 @@ internal class BetaAnalyticsUsageMetricsTest {
                 .outputTokens(891000L)
                 .requests(128L)
                 .serverToolUse(BetaAnalyticsServerToolUse.of(10L))
-                .totalTokens(5377000L)
+                .totalTokens(5375500L)
                 .uncachedInputTokens(1284500L)
                 .build()
 

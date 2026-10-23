@@ -34,7 +34,7 @@ class ArtifactServiceImpl internal constructor(private val clientOptions: Client
         params: ArtifactListParams,
         requestOptions: RequestOptions,
     ): ArtifactListPage =
-        // get /v1/organizations/analytics/artifacts?beta=true
+        // get /v1/organizations/analytics/artifacts
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -62,10 +62,12 @@ class ArtifactServiceImpl internal constructor(private val clientOptions: Client
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "analytics", "artifacts")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

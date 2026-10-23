@@ -63,6 +63,11 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.organization.analytics.users;
     exports com.anthropic.models.beta.organization.analytics.userusagereport;
     exports com.anthropic.models.beta.organization.apikeys;
+    exports com.anthropic.models.beta.organization.claudetag;
+    exports com.anthropic.models.beta.organization.claudetag.bundles;
+    exports com.anthropic.models.beta.organization.claudetag.bundles.targets;
+    exports com.anthropic.models.beta.organization.claudetag.slackchannels;
+    exports com.anthropic.models.beta.organization.claudetag.slackworkspaces;
     exports com.anthropic.models.beta.organization.compliancesettings;
     exports com.anthropic.models.beta.organization.externalkeys;
     exports com.anthropic.models.beta.organization.federation.issuers;
@@ -140,6 +145,8 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.beta.organization.analytics;
     exports com.anthropic.services.async.beta.organization.analytics.apps;
     exports com.anthropic.services.async.beta.organization.analytics.apps.chat;
+    exports com.anthropic.services.async.beta.organization.claudetag;
+    exports com.anthropic.services.async.beta.organization.claudetag.bundles;
     exports com.anthropic.services.async.beta.organization.federation;
     exports com.anthropic.services.async.beta.organization.federation.rules;
     exports com.anthropic.services.async.beta.organization.plugins;
@@ -173,6 +180,8 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.beta.organization.analytics;
     exports com.anthropic.services.blocking.beta.organization.analytics.apps;
     exports com.anthropic.services.blocking.beta.organization.analytics.apps.chat;
+    exports com.anthropic.services.blocking.beta.organization.claudetag;
+    exports com.anthropic.services.blocking.beta.organization.claudetag.bundles;
     exports com.anthropic.services.blocking.beta.organization.federation;
     exports com.anthropic.services.blocking.beta.organization.federation.rules;
     exports com.anthropic.services.blocking.beta.organization.plugins;

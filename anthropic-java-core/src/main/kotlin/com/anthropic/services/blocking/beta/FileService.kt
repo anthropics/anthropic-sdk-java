@@ -162,7 +162,7 @@ interface FileService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/files?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/files`, but is otherwise the same as
          * [FileService.list].
          */
         @MustBeClosed fun list(): HttpResponseFor<FileListPage> = list(FileListParams.none())
@@ -185,8 +185,8 @@ interface FileService {
             list(FileListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /v1/files/{file_id}?beta=true`, but is otherwise
-         * the same as [FileService.delete].
+         * Returns a raw HTTP response for `delete /v1/files/{file_id}`, but is otherwise the same
+         * as [FileService.delete].
          */
         @MustBeClosed
         fun delete(fileId: String): HttpResponseFor<BetaDeletedFile> =
@@ -229,8 +229,8 @@ interface FileService {
             delete(fileId, FileDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/files/{file_id}/content?beta=true`, but is
-         * otherwise the same as [FileService.download].
+         * Returns a raw HTTP response for `get /v1/files/{file_id}/content`, but is otherwise the
+         * same as [FileService.download].
          */
         @MustBeClosed
         fun download(fileId: String): HttpResponse = download(fileId, FileDownloadParams.none())
@@ -268,8 +268,8 @@ interface FileService {
             download(fileId, FileDownloadParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/files/{file_id}?beta=true`, but is otherwise the
-         * same as [FileService.retrieveMetadata].
+         * Returns a raw HTTP response for `get /v1/files/{file_id}`, but is otherwise the same as
+         * [FileService.retrieveMetadata].
          */
         @MustBeClosed
         fun retrieveMetadata(fileId: String): HttpResponseFor<BetaFileMetadata> =
@@ -314,7 +314,7 @@ interface FileService {
             retrieveMetadata(fileId, FileRetrieveMetadataParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/files?beta=true`, but is otherwise the same as
+         * Returns a raw HTTP response for `post /v1/files`, but is otherwise the same as
          * [FileService.upload].
          */
         @MustBeClosed

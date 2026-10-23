@@ -16,7 +16,8 @@ internal class VersionServiceAsyncTest {
 
     @Test
     fun list() {
-        val versionServiceAsync = client.beta().agents().versions()
+        val versionServiceAsync =
+            client.beta().agents().versions().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = versionServiceAsync.list("agent_011CZkYpogX7uDKUyvBTophP")
 

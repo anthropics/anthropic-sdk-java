@@ -40,15 +40,15 @@ class ApiKeyServiceImpl internal constructor(private val clientOptions: ClientOp
         params: ApiKeyRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaApiKey =
-        // get /v1/organizations/api_keys/{api_key_id}?beta=true
+        // get /v1/organizations/api_keys/{api_key_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(params: ApiKeyUpdateParams, requestOptions: RequestOptions): BetaApiKey =
-        // post /v1/organizations/api_keys/{api_key_id}?beta=true
+        // post /v1/organizations/api_keys/{api_key_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: ApiKeyListParams, requestOptions: RequestOptions): ApiKeyListPage =
-        // get /v1/organizations/api_keys?beta=true
+        // get /v1/organizations/api_keys
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -80,10 +80,12 @@ class ApiKeyServiceImpl internal constructor(private val clientOptions: ClientOp
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "api_keys")
                     .addPathParam("apiKeyId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -114,11 +116,13 @@ class ApiKeyServiceImpl internal constructor(private val clientOptions: ClientOp
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "api_keys")
                     .addPathParam("apiKeyId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -145,10 +149,12 @@ class ApiKeyServiceImpl internal constructor(private val clientOptions: ClientOp
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "api_keys")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

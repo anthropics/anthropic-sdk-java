@@ -52,8 +52,8 @@ interface CostServiceAsync {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): CostServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/cost?beta=true`, but is
-         * otherwise the same as [CostServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/cost`, but is otherwise
+         * the same as [CostServiceAsync.list].
          */
         fun list(params: CostListParams): CompletableFuture<HttpResponseFor<CostListPageAsync>> =
             list(params, RequestOptions.none())

@@ -71,39 +71,39 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
         params: SessionCreateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsSession =
-        // post /v1/sessions?beta=true
+        // post /v1/sessions
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: SessionRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsSession =
-        // get /v1/sessions/{session_id}?beta=true
+        // get /v1/sessions/{session_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: SessionUpdateParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsSession =
-        // post /v1/sessions/{session_id}?beta=true
+        // post /v1/sessions/{session_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: SessionListParams, requestOptions: RequestOptions): SessionListPage =
-        // get /v1/sessions?beta=true
+        // get /v1/sessions
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: SessionDeleteParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeletedSession =
-        // delete /v1/sessions/{session_id}?beta=true
+        // delete /v1/sessions/{session_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun archive(
         params: SessionArchiveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsSession =
-        // post /v1/sessions/{session_id}/archive?beta=true
+        // post /v1/sessions/{session_id}/archive
         withRawResponse().archive(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -149,12 +149,14 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "sessions")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             val call = startSessionsCreate(clientOptions, requestOptions, params)
             return traceApiCall(clientOptions, call) { client ->
                 val response = client.execute(request, requestOptions)
@@ -188,11 +190,13 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -223,12 +227,14 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -255,11 +261,13 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "sessions")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -297,12 +305,14 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -334,12 +344,14 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

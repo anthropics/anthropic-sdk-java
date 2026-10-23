@@ -20,7 +20,10 @@ internal class MemoryVersionServiceTest {
 
     @Test
     fun retrieve() {
-        val memoryVersionService = client.beta().memoryStores().memoryVersions()
+        val memoryVersionService =
+            client.beta().memoryStores().memoryVersions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaManagedAgentsMemoryVersion =
             memoryVersionService.retrieve(
@@ -38,7 +41,10 @@ internal class MemoryVersionServiceTest {
 
     @Test
     fun list() {
-        val memoryVersionService = client.beta().memoryStores().memoryVersions()
+        val memoryVersionService =
+            client.beta().memoryStores().memoryVersions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = memoryVersionService.list("memory_store_id")
 
@@ -47,7 +53,10 @@ internal class MemoryVersionServiceTest {
 
     @Test
     fun redact() {
-        val memoryVersionService = client.beta().memoryStores().memoryVersions()
+        val memoryVersionService =
+            client.beta().memoryStores().memoryVersions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaManagedAgentsMemoryVersion =
             memoryVersionService.redact(

@@ -16,7 +16,10 @@ internal class PermissionServiceAsyncTest {
 
     @Test
     fun list() {
-        val permissionServiceAsync = client.beta().organization().rbacRoles().permissions()
+        val permissionServiceAsync =
+            client.beta().organization().rbacRoles().permissions().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = permissionServiceAsync.list("rbac_role_id")
 

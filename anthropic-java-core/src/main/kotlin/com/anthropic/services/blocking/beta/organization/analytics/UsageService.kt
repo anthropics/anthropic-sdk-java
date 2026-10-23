@@ -51,8 +51,8 @@ interface UsageService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UsageService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/usage?beta=true`, but is
-         * otherwise the same as [UsageService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/usage`, but is otherwise
+         * the same as [UsageService.list].
          */
         @MustBeClosed
         fun list(params: UsageListParams): HttpResponseFor<UsageListPage> =

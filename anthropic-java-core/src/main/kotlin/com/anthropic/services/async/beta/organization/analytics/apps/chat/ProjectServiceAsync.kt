@@ -62,9 +62,8 @@ interface ProjectServiceAsync {
         ): ProjectServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/analytics/apps/chat/projects?beta=true`, but is otherwise the same as
-         * [ProjectServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/apps/chat/projects`, but
+         * is otherwise the same as [ProjectServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<ProjectListPageAsync>> =
             list(ProjectListParams.none())

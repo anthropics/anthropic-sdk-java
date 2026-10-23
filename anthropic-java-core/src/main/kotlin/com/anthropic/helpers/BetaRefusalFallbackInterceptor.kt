@@ -72,7 +72,6 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.streams.asSequence
 
 /**
  * An [Interceptor] that retries refused beta `/v1/messages` requests down a fallback chain.
@@ -442,13 +441,13 @@ private constructor(
      * `null` if the request should pass through unintercepted.
      */
     private fun prepare(request: HttpRequest, requestOptions: RequestOptions): PreparedRequest? {
-        // This interceptor only applies to the beta messages API — the SDK's beta services tag
-        // their requests with `beta=true`. An empty chain also disables this interceptor.
+        // This interceptor only applies to the beta messages API — the SDK's beta services pass
+        // the `beta` qualifier with their requests. An empty chain also disables this interceptor.
         if (
             fallbacks.isEmpty() ||
                 request.method != HttpMethod.POST ||
                 request.pathSegments != listOf("v1", "messages") ||
-                !request.queryParams.values("beta").contains("true") ||
+                requestOptions.qualifiers?.get("beta") != "true" ||
                 !request.body().isPresent
         ) {
             return null
@@ -1216,7 +1215,7 @@ private class FallbackStreamSplicer(
         var startInputTransformations: JsonNode? = null
 
         rawSseHandler(jsonMapper).handle(response).use { sseStream ->
-            events@ for (sse in sseStream.stream().asSequence()) {
+            events@ for (sse in sseStream) {
                 // The decoder's `lastId` persists across messages, so stray blank lines after an
                 // id-bearing message can flush line-less messages; nothing to forward.
                 if (sse.rawLines.isEmpty()) {

@@ -78,8 +78,8 @@ interface PermissionServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/rbac_roles/{rbac_role_id}/permissions?beta=true`, but is otherwise the
-         * same as [PermissionServiceAsync.list].
+         * /v1/organizations/rbac_roles/{rbac_role_id}/permissions`, but is otherwise the same as
+         * [PermissionServiceAsync.list].
          */
         fun list(rbacRoleId: String): CompletableFuture<HttpResponseFor<PermissionListPageAsync>> =
             list(rbacRoleId, PermissionListParams.none())

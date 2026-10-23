@@ -60,8 +60,8 @@ interface CostReportServiceAsync {
         ): CostReportServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/analytics/cost_report?beta=true`,
-         * but is otherwise the same as [CostReportServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/analytics/cost_report`, but is
+         * otherwise the same as [CostReportServiceAsync.list].
          */
         fun list(
             params: CostReportListParams

@@ -206,8 +206,8 @@ interface RbacGroupServiceAsync {
         fun members(): MemberServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/rbac_groups?beta=true`, but is
-         * otherwise the same as [RbacGroupServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/rbac_groups`, but is otherwise
+         * the same as [RbacGroupServiceAsync.create].
          */
         fun create(
             params: RbacGroupCreateParams
@@ -220,9 +220,8 @@ interface RbacGroupServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaRbacGroup>>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/rbac_groups/{rbac_group_id}?beta=true`, but is otherwise the same as
-         * [RbacGroupServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/rbac_groups/{rbac_group_id}`, but
+         * is otherwise the same as [RbacGroupServiceAsync.retrieve].
          */
         fun retrieve(rbacGroupId: String): CompletableFuture<HttpResponseFor<BetaRbacGroup>> =
             retrieve(rbacGroupId, RbacGroupRetrieveParams.none())
@@ -262,9 +261,8 @@ interface RbacGroupServiceAsync {
             retrieve(rbacGroupId, RbacGroupRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post
-         * /v1/organizations/rbac_groups/{rbac_group_id}?beta=true`, but is otherwise the same as
-         * [RbacGroupServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/organizations/rbac_groups/{rbac_group_id}`, but
+         * is otherwise the same as [RbacGroupServiceAsync.update].
          */
         fun update(rbacGroupId: String): CompletableFuture<HttpResponseFor<BetaRbacGroup>> =
             update(rbacGroupId, RbacGroupUpdateParams.none())
@@ -303,8 +301,8 @@ interface RbacGroupServiceAsync {
             update(rbacGroupId, RbacGroupUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/rbac_groups?beta=true`, but is
-         * otherwise the same as [RbacGroupServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/rbac_groups`, but is otherwise the
+         * same as [RbacGroupServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<RbacGroupListPageAsync>> =
             list(RbacGroupListParams.none())
@@ -328,9 +326,8 @@ interface RbacGroupServiceAsync {
             list(RbacGroupListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete
-         * /v1/organizations/rbac_groups/{rbac_group_id}?beta=true`, but is otherwise the same as
-         * [RbacGroupServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/organizations/rbac_groups/{rbac_group_id}`,
+         * but is otherwise the same as [RbacGroupServiceAsync.delete].
          */
         fun delete(
             rbacGroupId: String

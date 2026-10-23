@@ -47,7 +47,8 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun create() {
-        val batchServiceAsync = client.beta().messages().batches()
+        val batchServiceAsync =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageBatchFuture =
             batchServiceAsync.create(
@@ -255,7 +256,8 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val batchServiceAsync = client.beta().messages().batches()
+        val batchServiceAsync =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageBatchFuture =
             batchServiceAsync.retrieve(
@@ -272,7 +274,8 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun list() {
-        val batchServiceAsync = client.beta().messages().batches()
+        val batchServiceAsync =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val pageFuture = batchServiceAsync.list()
 
@@ -282,7 +285,8 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun delete() {
-        val batchServiceAsync = client.beta().messages().batches()
+        val batchServiceAsync =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val betaDeletedMessageBatchFuture =
             batchServiceAsync.delete(
@@ -299,7 +303,8 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun cancel() {
-        val batchServiceAsync = client.beta().messages().batches()
+        val batchServiceAsync =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageBatchFuture =
             batchServiceAsync.cancel(
@@ -316,7 +321,8 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun resultsStreaming() {
-        val batchServiceAsync = client.beta().messages().batches()
+        val batchServiceAsync =
+            client.beta().messages().batches().withOptions { it.putQueryParam("beta", "true") }
 
         val betaMessageBatchIndividualResponseStreamResponse =
             batchServiceAsync.resultsStreaming(

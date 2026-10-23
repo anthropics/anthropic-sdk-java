@@ -61,42 +61,42 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: VaultCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsVault> =
-        // post /v1/vaults?beta=true
+        // post /v1/vaults
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: VaultRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsVault> =
-        // get /v1/vaults/{vault_id}?beta=true
+        // get /v1/vaults/{vault_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: VaultUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsVault> =
-        // post /v1/vaults/{vault_id}?beta=true
+        // post /v1/vaults/{vault_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: VaultListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<VaultListPageAsync> =
-        // get /v1/vaults?beta=true
+        // get /v1/vaults
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: VaultDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeletedVault> =
-        // delete /v1/vaults/{vault_id}?beta=true
+        // delete /v1/vaults/{vault_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun archive(
         params: VaultArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsVault> =
-        // post /v1/vaults/{vault_id}/archive?beta=true
+        // post /v1/vaults/{vault_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -130,12 +130,14 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "vaults")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -170,11 +172,13 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -208,12 +212,14 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -243,11 +249,13 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "vaults")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -289,12 +297,14 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -329,12 +339,14 @@ class VaultServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "vaults")
                     .addPathParam("vaultId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

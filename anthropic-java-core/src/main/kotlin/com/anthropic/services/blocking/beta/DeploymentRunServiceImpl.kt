@@ -45,14 +45,14 @@ class DeploymentRunServiceImpl internal constructor(private val clientOptions: C
         params: DeploymentRunRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaManagedAgentsDeploymentRun =
-        // get /v1/deployment_runs/{deployment_run_id}?beta=true
+        // get /v1/deployment_runs/{deployment_run_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(
         params: DeploymentRunListParams,
         requestOptions: RequestOptions,
     ): DeploymentRunListPage =
-        // get /v1/deployment_runs?beta=true
+        // get /v1/deployment_runs
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -84,11 +84,13 @@ class DeploymentRunServiceImpl internal constructor(private val clientOptions: C
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployment_runs")
                     .addPathParam("deploymentRunId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -115,11 +117,13 @@ class DeploymentRunServiceImpl internal constructor(private val clientOptions: C
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployment_runs")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

@@ -1,5 +1,42 @@
 # Changelog
 
+## [3.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.2.0...v3.3.0) (2026-10-23)
+
+### Features
+
+* **api:** add Claude Tag endpoints for Claude Enterprise organizations
+* **client:** make StreamResponse iterable
+
+
+### Bug Fixes
+
+* **client:** hide the webhook secret in UnwrapWebhookParams.toString()
+* **client:** link error messages and doc comments to the SDK documentation
+* **google-cloud:** send user profiles requests to the organization endpoint
+
+
+### Chores
+
+* **client:** stop sending query params hardcoded in endpoint paths
+* **docs:** fix the usage and cost report examples' token total and data_refreshed_at
+* **docs:** improve the descriptions of the code execution tool and its encrypted results
+* **docs:** reword work queue, skill and external key descriptions
+* **docs:** update descriptions of the per-user usage and cost reports
+* **internal:** carry endpoint path query params to the request layer
+* **internal:** check the repository by owner and public name in workflows
+* **internal:** give the compiler daemon more heap
+* **internal:** let other modules read the route qualifiers
+* **internal:** lint environment variable reads outside fromEnv()
+* **internal:** read the beta route qualifier instead of the beta=true query
+* **internal:** remove preview build upload from CI
+* **internal:** stop expecting the beta query param in tests
+
+
+### Documentation
+
+* **google-cloud:** update the product name
+* update the README and the example request
+
 ## [3.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.1.0...v3.2.0) (2026-10-23)
 
 ### Features

@@ -46,15 +46,14 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
         params: IncreaseRequestRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSpendLimitIncreaseRequest> =
-        // get
-        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}?beta=true
+        // get /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: IncreaseRequestListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<IncreaseRequestListPageAsync> =
-        // get /v1/organizations/spend_limit_increase_requests?beta=true
+        // get /v1/organizations/spend_limit_increase_requests
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun approve(
@@ -62,7 +61,7 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
         requestOptions: RequestOptions,
     ): CompletableFuture<IncreaseRequestApproveResponse> =
         // post
-        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/approve?beta=true
+        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/approve
         withRawResponse().approve(params, requestOptions).thenParse()
 
     override fun deny(
@@ -70,7 +69,7 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSpendLimitIncreaseRequest> =
         // post
-        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/deny?beta=true
+        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/deny
         withRawResponse().deny(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -105,10 +104,12 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
                     .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -138,10 +139,12 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -187,11 +190,13 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                     .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
                     .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
                     .addPathSegments("approve")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -229,11 +234,13 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                     .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
                     .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
                     .addPathSegments("deny")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

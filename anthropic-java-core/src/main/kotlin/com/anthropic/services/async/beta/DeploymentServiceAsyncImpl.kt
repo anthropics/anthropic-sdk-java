@@ -55,56 +55,56 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
         params: DeploymentCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeployment> =
-        // post /v1/deployments?beta=true
+        // post /v1/deployments
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: DeploymentRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeployment> =
-        // get /v1/deployments/{deployment_id}?beta=true
+        // get /v1/deployments/{deployment_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: DeploymentUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeployment> =
-        // post /v1/deployments/{deployment_id}?beta=true
+        // post /v1/deployments/{deployment_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: DeploymentListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<DeploymentListPageAsync> =
-        // get /v1/deployments?beta=true
+        // get /v1/deployments
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: DeploymentArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeployment> =
-        // post /v1/deployments/{deployment_id}/archive?beta=true
+        // post /v1/deployments/{deployment_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     override fun pause(
         params: DeploymentPauseParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeployment> =
-        // post /v1/deployments/{deployment_id}/pause?beta=true
+        // post /v1/deployments/{deployment_id}/pause
         withRawResponse().pause(params, requestOptions).thenParse()
 
     override fun run(
         params: DeploymentRunParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeploymentRun> =
-        // post /v1/deployments/{deployment_id}/run?beta=true
+        // post /v1/deployments/{deployment_id}/run
         withRawResponse().run(params, requestOptions).thenParse()
 
     override fun unpause(
         params: DeploymentUnpauseParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeployment> =
-        // post /v1/deployments/{deployment_id}/unpause?beta=true
+        // post /v1/deployments/{deployment_id}/unpause
         withRawResponse().unpause(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -132,12 +132,14 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployments")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -174,11 +176,13 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -212,12 +216,14 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -247,11 +253,13 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "deployments")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -294,12 +302,14 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -334,12 +344,14 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
                     .addPathSegments("pause")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -374,12 +386,14 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
                     .addPathSegments("run")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -414,12 +428,14 @@ class DeploymentServiceAsyncImpl internal constructor(private val clientOptions:
                     .addPathSegments("v1", "deployments")
                     .addPathParam("deploymentId", params._pathParam(0))
                     .addPathSegments("unpause")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

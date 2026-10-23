@@ -73,42 +73,42 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: SessionCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsSession> =
-        // post /v1/sessions?beta=true
+        // post /v1/sessions
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: SessionRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsSession> =
-        // get /v1/sessions/{session_id}?beta=true
+        // get /v1/sessions/{session_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: SessionUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsSession> =
-        // post /v1/sessions/{session_id}?beta=true
+        // post /v1/sessions/{session_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: SessionListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<SessionListPageAsync> =
-        // get /v1/sessions?beta=true
+        // get /v1/sessions
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: SessionDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeletedSession> =
-        // delete /v1/sessions/{session_id}?beta=true
+        // delete /v1/sessions/{session_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun archive(
         params: SessionArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsSession> =
-        // post /v1/sessions/{session_id}/archive?beta=true
+        // post /v1/sessions/{session_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -154,12 +154,14 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "sessions")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             val call = startSessionsCreate(clientOptions, requestOptions, params)
             return traceApiCallAsync(clientOptions, call) { client ->
                 request
@@ -196,11 +198,13 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -234,12 +238,14 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -269,11 +275,13 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "sessions")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -315,12 +323,14 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -355,12 +365,14 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("v1", "sessions")
                     .addPathParam("sessionId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

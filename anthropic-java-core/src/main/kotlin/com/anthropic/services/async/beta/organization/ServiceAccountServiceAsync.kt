@@ -234,8 +234,8 @@ interface ServiceAccountServiceAsync {
         fun workspaces(): WorkspaceServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/service_accounts?beta=true`, but
-         * is otherwise the same as [ServiceAccountServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/organizations/service_accounts`, but is
+         * otherwise the same as [ServiceAccountServiceAsync.create].
          */
         fun create(
             params: ServiceAccountCreateParams
@@ -250,8 +250,8 @@ interface ServiceAccountServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/service_accounts/{service_account_id}?beta=true`, but is otherwise the
-         * same as [ServiceAccountServiceAsync.retrieve].
+         * /v1/organizations/service_accounts/{service_account_id}`, but is otherwise the same as
+         * [ServiceAccountServiceAsync.retrieve].
          */
         fun retrieve(
             serviceAccountId: String
@@ -294,8 +294,8 @@ interface ServiceAccountServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/service_accounts/{service_account_id}?beta=true`, but is otherwise the
-         * same as [ServiceAccountServiceAsync.update].
+         * /v1/organizations/service_accounts/{service_account_id}`, but is otherwise the same as
+         * [ServiceAccountServiceAsync.update].
          */
         fun update(
             serviceAccountId: String
@@ -337,8 +337,8 @@ interface ServiceAccountServiceAsync {
             update(serviceAccountId, ServiceAccountUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/service_accounts?beta=true`, but
-         * is otherwise the same as [ServiceAccountServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/service_accounts`, but is
+         * otherwise the same as [ServiceAccountServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<ServiceAccountListPageAsync>> =
             list(ServiceAccountListParams.none())
@@ -363,8 +363,8 @@ interface ServiceAccountServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/service_accounts/{service_account_id}/archive?beta=true`, but is
-         * otherwise the same as [ServiceAccountServiceAsync.archive].
+         * /v1/organizations/service_accounts/{service_account_id}/archive`, but is otherwise the
+         * same as [ServiceAccountServiceAsync.archive].
          */
         fun archive(
             serviceAccountId: String

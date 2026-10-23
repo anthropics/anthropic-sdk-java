@@ -59,8 +59,8 @@ interface RateLimitService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): RateLimitService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/rate_limits?beta=true`, but is
-         * otherwise the same as [RateLimitService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/rate_limits`, but is otherwise the
+         * same as [RateLimitService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<RateLimitListPage> = list(RateLimitListParams.none())

@@ -24,7 +24,10 @@ internal class RuleServiceAsyncTest {
 
     @Test
     fun create() {
-        val ruleServiceAsync = client.beta().organization().federation().rules()
+        val ruleServiceAsync =
+            client.beta().organization().federation().rules().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationRuleFuture =
             ruleServiceAsync.create(
@@ -69,7 +72,10 @@ internal class RuleServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val ruleServiceAsync = client.beta().organization().federation().rules()
+        val ruleServiceAsync =
+            client.beta().organization().federation().rules().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationRuleFuture =
             ruleServiceAsync.retrieve(
@@ -85,7 +91,10 @@ internal class RuleServiceAsyncTest {
 
     @Test
     fun update() {
-        val ruleServiceAsync = client.beta().organization().federation().rules()
+        val ruleServiceAsync =
+            client.beta().organization().federation().rules().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationRuleFuture =
             ruleServiceAsync.update(
@@ -130,7 +139,10 @@ internal class RuleServiceAsyncTest {
 
     @Test
     fun list() {
-        val ruleServiceAsync = client.beta().organization().federation().rules()
+        val ruleServiceAsync =
+            client.beta().organization().federation().rules().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = ruleServiceAsync.list()
 
@@ -140,7 +152,10 @@ internal class RuleServiceAsyncTest {
 
     @Test
     fun archive() {
-        val ruleServiceAsync = client.beta().organization().federation().rules()
+        val ruleServiceAsync =
+            client.beta().organization().federation().rules().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaFederationRuleFuture =
             ruleServiceAsync.archive(

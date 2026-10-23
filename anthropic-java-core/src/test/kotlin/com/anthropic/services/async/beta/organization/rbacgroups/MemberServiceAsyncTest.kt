@@ -18,7 +18,10 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun list() {
-        val memberServiceAsync = client.beta().organization().rbacGroups().members()
+        val memberServiceAsync =
+            client.beta().organization().rbacGroups().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val pageFuture = memberServiceAsync.list("rbac_group_id")
 
@@ -28,7 +31,10 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun add() {
-        val memberServiceAsync = client.beta().organization().rbacGroups().members()
+        val memberServiceAsync =
+            client.beta().organization().rbacGroups().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaRbacGroupMemberFuture =
             memberServiceAsync.add(
@@ -44,7 +50,10 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun remove() {
-        val memberServiceAsync = client.beta().organization().rbacGroups().members()
+        val memberServiceAsync =
+            client.beta().organization().rbacGroups().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val memberFuture =
             memberServiceAsync.remove(

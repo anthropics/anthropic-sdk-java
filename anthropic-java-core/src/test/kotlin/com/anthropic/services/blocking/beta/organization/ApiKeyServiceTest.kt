@@ -17,7 +17,8 @@ internal class ApiKeyServiceTest {
 
     @Test
     fun retrieve() {
-        val apiKeyService = client.beta().organization().apiKeys()
+        val apiKeyService =
+            client.beta().organization().apiKeys().withOptions { it.putQueryParam("beta", "true") }
 
         val betaApiKey = apiKeyService.retrieve("api_key_id")
 
@@ -26,7 +27,8 @@ internal class ApiKeyServiceTest {
 
     @Test
     fun update() {
-        val apiKeyService = client.beta().organization().apiKeys()
+        val apiKeyService =
+            client.beta().organization().apiKeys().withOptions { it.putQueryParam("beta", "true") }
 
         val betaApiKey =
             apiKeyService.update(
@@ -42,7 +44,8 @@ internal class ApiKeyServiceTest {
 
     @Test
     fun list() {
-        val apiKeyService = client.beta().organization().apiKeys()
+        val apiKeyService =
+            client.beta().organization().apiKeys().withOptions { it.putQueryParam("beta", "true") }
 
         val page = apiKeyService.list()
 

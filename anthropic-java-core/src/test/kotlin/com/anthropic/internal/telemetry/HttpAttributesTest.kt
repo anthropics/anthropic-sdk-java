@@ -244,9 +244,7 @@ internal class HttpAttributesTest : TracingTestSupport() {
 
         // The pairs that the endpoint defines, with the bytes and in the order that they were sent.
         val query = "ids%5B%5D=file_1&ids%5B%5D=file%202%263&limit=5"
-        assertThat(urlsSent())
-            .hasSize(2)
-            .containsOnly("/v1/files?beta=true&tenant=acme&$query&trace=on")
+        assertThat(urlsSent()).hasSize(2).containsOnly("/v1/files?tenant=acme&$query&trace=on")
         assertThat(spans).allSatisfy { span ->
             assertThat(span.string("url.path")).isEqualTo("/v1/files")
             assertThat(span.string("url.query")).isEqualTo(query)
@@ -281,7 +279,6 @@ internal class HttpAttributesTest : TracingTestSupport() {
 
         assertThat(urlsSent()).allSatisfy {
             assertThat(it)
-                .contains("beta=true")
                 .contains("created_at%5Bgt%5D=2023-01-01")
                 .contains("limit%5Bx%5D=9")
                 .contains("limit%5Bx%5D%5By%5D=10")
@@ -335,10 +332,11 @@ internal class HttpAttributesTest : TracingTestSupport() {
         stubEveryRequest()
         stubMessage()
 
-        client.beta().messages().create(betaMessageParams())
+        val params = betaMessageParams().toBuilder().putAdditionalQueryParam("trace", "on").build()
+        client.beta().messages().create(params)
         client.models().list()
 
-        assertThat(urlsSent()).containsExactlyInAnyOrder("/v1/messages?beta=true", "/v1/models")
+        assertThat(urlsSent()).containsExactlyInAnyOrder("/v1/messages?trace=on", "/v1/models")
         assertThat(recorder.spans.map { it.string("url.full") })
             .containsExactly("$baseUrl/v1/messages", "$baseUrl/v1/models")
         assertThat(recorder.spans).allSatisfy {
@@ -472,7 +470,7 @@ internal class HttpAttributesTest : TracingTestSupport() {
             .get(30, TimeUnit.SECONDS)
         val spans = recorder.await(4)
 
-        assertThat(urlsSent()).hasSize(4).containsOnly("$path?beta=true&$query")
+        assertThat(urlsSent()).hasSize(4).containsOnly("$path?$query")
         assertThat(spans).allSatisfy { span ->
             assertThat(span.name).isEqualTo("anthropic.organization.invites.list")
             assertThat(span.string("http.request.method")).isEqualTo("GET")
@@ -557,7 +555,7 @@ internal class HttpAttributesTest : TracingTestSupport() {
         assertThat(urlsSent())
             .containsExactlyInAnyOrderElementsOf(
                 endpointContentQueryCalls.flatMap { case ->
-                    List(2) { "${case.path}?beta=true&${case.query}" }
+                    List(2) { "${case.path}?${case.query}" }
                 }
             )
         assertThat(spans.map { it.string("url.path") })

@@ -220,8 +220,8 @@ interface ServiceAccountService {
         fun workspaces(): WorkspaceService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/service_accounts?beta=true`, but
-         * is otherwise the same as [ServiceAccountService.create].
+         * Returns a raw HTTP response for `post /v1/organizations/service_accounts`, but is
+         * otherwise the same as [ServiceAccountService.create].
          */
         @MustBeClosed
         fun create(params: ServiceAccountCreateParams): HttpResponseFor<BetaServiceAccount> =
@@ -236,8 +236,8 @@ interface ServiceAccountService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/service_accounts/{service_account_id}?beta=true`, but is otherwise the
-         * same as [ServiceAccountService.retrieve].
+         * /v1/organizations/service_accounts/{service_account_id}`, but is otherwise the same as
+         * [ServiceAccountService.retrieve].
          */
         @MustBeClosed
         fun retrieve(serviceAccountId: String): HttpResponseFor<BetaServiceAccount> =
@@ -282,8 +282,8 @@ interface ServiceAccountService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/service_accounts/{service_account_id}?beta=true`, but is otherwise the
-         * same as [ServiceAccountService.update].
+         * /v1/organizations/service_accounts/{service_account_id}`, but is otherwise the same as
+         * [ServiceAccountService.update].
          */
         @MustBeClosed
         fun update(serviceAccountId: String): HttpResponseFor<BetaServiceAccount> =
@@ -327,8 +327,8 @@ interface ServiceAccountService {
             update(serviceAccountId, ServiceAccountUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/service_accounts?beta=true`, but
-         * is otherwise the same as [ServiceAccountService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/service_accounts`, but is
+         * otherwise the same as [ServiceAccountService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<ServiceAccountListPage> = list(ServiceAccountListParams.none())
@@ -353,8 +353,8 @@ interface ServiceAccountService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/service_accounts/{service_account_id}/archive?beta=true`, but is
-         * otherwise the same as [ServiceAccountService.archive].
+         * /v1/organizations/service_accounts/{service_account_id}/archive`, but is otherwise the
+         * same as [ServiceAccountService.archive].
          */
         @MustBeClosed
         fun archive(serviceAccountId: String): HttpResponseFor<BetaServiceAccount> =

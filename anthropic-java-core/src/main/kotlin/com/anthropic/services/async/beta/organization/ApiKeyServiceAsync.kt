@@ -122,8 +122,8 @@ interface ApiKeyServiceAsync {
         ): ApiKeyServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/api_keys/{api_key_id}?beta=true`,
-         * but is otherwise the same as [ApiKeyServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/api_keys/{api_key_id}`, but is
+         * otherwise the same as [ApiKeyServiceAsync.retrieve].
          */
         fun retrieve(apiKeyId: String): CompletableFuture<HttpResponseFor<BetaApiKey>> =
             retrieve(apiKeyId, ApiKeyRetrieveParams.none())
@@ -161,8 +161,8 @@ interface ApiKeyServiceAsync {
             retrieve(apiKeyId, ApiKeyRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/organizations/api_keys/{api_key_id}?beta=true`,
-         * but is otherwise the same as [ApiKeyServiceAsync.update].
+         * Returns a raw HTTP response for `post /v1/organizations/api_keys/{api_key_id}`, but is
+         * otherwise the same as [ApiKeyServiceAsync.update].
          */
         fun update(apiKeyId: String): CompletableFuture<HttpResponseFor<BetaApiKey>> =
             update(apiKeyId, ApiKeyUpdateParams.none())
@@ -200,8 +200,8 @@ interface ApiKeyServiceAsync {
             update(apiKeyId, ApiKeyUpdateParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/api_keys?beta=true`, but is
-         * otherwise the same as [ApiKeyServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/organizations/api_keys`, but is otherwise the
+         * same as [ApiKeyServiceAsync.list].
          */
         fun list(): CompletableFuture<HttpResponseFor<ApiKeyListPageAsync>> =
             list(ApiKeyListParams.none())

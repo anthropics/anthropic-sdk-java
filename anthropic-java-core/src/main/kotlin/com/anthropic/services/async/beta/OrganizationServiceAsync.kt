@@ -7,6 +7,7 @@ import com.anthropic.models.beta.organization.BetaOrganization
 import com.anthropic.models.beta.organization.OrganizationRetrieveParams
 import com.anthropic.services.async.beta.organization.AnalyticsServiceAsync
 import com.anthropic.services.async.beta.organization.ApiKeyServiceAsync
+import com.anthropic.services.async.beta.organization.ClaudeTagServiceAsync
 import com.anthropic.services.async.beta.organization.ComplianceSettingServiceAsync
 import com.anthropic.services.async.beta.organization.ExternalKeyServiceAsync
 import com.anthropic.services.async.beta.organization.FederationServiceAsync
@@ -72,6 +73,8 @@ interface OrganizationServiceAsync {
     fun telemetryDestinations(): TelemetryDestinationServiceAsync
 
     fun webhooks(): WebhookServiceAsync
+
+    fun claudeTag(): ClaudeTagServiceAsync
 
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): CompletableFuture<BetaOrganization> =
@@ -141,9 +144,11 @@ interface OrganizationServiceAsync {
 
         fun webhooks(): WebhookServiceAsync.WithRawResponse
 
+        fun claudeTag(): ClaudeTagServiceAsync.WithRawResponse
+
         /**
-         * Returns a raw HTTP response for `get /v1/organizations/me?beta=true`, but is otherwise
-         * the same as [OrganizationServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/organizations/me`, but is otherwise the same as
+         * [OrganizationServiceAsync.retrieve].
          */
         fun retrieve(): CompletableFuture<HttpResponseFor<BetaOrganization>> =
             retrieve(OrganizationRetrieveParams.none())

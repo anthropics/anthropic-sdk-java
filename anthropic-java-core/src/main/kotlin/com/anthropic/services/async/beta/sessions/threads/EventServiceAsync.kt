@@ -90,8 +90,8 @@ interface EventServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/sessions/{session_id}/threads/{thread_id}/events?beta=true`, but is otherwise the
-         * same as [EventServiceAsync.list].
+         * /v1/sessions/{session_id}/threads/{thread_id}/events`, but is otherwise the same as
+         * [EventServiceAsync.list].
          */
         fun list(
             threadId: String,
@@ -119,8 +119,8 @@ interface EventServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/sessions/{session_id}/threads/{thread_id}/stream?beta=true`, but is otherwise the
-         * same as [EventServiceAsync.streamStreaming].
+         * /v1/sessions/{session_id}/threads/{thread_id}/stream`, but is otherwise the same as
+         * [EventServiceAsync.streamStreaming].
          */
         @MustBeClosed
         fun streamStreaming(

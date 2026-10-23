@@ -60,42 +60,42 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
         params: TelemetryDestinationCreateParams,
         requestOptions: RequestOptions,
     ): BetaTelemetryDestination =
-        // post /v1/organizations/telemetry_destinations?beta=true
+        // post /v1/organizations/telemetry_destinations
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: TelemetryDestinationRetrieveParams,
         requestOptions: RequestOptions,
     ): BetaTelemetryDestination =
-        // get /v1/organizations/telemetry_destinations/{destination_id}?beta=true
+        // get /v1/organizations/telemetry_destinations/{destination_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: TelemetryDestinationUpdateParams,
         requestOptions: RequestOptions,
     ): BetaTelemetryDestination =
-        // post /v1/organizations/telemetry_destinations/{destination_id}?beta=true
+        // post /v1/organizations/telemetry_destinations/{destination_id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: TelemetryDestinationListParams,
         requestOptions: RequestOptions,
     ): TelemetryDestinationListPage =
-        // get /v1/organizations/telemetry_destinations?beta=true
+        // get /v1/organizations/telemetry_destinations
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: TelemetryDestinationDeleteParams,
         requestOptions: RequestOptions,
     ): BetaDeletedTelemetryDestination =
-        // delete /v1/organizations/telemetry_destinations/{destination_id}?beta=true
+        // delete /v1/organizations/telemetry_destinations/{destination_id}
         withRawResponse().delete(params, requestOptions).parse()
 
     override fun test(
         params: TelemetryDestinationTestParams,
         requestOptions: RequestOptions,
     ): BetaTelemetryDestinationTestResponse =
-        // post /v1/organizations/telemetry_destinations/{destination_id}/test?beta=true
+        // post /v1/organizations/telemetry_destinations/{destination_id}/test
         withRawResponse().test(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -129,12 +129,14 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -171,11 +173,13 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
                     .addPathParam("destinationId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -206,12 +210,14 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
                     .addPathParam("destinationId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -238,11 +244,13 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -280,12 +288,14 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
                     .addPathParam("destinationId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
@@ -317,12 +327,14 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .addPathSegments("v1", "organizations", "telemetry_destinations")
                     .addPathParam("destinationId", params._pathParam(0))
                     .addPathSegments("test")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {

@@ -22,7 +22,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun create() {
-        val workspaceService = client.beta().organization().workspaces()
+        val workspaceService =
+            client.beta().organization().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspace =
             workspaceService.create(
@@ -54,7 +57,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun retrieve() {
-        val workspaceService = client.beta().organization().workspaces()
+        val workspaceService =
+            client.beta().organization().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspace = workspaceService.retrieve("workspace_id")
 
@@ -63,7 +69,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun update() {
-        val workspaceService = client.beta().organization().workspaces()
+        val workspaceService =
+            client.beta().organization().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspace =
             workspaceService.update(
@@ -94,7 +103,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun list() {
-        val workspaceService = client.beta().organization().workspaces()
+        val workspaceService =
+            client.beta().organization().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = workspaceService.list()
 
@@ -103,7 +115,10 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun archive() {
-        val workspaceService = client.beta().organization().workspaces()
+        val workspaceService =
+            client.beta().organization().workspaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspace = workspaceService.archive("workspace_id")
 

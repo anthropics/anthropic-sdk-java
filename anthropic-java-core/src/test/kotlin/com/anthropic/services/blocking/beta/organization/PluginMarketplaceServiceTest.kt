@@ -21,7 +21,10 @@ internal class PluginMarketplaceServiceTest {
 
     @Test
     fun retrieve() {
-        val pluginMarketplaceService = client.beta().organization().pluginMarketplaces()
+        val pluginMarketplaceService =
+            client.beta().organization().pluginMarketplaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginMarketplace =
             pluginMarketplaceService.retrieve(
@@ -37,7 +40,10 @@ internal class PluginMarketplaceServiceTest {
 
     @Test
     fun update() {
-        val pluginMarketplaceService = client.beta().organization().pluginMarketplaces()
+        val pluginMarketplaceService =
+            client.beta().organization().pluginMarketplaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginMarketplace =
             pluginMarketplaceService.update(
@@ -55,7 +61,10 @@ internal class PluginMarketplaceServiceTest {
 
     @Test
     fun list() {
-        val pluginMarketplaceService = client.beta().organization().pluginMarketplaces()
+        val pluginMarketplaceService =
+            client.beta().organization().pluginMarketplaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = pluginMarketplaceService.list()
 
@@ -64,7 +73,10 @@ internal class PluginMarketplaceServiceTest {
 
     @Test
     fun validateArchive() {
-        val pluginMarketplaceService = client.beta().organization().pluginMarketplaces()
+        val pluginMarketplaceService =
+            client.beta().organization().pluginMarketplaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginMarketplaceValidationReport =
             pluginMarketplaceService.validateArchive(
@@ -79,7 +91,10 @@ internal class PluginMarketplaceServiceTest {
 
     @Test
     fun validateRepository() {
-        val pluginMarketplaceService = client.beta().organization().pluginMarketplaces()
+        val pluginMarketplaceService =
+            client.beta().organization().pluginMarketplaces().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaPluginMarketplaceValidationReport =
             pluginMarketplaceService.validateRepository(

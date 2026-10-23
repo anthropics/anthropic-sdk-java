@@ -16,7 +16,8 @@ internal class VersionServiceTest {
 
     @Test
     fun list() {
-        val versionService = client.beta().agents().versions()
+        val versionService =
+            client.beta().agents().versions().withOptions { it.putQueryParam("beta", "true") }
 
         val page = versionService.list("agent_011CZkYpogX7uDKUyvBTophP")
 

@@ -42,21 +42,21 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: ApiKeyRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaApiKey> =
-        // get /v1/organizations/api_keys/{api_key_id}?beta=true
+        // get /v1/organizations/api_keys/{api_key_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: ApiKeyUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaApiKey> =
-        // post /v1/organizations/api_keys/{api_key_id}?beta=true
+        // post /v1/organizations/api_keys/{api_key_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: ApiKeyListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ApiKeyListPageAsync> =
-        // get /v1/organizations/api_keys?beta=true
+        // get /v1/organizations/api_keys
         withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -88,10 +88,12 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "api_keys")
                     .addPathParam("apiKeyId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -125,11 +127,13 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "api_keys")
                     .addPathParam("apiKeyId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -159,10 +163,12 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "api_keys")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

@@ -18,7 +18,10 @@ internal class ComplianceSettingServiceTest {
 
     @Test
     fun retrieve() {
-        val complianceSettingService = client.beta().organization().complianceSettings()
+        val complianceSettingService =
+            client.beta().organization().complianceSettings().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaComplianceSettings = complianceSettingService.retrieve()
 
@@ -27,7 +30,10 @@ internal class ComplianceSettingServiceTest {
 
     @Test
     fun update() {
-        val complianceSettingService = client.beta().organization().complianceSettings()
+        val complianceSettingService =
+            client.beta().organization().complianceSettings().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaComplianceSettings =
             complianceSettingService.update(

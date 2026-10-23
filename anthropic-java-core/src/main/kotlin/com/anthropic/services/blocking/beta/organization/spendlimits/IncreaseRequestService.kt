@@ -189,8 +189,8 @@ interface IncreaseRequestService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}?beta=true`,
-         * but is otherwise the same as [IncreaseRequestService.retrieve].
+         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}`, but
+         * is otherwise the same as [IncreaseRequestService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -244,9 +244,8 @@ interface IncreaseRequestService {
             )
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/organizations/spend_limit_increase_requests?beta=true`, but is otherwise the same as
-         * [IncreaseRequestService.list].
+         * Returns a raw HTTP response for `get /v1/organizations/spend_limit_increase_requests`,
+         * but is otherwise the same as [IncreaseRequestService.list].
          */
         @MustBeClosed
         fun list(): HttpResponseFor<IncreaseRequestListPage> =
@@ -272,7 +271,7 @@ interface IncreaseRequestService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/approve?beta=true`,
+         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/approve`,
          * but is otherwise the same as [IncreaseRequestService.approve].
          */
         @MustBeClosed
@@ -309,7 +308,7 @@ interface IncreaseRequestService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/deny?beta=true`,
+         * /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/deny`,
          * but is otherwise the same as [IncreaseRequestService.deny].
          */
         @MustBeClosed

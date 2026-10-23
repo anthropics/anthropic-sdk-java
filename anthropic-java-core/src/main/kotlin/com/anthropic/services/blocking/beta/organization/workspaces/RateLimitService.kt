@@ -108,8 +108,8 @@ interface RateLimitService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}?beta=true`, but
-         * is otherwise the same as [RateLimitService.update].
+         * /v1/organizations/workspaces/{workspace_id}/rate_limits/{rate_limit_id}`, but is
+         * otherwise the same as [RateLimitService.update].
          */
         @MustBeClosed
         fun update(
@@ -141,8 +141,8 @@ interface RateLimitService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}/rate_limits?beta=true`, but is otherwise the
-         * same as [RateLimitService.list].
+         * /v1/organizations/workspaces/{workspace_id}/rate_limits`, but is otherwise the same as
+         * [RateLimitService.list].
          */
         @MustBeClosed
         fun list(workspaceId: String): HttpResponseFor<RateLimitListPage> =

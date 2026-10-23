@@ -18,7 +18,10 @@ internal class ArtifactServiceTest {
 
     @Test
     fun list() {
-        val artifactService = client.beta().organization().analytics().artifacts()
+        val artifactService =
+            client.beta().organization().analytics().artifacts().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page =
             artifactService.list(

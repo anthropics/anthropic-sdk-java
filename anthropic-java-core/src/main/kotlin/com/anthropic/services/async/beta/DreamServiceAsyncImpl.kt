@@ -51,35 +51,35 @@ class DreamServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: DreamCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDream> =
-        // post /v1/dreams?beta=true
+        // post /v1/dreams
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: DreamRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDream> =
-        // get /v1/dreams/{dream_id}?beta=true
+        // get /v1/dreams/{dream_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: DreamListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<DreamListPageAsync> =
-        // get /v1/dreams?beta=true
+        // get /v1/dreams
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: DreamArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDream> =
-        // post /v1/dreams/{dream_id}/archive?beta=true
+        // post /v1/dreams/{dream_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     override fun cancel(
         params: DreamCancelParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDream> =
-        // post /v1/dreams/{dream_id}/cancel?beta=true
+        // post /v1/dreams/{dream_id}/cancel
         withRawResponse().cancel(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -107,12 +107,14 @@ class DreamServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "dreams")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -147,11 +149,13 @@ class DreamServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "dreams")
                     .addPathParam("dreamId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -181,11 +185,13 @@ class DreamServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "dreams")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -228,12 +234,14 @@ class DreamServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "dreams")
                     .addPathParam("dreamId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -268,12 +276,14 @@ class DreamServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "dreams")
                     .addPathParam("dreamId", params._pathParam(0))
                     .addPathSegments("cancel")
-                    .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

@@ -47,35 +47,35 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
         params: FileListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<FileListPageAsync> =
-        // get /v1/files?beta=true
+        // get /v1/files
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: FileDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDeletedFile> =
-        // delete /v1/files/{file_id}?beta=true
+        // delete /v1/files/{file_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun download(
         params: FileDownloadParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> =
-        // get /v1/files/{file_id}/content?beta=true
+        // get /v1/files/{file_id}/content
         withRawResponse().download(params, requestOptions)
 
     override fun retrieveMetadata(
         params: FileRetrieveMetadataParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFileMetadata> =
-        // get /v1/files/{file_id}?beta=true
+        // get /v1/files/{file_id}
         withRawResponse().retrieveMetadata(params, requestOptions).thenParse()
 
     override fun upload(
         params: FileUploadParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaFileMetadata> =
-        // post /v1/files?beta=true
+        // post /v1/files
         withRawResponse().upload(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -103,10 +103,12 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -148,11 +150,13 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
                     .addPathParam("fileId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -184,11 +188,13 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .addPathSegments("v1", "files")
                     .addPathParam("fileId", params._pathParam(0))
                     .addPathSegments("content")
-                    .putQueryParam("beta", "true")
                     .putHeader("Accept", "application/binary")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceRawApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -212,10 +218,12 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
                     .addPathParam("fileId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -245,11 +253,13 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
-                    .putQueryParam("beta", "true")
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

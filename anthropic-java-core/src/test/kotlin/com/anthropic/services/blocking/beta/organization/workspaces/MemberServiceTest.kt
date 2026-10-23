@@ -22,7 +22,10 @@ internal class MemberServiceTest {
 
     @Test
     fun retrieve() {
-        val memberService = client.beta().organization().workspaces().members()
+        val memberService =
+            client.beta().organization().workspaces().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceMember =
             memberService.retrieve(
@@ -34,7 +37,10 @@ internal class MemberServiceTest {
 
     @Test
     fun update() {
-        val memberService = client.beta().organization().workspaces().members()
+        val memberService =
+            client.beta().organization().workspaces().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceMember =
             memberService.update(
@@ -50,7 +56,10 @@ internal class MemberServiceTest {
 
     @Test
     fun list() {
-        val memberService = client.beta().organization().workspaces().members()
+        val memberService =
+            client.beta().organization().workspaces().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val page = memberService.list("workspace_id")
 
@@ -59,7 +68,10 @@ internal class MemberServiceTest {
 
     @Test
     fun add() {
-        val memberService = client.beta().organization().workspaces().members()
+        val memberService =
+            client.beta().organization().workspaces().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val betaWorkspaceMember =
             memberService.add(
@@ -75,7 +87,10 @@ internal class MemberServiceTest {
 
     @Test
     fun remove() {
-        val memberService = client.beta().organization().workspaces().members()
+        val memberService =
+            client.beta().organization().workspaces().members().withOptions {
+                it.putQueryParam("beta", "true")
+            }
 
         val member =
             memberService.remove(

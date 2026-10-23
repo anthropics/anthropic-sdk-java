@@ -60,28 +60,28 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
         params: SpendLimitRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSpendLimit> =
-        // get /v1/organizations/spend_limits/{spend_limit_id}?beta=true
+        // get /v1/organizations/spend_limits/{spend_limit_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: SpendLimitListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<SpendLimitListPageAsync> =
-        // get /v1/organizations/spend_limits?beta=true
+        // get /v1/organizations/spend_limits
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: SpendLimitDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<SpendLimitDeleteResponse> =
-        // delete /v1/organizations/spend_limits/{spend_limit_id}?beta=true
+        // delete /v1/organizations/spend_limits/{spend_limit_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun set(
         params: SpendLimitSetParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSpendLimit> =
-        // post /v1/organizations/spend_limits?beta=true
+        // post /v1/organizations/spend_limits
         withRawResponse().set(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -126,10 +126,12 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limits")
                     .addPathParam("spendLimitId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -159,11 +161,13 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limits")
-                    .putQueryParam("beta", "true")
                     .replaceHeaders("anthropic-beta", "spend-limit-reads-2026-09-26")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -205,11 +209,13 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limits")
                     .addPathParam("spendLimitId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -239,11 +245,13 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limits")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }

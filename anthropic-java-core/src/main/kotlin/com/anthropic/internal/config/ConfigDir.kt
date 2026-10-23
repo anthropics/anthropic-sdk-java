@@ -6,6 +6,7 @@ import java.nio.file.Paths
 internal object ConfigDir {
     private const val ENV_CONFIG_DIR = "ANTHROPIC_CONFIG_DIR"
 
+    @Suppress("EnvironmentReadOutsideFromEnv")
     fun resolve(): String? =
         resolve(
             envConfigDir = System.getenv(ENV_CONFIG_DIR),

@@ -171,8 +171,8 @@ interface VersionServiceAsync {
         ): VersionServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /v1/skills/{skill_id}/versions?beta=true`, but is
-         * otherwise the same as [VersionServiceAsync.create].
+         * Returns a raw HTTP response for `post /v1/skills/{skill_id}/versions`, but is otherwise
+         * the same as [VersionServiceAsync.create].
          */
         fun create(
             skillId: String,
@@ -201,8 +201,8 @@ interface VersionServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaSkillVersion>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}?beta=true`,
-         * but is otherwise the same as [VersionServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}`, but is
+         * otherwise the same as [VersionServiceAsync.retrieve].
          */
         fun retrieve(
             version: String,
@@ -231,8 +231,8 @@ interface VersionServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaSkillVersion>>
 
         /**
-         * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions?beta=true`, but is
-         * otherwise the same as [VersionServiceAsync.list].
+         * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions`, but is otherwise
+         * the same as [VersionServiceAsync.list].
          */
         fun list(skillId: String): CompletableFuture<HttpResponseFor<VersionListPageAsync>> =
             list(skillId, VersionListParams.none())
@@ -272,9 +272,8 @@ interface VersionServiceAsync {
             list(skillId, VersionListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete
-         * /v1/skills/{skill_id}/versions/{version}?beta=true`, but is otherwise the same as
-         * [VersionServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /v1/skills/{skill_id}/versions/{version}`, but is
+         * otherwise the same as [VersionServiceAsync.delete].
          */
         fun delete(
             version: String,
@@ -303,9 +302,8 @@ interface VersionServiceAsync {
         ): CompletableFuture<HttpResponseFor<BetaDeletedSkillVersion>>
 
         /**
-         * Returns a raw HTTP response for `get
-         * /v1/skills/{skill_id}/versions/{version}/content?beta=true`, but is otherwise the same as
-         * [VersionServiceAsync.download].
+         * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}/content`,
+         * but is otherwise the same as [VersionServiceAsync.download].
          */
         fun download(
             version: String,

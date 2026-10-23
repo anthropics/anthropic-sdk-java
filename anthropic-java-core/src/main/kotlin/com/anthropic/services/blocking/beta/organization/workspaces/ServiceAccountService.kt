@@ -230,8 +230,8 @@ interface ServiceAccountService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true`,
-         * but is otherwise the same as [ServiceAccountService.retrieve].
+         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}`, but
+         * is otherwise the same as [ServiceAccountService.retrieve].
          */
         @MustBeClosed
         fun retrieve(
@@ -265,8 +265,8 @@ interface ServiceAccountService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true`,
-         * but is otherwise the same as [ServiceAccountService.update].
+         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}`, but
+         * is otherwise the same as [ServiceAccountService.update].
          */
         @MustBeClosed
         fun update(
@@ -300,8 +300,8 @@ interface ServiceAccountService {
 
         /**
          * Returns a raw HTTP response for `get
-         * /v1/organizations/workspaces/{workspace_id}/service_accounts?beta=true`, but is otherwise
-         * the same as [ServiceAccountService.list].
+         * /v1/organizations/workspaces/{workspace_id}/service_accounts`, but is otherwise the same
+         * as [ServiceAccountService.list].
          */
         @MustBeClosed
         fun list(workspaceId: String): HttpResponseFor<ServiceAccountListPage> =
@@ -346,8 +346,8 @@ interface ServiceAccountService {
 
         /**
          * Returns a raw HTTP response for `post
-         * /v1/organizations/workspaces/{workspace_id}/service_accounts?beta=true`, but is otherwise
-         * the same as [ServiceAccountService.add].
+         * /v1/organizations/workspaces/{workspace_id}/service_accounts`, but is otherwise the same
+         * as [ServiceAccountService.add].
          */
         @MustBeClosed
         fun add(
@@ -380,8 +380,8 @@ interface ServiceAccountService {
 
         /**
          * Returns a raw HTTP response for `delete
-         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}?beta=true`,
-         * but is otherwise the same as [ServiceAccountService.remove].
+         * /v1/organizations/workspaces/{workspace_id}/service_accounts/{service_account_id}`, but
+         * is otherwise the same as [ServiceAccountService.remove].
          */
         @MustBeClosed
         fun remove(

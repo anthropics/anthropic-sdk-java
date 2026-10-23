@@ -66,35 +66,35 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
         params: WorkspaceCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaWorkspace> =
-        // post /v1/organizations/workspaces?beta=true
+        // post /v1/organizations/workspaces
         withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: WorkspaceRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaWorkspace> =
-        // get /v1/organizations/workspaces/{workspace_id}?beta=true
+        // get /v1/organizations/workspaces/{workspace_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: WorkspaceUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaWorkspace> =
-        // post /v1/organizations/workspaces/{workspace_id}?beta=true
+        // post /v1/organizations/workspaces/{workspace_id}
         withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: WorkspaceListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WorkspaceListPageAsync> =
-        // get /v1/organizations/workspaces?beta=true
+        // get /v1/organizations/workspaces
         withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: WorkspaceArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaWorkspace> =
-        // post /v1/organizations/workspaces/{workspace_id}/archive?beta=true
+        // post /v1/organizations/workspaces/{workspace_id}/archive
         withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -140,11 +140,13 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "workspaces")
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -184,10 +186,12 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -221,11 +225,13 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
-                    .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -255,10 +261,12 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "workspaces")
-                    .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
@@ -301,11 +309,13 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .addPathSegments("v1", "organizations", "workspaces")
                     .addPathParam("workspaceId", params._pathParam(0))
                     .addPathSegments("archive")
-                    .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
