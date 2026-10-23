@@ -182,7 +182,9 @@ private constructor(
          * Wraps access to system environment variables to allow mocking of environment variables
          * when testing.
          */
-        @JvmSynthetic internal fun getEnv(name: String): String? = System.getenv(name)
+        @Suppress("EnvironmentReadOutsideFromEnv")
+        @JvmSynthetic
+        internal fun getEnv(name: String): String? = System.getenv(name)
 
         fun apiKey(apiKey: String) = apply { this.apiKey = apiKey }
 

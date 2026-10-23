@@ -247,7 +247,9 @@ private constructor(
             getEnv(ENV_BASE_URL)?.let { baseUrlOverride = it }
         }
 
-        @JvmSynthetic internal fun getEnv(name: String): String? = System.getenv(name)
+        @Suppress("EnvironmentReadOutsideFromEnv")
+        @JvmSynthetic
+        internal fun getEnv(name: String): String? = System.getenv(name)
 
         fun awsCredentialsProvider(awsCredentialsProvider: AwsCredentialsProvider) = apply {
             this.awsCredentialsProvider = awsCredentialsProvider
