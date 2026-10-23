@@ -5,6 +5,7 @@
 ### Bug Fixes
 
 * **client:** hide the webhook secret in UnwrapWebhookParams.toString()
+* **client:** link error messages and doc comments to the SDK documentation
 
 
 ### Chores

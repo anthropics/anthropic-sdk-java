@@ -99,7 +99,7 @@ private constructor(
             """
             Streaming is required for operations that may take longer than 10 minutes.
 
-            See https://github.com/anthropics/anthropic-sdk-java#streaming for more details.
+            See https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/java#streaming for more details.
             """
                 .trimIndent()
         }
