@@ -19,6 +19,7 @@ class AnthropicRuleSetProvider : RuleSetProvider {
                 CompanionConstantMissingJvmField(config),
                 CompanionFunctionMissingJvmStatic(config),
                 DefaultArgsInvisibleToJava(config),
+                EnvironmentReadOutsideFromEnv(config),
                 FileJvmSynthetic(config),
                 InternalMemberMissingJvmSynthetic(config),
                 KotlinOnlyTypeInPublicApi(config),
