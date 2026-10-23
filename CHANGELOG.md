@@ -17,6 +17,7 @@
 * **internal:** give the compiler daemon more heap
 * **internal:** lint environment variable reads outside fromEnv()
 * **internal:** read the beta route qualifier instead of the beta=true query
+* **internal:** stop expecting the beta query param in tests
 
 
 ### Documentation

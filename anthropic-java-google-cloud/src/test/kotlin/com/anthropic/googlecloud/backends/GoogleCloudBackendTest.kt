@@ -34,7 +34,7 @@ internal class GoogleCloudBackendTest {
             "$GATEWAY_URL/projects/$PROJECT/locations/$LOCATION/workspaces/$WORKSPACE_ID/invoke"
         private const val ORGANIZATION_BASE_URL =
             "$GATEWAY_URL/projects/$PROJECT/locations/$LOCATION/claudeOrganization/invoke"
-        private const val ORGANIZATION_PATH = "/v1/organizations/workspaces?beta=true"
+        private const val ORGANIZATION_PATH = "/v1/organizations/workspaces"
 
         private const val ENV_PROJECT = "ANTHROPIC_GOOGLE_CLOUD_PROJECT"
         private const val ENV_PROJECT_FALLBACK = "GOOGLE_CLOUD_PROJECT"
@@ -935,7 +935,6 @@ internal class GoogleCloudBackendTest {
             .method(HttpMethod.GET)
             .baseUrl(baseUrl)
             .addPathSegments("v1", "organizations", "workspaces")
-            .putQueryParam("beta", "true")
             .build()
 
     private fun createClient(backend: Backend): AnthropicClient =
