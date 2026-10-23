@@ -25,9 +25,9 @@ internal enum class StainlessHelperHeaderValue(@JvmSynthetic internal val value:
 /**
  * Returns the [STAINLESS_HELPER_HEADER] value to set after appending [value] to whatever is already
  * present in [headers] — existing tags keep their position, the new tag goes at the end, duplicates
- * are dropped, joined as one comma-separated string. The backend logs the header as one opaque
- * string, so a second header line or a clobbered value loses data; callers set the result via
- * `replaceHeaders(STAINLESS_HELPER_HEADER, …)`.
+ * are dropped, joined as one comma-separated string. Callers set the result via
+ * `replaceHeaders(STAINLESS_HELPER_HEADER, …)`, so the new tag is merged into the existing value
+ * rather than replacing it, because a second header line or a clobbered value loses data.
  */
 @JvmSynthetic
 internal fun mergedStainlessHelperValue(

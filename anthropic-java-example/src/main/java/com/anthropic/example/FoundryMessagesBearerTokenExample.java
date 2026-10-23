@@ -56,7 +56,7 @@ public final class FoundryMessagesBearerTokenExample {
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                // For Foundry, the `model` name must be set to the name of the Magma deployment,
+                // For Foundry, the `model` name must be set to the name of the Foundry deployment,
                 // which defaults to the name of the deployed Anthropic model, but the deployment
                 // name may be changed to an arbitrary value, such as that shown here.
                 .model("claude-sonnet-5-5")
