@@ -2,9 +2,11 @@ package com.anthropic.core.http
 
 import java.util.stream.Stream
 
-interface StreamResponse<T> : AutoCloseable {
+interface StreamResponse<T> : Iterable<T>, AutoCloseable {
 
     fun stream(): Stream<T>
+
+    override fun iterator(): Iterator<T> = stream().iterator()
 
     /** Overridden from [AutoCloseable] to not have a checked exception in its signature. */
     override fun close()
