@@ -18,6 +18,7 @@
 * **client:** stop sending query params hardcoded in endpoint paths
 * **docs:** fix the usage and cost report examples' token total and data_refreshed_at
 * **docs:** reword work queue, skill and external key descriptions
+* **docs:** update descriptions of the per-user usage and cost reports
 * **internal:** carry endpoint path query params to the request layer
 * **internal:** check the repository by owner and public name in workflows
 * **internal:** give the compiler daemon more heap
@@ -30,6 +31,7 @@
 ### Documentation
 
 * **google-cloud:** update the product name
+* update the README and the example request
 
 ## [3.2.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.1.0...v3.2.0) (2026-10-23)
 
