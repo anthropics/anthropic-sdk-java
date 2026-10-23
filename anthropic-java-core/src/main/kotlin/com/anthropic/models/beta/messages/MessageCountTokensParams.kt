@@ -3889,7 +3889,18 @@ private constructor(
         fun betaCodeExecutionTool20250825(): Optional<BetaCodeExecutionTool20250825> =
             Optional.ofNullable(betaCodeExecutionTool20250825)
 
-        /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+        /**
+         * A `tools` entry for the code execution tool, version `code_execution_20260120`. It adds
+         * REPL state persistence to version `code_execution_20250825`.
+         *
+         * REPL state persistence applies with programmatic tool calling. With it, the Python
+         * interpreter state, such as variable bindings, persists across requests that reuse the
+         * container.
+         *
+         * See the
+         * [code execution tool guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool#tool-versions)
+         * to learn what each tool version adds.
+         */
         fun betaCodeExecutionTool20260120(): Optional<BetaCodeExecutionTool20260120> =
             Optional.ofNullable(betaCodeExecutionTool20260120)
 
@@ -4049,7 +4060,18 @@ private constructor(
         fun asBetaCodeExecutionTool20250825(): BetaCodeExecutionTool20250825 =
             betaCodeExecutionTool20250825.getOrThrow("betaCodeExecutionTool20250825")
 
-        /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+        /**
+         * A `tools` entry for the code execution tool, version `code_execution_20260120`. It adds
+         * REPL state persistence to version `code_execution_20250825`.
+         *
+         * REPL state persistence applies with programmatic tool calling. With it, the Python
+         * interpreter state, such as variable bindings, persists across requests that reuse the
+         * container.
+         *
+         * See the
+         * [code execution tool guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool#tool-versions)
+         * to learn what each tool version adds.
+         */
         fun asBetaCodeExecutionTool20260120(): BetaCodeExecutionTool20260120 =
             betaCodeExecutionTool20260120.getOrThrow("betaCodeExecutionTool20260120")
 
@@ -4480,7 +4502,16 @@ private constructor(
             ) = Tool(betaCodeExecutionTool20250825 = betaCodeExecutionTool20250825)
 
             /**
-             * Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint).
+             * A `tools` entry for the code execution tool, version `code_execution_20260120`. It
+             * adds REPL state persistence to version `code_execution_20250825`.
+             *
+             * REPL state persistence applies with programmatic tool calling. With it, the Python
+             * interpreter state, such as variable bindings, persists across requests that reuse the
+             * container.
+             *
+             * See the
+             * [code execution tool guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool#tool-versions)
+             * to learn what each tool version adds.
              */
             @JvmStatic
             fun ofBetaCodeExecutionTool20260120(
@@ -4670,7 +4701,16 @@ private constructor(
             ): T
 
             /**
-             * Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint).
+             * A `tools` entry for the code execution tool, version `code_execution_20260120`. It
+             * adds REPL state persistence to version `code_execution_20250825`.
+             *
+             * REPL state persistence applies with programmatic tool calling. With it, the Python
+             * interpreter state, such as variable bindings, persists across requests that reuse the
+             * container.
+             *
+             * See the
+             * [code execution tool guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool#tool-versions)
+             * to learn what each tool version adds.
              */
             fun visitBetaCodeExecutionTool20260120(
                 betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120

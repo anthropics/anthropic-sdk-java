@@ -16,7 +16,10 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Code execution result with encrypted stdout for PFC + web_search results. */
+/**
+ * The output and exit code of Python code that Claude ran with the code execution tool, with
+ * standard output in encrypted form, sent back in a later request.
+ */
 class BetaEncryptedCodeExecutionResultBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

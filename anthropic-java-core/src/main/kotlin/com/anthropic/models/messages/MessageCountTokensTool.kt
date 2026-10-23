@@ -380,7 +380,18 @@ private constructor(
     fun codeExecutionTool20250825(): Optional<CodeExecutionTool20250825> =
         Optional.ofNullable(codeExecutionTool20250825)
 
-    /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+    /**
+     * A `tools` entry for the code execution tool, version `code_execution_20260120`. It adds REPL
+     * state persistence to version `code_execution_20250825`.
+     *
+     * REPL state persistence applies with programmatic tool calling. With it, the Python
+     * interpreter state, such as variable bindings, persists across requests that reuse the
+     * container.
+     *
+     * See the
+     * [code execution tool guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool#tool-versions)
+     * to learn what each tool version adds.
+     */
     fun codeExecutionTool20260120(): Optional<CodeExecutionTool20260120> =
         Optional.ofNullable(codeExecutionTool20260120)
 
@@ -498,7 +509,18 @@ private constructor(
     fun asCodeExecutionTool20250825(): CodeExecutionTool20250825 =
         codeExecutionTool20250825.getOrThrow("codeExecutionTool20250825")
 
-    /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+    /**
+     * A `tools` entry for the code execution tool, version `code_execution_20260120`. It adds REPL
+     * state persistence to version `code_execution_20250825`.
+     *
+     * REPL state persistence applies with programmatic tool calling. With it, the Python
+     * interpreter state, such as variable bindings, persists across requests that reuse the
+     * container.
+     *
+     * See the
+     * [code execution tool guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool#tool-versions)
+     * to learn what each tool version adds.
+     */
     fun asCodeExecutionTool20260120(): CodeExecutionTool20260120 =
         codeExecutionTool20260120.getOrThrow("codeExecutionTool20260120")
 
@@ -834,7 +856,18 @@ private constructor(
         fun ofCodeExecutionTool20250825(codeExecutionTool20250825: CodeExecutionTool20250825) =
             MessageCountTokensTool(codeExecutionTool20250825 = codeExecutionTool20250825)
 
-        /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+        /**
+         * A `tools` entry for the code execution tool, version `code_execution_20260120`. It adds
+         * REPL state persistence to version `code_execution_20250825`.
+         *
+         * REPL state persistence applies with programmatic tool calling. With it, the Python
+         * interpreter state, such as variable bindings, persists across requests that reuse the
+         * container.
+         *
+         * See the
+         * [code execution tool guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool#tool-versions)
+         * to learn what each tool version adds.
+         */
         @JvmStatic
         fun ofCodeExecutionTool20260120(codeExecutionTool20260120: CodeExecutionTool20260120) =
             MessageCountTokensTool(codeExecutionTool20260120 = codeExecutionTool20260120)
@@ -951,7 +984,18 @@ private constructor(
 
         fun visitCodeExecutionTool20250825(codeExecutionTool20250825: CodeExecutionTool20250825): T
 
-        /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
+        /**
+         * A `tools` entry for the code execution tool, version `code_execution_20260120`. It adds
+         * REPL state persistence to version `code_execution_20250825`.
+         *
+         * REPL state persistence applies with programmatic tool calling. With it, the Python
+         * interpreter state, such as variable bindings, persists across requests that reuse the
+         * container.
+         *
+         * See the
+         * [code execution tool guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool#tool-versions)
+         * to learn what each tool version adds.
+         */
         fun visitCodeExecutionTool20260120(codeExecutionTool20260120: CodeExecutionTool20260120): T
 
         /** Code execution tool with REPL state persistence. */

@@ -62,7 +62,10 @@ private constructor(
     fun resultBlockParam(): Optional<BetaCodeExecutionResultBlockParam> =
         Optional.ofNullable(resultBlockParam)
 
-    /** Code execution result with encrypted stdout for PFC + web_search results. */
+    /**
+     * The output and exit code of Python code that Claude ran with the code execution tool, with
+     * standard output in encrypted form, sent back in a later request.
+     */
     fun encryptedCodeExecutionResultBlockParam():
         Optional<BetaEncryptedCodeExecutionResultBlockParam> =
         Optional.ofNullable(encryptedCodeExecutionResultBlockParam)
@@ -79,7 +82,10 @@ private constructor(
     fun asResultBlockParam(): BetaCodeExecutionResultBlockParam =
         resultBlockParam.getOrThrow("resultBlockParam")
 
-    /** Code execution result with encrypted stdout for PFC + web_search results. */
+    /**
+     * The output and exit code of Python code that Claude ran with the code execution tool, with
+     * standard output in encrypted form, sent back in a later request.
+     */
     fun asEncryptedCodeExecutionResultBlockParam(): BetaEncryptedCodeExecutionResultBlockParam =
         encryptedCodeExecutionResultBlockParam.getOrThrow("encryptedCodeExecutionResultBlockParam")
 
@@ -221,7 +227,10 @@ private constructor(
         fun ofResultBlockParam(resultBlockParam: BetaCodeExecutionResultBlockParam) =
             BetaCodeExecutionToolResultBlockParamContent(resultBlockParam = resultBlockParam)
 
-        /** Code execution result with encrypted stdout for PFC + web_search results. */
+        /**
+         * The output and exit code of Python code that Claude ran with the code execution tool,
+         * with standard output in encrypted form, sent back in a later request.
+         */
         @JvmStatic
         fun ofEncryptedCodeExecutionResultBlockParam(
             encryptedCodeExecutionResultBlockParam: BetaEncryptedCodeExecutionResultBlockParam
@@ -241,7 +250,10 @@ private constructor(
 
         fun visitResultBlockParam(resultBlockParam: BetaCodeExecutionResultBlockParam): T
 
-        /** Code execution result with encrypted stdout for PFC + web_search results. */
+        /**
+         * The output and exit code of Python code that Claude ran with the code execution tool,
+         * with standard output in encrypted form, sent back in a later request.
+         */
         fun visitEncryptedCodeExecutionResultBlockParam(
             encryptedCodeExecutionResultBlockParam: BetaEncryptedCodeExecutionResultBlockParam
         ): T
