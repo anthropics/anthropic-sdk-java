@@ -72,7 +72,6 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.streams.asSequence
 
 /**
  * An [Interceptor] that retries refused beta `/v1/messages` requests down a fallback chain.
@@ -1216,7 +1215,7 @@ private class FallbackStreamSplicer(
         var startInputTransformations: JsonNode? = null
 
         rawSseHandler(jsonMapper).handle(response).use { sseStream ->
-            events@ for (sse in sseStream.stream().asSequence()) {
+            events@ for (sse in sseStream) {
                 // The decoder's `lastId` persists across messages, so stray blank lines after an
                 // id-bearing message can flush line-less messages; nothing to forward.
                 if (sse.rawLines.isEmpty()) {

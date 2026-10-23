@@ -20,7 +20,6 @@ import com.anthropic.models.beta.sessions.events.EventSendParams;
 import com.anthropic.models.beta.sessions.resources.ResourceListParams;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.List;
 
 public final class ManagedAgentsWithFilesExample {
@@ -101,10 +100,7 @@ public final class ManagedAgentsWithFilesExample {
         System.out.println("Streaming events:");
         try (StreamResponse<BetaManagedAgentsStreamSessionEvents> streamResponse =
                 client.beta().sessions().events().streamStreaming(session.id())) {
-            Iterator<BetaManagedAgentsStreamSessionEvents> it =
-                    streamResponse.stream().iterator();
-            while (it.hasNext()) {
-                BetaManagedAgentsStreamSessionEvents event = it.next();
+            for (BetaManagedAgentsStreamSessionEvents event : streamResponse) {
                 System.out.println(event);
                 if (event.isSessionStatusIdle()) {
                     break;

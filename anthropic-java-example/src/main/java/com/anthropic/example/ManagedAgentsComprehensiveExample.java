@@ -26,7 +26,6 @@ import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsStaticBeare
 import com.anthropic.models.beta.vaults.credentials.CredentialCreateParams;
 import com.anthropic.models.skills.SkillCreateParams;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -161,10 +160,7 @@ public final class ManagedAgentsComprehensiveExample {
         System.out.println("Streaming events:");
         try (StreamResponse<BetaManagedAgentsStreamSessionEvents> streamResponse =
                 client.beta().sessions().events().streamStreaming(session.id())) {
-            Iterator<BetaManagedAgentsStreamSessionEvents> it =
-                    streamResponse.stream().iterator();
-            while (it.hasNext()) {
-                BetaManagedAgentsStreamSessionEvents event = it.next();
+            for (BetaManagedAgentsStreamSessionEvents event : streamResponse) {
                 System.out.println(event);
 
                 // If the agent calls the custom get_weather tool, provide a result
