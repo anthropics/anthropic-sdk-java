@@ -18,6 +18,7 @@
 * **ci:** update the runner label for internal CI jobs
 * **docs:** clarify plugin content scan and validation descriptions
 * **docs:** clarify plugin served_version_pinned and updated_at
+* **docs:** fix usage and cost report examples and ending_at docs
 * **docs:** rate limit model lists vary by organization and workspace
 * **docs:** update model line example
 * **tests:** use shorter example values for strings that match a pattern

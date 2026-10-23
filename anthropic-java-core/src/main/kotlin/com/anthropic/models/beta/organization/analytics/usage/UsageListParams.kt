@@ -137,8 +137,9 @@ private constructor(
     fun deploymentIds(): Optional<List<String>> = Optional.ofNullable(deploymentIds)
 
     /**
-     * End of range, exclusive. When omitted, defaults to the earlier of now and `starting_at` + 31
-     * days. The range may span at most 31 days.
+     * End of range, exclusive. Required when `time_bucket_width` is set. Without
+     * `time_bucket_width`, defaults to the earlier of now and `starting_at` + 31 days. The range
+     * may span at most 31 days.
      */
     fun endingAt(): Optional<OffsetDateTime> = Optional.ofNullable(endingAt)
 
@@ -547,8 +548,9 @@ private constructor(
         }
 
         /**
-         * End of range, exclusive. When omitted, defaults to the earlier of now and `starting_at` +
-         * 31 days. The range may span at most 31 days.
+         * End of range, exclusive. Required when `time_bucket_width` is set. Without
+         * `time_bucket_width`, defaults to the earlier of now and `starting_at` + 31 days. The
+         * range may span at most 31 days.
          */
         fun endingAt(endingAt: OffsetDateTime?) = apply { this.endingAt = endingAt }
 

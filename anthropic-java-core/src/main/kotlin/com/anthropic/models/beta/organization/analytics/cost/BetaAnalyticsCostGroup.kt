@@ -352,9 +352,7 @@ private constructor(
     /**
      * Workspace the usage occurred in, as a tagged workspace ID, including the organization's
      * default workspace. Populated only when `workspace_id` is in `group_by[]`; null for Claude
-     * Enterprise usage. Usage a linked platform made on this organization's account is in none of
-     * its workspaces and carries the placeholder workspace ID `wrkspc_011111111111111111111111`,
-     * which `workspace_ids[]` also accepts.
+     * Enterprise usage.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -1109,9 +1107,7 @@ private constructor(
         /**
          * Workspace the usage occurred in, as a tagged workspace ID, including the organization's
          * default workspace. Populated only when `workspace_id` is in `group_by[]`; null for Claude
-         * Enterprise usage. Usage a linked platform made on this organization's account is in none
-         * of its workspaces and carries the placeholder workspace ID
-         * `wrkspc_011111111111111111111111`, which `workspace_ids[]` also accepts.
+         * Enterprise usage.
          */
         fun workspaceId(workspaceId: String?) = workspaceId(JsonField.ofNullable(workspaceId))
 

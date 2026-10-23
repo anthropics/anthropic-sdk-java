@@ -23,18 +23,18 @@ internal class UsageListPageResponseTest {
             UsageListPageResponse.builder()
                 .addData(
                     BetaAnalyticsUsageItem.builder()
-                        .endingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .endingAt(OffsetDateTime.parse("2026-10-01T00:00:00Z"))
                         .group(
                             BetaAnalyticsUsageGroup.builder()
                                 .actor(
                                     BetaAnalyticsReportUserActor.builder()
-                                        .deleted(true)
+                                        .deleted(false)
                                         .emailAddress("user@emaildomain.com")
                                         .name("Jane Doe")
                                         .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
                                         .build()
                                 )
-                                .actorType(BetaAnalyticsActorType.API_ACTOR)
+                                .actorType(BetaAnalyticsActorType.USER_ACTOR)
                                 .agentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
                                 .apiKeyId("apikey_01Rj2N8SVvo6BePZj99NhmiT")
                                 .claudeTagCategory(BetaAnalyticsClaudeTagCategory.DM)
@@ -46,7 +46,7 @@ internal class UsageListPageResponseTest {
                                 .model("claude-opus-5-5")
                                 .product("chat")
                                 .rbacGroupId("rbac_group_012rppKaSVsmTo6NqRDXQXNF")
-                                .serviceTier(BetaAnalyticsServiceTier.BATCH)
+                                .serviceTier(BetaAnalyticsServiceTier.STANDARD)
                                 .sessionId("sesn_0187kPDyNCwibNNvfaPEApCJ")
                                 .slackChannelId("C0123ABCDEF")
                                 .speed(BetaAnalyticsSpeed.FAST)
@@ -54,7 +54,7 @@ internal class UsageListPageResponseTest {
                                 .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                                 .build()
                         )
-                        .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
                         .usage(
                             BetaAnalyticsUsageMetrics.builder()
                                 .cacheCreation(
@@ -81,18 +81,18 @@ internal class UsageListPageResponseTest {
         assertThat(usageListPageResponse.data())
             .containsExactly(
                 BetaAnalyticsUsageItem.builder()
-                    .endingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .endingAt(OffsetDateTime.parse("2026-10-01T00:00:00Z"))
                     .group(
                         BetaAnalyticsUsageGroup.builder()
                             .actor(
                                 BetaAnalyticsReportUserActor.builder()
-                                    .deleted(true)
+                                    .deleted(false)
                                     .emailAddress("user@emaildomain.com")
                                     .name("Jane Doe")
                                     .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
                                     .build()
                             )
-                            .actorType(BetaAnalyticsActorType.API_ACTOR)
+                            .actorType(BetaAnalyticsActorType.USER_ACTOR)
                             .agentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
                             .apiKeyId("apikey_01Rj2N8SVvo6BePZj99NhmiT")
                             .claudeTagCategory(BetaAnalyticsClaudeTagCategory.DM)
@@ -104,7 +104,7 @@ internal class UsageListPageResponseTest {
                             .model("claude-opus-5-5")
                             .product("chat")
                             .rbacGroupId("rbac_group_012rppKaSVsmTo6NqRDXQXNF")
-                            .serviceTier(BetaAnalyticsServiceTier.BATCH)
+                            .serviceTier(BetaAnalyticsServiceTier.STANDARD)
                             .sessionId("sesn_0187kPDyNCwibNNvfaPEApCJ")
                             .slackChannelId("C0123ABCDEF")
                             .speed(BetaAnalyticsSpeed.FAST)
@@ -112,7 +112,7 @@ internal class UsageListPageResponseTest {
                             .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                             .build()
                     )
-                    .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
                     .usage(
                         BetaAnalyticsUsageMetrics.builder()
                             .cacheCreation(
@@ -144,18 +144,18 @@ internal class UsageListPageResponseTest {
             UsageListPageResponse.builder()
                 .addData(
                     BetaAnalyticsUsageItem.builder()
-                        .endingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .endingAt(OffsetDateTime.parse("2026-10-01T00:00:00Z"))
                         .group(
                             BetaAnalyticsUsageGroup.builder()
                                 .actor(
                                     BetaAnalyticsReportUserActor.builder()
-                                        .deleted(true)
+                                        .deleted(false)
                                         .emailAddress("user@emaildomain.com")
                                         .name("Jane Doe")
                                         .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
                                         .build()
                                 )
-                                .actorType(BetaAnalyticsActorType.API_ACTOR)
+                                .actorType(BetaAnalyticsActorType.USER_ACTOR)
                                 .agentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
                                 .apiKeyId("apikey_01Rj2N8SVvo6BePZj99NhmiT")
                                 .claudeTagCategory(BetaAnalyticsClaudeTagCategory.DM)
@@ -167,7 +167,7 @@ internal class UsageListPageResponseTest {
                                 .model("claude-opus-5-5")
                                 .product("chat")
                                 .rbacGroupId("rbac_group_012rppKaSVsmTo6NqRDXQXNF")
-                                .serviceTier(BetaAnalyticsServiceTier.BATCH)
+                                .serviceTier(BetaAnalyticsServiceTier.STANDARD)
                                 .sessionId("sesn_0187kPDyNCwibNNvfaPEApCJ")
                                 .slackChannelId("C0123ABCDEF")
                                 .speed(BetaAnalyticsSpeed.FAST)
@@ -175,7 +175,7 @@ internal class UsageListPageResponseTest {
                                 .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                                 .build()
                         )
-                        .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
                         .usage(
                             BetaAnalyticsUsageMetrics.builder()
                                 .cacheCreation(

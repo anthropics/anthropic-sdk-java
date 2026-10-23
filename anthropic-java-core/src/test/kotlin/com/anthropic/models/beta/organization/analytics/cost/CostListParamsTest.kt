@@ -21,7 +21,7 @@ internal class CostListParamsTest {
     @Test
     fun create() {
         CostListParams.builder()
-            .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
             .addActorId("user_01WCz1FkmYMm4gnmykNKUu3Q")
             .addActorType(BetaAnalyticsActorType.SERVICE_ACCOUNT_ACTOR)
             .addAgentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
@@ -30,7 +30,7 @@ internal class CostListParamsTest {
             .addClaudeTagUserId("U0123ABCDEF")
             .addContextWindow(BetaAnalyticsContextWindow.FROM_0_TO_200K)
             .addDeploymentId("depl_01JFC6ihzZHtAuyHsaENdJhY")
-            .endingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .endingAt(OffsetDateTime.parse("2026-10-01T00:00:00Z"))
             .addEnvironmentId("env_017oTjuGedHtjhJauVC5xGJD")
             .excludeDeletedUsers(true)
             .addGroupBy(BetaAnalyticsCostGroupBy.ACTOR)
@@ -57,7 +57,7 @@ internal class CostListParamsTest {
     fun headers() {
         val params =
             CostListParams.builder()
-                .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
                 .addActorId("user_01WCz1FkmYMm4gnmykNKUu3Q")
                 .addActorType(BetaAnalyticsActorType.SERVICE_ACCOUNT_ACTOR)
                 .addAgentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
@@ -66,7 +66,7 @@ internal class CostListParamsTest {
                 .addClaudeTagUserId("U0123ABCDEF")
                 .addContextWindow(BetaAnalyticsContextWindow.FROM_0_TO_200K)
                 .addDeploymentId("depl_01JFC6ihzZHtAuyHsaENdJhY")
-                .endingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .endingAt(OffsetDateTime.parse("2026-10-01T00:00:00Z"))
                 .addEnvironmentId("env_017oTjuGedHtjhJauVC5xGJD")
                 .excludeDeletedUsers(true)
                 .addGroupBy(BetaAnalyticsCostGroupBy.ACTOR)
@@ -106,7 +106,7 @@ internal class CostListParamsTest {
     fun headersWithoutOptionalFields() {
         val params =
             CostListParams.builder()
-                .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
                 .build()
 
         val headers = params._headers()
@@ -118,7 +118,7 @@ internal class CostListParamsTest {
     fun queryParams() {
         val params =
             CostListParams.builder()
-                .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
                 .addActorId("user_01WCz1FkmYMm4gnmykNKUu3Q")
                 .addActorType(BetaAnalyticsActorType.SERVICE_ACCOUNT_ACTOR)
                 .addAgentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
@@ -127,7 +127,7 @@ internal class CostListParamsTest {
                 .addClaudeTagUserId("U0123ABCDEF")
                 .addContextWindow(BetaAnalyticsContextWindow.FROM_0_TO_200K)
                 .addDeploymentId("depl_01JFC6ihzZHtAuyHsaENdJhY")
-                .endingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .endingAt(OffsetDateTime.parse("2026-10-01T00:00:00Z"))
                 .addEnvironmentId("env_017oTjuGedHtjhJauVC5xGJD")
                 .excludeDeletedUsers(true)
                 .addGroupBy(BetaAnalyticsCostGroupBy.ACTOR)
@@ -154,7 +154,7 @@ internal class CostListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("starting_at", "2019-12-27T18:11:19.117Z")
+                    .put("starting_at", "2026-09-01T00:00:00Z")
                     .put("actor_ids[]", "user_01WCz1FkmYMm4gnmykNKUu3Q")
                     .put("actor_types[]", "service_account_actor")
                     .put("agent_ids[]", "agent_01VHd3EAGJ6PLkP9LM7DDu3f")
@@ -163,7 +163,7 @@ internal class CostListParamsTest {
                     .put("claude_tag_user_ids[]", "U0123ABCDEF")
                     .put("context_windows[]", "0-200k")
                     .put("deployment_ids[]", "depl_01JFC6ihzZHtAuyHsaENdJhY")
-                    .put("ending_at", "2019-12-27T18:11:19.117Z")
+                    .put("ending_at", "2026-10-01T00:00:00Z")
                     .put("environment_ids[]", "env_017oTjuGedHtjhJauVC5xGJD")
                     .put("exclude_deleted_users", "true")
                     .put("group_by[]", "actor")
@@ -190,12 +190,12 @@ internal class CostListParamsTest {
     fun queryParamsWithoutOptionalFields() {
         val params =
             CostListParams.builder()
-                .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
                 .build()
 
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
-            .isEqualTo(QueryParams.builder().put("starting_at", "2019-12-27T18:11:19.117Z").build())
+            .isEqualTo(QueryParams.builder().put("starting_at", "2026-09-01T00:00:00Z").build())
     }
 }

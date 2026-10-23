@@ -23,7 +23,7 @@ internal class CostServiceTest {
         val page =
             costService.list(
                 CostListParams.builder()
-                    .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
                     .build()
             )
 

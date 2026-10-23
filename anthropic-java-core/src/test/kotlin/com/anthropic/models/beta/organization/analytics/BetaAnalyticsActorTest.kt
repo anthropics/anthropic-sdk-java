@@ -16,7 +16,7 @@ internal class BetaAnalyticsActorTest {
     fun ofUser() {
         val user =
             BetaAnalyticsReportUserActor.builder()
-                .deleted(true)
+                .deleted(false)
                 .emailAddress("user@emaildomain.com")
                 .name("Jane Doe")
                 .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
@@ -36,7 +36,7 @@ internal class BetaAnalyticsActorTest {
         val betaAnalyticsActor =
             BetaAnalyticsActor.ofUser(
                 BetaAnalyticsReportUserActor.builder()
-                    .deleted(true)
+                    .deleted(false)
                     .emailAddress("user@emaildomain.com")
                     .name("Jane Doe")
                     .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")

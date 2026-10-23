@@ -11,13 +11,13 @@ internal class BetaAnalyticsReportUserActorTest {
     fun create() {
         val betaAnalyticsReportUserActor =
             BetaAnalyticsReportUserActor.builder()
-                .deleted(true)
+                .deleted(false)
                 .emailAddress("user@emaildomain.com")
                 .name("Jane Doe")
                 .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
                 .build()
 
-        assertThat(betaAnalyticsReportUserActor.deleted()).isEqualTo(true)
+        assertThat(betaAnalyticsReportUserActor.deleted()).isEqualTo(false)
         assertThat(betaAnalyticsReportUserActor.emailAddress()).contains("user@emaildomain.com")
         assertThat(betaAnalyticsReportUserActor.name()).contains("Jane Doe")
         assertThat(betaAnalyticsReportUserActor.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
@@ -28,7 +28,7 @@ internal class BetaAnalyticsReportUserActorTest {
         val jsonMapper = jsonMapper()
         val betaAnalyticsReportUserActor =
             BetaAnalyticsReportUserActor.builder()
-                .deleted(true)
+                .deleted(false)
                 .emailAddress("user@emaildomain.com")
                 .name("Jane Doe")
                 .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
