@@ -7,6 +7,7 @@ import com.anthropic.models.beta.organization.BetaOrganization
 import com.anthropic.models.beta.organization.OrganizationRetrieveParams
 import com.anthropic.services.blocking.beta.organization.AnalyticsService
 import com.anthropic.services.blocking.beta.organization.ApiKeyService
+import com.anthropic.services.blocking.beta.organization.ClaudeTagService
 import com.anthropic.services.blocking.beta.organization.ComplianceSettingService
 import com.anthropic.services.blocking.beta.organization.ExternalKeyService
 import com.anthropic.services.blocking.beta.organization.FederationService
@@ -73,6 +74,8 @@ interface OrganizationService {
 
     fun webhooks(): WebhookService
 
+    fun claudeTag(): ClaudeTagService
+
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): BetaOrganization = retrieve(OrganizationRetrieveParams.none())
 
@@ -138,6 +141,8 @@ interface OrganizationService {
         fun telemetryDestinations(): TelemetryDestinationService.WithRawResponse
 
         fun webhooks(): WebhookService.WithRawResponse
+
+        fun claudeTag(): ClaudeTagService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/me`, but is otherwise the same as

@@ -20,6 +20,8 @@ import com.anthropic.services.async.beta.organization.AnalyticsServiceAsync
 import com.anthropic.services.async.beta.organization.AnalyticsServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.ApiKeyServiceAsync
 import com.anthropic.services.async.beta.organization.ApiKeyServiceAsyncImpl
+import com.anthropic.services.async.beta.organization.ClaudeTagServiceAsync
+import com.anthropic.services.async.beta.organization.ClaudeTagServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.ComplianceSettingServiceAsync
 import com.anthropic.services.async.beta.organization.ComplianceSettingServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.ExternalKeyServiceAsync
@@ -116,6 +118,10 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
 
     private val webhooks: WebhookServiceAsync by lazy { WebhookServiceAsyncImpl(clientOptions) }
 
+    private val claudeTag: ClaudeTagServiceAsync by lazy {
+        ClaudeTagServiceAsyncImpl(clientOptions)
+    }
+
     override fun withRawResponse(): OrganizationServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrganizationServiceAsync =
@@ -154,6 +160,8 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
     override fun telemetryDestinations(): TelemetryDestinationServiceAsync = telemetryDestinations
 
     override fun webhooks(): WebhookServiceAsync = webhooks
+
+    override fun claudeTag(): ClaudeTagServiceAsync = claudeTag
 
     override fun retrieve(
         params: OrganizationRetrieveParams,
@@ -237,6 +245,10 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
             WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val claudeTag: ClaudeTagServiceAsync.WithRawResponse by lazy {
+            ClaudeTagServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): OrganizationServiceAsync.WithRawResponse =
@@ -280,6 +292,8 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
             telemetryDestinations
 
         override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks
+
+        override fun claudeTag(): ClaudeTagServiceAsync.WithRawResponse = claudeTag
 
         private val retrieveHandler: Handler<BetaOrganization> =
             jsonHandler<BetaOrganization>(clientOptions.jsonMapper)

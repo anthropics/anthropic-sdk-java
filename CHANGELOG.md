@@ -4,6 +4,7 @@
 
 ### Features
 
+* **api:** add Claude Tag endpoints for Claude Enterprise organizations
 * **client:** make StreamResponse iterable
 
 
