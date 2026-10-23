@@ -7,6 +7,7 @@
 * **docs:** fix the usage and cost report examples' token total and data_refreshed_at
 * **internal:** carry endpoint path query params to the request layer
 * **internal:** give the compiler daemon more heap
+* **internal:** read the beta route qualifier instead of the beta=true query
 
 
 ### Documentation

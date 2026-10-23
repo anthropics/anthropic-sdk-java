@@ -1,5 +1,7 @@
 package com.anthropic.helpers
 
+import com.anthropic.client.AnthropicClientImpl
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpMethod
@@ -323,7 +325,7 @@ internal class BetaRefusalFallbackInterceptorTest {
                 .build()
                 .intercept(httpClient)
 
-        // the GA surface (no ?beta=true) is not applicable to this interceptor
+        // the GA surface (no `beta` qualifier) is not applicable to this interceptor
         val gaRequest =
             HttpRequest.builder()
                 .method(HttpMethod.POST)
@@ -331,7 +333,7 @@ internal class BetaRefusalFallbackInterceptorTest {
                 .addPathSegments("v1", "messages")
                 .body(HttpRequestBody.ofJson(messagesBody()))
                 .build()
-        interceptedClient.execute(gaRequest, RequestOptions.none(), async)
+        interceptedClient.execute(gaRequest, RequestOptions.none(), async, emptyMap())
 
         assertThat(httpClient.requests.single().headers.values(STAINLESS_HELPER_HEADER)).isEmpty()
     }
@@ -1235,7 +1237,7 @@ internal class BetaRefusalFallbackInterceptorTest {
                 .build()
                 .intercept(httpClient)
 
-        // The same request the beta service would make, minus its `beta=true` tag — what the
+        // The same request the beta service would make, minus its `beta` qualifier — what the
         // non-beta `client.messages()` service sends.
         val request =
             HttpRequest.builder()
@@ -1244,10 +1246,75 @@ internal class BetaRefusalFallbackInterceptorTest {
                 .addPathSegments("v1", "messages")
                 .body(HttpRequestBody.ofJson(messagesBody()))
                 .build()
-        interceptedClient.execute(request, RequestOptions.none(), async)
+        interceptedClient.execute(request, RequestOptions.none(), async, emptyMap())
 
         assertThat(httpClient.requests).hasSize(1)
         assertThat(httpClient.requests.single().headers.values("anthropic-beta")).isEmpty()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun skipsRequestsWithTheBetaQueryAndNoBetaQualifier(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(messagesRequest(), RequestOptions.none(), async, emptyMap())
+
+        assertThat(httpClient.requests).hasSize(1)
+        assertThat(httpClient.requests.single().headers.values(STAINLESS_HELPER_HEADER)).isEmpty()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun retriesRequestsWithOnlyTheBetaQualifier(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest().toBuilder().removeQueryParams("beta").build(),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        assertThat(httpClient.models()).containsExactly("primary-model", "fallback-model")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun createGetsTheRefusalFallback(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val client =
+            AnthropicClientImpl(
+                ClientOptions.builder()
+                    .httpClient(httpClient)
+                    .baseUrl("https://api.example.com")
+                    .maxRetries(0)
+                    .addInterceptor(
+                        BetaRefusalFallbackInterceptor.builder()
+                            .addFallback(fallback("fallback-model"))
+                            .build()
+                    )
+                    .build()
+            )
+        val params = MessageCreateParams.builder().body(messagesBody()).build()
+        val requestOptions =
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build()
+
+        if (async) {
+            client.async().beta().messages().create(params, requestOptions).get()
+        } else {
+            client.beta().messages().create(params, requestOptions)
+        }
+
+        assertThat(httpClient.models()).containsExactly("primary-model", "fallback-model")
     }
 
     private fun fallback(model: String): BetaFallbackParam =

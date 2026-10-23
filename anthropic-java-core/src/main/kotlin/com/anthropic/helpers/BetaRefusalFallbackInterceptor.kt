@@ -442,13 +442,13 @@ private constructor(
      * `null` if the request should pass through unintercepted.
      */
     private fun prepare(request: HttpRequest, requestOptions: RequestOptions): PreparedRequest? {
-        // This interceptor only applies to the beta messages API — the SDK's beta services tag
-        // their requests with `beta=true`. An empty chain also disables this interceptor.
+        // This interceptor only applies to the beta messages API — the SDK's beta services pass
+        // the `beta` qualifier with their requests. An empty chain also disables this interceptor.
         if (
             fallbacks.isEmpty() ||
                 request.method != HttpMethod.POST ||
                 request.pathSegments != listOf("v1", "messages") ||
-                !request.queryParams.values("beta").contains("true") ||
+                requestOptions.qualifiers?.get("beta") != "true" ||
                 !request.body().isPresent
         ) {
             return null
