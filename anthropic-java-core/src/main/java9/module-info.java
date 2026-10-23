@@ -52,10 +52,12 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.organization.analytics.apps.chat.projects;
     exports com.anthropic.models.beta.organization.analytics.artifacts;
     exports com.anthropic.models.beta.organization.analytics.connectors;
+    exports com.anthropic.models.beta.organization.analytics.cost;
     exports com.anthropic.models.beta.organization.analytics.costreport;
     exports com.anthropic.models.beta.organization.analytics.plugins;
     exports com.anthropic.models.beta.organization.analytics.skills;
     exports com.anthropic.models.beta.organization.analytics.summaries;
+    exports com.anthropic.models.beta.organization.analytics.usage;
     exports com.anthropic.models.beta.organization.analytics.usagereport;
     exports com.anthropic.models.beta.organization.analytics.usercostreport;
     exports com.anthropic.models.beta.organization.analytics.users;

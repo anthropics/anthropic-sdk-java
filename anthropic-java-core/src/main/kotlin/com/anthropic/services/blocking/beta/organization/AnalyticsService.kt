@@ -5,10 +5,12 @@ import com.anthropic.services.blocking.beta.organization.analytics.AppService
 import com.anthropic.services.blocking.beta.organization.analytics.ArtifactService
 import com.anthropic.services.blocking.beta.organization.analytics.ConnectorService
 import com.anthropic.services.blocking.beta.organization.analytics.CostReportService
+import com.anthropic.services.blocking.beta.organization.analytics.CostService
 import com.anthropic.services.blocking.beta.organization.analytics.PluginService
 import com.anthropic.services.blocking.beta.organization.analytics.SkillService
 import com.anthropic.services.blocking.beta.organization.analytics.SummaryService
 import com.anthropic.services.blocking.beta.organization.analytics.UsageReportService
+import com.anthropic.services.blocking.beta.organization.analytics.UsageService
 import com.anthropic.services.blocking.beta.organization.analytics.UserCostReportService
 import com.anthropic.services.blocking.beta.organization.analytics.UserService
 import com.anthropic.services.blocking.beta.organization.analytics.UserUsageReportService
@@ -42,6 +44,10 @@ interface AnalyticsService {
 
     fun artifacts(): ArtifactService
 
+    fun usage(): UsageService
+
+    fun cost(): CostService
+
     fun usageReport(): UsageReportService
 
     fun userUsageReport(): UserUsageReportService
@@ -73,6 +79,10 @@ interface AnalyticsService {
         fun skills(): SkillService.WithRawResponse
 
         fun artifacts(): ArtifactService.WithRawResponse
+
+        fun usage(): UsageService.WithRawResponse
+
+        fun cost(): CostService.WithRawResponse
 
         fun usageReport(): UsageReportService.WithRawResponse
 

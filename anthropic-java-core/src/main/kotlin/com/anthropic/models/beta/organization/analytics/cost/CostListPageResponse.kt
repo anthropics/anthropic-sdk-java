@@ -1,0 +1,363 @@
+package com.anthropic.models.beta.organization.analytics.cost
+
+import com.anthropic.core.ExcludeMissing
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonValue
+import com.anthropic.core.checkKnown
+import com.anthropic.core.checkRequired
+import com.anthropic.core.toImmutable
+import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.OffsetDateTime
+import java.util.Collections
+import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+class CostListPageResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+private constructor(
+    private val data: JsonField<List<BetaAnalyticsCostItem>>,
+    private val dataRefreshedAt: JsonField<OffsetDateTime>,
+    private val hasMore: JsonField<Boolean>,
+    private val nextPage: JsonField<String>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
+) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("data")
+        @ExcludeMissing
+        data: JsonField<List<BetaAnalyticsCostItem>> = JsonMissing.of(),
+        @JsonProperty("data_refreshed_at")
+        @ExcludeMissing
+        dataRefreshedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("has_more") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("next_page") @ExcludeMissing nextPage: JsonField<String> = JsonMissing.of(),
+    ) : this(data, dataRefreshedAt, hasMore, nextPage, mutableMapOf())
+
+    /**
+     * Rows for this page, in the order set by `order_by` and `order`: one per combination of the
+     * `group_by[]` dimensions (and per time bucket, when `time_bucket_width` is set) with usage or
+     * cost in the range, or a single row when neither is set. Rows split out by `cost_type` or
+     * `token_type` (cost endpoint only) stay adjacent and are ranked as one unit.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun data(): List<BetaAnalyticsCostItem> = data.getRequired("data")
+
+    /**
+     * RFC 3339 timestamp of the export this response was served from. Null when no export yet
+     * covers any part of the requested range, in which case `data` is empty. Data beyond this
+     * watermark is incomplete; for stable results, set `ending_at` to this value or earlier. Data
+     * is typically refreshed every 4 hours. Values can be revised as late events arrive and
+     * reconciliation runs, until about 7 days after the end of the calendar month the usage falls
+     * in; for example, values for October 1 can change until about November 7.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun dataRefreshedAt(): Optional<OffsetDateTime> =
+        dataRefreshedAt.getOptional("data_refreshed_at")
+
+    /**
+     * Whether another page is available. When true, pass `next_page` as the `page` parameter to
+     * fetch it.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun hasMore(): Boolean = hasMore.getRequired("has_more")
+
+    /**
+     * Opaque cursor for the next page, or null when `has_more` is false. Pass it as the `page`
+     * parameter, keeping the other parameters unchanged. A cursor can expire after the underlying
+     * data refreshes; the request then returns HTTP 410 and pagination must restart from the first
+     * page.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun nextPage(): Optional<String> = nextPage.getOptional("next_page")
+
+    /**
+     * Returns the raw JSON value of [data].
+     *
+     * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<BetaAnalyticsCostItem>> = data
+
+    /**
+     * Returns the raw JSON value of [dataRefreshedAt].
+     *
+     * Unlike [dataRefreshedAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("data_refreshed_at")
+    @ExcludeMissing
+    fun _dataRefreshedAt(): JsonField<OffsetDateTime> = dataRefreshedAt
+
+    /**
+     * Returns the raw JSON value of [hasMore].
+     *
+     * Unlike [hasMore], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("has_more") @ExcludeMissing fun _hasMore(): JsonField<Boolean> = hasMore
+
+    /**
+     * Returns the raw JSON value of [nextPage].
+     *
+     * Unlike [nextPage], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("next_page") @ExcludeMissing fun _nextPage(): JsonField<String> = nextPage
+
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
+    @JsonAnyGetter
+    @ExcludeMissing
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [CostListPageResponse].
+         *
+         * The following fields are required:
+         * ```java
+         * .data()
+         * .dataRefreshedAt()
+         * .hasMore()
+         * .nextPage()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
+    }
+
+    /** A builder for [CostListPageResponse]. */
+    class Builder internal constructor() {
+
+        private var data: JsonField<MutableList<BetaAnalyticsCostItem>>? = null
+        private var dataRefreshedAt: JsonField<OffsetDateTime>? = null
+        private var hasMore: JsonField<Boolean>? = null
+        private var nextPage: JsonField<String>? = null
+        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+        @JvmSynthetic
+        internal fun from(costListPageResponse: CostListPageResponse) = apply {
+            data =
+                costListPageResponse.data.map { it.toMutableList() }.takeUnless { it.isMissing() }
+            dataRefreshedAt = costListPageResponse.dataRefreshedAt
+            hasMore = costListPageResponse.hasMore
+            nextPage = costListPageResponse.nextPage
+            additionalProperties = costListPageResponse.additionalProperties.toMutableMap()
+        }
+
+        /**
+         * Rows for this page, in the order set by `order_by` and `order`: one per combination of
+         * the `group_by[]` dimensions (and per time bucket, when `time_bucket_width` is set) with
+         * usage or cost in the range, or a single row when neither is set. Rows split out by
+         * `cost_type` or `token_type` (cost endpoint only) stay adjacent and are ranked as one
+         * unit.
+         */
+        fun data(data: List<BetaAnalyticsCostItem>) = data(JsonField.of(data))
+
+        /**
+         * Sets [Builder.data] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.data] with a well-typed `List<BetaAnalyticsCostItem>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun data(data: JsonField<List<BetaAnalyticsCostItem>>) = apply {
+            this.data = data.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [BetaAnalyticsCostItem] to [Builder.data].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addData(data: BetaAnalyticsCostItem) = apply {
+            this.data =
+                (this.data ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("data", it).add(data)
+                }
+        }
+
+        /**
+         * RFC 3339 timestamp of the export this response was served from. Null when no export yet
+         * covers any part of the requested range, in which case `data` is empty. Data beyond this
+         * watermark is incomplete; for stable results, set `ending_at` to this value or earlier.
+         * Data is typically refreshed every 4 hours. Values can be revised as late events arrive
+         * and reconciliation runs, until about 7 days after the end of the calendar month the usage
+         * falls in; for example, values for October 1 can change until about November 7.
+         */
+        fun dataRefreshedAt(dataRefreshedAt: OffsetDateTime?) =
+            dataRefreshedAt(JsonField.ofNullable(dataRefreshedAt))
+
+        /** Alias for calling [Builder.dataRefreshedAt] with `dataRefreshedAt.orElse(null)`. */
+        fun dataRefreshedAt(dataRefreshedAt: Optional<OffsetDateTime>) =
+            dataRefreshedAt(dataRefreshedAt.getOrNull())
+
+        /**
+         * Sets [Builder.dataRefreshedAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.dataRefreshedAt] with a well-typed [OffsetDateTime]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun dataRefreshedAt(dataRefreshedAt: JsonField<OffsetDateTime>) = apply {
+            this.dataRefreshedAt = dataRefreshedAt
+        }
+
+        /**
+         * Whether another page is available. When true, pass `next_page` as the `page` parameter to
+         * fetch it.
+         */
+        fun hasMore(hasMore: Boolean) = hasMore(JsonField.of(hasMore))
+
+        /**
+         * Sets [Builder.hasMore] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.hasMore] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
+
+        /**
+         * Opaque cursor for the next page, or null when `has_more` is false. Pass it as the `page`
+         * parameter, keeping the other parameters unchanged. A cursor can expire after the
+         * underlying data refreshes; the request then returns HTTP 410 and pagination must restart
+         * from the first page.
+         */
+        fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
+
+        /** Alias for calling [Builder.nextPage] with `nextPage.orElse(null)`. */
+        fun nextPage(nextPage: Optional<String>) = nextPage(nextPage.getOrNull())
+
+        /**
+         * Sets [Builder.nextPage] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.nextPage] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun nextPage(nextPage: JsonField<String>) = apply { this.nextPage = nextPage }
+
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.clear()
+            putAllAdditionalProperties(additionalProperties)
+        }
+
+        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+            additionalProperties.put(key, value)
+        }
+
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
+        }
+
+        /**
+         * Returns an immutable instance of [CostListPageResponse].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .data()
+         * .dataRefreshedAt()
+         * .hasMore()
+         * .nextPage()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): CostListPageResponse =
+            CostListPageResponse(
+                checkRequired("data", data).map { it.toImmutable() },
+                checkRequired("dataRefreshedAt", dataRefreshedAt),
+                checkRequired("hasMore", hasMore),
+                checkRequired("nextPage", nextPage),
+                additionalProperties.toMutableMap(),
+            )
+    }
+
+    private var validated: Boolean = false
+
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
+    fun validate(): CostListPageResponse = apply {
+        if (validated) {
+            return@apply
+        }
+
+        data().forEach { it.validate() }
+        dataRefreshedAt()
+        hasMore()
+        nextPage()
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (dataRefreshedAt.asKnown().isPresent) 1 else 0) +
+            (if (hasMore.asKnown().isPresent) 1 else 0) +
+            (if (nextPage.asKnown().isPresent) 1 else 0)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is CostListPageResponse &&
+            data == other.data &&
+            dataRefreshedAt == other.dataRefreshedAt &&
+            hasMore == other.hasMore &&
+            nextPage == other.nextPage &&
+            additionalProperties == other.additionalProperties
+    }
+
+    private val hashCode: Int by lazy {
+        Objects.hash(data, dataRefreshedAt, hasMore, nextPage, additionalProperties)
+    }
+
+    override fun hashCode(): Int = hashCode
+
+    override fun toString() =
+        "CostListPageResponse{data=$data, dataRefreshedAt=$dataRefreshedAt, hasMore=$hasMore, nextPage=$nextPage, additionalProperties=$additionalProperties}"
+}
