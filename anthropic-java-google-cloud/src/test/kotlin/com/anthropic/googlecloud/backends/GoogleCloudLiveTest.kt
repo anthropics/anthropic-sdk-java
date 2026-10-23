@@ -7,8 +7,10 @@ import com.anthropic.models.beta.agents.AgentListParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgent
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.messages.MessageCreateParams
+import com.anthropic.models.userprofiles.UserProfileListParams
 import com.google.auth.oauth2.GoogleCredentials
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatNoException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable
 
@@ -64,6 +66,15 @@ internal class GoogleCloudLiveTest {
 
         val workspace = client.organization().workspaces().retrieve(workspaceId)
         assertThat(workspace.id()).isEqualTo(workspaceId)
+    }
+
+    @Test
+    fun userProfilesRoute() {
+        val client = newClient(GoogleCloudBackend.fromEnv())
+
+        assertThatNoException().isThrownBy {
+            client.userProfiles().list(UserProfileListParams.builder().limit(1).build())
+        }
     }
 
     @Test

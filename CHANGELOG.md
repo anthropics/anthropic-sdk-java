@@ -11,6 +11,7 @@
 
 * **client:** hide the webhook secret in UnwrapWebhookParams.toString()
 * **client:** link error messages and doc comments to the SDK documentation
+* **google-cloud:** send user profiles requests to the organization endpoint
 
 
 ### Chores

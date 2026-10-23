@@ -35,6 +35,8 @@ internal class GoogleCloudBackendTest {
         private const val ORGANIZATION_BASE_URL =
             "$GATEWAY_URL/projects/$PROJECT/locations/$LOCATION/claudeOrganization/invoke"
         private const val ORGANIZATION_PATH = "/v1/organizations/workspaces"
+        private const val USER_PROFILES_PATH = "/v1/user_profiles"
+        private const val USER_PROFILE_ID = "uprof_123"
 
         private const val ENV_PROJECT = "ANTHROPIC_GOOGLE_CLOUD_PROJECT"
         private const val ENV_PROJECT_FALLBACK = "GOOGLE_CLOUD_PROJECT"
@@ -541,6 +543,19 @@ internal class GoogleCloudBackendTest {
     }
 
     @Test
+    fun userProfilesRouteUsesOrganizationBaseUrl() {
+        val backend = createBackendWithTokenSupplier()
+        val request = createOrganizationRequest(backend.baseUrl()).toBuilder()
+        val collection = request.replaceAllPathSegments("v1", "user_profiles").build()
+        val item = request.replaceAllPathSegments("v1", "user_profiles", USER_PROFILE_ID).build()
+
+        assertThat(backend.prepareRequest(collection).url())
+            .isEqualTo(ORGANIZATION_BASE_URL + USER_PROFILES_PATH)
+        assertThat(backend.prepareRequest(item).url())
+            .isEqualTo("$ORGANIZATION_BASE_URL$USER_PROFILES_PATH/$USER_PROFILE_ID")
+    }
+
+    @Test
     fun workspaceRouteKeepsWorkspaceBaseUrl() {
         val backend = createBackendWithTokenSupplier()
         val prepared = backend.prepareRequest(createRequest(backend.baseUrl()))
@@ -562,11 +577,37 @@ internal class GoogleCloudBackendTest {
     }
 
     @Test
+    fun routeOutsideUserProfilesPathKeepsWorkspaceBaseUrl() {
+        val backend = createBackendWithTokenSupplier()
+        val request = createRequest(backend.baseUrl()).toBuilder()
+        val sibling = request.replaceAllPathSegments("v1", "user_profiles_other").build()
+        val nested = request.replaceAllPathSegments("v1", "user_profiles_other", "x").build()
+
+        assertThat(backend.prepareRequest(sibling).url())
+            .isEqualTo("$WORKSPACE_BASE_URL/v1/user_profiles_other")
+        assertThat(backend.prepareRequest(nested).url())
+            .isEqualTo("$WORKSPACE_BASE_URL/v1/user_profiles_other/x")
+    }
+
+    @Test
     fun organizationRouteWithoutWorkspaceId() {
         val backend = createBackendWithoutWorkspaceId()
         val prepared = backend.prepareRequest(createOrganizationRequest(backend.baseUrl()))
 
         assertThat(prepared.url()).isEqualTo(ORGANIZATION_BASE_URL + ORGANIZATION_PATH)
+    }
+
+    @Test
+    fun userProfilesRouteWithoutWorkspaceId() {
+        val backend = createBackendWithoutWorkspaceId()
+        val request =
+            createOrganizationRequest(backend.baseUrl())
+                .toBuilder()
+                .replaceAllPathSegments("v1", "user_profiles")
+                .build()
+
+        assertThat(backend.prepareRequest(request).url())
+            .isEqualTo(ORGANIZATION_BASE_URL + USER_PROFILES_PATH)
     }
 
     @Test
@@ -713,6 +754,30 @@ internal class GoogleCloudBackendTest {
     }
 
     @Test
+    fun clientUserProfilesRoute() {
+        val backend = RecordingBackend(createBackendWithTokenSupplier())
+        val client = createClient(backend)
+
+        send { client.userProfiles().create() }
+        send { client.userProfiles().retrieve(USER_PROFILE_ID) }
+        send { client.beta().userProfiles().list() }
+        send { client.async().beta().userProfiles().retrieve(USER_PROFILE_ID).join() }
+        send { client.messages().create(MESSAGE_PARAMS) }
+
+        assertThat(backend.urls())
+            .containsExactly(
+                ORGANIZATION_BASE_URL + USER_PROFILES_PATH,
+                "$ORGANIZATION_BASE_URL$USER_PROFILES_PATH/$USER_PROFILE_ID",
+                ORGANIZATION_BASE_URL + USER_PROFILES_PATH,
+                "$ORGANIZATION_BASE_URL$USER_PROFILES_PATH/$USER_PROFILE_ID",
+                "$WORKSPACE_BASE_URL/v1/messages",
+            )
+        assertThat(backend.requests).allSatisfy {
+            assertThat(it.headers.values("Authorization")).containsExactly("Bearer $TOKEN")
+        }
+    }
+
+    @Test
     fun clientWorkspaceRoute() {
         val backend = RecordingBackend(createBackendWithTokenSupplier())
         val client = createClient(backend)
@@ -736,6 +801,21 @@ internal class GoogleCloudBackendTest {
             .containsExactly(
                 ORGANIZATION_BASE_URL + ORGANIZATION_PATH,
                 ORGANIZATION_BASE_URL + ORGANIZATION_PATH,
+            )
+    }
+
+    @Test
+    fun clientUserProfilesRouteWithoutWorkspaceId() {
+        val backend = RecordingBackend(createBackendWithoutWorkspaceId())
+        val client = createClient(backend)
+
+        send { client.userProfiles().list() }
+        send { client.async().userProfiles().retrieve(USER_PROFILE_ID).join() }
+
+        assertThat(backend.urls())
+            .containsExactly(
+                ORGANIZATION_BASE_URL + USER_PROFILES_PATH,
+                "$ORGANIZATION_BASE_URL$USER_PROFILES_PATH/$USER_PROFILE_ID",
             )
     }
 
@@ -767,11 +847,13 @@ internal class GoogleCloudBackendTest {
 
         send { client.beta().organization().workspaces().list() }
         send { client.async().beta().organization().workspaces().list().join() }
+        send { client.userProfiles().list() }
 
         assertThat(backend.urls())
             .containsExactly(
                 CUSTOM_BASE_URL + ORGANIZATION_PATH,
                 CUSTOM_BASE_URL + ORGANIZATION_PATH,
+                CUSTOM_BASE_URL + USER_PROFILES_PATH,
             )
     }
 

@@ -20,8 +20,8 @@ import java.util.function.Supplier
  *
  * When the base URL is derived, a workspace ID set via [Builder.workspaceId] or the
  * `ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID` environment variable is required for every route outside
- * `/v1/organizations`. Those organization-level routes are sent to the project's organization
- * endpoint and need none.
+ * `/v1/organizations` and `/v1/user_profiles`. Those organization-level routes are sent to the
+ * project's organization endpoint and need none.
  *
  * See the Google Cloud documentation for details on how to configure Google credentials.
  */
@@ -78,6 +78,8 @@ private constructor(
 
         private const val ORGANIZATION_PATH_PREFIX = "/v1/organizations/"
 
+        private const val USER_PROFILES_PATH = "/v1/user_profiles"
+
         @JvmStatic fun builder() = Builder()
 
         /**
@@ -109,10 +111,12 @@ private constructor(
         return template.replace("{project}", project).replace("{location}", location)
     }
 
-    private fun isOrganizationRoute(request: HttpRequest): Boolean =
-        request.pathSegments
-            .joinToString(separator = "/", prefix = "/")
-            .startsWith(ORGANIZATION_PATH_PREFIX)
+    private fun isOrganizationRoute(request: HttpRequest): Boolean {
+        val path = request.pathSegments.joinToString(separator = "/", prefix = "/")
+        return path.startsWith(ORGANIZATION_PATH_PREFIX) ||
+            path == USER_PROFILES_PATH ||
+            path.startsWith("$USER_PROFILES_PATH/")
+    }
 
     override fun openTelemetryPlatform(): Optional<String> = Optional.of("googlecloud")
 
