@@ -2,6 +2,11 @@
 
 ## [3.2.1](https://github.com/anthropics/anthropic-sdk-java/compare/v3.2.0...v3.2.1) (2026-10-23)
 
+### Bug Fixes
+
+* **client:** hide the webhook secret in UnwrapWebhookParams.toString()
+
+
 ### Chores
 
 * **docs:** fix the usage and cost report examples' token total and data_refreshed_at
