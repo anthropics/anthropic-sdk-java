@@ -13,6 +13,7 @@
 * **docs:** fix the usage and cost report examples' token total and data_refreshed_at
 * **docs:** reword work queue, skill and external key descriptions
 * **internal:** carry endpoint path query params to the request layer
+* **internal:** check the repository by owner and public name in workflows
 * **internal:** give the compiler daemon more heap
 * **internal:** lint environment variable reads outside fromEnv()
 * **internal:** read the beta route qualifier instead of the beta=true query
