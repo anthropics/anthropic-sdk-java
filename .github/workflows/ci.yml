@@ -52,7 +52,6 @@ jobs:
     name: build
     permissions:
       contents: read
-      id-token: write
     runs-on: ${{ github.repository == 'anthropics/anthropic-sdk-java' && 'ubuntu-latest-16core' || 'sdk-ubuntu-latest-16-core' }}
     if: github.event_name == 'push' || github.event.pull_request.head.repo.fork
 
@@ -74,8 +73,7 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Build SDK
-        # Where the "Build local Maven repo" step runs it needs the Javadoc, and generating it in
-        # the same Gradle run as the compile is faster.
+        # Generates the Javadoc so that a Dokka failure shows here rather than when publishing.
         run: ./scripts/build ${{ github.repository != 'anthropics/anthropic-sdk-java' && !startsWith(github.ref, 'refs/heads/stl/') && 'dokkaGeneratePublicationJavadoc' || '' }}
 
   test:
