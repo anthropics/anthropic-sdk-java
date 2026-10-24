@@ -123,7 +123,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 startMessagesCreate(clientOptions, requestOptions, params, stream = false)
             return traceApiCallAsync(clientOptions, recording?.call) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenCompose { client.executeAsync(it, requestOptions) }
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -178,7 +178,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 startMessagesCreate(clientOptions, requestOptions, params, stream = true)
             return traceApiCallAsync(clientOptions, recording?.call) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenCompose { client.executeAsync(it, requestOptions) }
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -217,7 +217,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val call = startCountTokens(clientOptions, requestOptions, params)
             return traceApiCallAsync(clientOptions, call) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenCompose { client.executeAsync(it, requestOptions) }
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
