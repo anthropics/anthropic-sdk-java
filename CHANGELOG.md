@@ -11,6 +11,10 @@
 
 * **ci:** remove unused build upload steps
 
+### Documentation
+
+* **examples:** use current model IDs
+
 ## [3.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.2.0...v3.3.0) (2026-10-23)
 
 ### Features
