@@ -9,15 +9,15 @@ internal class ApiKeyUserActorTest {
 
     @Test
     fun create() {
-        val apiKeyUserActor = ApiKeyUserActor.of("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        val apiKeyUserActor = ApiKeyUserActor.of("user_01WxYzAbCdEfGhJkMnPqRsTu")
 
-        assertThat(apiKeyUserActor.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(apiKeyUserActor.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val apiKeyUserActor = ApiKeyUserActor.of("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        val apiKeyUserActor = ApiKeyUserActor.of("user_01WxYzAbCdEfGhJkMnPqRsTu")
 
         val roundtrippedApiKeyUserActor =
             jsonMapper.readValue(

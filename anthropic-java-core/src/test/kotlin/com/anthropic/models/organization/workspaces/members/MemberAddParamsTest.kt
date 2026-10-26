@@ -10,7 +10,7 @@ internal class MemberAddParamsTest {
     fun create() {
         MemberAddParams.builder()
             .workspaceId("workspace_id")
-            .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+            .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
             .workspaceRole(NoBillingWorkspaceRole.WORKSPACE_ADMIN)
             .build()
     }
@@ -20,7 +20,7 @@ internal class MemberAddParamsTest {
         val params =
             MemberAddParams.builder()
                 .workspaceId("workspace_id")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .workspaceRole(NoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 
@@ -34,13 +34,13 @@ internal class MemberAddParamsTest {
         val params =
             MemberAddParams.builder()
                 .workspaceId("workspace_id")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .workspaceRole(NoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 
         val body = params._body()
 
-        assertThat(body.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(body.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
         assertThat(body.workspaceRole()).isEqualTo(NoBillingWorkspaceRole.WORKSPACE_ADMIN)
     }
 }

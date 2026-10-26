@@ -14,13 +14,13 @@ internal class BetaSpendLimitUserActorTest {
                 .deleted(true)
                 .emailAddress("email_address")
                 .name("name")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         assertThat(betaSpendLimitUserActor.deleted()).isEqualTo(true)
         assertThat(betaSpendLimitUserActor.emailAddress()).contains("email_address")
         assertThat(betaSpendLimitUserActor.name()).contains("name")
-        assertThat(betaSpendLimitUserActor.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(betaSpendLimitUserActor.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
     }
 
     @Test
@@ -31,7 +31,7 @@ internal class BetaSpendLimitUserActorTest {
                 .deleted(true)
                 .emailAddress("email_address")
                 .name("name")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         val roundtrippedBetaSpendLimitUserActor =

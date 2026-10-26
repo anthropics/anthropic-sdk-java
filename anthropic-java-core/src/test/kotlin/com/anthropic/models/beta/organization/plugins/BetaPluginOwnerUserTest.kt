@@ -9,15 +9,15 @@ internal class BetaPluginOwnerUserTest {
 
     @Test
     fun create() {
-        val betaPluginOwnerUser = BetaPluginOwnerUser.of("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        val betaPluginOwnerUser = BetaPluginOwnerUser.of("user_01WxYzAbCdEfGhJkMnPqRsTu")
 
-        assertThat(betaPluginOwnerUser.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(betaPluginOwnerUser.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaPluginOwnerUser = BetaPluginOwnerUser.of("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        val betaPluginOwnerUser = BetaPluginOwnerUser.of("user_01WxYzAbCdEfGhJkMnPqRsTu")
 
         val roundtrippedBetaPluginOwnerUser =
             jsonMapper.readValue(

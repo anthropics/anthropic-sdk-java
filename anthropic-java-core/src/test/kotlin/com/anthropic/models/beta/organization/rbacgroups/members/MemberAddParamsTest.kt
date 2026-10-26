@@ -9,7 +9,7 @@ internal class MemberAddParamsTest {
     fun create() {
         MemberAddParams.builder()
             .rbacGroupId("rbac_group_id")
-            .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+            .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
             .build()
     }
 
@@ -18,7 +18,7 @@ internal class MemberAddParamsTest {
         val params =
             MemberAddParams.builder()
                 .rbacGroupId("rbac_group_id")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("rbac_group_id")
@@ -31,11 +31,11 @@ internal class MemberAddParamsTest {
         val params =
             MemberAddParams.builder()
                 .rbacGroupId("rbac_group_id")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(body.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
     }
 }

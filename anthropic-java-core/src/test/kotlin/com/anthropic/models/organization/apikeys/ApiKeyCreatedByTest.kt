@@ -11,11 +11,11 @@ internal class ApiKeyCreatedByTest {
     fun create() {
         val apiKeyCreatedBy =
             ApiKeyCreatedBy.builder()
-                .id("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .id("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .type(ApiKeyCreatedBy.Type.USER)
                 .build()
 
-        assertThat(apiKeyCreatedBy.id()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(apiKeyCreatedBy.id()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
         assertThat(apiKeyCreatedBy.type()).isEqualTo(ApiKeyCreatedBy.Type.USER)
     }
 
@@ -24,7 +24,7 @@ internal class ApiKeyCreatedByTest {
         val jsonMapper = jsonMapper()
         val apiKeyCreatedBy =
             ApiKeyCreatedBy.builder()
-                .id("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .id("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .type(ApiKeyCreatedBy.Type.USER)
                 .build()
 

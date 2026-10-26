@@ -40,7 +40,7 @@ internal class MemberServiceAsyncTest {
             memberServiceAsync.add(
                 MemberAddParams.builder()
                     .rbacGroupId("rbac_group_id")
-                    .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                    .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                     .build()
             )
 

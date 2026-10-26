@@ -9,15 +9,15 @@ internal class BetaSpendLimitUserScopeTest {
 
     @Test
     fun create() {
-        val betaSpendLimitUserScope = BetaSpendLimitUserScope.of("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        val betaSpendLimitUserScope = BetaSpendLimitUserScope.of("user_01WxYzAbCdEfGhJkMnPqRsTu")
 
-        assertThat(betaSpendLimitUserScope.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(betaSpendLimitUserScope.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaSpendLimitUserScope = BetaSpendLimitUserScope.of("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        val betaSpendLimitUserScope = BetaSpendLimitUserScope.of("user_01WxYzAbCdEfGhJkMnPqRsTu")
 
         val roundtrippedBetaSpendLimitUserScope =
             jsonMapper.readValue(

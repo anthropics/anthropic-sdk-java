@@ -12,7 +12,7 @@ internal class SpendLimitSetParamsTest {
         SpendLimitSetParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .amount("50000")
-            .userScope("user_01WCz1FkmYMm4gnmykNKUu3Q")
+            .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
             .period(BetaSpendLimitPeriod.DAILY)
             .build()
     }
@@ -23,7 +23,7 @@ internal class SpendLimitSetParamsTest {
             SpendLimitSetParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .amount("50000")
-                .userScope("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .period(BetaSpendLimitPeriod.DAILY)
                 .build()
 
@@ -42,7 +42,7 @@ internal class SpendLimitSetParamsTest {
         val params =
             SpendLimitSetParams.builder()
                 .amount("50000")
-                .userScope("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         val headers = params._headers()
@@ -56,7 +56,7 @@ internal class SpendLimitSetParamsTest {
             SpendLimitSetParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .amount("50000")
-                .userScope("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .period(BetaSpendLimitPeriod.DAILY)
                 .build()
 
@@ -64,7 +64,7 @@ internal class SpendLimitSetParamsTest {
 
         assertThat(body.amount()).contains("50000")
         assertThat(body.scope())
-            .isEqualTo(SpendLimitSetParams.Scope.ofUser("user_01WCz1FkmYMm4gnmykNKUu3Q"))
+            .isEqualTo(SpendLimitSetParams.Scope.ofUser("user_01WxYzAbCdEfGhJkMnPqRsTu"))
         assertThat(body.period()).contains(BetaSpendLimitPeriod.DAILY)
     }
 
@@ -73,13 +73,13 @@ internal class SpendLimitSetParamsTest {
         val params =
             SpendLimitSetParams.builder()
                 .amount("50000")
-                .userScope("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         val body = params._body()
 
         assertThat(body.amount()).contains("50000")
         assertThat(body.scope())
-            .isEqualTo(SpendLimitSetParams.Scope.ofUser("user_01WCz1FkmYMm4gnmykNKUu3Q"))
+            .isEqualTo(SpendLimitSetParams.Scope.ofUser("user_01WxYzAbCdEfGhJkMnPqRsTu"))
     }
 }

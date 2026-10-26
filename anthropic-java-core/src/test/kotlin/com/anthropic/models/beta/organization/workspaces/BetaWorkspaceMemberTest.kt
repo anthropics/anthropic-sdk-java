@@ -11,12 +11,12 @@ internal class BetaWorkspaceMemberTest {
     fun create() {
         val betaWorkspaceMember =
             BetaWorkspaceMember.builder()
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .workspaceRole(BetaWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 
-        assertThat(betaWorkspaceMember.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(betaWorkspaceMember.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
         assertThat(betaWorkspaceMember.workspaceId()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
         assertThat(betaWorkspaceMember.workspaceRole()).isEqualTo(BetaWorkspaceRole.WORKSPACE_ADMIN)
     }
@@ -26,7 +26,7 @@ internal class BetaWorkspaceMemberTest {
         val jsonMapper = jsonMapper()
         val betaWorkspaceMember =
             BetaWorkspaceMember.builder()
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .workspaceRole(BetaWorkspaceRole.WORKSPACE_ADMIN)
                 .build()

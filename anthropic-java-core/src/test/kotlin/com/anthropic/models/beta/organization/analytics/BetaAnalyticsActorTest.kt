@@ -19,7 +19,7 @@ internal class BetaAnalyticsActorTest {
                 .deleted(false)
                 .emailAddress("user@emaildomain.com")
                 .name("Jane Doe")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         val betaAnalyticsActor = BetaAnalyticsActor.ofUser(user)
@@ -39,7 +39,7 @@ internal class BetaAnalyticsActorTest {
                     .deleted(false)
                     .emailAddress("user@emaildomain.com")
                     .name("Jane Doe")
-                    .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                    .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                     .build()
             )
 

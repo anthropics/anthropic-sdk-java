@@ -9,15 +9,15 @@ internal class UserRemoveResponseTest {
 
     @Test
     fun create() {
-        val userRemoveResponse = UserRemoveResponse.of("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        val userRemoveResponse = UserRemoveResponse.of("user_01WxYzAbCdEfGhJkMnPqRsTu")
 
-        assertThat(userRemoveResponse.id()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(userRemoveResponse.id()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val userRemoveResponse = UserRemoveResponse.of("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        val userRemoveResponse = UserRemoveResponse.of("user_01WxYzAbCdEfGhJkMnPqRsTu")
 
         val roundtrippedUserRemoveResponse =
             jsonMapper.readValue(

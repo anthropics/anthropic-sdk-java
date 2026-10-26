@@ -10,17 +10,17 @@ internal class BetaPluginTargetOrganizationMemberTest {
     @Test
     fun create() {
         val betaPluginTargetOrganizationMember =
-            BetaPluginTargetOrganizationMember.of("user_01WCz1FkmYMm4gnmykNKUu3Q")
+            BetaPluginTargetOrganizationMember.of("user_01WxYzAbCdEfGhJkMnPqRsTu")
 
         assertThat(betaPluginTargetOrganizationMember.userId())
-            .isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+            .isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaPluginTargetOrganizationMember =
-            BetaPluginTargetOrganizationMember.of("user_01WCz1FkmYMm4gnmykNKUu3Q")
+            BetaPluginTargetOrganizationMember.of("user_01WxYzAbCdEfGhJkMnPqRsTu")
 
         val roundtrippedBetaPluginTargetOrganizationMember =
             jsonMapper.readValue(

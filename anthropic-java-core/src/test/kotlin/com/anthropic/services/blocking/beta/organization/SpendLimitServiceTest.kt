@@ -65,7 +65,7 @@ internal class SpendLimitServiceTest {
                 SpendLimitSetParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .amount("50000")
-                    .userScope("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                    .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
                     .period(BetaSpendLimitPeriod.DAILY)
                     .build()
             )

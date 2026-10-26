@@ -13,14 +13,14 @@ internal class OrganizationUserTest {
     fun create() {
         val organizationUser =
             OrganizationUser.builder()
-                .id("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .id("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .addedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .email("user@emaildomain.com")
                 .name("Jane Doe")
                 .role(OrganizationRole.ADMIN)
                 .build()
 
-        assertThat(organizationUser.id()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(organizationUser.id()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
         assertThat(organizationUser.addedAt())
             .isEqualTo(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
         assertThat(organizationUser.email()).isEqualTo("user@emaildomain.com")
@@ -33,7 +33,7 @@ internal class OrganizationUserTest {
         val jsonMapper = jsonMapper()
         val organizationUser =
             OrganizationUser.builder()
-                .id("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .id("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .addedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .email("user@emaildomain.com")
                 .name("Jane Doe")

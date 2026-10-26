@@ -22,7 +22,7 @@ internal class UsageListParamsTest {
     fun create() {
         UsageListParams.builder()
             .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
-            .addActorId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+            .addActorId("user_01WxYzAbCdEfGhJkMnPqRsTu")
             .addActorType(BetaAnalyticsActorType.SERVICE_ACCOUNT_ACTOR)
             .addAgentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
             .addApiKeyId("apikey_01Rj2N8SVvo6BePZj99NhmiT")
@@ -58,7 +58,7 @@ internal class UsageListParamsTest {
         val params =
             UsageListParams.builder()
                 .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
-                .addActorId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .addActorId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .addActorType(BetaAnalyticsActorType.SERVICE_ACCOUNT_ACTOR)
                 .addAgentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
                 .addApiKeyId("apikey_01Rj2N8SVvo6BePZj99NhmiT")
@@ -119,7 +119,7 @@ internal class UsageListParamsTest {
         val params =
             UsageListParams.builder()
                 .startingAt(OffsetDateTime.parse("2026-09-01T00:00:00Z"))
-                .addActorId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .addActorId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .addActorType(BetaAnalyticsActorType.SERVICE_ACCOUNT_ACTOR)
                 .addAgentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
                 .addApiKeyId("apikey_01Rj2N8SVvo6BePZj99NhmiT")
@@ -155,7 +155,7 @@ internal class UsageListParamsTest {
             .isEqualTo(
                 QueryParams.builder()
                     .put("starting_at", "2026-09-01T00:00:00Z")
-                    .put("actor_ids[]", "user_01WCz1FkmYMm4gnmykNKUu3Q")
+                    .put("actor_ids[]", "user_01WxYzAbCdEfGhJkMnPqRsTu")
                     .put("actor_types[]", "service_account_actor")
                     .put("agent_ids[]", "agent_01VHd3EAGJ6PLkP9LM7DDu3f")
                     .put("api_key_ids[]", "apikey_01Rj2N8SVvo6BePZj99NhmiT")

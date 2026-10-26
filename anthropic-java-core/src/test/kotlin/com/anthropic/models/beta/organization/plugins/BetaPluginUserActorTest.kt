@@ -12,11 +12,11 @@ internal class BetaPluginUserActorTest {
         val betaPluginUserActor =
             BetaPluginUserActor.builder()
                 .emailAddress("user@example.com")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         assertThat(betaPluginUserActor.emailAddress()).contains("user@example.com")
-        assertThat(betaPluginUserActor.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(betaPluginUserActor.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
     }
 
     @Test
@@ -25,7 +25,7 @@ internal class BetaPluginUserActorTest {
         val betaPluginUserActor =
             BetaPluginUserActor.builder()
                 .emailAddress("user@example.com")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         val roundtrippedBetaPluginUserActor =
