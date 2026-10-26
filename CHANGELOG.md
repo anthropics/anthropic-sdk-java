@@ -10,6 +10,7 @@
 ### Chores
 
 * **ci:** remove unused build upload steps
+* **internal:** wait for the request of the canceled call test to reach the server
 
 ### Documentation
 

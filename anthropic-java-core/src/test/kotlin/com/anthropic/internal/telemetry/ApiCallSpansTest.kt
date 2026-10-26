@@ -1643,7 +1643,14 @@ internal class ApiCallSpansTest : TracingTestSupport() {
         val client = asyncClient()
 
         val future = client.messages().create(messageParams())
-        Thread.sleep(200)
+        // Canceling the future doesn't stop the HTTP request, so one that reaches the server after
+        // this test ends is counted by the next test, fromEnv_appliesThePropagationSystemProperty.
+        val sent = postRequestedFor(urlPathEqualTo("/v1/messages"))
+        val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
+        while (findAll(sent).isEmpty() && System.nanoTime() < deadline) {
+            Thread.sleep(10)
+        }
+        assertThat(findAll(sent)).hasSize(1)
         future.cancel(true)
         assertThrows<CancellationException> { future.get() }
 
