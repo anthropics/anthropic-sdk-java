@@ -13,11 +13,14 @@ import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.ApiCall
+import com.anthropic.core.opentelemetry.ApiCallClient
 import com.anthropic.core.opentelemetry.OpenTelemetryContentMode
 import com.anthropic.core.opentelemetry.OpenTelemetryOptions
 import com.anthropic.core.opentelemetry.OpenTelemetryRequestOptions
 import com.anthropic.core.opentelemetry.OpenTelemetryTraces
+import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCall
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicIoException
 import com.anthropic.errors.InternalServerException
@@ -1653,6 +1656,39 @@ internal class ApiCallSpansTest : TracingTestSupport() {
         assertThat(findAll(sent)).hasSize(1)
         future.cancel(true)
         assertThrows<CancellationException> { future.get() }
+
+        val span = recorder.await(1).single()
+        assertThat(span.status.statusCode).isEqualTo(StatusCode.UNSET)
+        assertThat(span.string("error.type")).isNull()
+    }
+
+    @Test
+    fun asyncCallCanceledBeforeItsSpanStarts_leavesStatusUnset() {
+        val clientOptions =
+            ClientOptions.builder()
+                .httpClient(FakeHttpClient("{}"))
+                .openTelemetry(options())
+                .build()
+        val request =
+            HttpRequest.builder().method(HttpMethod.POST).baseUrl("http://localhost").build()
+        val prepared = CompletableFuture<HttpRequest>()
+        lateinit var apiCallClient: ApiCallClient
+
+        // Not `messages().create`, whose span starts before its request is sent.
+        val future =
+            traceApiCallAsync(clientOptions, messageParams()) { client ->
+                    apiCallClient = client
+                    prepared
+                        .thenCompose { client.executeAsync(it, RequestOptions.none()) }
+                        .thenApply { response -> response.parseable { "parsed" } }
+                }
+                .thenParse()
+        future.cancel(true)
+        assertThrows<CancellationException> { future.get() }
+        assertThat(apiCallClient.call).isNull()
+
+        // Canceling does not stop the send, so the span starts after the future was canceled.
+        prepared.complete(request)
 
         val span = recorder.await(1).single()
         assertThat(span.status.statusCode).isEqualTo(StatusCode.UNSET)

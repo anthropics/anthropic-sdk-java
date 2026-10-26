@@ -11,6 +11,7 @@
 
 * **ci:** remove unused build upload steps
 * **docs:** clarify what disabling the Compliance API stops
+* **internal:** cover an async call canceled before its span starts
 * **internal:** wait for the request of the canceled call test to reach the server
 
 ### Documentation
