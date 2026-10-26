@@ -17,6 +17,7 @@
 ### Documentation
 
 * **examples:** use current model IDs
+* link to the SDK documentation instead of removed README sections
 
 ## [3.3.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.2.0...v3.3.0) (2026-10-23)
 
