@@ -44,6 +44,7 @@ internal class WorkspaceServiceTest {
                             .putAdditionalProperty("team", JsonValue.from("platform"))
                             .build()
                     )
+                    .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                     .build()
             )
 
@@ -84,6 +85,7 @@ internal class WorkspaceServiceTest {
                             .putAdditionalProperty("team", JsonValue.from("platform"))
                             .build()
                     )
+                    .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                     .build()
             )
 

@@ -19,6 +19,7 @@ internal class ExternalKeyCreateParamsTest {
             )
             .displayName("x")
             .geo(ExternalKeyCreateParams.Geo.US)
+            .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
             .build()
     }
 
@@ -37,6 +38,7 @@ internal class ExternalKeyCreateParamsTest {
                 )
                 .displayName("x")
                 .geo(ExternalKeyCreateParams.Geo.US)
+                .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                 .build()
 
         val body = params._body()
@@ -55,6 +57,7 @@ internal class ExternalKeyCreateParamsTest {
             )
         assertThat(body.displayName()).contains("x")
         assertThat(body.geo()).contains(ExternalKeyCreateParams.Geo.US)
+        assertThat(body.userProfileId()).contains("uprof_01SDCCSbTxrXDpWc1phhtcfK")
     }
 
     @Test

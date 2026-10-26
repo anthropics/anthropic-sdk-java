@@ -30,6 +30,7 @@ private constructor(
     private val name: JsonField<String>,
     private val tags: JsonField<Tags>,
     private val type: JsonValue,
+    private val userProfileId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -57,6 +58,9 @@ private constructor(
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("tags") @ExcludeMissing tags: JsonField<Tags> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("user_profile_id")
+        @ExcludeMissing
+        userProfileId: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
         archivedAt,
@@ -68,6 +72,7 @@ private constructor(
         name,
         tags,
         type,
+        userProfileId,
         mutableMapOf(),
     )
 
@@ -89,15 +94,16 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
-     * Identifier for this Workspace's encryption compartment. When you configure a customer-managed
-     * encryption key (CMEK) on AWS, reference this value in your KMS key-policy condition so the
-     * key is scoped to this compartment. On GCP and Azure, Anthropic enforces the compartment
-     * binding automatically; you do not need to reference this value in your key configuration. See
-     * the CMEK integration guide for the required key configuration; unless your organization is on
-     * Claude Platform on AWS, it includes a separate value used during key validation. On Claude
-     * Platform on AWS there is no separate validation value: the key is validated against this
-     * Workspace's own value when it is attached, so if your key policy uses the compartment
-     * condition, add this value to it before attaching the key.
+     * Identifier for this Workspace's encryption compartment. When you configure an AWS KMS
+     * customer-managed encryption key (CMEK) that isn't bound to a user profile, reference this
+     * value in your KMS key-policy condition so the key is scoped to this compartment. On GCP and
+     * Azure, Anthropic enforces the compartment binding automatically; you do not need to reference
+     * this value in your key configuration. See the CMEK integration guide for the required key
+     * configuration; unless your organization is on Claude Platform on AWS, it includes a separate
+     * value used during key validation. On Claude Platform on AWS there is no separate validation
+     * value: your organization's own key is validated against this Workspace's own value when it is
+     * attached, so if its key policy uses the compartment condition, add this value to it before
+     * attaching the key.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -132,12 +138,13 @@ private constructor(
      * ID of the customer-managed encryption key (CMEK) configuration to use for this Workspace.
      * Setting this field requires CMEK to be enabled for your organization. When set, data stored
      * for this Workspace is encrypted with the referenced key. Create key configurations with the
-     * External Keys API. On Claude Platform on AWS the value is the AWS KMS key ARN, and the key
-     * must be a single-Region key in the same AWS account and Region as the Workspace. On that
-     * platform the key is validated against this Workspace when it is attached, so a key-policy
-     * problem is reported as an error on this request. This field is write-once: once a key is
-     * attached to a Workspace it cannot be detached or replaced. To rotate key material, rotate the
-     * underlying key on your cloud KMS; the `external_key_id` stays the same.
+     * External Keys API. On Claude Platform on AWS the value for an AWS KMS key is the key's ARN,
+     * and your organization's own key must be a single-Region key in the same AWS account and
+     * Region as the Workspace. On that platform the key is validated against this Workspace when it
+     * is attached, so a key-policy problem is reported as an error on this request. This field is
+     * write-once: once a key is attached to a Workspace it cannot be detached or replaced. To
+     * rotate key material, rotate the underlying key on your cloud KMS; the `external_key_id` stays
+     * the same.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -174,6 +181,15 @@ private constructor(
      * with an unexpected value).
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+    /**
+     * ID of the user profile attached to the Workspace, or null if it has none. Every inference
+     * request through a Workspace that has a user profile must name that profile.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun userProfileId(): Optional<String> = userProfileId.getOptional("user_profile_id")
 
     /**
      * Returns the raw JSON value of [id].
@@ -250,6 +266,15 @@ private constructor(
      */
     @JsonProperty("tags") @ExcludeMissing fun _tags(): JsonField<Tags> = tags
 
+    /**
+     * Returns the raw JSON value of [userProfileId].
+     *
+     * Unlike [userProfileId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("user_profile_id")
+    @ExcludeMissing
+    fun _userProfileId(): JsonField<String> = userProfileId
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -278,6 +303,7 @@ private constructor(
          * .externalKeyId()
          * .name()
          * .tags()
+         * .userProfileId()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -296,6 +322,7 @@ private constructor(
         private var name: JsonField<String>? = null
         private var tags: JsonField<Tags>? = null
         private var type: JsonValue = JsonValue.from("workspace")
+        private var userProfileId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -310,6 +337,7 @@ private constructor(
             name = workspace.name
             tags = workspace.tags
             type = workspace.type
+            userProfileId = workspace.userProfileId
             additionalProperties = workspace.additionalProperties.toMutableMap()
         }
 
@@ -345,16 +373,16 @@ private constructor(
         }
 
         /**
-         * Identifier for this Workspace's encryption compartment. When you configure a
-         * customer-managed encryption key (CMEK) on AWS, reference this value in your KMS
-         * key-policy condition so the key is scoped to this compartment. On GCP and Azure,
-         * Anthropic enforces the compartment binding automatically; you do not need to reference
-         * this value in your key configuration. See the CMEK integration guide for the required key
-         * configuration; unless your organization is on Claude Platform on AWS, it includes a
-         * separate value used during key validation. On Claude Platform on AWS there is no separate
-         * validation value: the key is validated against this Workspace's own value when it is
-         * attached, so if your key policy uses the compartment condition, add this value to it
-         * before attaching the key.
+         * Identifier for this Workspace's encryption compartment. When you configure an AWS KMS
+         * customer-managed encryption key (CMEK) that isn't bound to a user profile, reference this
+         * value in your KMS key-policy condition so the key is scoped to this compartment. On GCP
+         * and Azure, Anthropic enforces the compartment binding automatically; you do not need to
+         * reference this value in your key configuration. See the CMEK integration guide for the
+         * required key configuration; unless your organization is on Claude Platform on AWS, it
+         * includes a separate value used during key validation. On Claude Platform on AWS there is
+         * no separate validation value: your organization's own key is validated against this
+         * Workspace's own value when it is attached, so if its key policy uses the compartment
+         * condition, add this value to it before attaching the key.
          */
         fun compartmentId(compartmentId: String) = compartmentId(JsonField.of(compartmentId))
 
@@ -413,13 +441,13 @@ private constructor(
          * ID of the customer-managed encryption key (CMEK) configuration to use for this Workspace.
          * Setting this field requires CMEK to be enabled for your organization. When set, data
          * stored for this Workspace is encrypted with the referenced key. Create key configurations
-         * with the External Keys API. On Claude Platform on AWS the value is the AWS KMS key ARN,
-         * and the key must be a single-Region key in the same AWS account and Region as the
-         * Workspace. On that platform the key is validated against this Workspace when it is
-         * attached, so a key-policy problem is reported as an error on this request. This field is
-         * write-once: once a key is attached to a Workspace it cannot be detached or replaced. To
-         * rotate key material, rotate the underlying key on your cloud KMS; the `external_key_id`
-         * stays the same.
+         * with the External Keys API. On Claude Platform on AWS the value for an AWS KMS key is the
+         * key's ARN, and your organization's own key must be a single-Region key in the same AWS
+         * account and Region as the Workspace. On that platform the key is validated against this
+         * Workspace when it is attached, so a key-policy problem is reported as an error on this
+         * request. This field is write-once: once a key is attached to a Workspace it cannot be
+         * detached or replaced. To rotate key material, rotate the underlying key on your cloud
+         * KMS; the `external_key_id` stays the same.
          */
         fun externalKeyId(externalKeyId: String?) =
             externalKeyId(JsonField.ofNullable(externalKeyId))
@@ -475,6 +503,28 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
+        /**
+         * ID of the user profile attached to the Workspace, or null if it has none. Every inference
+         * request through a Workspace that has a user profile must name that profile.
+         */
+        fun userProfileId(userProfileId: String?) =
+            userProfileId(JsonField.ofNullable(userProfileId))
+
+        /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
+        fun userProfileId(userProfileId: Optional<String>) =
+            userProfileId(userProfileId.getOrNull())
+
+        /**
+         * Sets [Builder.userProfileId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.userProfileId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun userProfileId(userProfileId: JsonField<String>) = apply {
+            this.userProfileId = userProfileId
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -510,6 +560,7 @@ private constructor(
          * .externalKeyId()
          * .name()
          * .tags()
+         * .userProfileId()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -526,6 +577,7 @@ private constructor(
                 checkRequired("name", name),
                 checkRequired("tags", tags),
                 type,
+                checkRequired("userProfileId", userProfileId),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -559,6 +611,7 @@ private constructor(
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
+        userProfileId()
         validated = true
     }
 
@@ -586,7 +639,8 @@ private constructor(
             (if (externalKeyId.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (tags.asKnown().getOrNull()?.validity() ?: 0) +
-            type.let { if (it == JsonValue.from("workspace")) 1 else 0 }
+            type.let { if (it == JsonValue.from("workspace")) 1 else 0 } +
+            (if (userProfileId.asKnown().isPresent) 1 else 0)
 
     /** User-defined tags as string key-value pairs. Keys may not begin with `anthropic`. */
     class Tags
@@ -713,6 +767,7 @@ private constructor(
             name == other.name &&
             tags == other.tags &&
             type == other.type &&
+            userProfileId == other.userProfileId &&
             additionalProperties == other.additionalProperties
     }
 
@@ -728,6 +783,7 @@ private constructor(
             name,
             tags,
             type,
+            userProfileId,
             additionalProperties,
         )
     }
@@ -735,5 +791,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Workspace{id=$id, archivedAt=$archivedAt, compartmentId=$compartmentId, createdAt=$createdAt, dataResidency=$dataResidency, displayColor=$displayColor, externalKeyId=$externalKeyId, name=$name, tags=$tags, type=$type, additionalProperties=$additionalProperties}"
+        "Workspace{id=$id, archivedAt=$archivedAt, compartmentId=$compartmentId, createdAt=$createdAt, dataResidency=$dataResidency, displayColor=$displayColor, externalKeyId=$externalKeyId, name=$name, tags=$tags, type=$type, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
 }

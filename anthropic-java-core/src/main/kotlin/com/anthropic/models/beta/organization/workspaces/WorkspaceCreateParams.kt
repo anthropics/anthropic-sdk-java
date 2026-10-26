@@ -62,12 +62,13 @@ private constructor(
      * ID of the customer-managed encryption key (CMEK) configuration to use for this Workspace.
      * Setting this field requires CMEK to be enabled for your organization. When set, data stored
      * for this Workspace is encrypted with the referenced key. Create key configurations with the
-     * External Keys API. On Claude Platform on AWS the value is the AWS KMS key ARN, and the key
-     * must be a single-Region key in the same AWS account and Region as the Workspace. On that
-     * platform the key is validated against this Workspace when it is attached, so a key-policy
-     * problem is reported as an error on this request. This field is write-once: once a key is
-     * attached to a Workspace it cannot be detached or replaced. To rotate key material, rotate the
-     * underlying key on your cloud KMS; the `external_key_id` stays the same.
+     * External Keys API. On Claude Platform on AWS the value for an AWS KMS key is the key's ARN,
+     * and your organization's own key must be a single-Region key in the same AWS account and
+     * Region as the Workspace. On that platform the key is validated against this Workspace when it
+     * is attached, so a key-policy problem is reported as an error on this request. This field is
+     * write-once: once a key is attached to a Workspace it cannot be detached or replaced. To
+     * rotate key material, rotate the underlying key on your cloud KMS; the `external_key_id` stays
+     * the same.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -81,6 +82,17 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun tags(): Optional<Tags> = body.tags()
+
+    /**
+     * ID of a user profile to attach to the Workspace. Every inference request through the
+     * Workspace must then name this user profile; the API rejects a request that names none or a
+     * different one. The user profile can't be replaced or removed later; only deleting the user
+     * profile clears it.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun userProfileId(): Optional<String> = body.userProfileId()
 
     /**
      * Returns the raw JSON value of [name].
@@ -116,6 +128,13 @@ private constructor(
      * Unlike [tags], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _tags(): JsonField<Tags> = body._tags()
+
+    /**
+     * Returns the raw JSON value of [userProfileId].
+     *
+     * Unlike [userProfileId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _userProfileId(): JsonField<String> = body._userProfileId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -249,13 +268,13 @@ private constructor(
          * ID of the customer-managed encryption key (CMEK) configuration to use for this Workspace.
          * Setting this field requires CMEK to be enabled for your organization. When set, data
          * stored for this Workspace is encrypted with the referenced key. Create key configurations
-         * with the External Keys API. On Claude Platform on AWS the value is the AWS KMS key ARN,
-         * and the key must be a single-Region key in the same AWS account and Region as the
-         * Workspace. On that platform the key is validated against this Workspace when it is
-         * attached, so a key-policy problem is reported as an error on this request. This field is
-         * write-once: once a key is attached to a Workspace it cannot be detached or replaced. To
-         * rotate key material, rotate the underlying key on your cloud KMS; the `external_key_id`
-         * stays the same.
+         * with the External Keys API. On Claude Platform on AWS the value for an AWS KMS key is the
+         * key's ARN, and your organization's own key must be a single-Region key in the same AWS
+         * account and Region as the Workspace. On that platform the key is validated against this
+         * Workspace when it is attached, so a key-policy problem is reported as an error on this
+         * request. This field is write-once: once a key is attached to a Workspace it cannot be
+         * detached or replaced. To rotate key material, rotate the underlying key on your cloud
+         * KMS; the `external_key_id` stays the same.
          */
         fun externalKeyId(externalKeyId: String?) = apply { body.externalKeyId(externalKeyId) }
 
@@ -287,6 +306,29 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun tags(tags: JsonField<Tags>) = apply { body.tags(tags) }
+
+        /**
+         * ID of a user profile to attach to the Workspace. Every inference request through the
+         * Workspace must then name this user profile; the API rejects a request that names none or
+         * a different one. The user profile can't be replaced or removed later; only deleting the
+         * user profile clears it.
+         */
+        fun userProfileId(userProfileId: String?) = apply { body.userProfileId(userProfileId) }
+
+        /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
+        fun userProfileId(userProfileId: Optional<String>) =
+            userProfileId(userProfileId.getOrNull())
+
+        /**
+         * Sets [Builder.userProfileId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.userProfileId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun userProfileId(userProfileId: JsonField<String>) = apply {
+            body.userProfileId(userProfileId)
+        }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -456,6 +498,7 @@ private constructor(
         private val displayColor: JsonField<String>,
         private val externalKeyId: JsonField<String>,
         private val tags: JsonField<Tags>,
+        private val userProfileId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -472,7 +515,18 @@ private constructor(
             @ExcludeMissing
             externalKeyId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("tags") @ExcludeMissing tags: JsonField<Tags> = JsonMissing.of(),
-        ) : this(name, dataResidency, displayColor, externalKeyId, tags, mutableMapOf())
+            @JsonProperty("user_profile_id")
+            @ExcludeMissing
+            userProfileId: JsonField<String> = JsonMissing.of(),
+        ) : this(
+            name,
+            dataResidency,
+            displayColor,
+            externalKeyId,
+            tags,
+            userProfileId,
+            mutableMapOf(),
+        )
 
         /**
          * Name of the Workspace.
@@ -504,13 +558,13 @@ private constructor(
          * ID of the customer-managed encryption key (CMEK) configuration to use for this Workspace.
          * Setting this field requires CMEK to be enabled for your organization. When set, data
          * stored for this Workspace is encrypted with the referenced key. Create key configurations
-         * with the External Keys API. On Claude Platform on AWS the value is the AWS KMS key ARN,
-         * and the key must be a single-Region key in the same AWS account and Region as the
-         * Workspace. On that platform the key is validated against this Workspace when it is
-         * attached, so a key-policy problem is reported as an error on this request. This field is
-         * write-once: once a key is attached to a Workspace it cannot be detached or replaced. To
-         * rotate key material, rotate the underlying key on your cloud KMS; the `external_key_id`
-         * stays the same.
+         * with the External Keys API. On Claude Platform on AWS the value for an AWS KMS key is the
+         * key's ARN, and your organization's own key must be a single-Region key in the same AWS
+         * account and Region as the Workspace. On that platform the key is validated against this
+         * Workspace when it is attached, so a key-policy problem is reported as an error on this
+         * request. This field is write-once: once a key is attached to a Workspace it cannot be
+         * detached or replaced. To rotate key material, rotate the underlying key on your cloud
+         * KMS; the `external_key_id` stays the same.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -524,6 +578,17 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun tags(): Optional<Tags> = tags.getOptional("tags")
+
+        /**
+         * ID of a user profile to attach to the Workspace. Every inference request through the
+         * Workspace must then name this user profile; the API rejects a request that names none or
+         * a different one. The user profile can't be replaced or removed later; only deleting the
+         * user profile clears it.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun userProfileId(): Optional<String> = userProfileId.getOptional("user_profile_id")
 
         /**
          * Returns the raw JSON value of [name].
@@ -569,6 +634,16 @@ private constructor(
          */
         @JsonProperty("tags") @ExcludeMissing fun _tags(): JsonField<Tags> = tags
 
+        /**
+         * Returns the raw JSON value of [userProfileId].
+         *
+         * Unlike [userProfileId], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("user_profile_id")
+        @ExcludeMissing
+        fun _userProfileId(): JsonField<String> = userProfileId
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -608,6 +683,7 @@ private constructor(
             private var displayColor: JsonField<String> = JsonMissing.of()
             private var externalKeyId: JsonField<String> = JsonMissing.of()
             private var tags: JsonField<Tags> = JsonMissing.of()
+            private var userProfileId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -617,6 +693,7 @@ private constructor(
                 displayColor = body.displayColor
                 externalKeyId = body.externalKeyId
                 tags = body.tags
+                userProfileId = body.userProfileId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -678,13 +755,13 @@ private constructor(
              * ID of the customer-managed encryption key (CMEK) configuration to use for this
              * Workspace. Setting this field requires CMEK to be enabled for your organization. When
              * set, data stored for this Workspace is encrypted with the referenced key. Create key
-             * configurations with the External Keys API. On Claude Platform on AWS the value is the
-             * AWS KMS key ARN, and the key must be a single-Region key in the same AWS account and
-             * Region as the Workspace. On that platform the key is validated against this Workspace
-             * when it is attached, so a key-policy problem is reported as an error on this request.
-             * This field is write-once: once a key is attached to a Workspace it cannot be detached
-             * or replaced. To rotate key material, rotate the underlying key on your cloud KMS; the
-             * `external_key_id` stays the same.
+             * configurations with the External Keys API. On Claude Platform on AWS the value for an
+             * AWS KMS key is the key's ARN, and your organization's own key must be a single-Region
+             * key in the same AWS account and Region as the Workspace. On that platform the key is
+             * validated against this Workspace when it is attached, so a key-policy problem is
+             * reported as an error on this request. This field is write-once: once a key is
+             * attached to a Workspace it cannot be detached or replaced. To rotate key material,
+             * rotate the underlying key on your cloud KMS; the `external_key_id` stays the same.
              */
             fun externalKeyId(externalKeyId: String?) =
                 externalKeyId(JsonField.ofNullable(externalKeyId))
@@ -718,6 +795,30 @@ private constructor(
              * value.
              */
             fun tags(tags: JsonField<Tags>) = apply { this.tags = tags }
+
+            /**
+             * ID of a user profile to attach to the Workspace. Every inference request through the
+             * Workspace must then name this user profile; the API rejects a request that names none
+             * or a different one. The user profile can't be replaced or removed later; only
+             * deleting the user profile clears it.
+             */
+            fun userProfileId(userProfileId: String?) =
+                userProfileId(JsonField.ofNullable(userProfileId))
+
+            /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
+            fun userProfileId(userProfileId: Optional<String>) =
+                userProfileId(userProfileId.getOrNull())
+
+            /**
+             * Sets [Builder.userProfileId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.userProfileId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun userProfileId(userProfileId: JsonField<String>) = apply {
+                this.userProfileId = userProfileId
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -757,6 +858,7 @@ private constructor(
                     displayColor,
                     externalKeyId,
                     tags,
+                    userProfileId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -782,6 +884,7 @@ private constructor(
             displayColor()
             externalKeyId()
             tags().ifPresent { it.validate() }
+            userProfileId()
             validated = true
         }
 
@@ -805,7 +908,8 @@ private constructor(
                 (dataResidency.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (displayColor.asKnown().isPresent) 1 else 0) +
                 (if (externalKeyId.asKnown().isPresent) 1 else 0) +
-                (tags.asKnown().getOrNull()?.validity() ?: 0)
+                (tags.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (userProfileId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -818,6 +922,7 @@ private constructor(
                 displayColor == other.displayColor &&
                 externalKeyId == other.externalKeyId &&
                 tags == other.tags &&
+                userProfileId == other.userProfileId &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -828,6 +933,7 @@ private constructor(
                 displayColor,
                 externalKeyId,
                 tags,
+                userProfileId,
                 additionalProperties,
             )
         }
@@ -835,7 +941,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{name=$name, dataResidency=$dataResidency, displayColor=$displayColor, externalKeyId=$externalKeyId, tags=$tags, additionalProperties=$additionalProperties}"
+            "Body{name=$name, dataResidency=$dataResidency, displayColor=$displayColor, externalKeyId=$externalKeyId, tags=$tags, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
     }
 
     /** User-defined tags as string key-value pairs. Keys may not begin with `anthropic`. */

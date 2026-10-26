@@ -38,6 +38,7 @@ internal class ExternalKeyServiceTest {
                     )
                     .displayName("x")
                     .geo(ExternalKeyCreateParams.Geo.US)
+                    .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                     .build()
             )
 

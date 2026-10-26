@@ -25,6 +25,7 @@ internal class WorkspaceUpdateParamsTest {
                     .putAdditionalProperty("team", JsonValue.from("platform"))
                     .build()
             )
+            .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
             .build()
     }
 
@@ -59,6 +60,7 @@ internal class WorkspaceUpdateParamsTest {
                         .putAdditionalProperty("team", JsonValue.from("platform"))
                         .build()
                 )
+                .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                 .build()
 
         val body = params._body()
@@ -80,6 +82,7 @@ internal class WorkspaceUpdateParamsTest {
                     .putAdditionalProperty("team", JsonValue.from("platform"))
                     .build()
             )
+        assertThat(body.userProfileId()).contains("uprof_01SDCCSbTxrXDpWc1phhtcfK")
     }
 
     @Test

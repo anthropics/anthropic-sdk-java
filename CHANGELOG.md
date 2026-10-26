@@ -1,6 +1,11 @@
 # Changelog
 
-## [3.3.1](https://github.com/anthropics/anthropic-sdk-java/compare/v3.3.0...v3.3.1) (2026-10-24)
+## [3.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.3.0...v3.4.0) (2026-10-26)
+
+### Features
+
+* **api:** add user_profile_id to External Keys and Workspaces
+
 
 ### Chores
 

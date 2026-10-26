@@ -33,6 +33,7 @@ internal class WorkspaceTest {
                         .putAdditionalProperty("team", JsonValue.from("platform"))
                         .build()
                 )
+                .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                 .build()
 
         assertThat(workspace.id()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
@@ -59,6 +60,7 @@ internal class WorkspaceTest {
                     .putAdditionalProperty("team", JsonValue.from("platform"))
                     .build()
             )
+        assertThat(workspace.userProfileId()).contains("uprof_01SDCCSbTxrXDpWc1phhtcfK")
     }
 
     @Test
@@ -86,6 +88,7 @@ internal class WorkspaceTest {
                         .putAdditionalProperty("team", JsonValue.from("platform"))
                         .build()
                 )
+                .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                 .build()
 
         val roundtrippedWorkspace =
