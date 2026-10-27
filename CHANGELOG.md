@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.3.0...v3.4.0) (2026-10-26)
+## [3.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.3.0...v3.4.0) (2026-10-27)
 
 ### Features
 
@@ -17,6 +17,7 @@
 
 ### Documentation
 
+* add a description to the AnthropicBeta type
 * **examples:** use current model IDs
 * link to the SDK documentation instead of removed README sections
 

@@ -6,6 +6,12 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Beta names you can send in the `anthropic-beta` header.
+ *
+ * See [Beta headers](https://platform.claude.com/docs/en/api/beta-headers) for how to send them and
+ * where to find the name a feature needs.
+ */
 class AnthropicBeta private constructor(private val value: JsonField<String>) : Enum {
 
     /**
