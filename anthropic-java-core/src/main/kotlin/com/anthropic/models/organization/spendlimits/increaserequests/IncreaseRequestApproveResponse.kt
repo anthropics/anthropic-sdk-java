@@ -123,10 +123,10 @@ private constructor(
     /**
      * A configured spend limit: a cap on metered spend for one scope and period.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
-    fun spendLimit(): SpendLimit = spendLimit.getRequired("spend_limit")
+    fun spendLimit(): Optional<SpendLimit> = spendLimit.getOptional("spend_limit")
 
     /**
      * Per-member effective-limit report row (`GET /spend_limits/effective`).
@@ -421,7 +421,10 @@ private constructor(
             resolvedBy(SpendLimitScopedApiKeyActor.builder().scopedApiKeyId(scopedApiKeyId).build())
 
         /** A configured spend limit: a cap on metered spend for one scope and period. */
-        fun spendLimit(spendLimit: SpendLimit) = spendLimit(JsonField.of(spendLimit))
+        fun spendLimit(spendLimit: SpendLimit?) = spendLimit(JsonField.ofNullable(spendLimit))
+
+        /** Alias for calling [Builder.spendLimit] with `spendLimit.orElse(null)`. */
+        fun spendLimit(spendLimit: Optional<SpendLimit>) = spendLimit(spendLimit.getOrNull())
 
         /**
          * Sets [Builder.spendLimit] to an arbitrary JSON value.
@@ -554,7 +557,7 @@ private constructor(
         period().validate()
         resolvedAt()
         resolvedBy().ifPresent { it.validate() }
-        spendLimit().validate()
+        spendLimit().ifPresent { it.validate() }
         spendSummary().ifPresent { it.validate() }
         status().validate()
         _type().let {

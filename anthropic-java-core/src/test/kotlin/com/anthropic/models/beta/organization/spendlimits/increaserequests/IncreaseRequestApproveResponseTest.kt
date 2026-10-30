@@ -99,7 +99,7 @@ internal class IncreaseRequestApproveResponseTest {
                 )
             )
         assertThat(increaseRequestApproveResponse.spendLimit())
-            .isEqualTo(
+            .contains(
                 BetaSpendLimit.builder()
                     .id("id")
                     .amount("50000")
