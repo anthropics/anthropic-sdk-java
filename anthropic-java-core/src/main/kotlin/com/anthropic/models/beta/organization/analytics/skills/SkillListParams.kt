@@ -8,6 +8,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillGroupBy
 import com.fasterxml.jackson.annotation.JsonCreator
 import java.time.LocalDate
 import java.util.Objects
@@ -27,7 +28,7 @@ private constructor(
     private val date: LocalDate?,
     private val endingDate: LocalDate?,
     private val filter: List<String>?,
-    private val groupBy: List<GroupBy>?,
+    private val groupBy: List<BetaAnalyticsSkillGroupBy>?,
     private val limit: Long?,
     private val order: Order?,
     private val orderBy: String?,
@@ -76,7 +77,7 @@ private constructor(
      * point during each covered UTC day, so grouped rows are not an exclusive partition and can sum
      * above org-level totals. At most 100 entries.
      */
-    fun groupBy(): Optional<List<GroupBy>> = Optional.ofNullable(groupBy)
+    fun groupBy(): Optional<List<BetaAnalyticsSkillGroupBy>> = Optional.ofNullable(groupBy)
 
     /** Number of results per page (1-1000, default 100). */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
@@ -133,7 +134,7 @@ private constructor(
         private var date: LocalDate? = null
         private var endingDate: LocalDate? = null
         private var filter: MutableList<String>? = null
-        private var groupBy: MutableList<GroupBy>? = null
+        private var groupBy: MutableList<BetaAnalyticsSkillGroupBy>? = null
         private var limit: Long? = null
         private var order: Order? = null
         private var orderBy: String? = null
@@ -216,17 +217,20 @@ private constructor(
          * every group they held at any point during each covered UTC day, so grouped rows are not
          * an exclusive partition and can sum above org-level totals. At most 100 entries.
          */
-        fun groupBy(groupBy: List<GroupBy>?) = apply { this.groupBy = groupBy?.toMutableList() }
+        fun groupBy(groupBy: List<BetaAnalyticsSkillGroupBy>?) = apply {
+            this.groupBy = groupBy?.toMutableList()
+        }
 
         /** Alias for calling [Builder.groupBy] with `groupBy.orElse(null)`. */
-        fun groupBy(groupBy: Optional<List<GroupBy>>) = groupBy(groupBy.getOrNull())
+        fun groupBy(groupBy: Optional<List<BetaAnalyticsSkillGroupBy>>) =
+            groupBy(groupBy.getOrNull())
 
         /**
-         * Adds a single [GroupBy] to [Builder.groupBy].
+         * Adds a single [BetaAnalyticsSkillGroupBy] to [Builder.groupBy].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addGroupBy(groupBy: GroupBy) = apply {
+        fun addGroupBy(groupBy: BetaAnalyticsSkillGroupBy) = apply {
             this.groupBy = (this.groupBy ?: mutableListOf()).apply { add(groupBy) }
         }
 
@@ -440,161 +444,6 @@ private constructor(
                 ),
             contentQueryParams = listOf("filter"),
         )
-
-    class GroupBy private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val PRODUCT = GroupBy(JsonField.of("product"))
-
-            @JvmField val RBAC_GROUP_ID = GroupBy(JsonField.of("rbac_group_id"))
-
-            @JvmField val USER_ID = GroupBy(JsonField.of("user_id"))
-
-            @JvmStatic
-            fun of(value: String): GroupBy =
-                // Intern known values so `==` works
-                when (value) {
-                    "product" -> PRODUCT
-                    "rbac_group_id" -> RBAC_GROUP_ID
-                    "user_id" -> USER_ID
-                    else -> GroupBy(JsonField.of(value))
-                }
-
-            @JsonCreator
-            @JvmStatic
-            fun of(value: JsonField<String>): GroupBy =
-                value.asString().getOrNull()?.let { of(it) } ?: GroupBy(value)
-        }
-
-        /** An enum containing [GroupBy]'s known values. */
-        enum class Known {
-            PRODUCT,
-            RBAC_GROUP_ID,
-            USER_ID,
-        }
-
-        /**
-         * An enum containing [GroupBy]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [GroupBy] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            PRODUCT,
-            RBAC_GROUP_ID,
-            USER_ID,
-            /** An enum member indicating that [GroupBy] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                PRODUCT -> Value.PRODUCT
-                RBAC_GROUP_ID -> Value.RBAC_GROUP_ID
-                USER_ID -> Value.USER_ID
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                PRODUCT -> Known.PRODUCT
-                RBAC_GROUP_ID -> Known.RBAC_GROUP_ID
-                USER_ID -> Known.USER_ID
-                else -> throw AnthropicInvalidDataException("Unknown GroupBy: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): GroupBy = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is GroupBy && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     /**
      * Sort direction: `asc` or `desc`. Defaults to `asc` for the endpoint's sort column and to

@@ -1,14 +1,11 @@
 package com.anthropic.models.beta.organization.spendlimits.effective
 
-import com.anthropic.core.Enum
-import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
-import com.anthropic.errors.AnthropicInvalidDataException
-import com.fasterxml.jackson.annotation.JsonCreator
+import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitPeriod
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -25,7 +22,7 @@ class EffectiveListParams
 private constructor(
     private val limit: Long?,
     private val page: String?,
-    private val period: List<Period>?,
+    private val period: List<BetaSpendLimitPeriod>?,
     private val userIds: List<String>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -44,7 +41,7 @@ private constructor(
      * Restrict the report to these limit periods. Omit to return one row per period each member
      * resolves a spend limit for.
      */
-    fun period(): Optional<List<Period>> = Optional.ofNullable(period)
+    fun period(): Optional<List<BetaSpendLimitPeriod>> = Optional.ofNullable(period)
 
     /**
      * Restrict the report to these members, by tagged user ID (`user_...`). At most 100 entries.
@@ -72,7 +69,7 @@ private constructor(
 
         private var limit: Long? = null
         private var page: String? = null
-        private var period: MutableList<Period>? = null
+        private var period: MutableList<BetaSpendLimitPeriod>? = null
         private var userIds: MutableList<String>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -113,17 +110,19 @@ private constructor(
          * Restrict the report to these limit periods. Omit to return one row per period each member
          * resolves a spend limit for.
          */
-        fun period(period: List<Period>?) = apply { this.period = period?.toMutableList() }
+        fun period(period: List<BetaSpendLimitPeriod>?) = apply {
+            this.period = period?.toMutableList()
+        }
 
         /** Alias for calling [Builder.period] with `period.orElse(null)`. */
-        fun period(period: Optional<List<Period>>) = period(period.getOrNull())
+        fun period(period: Optional<List<BetaSpendLimitPeriod>>) = period(period.getOrNull())
 
         /**
-         * Adds a single [Period] to [Builder.period].
+         * Adds a single [BetaSpendLimitPeriod] to [Builder.period].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addPeriod(period: Period) = apply {
+        fun addPeriod(period: BetaSpendLimitPeriod) = apply {
             this.period = (this.period ?: mutableListOf()).apply { add(period) }
         }
 
@@ -278,161 +277,6 @@ private constructor(
             route = "/v1/organizations/spend_limits/effective",
             queryParams = listOf("limit", "page", "period", "user_ids"),
         )
-
-    class Period private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val DAILY = Period(JsonField.of("daily"))
-
-            @JvmField val MONTHLY = Period(JsonField.of("monthly"))
-
-            @JvmField val WEEKLY = Period(JsonField.of("weekly"))
-
-            @JvmStatic
-            fun of(value: String): Period =
-                // Intern known values so `==` works
-                when (value) {
-                    "daily" -> DAILY
-                    "monthly" -> MONTHLY
-                    "weekly" -> WEEKLY
-                    else -> Period(JsonField.of(value))
-                }
-
-            @JsonCreator
-            @JvmStatic
-            fun of(value: JsonField<String>): Period =
-                value.asString().getOrNull()?.let { of(it) } ?: Period(value)
-        }
-
-        /** An enum containing [Period]'s known values. */
-        enum class Known {
-            DAILY,
-            MONTHLY,
-            WEEKLY,
-        }
-
-        /**
-         * An enum containing [Period]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Period] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            DAILY,
-            MONTHLY,
-            WEEKLY,
-            /** An enum member indicating that [Period] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                DAILY -> Value.DAILY
-                MONTHLY -> Value.MONTHLY
-                WEEKLY -> Value.WEEKLY
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                DAILY -> Known.DAILY
-                MONTHLY -> Known.MONTHLY
-                WEEKLY -> Known.WEEKLY
-                else -> throw AnthropicInvalidDataException("Unknown Period: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): Period = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Period && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

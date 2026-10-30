@@ -1,6 +1,7 @@
 package com.anthropic.models.beta.organization.analytics.skills
 
 import com.anthropic.core.http.QueryParams
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillGroupBy
 import java.time.LocalDate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,7 +14,7 @@ internal class SkillListParamsTest {
             .date(LocalDate.parse("2019-12-27"))
             .endingDate(LocalDate.parse("2019-12-27"))
             .addFilter("string")
-            .addGroupBy(SkillListParams.GroupBy.PRODUCT)
+            .addGroupBy(BetaAnalyticsSkillGroupBy.PRODUCT)
             .limit(1L)
             .order(SkillListParams.Order.ASC)
             .orderBy("order_by")
@@ -29,7 +30,7 @@ internal class SkillListParamsTest {
                 .date(LocalDate.parse("2019-12-27"))
                 .endingDate(LocalDate.parse("2019-12-27"))
                 .addFilter("string")
-                .addGroupBy(SkillListParams.GroupBy.PRODUCT)
+                .addGroupBy(BetaAnalyticsSkillGroupBy.PRODUCT)
                 .limit(1L)
                 .order(SkillListParams.Order.ASC)
                 .orderBy("order_by")
