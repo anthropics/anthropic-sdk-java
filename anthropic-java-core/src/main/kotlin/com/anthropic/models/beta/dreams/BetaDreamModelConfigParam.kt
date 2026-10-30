@@ -37,7 +37,7 @@ private constructor(
      * The ID can be 1 to 256 characters long.
      *
      * The
-     * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+     * [Availability section of the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#feature-availability)
      * lists the supported models.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -120,7 +120,7 @@ private constructor(
          * The ID can be 1 to 256 characters long.
          *
          * The
-         * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+         * [Availability section of the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#feature-availability)
          * lists the supported models.
          */
         fun id(id: String) = id(JsonField.of(id))

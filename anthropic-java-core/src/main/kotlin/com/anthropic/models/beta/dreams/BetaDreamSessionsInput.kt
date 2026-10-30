@@ -39,10 +39,6 @@ private constructor(
      * Give 1 to 100 IDs, with no duplicates. Each session must be in the same workspace as the
      * dream. Responses list the IDs in sorted order.
      *
-     * The
-     * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
-     * lists all the limits on a dream.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -121,10 +117,6 @@ private constructor(
          *
          * Give 1 to 100 IDs, with no duplicates. Each session must be in the same workspace as the
          * dream. Responses list the IDs in sorted order.
-         *
-         * The
-         * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
-         * lists all the limits on a dream.
          */
         fun sessionIds(sessionIds: List<String>) = sessionIds(JsonField.of(sessionIds))
 
