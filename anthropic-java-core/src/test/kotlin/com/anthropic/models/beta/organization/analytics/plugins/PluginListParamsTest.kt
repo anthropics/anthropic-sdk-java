@@ -1,6 +1,7 @@
 package com.anthropic.models.beta.organization.analytics.plugins
 
 import com.anthropic.core.http.QueryParams
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsOrder
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsPluginGroupBy
 import java.time.LocalDate
 import org.assertj.core.api.Assertions.assertThat
@@ -16,7 +17,7 @@ internal class PluginListParamsTest {
             .addFilter("string")
             .addGroupBy(BetaAnalyticsPluginGroupBy.PRODUCT)
             .limit(1L)
-            .order(PluginListParams.Order.ASC)
+            .order(BetaAnalyticsOrder.ASC)
             .orderBy("order_by")
             .page("page")
             .startingDate(LocalDate.parse("2019-12-27"))
@@ -32,7 +33,7 @@ internal class PluginListParamsTest {
                 .addFilter("string")
                 .addGroupBy(BetaAnalyticsPluginGroupBy.PRODUCT)
                 .limit(1L)
-                .order(PluginListParams.Order.ASC)
+                .order(BetaAnalyticsOrder.ASC)
                 .orderBy("order_by")
                 .page("page")
                 .startingDate(LocalDate.parse("2019-12-27"))

@@ -60,7 +60,7 @@ internal class BetaSpendLimitIncreaseRequestTest {
         assertThat(betaSpendLimitIncreaseRequest.id()).isEqualTo("id")
         assertThat(betaSpendLimitIncreaseRequest.actor())
             .isEqualTo(
-                BetaSpendLimitIncreaseRequest.Actor.ofUser(
+                BetaSpendLimitIncreaseRequestActor.ofUser(
                     BetaSpendLimitUserActor.builder()
                         .deleted(true)
                         .emailAddress("email_address")
@@ -76,7 +76,7 @@ internal class BetaSpendLimitIncreaseRequestTest {
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaSpendLimitIncreaseRequest.resolvedBy())
             .contains(
-                BetaSpendLimitIncreaseRequest.ResolvedBy.ofUserActor(
+                BetaSpendLimitIncreaseRequestResolvedBy.ofUserActor(
                     BetaSpendLimitUserActor.builder()
                         .deleted(true)
                         .emailAddress("email_address")

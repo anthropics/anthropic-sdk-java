@@ -73,7 +73,7 @@ internal class IncreaseRequestApproveResponseTest {
         assertThat(increaseRequestApproveResponse.id()).isEqualTo("id")
         assertThat(increaseRequestApproveResponse.actor())
             .isEqualTo(
-                IncreaseRequestApproveResponse.Actor.ofUser(
+                BetaSpendLimitIncreaseRequestActor.ofUser(
                     BetaSpendLimitUserActor.builder()
                         .deleted(true)
                         .emailAddress("email_address")
@@ -89,7 +89,7 @@ internal class IncreaseRequestApproveResponseTest {
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(increaseRequestApproveResponse.resolvedBy())
             .contains(
-                IncreaseRequestApproveResponse.ResolvedBy.ofUserActor(
+                BetaSpendLimitIncreaseRequestResolvedBy.ofUserActor(
                     BetaSpendLimitUserActor.builder()
                         .deleted(true)
                         .emailAddress("email_address")
