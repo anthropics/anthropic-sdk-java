@@ -21,6 +21,7 @@
 * **docs:** clarify what disabling the Compliance API stops
 * **docs:** clarify what the capability_access_all role action grants
 * **docs:** update example user ID in Admin API examples
+* **internal:** add a section for each repository's own review rules
 * **internal:** cover an async call canceled before its span starts
 * **internal:** wait for the request of the canceled call test to reach the server
 
