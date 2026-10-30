@@ -8,6 +8,11 @@
 * **api:** add user_profile_id to External Keys and Workspaces
 
 
+### Bug Fixes
+
+* **api:** require always-sent analytics fields and drop the unused project product field
+
+
 ### Chores
 
 * **ci:** remove unused build upload steps

@@ -20,14 +20,13 @@ import kotlin.jvm.optionals.getOrNull
 class BetaAnalyticsProjectActivity
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val createdAt: JsonField<OffsetDateTime>,
+    private val createdBy: JsonField<BetaAnalyticsUser>,
+    private val distinctConversationCount: JsonField<Long>,
     private val distinctUserCount: JsonField<Long>,
     private val messageCount: JsonField<Long>,
     private val projectId: JsonField<String>,
     private val projectName: JsonField<String>,
-    private val createdAt: JsonField<OffsetDateTime>,
-    private val createdBy: JsonField<BetaAnalyticsUser>,
-    private val distinctConversationCount: JsonField<Long>,
-    private val product: JsonField<String>,
     private val rbacGroupId: JsonField<String>,
     private val rbacGroupName: JsonField<String>,
     private val userId: JsonField<String>,
@@ -36,6 +35,15 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("created_at")
+        @ExcludeMissing
+        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("created_by")
+        @ExcludeMissing
+        createdBy: JsonField<BetaAnalyticsUser> = JsonMissing.of(),
+        @JsonProperty("distinct_conversation_count")
+        @ExcludeMissing
+        distinctConversationCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("distinct_user_count")
         @ExcludeMissing
         distinctUserCount: JsonField<Long> = JsonMissing.of(),
@@ -46,16 +54,6 @@ private constructor(
         @JsonProperty("project_name")
         @ExcludeMissing
         projectName: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("created_at")
-        @ExcludeMissing
-        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("created_by")
-        @ExcludeMissing
-        createdBy: JsonField<BetaAnalyticsUser> = JsonMissing.of(),
-        @JsonProperty("distinct_conversation_count")
-        @ExcludeMissing
-        distinctConversationCount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("product") @ExcludeMissing product: JsonField<String> = JsonMissing.of(),
         @JsonProperty("rbac_group_id")
         @ExcludeMissing
         rbacGroupId: JsonField<String> = JsonMissing.of(),
@@ -64,19 +62,46 @@ private constructor(
         rbacGroupName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of(),
     ) : this(
+        createdAt,
+        createdBy,
+        distinctConversationCount,
         distinctUserCount,
         messageCount,
         projectId,
         projectName,
-        createdAt,
-        createdBy,
-        distinctConversationCount,
-        product,
         rbacGroupId,
         rbacGroupName,
         userId,
         mutableMapOf(),
     )
+
+    /**
+     * Project creation timestamp in RFC 3339 format. Null if the project was deleted before
+     * attribution was recorded.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun createdAt(): Optional<OffsetDateTime> = createdAt.getOptional("created_at")
+
+    /**
+     * User who created the project. Null if the project was deleted before attribution was
+     * recorded, or if the creator's account no longer exists.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun createdBy(): Optional<BetaAnalyticsUser> = createdBy.getOptional("created_by")
+
+    /**
+     * Number of distinct conversations in the project. Null on aggregated rows where a distinct
+     * count cannot be computed.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun distinctConversationCount(): Optional<Long> =
+        distinctConversationCount.getOptional("distinct_conversation_count")
 
     /**
      * Number of distinct users who used the project on the requested day, or, in date-range mode,
@@ -113,50 +138,6 @@ private constructor(
     fun projectName(): String = projectName.getRequired("project_name")
 
     /**
-     * Project creation timestamp in RFC 3339 format. Null if the project was deleted before
-     * attribution was recorded.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun createdAt(): Optional<OffsetDateTime> = createdAt.getOptional("created_at")
-
-    /**
-     * User who created the project. Null if the project was deleted before attribution was
-     * recorded, or if the creator's account no longer exists.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun createdBy(): Optional<BetaAnalyticsUser> = createdBy.getOptional("created_by")
-
-    /**
-     * Number of distinct conversations in the project. Null on aggregated rows where a distinct
-     * count cannot be computed.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun distinctConversationCount(): Optional<Long> =
-        distinctConversationCount.getOptional("distinct_conversation_count")
-
-    /**
-     * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
-     * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the canonical
-     * Cost & Usage product names; an `office_agent` row's per-surface breakdown is in its
-     * `office_metrics`. On `/plugins` only `cowork`, `claude_code` and `chat_cowork_unified` occur
-     * (the only surfaces with plugin attribution); on `/artifacts` only `chat`, `claude_code`,
-     * `cowork` and `chat_cowork_unified` occur (the surfaces that create artifacts);
-     * `/apps/chat/projects` does not support the product dimension (a `product` entry in
-     * `group_by[]` or `filter[]` there is rejected). Present only when the request grouped by
-     * `product`.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun product(): Optional<String> = product.getOptional("product")
-
-    /**
      * Tagged RBAC group identifier (`rbac_group_...`), matching the spend-limits API spelling.
      * Present only when the request grouped by `rbac_group_id`.
      *
@@ -182,6 +163,34 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun userId(): Optional<String> = userId.getOptional("user_id")
+
+    /**
+     * Returns the raw JSON value of [createdAt].
+     *
+     * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("created_at")
+    @ExcludeMissing
+    fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+    /**
+     * Returns the raw JSON value of [createdBy].
+     *
+     * Unlike [createdBy], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("created_by")
+    @ExcludeMissing
+    fun _createdBy(): JsonField<BetaAnalyticsUser> = createdBy
+
+    /**
+     * Returns the raw JSON value of [distinctConversationCount].
+     *
+     * Unlike [distinctConversationCount], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("distinct_conversation_count")
+    @ExcludeMissing
+    fun _distinctConversationCount(): JsonField<Long> = distinctConversationCount
 
     /**
      * Returns the raw JSON value of [distinctUserCount].
@@ -217,41 +226,6 @@ private constructor(
     @JsonProperty("project_name")
     @ExcludeMissing
     fun _projectName(): JsonField<String> = projectName
-
-    /**
-     * Returns the raw JSON value of [createdAt].
-     *
-     * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("created_at")
-    @ExcludeMissing
-    fun _createdAt(): JsonField<OffsetDateTime> = createdAt
-
-    /**
-     * Returns the raw JSON value of [createdBy].
-     *
-     * Unlike [createdBy], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("created_by")
-    @ExcludeMissing
-    fun _createdBy(): JsonField<BetaAnalyticsUser> = createdBy
-
-    /**
-     * Returns the raw JSON value of [distinctConversationCount].
-     *
-     * Unlike [distinctConversationCount], this method doesn't throw if the JSON field has an
-     * unexpected type.
-     */
-    @JsonProperty("distinct_conversation_count")
-    @ExcludeMissing
-    fun _distinctConversationCount(): JsonField<Long> = distinctConversationCount
-
-    /**
-     * Returns the raw JSON value of [product].
-     *
-     * Unlike [product], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("product") @ExcludeMissing fun _product(): JsonField<String> = product
 
     /**
      * Returns the raw JSON value of [rbacGroupId].
@@ -297,6 +271,9 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .createdAt()
+         * .createdBy()
+         * .distinctConversationCount()
          * .distinctUserCount()
          * .messageCount()
          * .projectId()
@@ -309,14 +286,13 @@ private constructor(
     /** A builder for [BetaAnalyticsProjectActivity]. */
     class Builder internal constructor() {
 
+        private var createdAt: JsonField<OffsetDateTime>? = null
+        private var createdBy: JsonField<BetaAnalyticsUser>? = null
+        private var distinctConversationCount: JsonField<Long>? = null
         private var distinctUserCount: JsonField<Long>? = null
         private var messageCount: JsonField<Long>? = null
         private var projectId: JsonField<String>? = null
         private var projectName: JsonField<String>? = null
-        private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var createdBy: JsonField<BetaAnalyticsUser> = JsonMissing.of()
-        private var distinctConversationCount: JsonField<Long> = JsonMissing.of()
-        private var product: JsonField<String> = JsonMissing.of()
         private var rbacGroupId: JsonField<String> = JsonMissing.of()
         private var rbacGroupName: JsonField<String> = JsonMissing.of()
         private var userId: JsonField<String> = JsonMissing.of()
@@ -324,74 +300,18 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaAnalyticsProjectActivity: BetaAnalyticsProjectActivity) = apply {
+            createdAt = betaAnalyticsProjectActivity.createdAt
+            createdBy = betaAnalyticsProjectActivity.createdBy
+            distinctConversationCount = betaAnalyticsProjectActivity.distinctConversationCount
             distinctUserCount = betaAnalyticsProjectActivity.distinctUserCount
             messageCount = betaAnalyticsProjectActivity.messageCount
             projectId = betaAnalyticsProjectActivity.projectId
             projectName = betaAnalyticsProjectActivity.projectName
-            createdAt = betaAnalyticsProjectActivity.createdAt
-            createdBy = betaAnalyticsProjectActivity.createdBy
-            distinctConversationCount = betaAnalyticsProjectActivity.distinctConversationCount
-            product = betaAnalyticsProjectActivity.product
             rbacGroupId = betaAnalyticsProjectActivity.rbacGroupId
             rbacGroupName = betaAnalyticsProjectActivity.rbacGroupName
             userId = betaAnalyticsProjectActivity.userId
             additionalProperties = betaAnalyticsProjectActivity.additionalProperties.toMutableMap()
         }
-
-        /**
-         * Number of distinct users who used the project on the requested day, or, in date-range
-         * mode, over the requested window — recomputed as an exact distinct count over the window's
-         * per-member daily rows, never a sum of per-day values.
-         */
-        fun distinctUserCount(distinctUserCount: Long) =
-            distinctUserCount(JsonField.of(distinctUserCount))
-
-        /**
-         * Sets [Builder.distinctUserCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.distinctUserCount] with a well-typed [Long] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun distinctUserCount(distinctUserCount: JsonField<Long>) = apply {
-            this.distinctUserCount = distinctUserCount
-        }
-
-        /** Number of messages sent in the project on the requested day */
-        fun messageCount(messageCount: Long) = messageCount(JsonField.of(messageCount))
-
-        /**
-         * Sets [Builder.messageCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.messageCount] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun messageCount(messageCount: JsonField<Long>) = apply { this.messageCount = messageCount }
-
-        /** Tagged project identifier (e.g. `claude_proj_...`) */
-        fun projectId(projectId: String) = projectId(JsonField.of(projectId))
-
-        /**
-         * Sets [Builder.projectId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.projectId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun projectId(projectId: JsonField<String>) = apply { this.projectId = projectId }
-
-        /** Name of the project */
-        fun projectName(projectName: String) = projectName(JsonField.of(projectName))
-
-        /**
-         * Sets [Builder.projectName] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.projectName] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun projectName(projectName: JsonField<String>) = apply { this.projectName = projectName }
 
         /**
          * Project creation timestamp in RFC 3339 format. Null if the project was deleted before
@@ -465,28 +385,59 @@ private constructor(
         }
 
         /**
-         * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
-         * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the
-         * canonical Cost & Usage product names; an `office_agent` row's per-surface breakdown is in
-         * its `office_metrics`. On `/plugins` only `cowork`, `claude_code` and
-         * `chat_cowork_unified` occur (the only surfaces with plugin attribution); on `/artifacts`
-         * only `chat`, `claude_code`, `cowork` and `chat_cowork_unified` occur (the surfaces that
-         * create artifacts); `/apps/chat/projects` does not support the product dimension (a
-         * `product` entry in `group_by[]` or `filter[]` there is rejected). Present only when the
-         * request grouped by `product`.
+         * Number of distinct users who used the project on the requested day, or, in date-range
+         * mode, over the requested window — recomputed as an exact distinct count over the window's
+         * per-member daily rows, never a sum of per-day values.
          */
-        fun product(product: String?) = product(JsonField.ofNullable(product))
-
-        /** Alias for calling [Builder.product] with `product.orElse(null)`. */
-        fun product(product: Optional<String>) = product(product.getOrNull())
+        fun distinctUserCount(distinctUserCount: Long) =
+            distinctUserCount(JsonField.of(distinctUserCount))
 
         /**
-         * Sets [Builder.product] to an arbitrary JSON value.
+         * Sets [Builder.distinctUserCount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.product] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.distinctUserCount] with a well-typed [Long] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun product(product: JsonField<String>) = apply { this.product = product }
+        fun distinctUserCount(distinctUserCount: JsonField<Long>) = apply {
+            this.distinctUserCount = distinctUserCount
+        }
+
+        /** Number of messages sent in the project on the requested day */
+        fun messageCount(messageCount: Long) = messageCount(JsonField.of(messageCount))
+
+        /**
+         * Sets [Builder.messageCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.messageCount] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun messageCount(messageCount: JsonField<Long>) = apply { this.messageCount = messageCount }
+
+        /** Tagged project identifier (e.g. `claude_proj_...`) */
+        fun projectId(projectId: String) = projectId(JsonField.of(projectId))
+
+        /**
+         * Sets [Builder.projectId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.projectId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun projectId(projectId: JsonField<String>) = apply { this.projectId = projectId }
+
+        /** Name of the project */
+        fun projectName(projectName: String) = projectName(JsonField.of(projectName))
+
+        /**
+         * Sets [Builder.projectName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.projectName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun projectName(projectName: JsonField<String>) = apply { this.projectName = projectName }
 
         /**
          * Tagged RBAC group identifier (`rbac_group_...`), matching the spend-limits API spelling.
@@ -572,6 +523,9 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .createdAt()
+         * .createdBy()
+         * .distinctConversationCount()
          * .distinctUserCount()
          * .messageCount()
          * .projectId()
@@ -582,14 +536,13 @@ private constructor(
          */
         fun build(): BetaAnalyticsProjectActivity =
             BetaAnalyticsProjectActivity(
+                checkRequired("createdAt", createdAt),
+                checkRequired("createdBy", createdBy),
+                checkRequired("distinctConversationCount", distinctConversationCount),
                 checkRequired("distinctUserCount", distinctUserCount),
                 checkRequired("messageCount", messageCount),
                 checkRequired("projectId", projectId),
                 checkRequired("projectName", projectName),
-                createdAt,
-                createdBy,
-                distinctConversationCount,
-                product,
                 rbacGroupId,
                 rbacGroupName,
                 userId,
@@ -612,14 +565,13 @@ private constructor(
             return@apply
         }
 
+        createdAt()
+        createdBy().ifPresent { it.validate() }
+        distinctConversationCount()
         distinctUserCount()
         messageCount()
         projectId()
         projectName()
-        createdAt()
-        createdBy().ifPresent { it.validate() }
-        distinctConversationCount()
-        product()
         rbacGroupId()
         rbacGroupName()
         userId()
@@ -641,14 +593,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (distinctUserCount.asKnown().isPresent) 1 else 0) +
+        (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (createdBy.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (distinctConversationCount.asKnown().isPresent) 1 else 0) +
+            (if (distinctUserCount.asKnown().isPresent) 1 else 0) +
             (if (messageCount.asKnown().isPresent) 1 else 0) +
             (if (projectId.asKnown().isPresent) 1 else 0) +
             (if (projectName.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (createdBy.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (distinctConversationCount.asKnown().isPresent) 1 else 0) +
-            (if (product.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupName.asKnown().isPresent) 1 else 0) +
             (if (userId.asKnown().isPresent) 1 else 0)
@@ -659,14 +610,13 @@ private constructor(
         }
 
         return other is BetaAnalyticsProjectActivity &&
+            createdAt == other.createdAt &&
+            createdBy == other.createdBy &&
+            distinctConversationCount == other.distinctConversationCount &&
             distinctUserCount == other.distinctUserCount &&
             messageCount == other.messageCount &&
             projectId == other.projectId &&
             projectName == other.projectName &&
-            createdAt == other.createdAt &&
-            createdBy == other.createdBy &&
-            distinctConversationCount == other.distinctConversationCount &&
-            product == other.product &&
             rbacGroupId == other.rbacGroupId &&
             rbacGroupName == other.rbacGroupName &&
             userId == other.userId &&
@@ -675,14 +625,13 @@ private constructor(
 
     private val hashCode: Int by lazy {
         Objects.hash(
+            createdAt,
+            createdBy,
+            distinctConversationCount,
             distinctUserCount,
             messageCount,
             projectId,
             projectName,
-            createdAt,
-            createdBy,
-            distinctConversationCount,
-            product,
             rbacGroupId,
             rbacGroupName,
             userId,
@@ -693,5 +642,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsProjectActivity{distinctUserCount=$distinctUserCount, messageCount=$messageCount, projectId=$projectId, projectName=$projectName, createdAt=$createdAt, createdBy=$createdBy, distinctConversationCount=$distinctConversationCount, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, userId=$userId, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsProjectActivity{createdAt=$createdAt, createdBy=$createdBy, distinctConversationCount=$distinctConversationCount, distinctUserCount=$distinctUserCount, messageCount=$messageCount, projectId=$projectId, projectName=$projectName, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, userId=$userId, additionalProperties=$additionalProperties}"
 }

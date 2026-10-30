@@ -24,17 +24,17 @@ private constructor(
     private val connectorsUsedCount: JsonField<Long>,
     private val dispatchTurnCount: JsonField<Long>,
     private val distinctConnectorsUsedCount: JsonField<Long>,
+    private val distinctPluginsUsedCount: JsonField<Long>,
     private val distinctSessionCount: JsonField<Long>,
     private val distinctSkillsUsedCount: JsonField<Long>,
-    private val messageCount: JsonField<Long>,
-    private val skillsUsedCount: JsonField<Long>,
-    private val distinctPluginsUsedCount: JsonField<Long>,
     private val editToolCount: JsonField<Long>,
     private val fileEditCount: JsonField<Long>,
+    private val messageCount: JsonField<Long>,
     private val multiEditToolCount: JsonField<Long>,
     private val notebookEditToolCount: JsonField<Long>,
     private val pluginsUsedCount: JsonField<Long>,
     private val sessionsWithFileEditsCount: JsonField<Long>,
+    private val skillsUsedCount: JsonField<Long>,
     private val writeToolCount: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -56,27 +56,24 @@ private constructor(
         @JsonProperty("distinct_connectors_used_count")
         @ExcludeMissing
         distinctConnectorsUsedCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("distinct_plugins_used_count")
+        @ExcludeMissing
+        distinctPluginsUsedCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("distinct_session_count")
         @ExcludeMissing
         distinctSessionCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("distinct_skills_used_count")
         @ExcludeMissing
         distinctSkillsUsedCount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("message_count")
-        @ExcludeMissing
-        messageCount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("skills_used_count")
-        @ExcludeMissing
-        skillsUsedCount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("distinct_plugins_used_count")
-        @ExcludeMissing
-        distinctPluginsUsedCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("edit_tool_count")
         @ExcludeMissing
         editToolCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("file_edit_count")
         @ExcludeMissing
         fileEditCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("message_count")
+        @ExcludeMissing
+        messageCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("multi_edit_tool_count")
         @ExcludeMissing
         multiEditToolCount: JsonField<Long> = JsonMissing.of(),
@@ -89,6 +86,9 @@ private constructor(
         @JsonProperty("sessions_with_file_edits_count")
         @ExcludeMissing
         sessionsWithFileEditsCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("skills_used_count")
+        @ExcludeMissing
+        skillsUsedCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("write_tool_count")
         @ExcludeMissing
         writeToolCount: JsonField<Long> = JsonMissing.of(),
@@ -98,17 +98,17 @@ private constructor(
         connectorsUsedCount,
         dispatchTurnCount,
         distinctConnectorsUsedCount,
+        distinctPluginsUsedCount,
         distinctSessionCount,
         distinctSkillsUsedCount,
-        messageCount,
-        skillsUsedCount,
-        distinctPluginsUsedCount,
         editToolCount,
         fileEditCount,
+        messageCount,
         multiEditToolCount,
         notebookEditToolCount,
         pluginsUsedCount,
         sessionsWithFileEditsCount,
+        skillsUsedCount,
         writeToolCount,
         mutableMapOf(),
     )
@@ -159,6 +159,17 @@ private constructor(
         distinctConnectorsUsedCount.getOptional("distinct_connectors_used_count")
 
     /**
+     * Number of distinct plugins used in Cowork sessions. Null while Cowork plugin-use metrics are
+     * not enabled for this organization. Approximate (HLL, typical error <2%) in date-range mode.
+     * Null on aggregated rows where a distinct count cannot be computed.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun distinctPluginsUsedCount(): Optional<Long> =
+        distinctPluginsUsedCount.getOptional("distinct_plugins_used_count")
+
+    /**
      * Number of distinct Cowork sessions. Approximate (HLL, typical error <2%) in date-range mode.
      * Null on aggregated rows where a distinct count cannot be computed.
      *
@@ -179,33 +190,6 @@ private constructor(
         distinctSkillsUsedCount.getOptional("distinct_skills_used_count")
 
     /**
-     * Number of messages sent in Cowork sessions
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun messageCount(): Long = messageCount.getRequired("message_count")
-
-    /**
-     * Total number of skill invocations in Cowork sessions
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun skillsUsedCount(): Long = skillsUsedCount.getRequired("skills_used_count")
-
-    /**
-     * Number of distinct plugins used in Cowork sessions. Null while Cowork plugin-use metrics are
-     * not enabled for this organization. Approximate (HLL, typical error <2%) in date-range mode.
-     * Null on aggregated rows where a distinct count cannot be computed.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun distinctPluginsUsedCount(): Optional<Long> =
-        distinctPluginsUsedCount.getOptional("distinct_plugins_used_count")
-
-    /**
      * Number of successful Edit tool calls in Cowork sessions. Null while the file-edit metrics are
      * not enabled for this organization.
      *
@@ -222,6 +206,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun fileEditCount(): Optional<Long> = fileEditCount.getOptional("file_edit_count")
+
+    /**
+     * Number of messages sent in Cowork sessions
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun messageCount(): Long = messageCount.getRequired("message_count")
 
     /**
      * Number of successful MultiEdit tool calls in Cowork sessions. Null while the file-edit
@@ -263,6 +255,14 @@ private constructor(
      */
     fun sessionsWithFileEditsCount(): Optional<Long> =
         sessionsWithFileEditsCount.getOptional("sessions_with_file_edits_count")
+
+    /**
+     * Total number of skill invocations in Cowork sessions
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun skillsUsedCount(): Long = skillsUsedCount.getRequired("skills_used_count")
 
     /**
      * Number of successful Write tool calls in Cowork sessions. Null while the file-edit metrics
@@ -321,6 +321,16 @@ private constructor(
     fun _distinctConnectorsUsedCount(): JsonField<Long> = distinctConnectorsUsedCount
 
     /**
+     * Returns the raw JSON value of [distinctPluginsUsedCount].
+     *
+     * Unlike [distinctPluginsUsedCount], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("distinct_plugins_used_count")
+    @ExcludeMissing
+    fun _distinctPluginsUsedCount(): JsonField<Long> = distinctPluginsUsedCount
+
+    /**
      * Returns the raw JSON value of [distinctSessionCount].
      *
      * Unlike [distinctSessionCount], this method doesn't throw if the JSON field has an unexpected
@@ -341,34 +351,6 @@ private constructor(
     fun _distinctSkillsUsedCount(): JsonField<Long> = distinctSkillsUsedCount
 
     /**
-     * Returns the raw JSON value of [messageCount].
-     *
-     * Unlike [messageCount], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("message_count")
-    @ExcludeMissing
-    fun _messageCount(): JsonField<Long> = messageCount
-
-    /**
-     * Returns the raw JSON value of [skillsUsedCount].
-     *
-     * Unlike [skillsUsedCount], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("skills_used_count")
-    @ExcludeMissing
-    fun _skillsUsedCount(): JsonField<Long> = skillsUsedCount
-
-    /**
-     * Returns the raw JSON value of [distinctPluginsUsedCount].
-     *
-     * Unlike [distinctPluginsUsedCount], this method doesn't throw if the JSON field has an
-     * unexpected type.
-     */
-    @JsonProperty("distinct_plugins_used_count")
-    @ExcludeMissing
-    fun _distinctPluginsUsedCount(): JsonField<Long> = distinctPluginsUsedCount
-
-    /**
      * Returns the raw JSON value of [editToolCount].
      *
      * Unlike [editToolCount], this method doesn't throw if the JSON field has an unexpected type.
@@ -385,6 +367,15 @@ private constructor(
     @JsonProperty("file_edit_count")
     @ExcludeMissing
     fun _fileEditCount(): JsonField<Long> = fileEditCount
+
+    /**
+     * Returns the raw JSON value of [messageCount].
+     *
+     * Unlike [messageCount], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("message_count")
+    @ExcludeMissing
+    fun _messageCount(): JsonField<Long> = messageCount
 
     /**
      * Returns the raw JSON value of [multiEditToolCount].
@@ -427,6 +418,15 @@ private constructor(
     fun _sessionsWithFileEditsCount(): JsonField<Long> = sessionsWithFileEditsCount
 
     /**
+     * Returns the raw JSON value of [skillsUsedCount].
+     *
+     * Unlike [skillsUsedCount], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("skills_used_count")
+    @ExcludeMissing
+    fun _skillsUsedCount(): JsonField<Long> = skillsUsedCount
+
+    /**
      * Returns the raw JSON value of [writeToolCount].
      *
      * Unlike [writeToolCount], this method doesn't throw if the JSON field has an unexpected type.
@@ -459,10 +459,18 @@ private constructor(
          * .connectorsUsedCount()
          * .dispatchTurnCount()
          * .distinctConnectorsUsedCount()
+         * .distinctPluginsUsedCount()
          * .distinctSessionCount()
          * .distinctSkillsUsedCount()
+         * .editToolCount()
+         * .fileEditCount()
          * .messageCount()
+         * .multiEditToolCount()
+         * .notebookEditToolCount()
+         * .pluginsUsedCount()
+         * .sessionsWithFileEditsCount()
          * .skillsUsedCount()
+         * .writeToolCount()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -476,18 +484,18 @@ private constructor(
         private var connectorsUsedCount: JsonField<Long>? = null
         private var dispatchTurnCount: JsonField<Long>? = null
         private var distinctConnectorsUsedCount: JsonField<Long>? = null
+        private var distinctPluginsUsedCount: JsonField<Long>? = null
         private var distinctSessionCount: JsonField<Long>? = null
         private var distinctSkillsUsedCount: JsonField<Long>? = null
+        private var editToolCount: JsonField<Long>? = null
+        private var fileEditCount: JsonField<Long>? = null
         private var messageCount: JsonField<Long>? = null
+        private var multiEditToolCount: JsonField<Long>? = null
+        private var notebookEditToolCount: JsonField<Long>? = null
+        private var pluginsUsedCount: JsonField<Long>? = null
+        private var sessionsWithFileEditsCount: JsonField<Long>? = null
         private var skillsUsedCount: JsonField<Long>? = null
-        private var distinctPluginsUsedCount: JsonField<Long> = JsonMissing.of()
-        private var editToolCount: JsonField<Long> = JsonMissing.of()
-        private var fileEditCount: JsonField<Long> = JsonMissing.of()
-        private var multiEditToolCount: JsonField<Long> = JsonMissing.of()
-        private var notebookEditToolCount: JsonField<Long> = JsonMissing.of()
-        private var pluginsUsedCount: JsonField<Long> = JsonMissing.of()
-        private var sessionsWithFileEditsCount: JsonField<Long> = JsonMissing.of()
-        private var writeToolCount: JsonField<Long> = JsonMissing.of()
+        private var writeToolCount: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -497,17 +505,17 @@ private constructor(
             connectorsUsedCount = betaAnalyticsCoworkMetrics.connectorsUsedCount
             dispatchTurnCount = betaAnalyticsCoworkMetrics.dispatchTurnCount
             distinctConnectorsUsedCount = betaAnalyticsCoworkMetrics.distinctConnectorsUsedCount
+            distinctPluginsUsedCount = betaAnalyticsCoworkMetrics.distinctPluginsUsedCount
             distinctSessionCount = betaAnalyticsCoworkMetrics.distinctSessionCount
             distinctSkillsUsedCount = betaAnalyticsCoworkMetrics.distinctSkillsUsedCount
-            messageCount = betaAnalyticsCoworkMetrics.messageCount
-            skillsUsedCount = betaAnalyticsCoworkMetrics.skillsUsedCount
-            distinctPluginsUsedCount = betaAnalyticsCoworkMetrics.distinctPluginsUsedCount
             editToolCount = betaAnalyticsCoworkMetrics.editToolCount
             fileEditCount = betaAnalyticsCoworkMetrics.fileEditCount
+            messageCount = betaAnalyticsCoworkMetrics.messageCount
             multiEditToolCount = betaAnalyticsCoworkMetrics.multiEditToolCount
             notebookEditToolCount = betaAnalyticsCoworkMetrics.notebookEditToolCount
             pluginsUsedCount = betaAnalyticsCoworkMetrics.pluginsUsedCount
             sessionsWithFileEditsCount = betaAnalyticsCoworkMetrics.sessionsWithFileEditsCount
+            skillsUsedCount = betaAnalyticsCoworkMetrics.skillsUsedCount
             writeToolCount = betaAnalyticsCoworkMetrics.writeToolCount
             additionalProperties = betaAnalyticsCoworkMetrics.additionalProperties.toMutableMap()
         }
@@ -609,6 +617,40 @@ private constructor(
         }
 
         /**
+         * Number of distinct plugins used in Cowork sessions. Null while Cowork plugin-use metrics
+         * are not enabled for this organization. Approximate (HLL, typical error <2%) in date-range
+         * mode. Null on aggregated rows where a distinct count cannot be computed.
+         */
+        fun distinctPluginsUsedCount(distinctPluginsUsedCount: Long?) =
+            distinctPluginsUsedCount(JsonField.ofNullable(distinctPluginsUsedCount))
+
+        /**
+         * Alias for [Builder.distinctPluginsUsedCount].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun distinctPluginsUsedCount(distinctPluginsUsedCount: Long) =
+            distinctPluginsUsedCount(distinctPluginsUsedCount as Long?)
+
+        /**
+         * Alias for calling [Builder.distinctPluginsUsedCount] with
+         * `distinctPluginsUsedCount.orElse(null)`.
+         */
+        fun distinctPluginsUsedCount(distinctPluginsUsedCount: Optional<Long>) =
+            distinctPluginsUsedCount(distinctPluginsUsedCount.getOrNull())
+
+        /**
+         * Sets [Builder.distinctPluginsUsedCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.distinctPluginsUsedCount] with a well-typed [Long] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun distinctPluginsUsedCount(distinctPluginsUsedCount: JsonField<Long>) = apply {
+            this.distinctPluginsUsedCount = distinctPluginsUsedCount
+        }
+
+        /**
          * Number of distinct Cowork sessions. Approximate (HLL, typical error <2%) in date-range
          * mode. Null on aggregated rows where a distinct count cannot be computed.
          */
@@ -674,66 +716,6 @@ private constructor(
             this.distinctSkillsUsedCount = distinctSkillsUsedCount
         }
 
-        /** Number of messages sent in Cowork sessions */
-        fun messageCount(messageCount: Long) = messageCount(JsonField.of(messageCount))
-
-        /**
-         * Sets [Builder.messageCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.messageCount] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun messageCount(messageCount: JsonField<Long>) = apply { this.messageCount = messageCount }
-
-        /** Total number of skill invocations in Cowork sessions */
-        fun skillsUsedCount(skillsUsedCount: Long) = skillsUsedCount(JsonField.of(skillsUsedCount))
-
-        /**
-         * Sets [Builder.skillsUsedCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.skillsUsedCount] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun skillsUsedCount(skillsUsedCount: JsonField<Long>) = apply {
-            this.skillsUsedCount = skillsUsedCount
-        }
-
-        /**
-         * Number of distinct plugins used in Cowork sessions. Null while Cowork plugin-use metrics
-         * are not enabled for this organization. Approximate (HLL, typical error <2%) in date-range
-         * mode. Null on aggregated rows where a distinct count cannot be computed.
-         */
-        fun distinctPluginsUsedCount(distinctPluginsUsedCount: Long?) =
-            distinctPluginsUsedCount(JsonField.ofNullable(distinctPluginsUsedCount))
-
-        /**
-         * Alias for [Builder.distinctPluginsUsedCount].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
-        fun distinctPluginsUsedCount(distinctPluginsUsedCount: Long) =
-            distinctPluginsUsedCount(distinctPluginsUsedCount as Long?)
-
-        /**
-         * Alias for calling [Builder.distinctPluginsUsedCount] with
-         * `distinctPluginsUsedCount.orElse(null)`.
-         */
-        fun distinctPluginsUsedCount(distinctPluginsUsedCount: Optional<Long>) =
-            distinctPluginsUsedCount(distinctPluginsUsedCount.getOrNull())
-
-        /**
-         * Sets [Builder.distinctPluginsUsedCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.distinctPluginsUsedCount] with a well-typed [Long] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun distinctPluginsUsedCount(distinctPluginsUsedCount: JsonField<Long>) = apply {
-            this.distinctPluginsUsedCount = distinctPluginsUsedCount
-        }
-
         /**
          * Number of successful Edit tool calls in Cowork sessions. Null while the file-edit metrics
          * are not enabled for this organization.
@@ -788,6 +770,18 @@ private constructor(
         fun fileEditCount(fileEditCount: JsonField<Long>) = apply {
             this.fileEditCount = fileEditCount
         }
+
+        /** Number of messages sent in Cowork sessions */
+        fun messageCount(messageCount: Long) = messageCount(JsonField.of(messageCount))
+
+        /**
+         * Sets [Builder.messageCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.messageCount] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun messageCount(messageCount: JsonField<Long>) = apply { this.messageCount = messageCount }
 
         /**
          * Number of successful MultiEdit tool calls in Cowork sessions. Null while the file-edit
@@ -918,6 +912,20 @@ private constructor(
             this.sessionsWithFileEditsCount = sessionsWithFileEditsCount
         }
 
+        /** Total number of skill invocations in Cowork sessions */
+        fun skillsUsedCount(skillsUsedCount: Long) = skillsUsedCount(JsonField.of(skillsUsedCount))
+
+        /**
+         * Sets [Builder.skillsUsedCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.skillsUsedCount] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun skillsUsedCount(skillsUsedCount: JsonField<Long>) = apply {
+            this.skillsUsedCount = skillsUsedCount
+        }
+
         /**
          * Number of successful Write tool calls in Cowork sessions. Null while the file-edit
          * metrics are not enabled for this organization.
@@ -978,10 +986,18 @@ private constructor(
          * .connectorsUsedCount()
          * .dispatchTurnCount()
          * .distinctConnectorsUsedCount()
+         * .distinctPluginsUsedCount()
          * .distinctSessionCount()
          * .distinctSkillsUsedCount()
+         * .editToolCount()
+         * .fileEditCount()
          * .messageCount()
+         * .multiEditToolCount()
+         * .notebookEditToolCount()
+         * .pluginsUsedCount()
+         * .sessionsWithFileEditsCount()
          * .skillsUsedCount()
+         * .writeToolCount()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -993,18 +1009,18 @@ private constructor(
                 checkRequired("connectorsUsedCount", connectorsUsedCount),
                 checkRequired("dispatchTurnCount", dispatchTurnCount),
                 checkRequired("distinctConnectorsUsedCount", distinctConnectorsUsedCount),
+                checkRequired("distinctPluginsUsedCount", distinctPluginsUsedCount),
                 checkRequired("distinctSessionCount", distinctSessionCount),
                 checkRequired("distinctSkillsUsedCount", distinctSkillsUsedCount),
+                checkRequired("editToolCount", editToolCount),
+                checkRequired("fileEditCount", fileEditCount),
                 checkRequired("messageCount", messageCount),
+                checkRequired("multiEditToolCount", multiEditToolCount),
+                checkRequired("notebookEditToolCount", notebookEditToolCount),
+                checkRequired("pluginsUsedCount", pluginsUsedCount),
+                checkRequired("sessionsWithFileEditsCount", sessionsWithFileEditsCount),
                 checkRequired("skillsUsedCount", skillsUsedCount),
-                distinctPluginsUsedCount,
-                editToolCount,
-                fileEditCount,
-                multiEditToolCount,
-                notebookEditToolCount,
-                pluginsUsedCount,
-                sessionsWithFileEditsCount,
-                writeToolCount,
+                checkRequired("writeToolCount", writeToolCount),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -1029,17 +1045,17 @@ private constructor(
         connectorsUsedCount()
         dispatchTurnCount()
         distinctConnectorsUsedCount()
+        distinctPluginsUsedCount()
         distinctSessionCount()
         distinctSkillsUsedCount()
-        messageCount()
-        skillsUsedCount()
-        distinctPluginsUsedCount()
         editToolCount()
         fileEditCount()
+        messageCount()
         multiEditToolCount()
         notebookEditToolCount()
         pluginsUsedCount()
         sessionsWithFileEditsCount()
+        skillsUsedCount()
         writeToolCount()
         validated = true
     }
@@ -1064,17 +1080,17 @@ private constructor(
             (if (connectorsUsedCount.asKnown().isPresent) 1 else 0) +
             (if (dispatchTurnCount.asKnown().isPresent) 1 else 0) +
             (if (distinctConnectorsUsedCount.asKnown().isPresent) 1 else 0) +
+            (if (distinctPluginsUsedCount.asKnown().isPresent) 1 else 0) +
             (if (distinctSessionCount.asKnown().isPresent) 1 else 0) +
             (if (distinctSkillsUsedCount.asKnown().isPresent) 1 else 0) +
-            (if (messageCount.asKnown().isPresent) 1 else 0) +
-            (if (skillsUsedCount.asKnown().isPresent) 1 else 0) +
-            (if (distinctPluginsUsedCount.asKnown().isPresent) 1 else 0) +
             (if (editToolCount.asKnown().isPresent) 1 else 0) +
             (if (fileEditCount.asKnown().isPresent) 1 else 0) +
+            (if (messageCount.asKnown().isPresent) 1 else 0) +
             (if (multiEditToolCount.asKnown().isPresent) 1 else 0) +
             (if (notebookEditToolCount.asKnown().isPresent) 1 else 0) +
             (if (pluginsUsedCount.asKnown().isPresent) 1 else 0) +
             (if (sessionsWithFileEditsCount.asKnown().isPresent) 1 else 0) +
+            (if (skillsUsedCount.asKnown().isPresent) 1 else 0) +
             (if (writeToolCount.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
@@ -1088,17 +1104,17 @@ private constructor(
             connectorsUsedCount == other.connectorsUsedCount &&
             dispatchTurnCount == other.dispatchTurnCount &&
             distinctConnectorsUsedCount == other.distinctConnectorsUsedCount &&
+            distinctPluginsUsedCount == other.distinctPluginsUsedCount &&
             distinctSessionCount == other.distinctSessionCount &&
             distinctSkillsUsedCount == other.distinctSkillsUsedCount &&
-            messageCount == other.messageCount &&
-            skillsUsedCount == other.skillsUsedCount &&
-            distinctPluginsUsedCount == other.distinctPluginsUsedCount &&
             editToolCount == other.editToolCount &&
             fileEditCount == other.fileEditCount &&
+            messageCount == other.messageCount &&
             multiEditToolCount == other.multiEditToolCount &&
             notebookEditToolCount == other.notebookEditToolCount &&
             pluginsUsedCount == other.pluginsUsedCount &&
             sessionsWithFileEditsCount == other.sessionsWithFileEditsCount &&
+            skillsUsedCount == other.skillsUsedCount &&
             writeToolCount == other.writeToolCount &&
             additionalProperties == other.additionalProperties
     }
@@ -1110,17 +1126,17 @@ private constructor(
             connectorsUsedCount,
             dispatchTurnCount,
             distinctConnectorsUsedCount,
+            distinctPluginsUsedCount,
             distinctSessionCount,
             distinctSkillsUsedCount,
-            messageCount,
-            skillsUsedCount,
-            distinctPluginsUsedCount,
             editToolCount,
             fileEditCount,
+            messageCount,
             multiEditToolCount,
             notebookEditToolCount,
             pluginsUsedCount,
             sessionsWithFileEditsCount,
+            skillsUsedCount,
             writeToolCount,
             additionalProperties,
         )
@@ -1129,5 +1145,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsCoworkMetrics{actionCount=$actionCount, artifactsCreatedCount=$artifactsCreatedCount, connectorsUsedCount=$connectorsUsedCount, dispatchTurnCount=$dispatchTurnCount, distinctConnectorsUsedCount=$distinctConnectorsUsedCount, distinctSessionCount=$distinctSessionCount, distinctSkillsUsedCount=$distinctSkillsUsedCount, messageCount=$messageCount, skillsUsedCount=$skillsUsedCount, distinctPluginsUsedCount=$distinctPluginsUsedCount, editToolCount=$editToolCount, fileEditCount=$fileEditCount, multiEditToolCount=$multiEditToolCount, notebookEditToolCount=$notebookEditToolCount, pluginsUsedCount=$pluginsUsedCount, sessionsWithFileEditsCount=$sessionsWithFileEditsCount, writeToolCount=$writeToolCount, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsCoworkMetrics{actionCount=$actionCount, artifactsCreatedCount=$artifactsCreatedCount, connectorsUsedCount=$connectorsUsedCount, dispatchTurnCount=$dispatchTurnCount, distinctConnectorsUsedCount=$distinctConnectorsUsedCount, distinctPluginsUsedCount=$distinctPluginsUsedCount, distinctSessionCount=$distinctSessionCount, distinctSkillsUsedCount=$distinctSkillsUsedCount, editToolCount=$editToolCount, fileEditCount=$fileEditCount, messageCount=$messageCount, multiEditToolCount=$multiEditToolCount, notebookEditToolCount=$notebookEditToolCount, pluginsUsedCount=$pluginsUsedCount, sessionsWithFileEditsCount=$sessionsWithFileEditsCount, skillsUsedCount=$skillsUsedCount, writeToolCount=$writeToolCount, additionalProperties=$additionalProperties}"
 }

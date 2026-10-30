@@ -24,15 +24,15 @@ private constructor(
     private val claudeCodeMetrics: JsonField<BetaAnalyticsClaudeCodeMetrics>,
     private val coworkMetrics: JsonField<BetaAnalyticsCoworkMetrics>,
     private val designMetrics: JsonField<BetaAnalyticsDesignMetrics>,
+    private val distinctUserCount: JsonField<Long>,
     private val officeMetrics: JsonField<BetaAnalyticsOfficeMetrics>,
     private val scienceMetrics: JsonField<BetaAnalyticsScienceMetrics>,
+    private val user: JsonField<BetaAnalyticsUser>,
     private val webSearchCount: JsonField<Long>,
     private val chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>,
-    private val distinctUserCount: JsonField<Long>,
     private val lastActivityDate: JsonField<LocalDate>,
     private val rbacGroupId: JsonField<String>,
     private val rbacGroupName: JsonField<String>,
-    private val user: JsonField<BetaAnalyticsUser>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -50,21 +50,22 @@ private constructor(
         @JsonProperty("design_metrics")
         @ExcludeMissing
         designMetrics: JsonField<BetaAnalyticsDesignMetrics> = JsonMissing.of(),
+        @JsonProperty("distinct_user_count")
+        @ExcludeMissing
+        distinctUserCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("office_metrics")
         @ExcludeMissing
         officeMetrics: JsonField<BetaAnalyticsOfficeMetrics> = JsonMissing.of(),
         @JsonProperty("science_metrics")
         @ExcludeMissing
         scienceMetrics: JsonField<BetaAnalyticsScienceMetrics> = JsonMissing.of(),
+        @JsonProperty("user") @ExcludeMissing user: JsonField<BetaAnalyticsUser> = JsonMissing.of(),
         @JsonProperty("web_search_count")
         @ExcludeMissing
         webSearchCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("chat_cowork_unified_metrics")
         @ExcludeMissing
         chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of(),
-        @JsonProperty("distinct_user_count")
-        @ExcludeMissing
-        distinctUserCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("last_activity_date")
         @ExcludeMissing
         lastActivityDate: JsonField<LocalDate> = JsonMissing.of(),
@@ -74,21 +75,20 @@ private constructor(
         @JsonProperty("rbac_group_name")
         @ExcludeMissing
         rbacGroupName: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("user") @ExcludeMissing user: JsonField<BetaAnalyticsUser> = JsonMissing.of(),
     ) : this(
         chatMetrics,
         claudeCodeMetrics,
         coworkMetrics,
         designMetrics,
+        distinctUserCount,
         officeMetrics,
         scienceMetrics,
+        user,
         webSearchCount,
         chatCoworkUnifiedMetrics,
-        distinctUserCount,
         lastActivityDate,
         rbacGroupId,
         rbacGroupName,
-        user,
         mutableMapOf(),
     )
 
@@ -126,6 +126,16 @@ private constructor(
     fun designMetrics(): BetaAnalyticsDesignMetrics = designMetrics.getRequired("design_metrics")
 
     /**
+     * Number of distinct active users represented by this row. Only set for grouped rollups
+     * (`group_by[]`); null for per-user rows. In date-range mode, recomputed as an exact distinct
+     * count of the group's active members over the requested window, never a sum of per-day values.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun distinctUserCount(): Optional<Long> = distinctUserCount.getOptional("distinct_user_count")
+
+    /**
      * Office Agent activity metrics for a single user on a given day, broken out by Office product.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -141,6 +151,14 @@ private constructor(
      */
     fun scienceMetrics(): BetaAnalyticsScienceMetrics =
         scienceMetrics.getRequired("science_metrics")
+
+    /**
+     * The user this row describes. Null on rows aggregated across users.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun user(): Optional<BetaAnalyticsUser> = user.getOptional("user")
 
     /**
      * Number of web searches performed
@@ -161,16 +179,6 @@ private constructor(
      */
     fun chatCoworkUnifiedMetrics(): Optional<ChatCoworkUnifiedMetrics> =
         chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
-
-    /**
-     * Number of distinct active users represented by this row. Only set for grouped rollups
-     * (`group_by[]`); null for per-user rows. In date-range mode, recomputed as an exact distinct
-     * count of the group's active members over the requested window, never a sum of per-day values.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun distinctUserCount(): Optional<Long> = distinctUserCount.getOptional("distinct_user_count")
 
     /**
      * Most recent UTC day (YYYY-MM-DD) on which the user had any counted activity, within the
@@ -206,14 +214,6 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun rbacGroupName(): Optional<String> = rbacGroupName.getOptional("rbac_group_name")
-
-    /**
-     * The user this row describes. Null on rows aggregated across users.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun user(): Optional<BetaAnalyticsUser> = user.getOptional("user")
 
     /**
      * Returns the raw JSON value of [chatMetrics].
@@ -253,6 +253,16 @@ private constructor(
     fun _designMetrics(): JsonField<BetaAnalyticsDesignMetrics> = designMetrics
 
     /**
+     * Returns the raw JSON value of [distinctUserCount].
+     *
+     * Unlike [distinctUserCount], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("distinct_user_count")
+    @ExcludeMissing
+    fun _distinctUserCount(): JsonField<Long> = distinctUserCount
+
+    /**
      * Returns the raw JSON value of [officeMetrics].
      *
      * Unlike [officeMetrics], this method doesn't throw if the JSON field has an unexpected type.
@@ -269,6 +279,13 @@ private constructor(
     @JsonProperty("science_metrics")
     @ExcludeMissing
     fun _scienceMetrics(): JsonField<BetaAnalyticsScienceMetrics> = scienceMetrics
+
+    /**
+     * Returns the raw JSON value of [user].
+     *
+     * Unlike [user], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("user") @ExcludeMissing fun _user(): JsonField<BetaAnalyticsUser> = user
 
     /**
      * Returns the raw JSON value of [webSearchCount].
@@ -288,16 +305,6 @@ private constructor(
     @JsonProperty("chat_cowork_unified_metrics")
     @ExcludeMissing
     fun _chatCoworkUnifiedMetrics(): JsonField<ChatCoworkUnifiedMetrics> = chatCoworkUnifiedMetrics
-
-    /**
-     * Returns the raw JSON value of [distinctUserCount].
-     *
-     * Unlike [distinctUserCount], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("distinct_user_count")
-    @ExcludeMissing
-    fun _distinctUserCount(): JsonField<Long> = distinctUserCount
 
     /**
      * Returns the raw JSON value of [lastActivityDate].
@@ -327,13 +334,6 @@ private constructor(
     @ExcludeMissing
     fun _rbacGroupName(): JsonField<String> = rbacGroupName
 
-    /**
-     * Returns the raw JSON value of [user].
-     *
-     * Unlike [user], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("user") @ExcludeMissing fun _user(): JsonField<BetaAnalyticsUser> = user
-
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -357,8 +357,10 @@ private constructor(
          * .claudeCodeMetrics()
          * .coworkMetrics()
          * .designMetrics()
+         * .distinctUserCount()
          * .officeMetrics()
          * .scienceMetrics()
+         * .user()
          * .webSearchCount()
          * ```
          */
@@ -372,15 +374,15 @@ private constructor(
         private var claudeCodeMetrics: JsonField<BetaAnalyticsClaudeCodeMetrics>? = null
         private var coworkMetrics: JsonField<BetaAnalyticsCoworkMetrics>? = null
         private var designMetrics: JsonField<BetaAnalyticsDesignMetrics>? = null
+        private var distinctUserCount: JsonField<Long>? = null
         private var officeMetrics: JsonField<BetaAnalyticsOfficeMetrics>? = null
         private var scienceMetrics: JsonField<BetaAnalyticsScienceMetrics>? = null
+        private var user: JsonField<BetaAnalyticsUser>? = null
         private var webSearchCount: JsonField<Long>? = null
         private var chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of()
-        private var distinctUserCount: JsonField<Long> = JsonMissing.of()
         private var lastActivityDate: JsonField<LocalDate> = JsonMissing.of()
         private var rbacGroupId: JsonField<String> = JsonMissing.of()
         private var rbacGroupName: JsonField<String> = JsonMissing.of()
-        private var user: JsonField<BetaAnalyticsUser> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -389,15 +391,15 @@ private constructor(
             claudeCodeMetrics = betaAnalyticsUserActivity.claudeCodeMetrics
             coworkMetrics = betaAnalyticsUserActivity.coworkMetrics
             designMetrics = betaAnalyticsUserActivity.designMetrics
+            distinctUserCount = betaAnalyticsUserActivity.distinctUserCount
             officeMetrics = betaAnalyticsUserActivity.officeMetrics
             scienceMetrics = betaAnalyticsUserActivity.scienceMetrics
+            user = betaAnalyticsUserActivity.user
             webSearchCount = betaAnalyticsUserActivity.webSearchCount
             chatCoworkUnifiedMetrics = betaAnalyticsUserActivity.chatCoworkUnifiedMetrics
-            distinctUserCount = betaAnalyticsUserActivity.distinctUserCount
             lastActivityDate = betaAnalyticsUserActivity.lastActivityDate
             rbacGroupId = betaAnalyticsUserActivity.rbacGroupId
             rbacGroupName = betaAnalyticsUserActivity.rbacGroupName
-            user = betaAnalyticsUserActivity.user
             additionalProperties = betaAnalyticsUserActivity.additionalProperties.toMutableMap()
         }
 
@@ -463,6 +465,38 @@ private constructor(
         }
 
         /**
+         * Number of distinct active users represented by this row. Only set for grouped rollups
+         * (`group_by[]`); null for per-user rows. In date-range mode, recomputed as an exact
+         * distinct count of the group's active members over the requested window, never a sum of
+         * per-day values.
+         */
+        fun distinctUserCount(distinctUserCount: Long?) =
+            distinctUserCount(JsonField.ofNullable(distinctUserCount))
+
+        /**
+         * Alias for [Builder.distinctUserCount].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun distinctUserCount(distinctUserCount: Long) =
+            distinctUserCount(distinctUserCount as Long?)
+
+        /** Alias for calling [Builder.distinctUserCount] with `distinctUserCount.orElse(null)`. */
+        fun distinctUserCount(distinctUserCount: Optional<Long>) =
+            distinctUserCount(distinctUserCount.getOrNull())
+
+        /**
+         * Sets [Builder.distinctUserCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.distinctUserCount] with a well-typed [Long] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun distinctUserCount(distinctUserCount: JsonField<Long>) = apply {
+            this.distinctUserCount = distinctUserCount
+        }
+
+        /**
          * Office Agent activity metrics for a single user on a given day, broken out by Office
          * product.
          */
@@ -494,6 +528,21 @@ private constructor(
         fun scienceMetrics(scienceMetrics: JsonField<BetaAnalyticsScienceMetrics>) = apply {
             this.scienceMetrics = scienceMetrics
         }
+
+        /** The user this row describes. Null on rows aggregated across users. */
+        fun user(user: BetaAnalyticsUser?) = user(JsonField.ofNullable(user))
+
+        /** Alias for calling [Builder.user] with `user.orElse(null)`. */
+        fun user(user: Optional<BetaAnalyticsUser>) = user(user.getOrNull())
+
+        /**
+         * Sets [Builder.user] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.user] with a well-typed [BetaAnalyticsUser] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun user(user: JsonField<BetaAnalyticsUser>) = apply { this.user = user }
 
         /** Number of web searches performed */
         fun webSearchCount(webSearchCount: Long) = webSearchCount(JsonField.of(webSearchCount))
@@ -535,38 +584,6 @@ private constructor(
         fun chatCoworkUnifiedMetrics(
             chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>
         ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
-
-        /**
-         * Number of distinct active users represented by this row. Only set for grouped rollups
-         * (`group_by[]`); null for per-user rows. In date-range mode, recomputed as an exact
-         * distinct count of the group's active members over the requested window, never a sum of
-         * per-day values.
-         */
-        fun distinctUserCount(distinctUserCount: Long?) =
-            distinctUserCount(JsonField.ofNullable(distinctUserCount))
-
-        /**
-         * Alias for [Builder.distinctUserCount].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
-        fun distinctUserCount(distinctUserCount: Long) =
-            distinctUserCount(distinctUserCount as Long?)
-
-        /** Alias for calling [Builder.distinctUserCount] with `distinctUserCount.orElse(null)`. */
-        fun distinctUserCount(distinctUserCount: Optional<Long>) =
-            distinctUserCount(distinctUserCount.getOrNull())
-
-        /**
-         * Sets [Builder.distinctUserCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.distinctUserCount] with a well-typed [Long] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun distinctUserCount(distinctUserCount: JsonField<Long>) = apply {
-            this.distinctUserCount = distinctUserCount
-        }
 
         /**
          * Most recent UTC day (YYYY-MM-DD) on which the user had any counted activity, within the
@@ -638,21 +655,6 @@ private constructor(
             this.rbacGroupName = rbacGroupName
         }
 
-        /** The user this row describes. Null on rows aggregated across users. */
-        fun user(user: BetaAnalyticsUser?) = user(JsonField.ofNullable(user))
-
-        /** Alias for calling [Builder.user] with `user.orElse(null)`. */
-        fun user(user: Optional<BetaAnalyticsUser>) = user(user.getOrNull())
-
-        /**
-         * Sets [Builder.user] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.user] with a well-typed [BetaAnalyticsUser] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun user(user: JsonField<BetaAnalyticsUser>) = apply { this.user = user }
-
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -683,8 +685,10 @@ private constructor(
          * .claudeCodeMetrics()
          * .coworkMetrics()
          * .designMetrics()
+         * .distinctUserCount()
          * .officeMetrics()
          * .scienceMetrics()
+         * .user()
          * .webSearchCount()
          * ```
          *
@@ -696,15 +700,15 @@ private constructor(
                 checkRequired("claudeCodeMetrics", claudeCodeMetrics),
                 checkRequired("coworkMetrics", coworkMetrics),
                 checkRequired("designMetrics", designMetrics),
+                checkRequired("distinctUserCount", distinctUserCount),
                 checkRequired("officeMetrics", officeMetrics),
                 checkRequired("scienceMetrics", scienceMetrics),
+                checkRequired("user", user),
                 checkRequired("webSearchCount", webSearchCount),
                 chatCoworkUnifiedMetrics,
-                distinctUserCount,
                 lastActivityDate,
                 rbacGroupId,
                 rbacGroupName,
-                user,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -728,15 +732,15 @@ private constructor(
         claudeCodeMetrics().validate()
         coworkMetrics().validate()
         designMetrics().validate()
+        distinctUserCount()
         officeMetrics().validate()
         scienceMetrics().validate()
+        user().ifPresent { it.validate() }
         webSearchCount()
         chatCoworkUnifiedMetrics().ifPresent { it.validate() }
-        distinctUserCount()
         lastActivityDate()
         rbacGroupId()
         rbacGroupName()
-        user().ifPresent { it.validate() }
         validated = true
     }
 
@@ -759,15 +763,15 @@ private constructor(
             (claudeCodeMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (coworkMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (designMetrics.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (distinctUserCount.asKnown().isPresent) 1 else 0) +
             (officeMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (scienceMetrics.asKnown().getOrNull()?.validity() ?: 0) +
+            (user.asKnown().getOrNull()?.validity() ?: 0) +
             (if (webSearchCount.asKnown().isPresent) 1 else 0) +
             (chatCoworkUnifiedMetrics.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (distinctUserCount.asKnown().isPresent) 1 else 0) +
             (if (lastActivityDate.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
-            (if (rbacGroupName.asKnown().isPresent) 1 else 0) +
-            (user.asKnown().getOrNull()?.validity() ?: 0)
+            (if (rbacGroupName.asKnown().isPresent) 1 else 0)
 
     /**
      * Activity recorded while the member had Chat and Cowork unified (Cowork's features inside
@@ -1009,15 +1013,15 @@ private constructor(
             claudeCodeMetrics == other.claudeCodeMetrics &&
             coworkMetrics == other.coworkMetrics &&
             designMetrics == other.designMetrics &&
+            distinctUserCount == other.distinctUserCount &&
             officeMetrics == other.officeMetrics &&
             scienceMetrics == other.scienceMetrics &&
+            user == other.user &&
             webSearchCount == other.webSearchCount &&
             chatCoworkUnifiedMetrics == other.chatCoworkUnifiedMetrics &&
-            distinctUserCount == other.distinctUserCount &&
             lastActivityDate == other.lastActivityDate &&
             rbacGroupId == other.rbacGroupId &&
             rbacGroupName == other.rbacGroupName &&
-            user == other.user &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1027,15 +1031,15 @@ private constructor(
             claudeCodeMetrics,
             coworkMetrics,
             designMetrics,
+            distinctUserCount,
             officeMetrics,
             scienceMetrics,
+            user,
             webSearchCount,
             chatCoworkUnifiedMetrics,
-            distinctUserCount,
             lastActivityDate,
             rbacGroupId,
             rbacGroupName,
-            user,
             additionalProperties,
         )
     }
@@ -1043,5 +1047,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsUserActivity{chatMetrics=$chatMetrics, claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, designMetrics=$designMetrics, officeMetrics=$officeMetrics, scienceMetrics=$scienceMetrics, webSearchCount=$webSearchCount, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, distinctUserCount=$distinctUserCount, lastActivityDate=$lastActivityDate, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, user=$user, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsUserActivity{chatMetrics=$chatMetrics, claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, designMetrics=$designMetrics, distinctUserCount=$distinctUserCount, officeMetrics=$officeMetrics, scienceMetrics=$scienceMetrics, user=$user, webSearchCount=$webSearchCount, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, lastActivityDate=$lastActivityDate, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, additionalProperties=$additionalProperties}"
 }
