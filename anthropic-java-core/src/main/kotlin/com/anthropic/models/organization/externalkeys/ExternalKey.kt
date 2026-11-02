@@ -121,7 +121,7 @@ private constructor(
     fun displayName(): Optional<String> = displayName.getOptional("display_name")
 
     /**
-     * Data residency geo. Selects the region that handles this key's encrypt/decrypt roundtrips.
+     * Data residency geo. Selects the region this key is used in.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -356,10 +356,7 @@ private constructor(
          */
         fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
 
-        /**
-         * Data residency geo. Selects the region that handles this key's encrypt/decrypt
-         * roundtrips.
-         */
+        /** Data residency geo. Selects the region this key is used in. */
         fun geo(geo: String) = geo(JsonField.of(geo))
 
         /**

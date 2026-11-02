@@ -62,7 +62,7 @@ private constructor(
      * `organization`, `private`, or `public`; `skill_name` matches case-insensitively; `user_id`
      * takes a tagged user id (`user_...`), as emitted in responses. An unsupported dimension
      * returns 400. At most 100 entries. `chat_cowork_unified` is accepted as a `product` value only
-     * on deployments that offer Chat and Cowork unified.
+     * where Chat and Cowork unified is available.
      */
     fun filter(): Optional<List<String>> = Optional.ofNullable(filter)
 
@@ -189,8 +189,8 @@ private constructor(
          * `share_status` is one of `organization`, `private`, or `public`; `skill_name` matches
          * case-insensitively; `user_id` takes a tagged user id (`user_...`), as emitted in
          * responses. An unsupported dimension returns 400. At most 100 entries.
-         * `chat_cowork_unified` is accepted as a `product` value only on deployments that offer
-         * Chat and Cowork unified.
+         * `chat_cowork_unified` is accepted as a `product` value only where Chat and Cowork unified
+         * is available.
          */
         fun filter(filter: List<String>?) = apply { this.filter = filter?.toMutableList() }
 
