@@ -12,13 +12,13 @@ internal class BetaManagedAgentsUserLocationTest {
         val betaManagedAgentsUserLocation =
             BetaManagedAgentsUserLocation.builder()
                 .city("x")
-                .country("country")
+                .country("SE")
                 .region("x")
                 .timezone("x")
                 .build()
 
         assertThat(betaManagedAgentsUserLocation.city()).contains("x")
-        assertThat(betaManagedAgentsUserLocation.country()).contains("country")
+        assertThat(betaManagedAgentsUserLocation.country()).contains("SE")
         assertThat(betaManagedAgentsUserLocation.region()).contains("x")
         assertThat(betaManagedAgentsUserLocation.timezone()).contains("x")
     }
@@ -29,7 +29,7 @@ internal class BetaManagedAgentsUserLocationTest {
         val betaManagedAgentsUserLocation =
             BetaManagedAgentsUserLocation.builder()
                 .city("x")
-                .country("country")
+                .country("SE")
                 .region("x")
                 .timezone("x")
                 .build()

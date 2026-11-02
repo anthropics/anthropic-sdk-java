@@ -19,7 +19,7 @@ internal class AgentCreateParamsTest {
             .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
             .name("My First Agent")
             .description("A general-purpose starter agent.")
-            .awsRoleExecutionIdentity("role_arn")
+            .awsRoleExecutionIdentity("arn:aws:iam::228601553692:role/T")
             .addMcpServer(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
@@ -76,7 +76,7 @@ internal class AgentCreateParamsTest {
                 .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                 .name("My First Agent")
                 .description("A general-purpose starter agent.")
-                .awsRoleExecutionIdentity("role_arn")
+                .awsRoleExecutionIdentity("arn:aws:iam::228601553692:role/T")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -167,7 +167,7 @@ internal class AgentCreateParamsTest {
                 .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                 .name("My First Agent")
                 .description("A general-purpose starter agent.")
-                .awsRoleExecutionIdentity("role_arn")
+                .awsRoleExecutionIdentity("arn:aws:iam::228601553692:role/T")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -230,7 +230,11 @@ internal class AgentCreateParamsTest {
         assertThat(body.name()).isEqualTo("My First Agent")
         assertThat(body.description()).contains("A general-purpose starter agent.")
         assertThat(body.executionIdentity())
-            .contains(BetaManagedAgentsExecutionIdentityParams.ofAwsRole("role_arn"))
+            .contains(
+                BetaManagedAgentsExecutionIdentityParams.ofAwsRole(
+                    "arn:aws:iam::228601553692:role/T"
+                )
+            )
         assertThat(body.mcpServers().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()

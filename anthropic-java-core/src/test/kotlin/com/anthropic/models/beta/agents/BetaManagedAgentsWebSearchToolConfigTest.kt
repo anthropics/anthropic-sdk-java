@@ -19,7 +19,7 @@ internal class BetaManagedAgentsWebSearchToolConfigTest {
                 .userLocation(
                     BetaManagedAgentsUserLocation.builder()
                         .city("x")
-                        .country("country")
+                        .country("SE")
                         .region("x")
                         .timezone("x")
                         .build()
@@ -41,7 +41,7 @@ internal class BetaManagedAgentsWebSearchToolConfigTest {
             .contains(
                 BetaManagedAgentsUserLocation.builder()
                     .city("x")
-                    .country("country")
+                    .country("SE")
                     .region("x")
                     .timezone("x")
                     .build()
@@ -81,7 +81,7 @@ internal class BetaManagedAgentsWebSearchToolConfigTest {
                 .userLocation(
                     BetaManagedAgentsUserLocation.builder()
                         .city("x")
-                        .country("country")
+                        .country("SE")
                         .region("x")
                         .timezone("x")
                         .build()

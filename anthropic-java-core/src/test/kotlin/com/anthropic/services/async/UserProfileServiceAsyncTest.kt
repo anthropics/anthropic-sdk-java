@@ -82,7 +82,7 @@ internal class UserProfileServiceAsyncTest {
                     .externalUserDetails(
                         UserProfileExternalUserDetailsParams.builder()
                             .accountStatus(UserProfileExternalUserAccountStatus.SUSPENDED)
-                            .country("country")
+                            .country("SE")
                             .emailHash("x")
                             .entityType(UserProfileExternalUserEntityType.INDIVIDUAL)
                             .nameHash("x")

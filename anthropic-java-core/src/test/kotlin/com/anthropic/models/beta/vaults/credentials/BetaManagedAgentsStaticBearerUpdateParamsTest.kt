@@ -10,16 +10,16 @@ internal class BetaManagedAgentsStaticBearerUpdateParamsTest {
     @Test
     fun create() {
         val betaManagedAgentsStaticBearerUpdateParams =
-            BetaManagedAgentsStaticBearerUpdateParams.builder().token("x").build()
+            BetaManagedAgentsStaticBearerUpdateParams.builder().token("token").build()
 
-        assertThat(betaManagedAgentsStaticBearerUpdateParams.token()).contains("x")
+        assertThat(betaManagedAgentsStaticBearerUpdateParams.token()).contains("token")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsStaticBearerUpdateParams =
-            BetaManagedAgentsStaticBearerUpdateParams.builder().token("x").build()
+            BetaManagedAgentsStaticBearerUpdateParams.builder().token("token").build()
 
         val roundtrippedBetaManagedAgentsStaticBearerUpdateParams =
             jsonMapper.readValue(

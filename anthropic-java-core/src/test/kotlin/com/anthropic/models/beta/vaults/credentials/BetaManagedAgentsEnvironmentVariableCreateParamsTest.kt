@@ -14,8 +14,8 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
                 .networking(
                     BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
-                .secretName("x")
-                .secretValue("x")
+                .secretName("B")
+                .secretValue("secret_value")
                 .injectionLocation(
                     BetaManagedAgentsInjectionLocationParams.builder()
                         .body(true)
@@ -30,8 +30,9 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
                     BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
             )
-        assertThat(betaManagedAgentsEnvironmentVariableCreateParams.secretName()).isEqualTo("x")
-        assertThat(betaManagedAgentsEnvironmentVariableCreateParams.secretValue()).isEqualTo("x")
+        assertThat(betaManagedAgentsEnvironmentVariableCreateParams.secretName()).isEqualTo("B")
+        assertThat(betaManagedAgentsEnvironmentVariableCreateParams.secretValue())
+            .isEqualTo("secret_value")
         assertThat(betaManagedAgentsEnvironmentVariableCreateParams.injectionLocation())
             .contains(
                 BetaManagedAgentsInjectionLocationParams.builder().body(true).header(true).build()
@@ -46,8 +47,8 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
                 .networking(
                     BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
-                .secretName("x")
-                .secretValue("x")
+                .secretName("B")
+                .secretValue("secret_value")
                 .injectionLocation(
                     BetaManagedAgentsInjectionLocationParams.builder()
                         .body(true)

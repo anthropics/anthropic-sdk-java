@@ -20,7 +20,7 @@ internal class UserProfileUpdateParamsTest {
             .externalUserDetails(
                 BetaUserProfileExternalUserDetailsParams.builder()
                     .accountStatus(BetaUserProfileExternalUserDetailsParams.AccountStatus.SUSPENDED)
-                    .country("country")
+                    .country("SE")
                     .emailHash("x")
                     .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
                     .nameHash("x")
@@ -64,7 +64,7 @@ internal class UserProfileUpdateParamsTest {
                         .accountStatus(
                             BetaUserProfileExternalUserDetailsParams.AccountStatus.SUSPENDED
                         )
-                        .country("country")
+                        .country("SE")
                         .emailHash("x")
                         .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
                         .nameHash("x")
@@ -122,7 +122,7 @@ internal class UserProfileUpdateParamsTest {
                         .accountStatus(
                             BetaUserProfileExternalUserDetailsParams.AccountStatus.SUSPENDED
                         )
-                        .country("country")
+                        .country("SE")
                         .emailHash("x")
                         .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
                         .nameHash("x")
@@ -147,7 +147,7 @@ internal class UserProfileUpdateParamsTest {
             .contains(
                 BetaUserProfileExternalUserDetailsParams.builder()
                     .accountStatus(BetaUserProfileExternalUserDetailsParams.AccountStatus.SUSPENDED)
-                    .country("country")
+                    .country("SE")
                     .emailHash("x")
                     .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
                     .nameHash("x")

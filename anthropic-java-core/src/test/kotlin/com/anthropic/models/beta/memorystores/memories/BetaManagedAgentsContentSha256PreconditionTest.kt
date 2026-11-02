@@ -11,11 +11,11 @@ internal class BetaManagedAgentsContentSha256PreconditionTest {
     fun create() {
         val betaManagedAgentsContentSha256Precondition =
             BetaManagedAgentsContentSha256Precondition.builder()
-                .contentSha256("content_sha256")
+                .contentSha256("210b9798eb53baa4e69d31c1071cf03d212b8ad0ca30cf321e0ea82e120aac26")
                 .build()
 
         assertThat(betaManagedAgentsContentSha256Precondition.contentSha256())
-            .contains("content_sha256")
+            .contains("210b9798eb53baa4e69d31c1071cf03d212b8ad0ca30cf321e0ea82e120aac26")
     }
 
     @Test
@@ -23,7 +23,7 @@ internal class BetaManagedAgentsContentSha256PreconditionTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsContentSha256Precondition =
             BetaManagedAgentsContentSha256Precondition.builder()
-                .contentSha256("content_sha256")
+                .contentSha256("210b9798eb53baa4e69d31c1071cf03d212b8ad0ca30cf321e0ea82e120aac26")
                 .build()
 
         val roundtrippedBetaManagedAgentsContentSha256Precondition =

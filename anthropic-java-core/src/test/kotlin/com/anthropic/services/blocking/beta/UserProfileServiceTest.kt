@@ -94,7 +94,7 @@ internal class UserProfileServiceTest {
                             .accountStatus(
                                 BetaUserProfileExternalUserDetailsParams.AccountStatus.SUSPENDED
                             )
-                            .country("country")
+                            .country("SE")
                             .emailHash("x")
                             .entityType(
                                 BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL

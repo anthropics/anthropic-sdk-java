@@ -20,7 +20,7 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
                 .networking(
                     BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
-                .secretValue("x")
+                .secretValue("secret_value")
                 .build()
 
         assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.injectionLocation())
@@ -36,7 +36,8 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
                     BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
             )
-        assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.secretValue()).contains("x")
+        assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.secretValue())
+            .contains("secret_value")
     }
 
     @Test
@@ -53,7 +54,7 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
                 .networking(
                     BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder().build()
                 )
-                .secretValue("x")
+                .secretValue("secret_value")
                 .build()
 
         val roundtrippedBetaManagedAgentsEnvironmentVariableUpdateParams =

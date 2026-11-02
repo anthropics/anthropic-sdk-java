@@ -12,7 +12,7 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
     fun create() {
         val betaManagedAgentsMcpOAuthCreateParams =
             BetaManagedAgentsMcpOAuthCreateParams.builder()
-                .accessToken("x")
+                .accessToken("access_token")
                 .mcpServerUrl("x")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .refresh(
@@ -29,7 +29,7 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
                 )
                 .build()
 
-        assertThat(betaManagedAgentsMcpOAuthCreateParams.accessToken()).isEqualTo("x")
+        assertThat(betaManagedAgentsMcpOAuthCreateParams.accessToken()).isEqualTo("access_token")
         assertThat(betaManagedAgentsMcpOAuthCreateParams.mcpServerUrl()).isEqualTo("x")
         assertThat(betaManagedAgentsMcpOAuthCreateParams.expiresAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -53,7 +53,7 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMcpOAuthCreateParams =
             BetaManagedAgentsMcpOAuthCreateParams.builder()
-                .accessToken("x")
+                .accessToken("access_token")
                 .mcpServerUrl("x")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .refresh(

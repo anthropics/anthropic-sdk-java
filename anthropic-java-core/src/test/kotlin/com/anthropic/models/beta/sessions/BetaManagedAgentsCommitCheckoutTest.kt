@@ -9,15 +9,15 @@ internal class BetaManagedAgentsCommitCheckoutTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsCommitCheckout = BetaManagedAgentsCommitCheckout.of("xxxxxxx")
+        val betaManagedAgentsCommitCheckout = BetaManagedAgentsCommitCheckout.of("92aD336")
 
-        assertThat(betaManagedAgentsCommitCheckout.sha()).isEqualTo("xxxxxxx")
+        assertThat(betaManagedAgentsCommitCheckout.sha()).isEqualTo("92aD336")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsCommitCheckout = BetaManagedAgentsCommitCheckout.of("xxxxxxx")
+        val betaManagedAgentsCommitCheckout = BetaManagedAgentsCommitCheckout.of("92aD336")
 
         val roundtrippedBetaManagedAgentsCommitCheckout =
             jsonMapper.readValue(

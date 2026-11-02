@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.4.1](https://github.com/anthropics/anthropic-sdk-java/compare/v3.4.0...v3.4.1) (2026-11-02)
+
+### Chores
+
+* **api:** update example values for pattern-constrained string fields
+
+
+### Documentation
+
+* **api:** show each field's own description for `speed`
+
 ## [3.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.3.0...v3.4.0) (2026-11-02)
 
 ### Features
@@ -33,7 +44,6 @@
 ### Documentation
 
 * add a description to the AnthropicBeta type
-* **api:** show each field's own description for `speed`
 * **examples:** use current model IDs
 * link to the SDK documentation instead of removed README sections
 
