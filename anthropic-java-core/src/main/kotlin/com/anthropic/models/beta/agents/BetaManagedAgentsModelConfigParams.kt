@@ -82,7 +82,9 @@ private constructor(
     fun inferenceGeo(): Optional<String> = inferenceGeo.getOptional("inference_geo")
 
     /**
-     * Inference speed mode. Defaults to `standard`.
+     * Inference speed mode. `fast` provides significantly faster output token generation at premium
+     * pricing. Defaults to `standard`. Not all models support `fast`; invalid combinations are
+     * rejected at create time.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -287,7 +289,11 @@ private constructor(
             this.inferenceGeo = inferenceGeo
         }
 
-        /** Inference speed mode. Defaults to `standard`. */
+        /**
+         * Inference speed mode. `fast` provides significantly faster output token generation at
+         * premium pricing. Defaults to `standard`. Not all models support `fast`; invalid
+         * combinations are rejected at create time.
+         */
         fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
         /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
@@ -967,7 +973,11 @@ private constructor(
         }
     }
 
-    /** Inference speed mode. Defaults to `standard`. */
+    /**
+     * Inference speed mode. `fast` provides significantly faster output token generation at premium
+     * pricing. Defaults to `standard`. Not all models support `fast`; invalid combinations are
+     * rejected at create time.
+     */
     class Speed private constructor(private val value: JsonField<String>) : Enum {
 
         /**

@@ -33,6 +33,7 @@
 ### Documentation
 
 * add a description to the AnthropicBeta type
+* **api:** show each field's own description for `speed`
 * **examples:** use current model IDs
 * link to the SDK documentation instead of removed README sections
 
