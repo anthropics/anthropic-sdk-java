@@ -46,6 +46,7 @@ private constructor(
     private val providerConfig: JsonField<ProviderConfig>,
     private val type: JsonValue,
     private val updatedAt: JsonField<OffsetDateTime>,
+    private val userProfileId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -69,6 +70,9 @@ private constructor(
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("user_profile_id")
+        @ExcludeMissing
+        userProfileId: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
         attachment,
@@ -78,12 +82,13 @@ private constructor(
         providerConfig,
         type,
         updatedAt,
+        userProfileId,
         mutableMapOf(),
     )
 
     /**
-     * Identifier of the external key config. A tagged ID prefixed `ekey_`, or — for organizations
-     * on the Claude Platform on AWS — the AWS KMS key ARN.
+     * Identifier of the external key config: a tagged ID prefixed `ekey_`, or, on Claude Platform
+     * on AWS, an AWS KMS key's ARN.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -149,6 +154,16 @@ private constructor(
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
     /**
+     * ID of the user profile the key is bound to, or null if the key is not bound to one. A key
+     * bound to a user profile can only be attached to a Workspace that has the same user profile. A
+     * key that isn't bound can be attached to a Workspace whatever its user profile.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun userProfileId(): Optional<String> = userProfileId.getOptional("user_profile_id")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -207,6 +222,15 @@ private constructor(
     @ExcludeMissing
     fun _updatedAt(): JsonField<OffsetDateTime> = updatedAt
 
+    /**
+     * Returns the raw JSON value of [userProfileId].
+     *
+     * Unlike [userProfileId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("user_profile_id")
+    @ExcludeMissing
+    fun _userProfileId(): JsonField<String> = userProfileId
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -233,6 +257,7 @@ private constructor(
          * .geo()
          * .providerConfig()
          * .updatedAt()
+         * .userProfileId()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -249,6 +274,7 @@ private constructor(
         private var providerConfig: JsonField<ProviderConfig>? = null
         private var type: JsonValue = JsonValue.from("external_key")
         private var updatedAt: JsonField<OffsetDateTime>? = null
+        private var userProfileId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -261,12 +287,13 @@ private constructor(
             providerConfig = betaExternalKey.providerConfig
             type = betaExternalKey.type
             updatedAt = betaExternalKey.updatedAt
+            userProfileId = betaExternalKey.userProfileId
             additionalProperties = betaExternalKey.additionalProperties.toMutableMap()
         }
 
         /**
-         * Identifier of the external key config. A tagged ID prefixed `ekey_`, or — for
-         * organizations on the Claude Platform on AWS — the AWS KMS key ARN.
+         * Identifier of the external key config: a tagged ID prefixed `ekey_`, or, on Claude
+         * Platform on AWS, an AWS KMS key's ARN.
          */
         fun id(id: String) = id(JsonField.of(id))
 
@@ -417,6 +444,29 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
 
+        /**
+         * ID of the user profile the key is bound to, or null if the key is not bound to one. A key
+         * bound to a user profile can only be attached to a Workspace that has the same user
+         * profile. A key that isn't bound can be attached to a Workspace whatever its user profile.
+         */
+        fun userProfileId(userProfileId: String?) =
+            userProfileId(JsonField.ofNullable(userProfileId))
+
+        /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
+        fun userProfileId(userProfileId: Optional<String>) =
+            userProfileId(userProfileId.getOrNull())
+
+        /**
+         * Sets [Builder.userProfileId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.userProfileId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun userProfileId(userProfileId: JsonField<String>) = apply {
+            this.userProfileId = userProfileId
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -450,6 +500,7 @@ private constructor(
          * .geo()
          * .providerConfig()
          * .updatedAt()
+         * .userProfileId()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -464,6 +515,7 @@ private constructor(
                 checkRequired("providerConfig", providerConfig),
                 type,
                 checkRequired("updatedAt", updatedAt),
+                checkRequired("userProfileId", userProfileId),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -495,6 +547,7 @@ private constructor(
             }
         }
         updatedAt()
+        userProfileId()
         validated = true
     }
 
@@ -520,7 +573,8 @@ private constructor(
             (if (geo.asKnown().isPresent) 1 else 0) +
             (providerConfig.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("external_key")) 1 else 0 } +
-            (if (updatedAt.asKnown().isPresent) 1 else 0)
+            (if (updatedAt.asKnown().isPresent) 1 else 0) +
+            (if (userProfileId.asKnown().isPresent) 1 else 0)
 
     /**
      * Whether any workspace uses this config to encrypt its data — counting live and archived
@@ -1311,6 +1365,7 @@ private constructor(
             providerConfig == other.providerConfig &&
             type == other.type &&
             updatedAt == other.updatedAt &&
+            userProfileId == other.userProfileId &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1324,6 +1379,7 @@ private constructor(
             providerConfig,
             type,
             updatedAt,
+            userProfileId,
             additionalProperties,
         )
     }
@@ -1331,5 +1387,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaExternalKey{id=$id, attachment=$attachment, createdAt=$createdAt, displayName=$displayName, geo=$geo, providerConfig=$providerConfig, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "BetaExternalKey{id=$id, attachment=$attachment, createdAt=$createdAt, displayName=$displayName, geo=$geo, providerConfig=$providerConfig, type=$type, updatedAt=$updatedAt, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
 }

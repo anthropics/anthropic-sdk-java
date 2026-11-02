@@ -44,7 +44,7 @@ public final class GoogleCloudMessagesExample {
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model(Model.CLAUDE_SONNET_4_5)
+                .model(Model.CLAUDE_SONNET_5_5)
                 .maxTokens(1024)
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();

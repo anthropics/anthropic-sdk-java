@@ -1,0 +1,232 @@
+package com.anthropic.services.blocking.organization.spendlimits
+
+import com.anthropic.core.ClientOptions
+import com.anthropic.core.RequestOptions
+import com.anthropic.core.checkRequired
+import com.anthropic.core.handlers.errorBodyHandler
+import com.anthropic.core.handlers.errorHandler
+import com.anthropic.core.handlers.jsonHandler
+import com.anthropic.core.http.HttpMethod
+import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.HttpResponse
+import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.core.http.json
+import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.traceApiCall
+import com.anthropic.core.prepare
+import com.anthropic.models.organization.spendlimits.increaserequests.IncreaseRequestApproveParams
+import com.anthropic.models.organization.spendlimits.increaserequests.IncreaseRequestApproveResponse
+import com.anthropic.models.organization.spendlimits.increaserequests.IncreaseRequestDenyParams
+import com.anthropic.models.organization.spendlimits.increaserequests.IncreaseRequestListPage
+import com.anthropic.models.organization.spendlimits.increaserequests.IncreaseRequestListPageResponse
+import com.anthropic.models.organization.spendlimits.increaserequests.IncreaseRequestListParams
+import com.anthropic.models.organization.spendlimits.increaserequests.IncreaseRequestRetrieveParams
+import com.anthropic.models.organization.spendlimits.increaserequests.SpendLimitIncreaseRequest
+import java.util.function.Consumer
+import kotlin.jvm.optionals.getOrNull
+
+class IncreaseRequestServiceImpl internal constructor(private val clientOptions: ClientOptions) :
+    IncreaseRequestService {
+
+    private val withRawResponse: IncreaseRequestService.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
+
+    override fun withRawResponse(): IncreaseRequestService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): IncreaseRequestService =
+        IncreaseRequestServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun retrieve(
+        params: IncreaseRequestRetrieveParams,
+        requestOptions: RequestOptions,
+    ): SpendLimitIncreaseRequest =
+        // get /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}
+        withRawResponse().retrieve(params, requestOptions).parse()
+
+    override fun list(
+        params: IncreaseRequestListParams,
+        requestOptions: RequestOptions,
+    ): IncreaseRequestListPage =
+        // get /v1/organizations/spend_limit_increase_requests
+        withRawResponse().list(params, requestOptions).parse()
+
+    override fun approve(
+        params: IncreaseRequestApproveParams,
+        requestOptions: RequestOptions,
+    ): IncreaseRequestApproveResponse =
+        // post
+        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/approve
+        withRawResponse().approve(params, requestOptions).parse()
+
+    override fun deny(
+        params: IncreaseRequestDenyParams,
+        requestOptions: RequestOptions,
+    ): SpendLimitIncreaseRequest =
+        // post
+        // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/deny
+        withRawResponse().deny(params, requestOptions).parse()
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        IncreaseRequestService.WithRawResponse {
+
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): IncreaseRequestService.WithRawResponse =
+            IncreaseRequestServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
+        private val retrieveHandler: Handler<SpendLimitIncreaseRequest> =
+            jsonHandler<SpendLimitIncreaseRequest>(clientOptions.jsonMapper)
+
+        override fun retrieve(
+            params: IncreaseRequestRetrieveParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<SpendLimitIncreaseRequest> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired(
+                "spendLimitIncreaseRequestId",
+                params.spendLimitIncreaseRequestId().getOrNull(),
+            )
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
+                    .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { retrieveHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation().get()) {
+                                it.validate()
+                            }
+                        }
+                }
+            }
+        }
+
+        private val listHandler: Handler<IncreaseRequestListPageResponse> =
+            jsonHandler<IncreaseRequestListPageResponse>(clientOptions.jsonMapper)
+
+        override fun list(
+            params: IncreaseRequestListParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<IncreaseRequestListPage> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { listHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation().get()) {
+                                it.validate()
+                            }
+                        }
+                        .let {
+                            IncreaseRequestListPage.builder()
+                                .service(IncreaseRequestServiceImpl(clientOptions))
+                                .params(params)
+                                .response(it)
+                                .build()
+                        }
+                }
+            }
+        }
+
+        private val approveHandler: Handler<IncreaseRequestApproveResponse> =
+            jsonHandler<IncreaseRequestApproveResponse>(clientOptions.jsonMapper)
+
+        override fun approve(
+            params: IncreaseRequestApproveParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<IncreaseRequestApproveResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired(
+                "spendLimitIncreaseRequestId",
+                params.spendLimitIncreaseRequestId().getOrNull(),
+            )
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
+                    .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
+                    .addPathSegments("approve")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { approveHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation().get()) {
+                                it.validate()
+                            }
+                        }
+                }
+            }
+        }
+
+        private val denyHandler: Handler<SpendLimitIncreaseRequest> =
+            jsonHandler<SpendLimitIncreaseRequest>(clientOptions.jsonMapper)
+
+        override fun deny(
+            params: IncreaseRequestDenyParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<SpendLimitIncreaseRequest> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired(
+                "spendLimitIncreaseRequestId",
+                params.spendLimitIncreaseRequestId().getOrNull(),
+            )
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
+                    .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
+                    .addPathSegments("deny")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { denyHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation().get()) {
+                                it.validate()
+                            }
+                        }
+                }
+            }
+        }
+    }
+}

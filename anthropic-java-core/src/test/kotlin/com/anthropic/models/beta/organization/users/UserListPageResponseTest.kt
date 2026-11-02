@@ -15,7 +15,7 @@ internal class UserListPageResponseTest {
             UserListPageResponse.builder()
                 .addData(
                     BetaOrganizationUser.builder()
-                        .id("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                        .id("user_01WxYzAbCdEfGhJkMnPqRsTu")
                         .addedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                         .email("user@emaildomain.com")
                         .name("Jane Doe")
@@ -30,7 +30,7 @@ internal class UserListPageResponseTest {
         assertThat(userListPageResponse.data())
             .containsExactly(
                 BetaOrganizationUser.builder()
-                    .id("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                    .id("user_01WxYzAbCdEfGhJkMnPqRsTu")
                     .addedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                     .email("user@emaildomain.com")
                     .name("Jane Doe")
@@ -49,7 +49,7 @@ internal class UserListPageResponseTest {
             UserListPageResponse.builder()
                 .addData(
                     BetaOrganizationUser.builder()
-                        .id("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                        .id("user_01WxYzAbCdEfGhJkMnPqRsTu")
                         .addedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                         .email("user@emaildomain.com")
                         .name("Jane Doe")

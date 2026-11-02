@@ -27,6 +27,7 @@ internal class BetaExternalKeyTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
+                .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                 .build()
 
         assertThat(betaExternalKey.id()).isEqualTo("ekey_01SDCCSbTxrXDpWc1phhtcfK")
@@ -54,6 +55,7 @@ internal class BetaExternalKeyTest {
             )
         assertThat(betaExternalKey.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
+        assertThat(betaExternalKey.userProfileId()).contains("uprof_01SDCCSbTxrXDpWc1phhtcfK")
     }
 
     @Test
@@ -76,6 +78,7 @@ internal class BetaExternalKeyTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
+                .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                 .build()
 
         val roundtrippedBetaExternalKey =

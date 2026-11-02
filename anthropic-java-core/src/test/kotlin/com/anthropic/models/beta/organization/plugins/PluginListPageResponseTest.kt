@@ -33,7 +33,7 @@ internal class PluginListPageResponseTest {
                         .createdBy(
                             BetaPluginUserActor.builder()
                                 .emailAddress("user@example.com")
-                                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                                 .build()
                         )
                         .description("Reviews pull requests against your team's conventions.")
@@ -78,7 +78,7 @@ internal class PluginListPageResponseTest {
                     .createdBy(
                         BetaPluginUserActor.builder()
                             .emailAddress("user@example.com")
-                            .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                            .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                             .build()
                     )
                     .description("Reviews pull requests against your team's conventions.")
@@ -127,7 +127,7 @@ internal class PluginListPageResponseTest {
                         .createdBy(
                             BetaPluginUserActor.builder()
                                 .emailAddress("user@example.com")
-                                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                                 .build()
                         )
                         .description("Reviews pull requests against your team's conventions.")

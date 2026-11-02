@@ -11,11 +11,11 @@ internal class MemberRemoveResponseTest {
     fun create() {
         val memberRemoveResponse =
             MemberRemoveResponse.builder()
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .build()
 
-        assertThat(memberRemoveResponse.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(memberRemoveResponse.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
         assertThat(memberRemoveResponse.workspaceId()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
     }
 
@@ -24,7 +24,7 @@ internal class MemberRemoveResponseTest {
         val jsonMapper = jsonMapper()
         val memberRemoveResponse =
             MemberRemoveResponse.builder()
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .build()
 

@@ -1,0 +1,74 @@
+package com.anthropic.services.async.organization.spendlimits
+
+import com.anthropic.TestServerExtension
+import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
+import com.anthropic.models.organization.spendlimits.SpendLimitPeriod
+import com.anthropic.models.organization.spendlimits.increaserequests.IncreaseRequestApproveParams
+import com.anthropic.models.organization.spendlimits.increaserequests.IncreaseRequestDenyParams
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+
+@ExtendWith(TestServerExtension::class)
+internal class IncreaseRequestServiceAsyncTest {
+
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
+    @Test
+    fun retrieve() {
+        val increaseRequestServiceAsync = client.organization().spendLimits().increaseRequests()
+
+        val spendLimitIncreaseRequestFuture =
+            increaseRequestServiceAsync.retrieve("spend_limit_increase_request_id")
+
+        val spendLimitIncreaseRequest = spendLimitIncreaseRequestFuture.get()
+        spendLimitIncreaseRequest.validate()
+    }
+
+    @Test
+    fun list() {
+        val increaseRequestServiceAsync = client.organization().spendLimits().increaseRequests()
+
+        val pageFuture = increaseRequestServiceAsync.list()
+
+        val page = pageFuture.get()
+        page.response().validate()
+    }
+
+    @Test
+    fun approve() {
+        val increaseRequestServiceAsync = client.organization().spendLimits().increaseRequests()
+
+        val responseFuture =
+            increaseRequestServiceAsync.approve(
+                IncreaseRequestApproveParams.builder()
+                    .spendLimitIncreaseRequestId("spend_limit_increase_request_id")
+                    .amount("50000")
+                    .period(SpendLimitPeriod.DAILY)
+                    .suppressNotification(true)
+                    .build()
+            )
+
+        val response = responseFuture.get()
+        response.validate()
+    }
+
+    @Test
+    fun deny() {
+        val increaseRequestServiceAsync = client.organization().spendLimits().increaseRequests()
+
+        val spendLimitIncreaseRequestFuture =
+            increaseRequestServiceAsync.deny(
+                IncreaseRequestDenyParams.builder()
+                    .spendLimitIncreaseRequestId("spend_limit_increase_request_id")
+                    .suppressNotification(true)
+                    .build()
+            )
+
+        val spendLimitIncreaseRequest = spendLimitIncreaseRequestFuture.get()
+        spendLimitIncreaseRequest.validate()
+    }
+}

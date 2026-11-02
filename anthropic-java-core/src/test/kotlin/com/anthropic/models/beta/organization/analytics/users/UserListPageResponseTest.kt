@@ -2,6 +2,7 @@ package com.anthropic.models.beta.organization.analytics.users
 
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatCoworkUnifiedChatMetrics
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatCoworkUnifiedMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatCoworkUnifiedSessionsMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsClaudeCodeMetrics
@@ -98,17 +99,17 @@ internal class UserListPageResponseTest {
                                 .connectorsUsedCount(0L)
                                 .dispatchTurnCount(0L)
                                 .distinctConnectorsUsedCount(0L)
+                                .distinctPluginsUsedCount(0L)
                                 .distinctSessionCount(0L)
                                 .distinctSkillsUsedCount(0L)
-                                .messageCount(0L)
-                                .skillsUsedCount(0L)
-                                .distinctPluginsUsedCount(0L)
                                 .editToolCount(0L)
                                 .fileEditCount(0L)
+                                .messageCount(0L)
                                 .multiEditToolCount(0L)
                                 .notebookEditToolCount(0L)
                                 .pluginsUsedCount(0L)
                                 .sessionsWithFileEditsCount(0L)
+                                .skillsUsedCount(0L)
                                 .writeToolCount(0L)
                                 .build()
                         )
@@ -120,6 +121,7 @@ internal class UserListPageResponseTest {
                                 .messageCount(0L)
                                 .build()
                         )
+                        .distinctUserCount(0L)
                         .officeMetrics(
                             BetaAnalyticsOfficeMetrics.builder()
                                 .excel(
@@ -173,9 +175,15 @@ internal class UserListPageResponseTest {
                                 .skillsUsedCount(0L)
                                 .build()
                         )
+                        .user(
+                            BetaAnalyticsUser.builder()
+                                .id("id")
+                                .emailAddress("email_address")
+                                .build()
+                        )
                         .webSearchCount(0L)
                         .chatCoworkUnifiedMetrics(
-                            BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
+                            BetaAnalyticsChatCoworkUnifiedMetrics.builder()
                                 .chat(
                                     BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                         .connectorsUsedCount(0L)
@@ -215,16 +223,9 @@ internal class UserListPageResponseTest {
                                 )
                                 .build()
                         )
-                        .distinctUserCount(0L)
                         .lastActivityDate(LocalDate.parse("2019-12-27"))
                         .rbacGroupId("rbac_group_id")
                         .rbacGroupName("rbac_group_name")
-                        .user(
-                            BetaAnalyticsUser.builder()
-                                .id("id")
-                                .emailAddress("email_address")
-                                .build()
-                        )
                         .build()
                 )
                 .nextPage("next_page")
@@ -302,17 +303,17 @@ internal class UserListPageResponseTest {
                             .connectorsUsedCount(0L)
                             .dispatchTurnCount(0L)
                             .distinctConnectorsUsedCount(0L)
+                            .distinctPluginsUsedCount(0L)
                             .distinctSessionCount(0L)
                             .distinctSkillsUsedCount(0L)
-                            .messageCount(0L)
-                            .skillsUsedCount(0L)
-                            .distinctPluginsUsedCount(0L)
                             .editToolCount(0L)
                             .fileEditCount(0L)
+                            .messageCount(0L)
                             .multiEditToolCount(0L)
                             .notebookEditToolCount(0L)
                             .pluginsUsedCount(0L)
                             .sessionsWithFileEditsCount(0L)
+                            .skillsUsedCount(0L)
                             .writeToolCount(0L)
                             .build()
                     )
@@ -324,6 +325,7 @@ internal class UserListPageResponseTest {
                             .messageCount(0L)
                             .build()
                     )
+                    .distinctUserCount(0L)
                     .officeMetrics(
                         BetaAnalyticsOfficeMetrics.builder()
                             .excel(
@@ -377,9 +379,12 @@ internal class UserListPageResponseTest {
                             .skillsUsedCount(0L)
                             .build()
                     )
+                    .user(
+                        BetaAnalyticsUser.builder().id("id").emailAddress("email_address").build()
+                    )
                     .webSearchCount(0L)
                     .chatCoworkUnifiedMetrics(
-                        BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
+                        BetaAnalyticsChatCoworkUnifiedMetrics.builder()
                             .chat(
                                 BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                     .connectorsUsedCount(0L)
@@ -419,13 +424,9 @@ internal class UserListPageResponseTest {
                             )
                             .build()
                     )
-                    .distinctUserCount(0L)
                     .lastActivityDate(LocalDate.parse("2019-12-27"))
                     .rbacGroupId("rbac_group_id")
                     .rbacGroupName("rbac_group_name")
-                    .user(
-                        BetaAnalyticsUser.builder().id("id").emailAddress("email_address").build()
-                    )
                     .build()
             )
         assertThat(userListPageResponse.nextPage()).contains("next_page")
@@ -507,17 +508,17 @@ internal class UserListPageResponseTest {
                                 .connectorsUsedCount(0L)
                                 .dispatchTurnCount(0L)
                                 .distinctConnectorsUsedCount(0L)
+                                .distinctPluginsUsedCount(0L)
                                 .distinctSessionCount(0L)
                                 .distinctSkillsUsedCount(0L)
-                                .messageCount(0L)
-                                .skillsUsedCount(0L)
-                                .distinctPluginsUsedCount(0L)
                                 .editToolCount(0L)
                                 .fileEditCount(0L)
+                                .messageCount(0L)
                                 .multiEditToolCount(0L)
                                 .notebookEditToolCount(0L)
                                 .pluginsUsedCount(0L)
                                 .sessionsWithFileEditsCount(0L)
+                                .skillsUsedCount(0L)
                                 .writeToolCount(0L)
                                 .build()
                         )
@@ -529,6 +530,7 @@ internal class UserListPageResponseTest {
                                 .messageCount(0L)
                                 .build()
                         )
+                        .distinctUserCount(0L)
                         .officeMetrics(
                             BetaAnalyticsOfficeMetrics.builder()
                                 .excel(
@@ -582,9 +584,15 @@ internal class UserListPageResponseTest {
                                 .skillsUsedCount(0L)
                                 .build()
                         )
+                        .user(
+                            BetaAnalyticsUser.builder()
+                                .id("id")
+                                .emailAddress("email_address")
+                                .build()
+                        )
                         .webSearchCount(0L)
                         .chatCoworkUnifiedMetrics(
-                            BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
+                            BetaAnalyticsChatCoworkUnifiedMetrics.builder()
                                 .chat(
                                     BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                         .connectorsUsedCount(0L)
@@ -624,16 +632,9 @@ internal class UserListPageResponseTest {
                                 )
                                 .build()
                         )
-                        .distinctUserCount(0L)
                         .lastActivityDate(LocalDate.parse("2019-12-27"))
                         .rbacGroupId("rbac_group_id")
                         .rbacGroupName("rbac_group_name")
-                        .user(
-                            BetaAnalyticsUser.builder()
-                                .id("id")
-                                .emailAddress("email_address")
-                                .build()
-                        )
                         .build()
                 )
                 .nextPage("next_page")

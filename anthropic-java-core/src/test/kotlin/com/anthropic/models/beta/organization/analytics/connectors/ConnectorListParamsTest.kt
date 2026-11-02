@@ -1,6 +1,8 @@
 package com.anthropic.models.beta.organization.analytics.connectors
 
 import com.anthropic.core.http.QueryParams
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorGroupBy
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsOrder
 import java.time.LocalDate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,9 +15,9 @@ internal class ConnectorListParamsTest {
             .date(LocalDate.parse("2019-12-27"))
             .endingDate(LocalDate.parse("2019-12-27"))
             .addFilter("string")
-            .addGroupBy(ConnectorListParams.GroupBy.PRODUCT)
+            .addGroupBy(BetaAnalyticsConnectorGroupBy.PRODUCT)
             .limit(1L)
-            .order(ConnectorListParams.Order.ASC)
+            .order(BetaAnalyticsOrder.ASC)
             .orderBy("order_by")
             .page("page")
             .startingDate(LocalDate.parse("2019-12-27"))
@@ -29,9 +31,9 @@ internal class ConnectorListParamsTest {
                 .date(LocalDate.parse("2019-12-27"))
                 .endingDate(LocalDate.parse("2019-12-27"))
                 .addFilter("string")
-                .addGroupBy(ConnectorListParams.GroupBy.PRODUCT)
+                .addGroupBy(BetaAnalyticsConnectorGroupBy.PRODUCT)
                 .limit(1L)
-                .order(ConnectorListParams.Order.ASC)
+                .order(BetaAnalyticsOrder.ASC)
                 .orderBy("order_by")
                 .page("page")
                 .startingDate(LocalDate.parse("2019-12-27"))

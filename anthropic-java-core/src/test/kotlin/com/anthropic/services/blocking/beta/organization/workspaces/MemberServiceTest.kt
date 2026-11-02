@@ -77,7 +77,7 @@ internal class MemberServiceTest {
             memberService.add(
                 MemberAddParams.builder()
                     .workspaceId("workspace_id")
-                    .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                    .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                     .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                     .build()
             )

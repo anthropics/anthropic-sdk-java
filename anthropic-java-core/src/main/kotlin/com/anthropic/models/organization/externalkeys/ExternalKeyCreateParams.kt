@@ -64,6 +64,17 @@ private constructor(
     fun geo(): Optional<Geo> = body.geo()
 
     /**
+     * ID of a user profile to bind the key to. Omit this field for a key that isn't bound to a user
+     * profile. Such a key can be attached to a Workspace whatever its user profile. The binding
+     * cannot be changed later. A key bound to a user profile can only be attached to a Workspace
+     * that has the same user profile.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun userProfileId(): Optional<String> = body.userProfileId()
+
+    /**
      * Returns the raw JSON value of [providerConfig].
      *
      * Unlike [providerConfig], this method doesn't throw if the JSON field has an unexpected type.
@@ -83,6 +94,13 @@ private constructor(
      * Unlike [geo], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _geo(): JsonField<Geo> = body._geo()
+
+    /**
+     * Returns the raw JSON value of [userProfileId].
+     *
+     * Unlike [userProfileId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _userProfileId(): JsonField<String> = body._userProfileId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -129,6 +147,7 @@ private constructor(
          * - [providerConfig]
          * - [displayName]
          * - [geo]
+         * - [userProfileId]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -204,6 +223,29 @@ private constructor(
          * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun geo(geo: JsonField<Geo>) = apply { body.geo(geo) }
+
+        /**
+         * ID of a user profile to bind the key to. Omit this field for a key that isn't bound to a
+         * user profile. Such a key can be attached to a Workspace whatever its user profile. The
+         * binding cannot be changed later. A key bound to a user profile can only be attached to a
+         * Workspace that has the same user profile.
+         */
+        fun userProfileId(userProfileId: String?) = apply { body.userProfileId(userProfileId) }
+
+        /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
+        fun userProfileId(userProfileId: Optional<String>) =
+            userProfileId(userProfileId.getOrNull())
+
+        /**
+         * Sets [Builder.userProfileId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.userProfileId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun userProfileId(userProfileId: JsonField<String>) = apply {
+            body.userProfileId(userProfileId)
+        }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -360,6 +402,7 @@ private constructor(
         private val providerConfig: JsonField<ProviderConfig>,
         private val displayName: JsonField<String>,
         private val geo: JsonField<Geo>,
+        private val userProfileId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -372,7 +415,10 @@ private constructor(
             @ExcludeMissing
             displayName: JsonField<String> = JsonMissing.of(),
             @JsonProperty("geo") @ExcludeMissing geo: JsonField<Geo> = JsonMissing.of(),
-        ) : this(providerConfig, displayName, geo, mutableMapOf())
+            @JsonProperty("user_profile_id")
+            @ExcludeMissing
+            userProfileId: JsonField<String> = JsonMissing.of(),
+        ) : this(providerConfig, displayName, geo, userProfileId, mutableMapOf())
 
         /**
          * KMS provider identity and auth coordinates.
@@ -399,6 +445,17 @@ private constructor(
         fun geo(): Optional<Geo> = geo.getOptional("geo")
 
         /**
+         * ID of a user profile to bind the key to. Omit this field for a key that isn't bound to a
+         * user profile. Such a key can be attached to a Workspace whatever its user profile. The
+         * binding cannot be changed later. A key bound to a user profile can only be attached to a
+         * Workspace that has the same user profile.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun userProfileId(): Optional<String> = userProfileId.getOptional("user_profile_id")
+
+        /**
          * Returns the raw JSON value of [providerConfig].
          *
          * Unlike [providerConfig], this method doesn't throw if the JSON field has an unexpected
@@ -423,6 +480,16 @@ private constructor(
          * Unlike [geo], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("geo") @ExcludeMissing fun _geo(): JsonField<Geo> = geo
+
+        /**
+         * Returns the raw JSON value of [userProfileId].
+         *
+         * Unlike [userProfileId], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("user_profile_id")
+        @ExcludeMissing
+        fun _userProfileId(): JsonField<String> = userProfileId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -473,6 +540,7 @@ private constructor(
             private var providerConfig: JsonField<ProviderConfig>? = null
             private var displayName: JsonField<String> = JsonMissing.of()
             private var geo: JsonField<Geo> = JsonMissing.of()
+            private var userProfileId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -480,6 +548,7 @@ private constructor(
                 providerConfig = body.providerConfig
                 displayName = body.displayName
                 geo = body.geo
+                userProfileId = body.userProfileId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -561,6 +630,30 @@ private constructor(
              */
             fun geo(geo: JsonField<Geo>) = apply { this.geo = geo }
 
+            /**
+             * ID of a user profile to bind the key to. Omit this field for a key that isn't bound
+             * to a user profile. Such a key can be attached to a Workspace whatever its user
+             * profile. The binding cannot be changed later. A key bound to a user profile can only
+             * be attached to a Workspace that has the same user profile.
+             */
+            fun userProfileId(userProfileId: String?) =
+                userProfileId(JsonField.ofNullable(userProfileId))
+
+            /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
+            fun userProfileId(userProfileId: Optional<String>) =
+                userProfileId(userProfileId.getOrNull())
+
+            /**
+             * Sets [Builder.userProfileId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.userProfileId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun userProfileId(userProfileId: JsonField<String>) = apply {
+                this.userProfileId = userProfileId
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -597,6 +690,7 @@ private constructor(
                     checkRequired("providerConfig", providerConfig),
                     displayName,
                     geo,
+                    userProfileId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -620,6 +714,7 @@ private constructor(
             providerConfig().validate()
             displayName()
             geo().ifPresent { it.validate() }
+            userProfileId()
             validated = true
         }
 
@@ -641,7 +736,8 @@ private constructor(
         internal fun validity(): Int =
             (providerConfig.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (displayName.asKnown().isPresent) 1 else 0) +
-                (geo.asKnown().getOrNull()?.validity() ?: 0)
+                (geo.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (userProfileId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -652,17 +748,18 @@ private constructor(
                 providerConfig == other.providerConfig &&
                 displayName == other.displayName &&
                 geo == other.geo &&
+                userProfileId == other.userProfileId &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(providerConfig, displayName, geo, additionalProperties)
+            Objects.hash(providerConfig, displayName, geo, userProfileId, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{providerConfig=$providerConfig, displayName=$displayName, geo=$geo, additionalProperties=$additionalProperties}"
+            "Body{providerConfig=$providerConfig, displayName=$displayName, geo=$geo, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
     }
 
     /** KMS provider identity and auth coordinates. */

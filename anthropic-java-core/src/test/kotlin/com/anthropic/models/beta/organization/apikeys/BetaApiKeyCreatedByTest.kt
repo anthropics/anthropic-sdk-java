@@ -11,11 +11,11 @@ internal class BetaApiKeyCreatedByTest {
     fun create() {
         val betaApiKeyCreatedBy =
             BetaApiKeyCreatedBy.builder()
-                .id("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .id("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .type(BetaApiKeyCreatedBy.Type.USER)
                 .build()
 
-        assertThat(betaApiKeyCreatedBy.id()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(betaApiKeyCreatedBy.id()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
         assertThat(betaApiKeyCreatedBy.type()).isEqualTo(BetaApiKeyCreatedBy.Type.USER)
     }
 
@@ -24,7 +24,7 @@ internal class BetaApiKeyCreatedByTest {
         val jsonMapper = jsonMapper()
         val betaApiKeyCreatedBy =
             BetaApiKeyCreatedBy.builder()
-                .id("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .id("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .type(BetaApiKeyCreatedBy.Type.USER)
                 .build()
 

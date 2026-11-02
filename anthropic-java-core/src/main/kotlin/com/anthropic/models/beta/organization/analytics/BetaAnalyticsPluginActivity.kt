@@ -31,9 +31,9 @@ private constructor(
     private val distinctUserCount: JsonField<Long>,
     private val installCount: JsonField<Long>,
     private val invocationCount: JsonField<Long>,
-    private val pluginName: JsonField<String>,
-    private val chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>,
     private val pluginId: JsonField<String>,
+    private val pluginName: JsonField<String>,
+    private val chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsPluginChatCoworkUnifiedMetrics>,
     private val product: JsonField<String>,
     private val rbacGroupId: JsonField<String>,
     private val rbacGroupName: JsonField<String>,
@@ -58,13 +58,14 @@ private constructor(
         @JsonProperty("invocation_count")
         @ExcludeMissing
         invocationCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("plugin_id") @ExcludeMissing pluginId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("plugin_name")
         @ExcludeMissing
         pluginName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("chat_cowork_unified_metrics")
         @ExcludeMissing
-        chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of(),
-        @JsonProperty("plugin_id") @ExcludeMissing pluginId: JsonField<String> = JsonMissing.of(),
+        chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsPluginChatCoworkUnifiedMetrics> =
+            JsonMissing.of(),
         @JsonProperty("product") @ExcludeMissing product: JsonField<String> = JsonMissing.of(),
         @JsonProperty("rbac_group_id")
         @ExcludeMissing
@@ -79,9 +80,9 @@ private constructor(
         distinctUserCount,
         installCount,
         invocationCount,
+        pluginId,
         pluginName,
         chatCoworkUnifiedMetrics,
-        pluginId,
         product,
         rbacGroupId,
         rbacGroupName,
@@ -137,6 +138,16 @@ private constructor(
     fun invocationCount(): Long = invocationCount.getRequired("invocation_count")
 
     /**
+     * Stable plugin identifier when available (e.g. `serena@claude-plugins-official`). Null for
+     * third-party Claude Code plugins (redacted at the source) and Cowork slash commands that carry
+     * only a hashed id.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun pluginId(): Optional<String> = pluginId.getOptional("plugin_id")
+
+    /**
      * Name of the plugin
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -152,18 +163,8 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun chatCoworkUnifiedMetrics(): Optional<ChatCoworkUnifiedMetrics> =
+    fun chatCoworkUnifiedMetrics(): Optional<BetaAnalyticsPluginChatCoworkUnifiedMetrics> =
         chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
-
-    /**
-     * Stable plugin identifier when available (e.g. `serena@claude-plugins-official`). Null for
-     * third-party Claude Code plugins (redacted at the source) and Cowork slash commands that carry
-     * only a hashed id.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun pluginId(): Optional<String> = pluginId.getOptional("plugin_id")
 
     /**
      * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
@@ -256,6 +257,13 @@ private constructor(
     fun _invocationCount(): JsonField<Long> = invocationCount
 
     /**
+     * Returns the raw JSON value of [pluginId].
+     *
+     * Unlike [pluginId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("plugin_id") @ExcludeMissing fun _pluginId(): JsonField<String> = pluginId
+
+    /**
      * Returns the raw JSON value of [pluginName].
      *
      * Unlike [pluginName], this method doesn't throw if the JSON field has an unexpected type.
@@ -270,14 +278,8 @@ private constructor(
      */
     @JsonProperty("chat_cowork_unified_metrics")
     @ExcludeMissing
-    fun _chatCoworkUnifiedMetrics(): JsonField<ChatCoworkUnifiedMetrics> = chatCoworkUnifiedMetrics
-
-    /**
-     * Returns the raw JSON value of [pluginId].
-     *
-     * Unlike [pluginId], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("plugin_id") @ExcludeMissing fun _pluginId(): JsonField<String> = pluginId
+    fun _chatCoworkUnifiedMetrics(): JsonField<BetaAnalyticsPluginChatCoworkUnifiedMetrics> =
+        chatCoworkUnifiedMetrics
 
     /**
      * Returns the raw JSON value of [product].
@@ -335,6 +337,7 @@ private constructor(
          * .distinctUserCount()
          * .installCount()
          * .invocationCount()
+         * .pluginId()
          * .pluginName()
          * ```
          */
@@ -349,9 +352,11 @@ private constructor(
         private var distinctUserCount: JsonField<Long>? = null
         private var installCount: JsonField<Long>? = null
         private var invocationCount: JsonField<Long>? = null
+        private var pluginId: JsonField<String>? = null
         private var pluginName: JsonField<String>? = null
-        private var chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of()
-        private var pluginId: JsonField<String> = JsonMissing.of()
+        private var chatCoworkUnifiedMetrics:
+            JsonField<BetaAnalyticsPluginChatCoworkUnifiedMetrics> =
+            JsonMissing.of()
         private var product: JsonField<String> = JsonMissing.of()
         private var rbacGroupId: JsonField<String> = JsonMissing.of()
         private var rbacGroupName: JsonField<String> = JsonMissing.of()
@@ -365,9 +370,9 @@ private constructor(
             distinctUserCount = betaAnalyticsPluginActivity.distinctUserCount
             installCount = betaAnalyticsPluginActivity.installCount
             invocationCount = betaAnalyticsPluginActivity.invocationCount
+            pluginId = betaAnalyticsPluginActivity.pluginId
             pluginName = betaAnalyticsPluginActivity.pluginName
             chatCoworkUnifiedMetrics = betaAnalyticsPluginActivity.chatCoworkUnifiedMetrics
-            pluginId = betaAnalyticsPluginActivity.pluginId
             product = betaAnalyticsPluginActivity.product
             rbacGroupId = betaAnalyticsPluginActivity.rbacGroupId
             rbacGroupName = betaAnalyticsPluginActivity.rbacGroupName
@@ -466,6 +471,24 @@ private constructor(
             this.invocationCount = invocationCount
         }
 
+        /**
+         * Stable plugin identifier when available (e.g. `serena@claude-plugins-official`). Null for
+         * third-party Claude Code plugins (redacted at the source) and Cowork slash commands that
+         * carry only a hashed id.
+         */
+        fun pluginId(pluginId: String?) = pluginId(JsonField.ofNullable(pluginId))
+
+        /** Alias for calling [Builder.pluginId] with `pluginId.orElse(null)`. */
+        fun pluginId(pluginId: Optional<String>) = pluginId(pluginId.getOrNull())
+
+        /**
+         * Sets [Builder.pluginId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.pluginId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun pluginId(pluginId: JsonField<String>) = apply { this.pluginId = pluginId }
+
         /** Name of the plugin */
         fun pluginName(pluginName: String) = pluginName(JsonField.of(pluginName))
 
@@ -484,44 +507,28 @@ private constructor(
          * computed. Omitted from the response on deployments that do not offer Chat and Cowork
          * unified.
          */
-        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics?) =
-            chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: BetaAnalyticsPluginChatCoworkUnifiedMetrics?
+        ) = chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
 
         /**
          * Alias for calling [Builder.chatCoworkUnifiedMetrics] with
          * `chatCoworkUnifiedMetrics.orElse(null)`.
          */
-        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: Optional<ChatCoworkUnifiedMetrics>) =
-            chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: Optional<BetaAnalyticsPluginChatCoworkUnifiedMetrics>
+        ) = chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
 
         /**
          * Sets [Builder.chatCoworkUnifiedMetrics] to an arbitrary JSON value.
          *
          * You should usually call [Builder.chatCoworkUnifiedMetrics] with a well-typed
-         * [ChatCoworkUnifiedMetrics] value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
+         * [BetaAnalyticsPluginChatCoworkUnifiedMetrics] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
          */
         fun chatCoworkUnifiedMetrics(
-            chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>
+            chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsPluginChatCoworkUnifiedMetrics>
         ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
-
-        /**
-         * Stable plugin identifier when available (e.g. `serena@claude-plugins-official`). Null for
-         * third-party Claude Code plugins (redacted at the source) and Cowork slash commands that
-         * carry only a hashed id.
-         */
-        fun pluginId(pluginId: String?) = pluginId(JsonField.ofNullable(pluginId))
-
-        /** Alias for calling [Builder.pluginId] with `pluginId.orElse(null)`. */
-        fun pluginId(pluginId: Optional<String>) = pluginId(pluginId.getOrNull())
-
-        /**
-         * Sets [Builder.pluginId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.pluginId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun pluginId(pluginId: JsonField<String>) = apply { this.pluginId = pluginId }
 
         /**
          * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
@@ -636,6 +643,7 @@ private constructor(
          * .distinctUserCount()
          * .installCount()
          * .invocationCount()
+         * .pluginId()
          * .pluginName()
          * ```
          *
@@ -648,9 +656,9 @@ private constructor(
                 checkRequired("distinctUserCount", distinctUserCount),
                 checkRequired("installCount", installCount),
                 checkRequired("invocationCount", invocationCount),
+                checkRequired("pluginId", pluginId),
                 checkRequired("pluginName", pluginName),
                 chatCoworkUnifiedMetrics,
-                pluginId,
                 product,
                 rbacGroupId,
                 rbacGroupName,
@@ -679,9 +687,9 @@ private constructor(
         distinctUserCount()
         installCount()
         invocationCount()
+        pluginId()
         pluginName()
         chatCoworkUnifiedMetrics().ifPresent { it.validate() }
-        pluginId()
         product()
         rbacGroupId()
         rbacGroupName()
@@ -709,244 +717,13 @@ private constructor(
             (if (distinctUserCount.asKnown().isPresent) 1 else 0) +
             (if (installCount.asKnown().isPresent) 1 else 0) +
             (if (invocationCount.asKnown().isPresent) 1 else 0) +
+            (if (pluginId.asKnown().isPresent) 1 else 0) +
             (if (pluginName.asKnown().isPresent) 1 else 0) +
             (chatCoworkUnifiedMetrics.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (pluginId.asKnown().isPresent) 1 else 0) +
             (if (product.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupName.asKnown().isPresent) 1 else 0) +
             (if (userId.asKnown().isPresent) 1 else 0)
-
-    /**
-     * Plugin use recorded while members had Chat and Cowork unified (Cowork's features inside
-     * claude.ai chat) turned on. A count is null in date-range mode where it cannot be computed.
-     * Omitted from the response on deployments that do not offer Chat and Cowork unified.
-     */
-    class ChatCoworkUnifiedMetrics
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val distinctSessionPluginUsedCount: JsonField<Long>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("distinct_session_plugin_used_count")
-            @ExcludeMissing
-            distinctSessionPluginUsedCount: JsonField<Long> = JsonMissing.of()
-        ) : this(distinctSessionPluginUsedCount, mutableMapOf())
-
-        /**
-         * Same measure as `cowork_metrics.distinct_session_plugin_used_count`, for activity
-         * recorded while members had Chat and Cowork unified turned on. Null on aggregated rows
-         * where a distinct count cannot be computed.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun distinctSessionPluginUsedCount(): Optional<Long> =
-            distinctSessionPluginUsedCount.getOptional("distinct_session_plugin_used_count")
-
-        /**
-         * Returns the raw JSON value of [distinctSessionPluginUsedCount].
-         *
-         * Unlike [distinctSessionPluginUsedCount], this method doesn't throw if the JSON field has
-         * an unexpected type.
-         */
-        @JsonProperty("distinct_session_plugin_used_count")
-        @ExcludeMissing
-        fun _distinctSessionPluginUsedCount(): JsonField<Long> = distinctSessionPluginUsedCount
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [ChatCoworkUnifiedMetrics].
-             *
-             * The following fields are required:
-             * ```java
-             * .distinctSessionPluginUsedCount()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-
-            /**
-             * Returns an immutable instance of [ChatCoworkUnifiedMetrics] with the required
-             * [distinctSessionPluginUsedCount] set to the given value.
-             */
-            @JvmStatic
-            fun of(distinctSessionPluginUsedCount: Long?) =
-                builder().distinctSessionPluginUsedCount(distinctSessionPluginUsedCount).build()
-
-            /**
-             * Alias for [of].
-             *
-             * This unboxed primitive overload exists for backwards compatibility.
-             */
-            @JvmStatic
-            fun of(distinctSessionPluginUsedCount: Long) =
-                of(distinctSessionPluginUsedCount as Long?)
-
-            /** Alias for calling [of] with `distinctSessionPluginUsedCount.orElse(null)`. */
-            @JvmStatic
-            fun of(distinctSessionPluginUsedCount: Optional<Long>) =
-                of(distinctSessionPluginUsedCount.getOrNull())
-        }
-
-        /** A builder for [ChatCoworkUnifiedMetrics]. */
-        class Builder internal constructor() {
-
-            private var distinctSessionPluginUsedCount: JsonField<Long>? = null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics) = apply {
-                distinctSessionPluginUsedCount =
-                    chatCoworkUnifiedMetrics.distinctSessionPluginUsedCount
-                additionalProperties = chatCoworkUnifiedMetrics.additionalProperties.toMutableMap()
-            }
-
-            /**
-             * Same measure as `cowork_metrics.distinct_session_plugin_used_count`, for activity
-             * recorded while members had Chat and Cowork unified turned on. Null on aggregated rows
-             * where a distinct count cannot be computed.
-             */
-            fun distinctSessionPluginUsedCount(distinctSessionPluginUsedCount: Long?) =
-                distinctSessionPluginUsedCount(JsonField.ofNullable(distinctSessionPluginUsedCount))
-
-            /**
-             * Alias for [Builder.distinctSessionPluginUsedCount].
-             *
-             * This unboxed primitive overload exists for backwards compatibility.
-             */
-            fun distinctSessionPluginUsedCount(distinctSessionPluginUsedCount: Long) =
-                distinctSessionPluginUsedCount(distinctSessionPluginUsedCount as Long?)
-
-            /**
-             * Alias for calling [Builder.distinctSessionPluginUsedCount] with
-             * `distinctSessionPluginUsedCount.orElse(null)`.
-             */
-            fun distinctSessionPluginUsedCount(distinctSessionPluginUsedCount: Optional<Long>) =
-                distinctSessionPluginUsedCount(distinctSessionPluginUsedCount.getOrNull())
-
-            /**
-             * Sets [Builder.distinctSessionPluginUsedCount] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.distinctSessionPluginUsedCount] with a well-typed
-             * [Long] value instead. This method is primarily for setting the field to an
-             * undocumented or not yet supported value.
-             */
-            fun distinctSessionPluginUsedCount(distinctSessionPluginUsedCount: JsonField<Long>) =
-                apply {
-                    this.distinctSessionPluginUsedCount = distinctSessionPluginUsedCount
-                }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [ChatCoworkUnifiedMetrics].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .distinctSessionPluginUsedCount()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): ChatCoworkUnifiedMetrics =
-                ChatCoworkUnifiedMetrics(
-                    checkRequired("distinctSessionPluginUsedCount", distinctSessionPluginUsedCount),
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): ChatCoworkUnifiedMetrics = apply {
-            if (validated) {
-                return@apply
-            }
-
-            distinctSessionPluginUsedCount()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (if (distinctSessionPluginUsedCount.asKnown().isPresent) 1 else 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is ChatCoworkUnifiedMetrics &&
-                distinctSessionPluginUsedCount == other.distinctSessionPluginUsedCount &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy {
-            Objects.hash(distinctSessionPluginUsedCount, additionalProperties)
-        }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "ChatCoworkUnifiedMetrics{distinctSessionPluginUsedCount=$distinctSessionPluginUsedCount, additionalProperties=$additionalProperties}"
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -959,9 +736,9 @@ private constructor(
             distinctUserCount == other.distinctUserCount &&
             installCount == other.installCount &&
             invocationCount == other.invocationCount &&
+            pluginId == other.pluginId &&
             pluginName == other.pluginName &&
             chatCoworkUnifiedMetrics == other.chatCoworkUnifiedMetrics &&
-            pluginId == other.pluginId &&
             product == other.product &&
             rbacGroupId == other.rbacGroupId &&
             rbacGroupName == other.rbacGroupName &&
@@ -976,9 +753,9 @@ private constructor(
             distinctUserCount,
             installCount,
             invocationCount,
+            pluginId,
             pluginName,
             chatCoworkUnifiedMetrics,
-            pluginId,
             product,
             rbacGroupId,
             rbacGroupName,
@@ -990,5 +767,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsPluginActivity{claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, distinctUserCount=$distinctUserCount, installCount=$installCount, invocationCount=$invocationCount, pluginName=$pluginName, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, pluginId=$pluginId, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, userId=$userId, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsPluginActivity{claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, distinctUserCount=$distinctUserCount, installCount=$installCount, invocationCount=$invocationCount, pluginId=$pluginId, pluginName=$pluginName, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, userId=$userId, additionalProperties=$additionalProperties}"
 }

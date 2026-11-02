@@ -80,7 +80,7 @@ private constructor(
      * In the object form, `speed` can only be `standard`.
      *
      * The
-     * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+     * [Availability section of the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#feature-availability)
      * lists the supported models.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -284,7 +284,7 @@ private constructor(
          * In the object form, `speed` can only be `standard`.
          *
          * The
-         * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+         * [Availability section of the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#feature-availability)
          * lists the supported models.
          */
         fun model(model: Model) = apply { body.model(model) }
@@ -580,7 +580,7 @@ private constructor(
          * In the object form, `speed` can only be `standard`.
          *
          * The
-         * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+         * [Availability section of the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#feature-availability)
          * lists the supported models.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -757,7 +757,7 @@ private constructor(
              * In the object form, `speed` can only be `standard`.
              *
              * The
-             * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+             * [Availability section of the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#feature-availability)
              * lists the supported models.
              */
             fun model(model: Model) = model(JsonField.of(model))
@@ -966,7 +966,7 @@ private constructor(
      * In the object form, `speed` can only be `standard`.
      *
      * The
-     * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+     * [Availability section of the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#feature-availability)
      * lists the supported models.
      */
     @JsonDeserialize(using = Model.Deserializer::class)

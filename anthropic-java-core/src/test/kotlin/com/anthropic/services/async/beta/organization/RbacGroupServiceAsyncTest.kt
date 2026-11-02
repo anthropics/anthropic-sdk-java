@@ -84,9 +84,9 @@ internal class RbacGroupServiceAsyncTest {
                 it.putQueryParam("beta", "true")
             }
 
-        val rbacGroupFuture = rbacGroupServiceAsync.delete("rbac_group_id")
+        val betaDeletedRbacGroupFuture = rbacGroupServiceAsync.delete("rbac_group_id")
 
-        val rbacGroup = rbacGroupFuture.get()
-        rbacGroup.validate()
+        val betaDeletedRbacGroup = betaDeletedRbacGroupFuture.get()
+        betaDeletedRbacGroup.validate()
     }
 }

@@ -5,13 +5,17 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.organization.OrganizationInfo
 import com.anthropic.models.organization.OrganizationRetrieveParams
+import com.anthropic.services.async.organization.AnalyticsServiceAsync
 import com.anthropic.services.async.organization.ApiKeyServiceAsync
 import com.anthropic.services.async.organization.ComplianceSettingServiceAsync
 import com.anthropic.services.async.organization.ExternalKeyServiceAsync
 import com.anthropic.services.async.organization.FederationServiceAsync
 import com.anthropic.services.async.organization.InviteServiceAsync
 import com.anthropic.services.async.organization.RateLimitServiceAsync
+import com.anthropic.services.async.organization.RbacGroupServiceAsync
+import com.anthropic.services.async.organization.RbacRoleServiceAsync
 import com.anthropic.services.async.organization.ServiceAccountServiceAsync
+import com.anthropic.services.async.organization.SpendLimitServiceAsync
 import com.anthropic.services.async.organization.UserServiceAsync
 import com.anthropic.services.async.organization.WorkspaceServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -48,6 +52,14 @@ interface OrganizationServiceAsync {
     fun rateLimits(): RateLimitServiceAsync
 
     fun complianceSettings(): ComplianceSettingServiceAsync
+
+    fun analytics(): AnalyticsServiceAsync
+
+    fun spendLimits(): SpendLimitServiceAsync
+
+    fun rbacGroups(): RbacGroupServiceAsync
+
+    fun rbacRoles(): RbacRoleServiceAsync
 
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): CompletableFuture<OrganizationInfo> =
@@ -100,6 +112,14 @@ interface OrganizationServiceAsync {
         fun rateLimits(): RateLimitServiceAsync.WithRawResponse
 
         fun complianceSettings(): ComplianceSettingServiceAsync.WithRawResponse
+
+        fun analytics(): AnalyticsServiceAsync.WithRawResponse
+
+        fun spendLimits(): SpendLimitServiceAsync.WithRawResponse
+
+        fun rbacGroups(): RbacGroupServiceAsync.WithRawResponse
+
+        fun rbacRoles(): RbacRoleServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/me`, but is otherwise the same as

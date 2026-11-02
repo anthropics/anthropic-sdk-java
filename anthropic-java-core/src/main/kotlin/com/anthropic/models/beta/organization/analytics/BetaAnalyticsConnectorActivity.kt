@@ -21,21 +21,21 @@ class BetaAnalyticsConnectorActivity
 private constructor(
     private val chatMetrics: JsonField<BetaAnalyticsConnectorChatMetrics>,
     private val claudeCodeMetrics: JsonField<BetaAnalyticsConnectorClaudeCodeMetrics>,
+    private val connectorDisplayName: JsonField<String>,
     private val connectorName: JsonField<String>,
     private val coworkMetrics: JsonField<BetaAnalyticsConnectorCoworkMetrics>,
     private val distinctUserCount: JsonField<Long>,
-    private val officeMetrics: JsonField<BetaAnalyticsConnectorOfficeMetrics>,
-    private val chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>,
-    private val connectorDisplayName: JsonField<String>,
     private val individualAuthDistinctUserCount: JsonField<Long>,
     private val managedAuthDistinctUserCount: JsonField<Long>,
+    private val officeMetrics: JsonField<BetaAnalyticsConnectorOfficeMetrics>,
+    private val readCallCount: JsonField<Long>,
+    private val unclassifiedCallCount: JsonField<Long>,
+    private val writeCallCount: JsonField<Long>,
+    private val chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedMetrics>,
     private val product: JsonField<String>,
     private val rbacGroupId: JsonField<String>,
     private val rbacGroupName: JsonField<String>,
-    private val readCallCount: JsonField<Long>,
-    private val unclassifiedCallCount: JsonField<Long>,
     private val userId: JsonField<String>,
-    private val writeCallCount: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -47,6 +47,9 @@ private constructor(
         @JsonProperty("claude_code_metrics")
         @ExcludeMissing
         claudeCodeMetrics: JsonField<BetaAnalyticsConnectorClaudeCodeMetrics> = JsonMissing.of(),
+        @JsonProperty("connector_display_name")
+        @ExcludeMissing
+        connectorDisplayName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("connector_name")
         @ExcludeMissing
         connectorName: JsonField<String> = JsonMissing.of(),
@@ -56,21 +59,28 @@ private constructor(
         @JsonProperty("distinct_user_count")
         @ExcludeMissing
         distinctUserCount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("office_metrics")
-        @ExcludeMissing
-        officeMetrics: JsonField<BetaAnalyticsConnectorOfficeMetrics> = JsonMissing.of(),
-        @JsonProperty("chat_cowork_unified_metrics")
-        @ExcludeMissing
-        chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of(),
-        @JsonProperty("connector_display_name")
-        @ExcludeMissing
-        connectorDisplayName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("individual_auth_distinct_user_count")
         @ExcludeMissing
         individualAuthDistinctUserCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("managed_auth_distinct_user_count")
         @ExcludeMissing
         managedAuthDistinctUserCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("office_metrics")
+        @ExcludeMissing
+        officeMetrics: JsonField<BetaAnalyticsConnectorOfficeMetrics> = JsonMissing.of(),
+        @JsonProperty("read_call_count")
+        @ExcludeMissing
+        readCallCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("unclassified_call_count")
+        @ExcludeMissing
+        unclassifiedCallCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("write_call_count")
+        @ExcludeMissing
+        writeCallCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("chat_cowork_unified_metrics")
+        @ExcludeMissing
+        chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedMetrics> =
+            JsonMissing.of(),
         @JsonProperty("product") @ExcludeMissing product: JsonField<String> = JsonMissing.of(),
         @JsonProperty("rbac_group_id")
         @ExcludeMissing
@@ -78,34 +88,25 @@ private constructor(
         @JsonProperty("rbac_group_name")
         @ExcludeMissing
         rbacGroupName: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("read_call_count")
-        @ExcludeMissing
-        readCallCount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("unclassified_call_count")
-        @ExcludeMissing
-        unclassifiedCallCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("write_call_count")
-        @ExcludeMissing
-        writeCallCount: JsonField<Long> = JsonMissing.of(),
     ) : this(
         chatMetrics,
         claudeCodeMetrics,
+        connectorDisplayName,
         connectorName,
         coworkMetrics,
         distinctUserCount,
-        officeMetrics,
-        chatCoworkUnifiedMetrics,
-        connectorDisplayName,
         individualAuthDistinctUserCount,
         managedAuthDistinctUserCount,
+        officeMetrics,
+        readCallCount,
+        unclassifiedCallCount,
+        writeCallCount,
+        chatCoworkUnifiedMetrics,
         product,
         rbacGroupId,
         rbacGroupName,
-        readCallCount,
-        unclassifiedCallCount,
         userId,
-        writeCallCount,
         mutableMapOf(),
     )
 
@@ -125,6 +126,22 @@ private constructor(
      */
     fun claudeCodeMetrics(): BetaAnalyticsConnectorClaudeCodeMetrics =
         claudeCodeMetrics.getRequired("claude_code_metrics")
+
+    /**
+     * Human-readable display name for rows whose `connector_name` is an opaque connector id rather
+     * than a readable name, resolved at request time from the organization's connectors (including
+     * connectors that have since been removed). `connector_name` remains the row's stable key for
+     * sorting and pagination, and `filter[]=connector_name:{value}` also matches these rows by
+     * display name. Display names are not unique, and the same connector's claude.ai usage can
+     * appear under a separate row with a readable `connector_name`. Null when `connector_name` is
+     * already a readable name, when the id cannot be resolved to one of the organization's
+     * connectors, or when display-name resolution is not enabled for this organization.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun connectorDisplayName(): Optional<String> =
+        connectorDisplayName.getOptional("connector_display_name")
 
     /**
      * Name of the connector. Some rows carry an opaque connector id here instead of a readable
@@ -153,44 +170,6 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun distinctUserCount(): Long = distinctUserCount.getRequired("distinct_user_count")
-
-    /**
-     * Office Agent activity metrics for a single connector on a given day, broken out by Office
-     * product.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun officeMetrics(): BetaAnalyticsConnectorOfficeMetrics =
-        officeMetrics.getRequired("office_metrics")
-
-    /**
-     * Connector use recorded while members had Chat and Cowork unified (Cowork's features inside
-     * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is null
-     * in date-range mode where it cannot be computed. Omitted from the response on deployments that
-     * do not offer Chat and Cowork unified.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun chatCoworkUnifiedMetrics(): Optional<ChatCoworkUnifiedMetrics> =
-        chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
-
-    /**
-     * Human-readable display name for rows whose `connector_name` is an opaque connector id rather
-     * than a readable name, resolved at request time from the organization's connectors (including
-     * connectors that have since been removed). `connector_name` remains the row's stable key for
-     * sorting and pagination, and `filter[]=connector_name:{value}` also matches these rows by
-     * display name. Display names are not unique, and the same connector's claude.ai usage can
-     * appear under a separate row with a readable `connector_name`. Null when `connector_name` is
-     * already a readable name, when the id cannot be resolved to one of the organization's
-     * connectors, or when display-name resolution is not enabled for this organization.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun connectorDisplayName(): Optional<String> =
-        connectorDisplayName.getOptional("connector_display_name")
 
     /**
      * Number of distinct users whose use of this connector on the requested day ran on their own
@@ -230,6 +209,71 @@ private constructor(
         managedAuthDistinctUserCount.getOptional("managed_auth_distinct_user_count")
 
     /**
+     * Office Agent activity metrics for a single connector on a given day, broken out by Office
+     * product.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun officeMetrics(): BetaAnalyticsConnectorOfficeMetrics =
+        officeMetrics.getRequired("office_metrics")
+
+    /**
+     * Number of connector tool calls on the requested day whose trusted read-only annotation marked
+     * them read-only. Call count, not distinct users. Every call recorded on a classified surface
+     * lands in exactly one of `read_call_count`, `write_call_count`, or `unclassified_call_count`,
+     * so the three sum to the day's classified calls. Classification is forward-only per surface:
+     * claude.ai from 2026-06-01, Claude Code from 2026-05-30, Claude in Office from 2026-05-29,
+     * Cowork from 2026-06-02 (Cowork clients predating annotation forwarding land in
+     * `unclassified_call_count`). Null, never 0, when the value cannot be stated: the read/write
+     * split is not enabled for this organization, or the day predates 2026-05-29. For a date-range
+     * total, sum the per-day values, but treat a window that extends before 2026-05-29 as null
+     * rather than summing only its covered days — date-range rollup mode
+     * (`starting_date`/`ending_date`) applies both rules server-side.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun readCallCount(): Optional<Long> = readCallCount.getOptional("read_call_count")
+
+    /**
+     * Number of connector tool calls on the requested day with no trusted read-only annotation —
+     * the annotation is optional in the MCP spec and is discarded when connector access controls
+     * are active, so unclassified calls are common. This field shows how much of the day's
+     * classified activity the read/write split actually covers. Call count, not distinct users. One
+     * of the three call-classification buckets; see `read_call_count` for the per-surface
+     * data-start dates, null conditions, and date-range guidance.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun unclassifiedCallCount(): Optional<Long> =
+        unclassifiedCallCount.getOptional("unclassified_call_count")
+
+    /**
+     * Number of connector tool calls on the requested day whose trusted read-only annotation marked
+     * them not read-only. Call count, not distinct users. One of the three call-classification
+     * buckets; see `read_call_count` for the per-surface data-start dates, null conditions, and
+     * date-range guidance.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun writeCallCount(): Optional<Long> = writeCallCount.getOptional("write_call_count")
+
+    /**
+     * Connector use recorded while members had Chat and Cowork unified (Cowork's features inside
+     * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is null
+     * in date-range mode where it cannot be computed. Omitted from the response on deployments that
+     * do not offer Chat and Cowork unified.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun chatCoworkUnifiedMetrics(): Optional<BetaAnalyticsConnectorChatCoworkUnifiedMetrics> =
+        chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
+
+    /**
      * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
      * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the canonical
      * Cost & Usage product names; an `office_agent` row's per-surface breakdown is in its
@@ -265,55 +309,12 @@ private constructor(
     fun rbacGroupName(): Optional<String> = rbacGroupName.getOptional("rbac_group_name")
 
     /**
-     * Number of connector tool calls on the requested day whose trusted read-only annotation marked
-     * them read-only. Call count, not distinct users. Every call recorded on a classified surface
-     * lands in exactly one of `read_call_count`, `write_call_count`, or `unclassified_call_count`,
-     * so the three sum to the day's classified calls. Classification is forward-only per surface:
-     * claude.ai from 2026-06-01, Claude Code from 2026-05-30, Claude in Office from 2026-05-29,
-     * Cowork from 2026-06-02 (Cowork clients predating annotation forwarding land in
-     * `unclassified_call_count`). Null, never 0, when the value cannot be stated: the read/write
-     * split is not enabled for this organization, or the day predates 2026-05-29. For a date-range
-     * total, sum the per-day values, but treat a window that extends before 2026-05-29 as null
-     * rather than summing only its covered days — date-range rollup mode
-     * (`starting_date`/`ending_date`) applies both rules server-side.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun readCallCount(): Optional<Long> = readCallCount.getOptional("read_call_count")
-
-    /**
-     * Number of connector tool calls on the requested day with no trusted read-only annotation —
-     * the annotation is optional in the MCP spec and is discarded when connector access controls
-     * are active, so unclassified calls are common. This field shows how much of the day's
-     * classified activity the read/write split actually covers. Call count, not distinct users. One
-     * of the three call-classification buckets; see `read_call_count` for the per-surface
-     * data-start dates, null conditions, and date-range guidance.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun unclassifiedCallCount(): Optional<Long> =
-        unclassifiedCallCount.getOptional("unclassified_call_count")
-
-    /**
      * Tagged user identifier (e.g. `user_...`). Present only when the request grouped by `user_id`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun userId(): Optional<String> = userId.getOptional("user_id")
-
-    /**
-     * Number of connector tool calls on the requested day whose trusted read-only annotation marked
-     * them not read-only. Call count, not distinct users. One of the three call-classification
-     * buckets; see `read_call_count` for the per-surface data-start dates, null conditions, and
-     * date-range guidance.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun writeCallCount(): Optional<Long> = writeCallCount.getOptional("write_call_count")
 
     /**
      * Returns the raw JSON value of [chatMetrics].
@@ -333,6 +334,16 @@ private constructor(
     @JsonProperty("claude_code_metrics")
     @ExcludeMissing
     fun _claudeCodeMetrics(): JsonField<BetaAnalyticsConnectorClaudeCodeMetrics> = claudeCodeMetrics
+
+    /**
+     * Returns the raw JSON value of [connectorDisplayName].
+     *
+     * Unlike [connectorDisplayName], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("connector_display_name")
+    @ExcludeMissing
+    fun _connectorDisplayName(): JsonField<String> = connectorDisplayName
 
     /**
      * Returns the raw JSON value of [connectorName].
@@ -363,35 +374,6 @@ private constructor(
     fun _distinctUserCount(): JsonField<Long> = distinctUserCount
 
     /**
-     * Returns the raw JSON value of [officeMetrics].
-     *
-     * Unlike [officeMetrics], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("office_metrics")
-    @ExcludeMissing
-    fun _officeMetrics(): JsonField<BetaAnalyticsConnectorOfficeMetrics> = officeMetrics
-
-    /**
-     * Returns the raw JSON value of [chatCoworkUnifiedMetrics].
-     *
-     * Unlike [chatCoworkUnifiedMetrics], this method doesn't throw if the JSON field has an
-     * unexpected type.
-     */
-    @JsonProperty("chat_cowork_unified_metrics")
-    @ExcludeMissing
-    fun _chatCoworkUnifiedMetrics(): JsonField<ChatCoworkUnifiedMetrics> = chatCoworkUnifiedMetrics
-
-    /**
-     * Returns the raw JSON value of [connectorDisplayName].
-     *
-     * Unlike [connectorDisplayName], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("connector_display_name")
-    @ExcludeMissing
-    fun _connectorDisplayName(): JsonField<String> = connectorDisplayName
-
-    /**
      * Returns the raw JSON value of [individualAuthDistinctUserCount].
      *
      * Unlike [individualAuthDistinctUserCount], this method doesn't throw if the JSON field has an
@@ -410,6 +392,54 @@ private constructor(
     @JsonProperty("managed_auth_distinct_user_count")
     @ExcludeMissing
     fun _managedAuthDistinctUserCount(): JsonField<Long> = managedAuthDistinctUserCount
+
+    /**
+     * Returns the raw JSON value of [officeMetrics].
+     *
+     * Unlike [officeMetrics], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("office_metrics")
+    @ExcludeMissing
+    fun _officeMetrics(): JsonField<BetaAnalyticsConnectorOfficeMetrics> = officeMetrics
+
+    /**
+     * Returns the raw JSON value of [readCallCount].
+     *
+     * Unlike [readCallCount], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("read_call_count")
+    @ExcludeMissing
+    fun _readCallCount(): JsonField<Long> = readCallCount
+
+    /**
+     * Returns the raw JSON value of [unclassifiedCallCount].
+     *
+     * Unlike [unclassifiedCallCount], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("unclassified_call_count")
+    @ExcludeMissing
+    fun _unclassifiedCallCount(): JsonField<Long> = unclassifiedCallCount
+
+    /**
+     * Returns the raw JSON value of [writeCallCount].
+     *
+     * Unlike [writeCallCount], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("write_call_count")
+    @ExcludeMissing
+    fun _writeCallCount(): JsonField<Long> = writeCallCount
+
+    /**
+     * Returns the raw JSON value of [chatCoworkUnifiedMetrics].
+     *
+     * Unlike [chatCoworkUnifiedMetrics], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("chat_cowork_unified_metrics")
+    @ExcludeMissing
+    fun _chatCoworkUnifiedMetrics(): JsonField<BetaAnalyticsConnectorChatCoworkUnifiedMetrics> =
+        chatCoworkUnifiedMetrics
 
     /**
      * Returns the raw JSON value of [product].
@@ -437,39 +467,11 @@ private constructor(
     fun _rbacGroupName(): JsonField<String> = rbacGroupName
 
     /**
-     * Returns the raw JSON value of [readCallCount].
-     *
-     * Unlike [readCallCount], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("read_call_count")
-    @ExcludeMissing
-    fun _readCallCount(): JsonField<Long> = readCallCount
-
-    /**
-     * Returns the raw JSON value of [unclassifiedCallCount].
-     *
-     * Unlike [unclassifiedCallCount], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("unclassified_call_count")
-    @ExcludeMissing
-    fun _unclassifiedCallCount(): JsonField<Long> = unclassifiedCallCount
-
-    /**
      * Returns the raw JSON value of [userId].
      *
      * Unlike [userId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("user_id") @ExcludeMissing fun _userId(): JsonField<String> = userId
-
-    /**
-     * Returns the raw JSON value of [writeCallCount].
-     *
-     * Unlike [writeCallCount], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("write_call_count")
-    @ExcludeMissing
-    fun _writeCallCount(): JsonField<Long> = writeCallCount
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -493,10 +495,16 @@ private constructor(
          * ```java
          * .chatMetrics()
          * .claudeCodeMetrics()
+         * .connectorDisplayName()
          * .connectorName()
          * .coworkMetrics()
          * .distinctUserCount()
+         * .individualAuthDistinctUserCount()
+         * .managedAuthDistinctUserCount()
          * .officeMetrics()
+         * .readCallCount()
+         * .unclassifiedCallCount()
+         * .writeCallCount()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -507,44 +515,46 @@ private constructor(
 
         private var chatMetrics: JsonField<BetaAnalyticsConnectorChatMetrics>? = null
         private var claudeCodeMetrics: JsonField<BetaAnalyticsConnectorClaudeCodeMetrics>? = null
+        private var connectorDisplayName: JsonField<String>? = null
         private var connectorName: JsonField<String>? = null
         private var coworkMetrics: JsonField<BetaAnalyticsConnectorCoworkMetrics>? = null
         private var distinctUserCount: JsonField<Long>? = null
+        private var individualAuthDistinctUserCount: JsonField<Long>? = null
+        private var managedAuthDistinctUserCount: JsonField<Long>? = null
         private var officeMetrics: JsonField<BetaAnalyticsConnectorOfficeMetrics>? = null
-        private var chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of()
-        private var connectorDisplayName: JsonField<String> = JsonMissing.of()
-        private var individualAuthDistinctUserCount: JsonField<Long> = JsonMissing.of()
-        private var managedAuthDistinctUserCount: JsonField<Long> = JsonMissing.of()
+        private var readCallCount: JsonField<Long>? = null
+        private var unclassifiedCallCount: JsonField<Long>? = null
+        private var writeCallCount: JsonField<Long>? = null
+        private var chatCoworkUnifiedMetrics:
+            JsonField<BetaAnalyticsConnectorChatCoworkUnifiedMetrics> =
+            JsonMissing.of()
         private var product: JsonField<String> = JsonMissing.of()
         private var rbacGroupId: JsonField<String> = JsonMissing.of()
         private var rbacGroupName: JsonField<String> = JsonMissing.of()
-        private var readCallCount: JsonField<Long> = JsonMissing.of()
-        private var unclassifiedCallCount: JsonField<Long> = JsonMissing.of()
         private var userId: JsonField<String> = JsonMissing.of()
-        private var writeCallCount: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaAnalyticsConnectorActivity: BetaAnalyticsConnectorActivity) = apply {
             chatMetrics = betaAnalyticsConnectorActivity.chatMetrics
             claudeCodeMetrics = betaAnalyticsConnectorActivity.claudeCodeMetrics
+            connectorDisplayName = betaAnalyticsConnectorActivity.connectorDisplayName
             connectorName = betaAnalyticsConnectorActivity.connectorName
             coworkMetrics = betaAnalyticsConnectorActivity.coworkMetrics
             distinctUserCount = betaAnalyticsConnectorActivity.distinctUserCount
-            officeMetrics = betaAnalyticsConnectorActivity.officeMetrics
-            chatCoworkUnifiedMetrics = betaAnalyticsConnectorActivity.chatCoworkUnifiedMetrics
-            connectorDisplayName = betaAnalyticsConnectorActivity.connectorDisplayName
             individualAuthDistinctUserCount =
                 betaAnalyticsConnectorActivity.individualAuthDistinctUserCount
             managedAuthDistinctUserCount =
                 betaAnalyticsConnectorActivity.managedAuthDistinctUserCount
+            officeMetrics = betaAnalyticsConnectorActivity.officeMetrics
+            readCallCount = betaAnalyticsConnectorActivity.readCallCount
+            unclassifiedCallCount = betaAnalyticsConnectorActivity.unclassifiedCallCount
+            writeCallCount = betaAnalyticsConnectorActivity.writeCallCount
+            chatCoworkUnifiedMetrics = betaAnalyticsConnectorActivity.chatCoworkUnifiedMetrics
             product = betaAnalyticsConnectorActivity.product
             rbacGroupId = betaAnalyticsConnectorActivity.rbacGroupId
             rbacGroupName = betaAnalyticsConnectorActivity.rbacGroupName
-            readCallCount = betaAnalyticsConnectorActivity.readCallCount
-            unclassifiedCallCount = betaAnalyticsConnectorActivity.unclassifiedCallCount
             userId = betaAnalyticsConnectorActivity.userId
-            writeCallCount = betaAnalyticsConnectorActivity.writeCallCount
             additionalProperties =
                 betaAnalyticsConnectorActivity.additionalProperties.toMutableMap()
         }
@@ -578,6 +588,38 @@ private constructor(
         fun claudeCodeMetrics(
             claudeCodeMetrics: JsonField<BetaAnalyticsConnectorClaudeCodeMetrics>
         ) = apply { this.claudeCodeMetrics = claudeCodeMetrics }
+
+        /**
+         * Human-readable display name for rows whose `connector_name` is an opaque connector id
+         * rather than a readable name, resolved at request time from the organization's connectors
+         * (including connectors that have since been removed). `connector_name` remains the row's
+         * stable key for sorting and pagination, and `filter[]=connector_name:{value}` also matches
+         * these rows by display name. Display names are not unique, and the same connector's
+         * claude.ai usage can appear under a separate row with a readable `connector_name`. Null
+         * when `connector_name` is already a readable name, when the id cannot be resolved to one
+         * of the organization's connectors, or when display-name resolution is not enabled for this
+         * organization.
+         */
+        fun connectorDisplayName(connectorDisplayName: String?) =
+            connectorDisplayName(JsonField.ofNullable(connectorDisplayName))
+
+        /**
+         * Alias for calling [Builder.connectorDisplayName] with
+         * `connectorDisplayName.orElse(null)`.
+         */
+        fun connectorDisplayName(connectorDisplayName: Optional<String>) =
+            connectorDisplayName(connectorDisplayName.getOrNull())
+
+        /**
+         * Sets [Builder.connectorDisplayName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.connectorDisplayName] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun connectorDisplayName(connectorDisplayName: JsonField<String>) = apply {
+            this.connectorDisplayName = connectorDisplayName
+        }
 
         /**
          * Name of the connector. Some rows carry an opaque connector id here instead of a readable
@@ -628,83 +670,6 @@ private constructor(
          */
         fun distinctUserCount(distinctUserCount: JsonField<Long>) = apply {
             this.distinctUserCount = distinctUserCount
-        }
-
-        /**
-         * Office Agent activity metrics for a single connector on a given day, broken out by Office
-         * product.
-         */
-        fun officeMetrics(officeMetrics: BetaAnalyticsConnectorOfficeMetrics) =
-            officeMetrics(JsonField.of(officeMetrics))
-
-        /**
-         * Sets [Builder.officeMetrics] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.officeMetrics] with a well-typed
-         * [BetaAnalyticsConnectorOfficeMetrics] value instead. This method is primarily for setting
-         * the field to an undocumented or not yet supported value.
-         */
-        fun officeMetrics(officeMetrics: JsonField<BetaAnalyticsConnectorOfficeMetrics>) = apply {
-            this.officeMetrics = officeMetrics
-        }
-
-        /**
-         * Connector use recorded while members had Chat and Cowork unified (Cowork's features
-         * inside claude.ai chat) turned on, split into chat conversations and Cowork sessions. A
-         * count is null in date-range mode where it cannot be computed. Omitted from the response
-         * on deployments that do not offer Chat and Cowork unified.
-         */
-        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics?) =
-            chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
-
-        /**
-         * Alias for calling [Builder.chatCoworkUnifiedMetrics] with
-         * `chatCoworkUnifiedMetrics.orElse(null)`.
-         */
-        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: Optional<ChatCoworkUnifiedMetrics>) =
-            chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
-
-        /**
-         * Sets [Builder.chatCoworkUnifiedMetrics] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.chatCoworkUnifiedMetrics] with a well-typed
-         * [ChatCoworkUnifiedMetrics] value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
-         */
-        fun chatCoworkUnifiedMetrics(
-            chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>
-        ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
-
-        /**
-         * Human-readable display name for rows whose `connector_name` is an opaque connector id
-         * rather than a readable name, resolved at request time from the organization's connectors
-         * (including connectors that have since been removed). `connector_name` remains the row's
-         * stable key for sorting and pagination, and `filter[]=connector_name:{value}` also matches
-         * these rows by display name. Display names are not unique, and the same connector's
-         * claude.ai usage can appear under a separate row with a readable `connector_name`. Null
-         * when `connector_name` is already a readable name, when the id cannot be resolved to one
-         * of the organization's connectors, or when display-name resolution is not enabled for this
-         * organization.
-         */
-        fun connectorDisplayName(connectorDisplayName: String?) =
-            connectorDisplayName(JsonField.ofNullable(connectorDisplayName))
-
-        /**
-         * Alias for calling [Builder.connectorDisplayName] with
-         * `connectorDisplayName.orElse(null)`.
-         */
-        fun connectorDisplayName(connectorDisplayName: Optional<String>) =
-            connectorDisplayName(connectorDisplayName.getOrNull())
-
-        /**
-         * Sets [Builder.connectorDisplayName] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.connectorDisplayName] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun connectorDisplayName(connectorDisplayName: JsonField<String>) = apply {
-            this.connectorDisplayName = connectorDisplayName
         }
 
         /**
@@ -794,68 +759,21 @@ private constructor(
         }
 
         /**
-         * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
-         * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the
-         * canonical Cost & Usage product names; an `office_agent` row's per-surface breakdown is in
-         * its `office_metrics`. On `/plugins` only `cowork`, `claude_code` and
-         * `chat_cowork_unified` occur (the only surfaces with plugin attribution); on `/artifacts`
-         * only `chat`, `claude_code`, `cowork` and `chat_cowork_unified` occur (the surfaces that
-         * create artifacts); `/apps/chat/projects` does not support the product dimension (a
-         * `product` entry in `group_by[]` or `filter[]` there is rejected). Present only when the
-         * request grouped by `product`.
+         * Office Agent activity metrics for a single connector on a given day, broken out by Office
+         * product.
          */
-        fun product(product: String?) = product(JsonField.ofNullable(product))
-
-        /** Alias for calling [Builder.product] with `product.orElse(null)`. */
-        fun product(product: Optional<String>) = product(product.getOrNull())
+        fun officeMetrics(officeMetrics: BetaAnalyticsConnectorOfficeMetrics) =
+            officeMetrics(JsonField.of(officeMetrics))
 
         /**
-         * Sets [Builder.product] to an arbitrary JSON value.
+         * Sets [Builder.officeMetrics] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.product] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.officeMetrics] with a well-typed
+         * [BetaAnalyticsConnectorOfficeMetrics] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
          */
-        fun product(product: JsonField<String>) = apply { this.product = product }
-
-        /**
-         * Tagged RBAC group identifier (`rbac_group_...`), matching the spend-limits API spelling.
-         * Present only when the request grouped by `rbac_group_id`.
-         */
-        fun rbacGroupId(rbacGroupId: String?) = rbacGroupId(JsonField.ofNullable(rbacGroupId))
-
-        /** Alias for calling [Builder.rbacGroupId] with `rbacGroupId.orElse(null)`. */
-        fun rbacGroupId(rbacGroupId: Optional<String>) = rbacGroupId(rbacGroupId.getOrNull())
-
-        /**
-         * Sets [Builder.rbacGroupId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.rbacGroupId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun rbacGroupId(rbacGroupId: JsonField<String>) = apply { this.rbacGroupId = rbacGroupId }
-
-        /**
-         * Resolved RBAC group display name, alongside `rbac_group_id` when name resolution is
-         * available. Null if the group has been deleted or its name could not be resolved;
-         * `rbac_group_id` remains the stable key.
-         */
-        fun rbacGroupName(rbacGroupName: String?) =
-            rbacGroupName(JsonField.ofNullable(rbacGroupName))
-
-        /** Alias for calling [Builder.rbacGroupName] with `rbacGroupName.orElse(null)`. */
-        fun rbacGroupName(rbacGroupName: Optional<String>) =
-            rbacGroupName(rbacGroupName.getOrNull())
-
-        /**
-         * Sets [Builder.rbacGroupName] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.rbacGroupName] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun rbacGroupName(rbacGroupName: JsonField<String>) = apply {
-            this.rbacGroupName = rbacGroupName
+        fun officeMetrics(officeMetrics: JsonField<BetaAnalyticsConnectorOfficeMetrics>) = apply {
+            this.officeMetrics = officeMetrics
         }
 
         /**
@@ -932,23 +850,6 @@ private constructor(
         }
 
         /**
-         * Tagged user identifier (e.g. `user_...`). Present only when the request grouped by
-         * `user_id`.
-         */
-        fun userId(userId: String?) = userId(JsonField.ofNullable(userId))
-
-        /** Alias for calling [Builder.userId] with `userId.orElse(null)`. */
-        fun userId(userId: Optional<String>) = userId(userId.getOrNull())
-
-        /**
-         * Sets [Builder.userId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.userId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun userId(userId: JsonField<String>) = apply { this.userId = userId }
-
-        /**
          * Number of connector tool calls on the requested day whose trusted read-only annotation
          * marked them not read-only. Call count, not distinct users. One of the three
          * call-classification buckets; see `read_call_count` for the per-surface data-start dates,
@@ -979,6 +880,117 @@ private constructor(
             this.writeCallCount = writeCallCount
         }
 
+        /**
+         * Connector use recorded while members had Chat and Cowork unified (Cowork's features
+         * inside claude.ai chat) turned on, split into chat conversations and Cowork sessions. A
+         * count is null in date-range mode where it cannot be computed. Omitted from the response
+         * on deployments that do not offer Chat and Cowork unified.
+         */
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: BetaAnalyticsConnectorChatCoworkUnifiedMetrics?
+        ) = chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
+
+        /**
+         * Alias for calling [Builder.chatCoworkUnifiedMetrics] with
+         * `chatCoworkUnifiedMetrics.orElse(null)`.
+         */
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: Optional<BetaAnalyticsConnectorChatCoworkUnifiedMetrics>
+        ) = chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
+
+        /**
+         * Sets [Builder.chatCoworkUnifiedMetrics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.chatCoworkUnifiedMetrics] with a well-typed
+         * [BetaAnalyticsConnectorChatCoworkUnifiedMetrics] value instead. This method is primarily
+         * for setting the field to an undocumented or not yet supported value.
+         */
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedMetrics>
+        ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
+
+        /**
+         * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
+         * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the
+         * canonical Cost & Usage product names; an `office_agent` row's per-surface breakdown is in
+         * its `office_metrics`. On `/plugins` only `cowork`, `claude_code` and
+         * `chat_cowork_unified` occur (the only surfaces with plugin attribution); on `/artifacts`
+         * only `chat`, `claude_code`, `cowork` and `chat_cowork_unified` occur (the surfaces that
+         * create artifacts); `/apps/chat/projects` does not support the product dimension (a
+         * `product` entry in `group_by[]` or `filter[]` there is rejected). Present only when the
+         * request grouped by `product`.
+         */
+        fun product(product: String?) = product(JsonField.ofNullable(product))
+
+        /** Alias for calling [Builder.product] with `product.orElse(null)`. */
+        fun product(product: Optional<String>) = product(product.getOrNull())
+
+        /**
+         * Sets [Builder.product] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.product] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun product(product: JsonField<String>) = apply { this.product = product }
+
+        /**
+         * Tagged RBAC group identifier (`rbac_group_...`), matching the spend-limits API spelling.
+         * Present only when the request grouped by `rbac_group_id`.
+         */
+        fun rbacGroupId(rbacGroupId: String?) = rbacGroupId(JsonField.ofNullable(rbacGroupId))
+
+        /** Alias for calling [Builder.rbacGroupId] with `rbacGroupId.orElse(null)`. */
+        fun rbacGroupId(rbacGroupId: Optional<String>) = rbacGroupId(rbacGroupId.getOrNull())
+
+        /**
+         * Sets [Builder.rbacGroupId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.rbacGroupId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun rbacGroupId(rbacGroupId: JsonField<String>) = apply { this.rbacGroupId = rbacGroupId }
+
+        /**
+         * Resolved RBAC group display name, alongside `rbac_group_id` when name resolution is
+         * available. Null if the group has been deleted or its name could not be resolved;
+         * `rbac_group_id` remains the stable key.
+         */
+        fun rbacGroupName(rbacGroupName: String?) =
+            rbacGroupName(JsonField.ofNullable(rbacGroupName))
+
+        /** Alias for calling [Builder.rbacGroupName] with `rbacGroupName.orElse(null)`. */
+        fun rbacGroupName(rbacGroupName: Optional<String>) =
+            rbacGroupName(rbacGroupName.getOrNull())
+
+        /**
+         * Sets [Builder.rbacGroupName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.rbacGroupName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun rbacGroupName(rbacGroupName: JsonField<String>) = apply {
+            this.rbacGroupName = rbacGroupName
+        }
+
+        /**
+         * Tagged user identifier (e.g. `user_...`). Present only when the request grouped by
+         * `user_id`.
+         */
+        fun userId(userId: String?) = userId(JsonField.ofNullable(userId))
+
+        /** Alias for calling [Builder.userId] with `userId.orElse(null)`. */
+        fun userId(userId: Optional<String>) = userId(userId.getOrNull())
+
+        /**
+         * Sets [Builder.userId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.userId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun userId(userId: JsonField<String>) = apply { this.userId = userId }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -1007,10 +1019,16 @@ private constructor(
          * ```java
          * .chatMetrics()
          * .claudeCodeMetrics()
+         * .connectorDisplayName()
          * .connectorName()
          * .coworkMetrics()
          * .distinctUserCount()
+         * .individualAuthDistinctUserCount()
+         * .managedAuthDistinctUserCount()
          * .officeMetrics()
+         * .readCallCount()
+         * .unclassifiedCallCount()
+         * .writeCallCount()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -1019,21 +1037,21 @@ private constructor(
             BetaAnalyticsConnectorActivity(
                 checkRequired("chatMetrics", chatMetrics),
                 checkRequired("claudeCodeMetrics", claudeCodeMetrics),
+                checkRequired("connectorDisplayName", connectorDisplayName),
                 checkRequired("connectorName", connectorName),
                 checkRequired("coworkMetrics", coworkMetrics),
                 checkRequired("distinctUserCount", distinctUserCount),
+                checkRequired("individualAuthDistinctUserCount", individualAuthDistinctUserCount),
+                checkRequired("managedAuthDistinctUserCount", managedAuthDistinctUserCount),
                 checkRequired("officeMetrics", officeMetrics),
+                checkRequired("readCallCount", readCallCount),
+                checkRequired("unclassifiedCallCount", unclassifiedCallCount),
+                checkRequired("writeCallCount", writeCallCount),
                 chatCoworkUnifiedMetrics,
-                connectorDisplayName,
-                individualAuthDistinctUserCount,
-                managedAuthDistinctUserCount,
                 product,
                 rbacGroupId,
                 rbacGroupName,
-                readCallCount,
-                unclassifiedCallCount,
                 userId,
-                writeCallCount,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -1055,21 +1073,21 @@ private constructor(
 
         chatMetrics().validate()
         claudeCodeMetrics().validate()
+        connectorDisplayName()
         connectorName()
         coworkMetrics().validate()
         distinctUserCount()
-        officeMetrics().validate()
-        chatCoworkUnifiedMetrics().ifPresent { it.validate() }
-        connectorDisplayName()
         individualAuthDistinctUserCount()
         managedAuthDistinctUserCount()
+        officeMetrics().validate()
+        readCallCount()
+        unclassifiedCallCount()
+        writeCallCount()
+        chatCoworkUnifiedMetrics().ifPresent { it.validate() }
         product()
         rbacGroupId()
         rbacGroupName()
-        readCallCount()
-        unclassifiedCallCount()
         userId()
-        writeCallCount()
         validated = true
     }
 
@@ -1090,261 +1108,21 @@ private constructor(
     internal fun validity(): Int =
         (chatMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (claudeCodeMetrics.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (connectorDisplayName.asKnown().isPresent) 1 else 0) +
             (if (connectorName.asKnown().isPresent) 1 else 0) +
             (coworkMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (if (distinctUserCount.asKnown().isPresent) 1 else 0) +
-            (officeMetrics.asKnown().getOrNull()?.validity() ?: 0) +
-            (chatCoworkUnifiedMetrics.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (connectorDisplayName.asKnown().isPresent) 1 else 0) +
             (if (individualAuthDistinctUserCount.asKnown().isPresent) 1 else 0) +
             (if (managedAuthDistinctUserCount.asKnown().isPresent) 1 else 0) +
+            (officeMetrics.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (readCallCount.asKnown().isPresent) 1 else 0) +
+            (if (unclassifiedCallCount.asKnown().isPresent) 1 else 0) +
+            (if (writeCallCount.asKnown().isPresent) 1 else 0) +
+            (chatCoworkUnifiedMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (if (product.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupName.asKnown().isPresent) 1 else 0) +
-            (if (readCallCount.asKnown().isPresent) 1 else 0) +
-            (if (unclassifiedCallCount.asKnown().isPresent) 1 else 0) +
-            (if (userId.asKnown().isPresent) 1 else 0) +
-            (if (writeCallCount.asKnown().isPresent) 1 else 0)
-
-    /**
-     * Connector use recorded while members had Chat and Cowork unified (Cowork's features inside
-     * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is null
-     * in date-range mode where it cannot be computed. Omitted from the response on deployments that
-     * do not offer Chat and Cowork unified.
-     */
-    class ChatCoworkUnifiedMetrics
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics>,
-        private val sessions: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("chat")
-            @ExcludeMissing
-            chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics> = JsonMissing.of(),
-            @JsonProperty("sessions")
-            @ExcludeMissing
-            sessions: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics> =
-                JsonMissing.of(),
-        ) : this(chat, sessions, mutableMapOf())
-
-        /**
-         * A connector's use in chat conversations recorded while members had Chat and Cowork
-         * unified turned on.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun chat(): BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics = chat.getRequired("chat")
-
-        /**
-         * A connector's use in Cowork sessions recorded while members had Chat and Cowork unified
-         * turned on.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun sessions(): BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics =
-            sessions.getRequired("sessions")
-
-        /**
-         * Returns the raw JSON value of [chat].
-         *
-         * Unlike [chat], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("chat")
-        @ExcludeMissing
-        fun _chat(): JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics> = chat
-
-        /**
-         * Returns the raw JSON value of [sessions].
-         *
-         * Unlike [sessions], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("sessions")
-        @ExcludeMissing
-        fun _sessions(): JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics> =
-            sessions
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [ChatCoworkUnifiedMetrics].
-             *
-             * The following fields are required:
-             * ```java
-             * .chat()
-             * .sessions()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [ChatCoworkUnifiedMetrics]. */
-        class Builder internal constructor() {
-
-            private var chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics>? = null
-            private var sessions:
-                JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics>? =
-                null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics) = apply {
-                chat = chatCoworkUnifiedMetrics.chat
-                sessions = chatCoworkUnifiedMetrics.sessions
-                additionalProperties = chatCoworkUnifiedMetrics.additionalProperties.toMutableMap()
-            }
-
-            /**
-             * A connector's use in chat conversations recorded while members had Chat and Cowork
-             * unified turned on.
-             */
-            fun chat(chat: BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics) =
-                chat(JsonField.of(chat))
-
-            /**
-             * Sets [Builder.chat] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.chat] with a well-typed
-             * [BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics] value instead. This method is
-             * primarily for setting the field to an undocumented or not yet supported value.
-             */
-            fun chat(chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics>) = apply {
-                this.chat = chat
-            }
-
-            /**
-             * A connector's use in Cowork sessions recorded while members had Chat and Cowork
-             * unified turned on.
-             */
-            fun sessions(sessions: BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics) =
-                sessions(JsonField.of(sessions))
-
-            /**
-             * Sets [Builder.sessions] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.sessions] with a well-typed
-             * [BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics] value instead. This method
-             * is primarily for setting the field to an undocumented or not yet supported value.
-             */
-            fun sessions(
-                sessions: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics>
-            ) = apply { this.sessions = sessions }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [ChatCoworkUnifiedMetrics].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .chat()
-             * .sessions()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): ChatCoworkUnifiedMetrics =
-                ChatCoworkUnifiedMetrics(
-                    checkRequired("chat", chat),
-                    checkRequired("sessions", sessions),
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): ChatCoworkUnifiedMetrics = apply {
-            if (validated) {
-                return@apply
-            }
-
-            chat().validate()
-            sessions().validate()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (chat.asKnown().getOrNull()?.validity() ?: 0) +
-                (sessions.asKnown().getOrNull()?.validity() ?: 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is ChatCoworkUnifiedMetrics &&
-                chat == other.chat &&
-                sessions == other.sessions &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(chat, sessions, additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "ChatCoworkUnifiedMetrics{chat=$chat, sessions=$sessions, additionalProperties=$additionalProperties}"
-    }
+            (if (userId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -1354,21 +1132,21 @@ private constructor(
         return other is BetaAnalyticsConnectorActivity &&
             chatMetrics == other.chatMetrics &&
             claudeCodeMetrics == other.claudeCodeMetrics &&
+            connectorDisplayName == other.connectorDisplayName &&
             connectorName == other.connectorName &&
             coworkMetrics == other.coworkMetrics &&
             distinctUserCount == other.distinctUserCount &&
-            officeMetrics == other.officeMetrics &&
-            chatCoworkUnifiedMetrics == other.chatCoworkUnifiedMetrics &&
-            connectorDisplayName == other.connectorDisplayName &&
             individualAuthDistinctUserCount == other.individualAuthDistinctUserCount &&
             managedAuthDistinctUserCount == other.managedAuthDistinctUserCount &&
+            officeMetrics == other.officeMetrics &&
+            readCallCount == other.readCallCount &&
+            unclassifiedCallCount == other.unclassifiedCallCount &&
+            writeCallCount == other.writeCallCount &&
+            chatCoworkUnifiedMetrics == other.chatCoworkUnifiedMetrics &&
             product == other.product &&
             rbacGroupId == other.rbacGroupId &&
             rbacGroupName == other.rbacGroupName &&
-            readCallCount == other.readCallCount &&
-            unclassifiedCallCount == other.unclassifiedCallCount &&
             userId == other.userId &&
-            writeCallCount == other.writeCallCount &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1376,21 +1154,21 @@ private constructor(
         Objects.hash(
             chatMetrics,
             claudeCodeMetrics,
+            connectorDisplayName,
             connectorName,
             coworkMetrics,
             distinctUserCount,
-            officeMetrics,
-            chatCoworkUnifiedMetrics,
-            connectorDisplayName,
             individualAuthDistinctUserCount,
             managedAuthDistinctUserCount,
+            officeMetrics,
+            readCallCount,
+            unclassifiedCallCount,
+            writeCallCount,
+            chatCoworkUnifiedMetrics,
             product,
             rbacGroupId,
             rbacGroupName,
-            readCallCount,
-            unclassifiedCallCount,
             userId,
-            writeCallCount,
             additionalProperties,
         )
     }
@@ -1398,5 +1176,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsConnectorActivity{chatMetrics=$chatMetrics, claudeCodeMetrics=$claudeCodeMetrics, connectorName=$connectorName, coworkMetrics=$coworkMetrics, distinctUserCount=$distinctUserCount, officeMetrics=$officeMetrics, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, connectorDisplayName=$connectorDisplayName, individualAuthDistinctUserCount=$individualAuthDistinctUserCount, managedAuthDistinctUserCount=$managedAuthDistinctUserCount, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, readCallCount=$readCallCount, unclassifiedCallCount=$unclassifiedCallCount, userId=$userId, writeCallCount=$writeCallCount, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsConnectorActivity{chatMetrics=$chatMetrics, claudeCodeMetrics=$claudeCodeMetrics, connectorDisplayName=$connectorDisplayName, connectorName=$connectorName, coworkMetrics=$coworkMetrics, distinctUserCount=$distinctUserCount, individualAuthDistinctUserCount=$individualAuthDistinctUserCount, managedAuthDistinctUserCount=$managedAuthDistinctUserCount, officeMetrics=$officeMetrics, readCallCount=$readCallCount, unclassifiedCallCount=$unclassifiedCallCount, writeCallCount=$writeCallCount, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, userId=$userId, additionalProperties=$additionalProperties}"
 }

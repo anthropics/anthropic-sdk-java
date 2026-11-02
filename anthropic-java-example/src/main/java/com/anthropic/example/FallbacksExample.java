@@ -30,7 +30,7 @@ public final class FallbacksExample {
         BetaMessage served = client.beta()
                 .messages()
                 .create(MessageCreateParams.builder()
-                        .model(Model.CLAUDE_FABLE_5)
+                        .model(Model.CLAUDE_FABLE_5_1)
                         .maxTokens(1024)
                         .addUserMessage("Some prompt that triggers a refusal")
                         .fallbacksOfFallbackParams(List.of(BetaFallbackParam.builder()
@@ -52,7 +52,7 @@ public final class FallbacksExample {
         BetaFallbackState state = BetaFallbackState.create();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model(Model.CLAUDE_FABLE_5)
+                .model(Model.CLAUDE_FABLE_5_1)
                 .maxTokens(1024)
                 .addUserMessage("Some prompt that triggers a refusal")
                 .build();

@@ -1,6 +1,8 @@
 package com.anthropic.models.beta.organization.analytics.plugins
 
 import com.anthropic.core.http.QueryParams
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsOrder
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsPluginGroupBy
 import java.time.LocalDate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,9 +15,9 @@ internal class PluginListParamsTest {
             .date(LocalDate.parse("2019-12-27"))
             .endingDate(LocalDate.parse("2019-12-27"))
             .addFilter("string")
-            .addGroupBy(PluginListParams.GroupBy.PRODUCT)
+            .addGroupBy(BetaAnalyticsPluginGroupBy.PRODUCT)
             .limit(1L)
-            .order(PluginListParams.Order.ASC)
+            .order(BetaAnalyticsOrder.ASC)
             .orderBy("order_by")
             .page("page")
             .startingDate(LocalDate.parse("2019-12-27"))
@@ -29,9 +31,9 @@ internal class PluginListParamsTest {
                 .date(LocalDate.parse("2019-12-27"))
                 .endingDate(LocalDate.parse("2019-12-27"))
                 .addFilter("string")
-                .addGroupBy(PluginListParams.GroupBy.PRODUCT)
+                .addGroupBy(BetaAnalyticsPluginGroupBy.PRODUCT)
                 .limit(1L)
-                .order(PluginListParams.Order.ASC)
+                .order(BetaAnalyticsOrder.ASC)
                 .orderBy("order_by")
                 .page("page")
                 .startingDate(LocalDate.parse("2019-12-27"))

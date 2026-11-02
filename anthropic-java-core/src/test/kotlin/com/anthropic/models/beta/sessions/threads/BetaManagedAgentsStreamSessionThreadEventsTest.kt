@@ -44,8 +44,7 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolEvalu
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolEvaluationAlwaysAllow
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolResultEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolUseEvent
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsRepositoryAuthenticationError
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsRetryStatusRetrying
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsRetryStatusExhausted
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionDeletedEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionEndTurn
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionErrorEvent
@@ -67,6 +66,7 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSpanOutcomeEva
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSpanOutcomeEvaluationStartEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsToolUseLimitReachedError
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserCustomToolResultEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserDefineOutcomeEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserInterruptEvent
@@ -1346,12 +1346,11 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsSessionErrorEvent.builder()
                 .id("id")
                 .error(
-                    BetaManagedAgentsRepositoryAuthenticationError.builder()
+                    BetaManagedAgentsToolUseLimitReachedError.builder()
                         .message(
-                            "The repository host rejected the credentials for the repository, or required credentials and received none."
+                            "This turn stopped because the agent loop reached its limit of 500 tool-use rounds since the turn started or last resumed. A round is one model response that calls tools, plus running those tools. Nothing failed. Send the session a new message to continue; nothing from the stopped turn is discarded."
                         )
-                        .repositoryUrl("https://github.com/example-org/example-repo")
-                        .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
+                        .retryStatus(BetaManagedAgentsRetryStatusExhausted.builder().build())
                         .build()
                 )
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1417,12 +1416,11 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsSessionErrorEvent.builder()
                     .id("id")
                     .error(
-                        BetaManagedAgentsRepositoryAuthenticationError.builder()
+                        BetaManagedAgentsToolUseLimitReachedError.builder()
                             .message(
-                                "The repository host rejected the credentials for the repository, or required credentials and received none."
+                                "This turn stopped because the agent loop reached its limit of 500 tool-use rounds since the turn started or last resumed. A round is one model response that calls tools, plus running those tools. Nothing failed. Send the session a new message to continue; nothing from the stopped turn is discarded."
                             )
-                            .repositoryUrl("https://github.com/example-org/example-repo")
-                            .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
+                            .retryStatus(BetaManagedAgentsRetryStatusExhausted.builder().build())
                             .build()
                     )
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))

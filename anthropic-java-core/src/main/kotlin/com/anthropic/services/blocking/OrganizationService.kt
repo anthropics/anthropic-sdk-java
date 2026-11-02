@@ -5,13 +5,17 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.organization.OrganizationInfo
 import com.anthropic.models.organization.OrganizationRetrieveParams
+import com.anthropic.services.blocking.organization.AnalyticsService
 import com.anthropic.services.blocking.organization.ApiKeyService
 import com.anthropic.services.blocking.organization.ComplianceSettingService
 import com.anthropic.services.blocking.organization.ExternalKeyService
 import com.anthropic.services.blocking.organization.FederationService
 import com.anthropic.services.blocking.organization.InviteService
 import com.anthropic.services.blocking.organization.RateLimitService
+import com.anthropic.services.blocking.organization.RbacGroupService
+import com.anthropic.services.blocking.organization.RbacRoleService
 import com.anthropic.services.blocking.organization.ServiceAccountService
+import com.anthropic.services.blocking.organization.SpendLimitService
 import com.anthropic.services.blocking.organization.UserService
 import com.anthropic.services.blocking.organization.WorkspaceService
 import com.google.errorprone.annotations.MustBeClosed
@@ -48,6 +52,14 @@ interface OrganizationService {
     fun rateLimits(): RateLimitService
 
     fun complianceSettings(): ComplianceSettingService
+
+    fun analytics(): AnalyticsService
+
+    fun spendLimits(): SpendLimitService
+
+    fun rbacGroups(): RbacGroupService
+
+    fun rbacRoles(): RbacRoleService
 
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): OrganizationInfo = retrieve(OrganizationRetrieveParams.none())
@@ -98,6 +110,14 @@ interface OrganizationService {
         fun rateLimits(): RateLimitService.WithRawResponse
 
         fun complianceSettings(): ComplianceSettingService.WithRawResponse
+
+        fun analytics(): AnalyticsService.WithRawResponse
+
+        fun spendLimits(): SpendLimitService.WithRawResponse
+
+        fun rbacGroups(): RbacGroupService.WithRawResponse
+
+        fun rbacRoles(): RbacRoleService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/me`, but is otherwise the same as

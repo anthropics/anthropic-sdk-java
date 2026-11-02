@@ -20,29 +20,32 @@ import kotlin.jvm.optionals.getOrNull
 class BetaAnalyticsSkillActivity
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val attributedListPrice: JsonField<String>,
     private val chatMetrics: JsonField<BetaAnalyticsSkillChatMetrics>,
     private val claudeCodeMetrics: JsonField<BetaAnalyticsSkillClaudeCodeMetrics>,
     private val coworkMetrics: JsonField<BetaAnalyticsSkillCoworkMetrics>,
-    private val distinctUserCount: JsonField<Long>,
-    private val officeMetrics: JsonField<BetaAnalyticsSkillOfficeMetrics>,
-    private val skillName: JsonField<String>,
-    private val attributedListPrice: JsonField<String>,
-    private val chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>,
     private val currency: JsonField<String>,
+    private val distinctUserCount: JsonField<Long>,
     private val enableCount: JsonField<Long>,
     private val estimatedOverageSpend: JsonField<String>,
     private val invocationCount: JsonField<Long>,
+    private val officeMetrics: JsonField<BetaAnalyticsSkillOfficeMetrics>,
+    private val shareStatus: JsonField<ShareStatus>,
+    private val skillDisplayName: JsonField<String>,
+    private val skillName: JsonField<String>,
+    private val chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsSkillChatCoworkUnifiedMetrics>,
     private val product: JsonField<String>,
     private val rbacGroupId: JsonField<String>,
     private val rbacGroupName: JsonField<String>,
-    private val shareStatus: JsonField<ShareStatus>,
-    private val skillDisplayName: JsonField<String>,
     private val userId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
+        @JsonProperty("attributed_list_price")
+        @ExcludeMissing
+        attributedListPrice: JsonField<String> = JsonMissing.of(),
         @JsonProperty("chat_metrics")
         @ExcludeMissing
         chatMetrics: JsonField<BetaAnalyticsSkillChatMetrics> = JsonMissing.of(),
@@ -52,20 +55,10 @@ private constructor(
         @JsonProperty("cowork_metrics")
         @ExcludeMissing
         coworkMetrics: JsonField<BetaAnalyticsSkillCoworkMetrics> = JsonMissing.of(),
+        @JsonProperty("currency") @ExcludeMissing currency: JsonField<String> = JsonMissing.of(),
         @JsonProperty("distinct_user_count")
         @ExcludeMissing
         distinctUserCount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("office_metrics")
-        @ExcludeMissing
-        officeMetrics: JsonField<BetaAnalyticsSkillOfficeMetrics> = JsonMissing.of(),
-        @JsonProperty("skill_name") @ExcludeMissing skillName: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("attributed_list_price")
-        @ExcludeMissing
-        attributedListPrice: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("chat_cowork_unified_metrics")
-        @ExcludeMissing
-        chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of(),
-        @JsonProperty("currency") @ExcludeMissing currency: JsonField<String> = JsonMissing.of(),
         @JsonProperty("enable_count")
         @ExcludeMissing
         enableCount: JsonField<Long> = JsonMissing.of(),
@@ -75,6 +68,20 @@ private constructor(
         @JsonProperty("invocation_count")
         @ExcludeMissing
         invocationCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("office_metrics")
+        @ExcludeMissing
+        officeMetrics: JsonField<BetaAnalyticsSkillOfficeMetrics> = JsonMissing.of(),
+        @JsonProperty("share_status")
+        @ExcludeMissing
+        shareStatus: JsonField<ShareStatus> = JsonMissing.of(),
+        @JsonProperty("skill_display_name")
+        @ExcludeMissing
+        skillDisplayName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("skill_name") @ExcludeMissing skillName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("chat_cowork_unified_metrics")
+        @ExcludeMissing
+        chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsSkillChatCoworkUnifiedMetrics> =
+            JsonMissing.of(),
         @JsonProperty("product") @ExcludeMissing product: JsonField<String> = JsonMissing.of(),
         @JsonProperty("rbac_group_id")
         @ExcludeMissing
@@ -82,34 +89,52 @@ private constructor(
         @JsonProperty("rbac_group_name")
         @ExcludeMissing
         rbacGroupName: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("share_status")
-        @ExcludeMissing
-        shareStatus: JsonField<ShareStatus> = JsonMissing.of(),
-        @JsonProperty("skill_display_name")
-        @ExcludeMissing
-        skillDisplayName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of(),
     ) : this(
+        attributedListPrice,
         chatMetrics,
         claudeCodeMetrics,
         coworkMetrics,
-        distinctUserCount,
-        officeMetrics,
-        skillName,
-        attributedListPrice,
-        chatCoworkUnifiedMetrics,
         currency,
+        distinctUserCount,
         enableCount,
         estimatedOverageSpend,
         invocationCount,
+        officeMetrics,
+        shareStatus,
+        skillDisplayName,
+        skillName,
+        chatCoworkUnifiedMetrics,
         product,
         rbacGroupId,
         rbacGroupName,
-        shareStatus,
-        skillDisplayName,
         userId,
         mutableMapOf(),
     )
+
+    /**
+     * List-price (rate-card) value of the member requests attributed to this skill, as a decimal
+     * string in the minor unit of `currency` (cents for USD), from Claude Code, Cowork, and Office
+     * Agent request-level attribution — the value of requests that involved the skill, not the
+     * skill's incremental cost. Unlike `estimated_overage_spend` this reflects usage value
+     * regardless of how it was funded — seat-covered usage counts — but it is undiscounted and does
+     * not tie to billed spend or the organization's spend reporting. claude.ai chat usage carries
+     * no request-level attribution and contributes nothing: the field is null on `chat` product
+     * rows and on `office_agent` product cuts dated before 2026-06-18 (the Office Agent attribution
+     * data-start), and on ungrouped rows it covers the Claude Code + Cowork + Office Agent share
+     * only (null when no attributable usage exists). Also null under the same conditions as
+     * `estimated_overage_spend` (spend reporting not enabled for this organization, `office_agent`
+     * product cuts before the 2026-06-18 data-start). "0" means attributable usage existed but none
+     * was attributed to this skill. Addable across days: date-range rollup mode returns the
+     * window's sum. On `group_by[]` and `filter[]` shapes both amounts can total below the
+     * ungrouped value for the same skill over the same date or range: spend attributed to a
+     * member–skill pair with no counted usage on that day is excluded from those cuts.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun attributedListPrice(): Optional<String> =
+        attributedListPrice.getOptional("attributed_list_price")
 
     /**
      * Claude.ai activity metrics for a single skill on a given day.
@@ -138,6 +163,16 @@ private constructor(
         coworkMetrics.getRequired("cowork_metrics")
 
     /**
+     * Currency for this row's monetary fields (`estimated_overage_spend` and
+     * `attributed_list_price`), as an uppercase ISO-4217 code. Always "USD" when either amount is
+     * populated; null whenever both amounts are null.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun currency(): Optional<String> = currency.getOptional("currency")
+
+    /**
      * Number of distinct users who used the skill on the requested day, or, in date-range mode,
      * over the requested window — recomputed as an exact distinct count over the window's
      * per-member daily rows, never a sum of per-day values. A skill counts as used only when it is
@@ -150,70 +185,6 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun distinctUserCount(): Long = distinctUserCount.getRequired("distinct_user_count")
-
-    /**
-     * Office Agent activity metrics for a single skill on a given day, broken out by Office
-     * product.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun officeMetrics(): BetaAnalyticsSkillOfficeMetrics =
-        officeMetrics.getRequired("office_metrics")
-
-    /**
-     * Name of the skill
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun skillName(): String = skillName.getRequired("skill_name")
-
-    /**
-     * List-price (rate-card) value of the member requests attributed to this skill, as a decimal
-     * string in the minor unit of `currency` (cents for USD), from Claude Code, Cowork, and Office
-     * Agent request-level attribution — the value of requests that involved the skill, not the
-     * skill's incremental cost. Unlike `estimated_overage_spend` this reflects usage value
-     * regardless of how it was funded — seat-covered usage counts — but it is undiscounted and does
-     * not tie to billed spend or the organization's spend reporting. claude.ai chat usage carries
-     * no request-level attribution and contributes nothing: the field is null on `chat` product
-     * rows and on `office_agent` product cuts dated before 2026-06-18 (the Office Agent attribution
-     * data-start), and on ungrouped rows it covers the Claude Code + Cowork + Office Agent share
-     * only (null when no attributable usage exists). Also null under the same conditions as
-     * `estimated_overage_spend` (spend reporting not enabled for this organization, `office_agent`
-     * product cuts before the 2026-06-18 data-start). "0" means attributable usage existed but none
-     * was attributed to this skill. Addable across days: date-range rollup mode returns the
-     * window's sum. On `group_by[]` and `filter[]` shapes both amounts can total below the
-     * ungrouped value for the same skill over the same date or range: spend attributed to a
-     * member–skill pair with no counted usage on that day is excluded from those cuts.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun attributedListPrice(): Optional<String> =
-        attributedListPrice.getOptional("attributed_list_price")
-
-    /**
-     * Skill use recorded while members had Chat and Cowork unified (Cowork's features inside
-     * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is null
-     * in date-range mode where it cannot be computed. Omitted from the response on deployments that
-     * do not offer Chat and Cowork unified.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun chatCoworkUnifiedMetrics(): Optional<ChatCoworkUnifiedMetrics> =
-        chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
-
-    /**
-     * Currency for this row's monetary fields (`estimated_overage_spend` and
-     * `attributed_list_price`), as an uppercase ISO-4217 code. Always "USD" when either amount is
-     * populated; null whenever both amounts are null.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun currency(): Optional<String> = currency.getOptional("currency")
 
     /**
      * Distinct accounts that enabled this skill on the requested day (claude.ai only — the skill
@@ -274,6 +245,66 @@ private constructor(
     fun invocationCount(): Optional<Long> = invocationCount.getOptional("invocation_count")
 
     /**
+     * Office Agent activity metrics for a single skill on a given day, broken out by Office
+     * product.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun officeMetrics(): BetaAnalyticsSkillOfficeMetrics =
+        officeMetrics.getRequired("office_metrics")
+
+    /**
+     * Skill share status (claude.ai only): one of `private`, `organization`, or `public`. Null for
+     * skills used only in Claude Code or Office (no per-skill share-status concept) and when
+     * share-status reporting is not yet available for the organization. Filterable via
+     * `filter[]=share_status:{value}`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun shareStatus(): Optional<ShareStatus> = shareStatus.getOptional("share_status")
+
+    /**
+     * Human-readable display name for rows whose `skill_name` is an opaque skill id
+     * (user/organization skill types and plugin-delivered skills, whose user-defined names usage
+     * reports generally withhold). Organization-shared skills and skills delivered by the
+     * organization's own plugins (its plugin marketplaces and its library) resolve; plugin skill
+     * names are shown without their 'plugin:' prefix. The literal 'unknown' bucket row gets a fixed
+     * 'Unknown skill' label. For a member's own skill (private or personal-plugin) it is null,
+     * except when the skill's owner used it from Claude Code or Cowork in the requested period:
+     * then it shows the name that client reported at the time. Apart from that, the names of
+     * members' own skills are not disclosed to analytics-key holders. Also null for
+     * Anthropic-provided plugin skills (not resolved), for an organization skill or plugin whose
+     * name can no longer be found (for example, one since deleted), when `skill_name` is already a
+     * display name, or when display-name resolution is not enabled for this organization.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun skillDisplayName(): Optional<String> = skillDisplayName.getOptional("skill_display_name")
+
+    /**
+     * Name of the skill
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun skillName(): String = skillName.getRequired("skill_name")
+
+    /**
+     * Skill use recorded while members had Chat and Cowork unified (Cowork's features inside
+     * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is null
+     * in date-range mode where it cannot be computed. Omitted from the response on deployments that
+     * do not offer Chat and Cowork unified.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun chatCoworkUnifiedMetrics(): Optional<BetaAnalyticsSkillChatCoworkUnifiedMetrics> =
+        chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
+
+    /**
      * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
      * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the canonical
      * Cost & Usage product names; an `office_agent` row's per-surface breakdown is in its
@@ -309,42 +340,22 @@ private constructor(
     fun rbacGroupName(): Optional<String> = rbacGroupName.getOptional("rbac_group_name")
 
     /**
-     * Skill share status (claude.ai only): one of `private`, `organization`, or `public`. Null for
-     * skills used only in Claude Code or Office (no per-skill share-status concept) and when
-     * share-status reporting is not yet available for the organization. Filterable via
-     * `filter[]=share_status:{value}`.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun shareStatus(): Optional<ShareStatus> = shareStatus.getOptional("share_status")
-
-    /**
-     * Human-readable display name for rows whose `skill_name` is an opaque skill id
-     * (user/organization skill types and plugin-delivered skills, whose user-defined names usage
-     * reports generally withhold). Organization-shared skills and skills delivered by the
-     * organization's own plugins (its plugin marketplaces and its library) resolve; plugin skill
-     * names are shown without their 'plugin:' prefix. The literal 'unknown' bucket row gets a fixed
-     * 'Unknown skill' label. For a member's own skill (private or personal-plugin) it is null,
-     * except when the skill's owner used it from Claude Code or Cowork in the requested period:
-     * then it shows the name that client reported at the time. Apart from that, the names of
-     * members' own skills are not disclosed to analytics-key holders. Also null for
-     * Anthropic-provided plugin skills (not resolved), for an organization skill or plugin whose
-     * name can no longer be found (for example, one since deleted), when `skill_name` is already a
-     * display name, or when display-name resolution is not enabled for this organization.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun skillDisplayName(): Optional<String> = skillDisplayName.getOptional("skill_display_name")
-
-    /**
      * Tagged user identifier (e.g. `user_...`). Present only when the request grouped by `user_id`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun userId(): Optional<String> = userId.getOptional("user_id")
+
+    /**
+     * Returns the raw JSON value of [attributedListPrice].
+     *
+     * Unlike [attributedListPrice], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("attributed_list_price")
+    @ExcludeMissing
+    fun _attributedListPrice(): JsonField<String> = attributedListPrice
 
     /**
      * Returns the raw JSON value of [chatMetrics].
@@ -375,6 +386,13 @@ private constructor(
     fun _coworkMetrics(): JsonField<BetaAnalyticsSkillCoworkMetrics> = coworkMetrics
 
     /**
+     * Returns the raw JSON value of [currency].
+     *
+     * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<String> = currency
+
+    /**
      * Returns the raw JSON value of [distinctUserCount].
      *
      * Unlike [distinctUserCount], this method doesn't throw if the JSON field has an unexpected
@@ -383,49 +401,6 @@ private constructor(
     @JsonProperty("distinct_user_count")
     @ExcludeMissing
     fun _distinctUserCount(): JsonField<Long> = distinctUserCount
-
-    /**
-     * Returns the raw JSON value of [officeMetrics].
-     *
-     * Unlike [officeMetrics], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("office_metrics")
-    @ExcludeMissing
-    fun _officeMetrics(): JsonField<BetaAnalyticsSkillOfficeMetrics> = officeMetrics
-
-    /**
-     * Returns the raw JSON value of [skillName].
-     *
-     * Unlike [skillName], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("skill_name") @ExcludeMissing fun _skillName(): JsonField<String> = skillName
-
-    /**
-     * Returns the raw JSON value of [attributedListPrice].
-     *
-     * Unlike [attributedListPrice], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("attributed_list_price")
-    @ExcludeMissing
-    fun _attributedListPrice(): JsonField<String> = attributedListPrice
-
-    /**
-     * Returns the raw JSON value of [chatCoworkUnifiedMetrics].
-     *
-     * Unlike [chatCoworkUnifiedMetrics], this method doesn't throw if the JSON field has an
-     * unexpected type.
-     */
-    @JsonProperty("chat_cowork_unified_metrics")
-    @ExcludeMissing
-    fun _chatCoworkUnifiedMetrics(): JsonField<ChatCoworkUnifiedMetrics> = chatCoworkUnifiedMetrics
-
-    /**
-     * Returns the raw JSON value of [currency].
-     *
-     * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<String> = currency
 
     /**
      * Returns the raw JSON value of [enableCount].
@@ -454,6 +429,52 @@ private constructor(
     fun _invocationCount(): JsonField<Long> = invocationCount
 
     /**
+     * Returns the raw JSON value of [officeMetrics].
+     *
+     * Unlike [officeMetrics], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("office_metrics")
+    @ExcludeMissing
+    fun _officeMetrics(): JsonField<BetaAnalyticsSkillOfficeMetrics> = officeMetrics
+
+    /**
+     * Returns the raw JSON value of [shareStatus].
+     *
+     * Unlike [shareStatus], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("share_status")
+    @ExcludeMissing
+    fun _shareStatus(): JsonField<ShareStatus> = shareStatus
+
+    /**
+     * Returns the raw JSON value of [skillDisplayName].
+     *
+     * Unlike [skillDisplayName], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("skill_display_name")
+    @ExcludeMissing
+    fun _skillDisplayName(): JsonField<String> = skillDisplayName
+
+    /**
+     * Returns the raw JSON value of [skillName].
+     *
+     * Unlike [skillName], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("skill_name") @ExcludeMissing fun _skillName(): JsonField<String> = skillName
+
+    /**
+     * Returns the raw JSON value of [chatCoworkUnifiedMetrics].
+     *
+     * Unlike [chatCoworkUnifiedMetrics], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("chat_cowork_unified_metrics")
+    @ExcludeMissing
+    fun _chatCoworkUnifiedMetrics(): JsonField<BetaAnalyticsSkillChatCoworkUnifiedMetrics> =
+        chatCoworkUnifiedMetrics
+
+    /**
      * Returns the raw JSON value of [product].
      *
      * Unlike [product], this method doesn't throw if the JSON field has an unexpected type.
@@ -477,25 +498,6 @@ private constructor(
     @JsonProperty("rbac_group_name")
     @ExcludeMissing
     fun _rbacGroupName(): JsonField<String> = rbacGroupName
-
-    /**
-     * Returns the raw JSON value of [shareStatus].
-     *
-     * Unlike [shareStatus], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("share_status")
-    @ExcludeMissing
-    fun _shareStatus(): JsonField<ShareStatus> = shareStatus
-
-    /**
-     * Returns the raw JSON value of [skillDisplayName].
-     *
-     * Unlike [skillDisplayName], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("skill_display_name")
-    @ExcludeMissing
-    fun _skillDisplayName(): JsonField<String> = skillDisplayName
 
     /**
      * Returns the raw JSON value of [userId].
@@ -523,11 +525,18 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .attributedListPrice()
          * .chatMetrics()
          * .claudeCodeMetrics()
          * .coworkMetrics()
+         * .currency()
          * .distinctUserCount()
+         * .enableCount()
+         * .estimatedOverageSpend()
+         * .invocationCount()
          * .officeMetrics()
+         * .shareStatus()
+         * .skillDisplayName()
          * .skillName()
          * ```
          */
@@ -537,47 +546,88 @@ private constructor(
     /** A builder for [BetaAnalyticsSkillActivity]. */
     class Builder internal constructor() {
 
+        private var attributedListPrice: JsonField<String>? = null
         private var chatMetrics: JsonField<BetaAnalyticsSkillChatMetrics>? = null
         private var claudeCodeMetrics: JsonField<BetaAnalyticsSkillClaudeCodeMetrics>? = null
         private var coworkMetrics: JsonField<BetaAnalyticsSkillCoworkMetrics>? = null
+        private var currency: JsonField<String>? = null
         private var distinctUserCount: JsonField<Long>? = null
+        private var enableCount: JsonField<Long>? = null
+        private var estimatedOverageSpend: JsonField<String>? = null
+        private var invocationCount: JsonField<Long>? = null
         private var officeMetrics: JsonField<BetaAnalyticsSkillOfficeMetrics>? = null
+        private var shareStatus: JsonField<ShareStatus>? = null
+        private var skillDisplayName: JsonField<String>? = null
         private var skillName: JsonField<String>? = null
-        private var attributedListPrice: JsonField<String> = JsonMissing.of()
-        private var chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of()
-        private var currency: JsonField<String> = JsonMissing.of()
-        private var enableCount: JsonField<Long> = JsonMissing.of()
-        private var estimatedOverageSpend: JsonField<String> = JsonMissing.of()
-        private var invocationCount: JsonField<Long> = JsonMissing.of()
+        private var chatCoworkUnifiedMetrics:
+            JsonField<BetaAnalyticsSkillChatCoworkUnifiedMetrics> =
+            JsonMissing.of()
         private var product: JsonField<String> = JsonMissing.of()
         private var rbacGroupId: JsonField<String> = JsonMissing.of()
         private var rbacGroupName: JsonField<String> = JsonMissing.of()
-        private var shareStatus: JsonField<ShareStatus> = JsonMissing.of()
-        private var skillDisplayName: JsonField<String> = JsonMissing.of()
         private var userId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaAnalyticsSkillActivity: BetaAnalyticsSkillActivity) = apply {
+            attributedListPrice = betaAnalyticsSkillActivity.attributedListPrice
             chatMetrics = betaAnalyticsSkillActivity.chatMetrics
             claudeCodeMetrics = betaAnalyticsSkillActivity.claudeCodeMetrics
             coworkMetrics = betaAnalyticsSkillActivity.coworkMetrics
-            distinctUserCount = betaAnalyticsSkillActivity.distinctUserCount
-            officeMetrics = betaAnalyticsSkillActivity.officeMetrics
-            skillName = betaAnalyticsSkillActivity.skillName
-            attributedListPrice = betaAnalyticsSkillActivity.attributedListPrice
-            chatCoworkUnifiedMetrics = betaAnalyticsSkillActivity.chatCoworkUnifiedMetrics
             currency = betaAnalyticsSkillActivity.currency
+            distinctUserCount = betaAnalyticsSkillActivity.distinctUserCount
             enableCount = betaAnalyticsSkillActivity.enableCount
             estimatedOverageSpend = betaAnalyticsSkillActivity.estimatedOverageSpend
             invocationCount = betaAnalyticsSkillActivity.invocationCount
+            officeMetrics = betaAnalyticsSkillActivity.officeMetrics
+            shareStatus = betaAnalyticsSkillActivity.shareStatus
+            skillDisplayName = betaAnalyticsSkillActivity.skillDisplayName
+            skillName = betaAnalyticsSkillActivity.skillName
+            chatCoworkUnifiedMetrics = betaAnalyticsSkillActivity.chatCoworkUnifiedMetrics
             product = betaAnalyticsSkillActivity.product
             rbacGroupId = betaAnalyticsSkillActivity.rbacGroupId
             rbacGroupName = betaAnalyticsSkillActivity.rbacGroupName
-            shareStatus = betaAnalyticsSkillActivity.shareStatus
-            skillDisplayName = betaAnalyticsSkillActivity.skillDisplayName
             userId = betaAnalyticsSkillActivity.userId
             additionalProperties = betaAnalyticsSkillActivity.additionalProperties.toMutableMap()
+        }
+
+        /**
+         * List-price (rate-card) value of the member requests attributed to this skill, as a
+         * decimal string in the minor unit of `currency` (cents for USD), from Claude Code, Cowork,
+         * and Office Agent request-level attribution — the value of requests that involved the
+         * skill, not the skill's incremental cost. Unlike `estimated_overage_spend` this reflects
+         * usage value regardless of how it was funded — seat-covered usage counts — but it is
+         * undiscounted and does not tie to billed spend or the organization's spend reporting.
+         * claude.ai chat usage carries no request-level attribution and contributes nothing: the
+         * field is null on `chat` product rows and on `office_agent` product cuts dated before
+         * 2026-06-18 (the Office Agent attribution data-start), and on ungrouped rows it covers the
+         * Claude Code + Cowork + Office Agent share only (null when no attributable usage exists).
+         * Also null under the same conditions as `estimated_overage_spend` (spend reporting not
+         * enabled for this organization, `office_agent` product cuts before the 2026-06-18
+         * data-start). "0" means attributable usage existed but none was attributed to this skill.
+         * Addable across days: date-range rollup mode returns the window's sum. On `group_by[]` and
+         * `filter[]` shapes both amounts can total below the ungrouped value for the same skill
+         * over the same date or range: spend attributed to a member–skill pair with no counted
+         * usage on that day is excluded from those cuts.
+         */
+        fun attributedListPrice(attributedListPrice: String?) =
+            attributedListPrice(JsonField.ofNullable(attributedListPrice))
+
+        /**
+         * Alias for calling [Builder.attributedListPrice] with `attributedListPrice.orElse(null)`.
+         */
+        fun attributedListPrice(attributedListPrice: Optional<String>) =
+            attributedListPrice(attributedListPrice.getOrNull())
+
+        /**
+         * Sets [Builder.attributedListPrice] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.attributedListPrice] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun attributedListPrice(attributedListPrice: JsonField<String>) = apply {
+            this.attributedListPrice = attributedListPrice
         }
 
         /** Claude.ai activity metrics for a single skill on a given day. */
@@ -627,6 +677,24 @@ private constructor(
         }
 
         /**
+         * Currency for this row's monetary fields (`estimated_overage_spend` and
+         * `attributed_list_price`), as an uppercase ISO-4217 code. Always "USD" when either amount
+         * is populated; null whenever both amounts are null.
+         */
+        fun currency(currency: String?) = currency(JsonField.ofNullable(currency))
+
+        /** Alias for calling [Builder.currency] with `currency.orElse(null)`. */
+        fun currency(currency: Optional<String>) = currency(currency.getOrNull())
+
+        /**
+         * Sets [Builder.currency] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.currency] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun currency(currency: JsonField<String>) = apply { this.currency = currency }
+
+        /**
          * Number of distinct users who used the skill on the requested day, or, in date-range mode,
          * over the requested window — recomputed as an exact distinct count over the window's
          * per-member daily rows, never a sum of per-day values. A skill counts as used only when it
@@ -648,120 +716,6 @@ private constructor(
         fun distinctUserCount(distinctUserCount: JsonField<Long>) = apply {
             this.distinctUserCount = distinctUserCount
         }
-
-        /**
-         * Office Agent activity metrics for a single skill on a given day, broken out by Office
-         * product.
-         */
-        fun officeMetrics(officeMetrics: BetaAnalyticsSkillOfficeMetrics) =
-            officeMetrics(JsonField.of(officeMetrics))
-
-        /**
-         * Sets [Builder.officeMetrics] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.officeMetrics] with a well-typed
-         * [BetaAnalyticsSkillOfficeMetrics] value instead. This method is primarily for setting the
-         * field to an undocumented or not yet supported value.
-         */
-        fun officeMetrics(officeMetrics: JsonField<BetaAnalyticsSkillOfficeMetrics>) = apply {
-            this.officeMetrics = officeMetrics
-        }
-
-        /** Name of the skill */
-        fun skillName(skillName: String) = skillName(JsonField.of(skillName))
-
-        /**
-         * Sets [Builder.skillName] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.skillName] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun skillName(skillName: JsonField<String>) = apply { this.skillName = skillName }
-
-        /**
-         * List-price (rate-card) value of the member requests attributed to this skill, as a
-         * decimal string in the minor unit of `currency` (cents for USD), from Claude Code, Cowork,
-         * and Office Agent request-level attribution — the value of requests that involved the
-         * skill, not the skill's incremental cost. Unlike `estimated_overage_spend` this reflects
-         * usage value regardless of how it was funded — seat-covered usage counts — but it is
-         * undiscounted and does not tie to billed spend or the organization's spend reporting.
-         * claude.ai chat usage carries no request-level attribution and contributes nothing: the
-         * field is null on `chat` product rows and on `office_agent` product cuts dated before
-         * 2026-06-18 (the Office Agent attribution data-start), and on ungrouped rows it covers the
-         * Claude Code + Cowork + Office Agent share only (null when no attributable usage exists).
-         * Also null under the same conditions as `estimated_overage_spend` (spend reporting not
-         * enabled for this organization, `office_agent` product cuts before the 2026-06-18
-         * data-start). "0" means attributable usage existed but none was attributed to this skill.
-         * Addable across days: date-range rollup mode returns the window's sum. On `group_by[]` and
-         * `filter[]` shapes both amounts can total below the ungrouped value for the same skill
-         * over the same date or range: spend attributed to a member–skill pair with no counted
-         * usage on that day is excluded from those cuts.
-         */
-        fun attributedListPrice(attributedListPrice: String?) =
-            attributedListPrice(JsonField.ofNullable(attributedListPrice))
-
-        /**
-         * Alias for calling [Builder.attributedListPrice] with `attributedListPrice.orElse(null)`.
-         */
-        fun attributedListPrice(attributedListPrice: Optional<String>) =
-            attributedListPrice(attributedListPrice.getOrNull())
-
-        /**
-         * Sets [Builder.attributedListPrice] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.attributedListPrice] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun attributedListPrice(attributedListPrice: JsonField<String>) = apply {
-            this.attributedListPrice = attributedListPrice
-        }
-
-        /**
-         * Skill use recorded while members had Chat and Cowork unified (Cowork's features inside
-         * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is
-         * null in date-range mode where it cannot be computed. Omitted from the response on
-         * deployments that do not offer Chat and Cowork unified.
-         */
-        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics?) =
-            chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
-
-        /**
-         * Alias for calling [Builder.chatCoworkUnifiedMetrics] with
-         * `chatCoworkUnifiedMetrics.orElse(null)`.
-         */
-        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: Optional<ChatCoworkUnifiedMetrics>) =
-            chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
-
-        /**
-         * Sets [Builder.chatCoworkUnifiedMetrics] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.chatCoworkUnifiedMetrics] with a well-typed
-         * [ChatCoworkUnifiedMetrics] value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
-         */
-        fun chatCoworkUnifiedMetrics(
-            chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>
-        ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
-
-        /**
-         * Currency for this row's monetary fields (`estimated_overage_spend` and
-         * `attributed_list_price`), as an uppercase ISO-4217 code. Always "USD" when either amount
-         * is populated; null whenever both amounts are null.
-         */
-        fun currency(currency: String?) = currency(JsonField.ofNullable(currency))
-
-        /** Alias for calling [Builder.currency] with `currency.orElse(null)`. */
-        fun currency(currency: Optional<String>) = currency(currency.getOrNull())
-
-        /**
-         * Sets [Builder.currency] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.currency] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun currency(currency: JsonField<String>) = apply { this.currency = currency }
 
         /**
          * Distinct accounts that enabled this skill on the requested day (claude.ai only — the
@@ -875,6 +829,120 @@ private constructor(
         }
 
         /**
+         * Office Agent activity metrics for a single skill on a given day, broken out by Office
+         * product.
+         */
+        fun officeMetrics(officeMetrics: BetaAnalyticsSkillOfficeMetrics) =
+            officeMetrics(JsonField.of(officeMetrics))
+
+        /**
+         * Sets [Builder.officeMetrics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.officeMetrics] with a well-typed
+         * [BetaAnalyticsSkillOfficeMetrics] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun officeMetrics(officeMetrics: JsonField<BetaAnalyticsSkillOfficeMetrics>) = apply {
+            this.officeMetrics = officeMetrics
+        }
+
+        /**
+         * Skill share status (claude.ai only): one of `private`, `organization`, or `public`. Null
+         * for skills used only in Claude Code or Office (no per-skill share-status concept) and
+         * when share-status reporting is not yet available for the organization. Filterable via
+         * `filter[]=share_status:{value}`.
+         */
+        fun shareStatus(shareStatus: ShareStatus?) = shareStatus(JsonField.ofNullable(shareStatus))
+
+        /** Alias for calling [Builder.shareStatus] with `shareStatus.orElse(null)`. */
+        fun shareStatus(shareStatus: Optional<ShareStatus>) = shareStatus(shareStatus.getOrNull())
+
+        /**
+         * Sets [Builder.shareStatus] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.shareStatus] with a well-typed [ShareStatus] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun shareStatus(shareStatus: JsonField<ShareStatus>) = apply {
+            this.shareStatus = shareStatus
+        }
+
+        /**
+         * Human-readable display name for rows whose `skill_name` is an opaque skill id
+         * (user/organization skill types and plugin-delivered skills, whose user-defined names
+         * usage reports generally withhold). Organization-shared skills and skills delivered by the
+         * organization's own plugins (its plugin marketplaces and its library) resolve; plugin
+         * skill names are shown without their 'plugin:' prefix. The literal 'unknown' bucket row
+         * gets a fixed 'Unknown skill' label. For a member's own skill (private or personal-plugin)
+         * it is null, except when the skill's owner used it from Claude Code or Cowork in the
+         * requested period: then it shows the name that client reported at the time. Apart from
+         * that, the names of members' own skills are not disclosed to analytics-key holders. Also
+         * null for Anthropic-provided plugin skills (not resolved), for an organization skill or
+         * plugin whose name can no longer be found (for example, one since deleted), when
+         * `skill_name` is already a display name, or when display-name resolution is not enabled
+         * for this organization.
+         */
+        fun skillDisplayName(skillDisplayName: String?) =
+            skillDisplayName(JsonField.ofNullable(skillDisplayName))
+
+        /** Alias for calling [Builder.skillDisplayName] with `skillDisplayName.orElse(null)`. */
+        fun skillDisplayName(skillDisplayName: Optional<String>) =
+            skillDisplayName(skillDisplayName.getOrNull())
+
+        /**
+         * Sets [Builder.skillDisplayName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.skillDisplayName] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun skillDisplayName(skillDisplayName: JsonField<String>) = apply {
+            this.skillDisplayName = skillDisplayName
+        }
+
+        /** Name of the skill */
+        fun skillName(skillName: String) = skillName(JsonField.of(skillName))
+
+        /**
+         * Sets [Builder.skillName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.skillName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun skillName(skillName: JsonField<String>) = apply { this.skillName = skillName }
+
+        /**
+         * Skill use recorded while members had Chat and Cowork unified (Cowork's features inside
+         * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is
+         * null in date-range mode where it cannot be computed. Omitted from the response on
+         * deployments that do not offer Chat and Cowork unified.
+         */
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: BetaAnalyticsSkillChatCoworkUnifiedMetrics?
+        ) = chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
+
+        /**
+         * Alias for calling [Builder.chatCoworkUnifiedMetrics] with
+         * `chatCoworkUnifiedMetrics.orElse(null)`.
+         */
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: Optional<BetaAnalyticsSkillChatCoworkUnifiedMetrics>
+        ) = chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
+
+        /**
+         * Sets [Builder.chatCoworkUnifiedMetrics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.chatCoworkUnifiedMetrics] with a well-typed
+         * [BetaAnalyticsSkillChatCoworkUnifiedMetrics] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
+         */
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsSkillChatCoworkUnifiedMetrics>
+        ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
+
+        /**
          * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
          * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the
          * canonical Cost & Usage product names; an `office_agent` row's per-surface breakdown is in
@@ -940,61 +1008,6 @@ private constructor(
         }
 
         /**
-         * Skill share status (claude.ai only): one of `private`, `organization`, or `public`. Null
-         * for skills used only in Claude Code or Office (no per-skill share-status concept) and
-         * when share-status reporting is not yet available for the organization. Filterable via
-         * `filter[]=share_status:{value}`.
-         */
-        fun shareStatus(shareStatus: ShareStatus?) = shareStatus(JsonField.ofNullable(shareStatus))
-
-        /** Alias for calling [Builder.shareStatus] with `shareStatus.orElse(null)`. */
-        fun shareStatus(shareStatus: Optional<ShareStatus>) = shareStatus(shareStatus.getOrNull())
-
-        /**
-         * Sets [Builder.shareStatus] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.shareStatus] with a well-typed [ShareStatus] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun shareStatus(shareStatus: JsonField<ShareStatus>) = apply {
-            this.shareStatus = shareStatus
-        }
-
-        /**
-         * Human-readable display name for rows whose `skill_name` is an opaque skill id
-         * (user/organization skill types and plugin-delivered skills, whose user-defined names
-         * usage reports generally withhold). Organization-shared skills and skills delivered by the
-         * organization's own plugins (its plugin marketplaces and its library) resolve; plugin
-         * skill names are shown without their 'plugin:' prefix. The literal 'unknown' bucket row
-         * gets a fixed 'Unknown skill' label. For a member's own skill (private or personal-plugin)
-         * it is null, except when the skill's owner used it from Claude Code or Cowork in the
-         * requested period: then it shows the name that client reported at the time. Apart from
-         * that, the names of members' own skills are not disclosed to analytics-key holders. Also
-         * null for Anthropic-provided plugin skills (not resolved), for an organization skill or
-         * plugin whose name can no longer be found (for example, one since deleted), when
-         * `skill_name` is already a display name, or when display-name resolution is not enabled
-         * for this organization.
-         */
-        fun skillDisplayName(skillDisplayName: String?) =
-            skillDisplayName(JsonField.ofNullable(skillDisplayName))
-
-        /** Alias for calling [Builder.skillDisplayName] with `skillDisplayName.orElse(null)`. */
-        fun skillDisplayName(skillDisplayName: Optional<String>) =
-            skillDisplayName(skillDisplayName.getOrNull())
-
-        /**
-         * Sets [Builder.skillDisplayName] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.skillDisplayName] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun skillDisplayName(skillDisplayName: JsonField<String>) = apply {
-            this.skillDisplayName = skillDisplayName
-        }
-
-        /**
          * Tagged user identifier (e.g. `user_...`). Present only when the request grouped by
          * `user_id`.
          */
@@ -1037,11 +1050,18 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .attributedListPrice()
          * .chatMetrics()
          * .claudeCodeMetrics()
          * .coworkMetrics()
+         * .currency()
          * .distinctUserCount()
+         * .enableCount()
+         * .estimatedOverageSpend()
+         * .invocationCount()
          * .officeMetrics()
+         * .shareStatus()
+         * .skillDisplayName()
          * .skillName()
          * ```
          *
@@ -1049,23 +1069,23 @@ private constructor(
          */
         fun build(): BetaAnalyticsSkillActivity =
             BetaAnalyticsSkillActivity(
+                checkRequired("attributedListPrice", attributedListPrice),
                 checkRequired("chatMetrics", chatMetrics),
                 checkRequired("claudeCodeMetrics", claudeCodeMetrics),
                 checkRequired("coworkMetrics", coworkMetrics),
+                checkRequired("currency", currency),
                 checkRequired("distinctUserCount", distinctUserCount),
+                checkRequired("enableCount", enableCount),
+                checkRequired("estimatedOverageSpend", estimatedOverageSpend),
+                checkRequired("invocationCount", invocationCount),
                 checkRequired("officeMetrics", officeMetrics),
+                checkRequired("shareStatus", shareStatus),
+                checkRequired("skillDisplayName", skillDisplayName),
                 checkRequired("skillName", skillName),
-                attributedListPrice,
                 chatCoworkUnifiedMetrics,
-                currency,
-                enableCount,
-                estimatedOverageSpend,
-                invocationCount,
                 product,
                 rbacGroupId,
                 rbacGroupName,
-                shareStatus,
-                skillDisplayName,
                 userId,
                 additionalProperties.toMutableMap(),
             )
@@ -1086,23 +1106,23 @@ private constructor(
             return@apply
         }
 
+        attributedListPrice()
         chatMetrics().validate()
         claudeCodeMetrics().validate()
         coworkMetrics().validate()
-        distinctUserCount()
-        officeMetrics().validate()
-        skillName()
-        attributedListPrice()
-        chatCoworkUnifiedMetrics().ifPresent { it.validate() }
         currency()
+        distinctUserCount()
         enableCount()
         estimatedOverageSpend()
         invocationCount()
+        officeMetrics().validate()
+        shareStatus().ifPresent { it.validate() }
+        skillDisplayName()
+        skillName()
+        chatCoworkUnifiedMetrics().ifPresent { it.validate() }
         product()
         rbacGroupId()
         rbacGroupName()
-        shareStatus().ifPresent { it.validate() }
-        skillDisplayName()
         userId()
         validated = true
     }
@@ -1122,263 +1142,24 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (chatMetrics.asKnown().getOrNull()?.validity() ?: 0) +
+        (if (attributedListPrice.asKnown().isPresent) 1 else 0) +
+            (chatMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (claudeCodeMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (coworkMetrics.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (distinctUserCount.asKnown().isPresent) 1 else 0) +
-            (officeMetrics.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (skillName.asKnown().isPresent) 1 else 0) +
-            (if (attributedListPrice.asKnown().isPresent) 1 else 0) +
-            (chatCoworkUnifiedMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (if (currency.asKnown().isPresent) 1 else 0) +
+            (if (distinctUserCount.asKnown().isPresent) 1 else 0) +
             (if (enableCount.asKnown().isPresent) 1 else 0) +
             (if (estimatedOverageSpend.asKnown().isPresent) 1 else 0) +
             (if (invocationCount.asKnown().isPresent) 1 else 0) +
+            (officeMetrics.asKnown().getOrNull()?.validity() ?: 0) +
+            (shareStatus.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (skillDisplayName.asKnown().isPresent) 1 else 0) +
+            (if (skillName.asKnown().isPresent) 1 else 0) +
+            (chatCoworkUnifiedMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (if (product.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupName.asKnown().isPresent) 1 else 0) +
-            (shareStatus.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (skillDisplayName.asKnown().isPresent) 1 else 0) +
             (if (userId.asKnown().isPresent) 1 else 0)
-
-    /**
-     * Skill use recorded while members had Chat and Cowork unified (Cowork's features inside
-     * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is null
-     * in date-range mode where it cannot be computed. Omitted from the response on deployments that
-     * do not offer Chat and Cowork unified.
-     */
-    class ChatCoworkUnifiedMetrics
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val chat: JsonField<BetaAnalyticsSkillChatCoworkUnifiedChatMetrics>,
-        private val sessions: JsonField<BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("chat")
-            @ExcludeMissing
-            chat: JsonField<BetaAnalyticsSkillChatCoworkUnifiedChatMetrics> = JsonMissing.of(),
-            @JsonProperty("sessions")
-            @ExcludeMissing
-            sessions: JsonField<BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics> =
-                JsonMissing.of(),
-        ) : this(chat, sessions, mutableMapOf())
-
-        /**
-         * A skill's use in chat conversations recorded while members had Chat and Cowork unified
-         * turned on.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun chat(): BetaAnalyticsSkillChatCoworkUnifiedChatMetrics = chat.getRequired("chat")
-
-        /**
-         * A skill's use in Cowork sessions recorded while members had Chat and Cowork unified
-         * turned on.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun sessions(): BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics =
-            sessions.getRequired("sessions")
-
-        /**
-         * Returns the raw JSON value of [chat].
-         *
-         * Unlike [chat], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("chat")
-        @ExcludeMissing
-        fun _chat(): JsonField<BetaAnalyticsSkillChatCoworkUnifiedChatMetrics> = chat
-
-        /**
-         * Returns the raw JSON value of [sessions].
-         *
-         * Unlike [sessions], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("sessions")
-        @ExcludeMissing
-        fun _sessions(): JsonField<BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics> = sessions
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [ChatCoworkUnifiedMetrics].
-             *
-             * The following fields are required:
-             * ```java
-             * .chat()
-             * .sessions()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [ChatCoworkUnifiedMetrics]. */
-        class Builder internal constructor() {
-
-            private var chat: JsonField<BetaAnalyticsSkillChatCoworkUnifiedChatMetrics>? = null
-            private var sessions: JsonField<BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics>? =
-                null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics) = apply {
-                chat = chatCoworkUnifiedMetrics.chat
-                sessions = chatCoworkUnifiedMetrics.sessions
-                additionalProperties = chatCoworkUnifiedMetrics.additionalProperties.toMutableMap()
-            }
-
-            /**
-             * A skill's use in chat conversations recorded while members had Chat and Cowork
-             * unified turned on.
-             */
-            fun chat(chat: BetaAnalyticsSkillChatCoworkUnifiedChatMetrics) =
-                chat(JsonField.of(chat))
-
-            /**
-             * Sets [Builder.chat] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.chat] with a well-typed
-             * [BetaAnalyticsSkillChatCoworkUnifiedChatMetrics] value instead. This method is
-             * primarily for setting the field to an undocumented or not yet supported value.
-             */
-            fun chat(chat: JsonField<BetaAnalyticsSkillChatCoworkUnifiedChatMetrics>) = apply {
-                this.chat = chat
-            }
-
-            /**
-             * A skill's use in Cowork sessions recorded while members had Chat and Cowork unified
-             * turned on.
-             */
-            fun sessions(sessions: BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics) =
-                sessions(JsonField.of(sessions))
-
-            /**
-             * Sets [Builder.sessions] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.sessions] with a well-typed
-             * [BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics] value instead. This method is
-             * primarily for setting the field to an undocumented or not yet supported value.
-             */
-            fun sessions(sessions: JsonField<BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics>) =
-                apply {
-                    this.sessions = sessions
-                }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [ChatCoworkUnifiedMetrics].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .chat()
-             * .sessions()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): ChatCoworkUnifiedMetrics =
-                ChatCoworkUnifiedMetrics(
-                    checkRequired("chat", chat),
-                    checkRequired("sessions", sessions),
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): ChatCoworkUnifiedMetrics = apply {
-            if (validated) {
-                return@apply
-            }
-
-            chat().validate()
-            sessions().validate()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (chat.asKnown().getOrNull()?.validity() ?: 0) +
-                (sessions.asKnown().getOrNull()?.validity() ?: 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is ChatCoworkUnifiedMetrics &&
-                chat == other.chat &&
-                sessions == other.sessions &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(chat, sessions, additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "ChatCoworkUnifiedMetrics{chat=$chat, sessions=$sessions, additionalProperties=$additionalProperties}"
-    }
 
     /**
      * Skill share status (claude.ai only): one of `private`, `organization`, or `public`. Null for
@@ -1549,46 +1330,46 @@ private constructor(
         }
 
         return other is BetaAnalyticsSkillActivity &&
+            attributedListPrice == other.attributedListPrice &&
             chatMetrics == other.chatMetrics &&
             claudeCodeMetrics == other.claudeCodeMetrics &&
             coworkMetrics == other.coworkMetrics &&
-            distinctUserCount == other.distinctUserCount &&
-            officeMetrics == other.officeMetrics &&
-            skillName == other.skillName &&
-            attributedListPrice == other.attributedListPrice &&
-            chatCoworkUnifiedMetrics == other.chatCoworkUnifiedMetrics &&
             currency == other.currency &&
+            distinctUserCount == other.distinctUserCount &&
             enableCount == other.enableCount &&
             estimatedOverageSpend == other.estimatedOverageSpend &&
             invocationCount == other.invocationCount &&
+            officeMetrics == other.officeMetrics &&
+            shareStatus == other.shareStatus &&
+            skillDisplayName == other.skillDisplayName &&
+            skillName == other.skillName &&
+            chatCoworkUnifiedMetrics == other.chatCoworkUnifiedMetrics &&
             product == other.product &&
             rbacGroupId == other.rbacGroupId &&
             rbacGroupName == other.rbacGroupName &&
-            shareStatus == other.shareStatus &&
-            skillDisplayName == other.skillDisplayName &&
             userId == other.userId &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
         Objects.hash(
+            attributedListPrice,
             chatMetrics,
             claudeCodeMetrics,
             coworkMetrics,
-            distinctUserCount,
-            officeMetrics,
-            skillName,
-            attributedListPrice,
-            chatCoworkUnifiedMetrics,
             currency,
+            distinctUserCount,
             enableCount,
             estimatedOverageSpend,
             invocationCount,
+            officeMetrics,
+            shareStatus,
+            skillDisplayName,
+            skillName,
+            chatCoworkUnifiedMetrics,
             product,
             rbacGroupId,
             rbacGroupName,
-            shareStatus,
-            skillDisplayName,
             userId,
             additionalProperties,
         )
@@ -1597,5 +1378,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsSkillActivity{chatMetrics=$chatMetrics, claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, distinctUserCount=$distinctUserCount, officeMetrics=$officeMetrics, skillName=$skillName, attributedListPrice=$attributedListPrice, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, currency=$currency, enableCount=$enableCount, estimatedOverageSpend=$estimatedOverageSpend, invocationCount=$invocationCount, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, shareStatus=$shareStatus, skillDisplayName=$skillDisplayName, userId=$userId, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsSkillActivity{attributedListPrice=$attributedListPrice, chatMetrics=$chatMetrics, claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, currency=$currency, distinctUserCount=$distinctUserCount, enableCount=$enableCount, estimatedOverageSpend=$estimatedOverageSpend, invocationCount=$invocationCount, officeMetrics=$officeMetrics, shareStatus=$shareStatus, skillDisplayName=$skillDisplayName, skillName=$skillName, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, userId=$userId, additionalProperties=$additionalProperties}"
 }

@@ -2,6 +2,7 @@ package com.anthropic.models.beta.organization.analytics.plugins
 
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsPluginActivity
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsPluginChatCoworkUnifiedMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsPluginClaudeCodeMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsPluginCoworkMetrics
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
@@ -21,11 +22,11 @@ internal class PluginListPageResponseTest {
                         .distinctUserCount(0L)
                         .installCount(0L)
                         .invocationCount(0L)
+                        .pluginId("plugin_id")
                         .pluginName("plugin_name")
                         .chatCoworkUnifiedMetrics(
-                            BetaAnalyticsPluginActivity.ChatCoworkUnifiedMetrics.of(0L)
+                            BetaAnalyticsPluginChatCoworkUnifiedMetrics.of(0L)
                         )
-                        .pluginId("plugin_id")
                         .product("product")
                         .rbacGroupId("rbac_group_id")
                         .rbacGroupName("rbac_group_name")
@@ -43,11 +44,9 @@ internal class PluginListPageResponseTest {
                     .distinctUserCount(0L)
                     .installCount(0L)
                     .invocationCount(0L)
-                    .pluginName("plugin_name")
-                    .chatCoworkUnifiedMetrics(
-                        BetaAnalyticsPluginActivity.ChatCoworkUnifiedMetrics.of(0L)
-                    )
                     .pluginId("plugin_id")
+                    .pluginName("plugin_name")
+                    .chatCoworkUnifiedMetrics(BetaAnalyticsPluginChatCoworkUnifiedMetrics.of(0L))
                     .product("product")
                     .rbacGroupId("rbac_group_id")
                     .rbacGroupName("rbac_group_name")
@@ -69,11 +68,11 @@ internal class PluginListPageResponseTest {
                         .distinctUserCount(0L)
                         .installCount(0L)
                         .invocationCount(0L)
+                        .pluginId("plugin_id")
                         .pluginName("plugin_name")
                         .chatCoworkUnifiedMetrics(
-                            BetaAnalyticsPluginActivity.ChatCoworkUnifiedMetrics.of(0L)
+                            BetaAnalyticsPluginChatCoworkUnifiedMetrics.of(0L)
                         )
-                        .pluginId("plugin_id")
                         .product("product")
                         .rbacGroupId("rbac_group_id")
                         .rbacGroupName("rbac_group_name")

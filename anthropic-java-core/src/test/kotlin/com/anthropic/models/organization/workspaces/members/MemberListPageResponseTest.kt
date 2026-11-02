@@ -15,7 +15,7 @@ internal class MemberListPageResponseTest {
             MemberListPageResponse.builder()
                 .addData(
                     WorkspaceMember.builder()
-                        .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                        .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                         .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                         .workspaceRole(WorkspaceRole.WORKSPACE_ADMIN)
                         .build()
@@ -28,7 +28,7 @@ internal class MemberListPageResponseTest {
         assertThat(memberListPageResponse.data())
             .containsExactly(
                 WorkspaceMember.builder()
-                    .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                    .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                     .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                     .workspaceRole(WorkspaceRole.WORKSPACE_ADMIN)
                     .build()
@@ -45,7 +45,7 @@ internal class MemberListPageResponseTest {
             MemberListPageResponse.builder()
                 .addData(
                     WorkspaceMember.builder()
-                        .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                        .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                         .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                         .workspaceRole(WorkspaceRole.WORKSPACE_ADMIN)
                         .build()

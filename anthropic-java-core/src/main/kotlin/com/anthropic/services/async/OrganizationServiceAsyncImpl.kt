@@ -16,6 +16,8 @@ import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.organization.OrganizationInfo
 import com.anthropic.models.organization.OrganizationRetrieveParams
+import com.anthropic.services.async.organization.AnalyticsServiceAsync
+import com.anthropic.services.async.organization.AnalyticsServiceAsyncImpl
 import com.anthropic.services.async.organization.ApiKeyServiceAsync
 import com.anthropic.services.async.organization.ApiKeyServiceAsyncImpl
 import com.anthropic.services.async.organization.ComplianceSettingServiceAsync
@@ -28,8 +30,14 @@ import com.anthropic.services.async.organization.InviteServiceAsync
 import com.anthropic.services.async.organization.InviteServiceAsyncImpl
 import com.anthropic.services.async.organization.RateLimitServiceAsync
 import com.anthropic.services.async.organization.RateLimitServiceAsyncImpl
+import com.anthropic.services.async.organization.RbacGroupServiceAsync
+import com.anthropic.services.async.organization.RbacGroupServiceAsyncImpl
+import com.anthropic.services.async.organization.RbacRoleServiceAsync
+import com.anthropic.services.async.organization.RbacRoleServiceAsyncImpl
 import com.anthropic.services.async.organization.ServiceAccountServiceAsync
 import com.anthropic.services.async.organization.ServiceAccountServiceAsyncImpl
+import com.anthropic.services.async.organization.SpendLimitServiceAsync
+import com.anthropic.services.async.organization.SpendLimitServiceAsyncImpl
 import com.anthropic.services.async.organization.UserServiceAsync
 import com.anthropic.services.async.organization.UserServiceAsyncImpl
 import com.anthropic.services.async.organization.WorkspaceServiceAsync
@@ -74,6 +82,20 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
         ComplianceSettingServiceAsyncImpl(clientOptions)
     }
 
+    private val analytics: AnalyticsServiceAsync by lazy {
+        AnalyticsServiceAsyncImpl(clientOptions)
+    }
+
+    private val spendLimits: SpendLimitServiceAsync by lazy {
+        SpendLimitServiceAsyncImpl(clientOptions)
+    }
+
+    private val rbacGroups: RbacGroupServiceAsync by lazy {
+        RbacGroupServiceAsyncImpl(clientOptions)
+    }
+
+    private val rbacRoles: RbacRoleServiceAsync by lazy { RbacRoleServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): OrganizationServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrganizationServiceAsync =
@@ -96,6 +118,14 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
     override fun rateLimits(): RateLimitServiceAsync = rateLimits
 
     override fun complianceSettings(): ComplianceSettingServiceAsync = complianceSettings
+
+    override fun analytics(): AnalyticsServiceAsync = analytics
+
+    override fun spendLimits(): SpendLimitServiceAsync = spendLimits
+
+    override fun rbacGroups(): RbacGroupServiceAsync = rbacGroups
+
+    override fun rbacRoles(): RbacRoleServiceAsync = rbacRoles
 
     override fun retrieve(
         params: OrganizationRetrieveParams,
@@ -146,6 +176,22 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
             ComplianceSettingServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val analytics: AnalyticsServiceAsync.WithRawResponse by lazy {
+            AnalyticsServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val spendLimits: SpendLimitServiceAsync.WithRawResponse by lazy {
+            SpendLimitServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val rbacGroups: RbacGroupServiceAsync.WithRawResponse by lazy {
+            RbacGroupServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val rbacRoles: RbacRoleServiceAsync.WithRawResponse by lazy {
+            RbacRoleServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): OrganizationServiceAsync.WithRawResponse =
@@ -171,6 +217,14 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
 
         override fun complianceSettings(): ComplianceSettingServiceAsync.WithRawResponse =
             complianceSettings
+
+        override fun analytics(): AnalyticsServiceAsync.WithRawResponse = analytics
+
+        override fun spendLimits(): SpendLimitServiceAsync.WithRawResponse = spendLimits
+
+        override fun rbacGroups(): RbacGroupServiceAsync.WithRawResponse = rbacGroups
+
+        override fun rbacRoles(): RbacRoleServiceAsync.WithRawResponse = rbacRoles
 
         private val retrieveHandler: Handler<OrganizationInfo> =
             jsonHandler<OrganizationInfo>(clientOptions.jsonMapper)

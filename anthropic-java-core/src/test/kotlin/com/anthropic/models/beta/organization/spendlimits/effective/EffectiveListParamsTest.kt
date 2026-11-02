@@ -1,6 +1,7 @@
 package com.anthropic.models.beta.organization.spendlimits.effective
 
 import com.anthropic.core.http.QueryParams
+import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitPeriod
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -11,7 +12,7 @@ internal class EffectiveListParamsTest {
         EffectiveListParams.builder()
             .limit(1L)
             .page("page")
-            .addPeriod(EffectiveListParams.Period.DAILY)
+            .addPeriod(BetaSpendLimitPeriod.DAILY)
             .addUserId("string")
             .build()
     }
@@ -22,7 +23,7 @@ internal class EffectiveListParamsTest {
             EffectiveListParams.builder()
                 .limit(1L)
                 .page("page")
-                .addPeriod(EffectiveListParams.Period.DAILY)
+                .addPeriod(BetaSpendLimitPeriod.DAILY)
                 .addUserId("string")
                 .build()
 

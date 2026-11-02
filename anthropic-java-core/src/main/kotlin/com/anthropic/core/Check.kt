@@ -77,7 +77,7 @@ This can happen if you are either:
 
 Double-check that you are depending on compatible Jackson versions.
 
-See https://www.github.com/anthropics/anthropic-sdk-java#jackson for more information.
+See https://platform.claude.com/docs/en/api/sdks/java for more information.
         """
             .trimIndent()
     }

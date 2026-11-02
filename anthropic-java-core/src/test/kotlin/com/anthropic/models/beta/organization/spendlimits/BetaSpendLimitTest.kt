@@ -18,7 +18,7 @@ internal class BetaSpendLimitTest {
                 .currency("USD")
                 .isEnabled(true)
                 .period(BetaSpendLimitPeriod.DAILY)
-                .userScope("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
@@ -30,7 +30,7 @@ internal class BetaSpendLimitTest {
         assertThat(betaSpendLimit.isEnabled()).isEqualTo(true)
         assertThat(betaSpendLimit.period()).isEqualTo(BetaSpendLimitPeriod.DAILY)
         assertThat(betaSpendLimit.scope())
-            .isEqualTo(BetaSpendLimit.Scope.ofUser("user_01WCz1FkmYMm4gnmykNKUu3Q"))
+            .isEqualTo(BetaSpendLimit.Scope.ofUser("user_01WxYzAbCdEfGhJkMnPqRsTu"))
         assertThat(betaSpendLimit.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
@@ -46,7 +46,7 @@ internal class BetaSpendLimitTest {
                 .currency("USD")
                 .isEnabled(true)
                 .period(BetaSpendLimitPeriod.DAILY)
-                .userScope("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 

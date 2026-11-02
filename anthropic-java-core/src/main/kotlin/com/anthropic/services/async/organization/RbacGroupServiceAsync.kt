@@ -1,0 +1,362 @@
+package com.anthropic.services.async.organization
+
+import com.anthropic.core.ClientOptions
+import com.anthropic.core.RequestOptions
+import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.models.organization.rbacgroups.DeletedRbacGroup
+import com.anthropic.models.organization.rbacgroups.RbacGroup
+import com.anthropic.models.organization.rbacgroups.RbacGroupCreateParams
+import com.anthropic.models.organization.rbacgroups.RbacGroupDeleteParams
+import com.anthropic.models.organization.rbacgroups.RbacGroupListPageAsync
+import com.anthropic.models.organization.rbacgroups.RbacGroupListParams
+import com.anthropic.models.organization.rbacgroups.RbacGroupRetrieveParams
+import com.anthropic.models.organization.rbacgroups.RbacGroupUpdateParams
+import com.anthropic.services.async.organization.rbacgroups.MemberServiceAsync
+import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
+
+interface RbacGroupServiceAsync {
+
+    /**
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     */
+    fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): RbacGroupServiceAsync
+
+    fun members(): MemberServiceAsync
+
+    /**
+     * Create an RBAC Group in the Claude Enterprise tenant. Groups created via the API have source
+     * type `"direct"`.
+     *
+     * The RBAC Groups API is available to Claude Enterprise organizations only.
+     */
+    fun create(params: RbacGroupCreateParams): CompletableFuture<RbacGroup> =
+        create(params, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        params: RbacGroupCreateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<RbacGroup>
+
+    /**
+     * Retrieve an RBAC Group by ID.
+     *
+     * The RBAC Groups API is available to Claude Enterprise organizations only.
+     */
+    fun retrieve(rbacGroupId: String): CompletableFuture<RbacGroup> =
+        retrieve(rbacGroupId, RbacGroupRetrieveParams.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        rbacGroupId: String,
+        params: RbacGroupRetrieveParams = RbacGroupRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<RbacGroup> =
+        retrieve(params.toBuilder().rbacGroupId(rbacGroupId).build(), requestOptions)
+
+    /** @see retrieve */
+    fun retrieve(
+        rbacGroupId: String,
+        params: RbacGroupRetrieveParams = RbacGroupRetrieveParams.none(),
+    ): CompletableFuture<RbacGroup> = retrieve(rbacGroupId, params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        params: RbacGroupRetrieveParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<RbacGroup>
+
+    /** @see retrieve */
+    fun retrieve(params: RbacGroupRetrieveParams): CompletableFuture<RbacGroup> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        rbacGroupId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<RbacGroup> =
+        retrieve(rbacGroupId, RbacGroupRetrieveParams.none(), requestOptions)
+
+    /**
+     * Update an RBAC Group's name. Groups provisioned by an identity provider (source type
+     * `"scim"`) cannot be modified via the API while an organization in the tenant uses SCIM
+     * provisioning.
+     *
+     * The RBAC Groups API is available to Claude Enterprise organizations only.
+     */
+    fun update(rbacGroupId: String): CompletableFuture<RbacGroup> =
+        update(rbacGroupId, RbacGroupUpdateParams.none())
+
+    /** @see update */
+    fun update(
+        rbacGroupId: String,
+        params: RbacGroupUpdateParams = RbacGroupUpdateParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<RbacGroup> =
+        update(params.toBuilder().rbacGroupId(rbacGroupId).build(), requestOptions)
+
+    /** @see update */
+    fun update(
+        rbacGroupId: String,
+        params: RbacGroupUpdateParams = RbacGroupUpdateParams.none(),
+    ): CompletableFuture<RbacGroup> = update(rbacGroupId, params, RequestOptions.none())
+
+    /** @see update */
+    fun update(
+        params: RbacGroupUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<RbacGroup>
+
+    /** @see update */
+    fun update(params: RbacGroupUpdateParams): CompletableFuture<RbacGroup> =
+        update(params, RequestOptions.none())
+
+    /** @see update */
+    fun update(rbacGroupId: String, requestOptions: RequestOptions): CompletableFuture<RbacGroup> =
+        update(rbacGroupId, RbacGroupUpdateParams.none(), requestOptions)
+
+    /**
+     * List RBAC Groups in the Claude Enterprise tenant.
+     *
+     * The RBAC Groups API is available to Claude Enterprise organizations only.
+     */
+    fun list(): CompletableFuture<RbacGroupListPageAsync> = list(RbacGroupListParams.none())
+
+    /** @see list */
+    fun list(
+        params: RbacGroupListParams = RbacGroupListParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<RbacGroupListPageAsync>
+
+    /** @see list */
+    fun list(
+        params: RbacGroupListParams = RbacGroupListParams.none()
+    ): CompletableFuture<RbacGroupListPageAsync> = list(params, RequestOptions.none())
+
+    /** @see list */
+    fun list(requestOptions: RequestOptions): CompletableFuture<RbacGroupListPageAsync> =
+        list(RbacGroupListParams.none(), requestOptions)
+
+    /**
+     * Delete an RBAC Group. Groups provisioned by an identity provider (source type `"scim"`)
+     * cannot be deleted via the API while an organization in the tenant uses SCIM provisioning.
+     *
+     * The RBAC Groups API is available to Claude Enterprise organizations only.
+     */
+    fun delete(rbacGroupId: String): CompletableFuture<DeletedRbacGroup> =
+        delete(rbacGroupId, RbacGroupDeleteParams.none())
+
+    /** @see delete */
+    fun delete(
+        rbacGroupId: String,
+        params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<DeletedRbacGroup> =
+        delete(params.toBuilder().rbacGroupId(rbacGroupId).build(), requestOptions)
+
+    /** @see delete */
+    fun delete(
+        rbacGroupId: String,
+        params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
+    ): CompletableFuture<DeletedRbacGroup> = delete(rbacGroupId, params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(
+        params: RbacGroupDeleteParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<DeletedRbacGroup>
+
+    /** @see delete */
+    fun delete(params: RbacGroupDeleteParams): CompletableFuture<DeletedRbacGroup> =
+        delete(params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(
+        rbacGroupId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<DeletedRbacGroup> =
+        delete(rbacGroupId, RbacGroupDeleteParams.none(), requestOptions)
+
+    /**
+     * A view of [RbacGroupServiceAsync] that provides access to raw HTTP responses for each method.
+     */
+    interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): RbacGroupServiceAsync.WithRawResponse
+
+        fun members(): MemberServiceAsync.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `post /v1/organizations/rbac_groups`, but is otherwise
+         * the same as [RbacGroupServiceAsync.create].
+         */
+        fun create(params: RbacGroupCreateParams): CompletableFuture<HttpResponseFor<RbacGroup>> =
+            create(params, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            params: RbacGroupCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<RbacGroup>>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/organizations/rbac_groups/{rbac_group_id}`, but
+         * is otherwise the same as [RbacGroupServiceAsync.retrieve].
+         */
+        fun retrieve(rbacGroupId: String): CompletableFuture<HttpResponseFor<RbacGroup>> =
+            retrieve(rbacGroupId, RbacGroupRetrieveParams.none())
+
+        /** @see retrieve */
+        fun retrieve(
+            rbacGroupId: String,
+            params: RbacGroupRetrieveParams = RbacGroupRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<RbacGroup>> =
+            retrieve(params.toBuilder().rbacGroupId(rbacGroupId).build(), requestOptions)
+
+        /** @see retrieve */
+        fun retrieve(
+            rbacGroupId: String,
+            params: RbacGroupRetrieveParams = RbacGroupRetrieveParams.none(),
+        ): CompletableFuture<HttpResponseFor<RbacGroup>> =
+            retrieve(rbacGroupId, params, RequestOptions.none())
+
+        /** @see retrieve */
+        fun retrieve(
+            params: RbacGroupRetrieveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<RbacGroup>>
+
+        /** @see retrieve */
+        fun retrieve(
+            params: RbacGroupRetrieveParams
+        ): CompletableFuture<HttpResponseFor<RbacGroup>> = retrieve(params, RequestOptions.none())
+
+        /** @see retrieve */
+        fun retrieve(
+            rbacGroupId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<RbacGroup>> =
+            retrieve(rbacGroupId, RbacGroupRetrieveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /v1/organizations/rbac_groups/{rbac_group_id}`, but
+         * is otherwise the same as [RbacGroupServiceAsync.update].
+         */
+        fun update(rbacGroupId: String): CompletableFuture<HttpResponseFor<RbacGroup>> =
+            update(rbacGroupId, RbacGroupUpdateParams.none())
+
+        /** @see update */
+        fun update(
+            rbacGroupId: String,
+            params: RbacGroupUpdateParams = RbacGroupUpdateParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<RbacGroup>> =
+            update(params.toBuilder().rbacGroupId(rbacGroupId).build(), requestOptions)
+
+        /** @see update */
+        fun update(
+            rbacGroupId: String,
+            params: RbacGroupUpdateParams = RbacGroupUpdateParams.none(),
+        ): CompletableFuture<HttpResponseFor<RbacGroup>> =
+            update(rbacGroupId, params, RequestOptions.none())
+
+        /** @see update */
+        fun update(
+            params: RbacGroupUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<RbacGroup>>
+
+        /** @see update */
+        fun update(params: RbacGroupUpdateParams): CompletableFuture<HttpResponseFor<RbacGroup>> =
+            update(params, RequestOptions.none())
+
+        /** @see update */
+        fun update(
+            rbacGroupId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<RbacGroup>> =
+            update(rbacGroupId, RbacGroupUpdateParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /v1/organizations/rbac_groups`, but is otherwise the
+         * same as [RbacGroupServiceAsync.list].
+         */
+        fun list(): CompletableFuture<HttpResponseFor<RbacGroupListPageAsync>> =
+            list(RbacGroupListParams.none())
+
+        /** @see list */
+        fun list(
+            params: RbacGroupListParams = RbacGroupListParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<RbacGroupListPageAsync>>
+
+        /** @see list */
+        fun list(
+            params: RbacGroupListParams = RbacGroupListParams.none()
+        ): CompletableFuture<HttpResponseFor<RbacGroupListPageAsync>> =
+            list(params, RequestOptions.none())
+
+        /** @see list */
+        fun list(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<RbacGroupListPageAsync>> =
+            list(RbacGroupListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /v1/organizations/rbac_groups/{rbac_group_id}`,
+         * but is otherwise the same as [RbacGroupServiceAsync.delete].
+         */
+        fun delete(rbacGroupId: String): CompletableFuture<HttpResponseFor<DeletedRbacGroup>> =
+            delete(rbacGroupId, RbacGroupDeleteParams.none())
+
+        /** @see delete */
+        fun delete(
+            rbacGroupId: String,
+            params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<DeletedRbacGroup>> =
+            delete(params.toBuilder().rbacGroupId(rbacGroupId).build(), requestOptions)
+
+        /** @see delete */
+        fun delete(
+            rbacGroupId: String,
+            params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
+        ): CompletableFuture<HttpResponseFor<DeletedRbacGroup>> =
+            delete(rbacGroupId, params, RequestOptions.none())
+
+        /** @see delete */
+        fun delete(
+            params: RbacGroupDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<DeletedRbacGroup>>
+
+        /** @see delete */
+        fun delete(
+            params: RbacGroupDeleteParams
+        ): CompletableFuture<HttpResponseFor<DeletedRbacGroup>> =
+            delete(params, RequestOptions.none())
+
+        /** @see delete */
+        fun delete(
+            rbacGroupId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<DeletedRbacGroup>> =
+            delete(rbacGroupId, RbacGroupDeleteParams.none(), requestOptions)
+    }
+}

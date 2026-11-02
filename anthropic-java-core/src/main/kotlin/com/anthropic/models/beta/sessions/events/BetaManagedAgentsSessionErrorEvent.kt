@@ -210,6 +210,16 @@ private constructor(
         fun error(credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError) =
             error(Error.ofCredentialHostUnreachable(credentialHostUnreachable))
 
+        /** Alias for calling [error] with `Error.ofToolUseLimitReached(toolUseLimitReached)`. */
+        fun error(toolUseLimitReached: BetaManagedAgentsToolUseLimitReachedError) =
+            error(Error.ofToolUseLimitReached(toolUseLimitReached))
+
+        /**
+         * Alias for calling [error] with `Error.ofCompactionLimitReached(compactionLimitReached)`.
+         */
+        fun error(compactionLimitReached: BetaManagedAgentsCompactionLimitReachedError) =
+            error(Error.ofCompactionLimitReached(compactionLimitReached))
+
         /**
          * Alias for calling [error] with
          * `Error.ofRepositoryAuthentication(repositoryAuthentication)`.
@@ -363,6 +373,8 @@ private constructor(
         private val billing: BetaManagedAgentsBillingError? = null,
         private val credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError? =
             null,
+        private val toolUseLimitReached: BetaManagedAgentsToolUseLimitReachedError? = null,
+        private val compactionLimitReached: BetaManagedAgentsCompactionLimitReachedError? = null,
         private val repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError? =
             null,
         private val repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError? = null,
@@ -382,6 +394,8 @@ private constructor(
                 mcpAuthenticationFailed != null -> Type.MCP_AUTHENTICATION_FAILED_ERROR
                 billing != null -> Type.BILLING_ERROR
                 credentialHostUnreachable != null -> Type.CREDENTIAL_HOST_UNREACHABLE_ERROR
+                toolUseLimitReached != null -> Type.TOOL_USE_LIMIT_REACHED_ERROR
+                compactionLimitReached != null -> Type.COMPACTION_LIMIT_REACHED_ERROR
                 repositoryAuthentication != null -> Type.REPOSITORY_AUTHENTICATION_ERROR
                 repositoryForbidden != null -> Type.REPOSITORY_FORBIDDEN_ERROR
                 repositoryNotFound != null -> Type.REPOSITORY_NOT_FOUND_ERROR
@@ -400,6 +414,8 @@ private constructor(
                 mcpAuthenticationFailed != null -> mcpAuthenticationFailed.message()
                 billing != null -> billing.message()
                 credentialHostUnreachable != null -> credentialHostUnreachable.message()
+                toolUseLimitReached != null -> toolUseLimitReached.message()
+                compactionLimitReached != null -> compactionLimitReached.message()
                 repositoryAuthentication != null -> repositoryAuthentication.message()
                 repositoryForbidden != null -> repositoryForbidden.message()
                 repositoryNotFound != null -> repositoryNotFound.message()
@@ -419,6 +435,8 @@ private constructor(
                     Optional.of(mcpAuthenticationFailed.mcpServerName())
                 billing != null -> Optional.empty()
                 credentialHostUnreachable != null -> Optional.empty()
+                toolUseLimitReached != null -> Optional.empty()
+                compactionLimitReached != null -> Optional.empty()
                 repositoryAuthentication != null -> Optional.empty()
                 repositoryForbidden != null -> Optional.empty()
                 repositoryNotFound != null -> Optional.empty()
@@ -437,6 +455,8 @@ private constructor(
                 mcpAuthenticationFailed != null -> Optional.empty()
                 billing != null -> Optional.empty()
                 credentialHostUnreachable != null -> Optional.empty()
+                toolUseLimitReached != null -> Optional.empty()
+                compactionLimitReached != null -> Optional.empty()
                 repositoryAuthentication != null -> repositoryAuthentication.repositoryUrl()
                 repositoryForbidden != null -> repositoryForbidden.repositoryUrl()
                 repositoryNotFound != null -> repositoryNotFound.repositoryUrl()
@@ -487,6 +507,24 @@ private constructor(
             Optional.ofNullable(credentialHostUnreachable)
 
         /**
+         * The turn stopped because the agent loop reached its limit on tool-use rounds (one model
+         * response that calls tools, plus running those tools, is one round), not because a request
+         * failed. The thread goes idle with `stop_reason: retries_exhausted` (a child thread then
+         * terminates); the next `user.message` starts a new turn.
+         */
+        fun toolUseLimitReached(): Optional<BetaManagedAgentsToolUseLimitReachedError> =
+            Optional.ofNullable(toolUseLimitReached)
+
+        /**
+         * The turn stopped because the context was compacted the maximum number of times in a row
+         * without the model producing a message or a tool call, not because a request failed. The
+         * thread goes idle with `stop_reason: retries_exhausted` (a child thread then terminates);
+         * the next `user.message` starts a new turn.
+         */
+        fun compactionLimitReached(): Optional<BetaManagedAgentsCompactionLimitReachedError> =
+            Optional.ofNullable(compactionLimitReached)
+
+        /**
          * The repository host rejected the credentials, or required credentials and received none.
          */
         fun repositoryAuthentication(): Optional<BetaManagedAgentsRepositoryAuthenticationError> =
@@ -523,6 +561,10 @@ private constructor(
         fun isBilling(): Boolean = billing != null
 
         fun isCredentialHostUnreachable(): Boolean = credentialHostUnreachable != null
+
+        fun isToolUseLimitReached(): Boolean = toolUseLimitReached != null
+
+        fun isCompactionLimitReached(): Boolean = compactionLimitReached != null
 
         fun isRepositoryAuthentication(): Boolean = repositoryAuthentication != null
 
@@ -574,6 +616,24 @@ private constructor(
          */
         fun asCredentialHostUnreachable(): BetaManagedAgentsCredentialHostUnreachableError =
             credentialHostUnreachable.getOrThrow("credentialHostUnreachable")
+
+        /**
+         * The turn stopped because the agent loop reached its limit on tool-use rounds (one model
+         * response that calls tools, plus running those tools, is one round), not because a request
+         * failed. The thread goes idle with `stop_reason: retries_exhausted` (a child thread then
+         * terminates); the next `user.message` starts a new turn.
+         */
+        fun asToolUseLimitReached(): BetaManagedAgentsToolUseLimitReachedError =
+            toolUseLimitReached.getOrThrow("toolUseLimitReached")
+
+        /**
+         * The turn stopped because the context was compacted the maximum number of times in a row
+         * without the model producing a message or a tool call, not because a request failed. The
+         * thread goes idle with `stop_reason: retries_exhausted` (a child thread then terminates);
+         * the next `user.message` starts a new turn.
+         */
+        fun asCompactionLimitReached(): BetaManagedAgentsCompactionLimitReachedError =
+            compactionLimitReached.getOrThrow("compactionLimitReached")
 
         /**
          * The repository host rejected the credentials, or required credentials and received none.
@@ -640,6 +700,9 @@ private constructor(
                 billing != null -> visitor.visitBilling(billing)
                 credentialHostUnreachable != null ->
                     visitor.visitCredentialHostUnreachable(credentialHostUnreachable)
+                toolUseLimitReached != null -> visitor.visitToolUseLimitReached(toolUseLimitReached)
+                compactionLimitReached != null ->
+                    visitor.visitCompactionLimitReached(compactionLimitReached)
                 repositoryAuthentication != null ->
                     visitor.visitRepositoryAuthentication(repositoryAuthentication)
                 repositoryForbidden != null -> visitor.visitRepositoryForbidden(repositoryForbidden)
@@ -674,6 +737,8 @@ private constructor(
                 mcpAuthenticationFailed != null -> mcpAuthenticationFailed.validate()
                 billing != null -> billing.validate()
                 credentialHostUnreachable != null -> credentialHostUnreachable.validate()
+                toolUseLimitReached != null -> toolUseLimitReached.validate()
+                compactionLimitReached != null -> compactionLimitReached.validate()
                 repositoryAuthentication != null -> repositoryAuthentication.validate()
                 repositoryForbidden != null -> repositoryForbidden.validate()
                 repositoryNotFound != null -> repositoryNotFound.validate()
@@ -709,6 +774,8 @@ private constructor(
                 mcpAuthenticationFailed != null -> mcpAuthenticationFailed.validity()
                 billing != null -> billing.validity()
                 credentialHostUnreachable != null -> credentialHostUnreachable.validity()
+                toolUseLimitReached != null -> toolUseLimitReached.validity()
+                compactionLimitReached != null -> compactionLimitReached.validity()
                 repositoryAuthentication != null -> repositoryAuthentication.validity()
                 repositoryForbidden != null -> repositoryForbidden.validity()
                 repositoryNotFound != null -> repositoryNotFound.validity()
@@ -731,6 +798,8 @@ private constructor(
                 mcpAuthenticationFailed == other.mcpAuthenticationFailed &&
                 billing == other.billing &&
                 credentialHostUnreachable == other.credentialHostUnreachable &&
+                toolUseLimitReached == other.toolUseLimitReached &&
+                compactionLimitReached == other.compactionLimitReached &&
                 repositoryAuthentication == other.repositoryAuthentication &&
                 repositoryForbidden == other.repositoryForbidden &&
                 repositoryNotFound == other.repositoryNotFound &&
@@ -748,6 +817,8 @@ private constructor(
                 mcpAuthenticationFailed,
                 billing,
                 credentialHostUnreachable,
+                toolUseLimitReached,
+                compactionLimitReached,
                 repositoryAuthentication,
                 repositoryForbidden,
                 repositoryNotFound,
@@ -767,6 +838,9 @@ private constructor(
                 billing != null -> "Error{billing=$billing}"
                 credentialHostUnreachable != null ->
                     "Error{credentialHostUnreachable=$credentialHostUnreachable}"
+                toolUseLimitReached != null -> "Error{toolUseLimitReached=$toolUseLimitReached}"
+                compactionLimitReached != null ->
+                    "Error{compactionLimitReached=$compactionLimitReached}"
                 repositoryAuthentication != null ->
                     "Error{repositoryAuthentication=$repositoryAuthentication}"
                 repositoryForbidden != null -> "Error{repositoryForbidden=$repositoryForbidden}"
@@ -830,6 +904,28 @@ private constructor(
             fun ofCredentialHostUnreachable(
                 credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
             ) = Error(credentialHostUnreachable = credentialHostUnreachable)
+
+            /**
+             * The turn stopped because the agent loop reached its limit on tool-use rounds (one
+             * model response that calls tools, plus running those tools, is one round), not because
+             * a request failed. The thread goes idle with `stop_reason: retries_exhausted` (a child
+             * thread then terminates); the next `user.message` starts a new turn.
+             */
+            @JvmStatic
+            fun ofToolUseLimitReached(
+                toolUseLimitReached: BetaManagedAgentsToolUseLimitReachedError
+            ) = Error(toolUseLimitReached = toolUseLimitReached)
+
+            /**
+             * The turn stopped because the context was compacted the maximum number of times in a
+             * row without the model producing a message or a tool call, not because a request
+             * failed. The thread goes idle with `stop_reason: retries_exhausted` (a child thread
+             * then terminates); the next `user.message` starts a new turn.
+             */
+            @JvmStatic
+            fun ofCompactionLimitReached(
+                compactionLimitReached: BetaManagedAgentsCompactionLimitReachedError
+            ) = Error(compactionLimitReached = compactionLimitReached)
 
             /**
              * The repository host rejected the credentials, or required credentials and received
@@ -906,6 +1002,26 @@ private constructor(
              */
             fun visitCredentialHostUnreachable(
                 credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
+            ): T
+
+            /**
+             * The turn stopped because the agent loop reached its limit on tool-use rounds (one
+             * model response that calls tools, plus running those tools, is one round), not because
+             * a request failed. The thread goes idle with `stop_reason: retries_exhausted` (a child
+             * thread then terminates); the next `user.message` starts a new turn.
+             */
+            fun visitToolUseLimitReached(
+                toolUseLimitReached: BetaManagedAgentsToolUseLimitReachedError
+            ): T
+
+            /**
+             * The turn stopped because the context was compacted the maximum number of times in a
+             * row without the model producing a message or a tool call, not because a request
+             * failed. The thread goes idle with `stop_reason: retries_exhausted` (a child thread
+             * then terminates); the next `user.message` starts a new turn.
+             */
+            fun visitCompactionLimitReached(
+                compactionLimitReached: BetaManagedAgentsCompactionLimitReachedError
             ): T
 
             /**
@@ -1012,6 +1128,22 @@ private constructor(
                             ?.let { Error(credentialHostUnreachable = it, _json = json) }
                             ?: Error(_json = json)
                     }
+                    "tool_use_limit_reached_error" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsToolUseLimitReachedError>(),
+                            )
+                            ?.let { Error(toolUseLimitReached = it, _json = json) }
+                            ?: Error(_json = json)
+                    }
+                    "compaction_limit_reached_error" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsCompactionLimitReachedError>(),
+                            )
+                            ?.let { Error(compactionLimitReached = it, _json = json) }
+                            ?: Error(_json = json)
+                    }
                     "repository_authentication_error" -> {
                         return tryDeserialize(
                                 node,
@@ -1078,6 +1210,10 @@ private constructor(
                     value.billing != null -> generator.writeObject(value.billing)
                     value.credentialHostUnreachable != null ->
                         generator.writeObject(value.credentialHostUnreachable)
+                    value.toolUseLimitReached != null ->
+                        generator.writeObject(value.toolUseLimitReached)
+                    value.compactionLimitReached != null ->
+                        generator.writeObject(value.compactionLimitReached)
                     value.repositoryAuthentication != null ->
                         generator.writeObject(value.repositoryAuthentication)
                     value.repositoryForbidden != null ->
@@ -1131,6 +1267,14 @@ private constructor(
                     Type(JsonField.of("credential_host_unreachable_error"))
 
                 @JvmField
+                val TOOL_USE_LIMIT_REACHED_ERROR =
+                    Type(JsonField.of("tool_use_limit_reached_error"))
+
+                @JvmField
+                val COMPACTION_LIMIT_REACHED_ERROR =
+                    Type(JsonField.of("compaction_limit_reached_error"))
+
+                @JvmField
                 val REPOSITORY_AUTHENTICATION_ERROR =
                     Type(JsonField.of("repository_authentication_error"))
 
@@ -1157,6 +1301,8 @@ private constructor(
                         "mcp_authentication_failed_error" -> MCP_AUTHENTICATION_FAILED_ERROR
                         "billing_error" -> BILLING_ERROR
                         "credential_host_unreachable_error" -> CREDENTIAL_HOST_UNREACHABLE_ERROR
+                        "tool_use_limit_reached_error" -> TOOL_USE_LIMIT_REACHED_ERROR
+                        "compaction_limit_reached_error" -> COMPACTION_LIMIT_REACHED_ERROR
                         "repository_authentication_error" -> REPOSITORY_AUTHENTICATION_ERROR
                         "repository_forbidden_error" -> REPOSITORY_FORBIDDEN_ERROR
                         "repository_not_found_error" -> REPOSITORY_NOT_FOUND_ERROR
@@ -1181,6 +1327,8 @@ private constructor(
                 MCP_AUTHENTICATION_FAILED_ERROR,
                 BILLING_ERROR,
                 CREDENTIAL_HOST_UNREACHABLE_ERROR,
+                TOOL_USE_LIMIT_REACHED_ERROR,
+                COMPACTION_LIMIT_REACHED_ERROR,
                 REPOSITORY_AUTHENTICATION_ERROR,
                 REPOSITORY_FORBIDDEN_ERROR,
                 REPOSITORY_NOT_FOUND_ERROR,
@@ -1206,6 +1354,8 @@ private constructor(
                 MCP_AUTHENTICATION_FAILED_ERROR,
                 BILLING_ERROR,
                 CREDENTIAL_HOST_UNREACHABLE_ERROR,
+                TOOL_USE_LIMIT_REACHED_ERROR,
+                COMPACTION_LIMIT_REACHED_ERROR,
                 REPOSITORY_AUTHENTICATION_ERROR,
                 REPOSITORY_FORBIDDEN_ERROR,
                 REPOSITORY_NOT_FOUND_ERROR,
@@ -1232,6 +1382,8 @@ private constructor(
                     MCP_AUTHENTICATION_FAILED_ERROR -> Value.MCP_AUTHENTICATION_FAILED_ERROR
                     BILLING_ERROR -> Value.BILLING_ERROR
                     CREDENTIAL_HOST_UNREACHABLE_ERROR -> Value.CREDENTIAL_HOST_UNREACHABLE_ERROR
+                    TOOL_USE_LIMIT_REACHED_ERROR -> Value.TOOL_USE_LIMIT_REACHED_ERROR
+                    COMPACTION_LIMIT_REACHED_ERROR -> Value.COMPACTION_LIMIT_REACHED_ERROR
                     REPOSITORY_AUTHENTICATION_ERROR -> Value.REPOSITORY_AUTHENTICATION_ERROR
                     REPOSITORY_FORBIDDEN_ERROR -> Value.REPOSITORY_FORBIDDEN_ERROR
                     REPOSITORY_NOT_FOUND_ERROR -> Value.REPOSITORY_NOT_FOUND_ERROR
@@ -1259,6 +1411,8 @@ private constructor(
                     MCP_AUTHENTICATION_FAILED_ERROR -> Known.MCP_AUTHENTICATION_FAILED_ERROR
                     BILLING_ERROR -> Known.BILLING_ERROR
                     CREDENTIAL_HOST_UNREACHABLE_ERROR -> Known.CREDENTIAL_HOST_UNREACHABLE_ERROR
+                    TOOL_USE_LIMIT_REACHED_ERROR -> Known.TOOL_USE_LIMIT_REACHED_ERROR
+                    COMPACTION_LIMIT_REACHED_ERROR -> Known.COMPACTION_LIMIT_REACHED_ERROR
                     REPOSITORY_AUTHENTICATION_ERROR -> Known.REPOSITORY_AUTHENTICATION_ERROR
                     REPOSITORY_FORBIDDEN_ERROR -> Known.REPOSITORY_FORBIDDEN_ERROR
                     REPOSITORY_NOT_FOUND_ERROR -> Known.REPOSITORY_NOT_FOUND_ERROR

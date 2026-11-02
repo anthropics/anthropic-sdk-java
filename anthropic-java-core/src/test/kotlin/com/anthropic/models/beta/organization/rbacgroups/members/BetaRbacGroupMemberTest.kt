@@ -15,7 +15,7 @@ internal class BetaRbacGroupMemberTest {
                 .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .email("user@emaildomain.com")
                 .rbacGroupId("rbac_group_012rppKaSVsmTo6NqRDXQXNF")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         assertThat(betaRbacGroupMember.createdAt())
@@ -23,7 +23,7 @@ internal class BetaRbacGroupMemberTest {
         assertThat(betaRbacGroupMember.email()).isEqualTo("user@emaildomain.com")
         assertThat(betaRbacGroupMember.rbacGroupId())
             .isEqualTo("rbac_group_012rppKaSVsmTo6NqRDXQXNF")
-        assertThat(betaRbacGroupMember.userId()).isEqualTo("user_01WCz1FkmYMm4gnmykNKUu3Q")
+        assertThat(betaRbacGroupMember.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
     }
 
     @Test
@@ -34,7 +34,7 @@ internal class BetaRbacGroupMemberTest {
                 .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .email("user@emaildomain.com")
                 .rbacGroupId("rbac_group_012rppKaSVsmTo6NqRDXQXNF")
-                .userId("user_01WCz1FkmYMm4gnmykNKUu3Q")
+                .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
         val roundtrippedBetaRbacGroupMember =

@@ -1,6 +1,7 @@
 package com.anthropic.models.beta.organization.analytics.artifacts
 
 import com.anthropic.core.http.QueryParams
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsArtifactGroupBy
 import java.time.LocalDate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,7 +13,7 @@ internal class ArtifactListParamsTest {
         ArtifactListParams.builder()
             .date(LocalDate.parse("2019-12-27"))
             .addFilter("string")
-            .addGroupBy(ArtifactListParams.GroupBy.PRODUCT)
+            .addGroupBy(BetaAnalyticsArtifactGroupBy.PRODUCT)
             .limit(1L)
             .page("page")
             .build()
@@ -24,7 +25,7 @@ internal class ArtifactListParamsTest {
             ArtifactListParams.builder()
                 .date(LocalDate.parse("2019-12-27"))
                 .addFilter("string")
-                .addGroupBy(ArtifactListParams.GroupBy.PRODUCT)
+                .addGroupBy(BetaAnalyticsArtifactGroupBy.PRODUCT)
                 .limit(1L)
                 .page("page")
                 .build()

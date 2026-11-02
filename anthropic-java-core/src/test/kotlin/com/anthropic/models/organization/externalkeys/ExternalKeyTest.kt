@@ -26,6 +26,7 @@ internal class ExternalKeyTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
+                .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                 .build()
 
         assertThat(externalKey.id()).isEqualTo("ekey_01SDCCSbTxrXDpWc1phhtcfK")
@@ -50,6 +51,7 @@ internal class ExternalKeyTest {
             )
         assertThat(externalKey.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
+        assertThat(externalKey.userProfileId()).contains("uprof_01SDCCSbTxrXDpWc1phhtcfK")
     }
 
     @Test
@@ -71,6 +73,7 @@ internal class ExternalKeyTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
+                .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                 .build()
 
         val roundtrippedExternalKey =
