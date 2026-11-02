@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.3.0...v3.4.0) (2026-10-30)
+## [3.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.3.0...v3.4.0) (2026-11-02)
 
 ### Features
 
@@ -20,6 +20,7 @@
 ### Chores
 
 * **ci:** remove unused build upload steps
+* **docs:** clarify the Slack channel id description
 * **docs:** clarify what disabling the Compliance API stops
 * **docs:** clarify what the capability_access_all role action grants
 * **docs:** link Dreams model fields to the supported models section

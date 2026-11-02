@@ -58,10 +58,9 @@ private constructor(
 
     /**
      * The channel's identifier. Starts with `slch_`. It does not change for as long as the channel
-     * is set up, with one exception: a channel that is not configured gets a new one when claude.ai
-     * replaces its record, which happens only while the organization's read-only mode is off. A
-     * channel that is removed and set up again also has a new one. The old one keeps returning 404;
-     * look the channel up by its Slack identifiers for the new one.
+     * is set up, with one exception: a channel that is not configured can get a new one. A channel
+     * that is removed and set up again also has a new one. The old one keeps returning 404; look
+     * the channel up by its Slack identifiers for the new one.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -232,10 +231,9 @@ private constructor(
 
         /**
          * The channel's identifier. Starts with `slch_`. It does not change for as long as the
-         * channel is set up, with one exception: a channel that is not configured gets a new one
-         * when claude.ai replaces its record, which happens only while the organization's read-only
-         * mode is off. A channel that is removed and set up again also has a new one. The old one
-         * keeps returning 404; look the channel up by its Slack identifiers for the new one.
+         * channel is set up, with one exception: a channel that is not configured can get a new
+         * one. A channel that is removed and set up again also has a new one. The old one keeps
+         * returning 404; look the channel up by its Slack identifiers for the new one.
          */
         fun id(id: String) = id(JsonField.of(id))
 
