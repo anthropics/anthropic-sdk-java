@@ -16,10 +16,10 @@ import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
+import com.anthropic.models.beta.organization.rbacgroups.BetaDeletedRbacGroup
 import com.anthropic.models.beta.organization.rbacgroups.BetaRbacGroup
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupCreateParams
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupDeleteParams
-import com.anthropic.models.beta.organization.rbacgroups.RbacGroupDeleteResponse
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupListPageAsync
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupListPageResponse
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupListParams
@@ -78,7 +78,7 @@ class RbacGroupServiceAsyncImpl internal constructor(private val clientOptions: 
     override fun delete(
         params: RbacGroupDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<RbacGroupDeleteResponse> =
+    ): CompletableFuture<BetaDeletedRbacGroup> =
         // delete /v1/organizations/rbac_groups/{rbac_group_id}
         withRawResponse().delete(params, requestOptions).thenParse()
 
@@ -265,13 +265,13 @@ class RbacGroupServiceAsyncImpl internal constructor(private val clientOptions: 
             }
         }
 
-        private val deleteHandler: Handler<RbacGroupDeleteResponse> =
-            jsonHandler<RbacGroupDeleteResponse>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<BetaDeletedRbacGroup> =
+            jsonHandler<BetaDeletedRbacGroup>(clientOptions.jsonMapper)
 
         override fun delete(
             params: RbacGroupDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<RbacGroupDeleteResponse>> {
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroup>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("rbacGroupId", params.rbacGroupId().getOrNull())

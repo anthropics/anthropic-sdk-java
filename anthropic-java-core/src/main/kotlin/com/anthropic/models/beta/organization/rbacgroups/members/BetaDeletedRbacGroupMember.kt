@@ -1,4 +1,4 @@
-package com.anthropic.models.beta.organization.rbacgroups
+package com.anthropic.models.beta.organization.rbacgroups.members
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -13,19 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class RbacGroupDeleteResponse
+class BetaDeletedRbacGroupMember
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val id: JsonField<String>,
+    private val rbacGroupId: JsonField<String>,
     private val type: JsonValue,
+    private val userId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("rbac_group_id")
+        @ExcludeMissing
+        rbacGroupId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(id, type, mutableMapOf())
+        @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of(),
+    ) : this(rbacGroupId, type, userId, mutableMapOf())
 
     /**
      * ID of the RBAC Group.
@@ -33,16 +37,14 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun id(): String = id.getRequired("id")
+    fun rbacGroupId(): String = rbacGroupId.getRequired("rbac_group_id")
 
     /**
-     * Deleted object type.
-     *
-     * For RBAC Groups, this is always `"rbac_group_deleted"`.
+     * Deleted object type. For RBAC Group Members, this is always `"rbac_group_member_deleted"`.
      *
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("rbac_group_deleted")
+     * JsonValue.from("rbac_group_member_deleted")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -51,11 +53,28 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Returns the raw JSON value of [id].
+     * ID of the User.
      *
-     * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+    fun userId(): String = userId.getRequired("user_id")
+
+    /**
+     * Returns the raw JSON value of [rbacGroupId].
+     *
+     * Unlike [rbacGroupId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("rbac_group_id")
+    @ExcludeMissing
+    fun _rbacGroupId(): JsonField<String> = rbacGroupId
+
+    /**
+     * Returns the raw JSON value of [userId].
+     *
+     * Unlike [userId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("user_id") @ExcludeMissing fun _userId(): JsonField<String> = userId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -72,46 +91,44 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [RbacGroupDeleteResponse].
+         * Returns a mutable builder for constructing an instance of [BetaDeletedRbacGroupMember].
          *
          * The following fields are required:
          * ```java
-         * .id()
+         * .rbacGroupId()
+         * .userId()
          * ```
          */
         @JvmStatic fun builder() = Builder()
-
-        /**
-         * Returns an immutable instance of [RbacGroupDeleteResponse] with the required [id] set to
-         * the given value.
-         */
-        @JvmStatic fun of(id: String) = builder().id(id).build()
     }
 
-    /** A builder for [RbacGroupDeleteResponse]. */
+    /** A builder for [BetaDeletedRbacGroupMember]. */
     class Builder internal constructor() {
 
-        private var id: JsonField<String>? = null
-        private var type: JsonValue = JsonValue.from("rbac_group_deleted")
+        private var rbacGroupId: JsonField<String>? = null
+        private var type: JsonValue = JsonValue.from("rbac_group_member_deleted")
+        private var userId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(rbacGroupDeleteResponse: RbacGroupDeleteResponse) = apply {
-            id = rbacGroupDeleteResponse.id
-            type = rbacGroupDeleteResponse.type
-            additionalProperties = rbacGroupDeleteResponse.additionalProperties.toMutableMap()
+        internal fun from(betaDeletedRbacGroupMember: BetaDeletedRbacGroupMember) = apply {
+            rbacGroupId = betaDeletedRbacGroupMember.rbacGroupId
+            type = betaDeletedRbacGroupMember.type
+            userId = betaDeletedRbacGroupMember.userId
+            additionalProperties = betaDeletedRbacGroupMember.additionalProperties.toMutableMap()
         }
 
         /** ID of the RBAC Group. */
-        fun id(id: String) = id(JsonField.of(id))
+        fun rbacGroupId(rbacGroupId: String) = rbacGroupId(JsonField.of(rbacGroupId))
 
         /**
-         * Sets [Builder.id] to an arbitrary JSON value.
+         * Sets [Builder.rbacGroupId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.rbacGroupId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun id(id: JsonField<String>) = apply { this.id = id }
+        fun rbacGroupId(rbacGroupId: JsonField<String>) = apply { this.rbacGroupId = rbacGroupId }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -119,13 +136,24 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("rbac_group_deleted")
+         * JsonValue.from("rbac_group_member_deleted")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
         fun type(type: JsonValue) = apply { this.type = type }
+
+        /** ID of the User. */
+        fun userId(userId: String) = userId(JsonField.of(userId))
+
+        /**
+         * Sets [Builder.userId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.userId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun userId(userId: JsonField<String>) = apply { this.userId = userId }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -147,21 +175,23 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [RbacGroupDeleteResponse].
+         * Returns an immutable instance of [BetaDeletedRbacGroupMember].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
-         * .id()
+         * .rbacGroupId()
+         * .userId()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): RbacGroupDeleteResponse =
-            RbacGroupDeleteResponse(
-                checkRequired("id", id),
+        fun build(): BetaDeletedRbacGroupMember =
+            BetaDeletedRbacGroupMember(
+                checkRequired("rbacGroupId", rbacGroupId),
                 type,
+                checkRequired("userId", userId),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -176,17 +206,18 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): RbacGroupDeleteResponse = apply {
+    fun validate(): BetaDeletedRbacGroupMember = apply {
         if (validated) {
             return@apply
         }
 
-        id()
+        rbacGroupId()
         _type().let {
-            if (it != JsonValue.from("rbac_group_deleted")) {
+            if (it != JsonValue.from("rbac_group_member_deleted")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
+        userId()
         validated = true
     }
 
@@ -205,24 +236,28 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            type.let { if (it == JsonValue.from("rbac_group_deleted")) 1 else 0 }
+        (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("rbac_group_member_deleted")) 1 else 0 } +
+            (if (userId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is RbacGroupDeleteResponse &&
-            id == other.id &&
+        return other is BetaDeletedRbacGroupMember &&
+            rbacGroupId == other.rbacGroupId &&
             type == other.type &&
+            userId == other.userId &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, type, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(rbacGroupId, type, userId, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "RbacGroupDeleteResponse{id=$id, type=$type, additionalProperties=$additionalProperties}"
+        "BetaDeletedRbacGroupMember{rbacGroupId=$rbacGroupId, type=$type, userId=$userId, additionalProperties=$additionalProperties}"
 }

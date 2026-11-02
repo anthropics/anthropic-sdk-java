@@ -3,6 +3,7 @@ package com.anthropic.models.beta.organization.analytics.connectors
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorActivity
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorChatCoworkUnifiedMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorChatMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorClaudeCodeMetrics
@@ -41,7 +42,7 @@ internal class ConnectorListPageResponseTest {
                         .unclassifiedCallCount(0L)
                         .writeCallCount(0L)
                         .chatCoworkUnifiedMetrics(
-                            BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
+                            BetaAnalyticsConnectorChatCoworkUnifiedMetrics.builder()
                                 .chat(BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics.of(0L))
                                 .sessions(
                                     BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics.of(0L)
@@ -80,7 +81,7 @@ internal class ConnectorListPageResponseTest {
                     .unclassifiedCallCount(0L)
                     .writeCallCount(0L)
                     .chatCoworkUnifiedMetrics(
-                        BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
+                        BetaAnalyticsConnectorChatCoworkUnifiedMetrics.builder()
                             .chat(BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics.of(0L))
                             .sessions(BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics.of(0L))
                             .build()
@@ -121,7 +122,7 @@ internal class ConnectorListPageResponseTest {
                         .unclassifiedCallCount(0L)
                         .writeCallCount(0L)
                         .chatCoworkUnifiedMetrics(
-                            BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
+                            BetaAnalyticsConnectorChatCoworkUnifiedMetrics.builder()
                                 .chat(BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics.of(0L))
                                 .sessions(
                                     BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics.of(0L)

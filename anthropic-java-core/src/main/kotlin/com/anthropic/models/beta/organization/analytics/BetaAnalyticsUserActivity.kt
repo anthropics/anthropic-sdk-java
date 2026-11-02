@@ -29,7 +29,7 @@ private constructor(
     private val scienceMetrics: JsonField<BetaAnalyticsScienceMetrics>,
     private val user: JsonField<BetaAnalyticsUser>,
     private val webSearchCount: JsonField<Long>,
-    private val chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>,
+    private val chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsChatCoworkUnifiedMetrics>,
     private val lastActivityDate: JsonField<LocalDate>,
     private val rbacGroupId: JsonField<String>,
     private val rbacGroupName: JsonField<String>,
@@ -65,7 +65,8 @@ private constructor(
         webSearchCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("chat_cowork_unified_metrics")
         @ExcludeMissing
-        chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of(),
+        chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsChatCoworkUnifiedMetrics> =
+            JsonMissing.of(),
         @JsonProperty("last_activity_date")
         @ExcludeMissing
         lastActivityDate: JsonField<LocalDate> = JsonMissing.of(),
@@ -177,7 +178,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun chatCoworkUnifiedMetrics(): Optional<ChatCoworkUnifiedMetrics> =
+    fun chatCoworkUnifiedMetrics(): Optional<BetaAnalyticsChatCoworkUnifiedMetrics> =
         chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
 
     /**
@@ -304,7 +305,8 @@ private constructor(
      */
     @JsonProperty("chat_cowork_unified_metrics")
     @ExcludeMissing
-    fun _chatCoworkUnifiedMetrics(): JsonField<ChatCoworkUnifiedMetrics> = chatCoworkUnifiedMetrics
+    fun _chatCoworkUnifiedMetrics(): JsonField<BetaAnalyticsChatCoworkUnifiedMetrics> =
+        chatCoworkUnifiedMetrics
 
     /**
      * Returns the raw JSON value of [lastActivityDate].
@@ -379,7 +381,8 @@ private constructor(
         private var scienceMetrics: JsonField<BetaAnalyticsScienceMetrics>? = null
         private var user: JsonField<BetaAnalyticsUser>? = null
         private var webSearchCount: JsonField<Long>? = null
-        private var chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of()
+        private var chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsChatCoworkUnifiedMetrics> =
+            JsonMissing.of()
         private var lastActivityDate: JsonField<LocalDate> = JsonMissing.of()
         private var rbacGroupId: JsonField<String> = JsonMissing.of()
         private var rbacGroupName: JsonField<String> = JsonMissing.of()
@@ -564,25 +567,27 @@ private constructor(
          * activity). Omitted from the response on deployments that do not offer Chat and Cowork
          * unified.
          */
-        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics?) =
-            chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: BetaAnalyticsChatCoworkUnifiedMetrics?
+        ) = chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
 
         /**
          * Alias for calling [Builder.chatCoworkUnifiedMetrics] with
          * `chatCoworkUnifiedMetrics.orElse(null)`.
          */
-        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: Optional<ChatCoworkUnifiedMetrics>) =
-            chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: Optional<BetaAnalyticsChatCoworkUnifiedMetrics>
+        ) = chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
 
         /**
          * Sets [Builder.chatCoworkUnifiedMetrics] to an arbitrary JSON value.
          *
          * You should usually call [Builder.chatCoworkUnifiedMetrics] with a well-typed
-         * [ChatCoworkUnifiedMetrics] value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
+         * [BetaAnalyticsChatCoworkUnifiedMetrics] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
          */
         fun chatCoworkUnifiedMetrics(
-            chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>
+            chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsChatCoworkUnifiedMetrics>
         ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
 
         /**
@@ -772,236 +777,6 @@ private constructor(
             (if (lastActivityDate.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupName.asKnown().isPresent) 1 else 0)
-
-    /**
-     * Activity recorded while the member had Chat and Cowork unified (Cowork's features inside
-     * claude.ai chat) turned on, split into `chat` (chat activity) and `sessions` (Cowork
-     * activity). Omitted from the response on deployments that do not offer Chat and Cowork
-     * unified.
-     */
-    class ChatCoworkUnifiedMetrics
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val chat: JsonField<BetaAnalyticsChatCoworkUnifiedChatMetrics>,
-        private val sessions: JsonField<BetaAnalyticsChatCoworkUnifiedSessionsMetrics>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("chat")
-            @ExcludeMissing
-            chat: JsonField<BetaAnalyticsChatCoworkUnifiedChatMetrics> = JsonMissing.of(),
-            @JsonProperty("sessions")
-            @ExcludeMissing
-            sessions: JsonField<BetaAnalyticsChatCoworkUnifiedSessionsMetrics> = JsonMissing.of(),
-        ) : this(chat, sessions, mutableMapOf())
-
-        /**
-         * Chat activity recorded while members had Chat and Cowork unified turned on.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun chat(): BetaAnalyticsChatCoworkUnifiedChatMetrics = chat.getRequired("chat")
-
-        /**
-         * Cowork session activity recorded while members had Chat and Cowork unified turned on.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun sessions(): BetaAnalyticsChatCoworkUnifiedSessionsMetrics =
-            sessions.getRequired("sessions")
-
-        /**
-         * Returns the raw JSON value of [chat].
-         *
-         * Unlike [chat], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("chat")
-        @ExcludeMissing
-        fun _chat(): JsonField<BetaAnalyticsChatCoworkUnifiedChatMetrics> = chat
-
-        /**
-         * Returns the raw JSON value of [sessions].
-         *
-         * Unlike [sessions], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("sessions")
-        @ExcludeMissing
-        fun _sessions(): JsonField<BetaAnalyticsChatCoworkUnifiedSessionsMetrics> = sessions
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [ChatCoworkUnifiedMetrics].
-             *
-             * The following fields are required:
-             * ```java
-             * .chat()
-             * .sessions()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [ChatCoworkUnifiedMetrics]. */
-        class Builder internal constructor() {
-
-            private var chat: JsonField<BetaAnalyticsChatCoworkUnifiedChatMetrics>? = null
-            private var sessions: JsonField<BetaAnalyticsChatCoworkUnifiedSessionsMetrics>? = null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics) = apply {
-                chat = chatCoworkUnifiedMetrics.chat
-                sessions = chatCoworkUnifiedMetrics.sessions
-                additionalProperties = chatCoworkUnifiedMetrics.additionalProperties.toMutableMap()
-            }
-
-            /** Chat activity recorded while members had Chat and Cowork unified turned on. */
-            fun chat(chat: BetaAnalyticsChatCoworkUnifiedChatMetrics) = chat(JsonField.of(chat))
-
-            /**
-             * Sets [Builder.chat] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.chat] with a well-typed
-             * [BetaAnalyticsChatCoworkUnifiedChatMetrics] value instead. This method is primarily
-             * for setting the field to an undocumented or not yet supported value.
-             */
-            fun chat(chat: JsonField<BetaAnalyticsChatCoworkUnifiedChatMetrics>) = apply {
-                this.chat = chat
-            }
-
-            /**
-             * Cowork session activity recorded while members had Chat and Cowork unified turned on.
-             */
-            fun sessions(sessions: BetaAnalyticsChatCoworkUnifiedSessionsMetrics) =
-                sessions(JsonField.of(sessions))
-
-            /**
-             * Sets [Builder.sessions] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.sessions] with a well-typed
-             * [BetaAnalyticsChatCoworkUnifiedSessionsMetrics] value instead. This method is
-             * primarily for setting the field to an undocumented or not yet supported value.
-             */
-            fun sessions(sessions: JsonField<BetaAnalyticsChatCoworkUnifiedSessionsMetrics>) =
-                apply {
-                    this.sessions = sessions
-                }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [ChatCoworkUnifiedMetrics].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .chat()
-             * .sessions()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): ChatCoworkUnifiedMetrics =
-                ChatCoworkUnifiedMetrics(
-                    checkRequired("chat", chat),
-                    checkRequired("sessions", sessions),
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): ChatCoworkUnifiedMetrics = apply {
-            if (validated) {
-                return@apply
-            }
-
-            chat().validate()
-            sessions().validate()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (chat.asKnown().getOrNull()?.validity() ?: 0) +
-                (sessions.asKnown().getOrNull()?.validity() ?: 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is ChatCoworkUnifiedMetrics &&
-                chat == other.chat &&
-                sessions == other.sessions &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(chat, sessions, additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "ChatCoworkUnifiedMetrics{chat=$chat, sessions=$sessions, additionalProperties=$additionalProperties}"
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -53,11 +53,11 @@ internal class MemberServiceTest {
                 it.putQueryParam("beta", "true")
             }
 
-        val member =
+        val betaDeletedRbacGroupMember =
             memberService.remove(
                 MemberRemoveParams.builder().rbacGroupId("rbac_group_id").userId("user_id").build()
             )
 
-        member.validate()
+        betaDeletedRbacGroupMember.validate()
     }
 }

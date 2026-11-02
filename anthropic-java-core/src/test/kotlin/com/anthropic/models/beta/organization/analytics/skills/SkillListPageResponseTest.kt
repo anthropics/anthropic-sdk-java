@@ -3,6 +3,7 @@ package com.anthropic.models.beta.organization.analytics.skills
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillActivity
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillChatCoworkUnifiedChatMetrics
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillChatCoworkUnifiedMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillChatMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillClaudeCodeMetrics
@@ -42,7 +43,7 @@ internal class SkillListPageResponseTest {
                         .skillDisplayName("skill_display_name")
                         .skillName("skill_name")
                         .chatCoworkUnifiedMetrics(
-                            BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                            BetaAnalyticsSkillChatCoworkUnifiedMetrics.builder()
                                 .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
                                 .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
                                 .build()
@@ -80,7 +81,7 @@ internal class SkillListPageResponseTest {
                     .skillDisplayName("skill_display_name")
                     .skillName("skill_name")
                     .chatCoworkUnifiedMetrics(
-                        BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                        BetaAnalyticsSkillChatCoworkUnifiedMetrics.builder()
                             .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
                             .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
                             .build()
@@ -122,7 +123,7 @@ internal class SkillListPageResponseTest {
                         .skillDisplayName("skill_display_name")
                         .skillName("skill_name")
                         .chatCoworkUnifiedMetrics(
-                            BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                            BetaAnalyticsSkillChatCoworkUnifiedMetrics.builder()
                                 .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
                                 .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
                                 .build()

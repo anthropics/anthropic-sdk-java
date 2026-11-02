@@ -16,13 +16,13 @@ import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
+import com.anthropic.models.beta.organization.rbacgroups.members.BetaDeletedRbacGroupMember
 import com.anthropic.models.beta.organization.rbacgroups.members.BetaRbacGroupMember
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberAddParams
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberListPageAsync
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberListPageResponse
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberListParams
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberRemoveParams
-import com.anthropic.models.beta.organization.rbacgroups.members.MemberRemoveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -56,7 +56,7 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
     override fun remove(
         params: MemberRemoveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<MemberRemoveResponse> =
+    ): CompletableFuture<BetaDeletedRbacGroupMember> =
         // delete /v1/organizations/rbac_groups/{rbac_group_id}/members/{user_id}
         withRawResponse().remove(params, requestOptions).thenParse()
 
@@ -168,13 +168,13 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
             }
         }
 
-        private val removeHandler: Handler<MemberRemoveResponse> =
-            jsonHandler<MemberRemoveResponse>(clientOptions.jsonMapper)
+        private val removeHandler: Handler<BetaDeletedRbacGroupMember> =
+            jsonHandler<BetaDeletedRbacGroupMember>(clientOptions.jsonMapper)
 
         override fun remove(
             params: MemberRemoveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<MemberRemoveResponse>> {
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroupMember>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("userId", params.userId().getOrNull())

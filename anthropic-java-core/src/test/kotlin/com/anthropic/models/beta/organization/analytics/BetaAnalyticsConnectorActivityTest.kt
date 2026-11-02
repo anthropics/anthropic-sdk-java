@@ -31,7 +31,7 @@ internal class BetaAnalyticsConnectorActivityTest {
                 .unclassifiedCallCount(0L)
                 .writeCallCount(0L)
                 .chatCoworkUnifiedMetrics(
-                    BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
+                    BetaAnalyticsConnectorChatCoworkUnifiedMetrics.builder()
                         .chat(BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics.of(0L))
                         .sessions(BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics.of(0L))
                         .build()
@@ -68,7 +68,7 @@ internal class BetaAnalyticsConnectorActivityTest {
         assertThat(betaAnalyticsConnectorActivity.writeCallCount()).contains(0L)
         assertThat(betaAnalyticsConnectorActivity.chatCoworkUnifiedMetrics())
             .contains(
-                BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
+                BetaAnalyticsConnectorChatCoworkUnifiedMetrics.builder()
                     .chat(BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics.of(0L))
                     .sessions(BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics.of(0L))
                     .build()
@@ -104,7 +104,7 @@ internal class BetaAnalyticsConnectorActivityTest {
                 .unclassifiedCallCount(0L)
                 .writeCallCount(0L)
                 .chatCoworkUnifiedMetrics(
-                    BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
+                    BetaAnalyticsConnectorChatCoworkUnifiedMetrics.builder()
                         .chat(BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics.of(0L))
                         .sessions(BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics.of(0L))
                         .build()

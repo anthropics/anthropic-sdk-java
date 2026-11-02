@@ -31,7 +31,7 @@ private constructor(
     private val readCallCount: JsonField<Long>,
     private val unclassifiedCallCount: JsonField<Long>,
     private val writeCallCount: JsonField<Long>,
-    private val chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>,
+    private val chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedMetrics>,
     private val product: JsonField<String>,
     private val rbacGroupId: JsonField<String>,
     private val rbacGroupName: JsonField<String>,
@@ -79,7 +79,8 @@ private constructor(
         writeCallCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("chat_cowork_unified_metrics")
         @ExcludeMissing
-        chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of(),
+        chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedMetrics> =
+            JsonMissing.of(),
         @JsonProperty("product") @ExcludeMissing product: JsonField<String> = JsonMissing.of(),
         @JsonProperty("rbac_group_id")
         @ExcludeMissing
@@ -269,7 +270,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun chatCoworkUnifiedMetrics(): Optional<ChatCoworkUnifiedMetrics> =
+    fun chatCoworkUnifiedMetrics(): Optional<BetaAnalyticsConnectorChatCoworkUnifiedMetrics> =
         chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
 
     /**
@@ -437,7 +438,8 @@ private constructor(
      */
     @JsonProperty("chat_cowork_unified_metrics")
     @ExcludeMissing
-    fun _chatCoworkUnifiedMetrics(): JsonField<ChatCoworkUnifiedMetrics> = chatCoworkUnifiedMetrics
+    fun _chatCoworkUnifiedMetrics(): JsonField<BetaAnalyticsConnectorChatCoworkUnifiedMetrics> =
+        chatCoworkUnifiedMetrics
 
     /**
      * Returns the raw JSON value of [product].
@@ -523,7 +525,9 @@ private constructor(
         private var readCallCount: JsonField<Long>? = null
         private var unclassifiedCallCount: JsonField<Long>? = null
         private var writeCallCount: JsonField<Long>? = null
-        private var chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of()
+        private var chatCoworkUnifiedMetrics:
+            JsonField<BetaAnalyticsConnectorChatCoworkUnifiedMetrics> =
+            JsonMissing.of()
         private var product: JsonField<String> = JsonMissing.of()
         private var rbacGroupId: JsonField<String> = JsonMissing.of()
         private var rbacGroupName: JsonField<String> = JsonMissing.of()
@@ -882,25 +886,27 @@ private constructor(
          * count is null in date-range mode where it cannot be computed. Omitted from the response
          * on deployments that do not offer Chat and Cowork unified.
          */
-        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics?) =
-            chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: BetaAnalyticsConnectorChatCoworkUnifiedMetrics?
+        ) = chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
 
         /**
          * Alias for calling [Builder.chatCoworkUnifiedMetrics] with
          * `chatCoworkUnifiedMetrics.orElse(null)`.
          */
-        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: Optional<ChatCoworkUnifiedMetrics>) =
-            chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: Optional<BetaAnalyticsConnectorChatCoworkUnifiedMetrics>
+        ) = chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
 
         /**
          * Sets [Builder.chatCoworkUnifiedMetrics] to an arbitrary JSON value.
          *
          * You should usually call [Builder.chatCoworkUnifiedMetrics] with a well-typed
-         * [ChatCoworkUnifiedMetrics] value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
+         * [BetaAnalyticsConnectorChatCoworkUnifiedMetrics] value instead. This method is primarily
+         * for setting the field to an undocumented or not yet supported value.
          */
         fun chatCoworkUnifiedMetrics(
-            chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>
+            chatCoworkUnifiedMetrics: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedMetrics>
         ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
 
         /**
@@ -1117,246 +1123,6 @@ private constructor(
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupName.asKnown().isPresent) 1 else 0) +
             (if (userId.asKnown().isPresent) 1 else 0)
-
-    /**
-     * Connector use recorded while members had Chat and Cowork unified (Cowork's features inside
-     * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is null
-     * in date-range mode where it cannot be computed. Omitted from the response on deployments that
-     * do not offer Chat and Cowork unified.
-     */
-    class ChatCoworkUnifiedMetrics
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics>,
-        private val sessions: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("chat")
-            @ExcludeMissing
-            chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics> = JsonMissing.of(),
-            @JsonProperty("sessions")
-            @ExcludeMissing
-            sessions: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics> =
-                JsonMissing.of(),
-        ) : this(chat, sessions, mutableMapOf())
-
-        /**
-         * A connector's use in chat conversations recorded while members had Chat and Cowork
-         * unified turned on.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun chat(): BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics = chat.getRequired("chat")
-
-        /**
-         * A connector's use in Cowork sessions recorded while members had Chat and Cowork unified
-         * turned on.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun sessions(): BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics =
-            sessions.getRequired("sessions")
-
-        /**
-         * Returns the raw JSON value of [chat].
-         *
-         * Unlike [chat], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("chat")
-        @ExcludeMissing
-        fun _chat(): JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics> = chat
-
-        /**
-         * Returns the raw JSON value of [sessions].
-         *
-         * Unlike [sessions], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("sessions")
-        @ExcludeMissing
-        fun _sessions(): JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics> =
-            sessions
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [ChatCoworkUnifiedMetrics].
-             *
-             * The following fields are required:
-             * ```java
-             * .chat()
-             * .sessions()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [ChatCoworkUnifiedMetrics]. */
-        class Builder internal constructor() {
-
-            private var chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics>? = null
-            private var sessions:
-                JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics>? =
-                null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics) = apply {
-                chat = chatCoworkUnifiedMetrics.chat
-                sessions = chatCoworkUnifiedMetrics.sessions
-                additionalProperties = chatCoworkUnifiedMetrics.additionalProperties.toMutableMap()
-            }
-
-            /**
-             * A connector's use in chat conversations recorded while members had Chat and Cowork
-             * unified turned on.
-             */
-            fun chat(chat: BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics) =
-                chat(JsonField.of(chat))
-
-            /**
-             * Sets [Builder.chat] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.chat] with a well-typed
-             * [BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics] value instead. This method is
-             * primarily for setting the field to an undocumented or not yet supported value.
-             */
-            fun chat(chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics>) = apply {
-                this.chat = chat
-            }
-
-            /**
-             * A connector's use in Cowork sessions recorded while members had Chat and Cowork
-             * unified turned on.
-             */
-            fun sessions(sessions: BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics) =
-                sessions(JsonField.of(sessions))
-
-            /**
-             * Sets [Builder.sessions] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.sessions] with a well-typed
-             * [BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics] value instead. This method
-             * is primarily for setting the field to an undocumented or not yet supported value.
-             */
-            fun sessions(
-                sessions: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics>
-            ) = apply { this.sessions = sessions }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [ChatCoworkUnifiedMetrics].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .chat()
-             * .sessions()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): ChatCoworkUnifiedMetrics =
-                ChatCoworkUnifiedMetrics(
-                    checkRequired("chat", chat),
-                    checkRequired("sessions", sessions),
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): ChatCoworkUnifiedMetrics = apply {
-            if (validated) {
-                return@apply
-            }
-
-            chat().validate()
-            sessions().validate()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (chat.asKnown().getOrNull()?.validity() ?: 0) +
-                (sessions.asKnown().getOrNull()?.validity() ?: 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is ChatCoworkUnifiedMetrics &&
-                chat == other.chat &&
-                sessions == other.sessions &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(chat, sessions, additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "ChatCoworkUnifiedMetrics{chat=$chat, sessions=$sessions, additionalProperties=$additionalProperties}"
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

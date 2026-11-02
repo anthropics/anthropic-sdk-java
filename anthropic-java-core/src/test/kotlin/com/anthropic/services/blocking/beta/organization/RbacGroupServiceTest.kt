@@ -78,8 +78,8 @@ internal class RbacGroupServiceTest {
                 it.putQueryParam("beta", "true")
             }
 
-        val rbacGroup = rbacGroupService.delete("rbac_group_id")
+        val betaDeletedRbacGroup = rbacGroupService.delete("rbac_group_id")
 
-        rbacGroup.validate()
+        betaDeletedRbacGroup.validate()
     }
 }

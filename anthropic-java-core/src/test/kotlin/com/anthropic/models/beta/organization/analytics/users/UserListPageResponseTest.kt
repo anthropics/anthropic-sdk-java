@@ -2,6 +2,7 @@ package com.anthropic.models.beta.organization.analytics.users
 
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatCoworkUnifiedChatMetrics
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatCoworkUnifiedMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatCoworkUnifiedSessionsMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsClaudeCodeMetrics
@@ -182,7 +183,7 @@ internal class UserListPageResponseTest {
                         )
                         .webSearchCount(0L)
                         .chatCoworkUnifiedMetrics(
-                            BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
+                            BetaAnalyticsChatCoworkUnifiedMetrics.builder()
                                 .chat(
                                     BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                         .connectorsUsedCount(0L)
@@ -383,7 +384,7 @@ internal class UserListPageResponseTest {
                     )
                     .webSearchCount(0L)
                     .chatCoworkUnifiedMetrics(
-                        BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
+                        BetaAnalyticsChatCoworkUnifiedMetrics.builder()
                             .chat(
                                 BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                     .connectorsUsedCount(0L)
@@ -591,7 +592,7 @@ internal class UserListPageResponseTest {
                         )
                         .webSearchCount(0L)
                         .chatCoworkUnifiedMetrics(
-                            BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
+                            BetaAnalyticsChatCoworkUnifiedMetrics.builder()
                                 .chat(
                                     BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                         .connectorsUsedCount(0L)

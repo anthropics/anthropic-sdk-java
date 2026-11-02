@@ -55,12 +55,12 @@ internal class MemberServiceAsyncTest {
                 it.putQueryParam("beta", "true")
             }
 
-        val memberFuture =
+        val betaDeletedRbacGroupMemberFuture =
             memberServiceAsync.remove(
                 MemberRemoveParams.builder().rbacGroupId("rbac_group_id").userId("user_id").build()
             )
 
-        val member = memberFuture.get()
-        member.validate()
+        val betaDeletedRbacGroupMember = betaDeletedRbacGroupMemberFuture.get()
+        betaDeletedRbacGroupMember.validate()
     }
 }

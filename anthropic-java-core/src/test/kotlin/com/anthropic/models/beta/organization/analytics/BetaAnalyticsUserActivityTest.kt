@@ -160,7 +160,7 @@ internal class BetaAnalyticsUserActivityTest {
                 .user(BetaAnalyticsUser.builder().id("id").emailAddress("email_address").build())
                 .webSearchCount(0L)
                 .chatCoworkUnifiedMetrics(
-                    BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
+                    BetaAnalyticsChatCoworkUnifiedMetrics.builder()
                         .chat(
                             BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                 .connectorsUsedCount(0L)
@@ -361,7 +361,7 @@ internal class BetaAnalyticsUserActivityTest {
         assertThat(betaAnalyticsUserActivity.webSearchCount()).isEqualTo(0L)
         assertThat(betaAnalyticsUserActivity.chatCoworkUnifiedMetrics())
             .contains(
-                BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
+                BetaAnalyticsChatCoworkUnifiedMetrics.builder()
                     .chat(
                         BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                             .connectorsUsedCount(0L)
@@ -560,7 +560,7 @@ internal class BetaAnalyticsUserActivityTest {
                 .user(BetaAnalyticsUser.builder().id("id").emailAddress("email_address").build())
                 .webSearchCount(0L)
                 .chatCoworkUnifiedMetrics(
-                    BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
+                    BetaAnalyticsChatCoworkUnifiedMetrics.builder()
                         .chat(
                             BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                 .connectorsUsedCount(0L)

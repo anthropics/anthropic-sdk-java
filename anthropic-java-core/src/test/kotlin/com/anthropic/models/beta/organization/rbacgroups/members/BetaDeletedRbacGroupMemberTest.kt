@@ -5,36 +5,36 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class MemberRemoveResponseTest {
+internal class BetaDeletedRbacGroupMemberTest {
 
     @Test
     fun create() {
-        val memberRemoveResponse =
-            MemberRemoveResponse.builder()
+        val betaDeletedRbacGroupMember =
+            BetaDeletedRbacGroupMember.builder()
                 .rbacGroupId("rbac_group_012rppKaSVsmTo6NqRDXQXNF")
                 .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
-        assertThat(memberRemoveResponse.rbacGroupId())
+        assertThat(betaDeletedRbacGroupMember.rbacGroupId())
             .isEqualTo("rbac_group_012rppKaSVsmTo6NqRDXQXNF")
-        assertThat(memberRemoveResponse.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
+        assertThat(betaDeletedRbacGroupMember.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val memberRemoveResponse =
-            MemberRemoveResponse.builder()
+        val betaDeletedRbacGroupMember =
+            BetaDeletedRbacGroupMember.builder()
                 .rbacGroupId("rbac_group_012rppKaSVsmTo6NqRDXQXNF")
                 .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .build()
 
-        val roundtrippedMemberRemoveResponse =
+        val roundtrippedBetaDeletedRbacGroupMember =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(memberRemoveResponse),
-                jacksonTypeRef<MemberRemoveResponse>(),
+                jsonMapper.writeValueAsString(betaDeletedRbacGroupMember),
+                jacksonTypeRef<BetaDeletedRbacGroupMember>(),
             )
 
-        assertThat(roundtrippedMemberRemoveResponse).isEqualTo(memberRemoveResponse)
+        assertThat(roundtrippedBetaDeletedRbacGroupMember).isEqualTo(betaDeletedRbacGroupMember)
     }
 }

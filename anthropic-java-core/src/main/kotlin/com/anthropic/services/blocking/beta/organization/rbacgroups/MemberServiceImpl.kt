@@ -15,13 +15,13 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
+import com.anthropic.models.beta.organization.rbacgroups.members.BetaDeletedRbacGroupMember
 import com.anthropic.models.beta.organization.rbacgroups.members.BetaRbacGroupMember
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberAddParams
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberListPage
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberListPageResponse
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberListParams
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberRemoveParams
-import com.anthropic.models.beta.organization.rbacgroups.members.MemberRemoveResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -48,7 +48,7 @@ class MemberServiceImpl internal constructor(private val clientOptions: ClientOp
     override fun remove(
         params: MemberRemoveParams,
         requestOptions: RequestOptions,
-    ): MemberRemoveResponse =
+    ): BetaDeletedRbacGroupMember =
         // delete /v1/organizations/rbac_groups/{rbac_group_id}/members/{user_id}
         withRawResponse().remove(params, requestOptions).parse()
 
@@ -153,13 +153,13 @@ class MemberServiceImpl internal constructor(private val clientOptions: ClientOp
             }
         }
 
-        private val removeHandler: Handler<MemberRemoveResponse> =
-            jsonHandler<MemberRemoveResponse>(clientOptions.jsonMapper)
+        private val removeHandler: Handler<BetaDeletedRbacGroupMember> =
+            jsonHandler<BetaDeletedRbacGroupMember>(clientOptions.jsonMapper)
 
         override fun remove(
             params: MemberRemoveParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<MemberRemoveResponse> {
+        ): HttpResponseFor<BetaDeletedRbacGroupMember> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("userId", params.userId().getOrNull())

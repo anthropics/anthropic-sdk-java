@@ -32,7 +32,7 @@ internal class BetaAnalyticsSkillActivityTest {
                 .skillDisplayName("skill_display_name")
                 .skillName("skill_name")
                 .chatCoworkUnifiedMetrics(
-                    BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                    BetaAnalyticsSkillChatCoworkUnifiedMetrics.builder()
                         .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
                         .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
                         .build()
@@ -72,7 +72,7 @@ internal class BetaAnalyticsSkillActivityTest {
         assertThat(betaAnalyticsSkillActivity.skillName()).isEqualTo("skill_name")
         assertThat(betaAnalyticsSkillActivity.chatCoworkUnifiedMetrics())
             .contains(
-                BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                BetaAnalyticsSkillChatCoworkUnifiedMetrics.builder()
                     .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
                     .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
                     .build()
@@ -109,7 +109,7 @@ internal class BetaAnalyticsSkillActivityTest {
                 .skillDisplayName("skill_display_name")
                 .skillName("skill_name")
                 .chatCoworkUnifiedMetrics(
-                    BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                    BetaAnalyticsSkillChatCoworkUnifiedMetrics.builder()
                         .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
                         .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
                         .build()
