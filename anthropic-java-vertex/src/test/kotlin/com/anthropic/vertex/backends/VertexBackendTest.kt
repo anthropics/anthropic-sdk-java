@@ -15,6 +15,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 @ResourceLock("environment")
 internal class VertexBackendTest {
@@ -385,6 +387,39 @@ internal class VertexBackendTest {
         assertThat(json!!.get("model")).isNull()
         assertThat(json.get("stream").asBoolean()).isEqualTo(false)
         assertThat(json.get("anthropic_version").asText()).isEqualTo(ANTHROPIC_VERSION)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["claude-sonnet-4-5@20250929", "../../x"])
+    fun prepareRequestMessagesModelStaysInOnePathSegment(model: String) {
+        val backend = createBackend()
+        val request = createRequest("""{"model":"$model"}""", "v1", "messages")
+        val preparedRequest = backend.prepareRequest(request)
+        val pathSegments = preparedRequest.pathSegments
+
+        assertThat(pathSegments.size).isEqualTo(9)
+        assertThat(pathSegments[8]).isEqualTo("$model:rawPredict")
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = [".", ".."])
+    fun prepareRequestMessagesProjectDotSegmentThrows(project: String) {
+        val backend = createBackend(createCredentials(), GC_REGION, project)
+        val request = createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
+
+        assertThatThrownBy { backend.prepareRequest(request) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageStartingWith("Path segment \"$project\" is a dot-segment")
+    }
+
+    @Test
+    fun prepareRequestMessagesProjectEmptyThrows() {
+        val backend = createBackend(createCredentials(), GC_REGION, "")
+        val request = createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
+
+        assertThatThrownBy { backend.prepareRequest(request) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("must be non-empty")
     }
 
     @Test

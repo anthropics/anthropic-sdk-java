@@ -105,7 +105,10 @@ private constructor(
         }
 
         fun replaceAllPathSegments(vararg pathSegments: String) = apply {
-            this.pathSegments = pathSegments.toMutableList()
+            this.pathSegments =
+                pathSegments
+                    .onEach { checkPathSegment(checkMinLength("pathSegment", it, 1)) }
+                    .toMutableList()
         }
 
         fun headers(headers: Headers) = apply {

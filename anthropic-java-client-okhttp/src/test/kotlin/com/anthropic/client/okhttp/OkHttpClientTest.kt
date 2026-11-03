@@ -80,6 +80,31 @@ internal class OkHttpClientTest {
     }
 
     @Test
+    fun execute_percentEncodesSlashButNotColonOrAtInAPathSegment() {
+        stubFor(post(anyUrl()).willReturn(ok()))
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl(baseUrl)
+                .addPathSegments(
+                    "arn:aws:bedrock:us-east-1:123456789012:inference-profile/a:0",
+                    "claude-sonnet-4-5@20250929:rawPredict",
+                )
+                .build()
+
+        httpClient.execute(request).close()
+
+        verify(
+            postRequestedFor(
+                urlEqualTo(
+                    "/arn:aws:bedrock:us-east-1:123456789012:inference-profile%2Fa:0" +
+                        "/claude-sonnet-4-5@20250929:rawPredict"
+                )
+            )
+        )
+    }
+
+    @Test
     fun executeAsync_whenFutureCancelled_cancelsUnderlyingCall() {
         stubFor(post(urlPathEqualTo("/something")).willReturn(ok()))
         val responseFuture =

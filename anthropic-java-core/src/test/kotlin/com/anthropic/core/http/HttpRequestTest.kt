@@ -63,6 +63,27 @@ internal class HttpRequestTest {
         assertThat(request.pathSegments[3]).isEqualTo("s6")
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = [".", ".."])
+    fun replaceAllPathSegments_dotSegment_throws(segment: String) {
+        val builder = createRequest().toBuilder()
+
+        assertThat(
+                runCatching { builder.replaceAllPathSegments("model", segment) }.exceptionOrNull()
+            )
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("dot-segment")
+    }
+
+    @Test
+    fun replaceAllPathSegments_empty_throws() {
+        val builder = createRequest().toBuilder()
+
+        assertThat(runCatching { builder.replaceAllPathSegments("model", "") }.exceptionOrNull())
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("`pathSegment` must be non-empty")
+    }
+
     @Test
     fun buffered_withoutBody_returnsSameRequest() {
         val request = createRequest()

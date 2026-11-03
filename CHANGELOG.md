@@ -2,6 +2,12 @@
 
 ## [3.4.1](https://github.com/anthropics/anthropic-sdk-java/compare/v3.4.0...v3.4.1) (2026-11-02)
 
+### Bug Fixes
+
+* **bedrock,vertex:** throw when the Bedrock model ID or the Vertex project or region is empty, "." or ".." instead of sending the request to a different URL
+* **google-cloud:** percent-encode the project, location and workspace ID in the base URL, and throw when one of them is empty, "." or ".."
+
+
 ### Chores
 
 * **api:** update example values for pattern-constrained string fields

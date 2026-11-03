@@ -18,6 +18,8 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.mockito.Mockito
 
 @ResourceLock("environment")
@@ -415,6 +417,70 @@ internal class GoogleCloudBackendTest {
                 "https://claude.googleapis.com/v1" +
                     "/projects/$PROJECT/locations/$LOCATION/workspaces/$WORKSPACE_ID/invoke"
             )
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "my-project, global, wrkspc_01AbCdEf",
+        "example.com:my-project, us-central1, wrkspc_01AbCdEf",
+    )
+    fun baseUrlDerivedKeepsRealValues(project: String, location: String, workspaceId: String) {
+        val backend =
+            RecordingBackend(createBackendWithTokenSupplier(project, location, workspaceId))
+        val client = createClient(backend)
+        val locationUrl = "$GATEWAY_URL/projects/$project/locations/$location"
+
+        send { client.messages().create(MESSAGE_PARAMS) }
+        send { client.beta().organization().workspaces().list() }
+
+        assertThat(backend.urls())
+            .containsExactly(
+                "$locationUrl/workspaces/$workspaceId/invoke/v1/messages",
+                "$locationUrl/claudeOrganization/invoke$ORGANIZATION_PATH",
+            )
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "a/b, a%2Fb",
+        "w/../../x, w%2F..%2F..%2Fx",
+        "w?x=1, w%3Fx%3D1",
+        "w#x, w%23x",
+        "a b, a%20b",
+        "a+b, a%2Bb",
+        "a%3Ab, a%253Ab",
+    )
+    fun baseUrlDerivedPercentEncodesEachValue(value: String, encoded: String) {
+        val backend = RecordingBackend(createBackendWithTokenSupplier(value, value, value))
+
+        send { createClient(backend).messages().create(MESSAGE_PARAMS) }
+
+        assertThat(backend.urls())
+            .containsExactly(
+                "$GATEWAY_URL/projects/$encoded/locations/$encoded/workspaces/$encoded" +
+                    "/invoke/v1/messages"
+            )
+    }
+
+    @ParameterizedTest
+    @CsvSource("., dot-segment", ".., dot-segment", "'', must be non-empty")
+    fun baseUrlDerivedBadSegmentThrows(segment: String, message: String) {
+        val backends =
+            listOf(
+                createBackendWithTokenSupplier(project = segment),
+                createBackendWithTokenSupplier(location = segment),
+                createBackendWithTokenSupplier(workspaceId = segment),
+                GoogleCloudBackend.builder()
+                    .bearerTokenSupplier(TOKEN_SUPPLIER)
+                    .project(segment)
+                    .build(),
+            )
+
+        assertThat(backends).allSatisfy {
+            assertThatThrownBy { createClient(it) }
+                .isExactlyInstanceOf(IllegalStateException::class.java)
+                .hasMessageContaining(message)
+        }
     }
 
     @Test
@@ -981,12 +1047,16 @@ internal class GoogleCloudBackendTest {
     private fun credentials(token: String = TOKEN): GoogleCredentials =
         GoogleCredentials.create(AccessToken.newBuilder().setTokenValue(token).build())
 
-    private fun createBackendWithTokenSupplier(): GoogleCloudBackend =
+    private fun createBackendWithTokenSupplier(
+        project: String = PROJECT,
+        location: String = LOCATION,
+        workspaceId: String = WORKSPACE_ID,
+    ): GoogleCloudBackend =
         GoogleCloudBackend.builder()
             .bearerTokenSupplier(TOKEN_SUPPLIER)
-            .project(PROJECT)
-            .location(LOCATION)
-            .workspaceId(WORKSPACE_ID)
+            .project(project)
+            .location(location)
+            .workspaceId(workspaceId)
             .build()
 
     private fun createBackendWithCredentials(): GoogleCloudBackend =
