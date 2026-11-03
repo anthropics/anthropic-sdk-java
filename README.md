@@ -1,8 +1,8 @@
-# Claude SDK for Java
+# Anthropic SDK for Java
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java)
 
-The Claude SDK for Java provides access to the [Claude API](https://docs.anthropic.com/en/api/) from Java applications.
+The Anthropic SDK for Java provides access to the [Claude API](https://docs.anthropic.com/en/api/) from Java applications.
 
 ## Documentation
 
