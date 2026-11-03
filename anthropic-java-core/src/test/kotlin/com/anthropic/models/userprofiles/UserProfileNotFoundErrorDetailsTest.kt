@@ -1,4 +1,4 @@
-package com.anthropic.models.organization
+package com.anthropic.models.userprofiles
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef

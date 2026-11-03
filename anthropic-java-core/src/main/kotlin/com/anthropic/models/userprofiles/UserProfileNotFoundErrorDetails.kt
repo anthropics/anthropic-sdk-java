@@ -1,4 +1,4 @@
-package com.anthropic.models.organization
+package com.anthropic.models.userprofiles
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonMissing
@@ -12,11 +12,11 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * A role attached to an RBAC Group in the request grants owner access, so this API does not add
- * members to that group (directly or through an invite), remove its members, or delete it. Make the
- * change in the organization's admin settings in Claude.
+ * The request depends on a user profile that does not exist in the organization or is no longer
+ * active. The request either names this user profile by ID, or names a resource, such as an
+ * External Key, that is bound to it.
  */
-class RbacGroupGrantsOwnerAccessErrorDetails
+class UserProfileNotFoundErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonValue,
@@ -31,7 +31,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("rbac_group_grants_owner_access")
+     * JsonValue.from("user_profile_not_found")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -55,25 +55,24 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [RbacGroupGrantsOwnerAccessErrorDetails].
+         * [UserProfileNotFoundErrorDetails].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [RbacGroupGrantsOwnerAccessErrorDetails]. */
+    /** A builder for [UserProfileNotFoundErrorDetails]. */
     class Builder internal constructor() {
 
-        private var errorCode: JsonValue = JsonValue.from("rbac_group_grants_owner_access")
+        private var errorCode: JsonValue = JsonValue.from("user_profile_not_found")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            rbacGroupGrantsOwnerAccessErrorDetails: RbacGroupGrantsOwnerAccessErrorDetails
-        ) = apply {
-            errorCode = rbacGroupGrantsOwnerAccessErrorDetails.errorCode
-            additionalProperties =
-                rbacGroupGrantsOwnerAccessErrorDetails.additionalProperties.toMutableMap()
-        }
+        internal fun from(userProfileNotFoundErrorDetails: UserProfileNotFoundErrorDetails) =
+            apply {
+                errorCode = userProfileNotFoundErrorDetails.errorCode
+                additionalProperties =
+                    userProfileNotFoundErrorDetails.additionalProperties.toMutableMap()
+            }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -81,7 +80,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("rbac_group_grants_owner_access")
+         * JsonValue.from("user_profile_not_found")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -109,12 +108,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [RbacGroupGrantsOwnerAccessErrorDetails].
+         * Returns an immutable instance of [UserProfileNotFoundErrorDetails].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): RbacGroupGrantsOwnerAccessErrorDetails =
-            RbacGroupGrantsOwnerAccessErrorDetails(errorCode, additionalProperties.toMutableMap())
+        fun build(): UserProfileNotFoundErrorDetails =
+            UserProfileNotFoundErrorDetails(errorCode, additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -127,13 +126,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): RbacGroupGrantsOwnerAccessErrorDetails = apply {
+    fun validate(): UserProfileNotFoundErrorDetails = apply {
         if (validated) {
             return@apply
         }
 
         _errorCode().let {
-            if (it != JsonValue.from("rbac_group_grants_owner_access")) {
+            if (it != JsonValue.from("user_profile_not_found")) {
                 throw AnthropicInvalidDataException("'errorCode' is invalid, received $it")
             }
         }
@@ -155,14 +154,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        errorCode.let { if (it == JsonValue.from("rbac_group_grants_owner_access")) 1 else 0 }
+        errorCode.let { if (it == JsonValue.from("user_profile_not_found")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is RbacGroupGrantsOwnerAccessErrorDetails &&
+        return other is UserProfileNotFoundErrorDetails &&
             errorCode == other.errorCode &&
             additionalProperties == other.additionalProperties
     }
@@ -172,5 +171,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "RbacGroupGrantsOwnerAccessErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
+        "UserProfileNotFoundErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
 }

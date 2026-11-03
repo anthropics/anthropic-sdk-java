@@ -1,4 +1,4 @@
-package com.anthropic.models.beta.organization.claudetag
+package com.anthropic.models.beta.environments
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef

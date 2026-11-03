@@ -1,4 +1,4 @@
-package com.anthropic.models.organization.invites
+package com.anthropic.models.organization
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef

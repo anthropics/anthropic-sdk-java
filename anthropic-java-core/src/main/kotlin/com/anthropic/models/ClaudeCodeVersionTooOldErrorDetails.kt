@@ -1,4 +1,4 @@
-package com.anthropic.models.organization.invites
+package com.anthropic.models
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonMissing
@@ -12,10 +12,10 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * The organization has reached the member limit that Anthropic set for it. Pending invites count
- * toward the limit.
+ * The request comes from a Claude Code version older than the minimum that the requested model or
+ * the organization requires. Update Claude Code, then retry.
  */
-class OrgMemberLimitExceededErrorDetails
+class ClaudeCodeVersionTooOldErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonValue,
@@ -30,7 +30,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("org_member_limit_exceeded")
+     * JsonValue.from("claude_code_version_too_old")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -54,24 +54,25 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [OrgMemberLimitExceededErrorDetails].
+         * [ClaudeCodeVersionTooOldErrorDetails].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [OrgMemberLimitExceededErrorDetails]. */
+    /** A builder for [ClaudeCodeVersionTooOldErrorDetails]. */
     class Builder internal constructor() {
 
-        private var errorCode: JsonValue = JsonValue.from("org_member_limit_exceeded")
+        private var errorCode: JsonValue = JsonValue.from("claude_code_version_too_old")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(orgMemberLimitExceededErrorDetails: OrgMemberLimitExceededErrorDetails) =
-            apply {
-                errorCode = orgMemberLimitExceededErrorDetails.errorCode
-                additionalProperties =
-                    orgMemberLimitExceededErrorDetails.additionalProperties.toMutableMap()
-            }
+        internal fun from(
+            claudeCodeVersionTooOldErrorDetails: ClaudeCodeVersionTooOldErrorDetails
+        ) = apply {
+            errorCode = claudeCodeVersionTooOldErrorDetails.errorCode
+            additionalProperties =
+                claudeCodeVersionTooOldErrorDetails.additionalProperties.toMutableMap()
+        }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -79,7 +80,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("org_member_limit_exceeded")
+         * JsonValue.from("claude_code_version_too_old")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -107,12 +108,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [OrgMemberLimitExceededErrorDetails].
+         * Returns an immutable instance of [ClaudeCodeVersionTooOldErrorDetails].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): OrgMemberLimitExceededErrorDetails =
-            OrgMemberLimitExceededErrorDetails(errorCode, additionalProperties.toMutableMap())
+        fun build(): ClaudeCodeVersionTooOldErrorDetails =
+            ClaudeCodeVersionTooOldErrorDetails(errorCode, additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -125,13 +126,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): OrgMemberLimitExceededErrorDetails = apply {
+    fun validate(): ClaudeCodeVersionTooOldErrorDetails = apply {
         if (validated) {
             return@apply
         }
 
         _errorCode().let {
-            if (it != JsonValue.from("org_member_limit_exceeded")) {
+            if (it != JsonValue.from("claude_code_version_too_old")) {
                 throw AnthropicInvalidDataException("'errorCode' is invalid, received $it")
             }
         }
@@ -153,14 +154,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        errorCode.let { if (it == JsonValue.from("org_member_limit_exceeded")) 1 else 0 }
+        errorCode.let { if (it == JsonValue.from("claude_code_version_too_old")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is OrgMemberLimitExceededErrorDetails &&
+        return other is ClaudeCodeVersionTooOldErrorDetails &&
             errorCode == other.errorCode &&
             additionalProperties == other.additionalProperties
     }
@@ -170,5 +171,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "OrgMemberLimitExceededErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
+        "ClaudeCodeVersionTooOldErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
 }

@@ -1,4 +1,4 @@
-package com.anthropic.models.organization
+package com.anthropic.models
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonMissing
@@ -12,11 +12,10 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * The API could not finish checking whether an RBAC Group in the request grants owner access (the
- * check reached a fixed limit), so it made no change. Retrying the same request will not help. Make
- * the change in the organization's admin settings in Claude.
+ * The endpoint does not support the organization's type. Each endpoint's description says which
+ * organization types it supports.
  */
-class RbacGroupOwnerAccessUnconfirmedErrorDetails
+class OrganizationTypeNotSupportedErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonValue,
@@ -31,7 +30,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("rbac_group_owner_access_unconfirmed")
+     * JsonValue.from("organization_type_not_supported")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -55,24 +54,24 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [RbacGroupOwnerAccessUnconfirmedErrorDetails].
+         * [OrganizationTypeNotSupportedErrorDetails].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [RbacGroupOwnerAccessUnconfirmedErrorDetails]. */
+    /** A builder for [OrganizationTypeNotSupportedErrorDetails]. */
     class Builder internal constructor() {
 
-        private var errorCode: JsonValue = JsonValue.from("rbac_group_owner_access_unconfirmed")
+        private var errorCode: JsonValue = JsonValue.from("organization_type_not_supported")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(
-            rbacGroupOwnerAccessUnconfirmedErrorDetails: RbacGroupOwnerAccessUnconfirmedErrorDetails
+            organizationTypeNotSupportedErrorDetails: OrganizationTypeNotSupportedErrorDetails
         ) = apply {
-            errorCode = rbacGroupOwnerAccessUnconfirmedErrorDetails.errorCode
+            errorCode = organizationTypeNotSupportedErrorDetails.errorCode
             additionalProperties =
-                rbacGroupOwnerAccessUnconfirmedErrorDetails.additionalProperties.toMutableMap()
+                organizationTypeNotSupportedErrorDetails.additionalProperties.toMutableMap()
         }
 
         /**
@@ -81,7 +80,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("rbac_group_owner_access_unconfirmed")
+         * JsonValue.from("organization_type_not_supported")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -109,15 +108,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [RbacGroupOwnerAccessUnconfirmedErrorDetails].
+         * Returns an immutable instance of [OrganizationTypeNotSupportedErrorDetails].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): RbacGroupOwnerAccessUnconfirmedErrorDetails =
-            RbacGroupOwnerAccessUnconfirmedErrorDetails(
-                errorCode,
-                additionalProperties.toMutableMap(),
-            )
+        fun build(): OrganizationTypeNotSupportedErrorDetails =
+            OrganizationTypeNotSupportedErrorDetails(errorCode, additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -130,13 +126,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): RbacGroupOwnerAccessUnconfirmedErrorDetails = apply {
+    fun validate(): OrganizationTypeNotSupportedErrorDetails = apply {
         if (validated) {
             return@apply
         }
 
         _errorCode().let {
-            if (it != JsonValue.from("rbac_group_owner_access_unconfirmed")) {
+            if (it != JsonValue.from("organization_type_not_supported")) {
                 throw AnthropicInvalidDataException("'errorCode' is invalid, received $it")
             }
         }
@@ -158,14 +154,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        errorCode.let { if (it == JsonValue.from("rbac_group_owner_access_unconfirmed")) 1 else 0 }
+        errorCode.let { if (it == JsonValue.from("organization_type_not_supported")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is RbacGroupOwnerAccessUnconfirmedErrorDetails &&
+        return other is OrganizationTypeNotSupportedErrorDetails &&
             errorCode == other.errorCode &&
             additionalProperties == other.additionalProperties
     }
@@ -175,5 +171,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "RbacGroupOwnerAccessUnconfirmedErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
+        "OrganizationTypeNotSupportedErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
 }

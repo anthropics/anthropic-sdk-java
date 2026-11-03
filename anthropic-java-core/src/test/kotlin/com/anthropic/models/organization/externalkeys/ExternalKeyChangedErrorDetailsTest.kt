@@ -1,4 +1,4 @@
-package com.anthropic.models.organization.workspaces
+package com.anthropic.models.organization.externalkeys
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef

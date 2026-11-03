@@ -1,4 +1,4 @@
-package com.anthropic.models.beta.organization
+package com.anthropic.models.beta.environments
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonMissing
@@ -11,11 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-/**
- * The request's `Content-Type` header names a charset other than UTF-8, ISO-8859-1 or US-ASCII.
- * Send the request with no charset, or with one of these.
- */
-class BetaUnsupportedCharsetErrorDetails
+/** `settings.environment_id` names no Environment within the organization's reach. */
+class BetaEnvironmentNotFoundErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonValue,
@@ -30,7 +27,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("unsupported_charset")
+     * JsonValue.from("environment_not_found")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -54,24 +51,25 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [BetaUnsupportedCharsetErrorDetails].
+         * [BetaEnvironmentNotFoundErrorDetails].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaUnsupportedCharsetErrorDetails]. */
+    /** A builder for [BetaEnvironmentNotFoundErrorDetails]. */
     class Builder internal constructor() {
 
-        private var errorCode: JsonValue = JsonValue.from("unsupported_charset")
+        private var errorCode: JsonValue = JsonValue.from("environment_not_found")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaUnsupportedCharsetErrorDetails: BetaUnsupportedCharsetErrorDetails) =
-            apply {
-                errorCode = betaUnsupportedCharsetErrorDetails.errorCode
-                additionalProperties =
-                    betaUnsupportedCharsetErrorDetails.additionalProperties.toMutableMap()
-            }
+        internal fun from(
+            betaEnvironmentNotFoundErrorDetails: BetaEnvironmentNotFoundErrorDetails
+        ) = apply {
+            errorCode = betaEnvironmentNotFoundErrorDetails.errorCode
+            additionalProperties =
+                betaEnvironmentNotFoundErrorDetails.additionalProperties.toMutableMap()
+        }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -79,7 +77,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("unsupported_charset")
+         * JsonValue.from("environment_not_found")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -107,12 +105,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaUnsupportedCharsetErrorDetails].
+         * Returns an immutable instance of [BetaEnvironmentNotFoundErrorDetails].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): BetaUnsupportedCharsetErrorDetails =
-            BetaUnsupportedCharsetErrorDetails(errorCode, additionalProperties.toMutableMap())
+        fun build(): BetaEnvironmentNotFoundErrorDetails =
+            BetaEnvironmentNotFoundErrorDetails(errorCode, additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -125,13 +123,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BetaUnsupportedCharsetErrorDetails = apply {
+    fun validate(): BetaEnvironmentNotFoundErrorDetails = apply {
         if (validated) {
             return@apply
         }
 
         _errorCode().let {
-            if (it != JsonValue.from("unsupported_charset")) {
+            if (it != JsonValue.from("environment_not_found")) {
                 throw AnthropicInvalidDataException("'errorCode' is invalid, received $it")
             }
         }
@@ -153,14 +151,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        errorCode.let { if (it == JsonValue.from("unsupported_charset")) 1 else 0 }
+        errorCode.let { if (it == JsonValue.from("environment_not_found")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is BetaUnsupportedCharsetErrorDetails &&
+        return other is BetaEnvironmentNotFoundErrorDetails &&
             errorCode == other.errorCode &&
             additionalProperties == other.additionalProperties
     }
@@ -170,5 +168,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaUnsupportedCharsetErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
+        "BetaEnvironmentNotFoundErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
 }

@@ -1,4 +1,4 @@
-package com.anthropic.models.organization.workspaces
+package com.anthropic.models.organization.externalkeys
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonMissing

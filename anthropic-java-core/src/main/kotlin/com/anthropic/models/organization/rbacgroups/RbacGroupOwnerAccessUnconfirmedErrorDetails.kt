@@ -1,4 +1,4 @@
-package com.anthropic.models.messages
+package com.anthropic.models.organization.rbacgroups
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonMissing
@@ -12,10 +12,11 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * A custom skill the request names is stored under an encryption key state the workspace cannot
- * currently decrypt.
+ * The API could not finish checking whether an RBAC Group in the request grants owner access (the
+ * check reached a fixed limit), so it made no change. Retrying the same request will not help. Make
+ * the change in the organization's admin settings in Claude.
  */
-class SkillReadBlockedUndecryptableErrorDetails
+class RbacGroupOwnerAccessUnconfirmedErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonValue,
@@ -30,7 +31,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("skill_read_blocked_undecryptable")
+     * JsonValue.from("rbac_group_owner_access_unconfirmed")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -54,24 +55,24 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [SkillReadBlockedUndecryptableErrorDetails].
+         * [RbacGroupOwnerAccessUnconfirmedErrorDetails].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [SkillReadBlockedUndecryptableErrorDetails]. */
+    /** A builder for [RbacGroupOwnerAccessUnconfirmedErrorDetails]. */
     class Builder internal constructor() {
 
-        private var errorCode: JsonValue = JsonValue.from("skill_read_blocked_undecryptable")
+        private var errorCode: JsonValue = JsonValue.from("rbac_group_owner_access_unconfirmed")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(
-            skillReadBlockedUndecryptableErrorDetails: SkillReadBlockedUndecryptableErrorDetails
+            rbacGroupOwnerAccessUnconfirmedErrorDetails: RbacGroupOwnerAccessUnconfirmedErrorDetails
         ) = apply {
-            errorCode = skillReadBlockedUndecryptableErrorDetails.errorCode
+            errorCode = rbacGroupOwnerAccessUnconfirmedErrorDetails.errorCode
             additionalProperties =
-                skillReadBlockedUndecryptableErrorDetails.additionalProperties.toMutableMap()
+                rbacGroupOwnerAccessUnconfirmedErrorDetails.additionalProperties.toMutableMap()
         }
 
         /**
@@ -80,7 +81,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("skill_read_blocked_undecryptable")
+         * JsonValue.from("rbac_group_owner_access_unconfirmed")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -108,12 +109,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [SkillReadBlockedUndecryptableErrorDetails].
+         * Returns an immutable instance of [RbacGroupOwnerAccessUnconfirmedErrorDetails].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): SkillReadBlockedUndecryptableErrorDetails =
-            SkillReadBlockedUndecryptableErrorDetails(
+        fun build(): RbacGroupOwnerAccessUnconfirmedErrorDetails =
+            RbacGroupOwnerAccessUnconfirmedErrorDetails(
                 errorCode,
                 additionalProperties.toMutableMap(),
             )
@@ -129,13 +130,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): SkillReadBlockedUndecryptableErrorDetails = apply {
+    fun validate(): RbacGroupOwnerAccessUnconfirmedErrorDetails = apply {
         if (validated) {
             return@apply
         }
 
         _errorCode().let {
-            if (it != JsonValue.from("skill_read_blocked_undecryptable")) {
+            if (it != JsonValue.from("rbac_group_owner_access_unconfirmed")) {
                 throw AnthropicInvalidDataException("'errorCode' is invalid, received $it")
             }
         }
@@ -157,14 +158,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        errorCode.let { if (it == JsonValue.from("skill_read_blocked_undecryptable")) 1 else 0 }
+        errorCode.let { if (it == JsonValue.from("rbac_group_owner_access_unconfirmed")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is SkillReadBlockedUndecryptableErrorDetails &&
+        return other is RbacGroupOwnerAccessUnconfirmedErrorDetails &&
             errorCode == other.errorCode &&
             additionalProperties == other.additionalProperties
     }
@@ -174,5 +175,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SkillReadBlockedUndecryptableErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
+        "RbacGroupOwnerAccessUnconfirmedErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
 }

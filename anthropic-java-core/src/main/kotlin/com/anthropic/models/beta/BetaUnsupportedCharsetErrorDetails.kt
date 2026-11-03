@@ -1,4 +1,4 @@
-package com.anthropic.models.messages
+package com.anthropic.models.beta
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonMissing
@@ -12,10 +12,10 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * The request comes from a Claude Code version older than the minimum that the requested model or
- * the organization requires. Update Claude Code, then retry.
+ * The request's `Content-Type` header names a charset other than UTF-8, ISO-8859-1 or US-ASCII.
+ * Send the request with no charset, or with one of these.
  */
-class ClaudeCodeVersionTooOldErrorDetails
+class BetaUnsupportedCharsetErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonValue,
@@ -30,7 +30,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("claude_code_version_too_old")
+     * JsonValue.from("unsupported_charset")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -54,25 +54,24 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [ClaudeCodeVersionTooOldErrorDetails].
+         * [BetaUnsupportedCharsetErrorDetails].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [ClaudeCodeVersionTooOldErrorDetails]. */
+    /** A builder for [BetaUnsupportedCharsetErrorDetails]. */
     class Builder internal constructor() {
 
-        private var errorCode: JsonValue = JsonValue.from("claude_code_version_too_old")
+        private var errorCode: JsonValue = JsonValue.from("unsupported_charset")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            claudeCodeVersionTooOldErrorDetails: ClaudeCodeVersionTooOldErrorDetails
-        ) = apply {
-            errorCode = claudeCodeVersionTooOldErrorDetails.errorCode
-            additionalProperties =
-                claudeCodeVersionTooOldErrorDetails.additionalProperties.toMutableMap()
-        }
+        internal fun from(betaUnsupportedCharsetErrorDetails: BetaUnsupportedCharsetErrorDetails) =
+            apply {
+                errorCode = betaUnsupportedCharsetErrorDetails.errorCode
+                additionalProperties =
+                    betaUnsupportedCharsetErrorDetails.additionalProperties.toMutableMap()
+            }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -80,7 +79,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("claude_code_version_too_old")
+         * JsonValue.from("unsupported_charset")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -108,12 +107,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [ClaudeCodeVersionTooOldErrorDetails].
+         * Returns an immutable instance of [BetaUnsupportedCharsetErrorDetails].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): ClaudeCodeVersionTooOldErrorDetails =
-            ClaudeCodeVersionTooOldErrorDetails(errorCode, additionalProperties.toMutableMap())
+        fun build(): BetaUnsupportedCharsetErrorDetails =
+            BetaUnsupportedCharsetErrorDetails(errorCode, additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -126,13 +125,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): ClaudeCodeVersionTooOldErrorDetails = apply {
+    fun validate(): BetaUnsupportedCharsetErrorDetails = apply {
         if (validated) {
             return@apply
         }
 
         _errorCode().let {
-            if (it != JsonValue.from("claude_code_version_too_old")) {
+            if (it != JsonValue.from("unsupported_charset")) {
                 throw AnthropicInvalidDataException("'errorCode' is invalid, received $it")
             }
         }
@@ -154,14 +153,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        errorCode.let { if (it == JsonValue.from("claude_code_version_too_old")) 1 else 0 }
+        errorCode.let { if (it == JsonValue.from("unsupported_charset")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is ClaudeCodeVersionTooOldErrorDetails &&
+        return other is BetaUnsupportedCharsetErrorDetails &&
             errorCode == other.errorCode &&
             additionalProperties == other.additionalProperties
     }
@@ -171,5 +170,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ClaudeCodeVersionTooOldErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
+        "BetaUnsupportedCharsetErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
 }

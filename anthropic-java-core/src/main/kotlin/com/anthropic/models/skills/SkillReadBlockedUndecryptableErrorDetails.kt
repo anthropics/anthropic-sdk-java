@@ -1,4 +1,4 @@
-package com.anthropic.models.beta.organization.claudetag
+package com.anthropic.models.skills
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonMissing
@@ -11,8 +11,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-/** `settings.environment_id` names no Environment within the organization's reach. */
-class BetaEnvironmentNotFoundErrorDetails
+/**
+ * A custom skill the request names is stored under an encryption key state the workspace cannot
+ * currently decrypt.
+ */
+class SkillReadBlockedUndecryptableErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonValue,
@@ -27,7 +30,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("environment_not_found")
+     * JsonValue.from("skill_read_blocked_undecryptable")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -51,24 +54,24 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [BetaEnvironmentNotFoundErrorDetails].
+         * [SkillReadBlockedUndecryptableErrorDetails].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaEnvironmentNotFoundErrorDetails]. */
+    /** A builder for [SkillReadBlockedUndecryptableErrorDetails]. */
     class Builder internal constructor() {
 
-        private var errorCode: JsonValue = JsonValue.from("environment_not_found")
+        private var errorCode: JsonValue = JsonValue.from("skill_read_blocked_undecryptable")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(
-            betaEnvironmentNotFoundErrorDetails: BetaEnvironmentNotFoundErrorDetails
+            skillReadBlockedUndecryptableErrorDetails: SkillReadBlockedUndecryptableErrorDetails
         ) = apply {
-            errorCode = betaEnvironmentNotFoundErrorDetails.errorCode
+            errorCode = skillReadBlockedUndecryptableErrorDetails.errorCode
             additionalProperties =
-                betaEnvironmentNotFoundErrorDetails.additionalProperties.toMutableMap()
+                skillReadBlockedUndecryptableErrorDetails.additionalProperties.toMutableMap()
         }
 
         /**
@@ -77,7 +80,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("environment_not_found")
+         * JsonValue.from("skill_read_blocked_undecryptable")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -105,12 +108,15 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaEnvironmentNotFoundErrorDetails].
+         * Returns an immutable instance of [SkillReadBlockedUndecryptableErrorDetails].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): BetaEnvironmentNotFoundErrorDetails =
-            BetaEnvironmentNotFoundErrorDetails(errorCode, additionalProperties.toMutableMap())
+        fun build(): SkillReadBlockedUndecryptableErrorDetails =
+            SkillReadBlockedUndecryptableErrorDetails(
+                errorCode,
+                additionalProperties.toMutableMap(),
+            )
     }
 
     private var validated: Boolean = false
@@ -123,13 +129,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BetaEnvironmentNotFoundErrorDetails = apply {
+    fun validate(): SkillReadBlockedUndecryptableErrorDetails = apply {
         if (validated) {
             return@apply
         }
 
         _errorCode().let {
-            if (it != JsonValue.from("environment_not_found")) {
+            if (it != JsonValue.from("skill_read_blocked_undecryptable")) {
                 throw AnthropicInvalidDataException("'errorCode' is invalid, received $it")
             }
         }
@@ -151,14 +157,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        errorCode.let { if (it == JsonValue.from("environment_not_found")) 1 else 0 }
+        errorCode.let { if (it == JsonValue.from("skill_read_blocked_undecryptable")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is BetaEnvironmentNotFoundErrorDetails &&
+        return other is SkillReadBlockedUndecryptableErrorDetails &&
             errorCode == other.errorCode &&
             additionalProperties == other.additionalProperties
     }
@@ -168,5 +174,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaEnvironmentNotFoundErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
+        "SkillReadBlockedUndecryptableErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
 }

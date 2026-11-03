@@ -12,10 +12,10 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * The endpoint does not support the organization's type. Each endpoint's description says which
- * organization types it supports.
+ * The organization has reached the member limit that Anthropic set for it. Pending invites count
+ * toward the limit.
  */
-class OrganizationTypeNotSupportedErrorDetails
+class OrgMemberLimitExceededErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonValue,
@@ -30,7 +30,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("organization_type_not_supported")
+     * JsonValue.from("org_member_limit_exceeded")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -54,25 +54,24 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [OrganizationTypeNotSupportedErrorDetails].
+         * [OrgMemberLimitExceededErrorDetails].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [OrganizationTypeNotSupportedErrorDetails]. */
+    /** A builder for [OrgMemberLimitExceededErrorDetails]. */
     class Builder internal constructor() {
 
-        private var errorCode: JsonValue = JsonValue.from("organization_type_not_supported")
+        private var errorCode: JsonValue = JsonValue.from("org_member_limit_exceeded")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            organizationTypeNotSupportedErrorDetails: OrganizationTypeNotSupportedErrorDetails
-        ) = apply {
-            errorCode = organizationTypeNotSupportedErrorDetails.errorCode
-            additionalProperties =
-                organizationTypeNotSupportedErrorDetails.additionalProperties.toMutableMap()
-        }
+        internal fun from(orgMemberLimitExceededErrorDetails: OrgMemberLimitExceededErrorDetails) =
+            apply {
+                errorCode = orgMemberLimitExceededErrorDetails.errorCode
+                additionalProperties =
+                    orgMemberLimitExceededErrorDetails.additionalProperties.toMutableMap()
+            }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -80,7 +79,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("organization_type_not_supported")
+         * JsonValue.from("org_member_limit_exceeded")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -108,12 +107,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [OrganizationTypeNotSupportedErrorDetails].
+         * Returns an immutable instance of [OrgMemberLimitExceededErrorDetails].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): OrganizationTypeNotSupportedErrorDetails =
-            OrganizationTypeNotSupportedErrorDetails(errorCode, additionalProperties.toMutableMap())
+        fun build(): OrgMemberLimitExceededErrorDetails =
+            OrgMemberLimitExceededErrorDetails(errorCode, additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -126,13 +125,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): OrganizationTypeNotSupportedErrorDetails = apply {
+    fun validate(): OrgMemberLimitExceededErrorDetails = apply {
         if (validated) {
             return@apply
         }
 
         _errorCode().let {
-            if (it != JsonValue.from("organization_type_not_supported")) {
+            if (it != JsonValue.from("org_member_limit_exceeded")) {
                 throw AnthropicInvalidDataException("'errorCode' is invalid, received $it")
             }
         }
@@ -154,14 +153,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        errorCode.let { if (it == JsonValue.from("organization_type_not_supported")) 1 else 0 }
+        errorCode.let { if (it == JsonValue.from("org_member_limit_exceeded")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is OrganizationTypeNotSupportedErrorDetails &&
+        return other is OrgMemberLimitExceededErrorDetails &&
             errorCode == other.errorCode &&
             additionalProperties == other.additionalProperties
     }
@@ -171,5 +170,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "OrganizationTypeNotSupportedErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
+        "OrgMemberLimitExceededErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
 }

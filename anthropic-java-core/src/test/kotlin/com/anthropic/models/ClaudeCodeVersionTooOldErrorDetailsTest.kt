@@ -1,4 +1,4 @@
-package com.anthropic.models.messages
+package com.anthropic.models
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
