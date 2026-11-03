@@ -138,7 +138,9 @@ private constructor(
     fun createdBy(): Optional<CreatedBy> = createdBy.getOptional("created_by")
 
     /**
-     * The manifest's description; null when it declares none.
+     * The manifest's description; null when it declares none. If that description is the first 500
+     * characters of exactly one distinct skill `description` in `components`, that skill
+     * `description` is returned instead.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -470,7 +472,11 @@ private constructor(
         fun apiActorCreatedBy(apiKeyId: String) =
             createdBy(BetaPluginApiActor.builder().apiKeyId(apiKeyId).build())
 
-        /** The manifest's description; null when it declares none. */
+        /**
+         * The manifest's description; null when it declares none. If that description is the first
+         * 500 characters of exactly one distinct skill `description` in `components`, that skill
+         * `description` is returned instead.
+         */
         fun description(description: String?) = description(JsonField.ofNullable(description))
 
         /** Alias for calling [Builder.description] with `description.orElse(null)`. */
