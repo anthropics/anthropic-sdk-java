@@ -1,6 +1,11 @@
 # Changelog
 
-## [3.4.1](https://github.com/anthropics/anthropic-sdk-java/compare/v3.4.0...v3.4.1) (2026-11-02)
+## [3.5.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.4.0...v3.5.0) (2026-11-03)
+
+### Features
+
+* **api:** add error details types and new error type values
+
 
 ### Bug Fixes
 
