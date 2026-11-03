@@ -9,6 +9,7 @@
 
 ### Bug Fixes
 
+* **aws:** accept `ANTHROPIC_AWS_BASE_URL` without a region in `fromEnv()`
 * **bedrock,vertex:** throw when the Bedrock model ID or the Vertex project or region is empty, "." or ".." instead of sending the request to a different URL
 * **google-cloud:** percent-encode the project, location and workspace ID in the base URL, and throw when one of them is empty, "." or ".."
 

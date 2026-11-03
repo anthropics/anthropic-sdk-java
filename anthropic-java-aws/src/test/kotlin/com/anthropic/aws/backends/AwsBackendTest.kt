@@ -42,6 +42,7 @@ internal class AwsBackendTest {
 
         private const val ENV_API_KEY = "ANTHROPIC_AWS_API_KEY"
         private const val ENV_WORKSPACE_ID = "ANTHROPIC_AWS_WORKSPACE_ID"
+        private const val ENV_BASE_URL = "ANTHROPIC_AWS_BASE_URL"
 
         private val hasRegionInEnvironment by lazy {
             try {
@@ -320,6 +321,16 @@ internal class AwsBackendTest {
                 .workspaceId(WORKSPACE_ID)
                 .baseUrl("https://custom.example.com")
                 .build()
+
+        assertThat(backend.baseUrl()).isEqualTo("https://custom.example.com")
+    }
+
+    @Test
+    @DisabledIf("hasRegionInEnvironment")
+    fun baseUrlFromEnvWithNoRegion() {
+        val builder = AwsBackend.builder().withApiKeyEnvVar()
+        Mockito.doReturn("https://custom.example.com").`when`(builder).getEnv(ENV_BASE_URL)
+        val backend = builder.fromEnv().build()
 
         assertThat(backend.baseUrl()).isEqualTo("https://custom.example.com")
     }
