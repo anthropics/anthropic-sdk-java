@@ -40,6 +40,18 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.CmekKeyDisabledException The workspace's customer-managed
+     *   encryption key is disabled or revoked. Re-enable the key, then retry.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     * @throws com.anthropic.models.EnforcedSpendLimitReachedException The organization has crossed
+     *   the monthly API usage threshold of its API tier.
      */
     fun create(params: BatchCreateParams): BetaMessageBatch = create(params, RequestOptions.none())
 
@@ -55,6 +67,14 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
      */
     fun retrieve(messageBatchId: String): BetaMessageBatch =
         retrieve(messageBatchId, BatchRetrieveParams.none())
@@ -93,6 +113,14 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
      */
     fun list(): BatchListPage = list(BatchListParams.none())
 
@@ -118,6 +146,14 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
      */
     fun delete(messageBatchId: String): BetaDeletedMessageBatch =
         delete(messageBatchId, BatchDeleteParams.none())
@@ -161,6 +197,14 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
      */
     fun cancel(messageBatchId: String): BetaMessageBatch =
         cancel(messageBatchId, BatchCancelParams.none())
@@ -201,6 +245,16 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.CmekKeyDisabledException The workspace's customer-managed
+     *   encryption key is disabled or revoked. Re-enable the key, then retry.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
      */
     @MustBeClosed
     fun resultsStreaming(

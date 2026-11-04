@@ -32,6 +32,19 @@ interface SlackWorkspaceService {
      * organization's Slack defaults are taken into account, and the request fails with 503 rather
      * than resolve against a settings level that could not be read. Either way `sources` names the
      * settings level each value comes from.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
+     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
+     *   for a change.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     *   Changes through the Claude Tag API are not enabled for the organization.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     *   The organization's compliance configuration does not let Claude Tag store anything new.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     *   The credential is not a scoped API key that is bound at the organization level.
      */
     fun retrieve(id: String): BetaClaudeTagSlackWorkspace =
         retrieve(id, SlackWorkspaceRetrieveParams.none())
@@ -67,6 +80,29 @@ interface SlackWorkspaceService {
      * Change the settings a Slack workspace stores. The update is partial: a setting left out is
      * unchanged, and a setting sent as null is cleared, so the workspace inherits it. If any value
      * is refused, no setting in the request is stored.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
+     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
+     *   for a change.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     *   Changes through the Claude Tag API are not enabled for the organization.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     *   The organization's compliance configuration does not let Claude Tag store anything new.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     *   The credential is not a scoped API key that is bound at the organization level.
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentNotFoundException
+     *   `settings.environment_id` names no Environment within the organization's reach.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpEnvironmentNotFoundException
+     *   `settings.environment_id` names no Environment within the organization's reach, and the
+     *   request had set the channel up by then. The channel stays set up with every setting unset.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictException
+     *   The request set the channel up, and something else then changed the channel or removed it.
+     *   Nothing of `settings` was stored.
      */
     fun update(id: String, params: SlackWorkspaceUpdateParams): BetaClaudeTagSlackWorkspace =
         update(id, params, RequestOptions.none())
@@ -96,6 +132,19 @@ interface SlackWorkspaceService {
      * workspace's `settings` holds what applies in it, and the request fails with 503 rather than
      * resolve against a settings level that could not be read. A `page` cursor resumes only a
      * request with the same `include_inherited`.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
+     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
+     *   for a change.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     *   Changes through the Claude Tag API are not enabled for the organization.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     *   The organization's compliance configuration does not let Claude Tag store anything new.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     *   The credential is not a scoped API key that is bound at the organization level.
      */
     fun list(): SlackWorkspaceListPage = list(SlackWorkspaceListParams.none())
 

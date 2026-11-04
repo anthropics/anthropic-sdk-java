@@ -69,6 +69,23 @@ interface PluginServiceAsync {
      * without it returns `404`, exactly as if the endpoint did not exist. The Plugins API is in
      * beta and is available to Claude Enterprise organizations only. It is not available to Claude
      * Platform (Claude Console) organizations, or to organizations with HIPAA readiness enabled.
+     *
+     * @throws com.anthropic.models.CmekKeyDisabledException The workspace's customer-managed
+     *   encryption key is disabled or revoked. Re-enable the key, then retry.
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException The key management service's
+     *   network access controls blocked the request to the workspace's customer-managed encryption
+     *   key. The key itself may be healthy.
+     * @throws com.anthropic.models.beta.BetaUnsupportedCharsetException The request's
+     *   `Content-Type` header names a charset other than UTF-8, ISO-8859-1 or US-ASCII. Send the
+     *   request with no charset, or with one of these.
+     * @throws com.anthropic.models.beta.organization.plugins.BetaPluginNameTakenException The
+     *   marketplace already holds this name. `plugin_id` is the Plugin that holds it, and can be
+     *   absent.
+     * @throws com.anthropic.models.beta.organization.plugins.BetaSkillNameTakenException One of the
+     *   Plugin's skills has the name of an organization skill. `skill_name` is that name.
+     * @throws com.anthropic.models.beta.organization.plugins.BetaRegistrationPendingException The
+     *   Plugin version was stored but is not yet usable in claude.ai. `plugin_id` and
+     *   `plugin_version_id` identify what was stored.
      */
     fun create(params: PluginCreateParams): CompletableFuture<BetaPlugin> =
         create(params, RequestOptions.none())
@@ -150,6 +167,19 @@ interface PluginServiceAsync {
      * without it returns `404`, exactly as if the endpoint did not exist. The Plugins API is in
      * beta and is available to Claude Enterprise organizations only. It is not available to Claude
      * Platform (Claude Console) organizations, or to organizations with HIPAA readiness enabled.
+     *
+     * @throws com.anthropic.models.CmekKeyDisabledException The workspace's customer-managed
+     *   encryption key is disabled or revoked. Re-enable the key, then retry.
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException The key management service's
+     *   network access controls blocked the request to the workspace's customer-managed encryption
+     *   key. The key itself may be healthy.
+     * @throws com.anthropic.models.beta.organization.plugins.BetaScanFailedException The content
+     *   scan of the version in `plugin_version_id` failed, errored or reached no verdict, so the
+     *   version cannot be served.
+     * @throws com.anthropic.models.beta.organization.plugins.BetaScanPendingException The content
+     *   scan of the version in `plugin_version_id` is still running. Retry once the scan finishes.
+     * @throws com.anthropic.models.beta.organization.plugins.BetaSkillNameTakenException One of the
+     *   Plugin's skills has the name of an organization skill. `skill_name` is that name.
      */
     fun update(pluginId: String, params: PluginUpdateParams): CompletableFuture<BetaPlugin> =
         update(pluginId, params, RequestOptions.none())
@@ -224,6 +254,9 @@ interface PluginServiceAsync {
      * without it returns `404`, exactly as if the endpoint did not exist. The Plugins API is in
      * beta and is available to Claude Enterprise organizations only. It is not available to Claude
      * Platform (Claude Console) organizations, or to organizations with HIPAA readiness enabled.
+     *
+     * @throws com.anthropic.models.CmekKeyDisabledException The workspace's customer-managed
+     *   encryption key is disabled or revoked. Re-enable the key, then retry.
      */
     fun delete(pluginId: String): CompletableFuture<BetaDeletedPlugin> =
         delete(pluginId, PluginDeleteParams.none())

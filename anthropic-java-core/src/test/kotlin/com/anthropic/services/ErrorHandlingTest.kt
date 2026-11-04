@@ -8,10 +8,20 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.BadRequestException
+import com.anthropic.errors.ClientClosedRequestException
+import com.anthropic.errors.ConflictException
+import com.anthropic.errors.ContentTooLargeException
+import com.anthropic.errors.GatewayTimeoutException
 import com.anthropic.errors.InternalServerException
 import com.anthropic.errors.NotFoundException
+import com.anthropic.errors.NotImplementedException
+import com.anthropic.errors.OverloadedException
 import com.anthropic.errors.PermissionDeniedException
+import com.anthropic.errors.PreconditionFailedException
 import com.anthropic.errors.RateLimitException
+import com.anthropic.errors.RequestHeaderFieldsTooLargeException
+import com.anthropic.errors.RequestTimeoutException
+import com.anthropic.errors.ServiceUnavailableException
 import com.anthropic.errors.SseException
 import com.anthropic.errors.UnauthorizedException
 import com.anthropic.errors.UnexpectedStatusCodeException
@@ -1161,6 +1171,1094 @@ internal class ErrorHandlingTest {
     }
 
     @Test
+    fun messagesCreate408() {
+        val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(408).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<RequestTimeoutException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(408)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate408WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(408).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<RequestTimeoutException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(408)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate409() {
+        val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(409).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<ConflictException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(409)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate409WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(409).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<ConflictException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(409)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate412() {
+        val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(412).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<PreconditionFailedException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(412)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate412WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(412).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<PreconditionFailedException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(412)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate413() {
+        val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(413).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<ContentTooLargeException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(413)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate413WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(413).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<ContentTooLargeException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(413)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
     fun messagesCreate422() {
         val messageService = client.messages()
         stubFor(
@@ -1700,6 +2798,1638 @@ internal class ErrorHandlingTest {
             }
 
         assertThat(e.statusCode()).isEqualTo(429)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate431() {
+        val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(431).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<RequestHeaderFieldsTooLargeException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(431)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate431WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(431).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<RequestHeaderFieldsTooLargeException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(431)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate499() {
+        val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(499).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<ClientClosedRequestException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(499)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate499WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(499).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<ClientClosedRequestException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(499)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate501() {
+        val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(501).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<NotImplementedException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(501)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate501WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(501).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<NotImplementedException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(501)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate503() {
+        val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(503).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<ServiceUnavailableException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(503)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate503WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(503).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<ServiceUnavailableException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(503)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate504() {
+        val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(504).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<GatewayTimeoutException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(504)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate504WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(504).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<GatewayTimeoutException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(504)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate529() {
+        val messageService = client.messages()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(529).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<OverloadedException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(529)
+        assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
+        assertThat(e.body()).isEqualTo(ERROR_JSON)
+    }
+
+    @Test
+    fun messagesCreate529WithRawResponse() {
+        val messageService = client.messages().withRawResponse()
+        stubFor(
+            post(anyUrl())
+                .willReturn(
+                    status(529).withHeader(HEADER_NAME, HEADER_VALUE).withBody(ERROR_JSON_BYTES)
+                )
+        )
+
+        val e =
+            assertThrows<OverloadedException> {
+                messageService.create(
+                    MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                        .maxTokens(1024L)
+                        .addUserMessage("Hello, world")
+                        .model(Model.CLAUDE_OPUS_5_5)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .container(
+                            ContainerParams.builder()
+                                .id("id")
+                                .addSkill(
+                                    SkillParams.builder()
+                                        .skillId("pdf")
+                                        .type(SkillParams.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .diagnostics(
+                            DiagnosticsParam.builder()
+                                .previousMessageId("previous_message_id")
+                                .build()
+                        )
+                        .inferenceGeo("inference_geo")
+                        .metadata(
+                            Metadata.builder()
+                                .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                .build()
+                        )
+                        .outputConfig(
+                            OutputConfig.builder()
+                                .effort(OutputConfig.Effort.LOW)
+                                .format(
+                                    JsonOutputFormat.of(
+                                        JsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                        .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
+                        .addStopSequence("string")
+                        .systemOfTextBlockParams(
+                            listOf(
+                                TextBlockParam.builder()
+                                    .text("Today's date is 2024-06-01.")
+                                    .cacheControl(
+                                        CacheControlEphemeral.builder()
+                                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .addCitation(
+                                        CitationCharLocationParam.builder()
+                                            .citedText("The grass is green. The sky is blue.")
+                                            .documentIndex(0L)
+                                            .documentTitle("x")
+                                            .endCharIndex(0L)
+                                            .startCharIndex(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        )
+                        .thinking(
+                            ThinkingConfigAdaptive.builder()
+                                .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                        .addTool(
+                            Tool.builder()
+                                .inputSchema(
+                                    Tool.InputSchema.builder()
+                                        .properties(
+                                            Tool.InputSchema.Properties.builder()
+                                                .putAdditionalProperty(
+                                                    "location",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .putAdditionalProperty(
+                                                    "unit",
+                                                    JsonValue.from("bar"),
+                                                )
+                                                .build()
+                                        )
+                                        .addRequired("location")
+                                        .build()
+                                )
+                                .name("name")
+                                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .deferLoading(true)
+                                .description("Get the current weather in a given location")
+                                .eagerInputStreaming(true)
+                                .addInputExample(
+                                    Tool.InputExample.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .strict(true)
+                                .type(Tool.Type.CUSTOM)
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(e.statusCode()).isEqualTo(529)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
         assertThat(e.body()).isEqualTo(ERROR_JSON)
     }
@@ -2257,7 +4987,7 @@ internal class ErrorHandlingTest {
         )
 
         val e =
-            assertThrows<UnexpectedStatusCodeException> {
+            assertThrows<ContentTooLargeException> {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
@@ -2390,7 +5120,7 @@ internal class ErrorHandlingTest {
         )
 
         val e =
-            assertThrows<UnexpectedStatusCodeException> {
+            assertThrows<ContentTooLargeException> {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
@@ -2523,7 +5253,7 @@ internal class ErrorHandlingTest {
         )
 
         val e =
-            assertThrows<UnexpectedStatusCodeException> {
+            assertThrows<ContentTooLargeException> {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
@@ -2656,7 +5386,7 @@ internal class ErrorHandlingTest {
         )
 
         val e =
-            assertThrows<UnexpectedStatusCodeException> {
+            assertThrows<ContentTooLargeException> {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")

@@ -29,7 +29,25 @@ interface VersionService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService
 
-    /** Create Skill Version */
+    /**
+     * Create Skill Version
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.CmekKeyDisabledException The workspace's customer-managed
+     *   encryption key is disabled or revoked. Re-enable the key, then retry.
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException The key management service's
+     *   network access controls blocked the request to the workspace's customer-managed encryption
+     *   key. The key itself may be healthy.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     * @throws com.anthropic.models.CmekContextUnavailableException The request's workspace
+     *   encryption context could not be resolved, so the request was refused. Retry in a few
+     *   minutes.
+     */
     fun create(skillId: String, params: VersionCreateParams): BetaSkillVersion =
         create(skillId, params, RequestOptions.none())
 
@@ -50,7 +68,17 @@ interface VersionService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaSkillVersion
 
-    /** Get Skill Version */
+    /**
+     * Get Skill Version
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     */
     fun retrieve(version: String, params: VersionRetrieveParams): BetaSkillVersion =
         retrieve(version, params, RequestOptions.none())
 
@@ -71,7 +99,17 @@ interface VersionService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaSkillVersion
 
-    /** List Skill Versions */
+    /**
+     * List Skill Versions
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     */
     fun list(skillId: String): VersionListPage = list(skillId, VersionListParams.none())
 
     /** @see list */
@@ -100,7 +138,17 @@ interface VersionService {
     fun list(skillId: String, requestOptions: RequestOptions): VersionListPage =
         list(skillId, VersionListParams.none(), requestOptions)
 
-    /** Delete Skill Version */
+    /**
+     * Delete Skill Version
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     */
     fun delete(version: String, params: VersionDeleteParams): BetaDeletedSkillVersion =
         delete(version, params, RequestOptions.none())
 

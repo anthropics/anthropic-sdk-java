@@ -32,7 +32,20 @@ interface EnvironmentService {
 
     fun work(): WorkService
 
-    /** Create a new environment with the specified configuration. */
+    /**
+     * Create a new environment with the specified configuration.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledException
+     *   Anthropic has turned off creating environments for this organization. Existing environments
+     *   still work.
+     */
     fun create(params: EnvironmentCreateParams): BetaEnvironment =
         create(params, RequestOptions.none())
 
@@ -42,7 +55,17 @@ interface EnvironmentService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaEnvironment
 
-    /** Retrieve a specific environment by ID. */
+    /**
+     * Retrieve a specific environment by ID.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     */
     fun retrieve(environmentId: String): BetaEnvironment =
         retrieve(environmentId, EnvironmentRetrieveParams.none())
 
@@ -74,7 +97,25 @@ interface EnvironmentService {
     fun retrieve(environmentId: String, requestOptions: RequestOptions): BetaEnvironment =
         retrieve(environmentId, EnvironmentRetrieveParams.none(), requestOptions)
 
-    /** Update an existing environment's configuration. */
+    /**
+     * Update an existing environment's configuration.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentArchivedException The
+     *   environment is archived, so it cannot be updated.
+     * @throws com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeException
+     *   `config.type` differs from the environment's stored type, which cannot change after
+     *   creation.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentUpdateDisabledException
+     *   Anthropic has turned off updating environments for this organization. Existing environments
+     *   still work as they are.
+     */
     fun update(environmentId: String): BetaEnvironment =
         update(environmentId, EnvironmentUpdateParams.none())
 
@@ -106,7 +147,17 @@ interface EnvironmentService {
     fun update(environmentId: String, requestOptions: RequestOptions): BetaEnvironment =
         update(environmentId, EnvironmentUpdateParams.none(), requestOptions)
 
-    /** List environments with pagination support. */
+    /**
+     * List environments with pagination support.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     */
     fun list(): EnvironmentListPage = list(EnvironmentListParams.none())
 
     /** @see list */
@@ -123,7 +174,17 @@ interface EnvironmentService {
     fun list(requestOptions: RequestOptions): EnvironmentListPage =
         list(EnvironmentListParams.none(), requestOptions)
 
-    /** Delete an environment by ID. Returns a confirmation of the deletion. */
+    /**
+     * Delete an environment by ID. Returns a confirmation of the deletion.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     */
     fun delete(environmentId: String): BetaEnvironmentDeleteResponse =
         delete(environmentId, EnvironmentDeleteParams.none())
 
@@ -160,6 +221,14 @@ interface EnvironmentService {
 
     /**
      * Archive an environment by ID. Archived environments cannot be used to create new sessions.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
      */
     fun archive(environmentId: String): BetaEnvironment =
         archive(environmentId, EnvironmentArchiveParams.none())

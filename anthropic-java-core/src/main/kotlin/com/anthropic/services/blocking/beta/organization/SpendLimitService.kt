@@ -33,7 +33,13 @@ interface SpendLimitService {
 
     fun increaseRequests(): IncreaseRequestService
 
-    /** Retrieve a spend limit by ID. */
+    /**
+     * Retrieve a spend limit by ID.
+     *
+     * @throws
+     *   com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledException
+     *   The organization cannot retrieve, set or delete spend limits with an Admin API credential.
+     */
     fun retrieve(spendLimitId: String): BetaSpendLimit =
         retrieve(spendLimitId, SpendLimitRetrieveParams.none())
 
@@ -73,6 +79,10 @@ interface SpendLimitService {
      * Anthropic account team. A Claude Enterprise organization's limits are grouped by scope type,
      * in the order `organization`, `seat_tier`, `rbac_group`, `organization_service`, `user`;
      * within a type they come in a fixed order that is not creation order.
+     *
+     * @throws com.anthropic.models.OrganizationTypeNotSupportedException The endpoint does not
+     *   support the organization's type. Each endpoint's description says which organization types
+     *   it supports.
      */
     fun list(): SpendLimitListPage = list(SpendLimitListParams.none())
 
@@ -98,6 +108,13 @@ interface SpendLimitService {
      * organization-level rows cannot be deleted via this endpoint. A Claude Console organization
      * deletes its organization and workspace limits, but not its `usage_tier` limit. Deleting
      * organization and workspace limits through the API is in an early access preview.
+     *
+     * @throws com.anthropic.models.beta.organization.BetaBillingFrozenException Anthropic has
+     *   temporarily disabled billing changes for the user account the credential belongs to.
+     *   Contact support.
+     * @throws
+     *   com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledException
+     *   The organization cannot retrieve, set or delete spend limits with an Admin API credential.
      */
     fun delete(spendLimitId: String): SpendLimitDeleteResponse =
         delete(spendLimitId, SpendLimitDeleteParams.none())
@@ -139,6 +156,13 @@ interface SpendLimitService {
      * `organization` and `workspace` limits, which are monthly and always carry an amount. Setting
      * those limits is in an early access preview. To request access, contact your Anthropic account
      * team.
+     *
+     * @throws com.anthropic.models.beta.organization.BetaBillingFrozenException Anthropic has
+     *   temporarily disabled billing changes for the user account the credential belongs to.
+     *   Contact support.
+     * @throws
+     *   com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledException
+     *   The organization cannot retrieve, set or delete spend limits with an Admin API credential.
      */
     fun set(params: SpendLimitSetParams): BetaSpendLimit = set(params, RequestOptions.none())
 

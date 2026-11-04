@@ -65,6 +65,15 @@ interface MemberService {
      * provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException A
+     *   role attached to an RBAC Group in the request grants owner access, so this API does not add
+     *   members to that group (directly or through an invite), remove its members, or delete it.
+     *   Make the change in the organization's admin settings in Claude.
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     *   The API could not finish checking whether an RBAC Group in the request grants owner access
+     *   (the check reached a fixed limit), so it made no change. Retrying the same request will not
+     *   help. Make the change in the organization's admin settings in Claude.
      */
     fun add(rbacGroupId: String, params: MemberAddParams): BetaRbacGroupMember =
         add(rbacGroupId, params, RequestOptions.none())
@@ -92,6 +101,15 @@ interface MemberService {
      * uses SCIM provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException A
+     *   role attached to an RBAC Group in the request grants owner access, so this API does not add
+     *   members to that group (directly or through an invite), remove its members, or delete it.
+     *   Make the change in the organization's admin settings in Claude.
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     *   The API could not finish checking whether an RBAC Group in the request grants owner access
+     *   (the check reached a fixed limit), so it made no change. Retrying the same request will not
+     *   help. Make the change in the organization's admin settings in Claude.
      */
     fun remove(userId: String, params: MemberRemoveParams): BetaDeletedRbacGroupMember =
         remove(userId, params, RequestOptions.none())

@@ -30,7 +30,25 @@ interface SkillService {
 
     fun versions(): VersionService
 
-    /** Create Skill */
+    /**
+     * Create Skill
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.CmekKeyDisabledException The workspace's customer-managed
+     *   encryption key is disabled or revoked. Re-enable the key, then retry.
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException The key management service's
+     *   network access controls blocked the request to the workspace's customer-managed encryption
+     *   key. The key itself may be healthy.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     * @throws com.anthropic.models.CmekContextUnavailableException The request's workspace
+     *   encryption context could not be resolved, so the request was refused. Retry in a few
+     *   minutes.
+     */
     fun create(params: SkillCreateParams): BetaSkill = create(params, RequestOptions.none())
 
     /** @see create */
@@ -39,7 +57,17 @@ interface SkillService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaSkill
 
-    /** Get Skill */
+    /**
+     * Get Skill
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     */
     fun retrieve(skillId: String): BetaSkill = retrieve(skillId, SkillRetrieveParams.none())
 
     /** @see retrieve */
@@ -68,7 +96,17 @@ interface SkillService {
     fun retrieve(skillId: String, requestOptions: RequestOptions): BetaSkill =
         retrieve(skillId, SkillRetrieveParams.none(), requestOptions)
 
-    /** List Skills */
+    /**
+     * List Skills
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     */
     fun list(): SkillListPage = list(SkillListParams.none())
 
     /** @see list */
@@ -85,7 +123,17 @@ interface SkillService {
     fun list(requestOptions: RequestOptions): SkillListPage =
         list(SkillListParams.none(), requestOptions)
 
-    /** Delete Skill */
+    /**
+     * Delete Skill
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     */
     fun delete(skillId: String): BetaDeletedSkill = delete(skillId, SkillDeleteParams.none())
 
     /** @see delete */
