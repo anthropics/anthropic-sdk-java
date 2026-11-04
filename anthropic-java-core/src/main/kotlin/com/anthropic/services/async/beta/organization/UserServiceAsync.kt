@@ -104,10 +104,8 @@ interface UserServiceAsync {
     /**
      * Remove a member from the organization.
      *
-     * @throws com.anthropic.models.organization.users.CannotRemoveLastMemberException The user is
-     *   the organization's only member. Add another member before removing this one.
-     * @throws com.anthropic.models.organization.ConcurrentMembershipChangeException Another change
-     *   to the organization's members is in progress. Retry the request once it completes.
+     * @throws com.anthropic.models.organization.users.CannotRemoveLastMemberException
+     * @throws com.anthropic.models.organization.ConcurrentMembershipChangeException
      */
     fun remove(userId: String): CompletableFuture<UserRemoveResponse> =
         remove(userId, UserRemoveParams.none())
