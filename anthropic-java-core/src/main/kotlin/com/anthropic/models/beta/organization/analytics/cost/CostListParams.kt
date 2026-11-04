@@ -106,9 +106,8 @@ private constructor(
 
     /**
      * Filter to Claude Tag (Claude in Slack) usage in specific spend categories. Usage with no
-     * category never matches. `dm` usage is reported under the user's product rather than
-     * `claude_tag`, so combining this filter with `products[]=claude_tag` excludes it. Use
-     * `group_by[]=claude_tag_category` to break out per-category values.
+     * category never matches. Use `group_by[]=claude_tag_category` to break out per-category
+     * values.
      */
     fun claudeTagCategories(): Optional<List<BetaAnalyticsClaudeTagCategory>> =
         Optional.ofNullable(claudeTagCategories)
@@ -456,9 +455,8 @@ private constructor(
 
         /**
          * Filter to Claude Tag (Claude in Slack) usage in specific spend categories. Usage with no
-         * category never matches. `dm` usage is reported under the user's product rather than
-         * `claude_tag`, so combining this filter with `products[]=claude_tag` excludes it. Use
-         * `group_by[]=claude_tag_category` to break out per-category values.
+         * category never matches. Use `group_by[]=claude_tag_category` to break out per-category
+         * values.
          */
         fun claudeTagCategories(claudeTagCategories: List<BetaAnalyticsClaudeTagCategory>?) =
             apply {

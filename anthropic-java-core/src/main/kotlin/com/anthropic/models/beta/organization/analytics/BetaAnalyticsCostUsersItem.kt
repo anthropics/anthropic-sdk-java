@@ -128,9 +128,7 @@ private constructor(
      * channel or thread), `proactive` (Claude responded without being addressed), `scheduled` (a
      * scheduled routine ran), `monitoring` (Claude watching a channel it was asked to monitor), or
      * `dm` (direct messages with Claude). Populated only when `claude_tag_category` is in
-     * `group_by[]`; null for usage that is not Claude Tag. Direct-message usage is billed to the
-     * individual user and is reported under that user's product, not under `claude-tag`. New
-     * categories may be added over time.
+     * `group_by[]`; null for usage that is not Claude Tag. New categories may be added over time.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -258,8 +256,8 @@ private constructor(
 
     /**
      * Slack channel the usage originated from. Populated only when `slack_channel_id` is in
-     * `group_by[]`; null for usage outside Slack (and for rows recorded before channel attribution
-     * was enabled).
+     * `group_by[]`; null for usage outside Slack, for some Claude Tag usage that has no channel
+     * recorded, and for usage recorded before channel attribution was enabled.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -553,9 +551,8 @@ private constructor(
          * channel or thread), `proactive` (Claude responded without being addressed), `scheduled`
          * (a scheduled routine ran), `monitoring` (Claude watching a channel it was asked to
          * monitor), or `dm` (direct messages with Claude). Populated only when
-         * `claude_tag_category` is in `group_by[]`; null for usage that is not Claude Tag.
-         * Direct-message usage is billed to the individual user and is reported under that user's
-         * product, not under `claude-tag`. New categories may be added over time.
+         * `claude_tag_category` is in `group_by[]`; null for usage that is not Claude Tag. New
+         * categories may be added over time.
          */
         fun claudeTagCategory(claudeTagCategory: BetaAnalyticsClaudeTagCategory?) =
             claudeTagCategory(JsonField.ofNullable(claudeTagCategory))
@@ -801,8 +798,8 @@ private constructor(
 
         /**
          * Slack channel the usage originated from. Populated only when `slack_channel_id` is in
-         * `group_by[]`; null for usage outside Slack (and for rows recorded before channel
-         * attribution was enabled).
+         * `group_by[]`; null for usage outside Slack, for some Claude Tag usage that has no channel
+         * recorded, and for usage recorded before channel attribution was enabled.
          */
         fun slackChannelId(slackChannelId: String?) =
             slackChannelId(JsonField.ofNullable(slackChannelId))
