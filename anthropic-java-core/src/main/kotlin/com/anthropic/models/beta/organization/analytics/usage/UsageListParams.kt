@@ -91,8 +91,7 @@ private constructor(
 
     /**
      * Filter to usage incurred by sessions of specific Claude Managed Agents agents. Use
-     * `group_by[]=agent_id` to break out per-agent values. Claude Developer Platform organizations
-     * only.
+     * `group_by[]=agent_id` to break out per-agent values. Claude Platform organizations only.
      */
     fun agentIds(): Optional<List<String>> = Optional.ofNullable(agentIds)
 
@@ -100,8 +99,8 @@ private constructor(
      * Filter to usage authenticated by specific API keys, by tagged API key ID (`apikey_...`),
      * whichever identity the usage is attributed to. Include an empty entry (`api_key_ids[]=`) to
      * also match usage that no API key authenticated. Use `group_by[]=api_key_id` to break out
-     * per-key values; usage without a key has a null `api_key_id`. Claude Developer Platform
-     * organizations only.
+     * per-key values; usage without a key has a null `api_key_id`. Claude Platform organizations
+     * only.
      */
     fun apiKeyIds(): Optional<List<String>> = Optional.ofNullable(apiKeyIds)
 
@@ -131,7 +130,7 @@ private constructor(
 
     /**
      * Filter to usage incurred by Claude Managed Agents sessions that specific deployments started.
-     * Use `group_by[]=deployment_id` to break out per-deployment values. Claude Developer Platform
+     * Use `group_by[]=deployment_id` to break out per-deployment values. Claude Platform
      * organizations only.
      */
     fun deploymentIds(): Optional<List<String>> = Optional.ofNullable(deploymentIds)
@@ -145,8 +144,8 @@ private constructor(
 
     /**
      * Filter to usage incurred by Claude Managed Agents sessions that ran in specific environments.
-     * Use `group_by[]=environment_id` to break out per-environment values. Claude Developer
-     * Platform organizations only.
+     * Use `group_by[]=environment_id` to break out per-environment values. Claude Platform
+     * organizations only.
      */
     fun environmentIds(): Optional<List<String>> = Optional.ofNullable(environmentIds)
 
@@ -216,15 +215,14 @@ private constructor(
 
     /**
      * Filter to specific service tiers. Use `group_by[]=service_tier` to break out per-tier values.
-     * Claude Developer Platform organizations only; matches nothing for a Claude Enterprise
-     * organization.
+     * Claude Platform organizations only; matches nothing for a Claude Enterprise organization.
      */
     fun serviceTiers(): Optional<List<BetaAnalyticsServiceTier>> = Optional.ofNullable(serviceTiers)
 
     /**
      * Filter to usage incurred by specific Claude Managed Agents sessions, by tagged session ID
-     * (`sesn_...`). Use `group_by[]=session_id` to break out per-session values. Claude Developer
-     * Platform organizations only.
+     * (`sesn_...`). Use `group_by[]=session_id` to break out per-session values. Claude Platform
+     * organizations only.
      */
     fun sessionIds(): Optional<List<String>> = Optional.ofNullable(sessionIds)
 
@@ -254,14 +252,14 @@ private constructor(
     /**
      * Filter to usage attributed to specific user profiles, by tagged user profile ID
      * (`uprof_...`). Use `group_by[]=user_profile_id` to break out per-profile values. Claude
-     * Developer Platform organizations only.
+     * Platform organizations only.
      */
     fun userProfileIds(): Optional<List<String>> = Optional.ofNullable(userProfileIds)
 
     /**
      * Filter to usage in specific workspaces, by tagged workspace ID (`wrkspc_...`). Use
-     * `group_by[]=workspace_id` to break out per-workspace values. Claude Developer Platform
-     * organizations only; matches nothing for a Claude Enterprise organization.
+     * `group_by[]=workspace_id` to break out per-workspace values. Claude Platform organizations
+     * only; matches nothing for a Claude Enterprise organization.
      */
     fun workspaceIds(): Optional<List<String>> = Optional.ofNullable(workspaceIds)
 
@@ -413,8 +411,7 @@ private constructor(
 
         /**
          * Filter to usage incurred by sessions of specific Claude Managed Agents agents. Use
-         * `group_by[]=agent_id` to break out per-agent values. Claude Developer Platform
-         * organizations only.
+         * `group_by[]=agent_id` to break out per-agent values. Claude Platform organizations only.
          */
         fun agentIds(agentIds: List<String>?) = apply { this.agentIds = agentIds?.toMutableList() }
 
@@ -434,8 +431,8 @@ private constructor(
          * Filter to usage authenticated by specific API keys, by tagged API key ID (`apikey_...`),
          * whichever identity the usage is attributed to. Include an empty entry (`api_key_ids[]=`)
          * to also match usage that no API key authenticated. Use `group_by[]=api_key_id` to break
-         * out per-key values; usage without a key has a null `api_key_id`. Claude Developer
-         * Platform organizations only.
+         * out per-key values; usage without a key has a null `api_key_id`. Claude Platform
+         * organizations only.
          */
         fun apiKeyIds(apiKeyIds: List<String>?) = apply {
             this.apiKeyIds = apiKeyIds?.toMutableList()
@@ -528,7 +525,7 @@ private constructor(
         /**
          * Filter to usage incurred by Claude Managed Agents sessions that specific deployments
          * started. Use `group_by[]=deployment_id` to break out per-deployment values. Claude
-         * Developer Platform organizations only.
+         * Platform organizations only.
          */
         fun deploymentIds(deploymentIds: List<String>?) = apply {
             this.deploymentIds = deploymentIds?.toMutableList()
@@ -560,7 +557,7 @@ private constructor(
         /**
          * Filter to usage incurred by Claude Managed Agents sessions that ran in specific
          * environments. Use `group_by[]=environment_id` to break out per-environment values. Claude
-         * Developer Platform organizations only.
+         * Platform organizations only.
          */
         fun environmentIds(environmentIds: List<String>?) = apply {
             this.environmentIds = environmentIds?.toMutableList()
@@ -751,8 +748,8 @@ private constructor(
 
         /**
          * Filter to specific service tiers. Use `group_by[]=service_tier` to break out per-tier
-         * values. Claude Developer Platform organizations only; matches nothing for a Claude
-         * Enterprise organization.
+         * values. Claude Platform organizations only; matches nothing for a Claude Enterprise
+         * organization.
          */
         fun serviceTiers(serviceTiers: List<BetaAnalyticsServiceTier>?) = apply {
             this.serviceTiers = serviceTiers?.toMutableList()
@@ -774,7 +771,7 @@ private constructor(
         /**
          * Filter to usage incurred by specific Claude Managed Agents sessions, by tagged session ID
          * (`sesn_...`). Use `group_by[]=session_id` to break out per-session values. Claude
-         * Developer Platform organizations only.
+         * Platform organizations only.
          */
         fun sessionIds(sessionIds: List<String>?) = apply {
             this.sessionIds = sessionIds?.toMutableList()
@@ -852,7 +849,7 @@ private constructor(
         /**
          * Filter to usage attributed to specific user profiles, by tagged user profile ID
          * (`uprof_...`). Use `group_by[]=user_profile_id` to break out per-profile values. Claude
-         * Developer Platform organizations only.
+         * Platform organizations only.
          */
         fun userProfileIds(userProfileIds: List<String>?) = apply {
             this.userProfileIds = userProfileIds?.toMutableList()
@@ -873,7 +870,7 @@ private constructor(
 
         /**
          * Filter to usage in specific workspaces, by tagged workspace ID (`wrkspc_...`). Use
-         * `group_by[]=workspace_id` to break out per-workspace values. Claude Developer Platform
+         * `group_by[]=workspace_id` to break out per-workspace values. Claude Platform
          * organizations only; matches nothing for a Claude Enterprise organization.
          */
         fun workspaceIds(workspaceIds: List<String>?) = apply {
