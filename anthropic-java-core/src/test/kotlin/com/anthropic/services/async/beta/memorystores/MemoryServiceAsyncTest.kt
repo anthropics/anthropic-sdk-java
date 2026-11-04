@@ -34,7 +34,7 @@ internal class MemoryServiceAsyncTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .content("content")
-                    .path("xx")
+                    .path("/P")
                     .build()
             )
 
@@ -76,10 +76,12 @@ internal class MemoryServiceAsyncTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .content("content")
-                    .path("xx")
+                    .path("/P")
                     .precondition(
                         BetaManagedAgentsPrecondition.builder()
-                            .contentSha256("content_sha256")
+                            .contentSha256(
+                                "210b9798eb53baa4e69d31c1071cf03d212b8ad0ca30cf321e0ea82e120aac26"
+                            )
                             .build()
                     )
                     .build()

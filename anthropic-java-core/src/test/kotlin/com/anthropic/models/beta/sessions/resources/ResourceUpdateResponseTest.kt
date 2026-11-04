@@ -101,7 +101,7 @@ internal class ResourceUpdateResponseTest {
     fun ofMemoryStore() {
         val memoryStore =
             BetaManagedAgentsMemoryStoreResource.builder()
-                .memoryStoreId("memory_store_id")
+                .memoryStoreId("memstore_c")
                 .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
                 .description("description")
                 .instructions("instructions")
@@ -122,7 +122,7 @@ internal class ResourceUpdateResponseTest {
         val resourceUpdateResponse =
             ResourceUpdateResponse.ofMemoryStore(
                 BetaManagedAgentsMemoryStoreResource.builder()
-                    .memoryStoreId("memory_store_id")
+                    .memoryStoreId("memstore_c")
                     .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
                     .description("description")
                     .instructions("instructions")

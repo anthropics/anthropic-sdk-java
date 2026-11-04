@@ -54,7 +54,14 @@ interface ApiKeyService {
     fun retrieve(apiKeyId: String, requestOptions: RequestOptions): ApiKey =
         retrieve(apiKeyId, ApiKeyRetrieveParams.none(), requestOptions)
 
-    /** Update API Key */
+    /**
+     * Update API Key
+     *
+     * @throws com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededException The
+     *   organization has reached its limit of active API keys.
+     * @throws com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededException The
+     *   workspace has reached its limit of active API keys.
+     */
     fun update(apiKeyId: String): ApiKey = update(apiKeyId, ApiKeyUpdateParams.none())
 
     /** @see update */

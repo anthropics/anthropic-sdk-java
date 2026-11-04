@@ -114,6 +114,8 @@ private constructor(
                 jsonBody.remove("model")
                     ?: throw AnthropicInvalidDataException("No model found in body.")
             val modelId = model.asText()
+            // The path segment also holds the specifier, so it is never empty itself.
+            check(modelId.isNotEmpty()) { "`model` must be non-empty, but was empty" }
             // For Vertex, the "stream" property must be retained in the body.
             // This differs from Bedrock where the property is removed.
             val isStream = jsonBody["stream"]?.asBoolean() ?: false

@@ -12,7 +12,7 @@ internal class BetaManagedAgentsMcpOAuthUpdateParamsTest {
     fun create() {
         val betaManagedAgentsMcpOAuthUpdateParams =
             BetaManagedAgentsMcpOAuthUpdateParams.builder()
-                .accessToken("x")
+                .accessToken("access_token")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .refresh(
                     BetaManagedAgentsMcpOAuthRefreshUpdateParams.builder()
@@ -27,7 +27,7 @@ internal class BetaManagedAgentsMcpOAuthUpdateParamsTest {
                 )
                 .build()
 
-        assertThat(betaManagedAgentsMcpOAuthUpdateParams.accessToken()).contains("x")
+        assertThat(betaManagedAgentsMcpOAuthUpdateParams.accessToken()).contains("access_token")
         assertThat(betaManagedAgentsMcpOAuthUpdateParams.expiresAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsMcpOAuthUpdateParams.refresh())
@@ -49,7 +49,7 @@ internal class BetaManagedAgentsMcpOAuthUpdateParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMcpOAuthUpdateParams =
             BetaManagedAgentsMcpOAuthUpdateParams.builder()
-                .accessToken("x")
+                .accessToken("access_token")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .refresh(
                     BetaManagedAgentsMcpOAuthRefreshUpdateParams.builder()

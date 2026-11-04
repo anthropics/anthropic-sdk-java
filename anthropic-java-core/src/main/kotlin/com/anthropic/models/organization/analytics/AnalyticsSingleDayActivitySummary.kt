@@ -310,7 +310,7 @@ private constructor(
 
     /**
      * Number of users with activity in Chat and Cowork unified on the requested day. Omitted from
-     * the response on deployments that do not offer Chat and Cowork unified.
+     * the response where Chat and Cowork unified is not available.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -322,8 +322,8 @@ private constructor(
 
     /**
      * Number of users with activity in Chat and Cowork unified in the 28-day rolling window (30
-     * days when the request filters by `rbac_group_id`). Omitted from the response on deployments
-     * that do not offer Chat and Cowork unified.
+     * days when the request filters by `rbac_group_id`). Omitted from the response where Chat and
+     * Cowork unified is not available.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -335,7 +335,7 @@ private constructor(
 
     /**
      * Number of users with activity in Chat and Cowork unified in the 7-day rolling window. Omitted
-     * from the response on deployments that do not offer Chat and Cowork unified.
+     * from the response where Chat and Cowork unified is not available.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -1243,7 +1243,7 @@ private constructor(
 
         /**
          * Number of users with activity in Chat and Cowork unified on the requested day. Omitted
-         * from the response on deployments that do not offer Chat and Cowork unified.
+         * from the response where Chat and Cowork unified is not available.
          */
         fun chatCoworkUnifiedDailyActiveUserCount(chatCoworkUnifiedDailyActiveUserCount: Long?) =
             chatCoworkUnifiedDailyActiveUserCount(
@@ -1281,8 +1281,8 @@ private constructor(
 
         /**
          * Number of users with activity in Chat and Cowork unified in the 28-day rolling window (30
-         * days when the request filters by `rbac_group_id`). Omitted from the response on
-         * deployments that do not offer Chat and Cowork unified.
+         * days when the request filters by `rbac_group_id`). Omitted from the response where Chat
+         * and Cowork unified is not available.
          */
         fun chatCoworkUnifiedMonthlyActiveUserCount(
             chatCoworkUnifiedMonthlyActiveUserCount: Long?
@@ -1327,7 +1327,7 @@ private constructor(
 
         /**
          * Number of users with activity in Chat and Cowork unified in the 7-day rolling window.
-         * Omitted from the response on deployments that do not offer Chat and Cowork unified.
+         * Omitted from the response where Chat and Cowork unified is not available.
          */
         fun chatCoworkUnifiedWeeklyActiveUserCount(chatCoworkUnifiedWeeklyActiveUserCount: Long?) =
             chatCoworkUnifiedWeeklyActiveUserCount(

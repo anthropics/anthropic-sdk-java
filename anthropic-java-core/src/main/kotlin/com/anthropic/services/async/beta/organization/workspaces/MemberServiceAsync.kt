@@ -52,7 +52,12 @@ interface MemberServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaWorkspaceMember>
 
-    /** Update Workspace Member */
+    /**
+     * Update Workspace Member
+     *
+     * @throws com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
+     *   The workspace has reached the member limit that Anthropic set for it.
+     */
     fun update(userId: String, params: MemberUpdateParams): CompletableFuture<BetaWorkspaceMember> =
         update(userId, params, RequestOptions.none())
 
@@ -109,7 +114,12 @@ interface MemberServiceAsync {
     ): CompletableFuture<MemberListPageAsync> =
         list(workspaceId, MemberListParams.none(), requestOptions)
 
-    /** Create Workspace Member */
+    /**
+     * Create Workspace Member
+     *
+     * @throws com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
+     *   The workspace has reached the member limit that Anthropic set for it.
+     */
     fun add(workspaceId: String, params: MemberAddParams): CompletableFuture<BetaWorkspaceMember> =
         add(workspaceId, params, RequestOptions.none())
 

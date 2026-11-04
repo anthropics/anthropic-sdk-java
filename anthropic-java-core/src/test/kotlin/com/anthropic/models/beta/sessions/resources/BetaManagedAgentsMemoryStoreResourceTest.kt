@@ -11,7 +11,7 @@ internal class BetaManagedAgentsMemoryStoreResourceTest {
     fun create() {
         val betaManagedAgentsMemoryStoreResource =
             BetaManagedAgentsMemoryStoreResource.builder()
-                .memoryStoreId("memory_store_id")
+                .memoryStoreId("memstore_c")
                 .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
                 .description("description")
                 .instructions("instructions")
@@ -19,8 +19,7 @@ internal class BetaManagedAgentsMemoryStoreResourceTest {
                 .name("name")
                 .build()
 
-        assertThat(betaManagedAgentsMemoryStoreResource.memoryStoreId())
-            .isEqualTo("memory_store_id")
+        assertThat(betaManagedAgentsMemoryStoreResource.memoryStoreId()).isEqualTo("memstore_c")
         assertThat(betaManagedAgentsMemoryStoreResource.access())
             .contains(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
         assertThat(betaManagedAgentsMemoryStoreResource.description()).contains("description")
@@ -34,7 +33,7 @@ internal class BetaManagedAgentsMemoryStoreResourceTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMemoryStoreResource =
             BetaManagedAgentsMemoryStoreResource.builder()
-                .memoryStoreId("memory_store_id")
+                .memoryStoreId("memstore_c")
                 .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
                 .description("description")
                 .instructions("instructions")

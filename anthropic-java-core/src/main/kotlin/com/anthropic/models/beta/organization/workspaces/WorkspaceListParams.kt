@@ -4,6 +4,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
+import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -13,6 +14,7 @@ class WorkspaceListParams
 private constructor(
     private val afterId: String?,
     private val beforeId: String?,
+    private val ids: List<String>?,
     private val includeArchived: Boolean?,
     private val includeDefault: Boolean?,
     private val limit: Long?,
@@ -31,6 +33,12 @@ private constructor(
      * results immediately before this object.
      */
     fun beforeId(): Optional<String> = Optional.ofNullable(beforeId)
+
+    /**
+     * Only the Workspaces with these IDs, at most 100. `include_archived` and `include_default`
+     * still apply, and IDs of Workspaces the caller can't list are left out.
+     */
+    fun ids(): Optional<List<String>> = Optional.ofNullable(ids)
 
     /** Whether to include Workspaces that have been archived in the response */
     fun includeArchived(): Optional<Boolean> = Optional.ofNullable(includeArchived)
@@ -66,6 +74,7 @@ private constructor(
 
         private var afterId: String? = null
         private var beforeId: String? = null
+        private var ids: MutableList<String>? = null
         private var includeArchived: Boolean? = null
         private var includeDefault: Boolean? = null
         private var limit: Long? = null
@@ -76,6 +85,7 @@ private constructor(
         internal fun from(workspaceListParams: WorkspaceListParams) = apply {
             afterId = workspaceListParams.afterId
             beforeId = workspaceListParams.beforeId
+            ids = workspaceListParams.ids?.toMutableList()
             includeArchived = workspaceListParams.includeArchived
             includeDefault = workspaceListParams.includeDefault
             limit = workspaceListParams.limit
@@ -100,6 +110,22 @@ private constructor(
 
         /** Alias for calling [Builder.beforeId] with `beforeId.orElse(null)`. */
         fun beforeId(beforeId: Optional<String>) = beforeId(beforeId.getOrNull())
+
+        /**
+         * Only the Workspaces with these IDs, at most 100. `include_archived` and `include_default`
+         * still apply, and IDs of Workspaces the caller can't list are left out.
+         */
+        fun ids(ids: List<String>?) = apply { this.ids = ids?.toMutableList() }
+
+        /** Alias for calling [Builder.ids] with `ids.orElse(null)`. */
+        fun ids(ids: Optional<List<String>>) = ids(ids.getOrNull())
+
+        /**
+         * Adds a single [String] to [ids].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addId(id: String) = apply { ids = (ids ?: mutableListOf()).apply { add(id) } }
 
         /** Whether to include Workspaces that have been archived in the response */
         fun includeArchived(includeArchived: Boolean?) = apply {
@@ -257,6 +283,7 @@ private constructor(
             WorkspaceListParams(
                 afterId,
                 beforeId,
+                ids?.toImmutable(),
                 includeArchived,
                 includeDefault,
                 limit,
@@ -272,6 +299,7 @@ private constructor(
             .apply {
                 afterId?.let { put("after_id", it) }
                 beforeId?.let { put("before_id", it) }
+                ids?.forEach { put("ids[]", it) }
                 includeArchived?.let { put("include_archived", it.toString()) }
                 includeDefault?.let { put("include_default", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
@@ -284,7 +312,14 @@ private constructor(
             name = "anthropic.organization.workspaces.list",
             route = "/v1/organizations/workspaces",
             queryParams =
-                listOf("after_id", "before_id", "include_archived", "include_default", "limit"),
+                listOf(
+                    "after_id",
+                    "before_id",
+                    "ids",
+                    "include_archived",
+                    "include_default",
+                    "limit",
+                ),
         )
 
     override fun equals(other: Any?): Boolean {
@@ -295,6 +330,7 @@ private constructor(
         return other is WorkspaceListParams &&
             afterId == other.afterId &&
             beforeId == other.beforeId &&
+            ids == other.ids &&
             includeArchived == other.includeArchived &&
             includeDefault == other.includeDefault &&
             limit == other.limit &&
@@ -306,6 +342,7 @@ private constructor(
         Objects.hash(
             afterId,
             beforeId,
+            ids,
             includeArchived,
             includeDefault,
             limit,
@@ -314,5 +351,5 @@ private constructor(
         )
 
     override fun toString() =
-        "WorkspaceListParams{afterId=$afterId, beforeId=$beforeId, includeArchived=$includeArchived, includeDefault=$includeDefault, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "WorkspaceListParams{afterId=$afterId, beforeId=$beforeId, ids=$ids, includeArchived=$includeArchived, includeDefault=$includeDefault, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

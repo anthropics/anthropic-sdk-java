@@ -16,7 +16,7 @@ internal class MemoryCreateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .content("content")
-            .path("xx")
+            .path("/P")
             .build()
     }
 
@@ -26,7 +26,7 @@ internal class MemoryCreateParamsTest {
             MemoryCreateParams.builder()
                 .memoryStoreId("memory_store_id")
                 .content("content")
-                .path("xx")
+                .path("/P")
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("memory_store_id")
@@ -43,7 +43,7 @@ internal class MemoryCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .content("content")
-                .path("xx")
+                .path("/P")
                 .build()
 
         val headers = params._headers()
@@ -67,7 +67,7 @@ internal class MemoryCreateParamsTest {
             MemoryCreateParams.builder()
                 .memoryStoreId("memory_store_id")
                 .content("content")
-                .path("xx")
+                .path("/P")
                 .build()
 
         val headers = params._headers()
@@ -84,7 +84,7 @@ internal class MemoryCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .content("content")
-                .path("xx")
+                .path("/P")
                 .build()
 
         val queryParams = params._queryParams()
@@ -98,7 +98,7 @@ internal class MemoryCreateParamsTest {
             MemoryCreateParams.builder()
                 .memoryStoreId("memory_store_id")
                 .content("content")
-                .path("xx")
+                .path("/P")
                 .build()
 
         val queryParams = params._queryParams()
@@ -115,13 +115,13 @@ internal class MemoryCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .content("content")
-                .path("xx")
+                .path("/P")
                 .build()
 
         val body = params._body()
 
         assertThat(body.content()).contains("content")
-        assertThat(body.path()).isEqualTo("xx")
+        assertThat(body.path()).isEqualTo("/P")
     }
 
     @Test
@@ -130,12 +130,12 @@ internal class MemoryCreateParamsTest {
             MemoryCreateParams.builder()
                 .memoryStoreId("memory_store_id")
                 .content("content")
-                .path("xx")
+                .path("/P")
                 .build()
 
         val body = params._body()
 
         assertThat(body.content()).contains("content")
-        assertThat(body.path()).isEqualTo("xx")
+        assertThat(body.path()).isEqualTo("/P")
     }
 }

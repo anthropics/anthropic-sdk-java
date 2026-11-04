@@ -33,6 +33,19 @@ interface TargetServiceAsync {
      * workspace it is already attached to returns the existing Bundle Target. The channel or
      * workspace must be set up: attaching never sets a channel up. A group direct message takes no
      * Bundle and returns 400.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
+     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
+     *   for a change.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     *   Changes through the Claude Tag API are not enabled for the organization.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     *   The organization's compliance configuration does not let Claude Tag store anything new.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     *   The credential is not a scoped API key that is bound at the organization level.
      */
     fun create(
         bundleId: String,
@@ -61,6 +74,19 @@ interface TargetServiceAsync {
     /**
      * Get one Bundle Target. Returns 404 when `target_id` is the identifier of another Bundle's
      * Bundle Target, or the Bundle Target was detached.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
+     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
+     *   for a change.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     *   Changes through the Claude Tag API are not enabled for the organization.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     *   The organization's compliance configuration does not let Claude Tag store anything new.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     *   The credential is not a scoped API key that is bound at the organization level.
      */
     fun retrieve(
         targetId: String,
@@ -90,6 +116,19 @@ interface TargetServiceAsync {
      * List the Slack channels and Slack workspaces a Bundle is attached to, newest first by
      * `created_at`. Only channels and workspaces the organization owns are listed; a Bundle that is
      * attached to anything else has no Bundle Target for it.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
+     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
+     *   for a change.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     *   Changes through the Claude Tag API are not enabled for the organization.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     *   The organization's compliance configuration does not let Claude Tag store anything new.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     *   The credential is not a scoped API key that is bound at the organization level.
      */
     fun list(bundleId: String): CompletableFuture<TargetListPageAsync> =
         list(bundleId, TargetListParams.none())
@@ -125,7 +164,22 @@ interface TargetServiceAsync {
     ): CompletableFuture<TargetListPageAsync> =
         list(bundleId, TargetListParams.none(), requestOptions)
 
-    /** Detach a Bundle from a Slack channel or a Slack workspace. A repeated detach returns 404. */
+    /**
+     * Detach a Bundle from a Slack channel or a Slack workspace. A repeated detach returns 404.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
+     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
+     *   for a change.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     *   Changes through the Claude Tag API are not enabled for the organization.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     *   The organization's compliance configuration does not let Claude Tag store anything new.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     *   The credential is not a scoped API key that is bound at the organization level.
+     */
     fun delete(
         targetId: String,
         params: TargetDeleteParams,

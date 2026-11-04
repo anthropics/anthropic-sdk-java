@@ -23,6 +23,8 @@ class ErrorType private constructor(private val value: JsonField<String>) : Enum
 
         @JvmField val AUTHENTICATION_ERROR = ErrorType(JsonField.of("authentication_error"))
 
+        @JvmField val BILLING_ERROR = ErrorType(JsonField.of("billing_error"))
+
         @JvmField val PERMISSION_ERROR = ErrorType(JsonField.of("permission_error"))
 
         @JvmField val NOT_FOUND_ERROR = ErrorType(JsonField.of("not_found_error"))
@@ -31,11 +33,18 @@ class ErrorType private constructor(private val value: JsonField<String>) : Enum
 
         @JvmField val TIMEOUT_ERROR = ErrorType(JsonField.of("timeout_error"))
 
-        @JvmField val OVERLOADED_ERROR = ErrorType(JsonField.of("overloaded_error"))
-
         @JvmField val API_ERROR = ErrorType(JsonField.of("api_error"))
 
-        @JvmField val BILLING_ERROR = ErrorType(JsonField.of("billing_error"))
+        @JvmField val OVERLOADED_ERROR = ErrorType(JsonField.of("overloaded_error"))
+
+        @JvmField
+        val MEMORY_PRECONDITION_FAILED_ERROR =
+            ErrorType(JsonField.of("memory_precondition_failed_error"))
+
+        @JvmField
+        val MEMORY_PATH_CONFLICT_ERROR = ErrorType(JsonField.of("memory_path_conflict_error"))
+
+        @JvmField val CONFLICT_ERROR = ErrorType(JsonField.of("conflict_error"))
 
         @JvmStatic
         fun of(value: String): ErrorType =
@@ -43,13 +52,16 @@ class ErrorType private constructor(private val value: JsonField<String>) : Enum
             when (value) {
                 "invalid_request_error" -> INVALID_REQUEST_ERROR
                 "authentication_error" -> AUTHENTICATION_ERROR
+                "billing_error" -> BILLING_ERROR
                 "permission_error" -> PERMISSION_ERROR
                 "not_found_error" -> NOT_FOUND_ERROR
                 "rate_limit_error" -> RATE_LIMIT_ERROR
                 "timeout_error" -> TIMEOUT_ERROR
-                "overloaded_error" -> OVERLOADED_ERROR
                 "api_error" -> API_ERROR
-                "billing_error" -> BILLING_ERROR
+                "overloaded_error" -> OVERLOADED_ERROR
+                "memory_precondition_failed_error" -> MEMORY_PRECONDITION_FAILED_ERROR
+                "memory_path_conflict_error" -> MEMORY_PATH_CONFLICT_ERROR
+                "conflict_error" -> CONFLICT_ERROR
                 else -> ErrorType(JsonField.of(value))
             }
 
@@ -63,13 +75,16 @@ class ErrorType private constructor(private val value: JsonField<String>) : Enum
     enum class Known {
         INVALID_REQUEST_ERROR,
         AUTHENTICATION_ERROR,
+        BILLING_ERROR,
         PERMISSION_ERROR,
         NOT_FOUND_ERROR,
         RATE_LIMIT_ERROR,
         TIMEOUT_ERROR,
-        OVERLOADED_ERROR,
         API_ERROR,
-        BILLING_ERROR,
+        OVERLOADED_ERROR,
+        MEMORY_PRECONDITION_FAILED_ERROR,
+        MEMORY_PATH_CONFLICT_ERROR,
+        CONFLICT_ERROR,
     }
 
     /**
@@ -84,13 +99,16 @@ class ErrorType private constructor(private val value: JsonField<String>) : Enum
     enum class Value {
         INVALID_REQUEST_ERROR,
         AUTHENTICATION_ERROR,
+        BILLING_ERROR,
         PERMISSION_ERROR,
         NOT_FOUND_ERROR,
         RATE_LIMIT_ERROR,
         TIMEOUT_ERROR,
-        OVERLOADED_ERROR,
         API_ERROR,
-        BILLING_ERROR,
+        OVERLOADED_ERROR,
+        MEMORY_PRECONDITION_FAILED_ERROR,
+        MEMORY_PATH_CONFLICT_ERROR,
+        CONFLICT_ERROR,
         /** An enum member indicating that [ErrorType] was instantiated with an unknown value. */
         _UNKNOWN,
     }
@@ -106,13 +124,16 @@ class ErrorType private constructor(private val value: JsonField<String>) : Enum
         when (this) {
             INVALID_REQUEST_ERROR -> Value.INVALID_REQUEST_ERROR
             AUTHENTICATION_ERROR -> Value.AUTHENTICATION_ERROR
+            BILLING_ERROR -> Value.BILLING_ERROR
             PERMISSION_ERROR -> Value.PERMISSION_ERROR
             NOT_FOUND_ERROR -> Value.NOT_FOUND_ERROR
             RATE_LIMIT_ERROR -> Value.RATE_LIMIT_ERROR
             TIMEOUT_ERROR -> Value.TIMEOUT_ERROR
-            OVERLOADED_ERROR -> Value.OVERLOADED_ERROR
             API_ERROR -> Value.API_ERROR
-            BILLING_ERROR -> Value.BILLING_ERROR
+            OVERLOADED_ERROR -> Value.OVERLOADED_ERROR
+            MEMORY_PRECONDITION_FAILED_ERROR -> Value.MEMORY_PRECONDITION_FAILED_ERROR
+            MEMORY_PATH_CONFLICT_ERROR -> Value.MEMORY_PATH_CONFLICT_ERROR
+            CONFLICT_ERROR -> Value.CONFLICT_ERROR
             else -> Value._UNKNOWN
         }
 
@@ -128,13 +149,16 @@ class ErrorType private constructor(private val value: JsonField<String>) : Enum
         when (this) {
             INVALID_REQUEST_ERROR -> Known.INVALID_REQUEST_ERROR
             AUTHENTICATION_ERROR -> Known.AUTHENTICATION_ERROR
+            BILLING_ERROR -> Known.BILLING_ERROR
             PERMISSION_ERROR -> Known.PERMISSION_ERROR
             NOT_FOUND_ERROR -> Known.NOT_FOUND_ERROR
             RATE_LIMIT_ERROR -> Known.RATE_LIMIT_ERROR
             TIMEOUT_ERROR -> Known.TIMEOUT_ERROR
-            OVERLOADED_ERROR -> Known.OVERLOADED_ERROR
             API_ERROR -> Known.API_ERROR
-            BILLING_ERROR -> Known.BILLING_ERROR
+            OVERLOADED_ERROR -> Known.OVERLOADED_ERROR
+            MEMORY_PRECONDITION_FAILED_ERROR -> Known.MEMORY_PRECONDITION_FAILED_ERROR
+            MEMORY_PATH_CONFLICT_ERROR -> Known.MEMORY_PATH_CONFLICT_ERROR
+            CONFLICT_ERROR -> Known.CONFLICT_ERROR
             else -> throw AnthropicInvalidDataException("Unknown ErrorType: $value")
         }
 

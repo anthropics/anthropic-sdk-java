@@ -258,6 +258,8 @@ private constructor(
                 }
             }
 
+            getEnv(ENV_BASE_URL)?.let { baseUrlOverride = it }
+
             if (region == null) {
                 try {
                     region = DefaultAwsRegionProviderChain.builder().build().region
@@ -269,7 +271,6 @@ private constructor(
             }
 
             getEnv(ENV_WORKSPACE_ID)?.let { workspaceId = it }
-            getEnv(ENV_BASE_URL)?.let { baseUrlOverride = it }
         }
 
         /**

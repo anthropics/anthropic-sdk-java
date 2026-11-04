@@ -13,7 +13,7 @@ internal class UserProfileExternalUserDetailsParamsTest {
         val userProfileExternalUserDetailsParams =
             UserProfileExternalUserDetailsParams.builder()
                 .accountStatus(UserProfileExternalUserAccountStatus.ACTIVE)
-                .country("country")
+                .country("SE")
                 .emailHash("x")
                 .entityType(UserProfileExternalUserEntityType.INDIVIDUAL)
                 .nameHash("x")
@@ -23,7 +23,7 @@ internal class UserProfileExternalUserDetailsParamsTest {
 
         assertThat(userProfileExternalUserDetailsParams.accountStatus())
             .contains(UserProfileExternalUserAccountStatus.ACTIVE)
-        assertThat(userProfileExternalUserDetailsParams.country()).contains("country")
+        assertThat(userProfileExternalUserDetailsParams.country()).contains("SE")
         assertThat(userProfileExternalUserDetailsParams.emailHash()).contains("x")
         assertThat(userProfileExternalUserDetailsParams.entityType())
             .contains(UserProfileExternalUserEntityType.INDIVIDUAL)
@@ -39,7 +39,7 @@ internal class UserProfileExternalUserDetailsParamsTest {
         val userProfileExternalUserDetailsParams =
             UserProfileExternalUserDetailsParams.builder()
                 .accountStatus(UserProfileExternalUserAccountStatus.ACTIVE)
-                .country("country")
+                .country("SE")
                 .emailHash("x")
                 .entityType(UserProfileExternalUserEntityType.INDIVIDUAL)
                 .nameHash("x")

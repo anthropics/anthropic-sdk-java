@@ -95,7 +95,14 @@ interface UserService {
     fun list(requestOptions: RequestOptions): UserListPage =
         list(UserListParams.none(), requestOptions)
 
-    /** Remove a member from the organization. */
+    /**
+     * Remove a member from the organization.
+     *
+     * @throws com.anthropic.models.organization.users.CannotRemoveLastMemberException The user is
+     *   the organization's only member. Add another member before removing this one.
+     * @throws com.anthropic.models.organization.ConcurrentMembershipChangeException Another change
+     *   to the organization's members is in progress. Retry the request once it completes.
+     */
     fun remove(userId: String): UserRemoveResponse = remove(userId, UserRemoveParams.none())
 
     /** @see remove */

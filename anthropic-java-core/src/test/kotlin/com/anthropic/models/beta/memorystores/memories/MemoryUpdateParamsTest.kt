@@ -17,9 +17,13 @@ internal class MemoryUpdateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .content("content")
-            .path("xx")
+            .path("/P")
             .precondition(
-                BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
+                BetaManagedAgentsPrecondition.builder()
+                    .contentSha256(
+                        "210b9798eb53baa4e69d31c1071cf03d212b8ad0ca30cf321e0ea82e120aac26"
+                    )
+                    .build()
             )
             .build()
     }
@@ -48,9 +52,13 @@ internal class MemoryUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .content("content")
-                .path("xx")
+                .path("/P")
                 .precondition(
-                    BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
+                    BetaManagedAgentsPrecondition.builder()
+                        .contentSha256(
+                            "210b9798eb53baa4e69d31c1071cf03d212b8ad0ca30cf321e0ea82e120aac26"
+                        )
+                        .build()
                 )
                 .build()
 
@@ -92,9 +100,13 @@ internal class MemoryUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .content("content")
-                .path("xx")
+                .path("/P")
                 .precondition(
-                    BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
+                    BetaManagedAgentsPrecondition.builder()
+                        .contentSha256(
+                            "210b9798eb53baa4e69d31c1071cf03d212b8ad0ca30cf321e0ea82e120aac26"
+                        )
+                        .build()
                 )
                 .build()
 
@@ -126,19 +138,27 @@ internal class MemoryUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .content("content")
-                .path("xx")
+                .path("/P")
                 .precondition(
-                    BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
+                    BetaManagedAgentsPrecondition.builder()
+                        .contentSha256(
+                            "210b9798eb53baa4e69d31c1071cf03d212b8ad0ca30cf321e0ea82e120aac26"
+                        )
+                        .build()
                 )
                 .build()
 
         val body = params._body()
 
         assertThat(body.content()).contains("content")
-        assertThat(body.path()).contains("xx")
+        assertThat(body.path()).contains("/P")
         assertThat(body.precondition())
             .contains(
-                BetaManagedAgentsPrecondition.builder().contentSha256("content_sha256").build()
+                BetaManagedAgentsPrecondition.builder()
+                    .contentSha256(
+                        "210b9798eb53baa4e69d31c1071cf03d212b8ad0ca30cf321e0ea82e120aac26"
+                    )
+                    .build()
             )
     }
 

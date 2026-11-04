@@ -1,5 +1,30 @@
 # Changelog
 
+## [3.5.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.4.0...v3.5.0) (2026-11-03)
+
+### Features
+
+* **api:** add error details types and new error type values
+
+
+### Bug Fixes
+
+* **aws:** accept `ANTHROPIC_AWS_BASE_URL` without a region in `fromEnv()`
+* **bedrock,vertex:** throw when the Bedrock model ID or the Vertex project or region is empty, "." or ".." instead of sending the request to a different URL
+* **google-cloud:** percent-encode the project, location and workspace ID in the base URL, and throw when one of them is empty, "." or ".."
+
+
+### Chores
+
+* **api:** update example values for pattern-constrained string fields
+* **docs:** clarify some API field descriptions
+* **docs:** update the telemetry destination headers description
+
+
+### Documentation
+
+* **api:** show each field's own description for `speed`
+
 ## [3.4.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.3.0...v3.4.0) (2026-11-02)
 
 ### Features

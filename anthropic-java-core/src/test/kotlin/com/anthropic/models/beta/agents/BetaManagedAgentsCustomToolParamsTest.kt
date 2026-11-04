@@ -23,7 +23,7 @@ internal class BetaManagedAgentsCustomToolParamsTest {
                         .addRequired("string")
                         .build()
                 )
-                .name("x")
+                .name("name")
                 .build()
 
         assertThat(betaManagedAgentsCustomToolParams.description()).isEqualTo("x")
@@ -38,7 +38,7 @@ internal class BetaManagedAgentsCustomToolParamsTest {
                     .addRequired("string")
                     .build()
             )
-        assertThat(betaManagedAgentsCustomToolParams.name()).isEqualTo("x")
+        assertThat(betaManagedAgentsCustomToolParams.name()).isEqualTo("name")
     }
 
     @Test
@@ -57,7 +57,7 @@ internal class BetaManagedAgentsCustomToolParamsTest {
                         .addRequired("string")
                         .build()
                 )
-                .name("x")
+                .name("name")
                 .build()
 
         val roundtrippedBetaManagedAgentsCustomToolParams =

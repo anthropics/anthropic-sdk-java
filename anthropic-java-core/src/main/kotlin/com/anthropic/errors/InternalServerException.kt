@@ -7,8 +7,8 @@ import com.anthropic.core.jsonMapper
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class InternalServerException
-private constructor(
+open class InternalServerException
+protected constructor(
     private val statusCode: Int,
     private val headers: Headers,
     private val body: JsonValue,
@@ -25,7 +25,7 @@ private constructor(
 
     override fun body(): JsonValue = body
 
-    fun toBuilder() = Builder().from(this)
+    open fun toBuilder() = Builder().from(this)
 
     companion object {
 
@@ -43,7 +43,7 @@ private constructor(
     }
 
     /** A builder for [InternalServerException]. */
-    class Builder internal constructor() {
+    open class Builder internal constructor() {
 
         private var statusCode: Int? = null
         private var headers: Headers? = null
@@ -58,16 +58,16 @@ private constructor(
             cause = internalServerException.cause
         }
 
-        fun statusCode(statusCode: Int) = apply { this.statusCode = statusCode }
+        open fun statusCode(statusCode: Int) = apply { this.statusCode = statusCode }
 
-        fun headers(headers: Headers) = apply { this.headers = headers }
+        open fun headers(headers: Headers) = apply { this.headers = headers }
 
-        fun body(body: JsonValue) = apply { this.body = body }
+        open fun body(body: JsonValue) = apply { this.body = body }
 
-        fun cause(cause: Throwable?) = apply { this.cause = cause }
+        open fun cause(cause: Throwable?) = apply { this.cause = cause }
 
         /** Alias for calling [Builder.cause] with `cause.orElse(null)`. */
-        fun cause(cause: Optional<Throwable>) = cause(cause.getOrNull())
+        open fun cause(cause: Optional<Throwable>) = cause(cause.getOrNull())
 
         /**
          * Returns an immutable instance of [InternalServerException].
@@ -83,7 +83,7 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): InternalServerException =
+        open fun build(): InternalServerException =
             InternalServerException(
                 checkRequired("statusCode", statusCode),
                 checkRequired("headers", headers),

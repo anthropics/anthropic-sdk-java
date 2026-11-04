@@ -15,6 +15,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
 
 @ResourceLock("environment")
 internal class VertexBackendTest {
@@ -385,6 +388,105 @@ internal class VertexBackendTest {
         assertThat(json!!.get("model")).isNull()
         assertThat(json.get("stream").asBoolean()).isEqualTo(false)
         assertThat(json.get("anthropic_version").asText()).isEqualTo(ANTHROPIC_VERSION)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["claude-sonnet-4-5@20250929", "../../x", ".."])
+    fun prepareRequestMessagesModelStaysInOnePathSegment(model: String) {
+        val backend = createBackend()
+        val request = createRequest("""{"model":"$model"}""", "v1", "messages")
+        val preparedRequest = backend.prepareRequest(request)
+        val pathSegments = preparedRequest.pathSegments
+
+        assertThat(pathSegments.size).isEqualTo(9)
+        assertThat(pathSegments[8]).isEqualTo("$model:rawPredict")
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["a;b", "...;x", "x;.."])
+    fun prepareRequestMessagesOtherSemicolonStaysInPathSegment(value: String) {
+        val backend = createBackend(createCredentials(), value, value)
+        val request = createRequest("""{"model":"$value"}""", "v1", "messages")
+
+        assertThat(backend.prepareRequest(request).pathSegments)
+            .containsExactly(
+                "v1",
+                "projects",
+                value,
+                "locations",
+                value,
+                "publishers",
+                "anthropic",
+                "models",
+                "$value:rawPredict",
+            )
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "., is a dot-segment",
+        ".., is a dot-segment",
+        "..;x, is a dot-segment",
+        ".;x, is a dot-segment",
+        "..;, is a dot-segment",
+        "'', must be non-empty",
+        ";x, must be non-empty",
+        ";, must be non-empty",
+        ";a=b, must be non-empty",
+    )
+    fun prepareRequestMessagesProjectOrRegionBadSegmentThrows(segment: String, message: String) {
+        val backends =
+            listOf(
+                createBackend(createCredentials(), GC_REGION, segment),
+                createBackend(createCredentials(), segment, GC_PROJECT),
+            )
+        val request = createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
+
+        assertThat(backends).allSatisfy {
+            assertThatThrownBy { it.prepareRequest(request) }
+                .isExactlyInstanceOf(IllegalStateException::class.java)
+                .hasMessageContaining(message)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "..;x, is a dot-segment",
+        ".;x, is a dot-segment",
+        "..;, is a dot-segment",
+        ";x, must be non-empty",
+        ";, must be non-empty",
+        ";a=b, must be non-empty",
+    )
+    fun prepareRequestMessagesModelBadBeforeSemicolonThrows(model: String, message: String) {
+        val backend = createBackend()
+        val request = createRequest("""{"model":"$model"}""", "v1", "messages")
+
+        assertThatThrownBy { backend.prepareRequest(request) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining(message)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun prepareRequestMessagesModelEmptyThrows(stream: Boolean) {
+        val backend = createBackend()
+        val request = createRequest("""{"model":"","stream":$stream}""", "v1", "messages")
+
+        assertThatThrownBy { backend.prepareRequest(request) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessage("`model` must be non-empty, but was empty")
+    }
+
+    @Test
+    fun prepareRequestMessagesCountTokensModelEmptyStaysInBody() {
+        val backend = createBackend()
+        val request = createRequest("""{"model":""}""", "v1", "messages", "count_tokens")
+        val preparedRequest = backend.prepareRequest(request)
+        val json = bodyToJson(jsonMapper(), preparedRequest.body().getOrNull())
+
+        assertThat(preparedRequest.pathSegments.last()).isEqualTo("count-tokens:rawPredict")
+        assertThat(json!!.get("model").asText()).isEmpty()
     }
 
     @Test

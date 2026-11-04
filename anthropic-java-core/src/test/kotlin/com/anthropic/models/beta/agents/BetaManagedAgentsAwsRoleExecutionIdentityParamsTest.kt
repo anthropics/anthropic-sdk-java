@@ -10,16 +10,17 @@ internal class BetaManagedAgentsAwsRoleExecutionIdentityParamsTest {
     @Test
     fun create() {
         val betaManagedAgentsAwsRoleExecutionIdentityParams =
-            BetaManagedAgentsAwsRoleExecutionIdentityParams.of("role_arn")
+            BetaManagedAgentsAwsRoleExecutionIdentityParams.of("arn:aws:iam::228601553692:role/T")
 
-        assertThat(betaManagedAgentsAwsRoleExecutionIdentityParams.roleArn()).isEqualTo("role_arn")
+        assertThat(betaManagedAgentsAwsRoleExecutionIdentityParams.roleArn())
+            .isEqualTo("arn:aws:iam::228601553692:role/T")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsAwsRoleExecutionIdentityParams =
-            BetaManagedAgentsAwsRoleExecutionIdentityParams.of("role_arn")
+            BetaManagedAgentsAwsRoleExecutionIdentityParams.of("arn:aws:iam::228601553692:role/T")
 
         val roundtrippedBetaManagedAgentsAwsRoleExecutionIdentityParams =
             jsonMapper.readValue(

@@ -39,6 +39,14 @@ interface WorkServiceAsync {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Retrieve detailed information about a specific work item.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
      */
     fun retrieve(
         workId: String,
@@ -69,6 +77,17 @@ interface WorkServiceAsync {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Update work item metadata with merge semantics.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.beta.environments.BetaInvalidMetadataException `metadata` has
+     *   too many keys, a key or value that is too long, or a reserved key. The message names each
+     *   problem.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
      */
     fun update(workId: String, params: WorkUpdateParams): CompletableFuture<BetaSelfHostedWork> =
         update(workId, params, RequestOptions.none())
@@ -167,6 +186,10 @@ interface WorkServiceAsync {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Record a heartbeat for a work item to maintain the lease.
+     *
+     * @throws com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedException
+     *   `expected_last_heartbeat` does not match the stored heartbeat, so another worker may hold
+     *   the lease.
      */
     fun heartbeat(
         workId: String,
@@ -236,7 +259,17 @@ interface WorkServiceAsync {
     ): CompletableFuture<Optional<BetaSelfHostedWork>> =
         poll(environmentId, WorkPollParams.none(), requestOptions)
 
-    /** Get statistics about the work queue for an environment. */
+    /**
+     * Get statistics about the work queue for an environment.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
+     */
     fun stats(environmentId: String): CompletableFuture<BetaSelfHostedWorkQueueStats> =
         stats(environmentId, WorkStatsParams.none())
 
@@ -278,6 +311,14 @@ interface WorkServiceAsync {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Stop a work item, initiating graceful or forced shutdown.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
+     *   the Claude Code workspace, and the user who created it is no longer a member of the
+     *   organization or of that workspace.
+     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
+     *   organization for trust and safety reasons. An organization disabled for any other reason,
+     *   such as billing, does not get this code. `appeal_url`, when present, is where the
+     *   organization can appeal.
      */
     fun stop(workId: String, params: WorkStopParams): CompletableFuture<BetaSelfHostedWork> =
         stop(workId, params, RequestOptions.none())

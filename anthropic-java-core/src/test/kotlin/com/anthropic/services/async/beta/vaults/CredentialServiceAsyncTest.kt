@@ -90,7 +90,7 @@ internal class CredentialServiceAsyncTest {
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .auth(
                         BetaManagedAgentsMcpOAuthUpdateParams.builder()
-                            .accessToken("x")
+                            .accessToken("access_token")
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .refresh(
                                 BetaManagedAgentsMcpOAuthRefreshUpdateParams.builder()

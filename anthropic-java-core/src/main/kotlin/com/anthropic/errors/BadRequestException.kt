@@ -7,8 +7,12 @@ import com.anthropic.core.jsonMapper
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class BadRequestException
-private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
+open class BadRequestException
+protected constructor(
+    private val headers: Headers,
+    private val body: JsonValue,
+    cause: Throwable?,
+) :
     AnthropicServiceException(
         "400: ${if (body.isMissing()) "Unknown" else jsonMapper().writeValueAsString(body)}",
         cause,
@@ -20,7 +24,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
 
     override fun body(): JsonValue = body
 
-    fun toBuilder() = Builder().from(this)
+    open fun toBuilder() = Builder().from(this)
 
     companion object {
 
@@ -37,7 +41,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
     }
 
     /** A builder for [BadRequestException]. */
-    class Builder internal constructor() {
+    open class Builder internal constructor() {
 
         private var headers: Headers? = null
         private var body: JsonValue? = null
@@ -50,14 +54,14 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
             cause = badRequestException.cause
         }
 
-        fun headers(headers: Headers) = apply { this.headers = headers }
+        open fun headers(headers: Headers) = apply { this.headers = headers }
 
-        fun body(body: JsonValue) = apply { this.body = body }
+        open fun body(body: JsonValue) = apply { this.body = body }
 
-        fun cause(cause: Throwable?) = apply { this.cause = cause }
+        open fun cause(cause: Throwable?) = apply { this.cause = cause }
 
         /** Alias for calling [Builder.cause] with `cause.orElse(null)`. */
-        fun cause(cause: Optional<Throwable>) = cause(cause.getOrNull())
+        open fun cause(cause: Optional<Throwable>) = cause(cause.getOrNull())
 
         /**
          * Returns an immutable instance of [BadRequestException].
@@ -72,7 +76,7 @@ private constructor(private val headers: Headers, private val body: JsonValue, c
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BadRequestException =
+        open fun build(): BadRequestException =
             BadRequestException(
                 checkRequired("headers", headers),
                 checkRequired("body", body),

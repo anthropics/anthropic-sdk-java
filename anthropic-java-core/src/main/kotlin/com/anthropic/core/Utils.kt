@@ -5,6 +5,7 @@ package com.anthropic.core
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
+import java.util.Optional
 import java.util.SortedMap
 import java.util.SortedSet
 import java.util.concurrent.CompletableFuture
@@ -35,6 +36,24 @@ internal inline fun <reified T : Any> JsonValue.toField(): JsonField<T> =
     } catch (e: Exception) {
         this
     }
+
+/**
+ * Returns the value at the given [path] of property names, deserialized to [T], or an empty
+ * [Optional] if there's no value at that path or it doesn't deserialize to [T].
+ */
+@JvmSynthetic
+internal inline fun <reified T : Any> JsonValue.valueAt(vararg path: String): Optional<T> =
+    Optional.ofNullable(
+        try {
+            path
+                .fold<String, JsonValue?>(this) { value, name ->
+                    value?.asObject()?.getOrNull()?.get(name)
+                }
+                ?.convert(jacksonTypeRef<T>())
+        } catch (e: IllegalArgumentException) {
+            null
+        }
+    )
 
 @JvmSynthetic
 internal fun <T> List<T>.toImmutable(): List<T> =

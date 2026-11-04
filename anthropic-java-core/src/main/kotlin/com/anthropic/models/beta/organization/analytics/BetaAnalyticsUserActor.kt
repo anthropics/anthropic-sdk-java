@@ -65,8 +65,8 @@ private constructor(
      * the account itself has been deleted, or when the user is no longer a member of the
      * organization or its associated organizations and the organization has chosen to hide the
      * names of removed users. Otherwise, the name stays populated for removed users. Rows for
-     * system-minted service accounts render the service name (for example, `"Claude Security"` for
-     * usage by Anthropic's security-patching service) or null.
+     * system-minted service accounts render the service name (for example, `"Claude Security"`) or
+     * null.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -216,8 +216,8 @@ private constructor(
          * when the account itself has been deleted, or when the user is no longer a member of the
          * organization or its associated organizations and the organization has chosen to hide the
          * names of removed users. Otherwise, the name stays populated for removed users. Rows for
-         * system-minted service accounts render the service name (for example, `"Claude Security"`
-         * for usage by Anthropic's security-patching service) or null.
+         * system-minted service accounts render the service name (for example, `"Claude Security"`)
+         * or null.
          */
         fun name(name: String?) = name(JsonField.ofNullable(name))
 

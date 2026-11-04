@@ -13,7 +13,7 @@ internal class BetaUserProfileExternalUserDetailsParamsTest {
         val betaUserProfileExternalUserDetailsParams =
             BetaUserProfileExternalUserDetailsParams.builder()
                 .accountStatus(BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE)
-                .country("country")
+                .country("SE")
                 .emailHash("x")
                 .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
                 .nameHash("x")
@@ -23,7 +23,7 @@ internal class BetaUserProfileExternalUserDetailsParamsTest {
 
         assertThat(betaUserProfileExternalUserDetailsParams.accountStatus())
             .contains(BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE)
-        assertThat(betaUserProfileExternalUserDetailsParams.country()).contains("country")
+        assertThat(betaUserProfileExternalUserDetailsParams.country()).contains("SE")
         assertThat(betaUserProfileExternalUserDetailsParams.emailHash()).contains("x")
         assertThat(betaUserProfileExternalUserDetailsParams.entityType())
             .contains(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
@@ -39,7 +39,7 @@ internal class BetaUserProfileExternalUserDetailsParamsTest {
         val betaUserProfileExternalUserDetailsParams =
             BetaUserProfileExternalUserDetailsParams.builder()
                 .accountStatus(BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE)
-                .country("country")
+                .country("SE")
                 .emailHash("x")
                 .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
                 .nameHash("x")

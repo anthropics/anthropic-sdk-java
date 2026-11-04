@@ -172,8 +172,7 @@ private constructor(
     /**
      * Activity recorded while the member had Chat and Cowork unified (Cowork's features inside
      * claude.ai chat) turned on, split into `chat` (chat activity) and `sessions` (Cowork
-     * activity). Omitted from the response on deployments that do not offer Chat and Cowork
-     * unified.
+     * activity). Omitted from the response where Chat and Cowork unified is not available.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -564,8 +563,7 @@ private constructor(
         /**
          * Activity recorded while the member had Chat and Cowork unified (Cowork's features inside
          * claude.ai chat) turned on, split into `chat` (chat activity) and `sessions` (Cowork
-         * activity). Omitted from the response on deployments that do not offer Chat and Cowork
-         * unified.
+         * activity). Omitted from the response where Chat and Cowork unified is not available.
          */
         fun chatCoworkUnifiedMetrics(
             chatCoworkUnifiedMetrics: BetaAnalyticsChatCoworkUnifiedMetrics?

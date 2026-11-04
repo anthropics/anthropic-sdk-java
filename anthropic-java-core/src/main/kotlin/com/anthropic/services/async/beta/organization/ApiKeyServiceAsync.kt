@@ -57,7 +57,14 @@ interface ApiKeyServiceAsync {
     fun retrieve(apiKeyId: String, requestOptions: RequestOptions): CompletableFuture<BetaApiKey> =
         retrieve(apiKeyId, ApiKeyRetrieveParams.none(), requestOptions)
 
-    /** Update API Key */
+    /**
+     * Update API Key
+     *
+     * @throws com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededException The
+     *   organization has reached its limit of active API keys.
+     * @throws com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededException The
+     *   workspace has reached its limit of active API keys.
+     */
     fun update(apiKeyId: String): CompletableFuture<BetaApiKey> =
         update(apiKeyId, ApiKeyUpdateParams.none())
 

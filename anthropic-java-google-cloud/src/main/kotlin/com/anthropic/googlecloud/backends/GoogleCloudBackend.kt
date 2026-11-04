@@ -1,6 +1,7 @@
 package com.anthropic.googlecloud.backends
 
 import com.anthropic.backends.Backend
+import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.auth.oauth2.ServiceAccountCredentials
@@ -68,13 +69,7 @@ private constructor(
 
         private const val DEFAULT_LOCATION = "global"
 
-        private const val LOCATION_URL_TEMPLATE =
-            "https://claude.googleapis.com/v1/projects/{project}/locations/{location}"
-
-        private const val URL_TEMPLATE = "$LOCATION_URL_TEMPLATE/workspaces/{workspaceId}/invoke"
-
-        private const val ORGANIZATION_URL_TEMPLATE =
-            "$LOCATION_URL_TEMPLATE/claudeOrganization/invoke"
+        private const val GATEWAY_URL = "https://claude.googleapis.com"
 
         private const val ORGANIZATION_PATH_PREFIX = "/v1/organizations/"
 
@@ -100,15 +95,23 @@ private constructor(
             "Workspace ID is required; set workspaceId or the $ENV_WORKSPACE_ID " +
                 "environment variable."
         }
-        return locationUrl(URL_TEMPLATE).replace("{workspaceId}", workspaceId)
+        return locationUrl("workspaces", workspaceId, "invoke")
     }
 
-    private fun organizationBaseUrl(): String = locationUrl(ORGANIZATION_URL_TEMPLATE)
+    private fun organizationBaseUrl(): String = locationUrl("claudeOrganization", "invoke")
 
-    private fun locationUrl(template: String): String {
+    private fun locationUrl(vararg pathSegments: String): String {
         checkNotNull(project) { "No project configured to derive base URL." }
         checkNotNull(location) { "No location configured to derive base URL." }
-        return template.replace("{project}", project).replace("{location}", location)
+        return HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(GATEWAY_URL)
+            .replaceAllPathSegments("v1", "projects", project, "locations", location, *pathSegments)
+            .build()
+            .url()
+            .replace("%3A", ":")
+            .replace("%3B", ";")
+            .replace("+", "%20")
     }
 
     private fun isOrganizationRoute(request: HttpRequest): Boolean {

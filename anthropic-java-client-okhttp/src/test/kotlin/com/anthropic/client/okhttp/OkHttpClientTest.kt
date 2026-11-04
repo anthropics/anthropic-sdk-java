@@ -58,6 +58,27 @@ internal class OkHttpClientTest {
     }
 
     @Test
+    fun execute_percentEncodesPathSegments() {
+        stubFor(get(anyUrl()).willReturn(ok()))
+        val charsToEncode = " \"#%/<>?[\\]^`{|}é"
+        val charsToKeep = "-._~!$&'()*+,;=:@"
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.GET)
+                .baseUrl(baseUrl)
+                .addPathSegments(charsToEncode, charsToKeep)
+                .build()
+
+        httpClient.execute(request).close()
+
+        verify(
+            getRequestedFor(
+                urlEqualTo("/%20%22%23%25%2F%3C%3E%3F%5B%5C%5D%5E%60%7B%7C%7D%C3%A9/$charsToKeep")
+            )
+        )
+    }
+
+    @Test
     fun execute_followsRedirectsUnlessFollowRedirectsIsFalse() {
         stubFor(
             post(urlPathEqualTo("/something"))
@@ -77,6 +98,31 @@ internal class OkHttpClientTest {
 
         assertThat(followed.statusCode()).isEqualTo(200)
         assertThat(notFollowed.statusCode()).isEqualTo(307)
+    }
+
+    @Test
+    fun execute_percentEncodesSlashButNotColonOrAtInAPathSegment() {
+        stubFor(post(anyUrl()).willReturn(ok()))
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl(baseUrl)
+                .addPathSegments(
+                    "arn:aws:bedrock:us-east-1:123456789012:inference-profile/a:0",
+                    "claude-sonnet-4-5@20250929:rawPredict",
+                )
+                .build()
+
+        httpClient.execute(request).close()
+
+        verify(
+            postRequestedFor(
+                urlEqualTo(
+                    "/arn:aws:bedrock:us-east-1:123456789012:inference-profile%2Fa:0" +
+                        "/claude-sonnet-4-5@20250929:rawPredict"
+                )
+            )
+        )
     }
 
     @Test

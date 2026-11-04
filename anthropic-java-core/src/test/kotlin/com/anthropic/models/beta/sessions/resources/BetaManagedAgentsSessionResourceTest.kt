@@ -104,7 +104,7 @@ internal class BetaManagedAgentsSessionResourceTest {
     fun ofMemoryStore() {
         val memoryStore =
             BetaManagedAgentsMemoryStoreResource.builder()
-                .memoryStoreId("memory_store_id")
+                .memoryStoreId("memstore_c")
                 .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
                 .description("description")
                 .instructions("instructions")
@@ -126,7 +126,7 @@ internal class BetaManagedAgentsSessionResourceTest {
         val betaManagedAgentsSessionResource =
             BetaManagedAgentsSessionResource.ofMemoryStore(
                 BetaManagedAgentsMemoryStoreResource.builder()
-                    .memoryStoreId("memory_store_id")
+                    .memoryStoreId("memstore_c")
                     .access(BetaManagedAgentsMemoryStoreResource.Access.READ_WRITE)
                     .description("description")
                     .instructions("instructions")

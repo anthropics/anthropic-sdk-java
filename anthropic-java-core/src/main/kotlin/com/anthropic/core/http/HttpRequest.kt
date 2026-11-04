@@ -97,7 +97,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun addPathParam(name: String, value: String) = apply {
-            pathSegments.add(checkPathSegment(checkMinLength(name, value, 1)))
+            checkMinLength(name, value.substringBefore(';'), 1)
+            pathSegments.add(checkPathSegment(value))
         }
 
         fun addPathSegments(vararg pathSegments: String) = apply {
@@ -105,7 +106,14 @@ private constructor(
         }
 
         fun replaceAllPathSegments(vararg pathSegments: String) = apply {
-            this.pathSegments = pathSegments.toMutableList()
+            this.pathSegments =
+                pathSegments
+                    // Some servers drop ";" and what follows it before routing, so "..;x" can be
+                    // routed as "..".
+                    .onEach {
+                        checkPathSegment(checkMinLength("pathSegment", it.substringBefore(';'), 1))
+                    }
+                    .toMutableList()
         }
 
         fun headers(headers: Headers) = apply {
@@ -202,11 +210,12 @@ private constructor(
     }
 }
 
-// Throws on a "." or ".." segment: HTTP clients collapse them ("/cards/.." becomes "/"), so the
-// request would go to a different path.
+// Throws on a "." or ".." segment, also when a ";" follows it: HTTP clients collapse "/cards/.."
+// to "/", and some servers first drop the ";" and what follows, so the request goes elsewhere.
 private fun checkPathSegment(segment: String): String =
     segment.also {
-        check(it != "." && it != "..") {
+        val beforeSemicolon = it.substringBefore(';')
+        check(beforeSemicolon != "." && beforeSemicolon != "..") {
             "Path segment \"$it\" is a dot-segment and can't be safely passed as a path parameter"
         }
     }

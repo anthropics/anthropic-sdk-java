@@ -43,6 +43,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledIf
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mockito
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
@@ -61,6 +63,8 @@ internal class BedrockBackendTest {
         private const val AWS_SESSION_TOKEN = "FwoGZXIvYXdzEJr..."
         private const val AWS_REGION = "us-east-1"
         private const val MODEL_ID = "anthropic.claude-3-5-sonnet-20240620-v1:0"
+        private const val MODEL_ARN =
+            "arn:aws:bedrock:$AWS_REGION:123456789012:inference-profile/us.$MODEL_ID"
         private const val ANTHROPIC_VERSION = "2024-01-01"
         private const val TEXT_DELTA =
             """{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}"""
@@ -569,6 +573,47 @@ internal class BedrockBackendTest {
         // "stream" should be removed from JSON body.
         assertThat(json).isNotNull()
         assertThat(json!!.get("stream")).isNull()
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = [MODEL_ARN, "a;b", "...;x", "x;.."])
+    fun prepareRequestMessagesModelStaysOnePathSegment(model: String) {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request = createRequest("""{"model":"$model"}""", "v1", "messages")
+        val preparedRequest = backend.prepareRequest(request)
+        val pathSegments = preparedRequest.pathSegments
+
+        assertThat(pathSegments.size).isEqualTo(3)
+        assertThat(pathSegments[0]).isEqualTo("model")
+        assertThat(pathSegments[1]).isEqualTo(model)
+        assertThat(pathSegments[2]).isEqualTo("invoke")
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = [".", "..", "..;x", ".;x", "..;"])
+    fun prepareRequestMessagesModelDotSegmentThrows(model: String) {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request = createRequest("""{"model":"$model"}""", "v1", "messages")
+
+        assertThatThrownBy { backend.prepareRequest(request) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageStartingWith(
+                "Path segment \"${model.substringBefore(';')}\" is a dot-segment"
+            )
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["", ";x", ";", ";a=b"])
+    fun prepareRequestMessagesModelEmptyThrows(model: String) {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request = createRequest("""{"model":"$model"}""", "v1", "messages")
+
+        assertThatThrownBy { backend.prepareRequest(request) }
+            .isExactlyInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("must be non-empty")
     }
 
     @Test

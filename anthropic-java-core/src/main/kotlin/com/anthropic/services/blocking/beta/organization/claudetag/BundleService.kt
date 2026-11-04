@@ -30,6 +30,19 @@ interface BundleService {
     /**
      * Get one Bundle. What the Bundle grants (connectors, repositories and credentials) is never
      * returned.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
+     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
+     *   for a change.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     *   Changes through the Claude Tag API are not enabled for the organization.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     *   The organization's compliance configuration does not let Claude Tag store anything new.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     *   The credential is not a scoped API key that is bound at the organization level.
      */
     fun retrieve(bundleId: String): BetaClaudeTagBundle =
         retrieve(bundleId, BundleRetrieveParams.none())
@@ -64,6 +77,19 @@ interface BundleService {
     /**
      * List the organization's Bundles, newest first by `created_at`. A Bundle that Claude Tag
      * manages for itself is not listed.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
+     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
+     *   for a change.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     *   Changes through the Claude Tag API are not enabled for the organization.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     *   The organization's compliance configuration does not let Claude Tag store anything new.
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     *   The credential is not a scoped API key that is bound at the organization level.
      */
     fun list(): BundleListPage = list(BundleListParams.none())
 
