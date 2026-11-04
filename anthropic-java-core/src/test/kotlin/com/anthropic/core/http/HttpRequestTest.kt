@@ -64,7 +64,7 @@ internal class HttpRequestTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = [".", ".."])
+    @ValueSource(strings = [".", "..", "..;x", ".;x", "..;", ".;a=b"])
     fun replaceAllPathSegments_dotSegment_throws(segment: String) {
         val builder = createRequest().toBuilder()
 
@@ -75,13 +75,24 @@ internal class HttpRequestTest {
             .hasMessageContaining("dot-segment")
     }
 
-    @Test
-    fun replaceAllPathSegments_empty_throws() {
+    @ParameterizedTest
+    @ValueSource(strings = ["", ";x", ";", ";a=b"])
+    fun replaceAllPathSegments_empty_throws(segment: String) {
         val builder = createRequest().toBuilder()
 
-        assertThat(runCatching { builder.replaceAllPathSegments("model", "") }.exceptionOrNull())
+        assertThat(
+                runCatching { builder.replaceAllPathSegments("model", segment) }.exceptionOrNull()
+            )
             .isInstanceOf(IllegalStateException::class.java)
             .hasMessageContaining("`pathSegment` must be non-empty")
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["a;b", "...;x", "..x;y", "x;..", "x;"])
+    fun replaceAllPathSegments_otherSemicolon_keepsSegment(segment: String) {
+        val request = createRequest().toBuilder().replaceAllPathSegments("model", segment).build()
+
+        assertThat(request.pathSegments).containsExactly("model", segment)
     }
 
     @Test

@@ -423,6 +423,7 @@ internal class GoogleCloudBackendTest {
     @CsvSource(
         "my-project, global, wrkspc_01AbCdEf",
         "example.com:my-project, us-central1, wrkspc_01AbCdEf",
+        "a;b, c;d, e;f",
     )
     fun baseUrlDerivedKeepsRealValues(project: String, location: String, workspaceId: String) {
         val backend =
@@ -449,6 +450,10 @@ internal class GoogleCloudBackendTest {
         "a b, a%20b",
         "a+b, a%2Bb",
         "a%3Ab, a%253Ab",
+        "a%3Bb, a%253Bb",
+        "a;b, a;b",
+        "...;x, ...;x",
+        "x;.., x;..",
     )
     fun baseUrlDerivedPercentEncodesEachValue(value: String, encoded: String) {
         val backend = RecordingBackend(createBackendWithTokenSupplier(value, value, value))
@@ -463,7 +468,17 @@ internal class GoogleCloudBackendTest {
     }
 
     @ParameterizedTest
-    @CsvSource("., dot-segment", ".., dot-segment", "'', must be non-empty")
+    @CsvSource(
+        "., dot-segment",
+        ".., dot-segment",
+        "..;x, dot-segment",
+        ".;x, dot-segment",
+        "..;, dot-segment",
+        "'', must be non-empty",
+        ";x, must be non-empty",
+        ";, must be non-empty",
+        ";a=b, must be non-empty",
+    )
     fun baseUrlDerivedBadSegmentThrows(segment: String, message: String) {
         val backends =
             listOf(

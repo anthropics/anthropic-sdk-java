@@ -110,6 +110,7 @@ private constructor(
             .build()
             .url()
             .replace("%3A", ":")
+            .replace("%3B", ";")
             .replace("+", "%20")
     }
 

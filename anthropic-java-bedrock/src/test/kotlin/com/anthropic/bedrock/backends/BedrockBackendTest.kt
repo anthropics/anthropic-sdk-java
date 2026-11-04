@@ -575,22 +575,23 @@ internal class BedrockBackendTest {
         assertThat(json!!.get("stream")).isNull()
     }
 
-    @Test
-    fun prepareRequestMessagesModelArnStaysOnePathSegment() {
+    @ParameterizedTest
+    @ValueSource(strings = [MODEL_ARN, "a;b", "...;x", "x;.."])
+    fun prepareRequestMessagesModelStaysOnePathSegment(model: String) {
         initEnv()
         val backend = BedrockBackend.fromEnv()
-        val request = createRequest("""{"model":"$MODEL_ARN"}""", "v1", "messages")
+        val request = createRequest("""{"model":"$model"}""", "v1", "messages")
         val preparedRequest = backend.prepareRequest(request)
         val pathSegments = preparedRequest.pathSegments
 
         assertThat(pathSegments.size).isEqualTo(3)
         assertThat(pathSegments[0]).isEqualTo("model")
-        assertThat(pathSegments[1]).isEqualTo(MODEL_ARN)
+        assertThat(pathSegments[1]).isEqualTo(model)
         assertThat(pathSegments[2]).isEqualTo("invoke")
     }
 
     @ParameterizedTest
-    @ValueSource(strings = [".", ".."])
+    @ValueSource(strings = [".", "..", "..;x", ".;x", "..;"])
     fun prepareRequestMessagesModelDotSegmentThrows(model: String) {
         initEnv()
         val backend = BedrockBackend.fromEnv()
@@ -598,14 +599,17 @@ internal class BedrockBackendTest {
 
         assertThatThrownBy { backend.prepareRequest(request) }
             .isExactlyInstanceOf(IllegalStateException::class.java)
-            .hasMessageStartingWith("Path segment \"$model\" is a dot-segment")
+            .hasMessageStartingWith(
+                "Path segment \"${model.substringBefore(';')}\" is a dot-segment"
+            )
     }
 
-    @Test
-    fun prepareRequestMessagesModelEmptyThrows() {
+    @ParameterizedTest
+    @ValueSource(strings = ["", ";x", ";", ";a=b"])
+    fun prepareRequestMessagesModelEmptyThrows(model: String) {
         initEnv()
         val backend = BedrockBackend.fromEnv()
-        val request = createRequest("""{"model":""}""", "v1", "messages")
+        val request = createRequest("""{"model":"$model"}""", "v1", "messages")
 
         assertThatThrownBy { backend.prepareRequest(request) }
             .isExactlyInstanceOf(IllegalStateException::class.java)
