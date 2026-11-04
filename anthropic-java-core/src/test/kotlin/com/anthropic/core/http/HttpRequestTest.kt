@@ -253,7 +253,7 @@ internal class HttpRequestTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = [".", ".."])
+    @ValueSource(strings = [".", "..", ".;x", "..;x", "..;", "..;x;y"])
     fun addPathSegment_dotSegment_throws(segment: String) {
         val builder = HttpRequest.builder()
 
@@ -268,10 +268,25 @@ internal class HttpRequestTest {
             .hasMessageContaining("dot-segment")
     }
 
-    @Test
-    fun addPathParam_empty_throws() {
+    @ParameterizedTest
+    @ValueSource(strings = ["a;b", "a;", "...;x", "a..;x", "x;.."])
+    fun addPathParam_noDotSegmentBeforeSemicolon_isKept(value: String) {
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.GET)
+                .baseUrl("https://api.example.com")
+                .addPathParam("cardId", value)
+                .build()
+
+        assertThat(request.pathSegments).containsExactly(value)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["", ";", ";x", ";a=b"])
+    fun addPathParam_empty_throws(value: String) {
         assertThat(
-                runCatching { HttpRequest.builder().addPathParam("cardId", "") }.exceptionOrNull()
+                runCatching { HttpRequest.builder().addPathParam("cardId", value) }
+                    .exceptionOrNull()
             )
             .isInstanceOf(IllegalStateException::class.java)
             .hasMessageContaining("`cardId` must be non-empty")
