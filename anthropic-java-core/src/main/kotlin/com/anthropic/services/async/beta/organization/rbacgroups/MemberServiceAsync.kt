@@ -77,9 +77,9 @@ interface MemberServiceAsync {
      *   members to that group (directly or through an invite), remove its members, or delete it.
      *   Make the change in the organization's admin settings in Claude.
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
-     *   The API could not finish checking whether an RBAC Group in the request grants owner access
-     *   (the check reached a fixed limit), so it made no change. Retrying the same request will not
-     *   help. Make the change in the organization's admin settings in Claude.
+     *   The API could not finish checking whether an RBAC Group in the request grants owner access,
+     *   so it made no change. Retrying the same request will not help. Make the change in the
+     *   organization's admin settings in Claude.
      */
     fun add(rbacGroupId: String, params: MemberAddParams): CompletableFuture<BetaRbacGroupMember> =
         add(rbacGroupId, params, RequestOptions.none())
@@ -114,9 +114,9 @@ interface MemberServiceAsync {
      *   members to that group (directly or through an invite), remove its members, or delete it.
      *   Make the change in the organization's admin settings in Claude.
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
-     *   The API could not finish checking whether an RBAC Group in the request grants owner access
-     *   (the check reached a fixed limit), so it made no change. Retrying the same request will not
-     *   help. Make the change in the organization's admin settings in Claude.
+     *   The API could not finish checking whether an RBAC Group in the request grants owner access,
+     *   so it made no change. Retrying the same request will not help. Make the change in the
+     *   organization's admin settings in Claude.
      */
     fun remove(
         userId: String,

@@ -12,8 +12,8 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * The request's workspace encryption context could not be resolved, so the request was refused.
- * Retry in a few minutes.
+ * The workspace's encryption settings could not be read, so the request was refused. Retry in a few
+ * minutes.
  */
 class CmekContextUnavailableException
 private constructor(statusCode: Int, headers: Headers, body: JsonValue, cause: Throwable?) :

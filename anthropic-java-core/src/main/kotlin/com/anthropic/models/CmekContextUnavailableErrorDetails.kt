@@ -12,8 +12,8 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * The request's workspace encryption context could not be resolved, so the request was refused.
- * Retry in a few minutes.
+ * The workspace's encryption settings could not be read, so the request was refused. Retry in a few
+ * minutes.
  */
 class CmekContextUnavailableErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)

@@ -11,10 +11,7 @@ import com.anthropic.errors.BadRequestException
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * The content scan of the version in `plugin_version_id` failed, errored or reached no verdict, so
- * the version cannot be served.
- */
+/** The version in `plugin_version_id` did not pass its content scan, so it cannot be served. */
 class BetaScanFailedException
 private constructor(headers: Headers, body: JsonValue, cause: Throwable?) :
     BadRequestException(headers, body, cause) {

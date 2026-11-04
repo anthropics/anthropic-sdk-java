@@ -681,8 +681,8 @@ private constructor(
     fun fileExpired(): Optional<FileExpiredErrorDetails> = Optional.ofNullable(fileExpired)
 
     /**
-     * The request's workspace encryption context could not be resolved, so the request was refused.
-     * Retry in a few minutes.
+     * The workspace's encryption settings could not be read, so the request was refused. Retry in a
+     * few minutes.
      */
     fun cmekContextUnavailable(): Optional<CmekContextUnavailableErrorDetails> =
         Optional.ofNullable(cmekContextUnavailable)
@@ -750,9 +750,9 @@ private constructor(
         Optional.ofNullable(rbacGroupGrantsOwnerAccess)
 
     /**
-     * The API could not finish checking whether an RBAC Group in the request grants owner access
-     * (the check reached a fixed limit), so it made no change. Retrying the same request will not
-     * help. Make the change in the organization's admin settings in Claude.
+     * The API could not finish checking whether an RBAC Group in the request grants owner access,
+     * so it made no change. Retrying the same request will not help. Make the change in the
+     * organization's admin settings in Claude.
      */
     fun rbacGroupOwnerAccessUnconfirmed(): Optional<RbacGroupOwnerAccessUnconfirmedErrorDetails> =
         Optional.ofNullable(rbacGroupOwnerAccessUnconfirmed)
@@ -877,10 +877,7 @@ private constructor(
     fun registrationPending(): Optional<BetaRegistrationPendingErrorDetails> =
         Optional.ofNullable(registrationPending)
 
-    /**
-     * The content scan of the version in `plugin_version_id` failed, errored or reached no verdict,
-     * so the version cannot be served.
-     */
+    /** The version in `plugin_version_id` did not pass its content scan, so it cannot be served. */
     fun scanFailed(): Optional<BetaScanFailedErrorDetails> = Optional.ofNullable(scanFailed)
 
     /**
@@ -1268,8 +1265,8 @@ private constructor(
     fun asFileExpired(): FileExpiredErrorDetails = fileExpired.getOrThrow("fileExpired")
 
     /**
-     * The request's workspace encryption context could not be resolved, so the request was refused.
-     * Retry in a few minutes.
+     * The workspace's encryption settings could not be read, so the request was refused. Retry in a
+     * few minutes.
      */
     fun asCmekContextUnavailable(): CmekContextUnavailableErrorDetails =
         cmekContextUnavailable.getOrThrow("cmekContextUnavailable")
@@ -1339,9 +1336,9 @@ private constructor(
         rbacGroupGrantsOwnerAccess.getOrThrow("rbacGroupGrantsOwnerAccess")
 
     /**
-     * The API could not finish checking whether an RBAC Group in the request grants owner access
-     * (the check reached a fixed limit), so it made no change. Retrying the same request will not
-     * help. Make the change in the organization's admin settings in Claude.
+     * The API could not finish checking whether an RBAC Group in the request grants owner access,
+     * so it made no change. Retrying the same request will not help. Make the change in the
+     * organization's admin settings in Claude.
      */
     fun asRbacGroupOwnerAccessUnconfirmed(): RbacGroupOwnerAccessUnconfirmedErrorDetails =
         rbacGroupOwnerAccessUnconfirmed.getOrThrow("rbacGroupOwnerAccessUnconfirmed")
@@ -1465,10 +1462,7 @@ private constructor(
     fun asRegistrationPending(): BetaRegistrationPendingErrorDetails =
         registrationPending.getOrThrow("registrationPending")
 
-    /**
-     * The content scan of the version in `plugin_version_id` failed, errored or reached no verdict,
-     * so the version cannot be served.
-     */
+    /** The version in `plugin_version_id` did not pass its content scan, so it cannot be served. */
     fun asScanFailed(): BetaScanFailedErrorDetails = scanFailed.getOrThrow("scanFailed")
 
     /**
@@ -2408,8 +2402,8 @@ private constructor(
             ErrorDetails(fileExpired = fileExpired)
 
         /**
-         * The request's workspace encryption context could not be resolved, so the request was
-         * refused. Retry in a few minutes.
+         * The workspace's encryption settings could not be read, so the request was refused. Retry
+         * in a few minutes.
          */
         @JvmStatic
         fun ofCmekContextUnavailable(cmekContextUnavailable: CmekContextUnavailableErrorDetails) =
@@ -2498,8 +2492,8 @@ private constructor(
 
         /**
          * The API could not finish checking whether an RBAC Group in the request grants owner
-         * access (the check reached a fixed limit), so it made no change. Retrying the same request
-         * will not help. Make the change in the organization's admin settings in Claude.
+         * access, so it made no change. Retrying the same request will not help. Make the change in
+         * the organization's admin settings in Claude.
          */
         @JvmStatic
         fun ofRbacGroupOwnerAccessUnconfirmed(
@@ -2685,8 +2679,7 @@ private constructor(
             ErrorDetails(registrationPending = registrationPending)
 
         /**
-         * The content scan of the version in `plugin_version_id` failed, errored or reached no
-         * verdict, so the version cannot be served.
+         * The version in `plugin_version_id` did not pass its content scan, so it cannot be served.
          */
         @JvmStatic
         fun ofScanFailed(scanFailed: BetaScanFailedErrorDetails) =
@@ -3024,8 +3017,8 @@ private constructor(
         fun visitFileExpired(fileExpired: FileExpiredErrorDetails): T
 
         /**
-         * The request's workspace encryption context could not be resolved, so the request was
-         * refused. Retry in a few minutes.
+         * The workspace's encryption settings could not be read, so the request was refused. Retry
+         * in a few minutes.
          */
         fun visitCmekContextUnavailable(
             cmekContextUnavailable: CmekContextUnavailableErrorDetails
@@ -3099,8 +3092,8 @@ private constructor(
 
         /**
          * The API could not finish checking whether an RBAC Group in the request grants owner
-         * access (the check reached a fixed limit), so it made no change. Retrying the same request
-         * will not help. Make the change in the organization's admin settings in Claude.
+         * access, so it made no change. Retrying the same request will not help. Make the change in
+         * the organization's admin settings in Claude.
          */
         fun visitRbacGroupOwnerAccessUnconfirmed(
             rbacGroupOwnerAccessUnconfirmed: RbacGroupOwnerAccessUnconfirmedErrorDetails
@@ -3232,8 +3225,7 @@ private constructor(
         fun visitRegistrationPending(registrationPending: BetaRegistrationPendingErrorDetails): T
 
         /**
-         * The content scan of the version in `plugin_version_id` failed, errored or reached no
-         * verdict, so the version cannot be served.
+         * The version in `plugin_version_id` did not pass its content scan, so it cannot be served.
          */
         fun visitScanFailed(scanFailed: BetaScanFailedErrorDetails): T
 
