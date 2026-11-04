@@ -1,24 +1,42 @@
 # Changelog
 
-## [3.5.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.4.0...v3.5.0) (2026-11-03)
+## [3.5.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.4.0...v3.5.0) (2026-11-04)
 
 ### Features
 
 * **api:** add error details types and new error type values
+* **api:** add ids filter to list workspaces
+* **client:** add exception classes for HTTP statuses and API error codes, and errorCode(), errorDetails(), type() and apiMessage() on AnthropicServiceException; 408, 409, 412, 413, 431 and 499 now throw their own classes, no longer UnexpectedStatusCodeException
+* **client:** add requestId() and workspaceId() to AnthropicServiceException
 
 
 ### Bug Fixes
 
+* **api:** move some error details types to the resource they describe
 * **aws:** accept `ANTHROPIC_AWS_BASE_URL` without a region in `fromEnv()`
 * **bedrock,vertex:** throw when the Bedrock model ID or the Vertex project or region is empty, "." or ".." instead of sending the request to a different URL
+* **client:** percent-encode [ and ] in path parameters
+* **client:** reject ..;x, .;x and ;x in path parameters
+* **client:** throw when a Bedrock, Vertex or Google Cloud path value is empty, "." or ".." before its first ";", and send ";" unescaped in the Google Cloud base URL
 * **google-cloud:** percent-encode the project, location and workspace ID in the base URL, and throw when one of them is empty, "." or ".."
+* **vertex:** throw when the model is empty instead of sending the request to "/models/:rawPredict"
 
 
 ### Chores
 
 * **api:** update example values for pattern-constrained string fields
+* **docs:** clarify plugin reach values
+* **docs:** clarify plugin version description and plugin reach
+* **docs:** clarify plugin version description length
 * **docs:** clarify some API field descriptions
+* **docs:** clarify three error descriptions
+* **docs:** clarify which blocks to send back around a fallback block
+* **docs:** correct Claude Tag direct message notes in usage reports
+* **docs:** reword Dream and RBAC role permission descriptions
 * **docs:** update the telemetry destination headers description
+* **docs:** use the Claude Platform name in analytics filter docs
+* **internal:** accept changelog entry files in the changelog check
+* **internal:** move an error body helper into the core utilities
 
 
 ### Documentation
