@@ -1,6 +1,7 @@
 package com.anthropic.internal.telemetry
 
 import com.anthropic.core.ClientOptions
+import com.anthropic.core.JsonField
 import com.anthropic.core.opentelemetry.ApiCall
 import com.anthropic.helpers.BetaMessageAccumulator
 import com.anthropic.helpers.MessageAccumulator
@@ -9,7 +10,6 @@ import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.RawMessageStreamEvent
 import com.fasterxml.jackson.databind.JsonNode
-import io.opentelemetry.api.trace.Span
 
 /**
  * The [call] of a `messages.create` method whose request is on its span ([startMessagesCreate]),
@@ -25,21 +25,23 @@ internal class MessagesCreateRecording(
     private val requestContent: RequestContent?,
 ) {
 
-    /** Sets what comes from [message], the parsed response. */
-    fun recordResponse(message: Message) =
-        recordResponse({ setMessageAttributes(it, message) }) { message._content() }
+    /**
+     * Sets what is computed from [message], the parsed response, and its content. The call sets the
+     * attributes that its span data takes from the response itself.
+     */
+    fun recordResponse(message: Message) = recordResponse(message._usage()) { message._content() }
 
     /** [recordResponse] for the beta API. */
     fun recordResponse(message: BetaMessage) =
-        recordResponse({ setMessageAttributes(it, message) }) { message._content() }
+        recordResponse(message._usage()) { message._content() }
 
     /**
      * The response's content is fitted beside the request's, which the span already has, so that
      * the size limit counts both.
      */
-    private fun recordResponse(setMessageAttributes: (Span) -> Unit, content: () -> Any) =
+    private fun recordResponse(usage: JsonField<*>, content: () -> Any) =
         record(clientOptions, call.span, "Could not record the response on its span") { span ->
-            setMessageAttributes(span)
+            setUsageAttributes(span, usage)
             if (requestContent != null) {
                 val mapper = clientOptions.jsonMapper
                 setResponseContent(
@@ -68,7 +70,10 @@ internal class MessagesCreateRecording(
                 isMessageStop = { it.isMessageStop() },
                 isContentBlockDelta = { it.isContentBlockDelta() },
                 setMessageAttributes = { span, ended ->
-                    accumulator.partialMessage()?.let { setMessageAttributes(span, it, ended) }
+                    accumulator.partialMessage()?.let {
+                        span.setAllAttributes(streamedMessageAttributes(call, it, ended))
+                        setUsageAttributes(span, it._usage(), ended)
+                    }
                 },
                 content = { accumulator.partialMessage()?._content() },
             )
@@ -93,7 +98,10 @@ internal class MessagesCreateRecording(
                 isMessageStop = { it.isMessageStop() },
                 isContentBlockDelta = { it.isContentBlockDelta() },
                 setMessageAttributes = { span, ended ->
-                    accumulator.partialMessage()?.let { setMessageAttributes(span, it, ended) }
+                    accumulator.partialMessage()?.let {
+                        span.setAllAttributes(streamedMessageAttributes(call, it, ended))
+                        setUsageAttributes(span, it._usage(), ended)
+                    }
                 },
                 content = { accumulator.partialMessage()?._content() },
             )

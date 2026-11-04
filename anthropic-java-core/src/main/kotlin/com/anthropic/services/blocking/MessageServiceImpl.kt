@@ -20,8 +20,6 @@ import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
 import com.anthropic.helpers.warnIfThinkingEnabled
-import com.anthropic.internal.telemetry.recordCountTokensResponse
-import com.anthropic.internal.telemetry.startCountTokens
 import com.anthropic.internal.telemetry.startMessagesCreate
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.MessageCountTokensParams
@@ -198,8 +196,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val call = startCountTokens(clientOptions, requestOptions, params)
-            return traceApiCall(clientOptions, call) { client ->
+            return traceApiCall(clientOptions, params) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
                     response
@@ -209,7 +206,6 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                                 it.validate()
                             }
                         }
-                        .also { recordCountTokensResponse(clientOptions, call, it) }
                 }
             }
         }

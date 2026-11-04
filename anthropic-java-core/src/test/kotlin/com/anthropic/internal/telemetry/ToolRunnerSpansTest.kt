@@ -1225,8 +1225,8 @@ internal class ToolRunnerSpansTest : TracingTestSupport() {
     }
 
     /**
-     * Params whose `output_config` the application set as raw JSON, which the typed getter that the
-     * spans read rejects. The request itself is sent with it as it is.
+     * Params whose `output_config` the application set as raw JSON, which the spans read as not
+     * set. The request itself is sent with it as it is.
      */
     private fun paramsWithARawOutputConfig(): BetaMessageCreateParams =
         toolParams()
