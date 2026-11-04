@@ -735,7 +735,7 @@ private val CONTENT_QUERY_PARAMS = setOf("email", "path_prefix", "expected_conte
 
 /**
  * Percent-encodes the bytes of [value] that are in [encodeSet], controls, or not ASCII, which is
- * how OkHttp encodes the request's URL.
+ * how the SDK's HTTP client encodes the request's URL.
  */
 private fun percentEncode(value: String, encodeSet: String): String = buildString {
     for (byte in value.toByteArray()) {
@@ -750,7 +750,7 @@ private fun percentEncode(value: String, encodeSet: String): String = buildStrin
     }
 }
 
-private const val PATH_SEGMENT_ENCODE_SET = "\"<>^`{}|/\\?#%"
+private const val PATH_SEGMENT_ENCODE_SET = "\"<>[]^`{}|/\\?#%"
 
 private const val QUERY_ENCODE_SET = "!\"#$&'(),/:;<=>?@[]\\^`{|}~%+"
 

@@ -431,13 +431,37 @@ private fun requiresBody(method: HttpMethod): Boolean =
 
 private fun HttpRequest.toUrl(): String {
     val builder = baseUrl.toHttpUrl().newBuilder()
-    pathSegments.forEach(builder::addPathSegment)
+    pathSegments.forEach { builder.addEncodedPathSegment(it.encodePathSegment()) }
     queryParams.keys().forEach { key ->
         queryParams.values(key).forEach { builder.addQueryParameter(key, it) }
     }
 
     return builder.toString()
 }
+
+private fun String.encodePathSegment(): String {
+    if (all { it.code < 128 && PATH_SEGMENT_CHARS_TO_KEEP[it.code] }) {
+        return this
+    }
+    return buildString {
+        for (byte in this@encodePathSegment.toByteArray()) {
+            val code = byte.toInt() and 0xFF
+            if (code < 128 && PATH_SEGMENT_CHARS_TO_KEEP[code]) {
+                append(code.toChar())
+            } else {
+                append('%')
+                    .append("0123456789ABCDEF"[code shr 4])
+                    .append("0123456789ABCDEF"[code and 0xF])
+            }
+        }
+    }
+}
+
+private val PATH_SEGMENT_CHARS_TO_KEEP =
+    BooleanArray(128) {
+        val char = it.toChar()
+        char in 'A'..'Z' || char in 'a'..'z' || char in '0'..'9' || char in "-._~!$&'()*+,;=:@"
+    }
 
 private fun HttpRequestBody.toRequestBody(): RequestBody {
     val mediaType = contentType()?.toMediaType()

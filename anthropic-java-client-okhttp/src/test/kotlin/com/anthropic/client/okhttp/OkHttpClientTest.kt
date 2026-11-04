@@ -58,6 +58,27 @@ internal class OkHttpClientTest {
     }
 
     @Test
+    fun execute_percentEncodesPathSegments() {
+        stubFor(get(anyUrl()).willReturn(ok()))
+        val charsToEncode = " \"#%/<>?[\\]^`{|}é"
+        val charsToKeep = "-._~!$&'()*+,;=:@"
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.GET)
+                .baseUrl(baseUrl)
+                .addPathSegments(charsToEncode, charsToKeep)
+                .build()
+
+        httpClient.execute(request).close()
+
+        verify(
+            getRequestedFor(
+                urlEqualTo("/%20%22%23%25%2F%3C%3E%3F%5B%5C%5D%5E%60%7B%7C%7D%C3%A9/$charsToKeep")
+            )
+        )
+    }
+
+    @Test
     fun execute_followsRedirectsUnlessFollowRedirectsIsFalse() {
         stubFor(
             post(urlPathEqualTo("/something"))
