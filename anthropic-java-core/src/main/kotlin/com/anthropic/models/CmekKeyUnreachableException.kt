@@ -4,8 +4,8 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
-import com.anthropic.core.handlers.valueAt
 import com.anthropic.core.http.Headers
+import com.anthropic.core.valueAt
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.errors.ServiceUnavailableException
 import java.util.Optional

@@ -1,8 +1,8 @@
 package com.anthropic.errors
 
 import com.anthropic.core.JsonValue
-import com.anthropic.core.handlers.valueAt
 import com.anthropic.core.http.Headers
+import com.anthropic.core.valueAt
 import com.anthropic.models.ErrorDetails
 import com.anthropic.models.ErrorType
 import java.util.Optional

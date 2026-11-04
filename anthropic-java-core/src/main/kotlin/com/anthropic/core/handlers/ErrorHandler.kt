@@ -8,6 +8,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
+import com.anthropic.core.valueAt
 import com.anthropic.errors.AnthropicServiceException
 import com.anthropic.errors.BadRequestException
 import com.anthropic.errors.ClientClosedRequestException
@@ -102,7 +103,6 @@ import com.anthropic.models.userprofiles.UserProfileNotFoundException
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 @JvmSynthetic
@@ -569,18 +569,4 @@ private val errorCodeExceptions:
             { headers, body ->
                 CompactionUnavailableException.builder().headers(headers).body(body).build()
             },
-    )
-
-@JvmSynthetic
-internal inline fun <reified T : Any> JsonValue.valueAt(vararg path: String): Optional<T> =
-    Optional.ofNullable(
-        try {
-            path
-                .fold<String, JsonValue?>(this) { value, name ->
-                    value?.asObject()?.getOrNull()?.get(name)
-                }
-                ?.convert(jacksonTypeRef<T>())
-        } catch (e: java.lang.IllegalArgumentException) {
-            null
-        }
     )
