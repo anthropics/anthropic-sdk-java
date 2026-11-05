@@ -89,6 +89,8 @@ import com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededException
 import com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededException
 import com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
 import com.anthropic.models.organization.externalkeys.ExternalKeyInWorkspacePolicyException
+import com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
+import com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
 import com.anthropic.models.organization.invites.AlreadyMemberException
 import com.anthropic.models.organization.invites.CannotInviteEmailsWithUnverifiedDomainsException
 import com.anthropic.models.organization.invites.EmailDomainNotAllowedException
@@ -327,6 +329,14 @@ private val errorCodeExceptions:
         (400 to "external_key_in_workspace_policy") to
             { headers, body ->
                 ExternalKeyInWorkspacePolicyException.builder().headers(headers).body(body).build()
+            },
+        (400 to "external_key_validation_failed") to
+            { headers, body ->
+                ExternalKeyValidationFailedException.builder().headers(headers).body(body).build()
+            },
+        (400 to "external_key_validation_timed_out") to
+            { headers, body ->
+                ExternalKeyValidationTimedOutException.builder().headers(headers).body(body).build()
             },
         (400 to "file_not_downloadable") to
             { headers, body ->

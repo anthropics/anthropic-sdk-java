@@ -58,6 +58,8 @@ import com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededErrorDeta
 import com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededErrorDetails
 import com.anthropic.models.organization.externalkeys.ExternalKeyChangedErrorDetails
 import com.anthropic.models.organization.externalkeys.ExternalKeyInWorkspacePolicyErrorDetails
+import com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedErrorDetails
+import com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutErrorDetails
 import com.anthropic.models.organization.invites.AlreadyMemberErrorDetails
 import com.anthropic.models.organization.invites.CannotInviteEmailsWithUnverifiedDomainsErrorDetails
 import com.anthropic.models.organization.invites.EmailDomainNotAllowedErrorDetails
@@ -138,6 +140,8 @@ private constructor(
         null,
     private val cannotRemoveLastMember: CannotRemoveLastMemberErrorDetails? = null,
     private val concurrentMembershipChange: ConcurrentMembershipChangeErrorDetails? = null,
+    private val externalKeyValidationFailed: ExternalKeyValidationFailedErrorDetails? = null,
+    private val externalKeyValidationTimedOut: ExternalKeyValidationTimedOutErrorDetails? = null,
     private val keyProfileMismatch: KeyProfileMismatchErrorDetails? = null,
     private val workspacePolicyViolation: WorkspacePolicyViolationErrorDetails? = null,
     private val externalKeyChanged: ExternalKeyChangedErrorDetails? = null,
@@ -230,6 +234,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> ErrorCode.RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED
             cannotRemoveLastMember != null -> ErrorCode.CANNOT_REMOVE_LAST_MEMBER
             concurrentMembershipChange != null -> ErrorCode.CONCURRENT_MEMBERSHIP_CHANGE
+            externalKeyValidationFailed != null -> ErrorCode.EXTERNAL_KEY_VALIDATION_FAILED
+            externalKeyValidationTimedOut != null -> ErrorCode.EXTERNAL_KEY_VALIDATION_TIMED_OUT
             keyProfileMismatch != null -> ErrorCode.KEY_PROFILE_MISMATCH
             workspacePolicyViolation != null -> ErrorCode.WORKSPACE_POLICY_VIOLATION
             externalKeyChanged != null -> ErrorCode.EXTERNAL_KEY_CHANGED
@@ -315,6 +321,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> Optional.empty()
             cannotRemoveLastMember != null -> Optional.empty()
             concurrentMembershipChange != null -> Optional.empty()
+            externalKeyValidationFailed != null -> Optional.empty()
+            externalKeyValidationTimedOut != null -> Optional.empty()
             keyProfileMismatch != null -> Optional.empty()
             workspacePolicyViolation != null -> Optional.empty()
             externalKeyChanged != null -> Optional.empty()
@@ -393,6 +401,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> Optional.empty()
             cannotRemoveLastMember != null -> Optional.empty()
             concurrentMembershipChange != null -> Optional.empty()
+            externalKeyValidationFailed != null -> Optional.empty()
+            externalKeyValidationTimedOut != null -> Optional.empty()
             keyProfileMismatch != null -> Optional.empty()
             workspacePolicyViolation != null -> Optional.empty()
             externalKeyChanged != null -> Optional.empty()
@@ -471,6 +481,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> Optional.empty()
             cannotRemoveLastMember != null -> Optional.empty()
             concurrentMembershipChange != null -> Optional.empty()
+            externalKeyValidationFailed != null -> Optional.empty()
+            externalKeyValidationTimedOut != null -> Optional.empty()
             keyProfileMismatch != null -> Optional.empty()
             workspacePolicyViolation != null -> Optional.empty()
             externalKeyChanged != null -> Optional.empty()
@@ -781,6 +793,20 @@ private constructor(
         Optional.ofNullable(concurrentMembershipChange)
 
     /**
+     * The External Key failed Anthropic's validation, so the request was refused. The message gives
+     * the reason, if there is one.
+     */
+    fun externalKeyValidationFailed(): Optional<ExternalKeyValidationFailedErrorDetails> =
+        Optional.ofNullable(externalKeyValidationFailed)
+
+    /**
+     * Anthropic's validation of the External Key did not finish in time, so the request was
+     * refused. Wait a moment, then send the request again.
+     */
+    fun externalKeyValidationTimedOut(): Optional<ExternalKeyValidationTimedOutErrorDetails> =
+        Optional.ofNullable(externalKeyValidationTimedOut)
+
+    /**
      * The External Key is bound to a user profile, and the Workspace does not have that user
      * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
      * bound to one.
@@ -1039,6 +1065,10 @@ private constructor(
     fun isCannotRemoveLastMember(): Boolean = cannotRemoveLastMember != null
 
     fun isConcurrentMembershipChange(): Boolean = concurrentMembershipChange != null
+
+    fun isExternalKeyValidationFailed(): Boolean = externalKeyValidationFailed != null
+
+    fun isExternalKeyValidationTimedOut(): Boolean = externalKeyValidationTimedOut != null
 
     fun isKeyProfileMismatch(): Boolean = keyProfileMismatch != null
 
@@ -1376,6 +1406,20 @@ private constructor(
         concurrentMembershipChange.getOrThrow("concurrentMembershipChange")
 
     /**
+     * The External Key failed Anthropic's validation, so the request was refused. The message gives
+     * the reason, if there is one.
+     */
+    fun asExternalKeyValidationFailed(): ExternalKeyValidationFailedErrorDetails =
+        externalKeyValidationFailed.getOrThrow("externalKeyValidationFailed")
+
+    /**
+     * Anthropic's validation of the External Key did not finish in time, so the request was
+     * refused. Wait a moment, then send the request again.
+     */
+    fun asExternalKeyValidationTimedOut(): ExternalKeyValidationTimedOutErrorDetails =
+        externalKeyValidationTimedOut.getOrThrow("externalKeyValidationTimedOut")
+
+    /**
      * The External Key is bound to a user profile, and the Workspace does not have that user
      * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
      * bound to one.
@@ -1653,6 +1697,10 @@ private constructor(
                 visitor.visitCannotRemoveLastMember(cannotRemoveLastMember)
             concurrentMembershipChange != null ->
                 visitor.visitConcurrentMembershipChange(concurrentMembershipChange)
+            externalKeyValidationFailed != null ->
+                visitor.visitExternalKeyValidationFailed(externalKeyValidationFailed)
+            externalKeyValidationTimedOut != null ->
+                visitor.visitExternalKeyValidationTimedOut(externalKeyValidationTimedOut)
             keyProfileMismatch != null -> visitor.visitKeyProfileMismatch(keyProfileMismatch)
             workspacePolicyViolation != null ->
                 visitor.visitWorkspacePolicyViolation(workspacePolicyViolation)
@@ -1766,6 +1814,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> rbacGroupOwnerAccessUnconfirmed.validate()
             cannotRemoveLastMember != null -> cannotRemoveLastMember.validate()
             concurrentMembershipChange != null -> concurrentMembershipChange.validate()
+            externalKeyValidationFailed != null -> externalKeyValidationFailed.validate()
+            externalKeyValidationTimedOut != null -> externalKeyValidationTimedOut.validate()
             keyProfileMismatch != null -> keyProfileMismatch.validate()
             workspacePolicyViolation != null -> workspacePolicyViolation.validate()
             externalKeyChanged != null -> externalKeyChanged.validate()
@@ -1866,6 +1916,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> rbacGroupOwnerAccessUnconfirmed.validity()
             cannotRemoveLastMember != null -> cannotRemoveLastMember.validity()
             concurrentMembershipChange != null -> concurrentMembershipChange.validity()
+            externalKeyValidationFailed != null -> externalKeyValidationFailed.validity()
+            externalKeyValidationTimedOut != null -> externalKeyValidationTimedOut.validity()
             keyProfileMismatch != null -> keyProfileMismatch.validity()
             workspacePolicyViolation != null -> workspacePolicyViolation.validity()
             externalKeyChanged != null -> externalKeyChanged.validity()
@@ -1954,6 +2006,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed == other.rbacGroupOwnerAccessUnconfirmed &&
             cannotRemoveLastMember == other.cannotRemoveLastMember &&
             concurrentMembershipChange == other.concurrentMembershipChange &&
+            externalKeyValidationFailed == other.externalKeyValidationFailed &&
+            externalKeyValidationTimedOut == other.externalKeyValidationTimedOut &&
             keyProfileMismatch == other.keyProfileMismatch &&
             workspacePolicyViolation == other.workspacePolicyViolation &&
             externalKeyChanged == other.externalKeyChanged &&
@@ -2031,6 +2085,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed,
             cannotRemoveLastMember,
             concurrentMembershipChange,
+            externalKeyValidationFailed,
+            externalKeyValidationTimedOut,
             keyProfileMismatch,
             workspacePolicyViolation,
             externalKeyChanged,
@@ -2143,6 +2199,10 @@ private constructor(
                 "ErrorDetails{cannotRemoveLastMember=$cannotRemoveLastMember}"
             concurrentMembershipChange != null ->
                 "ErrorDetails{concurrentMembershipChange=$concurrentMembershipChange}"
+            externalKeyValidationFailed != null ->
+                "ErrorDetails{externalKeyValidationFailed=$externalKeyValidationFailed}"
+            externalKeyValidationTimedOut != null ->
+                "ErrorDetails{externalKeyValidationTimedOut=$externalKeyValidationTimedOut}"
             keyProfileMismatch != null -> "ErrorDetails{keyProfileMismatch=$keyProfileMismatch}"
             workspacePolicyViolation != null ->
                 "ErrorDetails{workspacePolicyViolation=$workspacePolicyViolation}"
@@ -2550,6 +2610,24 @@ private constructor(
         fun ofConcurrentMembershipChange(
             concurrentMembershipChange: ConcurrentMembershipChangeErrorDetails
         ) = ErrorDetails(concurrentMembershipChange = concurrentMembershipChange)
+
+        /**
+         * The External Key failed Anthropic's validation, so the request was refused. The message
+         * gives the reason, if there is one.
+         */
+        @JvmStatic
+        fun ofExternalKeyValidationFailed(
+            externalKeyValidationFailed: ExternalKeyValidationFailedErrorDetails
+        ) = ErrorDetails(externalKeyValidationFailed = externalKeyValidationFailed)
+
+        /**
+         * Anthropic's validation of the External Key did not finish in time, so the request was
+         * refused. Wait a moment, then send the request again.
+         */
+        @JvmStatic
+        fun ofExternalKeyValidationTimedOut(
+            externalKeyValidationTimedOut: ExternalKeyValidationTimedOutErrorDetails
+        ) = ErrorDetails(externalKeyValidationTimedOut = externalKeyValidationTimedOut)
 
         /**
          * The External Key is bound to a user profile, and the Workspace does not have that user
@@ -3156,6 +3234,22 @@ private constructor(
         ): T
 
         /**
+         * The External Key failed Anthropic's validation, so the request was refused. The message
+         * gives the reason, if there is one.
+         */
+        fun visitExternalKeyValidationFailed(
+            externalKeyValidationFailed: ExternalKeyValidationFailedErrorDetails
+        ): T
+
+        /**
+         * Anthropic's validation of the External Key did not finish in time, so the request was
+         * refused. Wait a moment, then send the request again.
+         */
+        fun visitExternalKeyValidationTimedOut(
+            externalKeyValidationTimedOut: ExternalKeyValidationTimedOutErrorDetails
+        ): T
+
+        /**
          * The External Key is bound to a user profile, and the Workspace does not have that user
          * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
          * bound to one.
@@ -3674,6 +3768,22 @@ private constructor(
                         ?.let { ErrorDetails(concurrentMembershipChange = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "external_key_validation_failed" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ExternalKeyValidationFailedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(externalKeyValidationFailed = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "external_key_validation_timed_out" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ExternalKeyValidationTimedOutErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(externalKeyValidationTimedOut = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "key_profile_mismatch" -> {
                     return tryDeserialize(node, jacksonTypeRef<KeyProfileMismatchErrorDetails>())
                         ?.let { ErrorDetails(keyProfileMismatch = it, _json = json) }
@@ -3967,6 +4077,10 @@ private constructor(
                     generator.writeObject(value.cannotRemoveLastMember)
                 value.concurrentMembershipChange != null ->
                     generator.writeObject(value.concurrentMembershipChange)
+                value.externalKeyValidationFailed != null ->
+                    generator.writeObject(value.externalKeyValidationFailed)
+                value.externalKeyValidationTimedOut != null ->
+                    generator.writeObject(value.externalKeyValidationTimedOut)
                 value.keyProfileMismatch != null -> generator.writeObject(value.keyProfileMismatch)
                 value.workspacePolicyViolation != null ->
                     generator.writeObject(value.workspacePolicyViolation)
@@ -4173,6 +4287,14 @@ private constructor(
             val CONCURRENT_MEMBERSHIP_CHANGE =
                 ErrorCode(JsonField.of("concurrent_membership_change"))
 
+            @JvmField
+            val EXTERNAL_KEY_VALIDATION_FAILED =
+                ErrorCode(JsonField.of("external_key_validation_failed"))
+
+            @JvmField
+            val EXTERNAL_KEY_VALIDATION_TIMED_OUT =
+                ErrorCode(JsonField.of("external_key_validation_timed_out"))
+
             @JvmField val KEY_PROFILE_MISMATCH = ErrorCode(JsonField.of("key_profile_mismatch"))
 
             @JvmField
@@ -4302,6 +4424,8 @@ private constructor(
                     "rbac_group_owner_access_unconfirmed" -> RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED
                     "cannot_remove_last_member" -> CANNOT_REMOVE_LAST_MEMBER
                     "concurrent_membership_change" -> CONCURRENT_MEMBERSHIP_CHANGE
+                    "external_key_validation_failed" -> EXTERNAL_KEY_VALIDATION_FAILED
+                    "external_key_validation_timed_out" -> EXTERNAL_KEY_VALIDATION_TIMED_OUT
                     "key_profile_mismatch" -> KEY_PROFILE_MISMATCH
                     "workspace_policy_violation" -> WORKSPACE_POLICY_VIOLATION
                     "external_key_changed" -> EXTERNAL_KEY_CHANGED
@@ -4390,6 +4514,8 @@ private constructor(
             RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED,
             CANNOT_REMOVE_LAST_MEMBER,
             CONCURRENT_MEMBERSHIP_CHANGE,
+            EXTERNAL_KEY_VALIDATION_FAILED,
+            EXTERNAL_KEY_VALIDATION_TIMED_OUT,
             KEY_PROFILE_MISMATCH,
             WORKSPACE_POLICY_VIOLATION,
             EXTERNAL_KEY_CHANGED,
@@ -4475,6 +4601,8 @@ private constructor(
             RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED,
             CANNOT_REMOVE_LAST_MEMBER,
             CONCURRENT_MEMBERSHIP_CHANGE,
+            EXTERNAL_KEY_VALIDATION_FAILED,
+            EXTERNAL_KEY_VALIDATION_TIMED_OUT,
             KEY_PROFILE_MISMATCH,
             WORKSPACE_POLICY_VIOLATION,
             EXTERNAL_KEY_CHANGED,
@@ -4564,6 +4692,8 @@ private constructor(
                 RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED -> Value.RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED
                 CANNOT_REMOVE_LAST_MEMBER -> Value.CANNOT_REMOVE_LAST_MEMBER
                 CONCURRENT_MEMBERSHIP_CHANGE -> Value.CONCURRENT_MEMBERSHIP_CHANGE
+                EXTERNAL_KEY_VALIDATION_FAILED -> Value.EXTERNAL_KEY_VALIDATION_FAILED
+                EXTERNAL_KEY_VALIDATION_TIMED_OUT -> Value.EXTERNAL_KEY_VALIDATION_TIMED_OUT
                 KEY_PROFILE_MISMATCH -> Value.KEY_PROFILE_MISMATCH
                 WORKSPACE_POLICY_VIOLATION -> Value.WORKSPACE_POLICY_VIOLATION
                 EXTERNAL_KEY_CHANGED -> Value.EXTERNAL_KEY_CHANGED
@@ -4656,6 +4786,8 @@ private constructor(
                 RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED -> Known.RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED
                 CANNOT_REMOVE_LAST_MEMBER -> Known.CANNOT_REMOVE_LAST_MEMBER
                 CONCURRENT_MEMBERSHIP_CHANGE -> Known.CONCURRENT_MEMBERSHIP_CHANGE
+                EXTERNAL_KEY_VALIDATION_FAILED -> Known.EXTERNAL_KEY_VALIDATION_FAILED
+                EXTERNAL_KEY_VALIDATION_TIMED_OUT -> Known.EXTERNAL_KEY_VALIDATION_TIMED_OUT
                 KEY_PROFILE_MISMATCH -> Known.KEY_PROFILE_MISMATCH
                 WORKSPACE_POLICY_VIOLATION -> Known.WORKSPACE_POLICY_VIOLATION
                 EXTERNAL_KEY_CHANGED -> Known.EXTERNAL_KEY_CHANGED

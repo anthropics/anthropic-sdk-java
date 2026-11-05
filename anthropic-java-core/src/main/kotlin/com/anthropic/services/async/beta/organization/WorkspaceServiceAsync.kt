@@ -39,6 +39,8 @@ interface WorkspaceServiceAsync {
     /**
      * Create Workspace
      *
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
      * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
      * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
      * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
@@ -91,6 +93,8 @@ interface WorkspaceServiceAsync {
     /**
      * Update Workspace
      *
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
      * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
      * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
      * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
