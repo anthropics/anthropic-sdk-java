@@ -68,6 +68,7 @@ interface MessageServiceAsync {
      * @throws com.anthropic.models.skills.SkillReadBlockedUndecryptableException
      * @throws com.anthropic.models.RequestBodyTooLargeAfterDecodingException
      * @throws com.anthropic.models.EnforcedSpendLimitReachedException
+     * @throws com.anthropic.models.RampLimitExceededException
      * @throws com.anthropic.models.CmekKeyUnreachableException
      * @throws com.anthropic.models.messages.CompactionUnavailableException
      */
@@ -141,6 +142,7 @@ interface MessageServiceAsync {
      * @throws com.anthropic.models.skills.SkillReadBlockedUndecryptableException
      * @throws com.anthropic.models.RequestBodyTooLargeAfterDecodingException
      * @throws com.anthropic.models.EnforcedSpendLimitReachedException
+     * @throws com.anthropic.models.RampLimitExceededException
      * @throws com.anthropic.models.CmekKeyUnreachableException
      * @throws com.anthropic.models.messages.CompactionUnavailableException
      */

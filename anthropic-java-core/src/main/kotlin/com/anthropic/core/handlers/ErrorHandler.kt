@@ -37,6 +37,7 @@ import com.anthropic.models.CmekKeyUnreachableException
 import com.anthropic.models.EnforcedSpendLimitReachedException
 import com.anthropic.models.OrganizationOnHoldException
 import com.anthropic.models.OrganizationTypeNotSupportedException
+import com.anthropic.models.RampLimitExceededException
 import com.anthropic.models.RequestBodyEncodingInvalidException
 import com.anthropic.models.RequestBodyEncodingUnsupportedException
 import com.anthropic.models.RequestBodyTooLargeAfterDecodingException
@@ -552,6 +553,10 @@ private val errorCodeExceptions:
         (429 to "enforced_spend_limit_reached") to
             { headers, body ->
                 EnforcedSpendLimitReachedException.builder().headers(headers).body(body).build()
+            },
+        (429 to "ramp_limit_exceeded") to
+            { headers, body ->
+                RampLimitExceededException.builder().headers(headers).body(body).build()
             },
         (503 to "cmek_context_unavailable") to
             { headers, body ->

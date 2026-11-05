@@ -115,6 +115,7 @@ private constructor(
     private val requestBodyTooLargeAfterDecoding: RequestBodyTooLargeAfterDecodingErrorDetails? =
         null,
     private val enforcedSpendLimitReached: EnforcedSpendLimitReachedErrorDetails? = null,
+    private val rampLimitExceeded: RampLimitExceededErrorDetails? = null,
     private val cmekKeyUnreachable: CmekKeyUnreachableErrorDetails? = null,
     private val compactionUnavailable: CompactionUnavailableErrorDetails? = null,
     private val storageQuotaExceeded: StorageQuotaExceededErrorDetails? = null,
@@ -208,6 +209,7 @@ private constructor(
             requestBodyTooLargeAfterDecoding != null ->
                 ErrorCode.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
             enforcedSpendLimitReached != null -> ErrorCode.ENFORCED_SPEND_LIMIT_REACHED
+            rampLimitExceeded != null -> ErrorCode.RAMP_LIMIT_EXCEEDED
             cmekKeyUnreachable != null -> ErrorCode.CMEK_KEY_UNREACHABLE
             compactionUnavailable != null -> ErrorCode.COMPACTION_UNAVAILABLE
             storageQuotaExceeded != null -> ErrorCode.STORAGE_QUOTA_EXCEEDED
@@ -293,6 +295,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
+            rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
@@ -370,6 +373,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
+            rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
@@ -447,6 +451,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
+            rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
@@ -650,6 +655,13 @@ private constructor(
     /** The organization has crossed the monthly API usage threshold of its API tier. */
     fun enforcedSpendLimitReached(): Optional<EnforcedSpendLimitReachedErrorDetails> =
         Optional.ofNullable(enforcedSpendLimitReached)
+
+    /**
+     * The request would exceed a ramp limit, which caps how fast usage can grow. Retry after the
+     * time in the `retry-after` header.
+     */
+    fun rampLimitExceeded(): Optional<RampLimitExceededErrorDetails> =
+        Optional.ofNullable(rampLimitExceeded)
 
     /**
      * The workspace's customer-managed encryption key could not be reached. Retry the request; if
@@ -987,6 +999,8 @@ private constructor(
 
     fun isEnforcedSpendLimitReached(): Boolean = enforcedSpendLimitReached != null
 
+    fun isRampLimitExceeded(): Boolean = rampLimitExceeded != null
+
     fun isCmekKeyUnreachable(): Boolean = cmekKeyUnreachable != null
 
     fun isCompactionUnavailable(): Boolean = compactionUnavailable != null
@@ -1234,6 +1248,13 @@ private constructor(
     /** The organization has crossed the monthly API usage threshold of its API tier. */
     fun asEnforcedSpendLimitReached(): EnforcedSpendLimitReachedErrorDetails =
         enforcedSpendLimitReached.getOrThrow("enforcedSpendLimitReached")
+
+    /**
+     * The request would exceed a ramp limit, which caps how fast usage can grow. Retry after the
+     * time in the `retry-after` header.
+     */
+    fun asRampLimitExceeded(): RampLimitExceededErrorDetails =
+        rampLimitExceeded.getOrThrow("rampLimitExceeded")
 
     /**
      * The workspace's customer-managed encryption key could not be reached. Retry the request; if
@@ -1598,6 +1619,7 @@ private constructor(
                 visitor.visitRequestBodyTooLargeAfterDecoding(requestBodyTooLargeAfterDecoding)
             enforcedSpendLimitReached != null ->
                 visitor.visitEnforcedSpendLimitReached(enforcedSpendLimitReached)
+            rampLimitExceeded != null -> visitor.visitRampLimitExceeded(rampLimitExceeded)
             cmekKeyUnreachable != null -> visitor.visitCmekKeyUnreachable(cmekKeyUnreachable)
             compactionUnavailable != null ->
                 visitor.visitCompactionUnavailable(compactionUnavailable)
@@ -1723,6 +1745,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> skillReadBlockedUndecryptable.validate()
             requestBodyTooLargeAfterDecoding != null -> requestBodyTooLargeAfterDecoding.validate()
             enforcedSpendLimitReached != null -> enforcedSpendLimitReached.validate()
+            rampLimitExceeded != null -> rampLimitExceeded.validate()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validate()
             compactionUnavailable != null -> compactionUnavailable.validate()
             storageQuotaExceeded != null -> storageQuotaExceeded.validate()
@@ -1822,6 +1845,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> skillReadBlockedUndecryptable.validity()
             requestBodyTooLargeAfterDecoding != null -> requestBodyTooLargeAfterDecoding.validity()
             enforcedSpendLimitReached != null -> enforcedSpendLimitReached.validity()
+            rampLimitExceeded != null -> rampLimitExceeded.validity()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validity()
             compactionUnavailable != null -> compactionUnavailable.validity()
             storageQuotaExceeded != null -> storageQuotaExceeded.validity()
@@ -1909,6 +1933,7 @@ private constructor(
             skillReadBlockedUndecryptable == other.skillReadBlockedUndecryptable &&
             requestBodyTooLargeAfterDecoding == other.requestBodyTooLargeAfterDecoding &&
             enforcedSpendLimitReached == other.enforcedSpendLimitReached &&
+            rampLimitExceeded == other.rampLimitExceeded &&
             cmekKeyUnreachable == other.cmekKeyUnreachable &&
             compactionUnavailable == other.compactionUnavailable &&
             storageQuotaExceeded == other.storageQuotaExceeded &&
@@ -1986,6 +2011,7 @@ private constructor(
             skillReadBlockedUndecryptable,
             requestBodyTooLargeAfterDecoding,
             enforcedSpendLimitReached,
+            rampLimitExceeded,
             cmekKeyUnreachable,
             compactionUnavailable,
             storageQuotaExceeded,
@@ -2084,6 +2110,7 @@ private constructor(
                 "ErrorDetails{requestBodyTooLargeAfterDecoding=$requestBodyTooLargeAfterDecoding}"
             enforcedSpendLimitReached != null ->
                 "ErrorDetails{enforcedSpendLimitReached=$enforcedSpendLimitReached}"
+            rampLimitExceeded != null -> "ErrorDetails{rampLimitExceeded=$rampLimitExceeded}"
             cmekKeyUnreachable != null -> "ErrorDetails{cmekKeyUnreachable=$cmekKeyUnreachable}"
             compactionUnavailable != null ->
                 "ErrorDetails{compactionUnavailable=$compactionUnavailable}"
@@ -2363,6 +2390,14 @@ private constructor(
         fun ofEnforcedSpendLimitReached(
             enforcedSpendLimitReached: EnforcedSpendLimitReachedErrorDetails
         ) = ErrorDetails(enforcedSpendLimitReached = enforcedSpendLimitReached)
+
+        /**
+         * The request would exceed a ramp limit, which caps how fast usage can grow. Retry after
+         * the time in the `retry-after` header.
+         */
+        @JvmStatic
+        fun ofRampLimitExceeded(rampLimitExceeded: RampLimitExceededErrorDetails) =
+            ErrorDetails(rampLimitExceeded = rampLimitExceeded)
 
         /**
          * The workspace's customer-managed encryption key could not be reached. Retry the request;
@@ -2990,6 +3025,12 @@ private constructor(
         ): T
 
         /**
+         * The request would exceed a ramp limit, which caps how fast usage can grow. Retry after
+         * the time in the `retry-after` header.
+         */
+        fun visitRampLimitExceeded(rampLimitExceeded: RampLimitExceededErrorDetails): T
+
+        /**
          * The workspace's customer-managed encryption key could not be reached. Retry the request;
          * if this continues, check that the key is available in your key management service, or
          * contact Anthropic support.
@@ -3502,6 +3543,11 @@ private constructor(
                         ?.let { ErrorDetails(enforcedSpendLimitReached = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "ramp_limit_exceeded" -> {
+                    return tryDeserialize(node, jacksonTypeRef<RampLimitExceededErrorDetails>())
+                        ?.let { ErrorDetails(rampLimitExceeded = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "cmek_key_unreachable" -> {
                     return tryDeserialize(node, jacksonTypeRef<CmekKeyUnreachableErrorDetails>())
                         ?.let { ErrorDetails(cmekKeyUnreachable = it, _json = json) }
@@ -3885,6 +3931,7 @@ private constructor(
                     generator.writeObject(value.requestBodyTooLargeAfterDecoding)
                 value.enforcedSpendLimitReached != null ->
                     generator.writeObject(value.enforcedSpendLimitReached)
+                value.rampLimitExceeded != null -> generator.writeObject(value.rampLimitExceeded)
                 value.cmekKeyUnreachable != null -> generator.writeObject(value.cmekKeyUnreachable)
                 value.compactionUnavailable != null ->
                     generator.writeObject(value.compactionUnavailable)
@@ -4069,6 +4116,8 @@ private constructor(
             val ENFORCED_SPEND_LIMIT_REACHED =
                 ErrorCode(JsonField.of("enforced_spend_limit_reached"))
 
+            @JvmField val RAMP_LIMIT_EXCEEDED = ErrorCode(JsonField.of("ramp_limit_exceeded"))
+
             @JvmField val CMEK_KEY_UNREACHABLE = ErrorCode(JsonField.of("cmek_key_unreachable"))
 
             @JvmField val COMPACTION_UNAVAILABLE = ErrorCode(JsonField.of("compaction_unavailable"))
@@ -4232,6 +4281,7 @@ private constructor(
                     "skill_read_blocked_undecryptable" -> SKILL_READ_BLOCKED_UNDECRYPTABLE
                     "request_body_too_large_after_decoding" -> REQUEST_BODY_TOO_LARGE_AFTER_DECODING
                     "enforced_spend_limit_reached" -> ENFORCED_SPEND_LIMIT_REACHED
+                    "ramp_limit_exceeded" -> RAMP_LIMIT_EXCEEDED
                     "cmek_key_unreachable" -> CMEK_KEY_UNREACHABLE
                     "compaction_unavailable" -> COMPACTION_UNAVAILABLE
                     "storage_quota_exceeded" -> STORAGE_QUOTA_EXCEEDED
@@ -4320,6 +4370,7 @@ private constructor(
             SKILL_READ_BLOCKED_UNDECRYPTABLE,
             REQUEST_BODY_TOO_LARGE_AFTER_DECODING,
             ENFORCED_SPEND_LIMIT_REACHED,
+            RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
             COMPACTION_UNAVAILABLE,
             STORAGE_QUOTA_EXCEEDED,
@@ -4404,6 +4455,7 @@ private constructor(
             SKILL_READ_BLOCKED_UNDECRYPTABLE,
             REQUEST_BODY_TOO_LARGE_AFTER_DECODING,
             ENFORCED_SPEND_LIMIT_REACHED,
+            RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
             COMPACTION_UNAVAILABLE,
             STORAGE_QUOTA_EXCEEDED,
@@ -4491,6 +4543,7 @@ private constructor(
                 SKILL_READ_BLOCKED_UNDECRYPTABLE -> Value.SKILL_READ_BLOCKED_UNDECRYPTABLE
                 REQUEST_BODY_TOO_LARGE_AFTER_DECODING -> Value.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
                 ENFORCED_SPEND_LIMIT_REACHED -> Value.ENFORCED_SPEND_LIMIT_REACHED
+                RAMP_LIMIT_EXCEEDED -> Value.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Value.CMEK_KEY_UNREACHABLE
                 COMPACTION_UNAVAILABLE -> Value.COMPACTION_UNAVAILABLE
                 STORAGE_QUOTA_EXCEEDED -> Value.STORAGE_QUOTA_EXCEEDED
@@ -4582,6 +4635,7 @@ private constructor(
                 SKILL_READ_BLOCKED_UNDECRYPTABLE -> Known.SKILL_READ_BLOCKED_UNDECRYPTABLE
                 REQUEST_BODY_TOO_LARGE_AFTER_DECODING -> Known.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
                 ENFORCED_SPEND_LIMIT_REACHED -> Known.ENFORCED_SPEND_LIMIT_REACHED
+                RAMP_LIMIT_EXCEEDED -> Known.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Known.CMEK_KEY_UNREACHABLE
                 COMPACTION_UNAVAILABLE -> Known.COMPACTION_UNAVAILABLE
                 STORAGE_QUOTA_EXCEEDED -> Known.STORAGE_QUOTA_EXCEEDED
