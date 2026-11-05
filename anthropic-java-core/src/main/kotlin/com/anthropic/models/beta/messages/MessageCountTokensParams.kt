@@ -16,6 +16,7 @@ import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
+import com.anthropic.core.opentelemetry.putField
 import com.anthropic.core.toField
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -32,6 +33,8 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import io.opentelemetry.api.common.AttributeKey
+import io.opentelemetry.api.common.Attributes
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -1466,7 +1469,30 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     override fun _spanData(): SpanData =
-        SpanData(name = "anthropic.messages.count_tokens", route = "/v1/messages/count_tokens")
+        SpanData(
+            name = "anthropic.messages.count_tokens",
+            route = "/v1/messages/count_tokens",
+            requestAttributes = {
+                Attributes.builder()
+                    .putField(
+                        AttributeKey.stringKey("gen_ai.request.model"),
+                        _model().asKnown().getOrNull()?._value(),
+                    )
+                    .build()
+            },
+            responseAttributes = { response ->
+                if (response is BetaMessageTokensCount) {
+                    Attributes.builder()
+                        .putField(
+                            AttributeKey.longKey("anthropic.message.count_tokens.input_tokens"),
+                            response._inputTokens(),
+                        )
+                        .build()
+                } else {
+                    Attributes.empty()
+                }
+            },
+        )
 
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)

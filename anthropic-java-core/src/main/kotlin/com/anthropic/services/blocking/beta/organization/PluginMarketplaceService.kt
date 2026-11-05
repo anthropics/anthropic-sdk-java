@@ -170,9 +170,7 @@ interface PluginMarketplaceService {
      * beta and is available to Claude Enterprise organizations only. It is not available to Claude
      * Platform (Claude Console) organizations, or to organizations with HIPAA readiness enabled.
      *
-     * @throws com.anthropic.models.beta.BetaUnsupportedCharsetException The request's
-     *   `Content-Type` header names a charset other than UTF-8, ISO-8859-1 or US-ASCII. Send the
-     *   request with no charset, or with one of these.
+     * @throws com.anthropic.models.beta.BetaUnsupportedCharsetException
      */
     fun validateArchive(
         params: PluginMarketplaceValidateArchiveParams

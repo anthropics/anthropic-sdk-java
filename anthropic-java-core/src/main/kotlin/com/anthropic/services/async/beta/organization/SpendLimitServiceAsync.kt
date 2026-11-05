@@ -38,7 +38,6 @@ interface SpendLimitServiceAsync {
      *
      * @throws
      *   com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledException
-     *   The organization cannot retrieve, set or delete spend limits with an Admin API credential.
      */
     fun retrieve(spendLimitId: String): CompletableFuture<BetaSpendLimit> =
         retrieve(spendLimitId, SpendLimitRetrieveParams.none())
@@ -83,9 +82,7 @@ interface SpendLimitServiceAsync {
      * in the order `organization`, `seat_tier`, `rbac_group`, `organization_service`, `user`;
      * within a type they come in a fixed order that is not creation order.
      *
-     * @throws com.anthropic.models.OrganizationTypeNotSupportedException The endpoint does not
-     *   support the organization's type. Each endpoint's description says which organization types
-     *   it supports.
+     * @throws com.anthropic.models.OrganizationTypeNotSupportedException
      */
     fun list(): CompletableFuture<SpendLimitListPageAsync> = list(SpendLimitListParams.none())
 
@@ -113,12 +110,9 @@ interface SpendLimitServiceAsync {
      * deletes its organization and workspace limits, but not its `usage_tier` limit. Deleting
      * organization and workspace limits through the API is in an early access preview.
      *
-     * @throws com.anthropic.models.beta.organization.BetaBillingFrozenException Anthropic has
-     *   temporarily disabled billing changes for the user account the credential belongs to.
-     *   Contact support.
+     * @throws com.anthropic.models.beta.organization.BetaBillingFrozenException
      * @throws
      *   com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledException
-     *   The organization cannot retrieve, set or delete spend limits with an Admin API credential.
      */
     fun delete(spendLimitId: String): CompletableFuture<SpendLimitDeleteResponse> =
         delete(spendLimitId, SpendLimitDeleteParams.none())
@@ -165,12 +159,9 @@ interface SpendLimitServiceAsync {
      * those limits is in an early access preview. To request access, contact your Anthropic account
      * team.
      *
-     * @throws com.anthropic.models.beta.organization.BetaBillingFrozenException Anthropic has
-     *   temporarily disabled billing changes for the user account the credential belongs to.
-     *   Contact support.
+     * @throws com.anthropic.models.beta.organization.BetaBillingFrozenException
      * @throws
      *   com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledException
-     *   The organization cannot retrieve, set or delete spend limits with an Admin API credential.
      */
     fun set(params: SpendLimitSetParams): CompletableFuture<BetaSpendLimit> =
         set(params, RequestOptions.none())

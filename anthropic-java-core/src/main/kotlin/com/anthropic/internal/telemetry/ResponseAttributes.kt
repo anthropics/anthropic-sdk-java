@@ -2,130 +2,93 @@
 
 package com.anthropic.internal.telemetry
 
-import com.anthropic.models.beta.messages.BetaMessage
-import com.anthropic.models.messages.Message
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonValue
+import com.anthropic.core.opentelemetry.ApiCall
+import com.anthropic.core.opentelemetry.integerOrNull
+import io.opentelemetry.api.common.Attributes
 import io.opentelemetry.api.trace.Span
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Sets the attributes that come from [message], the parsed response of a `messages.create` API
- * call, or as much of it as a stream delivered. The ones that a stream delivers with
- * `message_delta`, its output tokens and its stop reason, are set only when [complete] is true.
+ * Sets the input tokens of [usage] and, when [complete], the tokens of the compactions in its
+ * iterations: a stream delivers the iterations with `message_delta`.
  */
 @JvmSynthetic
-internal fun setMessageAttributes(span: Span, message: Message, complete: Boolean = true) {
-    val usage = message.usage()
-    val cacheCreation = usage.cacheCreation().getOrNull()
-    setMessageAttributes(
-        span,
-        MessageFields(
-            id = message.id(),
-            model = message.model().asString(),
-            stopReason = message.stopReason().getOrNull()?.asString(),
-            inputTokens = usage.inputTokens(),
-            cacheReadInputTokens = usage.cacheReadInputTokens().getOrNull(),
-            cacheCreationInputTokens = usage.cacheCreationInputTokens().getOrNull(),
-            ephemeral5mInputTokens = cacheCreation?.ephemeral5mInputTokens(),
-            ephemeral1hInputTokens = cacheCreation?.ephemeral1hInputTokens(),
-            serviceTier = usage.serviceTier().getOrNull()?.asString(),
-            outputTokens = usage.outputTokens(),
-            thinkingTokens = usage.outputTokensDetails().getOrNull()?.thinkingTokens(),
-        ),
-        complete,
-    )
-}
-
-/** [setMessageAttributes] for the beta API. */
-@JvmSynthetic
-internal fun setMessageAttributes(span: Span, message: BetaMessage, complete: Boolean = true) {
-    val usage = message.usage()
-    val cacheCreation = usage.cacheCreation().getOrNull()
-    val compactions =
-        usage
-            .iterations()
-            .getOrNull()
-            .orEmpty()
-            .mapNotNull { it.compaction().getOrNull() }
-            .ifEmpty { null }
-    setMessageAttributes(
-        span,
-        MessageFields(
-            id = message.id(),
-            model = message.model().asString(),
-            stopReason = message.stopReason().getOrNull()?.asString(),
-            inputTokens = usage.inputTokens(),
-            cacheReadInputTokens = usage.cacheReadInputTokens().getOrNull(),
-            cacheCreationInputTokens = usage.cacheCreationInputTokens().getOrNull(),
-            ephemeral5mInputTokens = cacheCreation?.ephemeral5mInputTokens(),
-            ephemeral1hInputTokens = cacheCreation?.ephemeral1hInputTokens(),
-            serviceTier = usage.serviceTier().getOrNull()?.asString(),
-            outputTokens = usage.outputTokens(),
-            thinkingTokens = usage.outputTokensDetails().getOrNull()?.thinkingTokens(),
-            // The input tokens of a compaction are the sum that those of the Message are.
-            compactionInputTokens =
-                compactions?.sumOf {
-                    it.inputTokens() + it.cacheReadInputTokens() + it.cacheCreationInputTokens()
-                },
-            compactionOutputTokens = compactions?.sumOf { it.outputTokens() },
-        ),
-        complete,
-    )
-}
-
-/**
- * What the span of a `messages.create` API call records of a Message, as the stable and the beta
- * Message both have it.
- */
-private class MessageFields(
-    val id: String,
-    val model: String,
-    val stopReason: String?,
-    val inputTokens: Long,
-    val cacheReadInputTokens: Long?,
-    val cacheCreationInputTokens: Long?,
-    val ephemeral5mInputTokens: Long?,
-    val ephemeral1hInputTokens: Long?,
-    val serviceTier: String?,
-    val outputTokens: Long,
-    val thinkingTokens: Long?,
-    /** The tokens of the compactions in the usage's iterations, which only the beta API has. */
-    val compactionInputTokens: Long? = null,
-    val compactionOutputTokens: Long? = null,
-)
-
-private fun setMessageAttributes(span: Span, message: MessageFields, complete: Boolean) {
-    span.setAttribute(GEN_AI_RESPONSE_ID, message.id)
-    span.setAttribute(GEN_AI_RESPONSE_MODEL, message.model)
-    // The conventions define the input tokens as the sum of these three.
-    span.setAttribute(
-        GEN_AI_USAGE_INPUT_TOKENS,
-        message.inputTokens +
-            (message.cacheReadInputTokens ?: 0) +
-            (message.cacheCreationInputTokens ?: 0),
-    )
-    message.cacheCreationInputTokens?.let {
-        span.setAttribute(GEN_AI_USAGE_CACHE_WRITE_INPUT_TOKENS, it)
+internal fun setUsageAttributes(span: Span, usage: JsonField<*>, complete: Boolean = true) {
+    // By name, so that a property that the API no longer has reads as not set. This converts the
+    // whole usage, which is small, and only for a span that records.
+    val json = usage.asKnown().getOrNull()?.let { JsonValue.from(it) }
+    if (json.at("input_tokens")?.isNull() == false) {
+        json.inputTokens()?.let { span.setAttribute(GEN_AI_USAGE_INPUT_TOKENS, it) }
     }
-    message.cacheReadInputTokens?.let {
-        span.setAttribute(GEN_AI_USAGE_CACHE_READ_INPUT_TOKENS, it)
-    }
-    message.ephemeral5mInputTokens?.let {
-        span.setAttribute(ANTHROPIC_USAGE_CACHE_CREATION_EPHEMERAL_5M_INPUT_TOKENS, it)
-    }
-    message.ephemeral1hInputTokens?.let {
-        span.setAttribute(ANTHROPIC_USAGE_CACHE_CREATION_EPHEMERAL_1H_INPUT_TOKENS, it)
-    }
-    message.serviceTier?.let { span.setAttribute(ANTHROPIC_RESPONSE_SERVICE_TIER, it) }
     if (!complete) {
         return
     }
-    span.setAttribute(GEN_AI_USAGE_OUTPUT_TOKENS, message.outputTokens)
-    message.thinkingTokens?.let { span.setAttribute(GEN_AI_USAGE_REASONING_OUTPUT_TOKENS, it) }
-    message.stopReason?.let { span.setAttribute(ANTHROPIC_MESSAGE_STOP_REASON, it) }
-    message.compactionInputTokens?.let {
-        span.setAttribute(ANTHROPIC_USAGE_COMPACTION_INPUT_TOKENS, it)
+    val compactions =
+        json.at("iterations")?.asArray()?.getOrNull().orEmpty().filter {
+            it.at("type")?.asString()?.getOrNull() == "compaction"
+        }
+    if (compactions.isEmpty()) {
+        return
     }
-    message.compactionOutputTokens?.let {
-        span.setAttribute(ANTHROPIC_USAGE_COMPACTION_OUTPUT_TOKENS, it)
-    }
+    compactions
+        .sumOrNull { it.inputTokens() }
+        ?.let { span.setAttribute(ANTHROPIC_USAGE_COMPACTION_INPUT_TOKENS, it) }
+    compactions
+        .sumOrNull { it.tokens("output_tokens") }
+        ?.let { span.setAttribute(ANTHROPIC_USAGE_COMPACTION_OUTPUT_TOKENS, it) }
 }
+
+/**
+ * The input tokens of this usage, or of this iteration of one. The conventions define them as the
+ * sum of these three.
+ */
+private fun JsonValue?.inputTokens(): Long? =
+    tokens("input_tokens", "cache_read_input_tokens", "cache_creation_input_tokens")
+
+/**
+ * The sum of the properties [names] of this object, each a count of tokens. One that is not set
+ * counts no tokens. One that is set to anything but a count leaves no sum that is right: `null`.
+ */
+private fun JsonValue?.tokens(vararg names: String): Long? =
+    names.asList().sumOrNull { name ->
+        val count = at(name)
+        if (count == null || count.isNull()) 0
+        else count.asNumber().getOrNull()?.let { integerOrNull(it) }
+    }
+
+/** The sum of what [count] gives for each element, or `null` when it gives `null` for one. */
+private inline fun <T> List<T>.sumOrNull(count: (T) -> Long?): Long? = sumOf {
+    count(it) ?: return null
+}
+
+/** The JSON of the property [name] of this object, or `null` when it is not set. */
+private fun JsonValue?.at(name: String): JsonValue? = this?.asObject()?.getOrNull()?.get(name)
+
+/**
+ * The attributes that [call] takes from [message], as much of a Message as its stream delivered.
+ * Until `message_delta` arrived ([complete]), they are the [MESSAGE_START_ATTRIBUTES] only.
+ */
+@JvmSynthetic
+internal fun streamedMessageAttributes(call: ApiCall, message: Any, complete: Boolean): Attributes {
+    val attributes = call.responseAttributes(message)
+    return if (complete) attributes
+    else attributes.toBuilder().removeIf { it.key !in MESSAGE_START_ATTRIBUTES }.build()
+}
+
+/**
+ * The response attributes of `messages.create` whose values `message_start` already has for good.
+ * For any other, the streamed Message can have a placeholder until `message_delta` arrives.
+ */
+@get:JvmSynthetic
+internal val MESSAGE_START_ATTRIBUTES: Set<String> =
+    setOf(
+        "gen_ai.response.id",
+        "gen_ai.response.model",
+        "gen_ai.usage.cache_write.input_tokens",
+        "gen_ai.usage.cache_read.input_tokens",
+        "anthropic.usage.cache_creation.ephemeral_5m_input_tokens",
+        "anthropic.usage.cache_creation.ephemeral_1h_input_tokens",
+        "anthropic.response.service_tier",
+    )

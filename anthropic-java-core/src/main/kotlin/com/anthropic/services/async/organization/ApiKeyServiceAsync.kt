@@ -60,10 +60,8 @@ interface ApiKeyServiceAsync {
     /**
      * Update API Key
      *
-     * @throws com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededException The
-     *   organization has reached its limit of active API keys.
-     * @throws com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededException The
-     *   workspace has reached its limit of active API keys.
+     * @throws com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededException
+     * @throws com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededException
      */
     fun update(apiKeyId: String): CompletableFuture<ApiKey> =
         update(apiKeyId, ApiKeyUpdateParams.none())

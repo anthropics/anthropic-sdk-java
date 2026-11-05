@@ -16,6 +16,8 @@ import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
+import com.anthropic.core.opentelemetry.putField
+import com.anthropic.core.opentelemetry.putHeader
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.helpers.BetaRunnableTool
@@ -33,6 +35,8 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import io.opentelemetry.api.common.AttributeKey
+import io.opentelemetry.api.common.Attributes
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -2138,7 +2142,133 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     override fun _spanData(): SpanData =
-        SpanData(name = "anthropic.messages.create", route = "/v1/messages")
+        SpanData(
+            name = "anthropic.messages.create",
+            route = "/v1/messages",
+            requestAttributes = { clientHeaders ->
+                Attributes.builder()
+                    .put("gen_ai.operation.name", "chat")
+                    .putField(
+                        AttributeKey.stringKey("gen_ai.request.model"),
+                        _model().asKnown().getOrNull()?._value(),
+                    )
+                    .putField(AttributeKey.longKey("gen_ai.request.max_tokens"), _maxTokens())
+                    .putField(
+                        AttributeKey.stringKey("gen_ai.request.reasoning.level"),
+                        _outputConfig()
+                            .asKnown()
+                            .getOrNull()
+                            ?._effort()
+                            ?.asKnown()
+                            ?.getOrNull()
+                            ?._value(),
+                    )
+                    .putField(
+                        AttributeKey.stringKey("anthropic.request.service_tier"),
+                        _serviceTier().asKnown().getOrNull()?._value(),
+                    )
+                    .putField(
+                        AttributeKey.stringKey("anthropic.thinking.type"),
+                        _thinking().asKnown().getOrNull()?.let { union ->
+                            union.enabled().getOrNull()?._type()
+                                ?: union.disabled().getOrNull()?._type()
+                                ?: union.betweenTools().getOrNull()?._type()
+                                ?: union.adaptive().getOrNull()?._type()
+                        },
+                    )
+                    .putField(
+                        AttributeKey.longKey("anthropic.thinking.budget_tokens"),
+                        _thinking().asKnown().getOrNull()?.let { union ->
+                            union.enabled().getOrNull()?._budgetTokens()
+                        },
+                    )
+                    .putHeader(
+                        AttributeKey.stringArrayKey("anthropic.beta"),
+                        _headers().values("anthropic-beta").ifEmpty {
+                            clientHeaders.values("anthropic-beta")
+                        },
+                    )
+                    .build()
+            },
+            streamAttribute = "gen_ai.request.stream",
+            responseAttributes = { response ->
+                if (response is BetaMessage) {
+                    Attributes.builder()
+                        .putField(AttributeKey.stringKey("gen_ai.response.id"), response._id())
+                        .putField(
+                            AttributeKey.stringKey("gen_ai.response.model"),
+                            response._model().asKnown().getOrNull()?._value(),
+                        )
+                        .putField(
+                            AttributeKey.longKey("gen_ai.usage.cache_write.input_tokens"),
+                            response._usage().asKnown().getOrNull()?._cacheCreationInputTokens(),
+                        )
+                        .putField(
+                            AttributeKey.longKey("gen_ai.usage.cache_read.input_tokens"),
+                            response._usage().asKnown().getOrNull()?._cacheReadInputTokens(),
+                        )
+                        .putField(
+                            AttributeKey.longKey(
+                                "anthropic.usage.cache_creation.ephemeral_5m_input_tokens"
+                            ),
+                            response
+                                ._usage()
+                                .asKnown()
+                                .getOrNull()
+                                ?._cacheCreation()
+                                ?.asKnown()
+                                ?.getOrNull()
+                                ?._ephemeral5mInputTokens(),
+                        )
+                        .putField(
+                            AttributeKey.longKey(
+                                "anthropic.usage.cache_creation.ephemeral_1h_input_tokens"
+                            ),
+                            response
+                                ._usage()
+                                .asKnown()
+                                .getOrNull()
+                                ?._cacheCreation()
+                                ?.asKnown()
+                                ?.getOrNull()
+                                ?._ephemeral1hInputTokens(),
+                        )
+                        .putField(
+                            AttributeKey.stringKey("anthropic.response.service_tier"),
+                            response
+                                ._usage()
+                                .asKnown()
+                                .getOrNull()
+                                ?._serviceTier()
+                                ?.asKnown()
+                                ?.getOrNull()
+                                ?._value(),
+                        )
+                        .putField(
+                            AttributeKey.longKey("gen_ai.usage.output_tokens"),
+                            response._usage().asKnown().getOrNull()?._outputTokens(),
+                        )
+                        .putField(
+                            AttributeKey.longKey("gen_ai.usage.reasoning.output_tokens"),
+                            response
+                                ._usage()
+                                .asKnown()
+                                .getOrNull()
+                                ?._outputTokensDetails()
+                                ?.asKnown()
+                                ?.getOrNull()
+                                ?._thinkingTokens(),
+                        )
+                        .putField(
+                            AttributeKey.stringKey("anthropic.message.stop_reason"),
+                            response._stopReason().asKnown().getOrNull()?._value(),
+                        )
+                        .build()
+                } else {
+                    Attributes.empty()
+                }
+            },
+        )
 
     /**
      * The parameters of a request for the next message in a conversation.

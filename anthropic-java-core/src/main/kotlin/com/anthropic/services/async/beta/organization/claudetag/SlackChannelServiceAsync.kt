@@ -41,30 +41,18 @@ interface SlackChannelServiceAsync {
      *
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsRefusedException
-     *   The request set the channel up, and `settings` was then refused. The channel stays set up
-     *   with every setting unset.
-     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
-     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
-     *   for a change.
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
-     *   Changes through the Claude Tag API are not enabled for the organization.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
-     *   The organization's compliance configuration does not let Claude Tag store anything new.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
-     *   The credential is not a scoped API key that is bound at the organization level.
      * @throws com.anthropic.models.beta.environments.BetaEnvironmentNotFoundException
-     *   `settings.environment_id` names no Environment within the organization's reach.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpEnvironmentNotFoundException
-     *   `settings.environment_id` names no Environment within the organization's reach, and the
-     *   request had set the channel up by then. The channel stays set up with every setting unset.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictException
-     *   The request set the channel up, and something else then changed the channel or removed it.
-     *   Nothing of `settings` was stored.
      */
     fun create(params: SlackChannelCreateParams): CompletableFuture<BetaClaudeTagSlackChannel> =
         create(params, RequestOptions.none())
@@ -84,18 +72,13 @@ interface SlackChannelServiceAsync {
      * level each value comes from, so a caller tells the channel's own value from an inherited one
      * by its source, not by whether it is null.
      *
-     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
-     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
-     *   for a change.
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
-     *   Changes through the Claude Tag API are not enabled for the organization.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
-     *   The organization's compliance configuration does not let Claude Tag store anything new.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
-     *   The credential is not a scoped API key that is bound at the organization level.
      */
     fun retrieve(id: String): CompletableFuture<BetaClaudeTagSlackChannel> =
         retrieve(id, SlackChannelRetrieveParams.none())
@@ -137,28 +120,18 @@ interface SlackChannelServiceAsync {
      * refused, no setting in the request is stored. A group direct message takes no settings and
      * returns 400.
      *
-     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
-     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
-     *   for a change.
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
-     *   Changes through the Claude Tag API are not enabled for the organization.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
-     *   The organization's compliance configuration does not let Claude Tag store anything new.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
-     *   The credential is not a scoped API key that is bound at the organization level.
      * @throws com.anthropic.models.beta.environments.BetaEnvironmentNotFoundException
-     *   `settings.environment_id` names no Environment within the organization's reach.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpEnvironmentNotFoundException
-     *   `settings.environment_id` names no Environment within the organization's reach, and the
-     *   request had set the channel up by then. The channel stays set up with every setting unset.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictException
-     *   The request set the channel up, and something else then changed the channel or removed it.
-     *   Nothing of `settings` was stored.
      */
     fun update(
         id: String,
@@ -194,18 +167,13 @@ interface SlackChannelServiceAsync {
      * that could not be read. A `page` cursor resumes only a request with the same
      * `include_inherited`.
      *
-     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
-     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
-     *   for a change.
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
-     *   Changes through the Claude Tag API are not enabled for the organization.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
-     *   The organization's compliance configuration does not let Claude Tag store anything new.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
-     *   The credential is not a scoped API key that is bound at the organization level.
      */
     fun list(params: SlackChannelListParams): CompletableFuture<SlackChannelListPageAsync> =
         list(params, RequestOptions.none())
@@ -230,22 +198,15 @@ interface SlackChannelServiceAsync {
      * returns, so a repeated removal returns 404. A group direct message returns 400, and so does a
      * channel that holds configuration this API does not manage.
      *
-     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException The
-     *   API key lacks the scope the request needs: `read:claude_tag` for a read, `write:claude_tag`
-     *   for a change.
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
-     *   Changes through the Claude Tag API are not enabled for the organization.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
-     *   The organization's compliance configuration does not let Claude Tag store anything new.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
-     *   The credential is not a scoped API key that is bound at the organization level.
      * @throws
      *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictException
-     *   The request set the channel up, and something else then changed the channel or removed it.
-     *   Nothing of `settings` was stored.
      */
     fun delete(id: String): CompletableFuture<BetaClaudeTagDeletedSlackChannel> =
         delete(id, SlackChannelDeleteParams.none())

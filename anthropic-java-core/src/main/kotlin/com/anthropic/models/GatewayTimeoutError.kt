@@ -28,12 +28,16 @@ private constructor(
     ) : this(message, type, mutableMapOf())
 
     /**
+     * A human-readable explanation of the error. Its wording can change, so don't match on it.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun message(): String = message.getRequired("message")
 
     /**
+     * The broad category of the error.
+     *
      * Expected to always return the following:
      * ```java
      * JsonValue.from("timeout_error")
@@ -96,6 +100,9 @@ private constructor(
             additionalProperties = gatewayTimeoutError.additionalProperties.toMutableMap()
         }
 
+        /**
+         * A human-readable explanation of the error. Its wording can change, so don't match on it.
+         */
         fun message(message: String) = message(JsonField.of(message))
 
         /**

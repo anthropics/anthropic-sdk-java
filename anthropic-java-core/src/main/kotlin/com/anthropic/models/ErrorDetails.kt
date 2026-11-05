@@ -9,6 +9,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaErrorDetails
 import com.anthropic.models.beta.BetaUnsupportedCharsetErrorDetails
 import com.anthropic.models.beta.environments.BetaEnvironmentArchivedErrorDetails
 import com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledErrorDetails
@@ -32,6 +33,12 @@ import com.anthropic.models.beta.organization.plugins.BetaScanFailedErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaScanPendingErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaSkillNameTakenErrorDetails
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutManagedMemberErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutMembershipAdminErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutOwnerErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrimaryOwnerErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrivilegedMemberErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutSelfErrorDetails
 import com.anthropic.models.files.FileExpiredErrorDetails
 import com.anthropic.models.files.FileNotDownloadableErrorDetails
 import com.anthropic.models.files.StorageQuotaExceededErrorDetails
@@ -58,6 +65,8 @@ import com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededErrorDeta
 import com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededErrorDetails
 import com.anthropic.models.organization.externalkeys.ExternalKeyChangedErrorDetails
 import com.anthropic.models.organization.externalkeys.ExternalKeyInWorkspacePolicyErrorDetails
+import com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedErrorDetails
+import com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutErrorDetails
 import com.anthropic.models.organization.invites.AlreadyMemberErrorDetails
 import com.anthropic.models.organization.invites.CannotInviteEmailsWithUnverifiedDomainsErrorDetails
 import com.anthropic.models.organization.invites.EmailDomainNotAllowedErrorDetails
@@ -115,6 +124,7 @@ private constructor(
     private val requestBodyTooLargeAfterDecoding: RequestBodyTooLargeAfterDecodingErrorDetails? =
         null,
     private val enforcedSpendLimitReached: EnforcedSpendLimitReachedErrorDetails? = null,
+    private val rampLimitExceeded: RampLimitExceededErrorDetails? = null,
     private val cmekKeyUnreachable: CmekKeyUnreachableErrorDetails? = null,
     private val compactionUnavailable: CompactionUnavailableErrorDetails? = null,
     private val storageQuotaExceeded: StorageQuotaExceededErrorDetails? = null,
@@ -137,6 +147,8 @@ private constructor(
         null,
     private val cannotRemoveLastMember: CannotRemoveLastMemberErrorDetails? = null,
     private val concurrentMembershipChange: ConcurrentMembershipChangeErrorDetails? = null,
+    private val externalKeyValidationFailed: ExternalKeyValidationFailedErrorDetails? = null,
+    private val externalKeyValidationTimedOut: ExternalKeyValidationTimedOutErrorDetails? = null,
     private val keyProfileMismatch: KeyProfileMismatchErrorDetails? = null,
     private val workspacePolicyViolation: WorkspacePolicyViolationErrorDetails? = null,
     private val externalKeyChanged: ExternalKeyChangedErrorDetails? = null,
@@ -148,6 +160,15 @@ private constructor(
     private val environmentUpdateDisabled: BetaEnvironmentUpdateDisabledErrorDetails? = null,
     private val heartbeatPreconditionFailed: BetaHeartbeatPreconditionFailedErrorDetails? = null,
     private val invalidMetadata: BetaInvalidMetadataErrorDetails? = null,
+    private val cannotSignOutPrimaryOwner: BetaCannotSignOutPrimaryOwnerErrorDetails? = null,
+    private val cannotSignOutSelf: BetaCannotSignOutSelfErrorDetails? = null,
+    private val organizationNotEnrolledInBeta: BetaOrganizationNotEnrolledInBetaErrorDetails? =
+        null,
+    private val cannotSignOutManagedMember: BetaCannotSignOutManagedMemberErrorDetails? = null,
+    private val cannotSignOutMembershipAdmin: BetaCannotSignOutMembershipAdminErrorDetails? = null,
+    private val cannotSignOutOwner: BetaCannotSignOutOwnerErrorDetails? = null,
+    private val cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails? =
+        null,
     private val billingFrozen: BetaBillingFrozenErrorDetails? = null,
     private val spendLimitsAdminApiWritesNotEnabled:
         BetaSpendLimitsAdminApiWritesNotEnabledErrorDetails? =
@@ -208,6 +229,7 @@ private constructor(
             requestBodyTooLargeAfterDecoding != null ->
                 ErrorCode.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
             enforcedSpendLimitReached != null -> ErrorCode.ENFORCED_SPEND_LIMIT_REACHED
+            rampLimitExceeded != null -> ErrorCode.RAMP_LIMIT_EXCEEDED
             cmekKeyUnreachable != null -> ErrorCode.CMEK_KEY_UNREACHABLE
             compactionUnavailable != null -> ErrorCode.COMPACTION_UNAVAILABLE
             storageQuotaExceeded != null -> ErrorCode.STORAGE_QUOTA_EXCEEDED
@@ -228,6 +250,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> ErrorCode.RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED
             cannotRemoveLastMember != null -> ErrorCode.CANNOT_REMOVE_LAST_MEMBER
             concurrentMembershipChange != null -> ErrorCode.CONCURRENT_MEMBERSHIP_CHANGE
+            externalKeyValidationFailed != null -> ErrorCode.EXTERNAL_KEY_VALIDATION_FAILED
+            externalKeyValidationTimedOut != null -> ErrorCode.EXTERNAL_KEY_VALIDATION_TIMED_OUT
             keyProfileMismatch != null -> ErrorCode.KEY_PROFILE_MISMATCH
             workspacePolicyViolation != null -> ErrorCode.WORKSPACE_POLICY_VIOLATION
             externalKeyChanged != null -> ErrorCode.EXTERNAL_KEY_CHANGED
@@ -239,6 +263,13 @@ private constructor(
             environmentUpdateDisabled != null -> ErrorCode.ENVIRONMENT_UPDATE_DISABLED
             heartbeatPreconditionFailed != null -> ErrorCode.HEARTBEAT_PRECONDITION_FAILED
             invalidMetadata != null -> ErrorCode.INVALID_METADATA
+            cannotSignOutPrimaryOwner != null -> ErrorCode.CANNOT_SIGN_OUT_PRIMARY_OWNER
+            cannotSignOutSelf != null -> ErrorCode.CANNOT_SIGN_OUT_SELF
+            organizationNotEnrolledInBeta != null -> ErrorCode.ORGANIZATION_NOT_ENROLLED_IN_BETA
+            cannotSignOutManagedMember != null -> ErrorCode.CANNOT_SIGN_OUT_MANAGED_MEMBER
+            cannotSignOutMembershipAdmin != null -> ErrorCode.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
+            cannotSignOutOwner != null -> ErrorCode.CANNOT_SIGN_OUT_OWNER
+            cannotSignOutPrivilegedMember != null -> ErrorCode.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
             billingFrozen != null -> ErrorCode.BILLING_FROZEN
             spendLimitsAdminApiWritesNotEnabled != null ->
                 ErrorCode.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
@@ -293,6 +324,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
+            rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
@@ -312,6 +344,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> Optional.empty()
             cannotRemoveLastMember != null -> Optional.empty()
             concurrentMembershipChange != null -> Optional.empty()
+            externalKeyValidationFailed != null -> Optional.empty()
+            externalKeyValidationTimedOut != null -> Optional.empty()
             keyProfileMismatch != null -> Optional.empty()
             workspacePolicyViolation != null -> Optional.empty()
             externalKeyChanged != null -> Optional.empty()
@@ -323,6 +357,13 @@ private constructor(
             environmentUpdateDisabled != null -> Optional.empty()
             heartbeatPreconditionFailed != null -> Optional.empty()
             invalidMetadata != null -> Optional.empty()
+            cannotSignOutPrimaryOwner != null -> Optional.empty()
+            cannotSignOutSelf != null -> Optional.empty()
+            organizationNotEnrolledInBeta != null -> Optional.empty()
+            cannotSignOutManagedMember != null -> Optional.empty()
+            cannotSignOutMembershipAdmin != null -> Optional.empty()
+            cannotSignOutOwner != null -> Optional.empty()
+            cannotSignOutPrivilegedMember != null -> Optional.empty()
             billingFrozen != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
@@ -370,6 +411,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
+            rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
@@ -389,6 +431,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> Optional.empty()
             cannotRemoveLastMember != null -> Optional.empty()
             concurrentMembershipChange != null -> Optional.empty()
+            externalKeyValidationFailed != null -> Optional.empty()
+            externalKeyValidationTimedOut != null -> Optional.empty()
             keyProfileMismatch != null -> Optional.empty()
             workspacePolicyViolation != null -> Optional.empty()
             externalKeyChanged != null -> Optional.empty()
@@ -400,6 +444,13 @@ private constructor(
             environmentUpdateDisabled != null -> Optional.empty()
             heartbeatPreconditionFailed != null -> Optional.empty()
             invalidMetadata != null -> Optional.empty()
+            cannotSignOutPrimaryOwner != null -> Optional.empty()
+            cannotSignOutSelf != null -> Optional.empty()
+            organizationNotEnrolledInBeta != null -> Optional.empty()
+            cannotSignOutManagedMember != null -> Optional.empty()
+            cannotSignOutMembershipAdmin != null -> Optional.empty()
+            cannotSignOutOwner != null -> Optional.empty()
+            cannotSignOutPrivilegedMember != null -> Optional.empty()
             billingFrozen != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
@@ -447,6 +498,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
+            rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
@@ -466,6 +518,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> Optional.empty()
             cannotRemoveLastMember != null -> Optional.empty()
             concurrentMembershipChange != null -> Optional.empty()
+            externalKeyValidationFailed != null -> Optional.empty()
+            externalKeyValidationTimedOut != null -> Optional.empty()
             keyProfileMismatch != null -> Optional.empty()
             workspacePolicyViolation != null -> Optional.empty()
             externalKeyChanged != null -> Optional.empty()
@@ -477,6 +531,13 @@ private constructor(
             environmentUpdateDisabled != null -> Optional.empty()
             heartbeatPreconditionFailed != null -> Optional.empty()
             invalidMetadata != null -> Optional.empty()
+            cannotSignOutPrimaryOwner != null -> Optional.empty()
+            cannotSignOutSelf != null -> Optional.empty()
+            organizationNotEnrolledInBeta != null -> Optional.empty()
+            cannotSignOutManagedMember != null -> Optional.empty()
+            cannotSignOutMembershipAdmin != null -> Optional.empty()
+            cannotSignOutOwner != null -> Optional.empty()
+            cannotSignOutPrivilegedMember != null -> Optional.empty()
             billingFrozen != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
@@ -652,6 +713,13 @@ private constructor(
         Optional.ofNullable(enforcedSpendLimitReached)
 
     /**
+     * The request would exceed a ramp limit, which caps how fast usage can grow. Retry after the
+     * time in the `retry-after` header.
+     */
+    fun rampLimitExceeded(): Optional<RampLimitExceededErrorDetails> =
+        Optional.ofNullable(rampLimitExceeded)
+
+    /**
      * The workspace's customer-managed encryption key could not be reached. Retry the request; if
      * this continues, check that the key is available in your key management service, or contact
      * Anthropic support.
@@ -769,6 +837,20 @@ private constructor(
         Optional.ofNullable(concurrentMembershipChange)
 
     /**
+     * The External Key failed Anthropic's validation, so the request was refused. The message gives
+     * the reason, if there is one.
+     */
+    fun externalKeyValidationFailed(): Optional<ExternalKeyValidationFailedErrorDetails> =
+        Optional.ofNullable(externalKeyValidationFailed)
+
+    /**
+     * Anthropic's validation of the External Key did not finish in time, so the request was
+     * refused. Wait a moment, then send the request again.
+     */
+    fun externalKeyValidationTimedOut(): Optional<ExternalKeyValidationTimedOutErrorDetails> =
+        Optional.ofNullable(externalKeyValidationTimedOut)
+
+    /**
      * The External Key is bound to a user profile, and the Workspace does not have that user
      * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
      * bound to one.
@@ -835,6 +917,49 @@ private constructor(
      */
     fun invalidMetadata(): Optional<BetaInvalidMetadataErrorDetails> =
         Optional.ofNullable(invalidMetadata)
+
+    /** The member is the organization's primary owner, whom no API key or token can sign out. */
+    fun cannotSignOutPrimaryOwner(): Optional<BetaCannotSignOutPrimaryOwnerErrorDetails> =
+        Optional.ofNullable(cannotSignOutPrimaryOwner)
+
+    /** The member is the user the API key or token belongs to. */
+    fun cannotSignOutSelf(): Optional<BetaCannotSignOutSelfErrorDetails> =
+        Optional.ofNullable(cannotSignOutSelf)
+
+    /**
+     * The beta that the endpoint requires is not enabled for the organization. The message names
+     * the beta value.
+     */
+    fun organizationNotEnrolledInBeta(): Optional<BetaOrganizationNotEnrolledInBetaErrorDetails> =
+        Optional.ofNullable(organizationNotEnrolledInBeta)
+
+    /**
+     * On a public-sector deployment, only an API key or token that belongs to a person with owner
+     * permissions can sign out a member with the `managed` role.
+     */
+    fun cannotSignOutManagedMember(): Optional<BetaCannotSignOutManagedMemberErrorDetails> =
+        Optional.ofNullable(cannotSignOutManagedMember)
+
+    /**
+     * The member is a membership admin, and the person the API key or token belongs to is not
+     * allowed to sign out membership admins.
+     */
+    fun cannotSignOutMembershipAdmin(): Optional<BetaCannotSignOutMembershipAdminErrorDetails> =
+        Optional.ofNullable(cannotSignOutMembershipAdmin)
+
+    /**
+     * The member is an owner or has owner permissions, and this API key or token cannot sign them
+     * out. In a Claude Enterprise organization, an API key with the `write:members` scope can.
+     */
+    fun cannotSignOutOwner(): Optional<BetaCannotSignOutOwnerErrorDetails> =
+        Optional.ofNullable(cannotSignOutOwner)
+
+    /**
+     * This OAuth token cannot sign out a membership admin or a member whose roles grant owner, user
+     * management, or identity and access management.
+     */
+    fun cannotSignOutPrivilegedMember(): Optional<BetaCannotSignOutPrivilegedMemberErrorDetails> =
+        Optional.ofNullable(cannotSignOutPrivilegedMember)
 
     /**
      * Anthropic has temporarily disabled billing changes for the user account the credential
@@ -987,6 +1112,8 @@ private constructor(
 
     fun isEnforcedSpendLimitReached(): Boolean = enforcedSpendLimitReached != null
 
+    fun isRampLimitExceeded(): Boolean = rampLimitExceeded != null
+
     fun isCmekKeyUnreachable(): Boolean = cmekKeyUnreachable != null
 
     fun isCompactionUnavailable(): Boolean = compactionUnavailable != null
@@ -1026,6 +1153,10 @@ private constructor(
 
     fun isConcurrentMembershipChange(): Boolean = concurrentMembershipChange != null
 
+    fun isExternalKeyValidationFailed(): Boolean = externalKeyValidationFailed != null
+
+    fun isExternalKeyValidationTimedOut(): Boolean = externalKeyValidationTimedOut != null
+
     fun isKeyProfileMismatch(): Boolean = keyProfileMismatch != null
 
     fun isWorkspacePolicyViolation(): Boolean = workspacePolicyViolation != null
@@ -1047,6 +1178,20 @@ private constructor(
     fun isHeartbeatPreconditionFailed(): Boolean = heartbeatPreconditionFailed != null
 
     fun isInvalidMetadata(): Boolean = invalidMetadata != null
+
+    fun isCannotSignOutPrimaryOwner(): Boolean = cannotSignOutPrimaryOwner != null
+
+    fun isCannotSignOutSelf(): Boolean = cannotSignOutSelf != null
+
+    fun isOrganizationNotEnrolledInBeta(): Boolean = organizationNotEnrolledInBeta != null
+
+    fun isCannotSignOutManagedMember(): Boolean = cannotSignOutManagedMember != null
+
+    fun isCannotSignOutMembershipAdmin(): Boolean = cannotSignOutMembershipAdmin != null
+
+    fun isCannotSignOutOwner(): Boolean = cannotSignOutOwner != null
+
+    fun isCannotSignOutPrivilegedMember(): Boolean = cannotSignOutPrivilegedMember != null
 
     fun isBillingFrozen(): Boolean = billingFrozen != null
 
@@ -1236,6 +1381,13 @@ private constructor(
         enforcedSpendLimitReached.getOrThrow("enforcedSpendLimitReached")
 
     /**
+     * The request would exceed a ramp limit, which caps how fast usage can grow. Retry after the
+     * time in the `retry-after` header.
+     */
+    fun asRampLimitExceeded(): RampLimitExceededErrorDetails =
+        rampLimitExceeded.getOrThrow("rampLimitExceeded")
+
+    /**
      * The workspace's customer-managed encryption key could not be reached. Retry the request; if
      * this continues, check that the key is available in your key management service, or contact
      * Anthropic support.
@@ -1355,6 +1507,20 @@ private constructor(
         concurrentMembershipChange.getOrThrow("concurrentMembershipChange")
 
     /**
+     * The External Key failed Anthropic's validation, so the request was refused. The message gives
+     * the reason, if there is one.
+     */
+    fun asExternalKeyValidationFailed(): ExternalKeyValidationFailedErrorDetails =
+        externalKeyValidationFailed.getOrThrow("externalKeyValidationFailed")
+
+    /**
+     * Anthropic's validation of the External Key did not finish in time, so the request was
+     * refused. Wait a moment, then send the request again.
+     */
+    fun asExternalKeyValidationTimedOut(): ExternalKeyValidationTimedOutErrorDetails =
+        externalKeyValidationTimedOut.getOrThrow("externalKeyValidationTimedOut")
+
+    /**
      * The External Key is bound to a user profile, and the Workspace does not have that user
      * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
      * bound to one.
@@ -1421,6 +1587,49 @@ private constructor(
      */
     fun asInvalidMetadata(): BetaInvalidMetadataErrorDetails =
         invalidMetadata.getOrThrow("invalidMetadata")
+
+    /** The member is the organization's primary owner, whom no API key or token can sign out. */
+    fun asCannotSignOutPrimaryOwner(): BetaCannotSignOutPrimaryOwnerErrorDetails =
+        cannotSignOutPrimaryOwner.getOrThrow("cannotSignOutPrimaryOwner")
+
+    /** The member is the user the API key or token belongs to. */
+    fun asCannotSignOutSelf(): BetaCannotSignOutSelfErrorDetails =
+        cannotSignOutSelf.getOrThrow("cannotSignOutSelf")
+
+    /**
+     * The beta that the endpoint requires is not enabled for the organization. The message names
+     * the beta value.
+     */
+    fun asOrganizationNotEnrolledInBeta(): BetaOrganizationNotEnrolledInBetaErrorDetails =
+        organizationNotEnrolledInBeta.getOrThrow("organizationNotEnrolledInBeta")
+
+    /**
+     * On a public-sector deployment, only an API key or token that belongs to a person with owner
+     * permissions can sign out a member with the `managed` role.
+     */
+    fun asCannotSignOutManagedMember(): BetaCannotSignOutManagedMemberErrorDetails =
+        cannotSignOutManagedMember.getOrThrow("cannotSignOutManagedMember")
+
+    /**
+     * The member is a membership admin, and the person the API key or token belongs to is not
+     * allowed to sign out membership admins.
+     */
+    fun asCannotSignOutMembershipAdmin(): BetaCannotSignOutMembershipAdminErrorDetails =
+        cannotSignOutMembershipAdmin.getOrThrow("cannotSignOutMembershipAdmin")
+
+    /**
+     * The member is an owner or has owner permissions, and this API key or token cannot sign them
+     * out. In a Claude Enterprise organization, an API key with the `write:members` scope can.
+     */
+    fun asCannotSignOutOwner(): BetaCannotSignOutOwnerErrorDetails =
+        cannotSignOutOwner.getOrThrow("cannotSignOutOwner")
+
+    /**
+     * This OAuth token cannot sign out a membership admin or a member whose roles grant owner, user
+     * management, or identity and access management.
+     */
+    fun asCannotSignOutPrivilegedMember(): BetaCannotSignOutPrivilegedMemberErrorDetails =
+        cannotSignOutPrivilegedMember.getOrThrow("cannotSignOutPrivilegedMember")
 
     /**
      * Anthropic has temporarily disabled billing changes for the user account the credential
@@ -1598,6 +1807,7 @@ private constructor(
                 visitor.visitRequestBodyTooLargeAfterDecoding(requestBodyTooLargeAfterDecoding)
             enforcedSpendLimitReached != null ->
                 visitor.visitEnforcedSpendLimitReached(enforcedSpendLimitReached)
+            rampLimitExceeded != null -> visitor.visitRampLimitExceeded(rampLimitExceeded)
             cmekKeyUnreachable != null -> visitor.visitCmekKeyUnreachable(cmekKeyUnreachable)
             compactionUnavailable != null ->
                 visitor.visitCompactionUnavailable(compactionUnavailable)
@@ -1631,6 +1841,10 @@ private constructor(
                 visitor.visitCannotRemoveLastMember(cannotRemoveLastMember)
             concurrentMembershipChange != null ->
                 visitor.visitConcurrentMembershipChange(concurrentMembershipChange)
+            externalKeyValidationFailed != null ->
+                visitor.visitExternalKeyValidationFailed(externalKeyValidationFailed)
+            externalKeyValidationTimedOut != null ->
+                visitor.visitExternalKeyValidationTimedOut(externalKeyValidationTimedOut)
             keyProfileMismatch != null -> visitor.visitKeyProfileMismatch(keyProfileMismatch)
             workspacePolicyViolation != null ->
                 visitor.visitWorkspacePolicyViolation(workspacePolicyViolation)
@@ -1649,6 +1863,18 @@ private constructor(
             heartbeatPreconditionFailed != null ->
                 visitor.visitHeartbeatPreconditionFailed(heartbeatPreconditionFailed)
             invalidMetadata != null -> visitor.visitInvalidMetadata(invalidMetadata)
+            cannotSignOutPrimaryOwner != null ->
+                visitor.visitCannotSignOutPrimaryOwner(cannotSignOutPrimaryOwner)
+            cannotSignOutSelf != null -> visitor.visitCannotSignOutSelf(cannotSignOutSelf)
+            organizationNotEnrolledInBeta != null ->
+                visitor.visitOrganizationNotEnrolledInBeta(organizationNotEnrolledInBeta)
+            cannotSignOutManagedMember != null ->
+                visitor.visitCannotSignOutManagedMember(cannotSignOutManagedMember)
+            cannotSignOutMembershipAdmin != null ->
+                visitor.visitCannotSignOutMembershipAdmin(cannotSignOutMembershipAdmin)
+            cannotSignOutOwner != null -> visitor.visitCannotSignOutOwner(cannotSignOutOwner)
+            cannotSignOutPrivilegedMember != null ->
+                visitor.visitCannotSignOutPrivilegedMember(cannotSignOutPrivilegedMember)
             billingFrozen != null -> visitor.visitBillingFrozen(billingFrozen)
             spendLimitsAdminApiWritesNotEnabled != null ->
                 visitor.visitSpendLimitsAdminApiWritesNotEnabled(
@@ -1723,6 +1949,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> skillReadBlockedUndecryptable.validate()
             requestBodyTooLargeAfterDecoding != null -> requestBodyTooLargeAfterDecoding.validate()
             enforcedSpendLimitReached != null -> enforcedSpendLimitReached.validate()
+            rampLimitExceeded != null -> rampLimitExceeded.validate()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validate()
             compactionUnavailable != null -> compactionUnavailable.validate()
             storageQuotaExceeded != null -> storageQuotaExceeded.validate()
@@ -1743,6 +1970,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> rbacGroupOwnerAccessUnconfirmed.validate()
             cannotRemoveLastMember != null -> cannotRemoveLastMember.validate()
             concurrentMembershipChange != null -> concurrentMembershipChange.validate()
+            externalKeyValidationFailed != null -> externalKeyValidationFailed.validate()
+            externalKeyValidationTimedOut != null -> externalKeyValidationTimedOut.validate()
             keyProfileMismatch != null -> keyProfileMismatch.validate()
             workspacePolicyViolation != null -> workspacePolicyViolation.validate()
             externalKeyChanged != null -> externalKeyChanged.validate()
@@ -1754,6 +1983,13 @@ private constructor(
             environmentUpdateDisabled != null -> environmentUpdateDisabled.validate()
             heartbeatPreconditionFailed != null -> heartbeatPreconditionFailed.validate()
             invalidMetadata != null -> invalidMetadata.validate()
+            cannotSignOutPrimaryOwner != null -> cannotSignOutPrimaryOwner.validate()
+            cannotSignOutSelf != null -> cannotSignOutSelf.validate()
+            organizationNotEnrolledInBeta != null -> organizationNotEnrolledInBeta.validate()
+            cannotSignOutManagedMember != null -> cannotSignOutManagedMember.validate()
+            cannotSignOutMembershipAdmin != null -> cannotSignOutMembershipAdmin.validate()
+            cannotSignOutOwner != null -> cannotSignOutOwner.validate()
+            cannotSignOutPrivilegedMember != null -> cannotSignOutPrivilegedMember.validate()
             billingFrozen != null -> billingFrozen.validate()
             spendLimitsAdminApiWritesNotEnabled != null ->
                 spendLimitsAdminApiWritesNotEnabled.validate()
@@ -1822,6 +2058,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> skillReadBlockedUndecryptable.validity()
             requestBodyTooLargeAfterDecoding != null -> requestBodyTooLargeAfterDecoding.validity()
             enforcedSpendLimitReached != null -> enforcedSpendLimitReached.validity()
+            rampLimitExceeded != null -> rampLimitExceeded.validity()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validity()
             compactionUnavailable != null -> compactionUnavailable.validity()
             storageQuotaExceeded != null -> storageQuotaExceeded.validity()
@@ -1842,6 +2079,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed != null -> rbacGroupOwnerAccessUnconfirmed.validity()
             cannotRemoveLastMember != null -> cannotRemoveLastMember.validity()
             concurrentMembershipChange != null -> concurrentMembershipChange.validity()
+            externalKeyValidationFailed != null -> externalKeyValidationFailed.validity()
+            externalKeyValidationTimedOut != null -> externalKeyValidationTimedOut.validity()
             keyProfileMismatch != null -> keyProfileMismatch.validity()
             workspacePolicyViolation != null -> workspacePolicyViolation.validity()
             externalKeyChanged != null -> externalKeyChanged.validity()
@@ -1853,6 +2092,13 @@ private constructor(
             environmentUpdateDisabled != null -> environmentUpdateDisabled.validity()
             heartbeatPreconditionFailed != null -> heartbeatPreconditionFailed.validity()
             invalidMetadata != null -> invalidMetadata.validity()
+            cannotSignOutPrimaryOwner != null -> cannotSignOutPrimaryOwner.validity()
+            cannotSignOutSelf != null -> cannotSignOutSelf.validity()
+            organizationNotEnrolledInBeta != null -> organizationNotEnrolledInBeta.validity()
+            cannotSignOutManagedMember != null -> cannotSignOutManagedMember.validity()
+            cannotSignOutMembershipAdmin != null -> cannotSignOutMembershipAdmin.validity()
+            cannotSignOutOwner != null -> cannotSignOutOwner.validity()
+            cannotSignOutPrivilegedMember != null -> cannotSignOutPrivilegedMember.validity()
             billingFrozen != null -> billingFrozen.validity()
             spendLimitsAdminApiWritesNotEnabled != null ->
                 spendLimitsAdminApiWritesNotEnabled.validity()
@@ -1909,6 +2155,7 @@ private constructor(
             skillReadBlockedUndecryptable == other.skillReadBlockedUndecryptable &&
             requestBodyTooLargeAfterDecoding == other.requestBodyTooLargeAfterDecoding &&
             enforcedSpendLimitReached == other.enforcedSpendLimitReached &&
+            rampLimitExceeded == other.rampLimitExceeded &&
             cmekKeyUnreachable == other.cmekKeyUnreachable &&
             compactionUnavailable == other.compactionUnavailable &&
             storageQuotaExceeded == other.storageQuotaExceeded &&
@@ -1929,6 +2176,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed == other.rbacGroupOwnerAccessUnconfirmed &&
             cannotRemoveLastMember == other.cannotRemoveLastMember &&
             concurrentMembershipChange == other.concurrentMembershipChange &&
+            externalKeyValidationFailed == other.externalKeyValidationFailed &&
+            externalKeyValidationTimedOut == other.externalKeyValidationTimedOut &&
             keyProfileMismatch == other.keyProfileMismatch &&
             workspacePolicyViolation == other.workspacePolicyViolation &&
             externalKeyChanged == other.externalKeyChanged &&
@@ -1940,6 +2189,13 @@ private constructor(
             environmentUpdateDisabled == other.environmentUpdateDisabled &&
             heartbeatPreconditionFailed == other.heartbeatPreconditionFailed &&
             invalidMetadata == other.invalidMetadata &&
+            cannotSignOutPrimaryOwner == other.cannotSignOutPrimaryOwner &&
+            cannotSignOutSelf == other.cannotSignOutSelf &&
+            organizationNotEnrolledInBeta == other.organizationNotEnrolledInBeta &&
+            cannotSignOutManagedMember == other.cannotSignOutManagedMember &&
+            cannotSignOutMembershipAdmin == other.cannotSignOutMembershipAdmin &&
+            cannotSignOutOwner == other.cannotSignOutOwner &&
+            cannotSignOutPrivilegedMember == other.cannotSignOutPrivilegedMember &&
             billingFrozen == other.billingFrozen &&
             spendLimitsAdminApiWritesNotEnabled == other.spendLimitsAdminApiWritesNotEnabled &&
             unsupportedCharset == other.unsupportedCharset &&
@@ -1986,6 +2242,7 @@ private constructor(
             skillReadBlockedUndecryptable,
             requestBodyTooLargeAfterDecoding,
             enforcedSpendLimitReached,
+            rampLimitExceeded,
             cmekKeyUnreachable,
             compactionUnavailable,
             storageQuotaExceeded,
@@ -2005,6 +2262,8 @@ private constructor(
             rbacGroupOwnerAccessUnconfirmed,
             cannotRemoveLastMember,
             concurrentMembershipChange,
+            externalKeyValidationFailed,
+            externalKeyValidationTimedOut,
             keyProfileMismatch,
             workspacePolicyViolation,
             externalKeyChanged,
@@ -2016,6 +2275,13 @@ private constructor(
             environmentUpdateDisabled,
             heartbeatPreconditionFailed,
             invalidMetadata,
+            cannotSignOutPrimaryOwner,
+            cannotSignOutSelf,
+            organizationNotEnrolledInBeta,
+            cannotSignOutManagedMember,
+            cannotSignOutMembershipAdmin,
+            cannotSignOutOwner,
+            cannotSignOutPrivilegedMember,
             billingFrozen,
             spendLimitsAdminApiWritesNotEnabled,
             unsupportedCharset,
@@ -2084,6 +2350,7 @@ private constructor(
                 "ErrorDetails{requestBodyTooLargeAfterDecoding=$requestBodyTooLargeAfterDecoding}"
             enforcedSpendLimitReached != null ->
                 "ErrorDetails{enforcedSpendLimitReached=$enforcedSpendLimitReached}"
+            rampLimitExceeded != null -> "ErrorDetails{rampLimitExceeded=$rampLimitExceeded}"
             cmekKeyUnreachable != null -> "ErrorDetails{cmekKeyUnreachable=$cmekKeyUnreachable}"
             compactionUnavailable != null ->
                 "ErrorDetails{compactionUnavailable=$compactionUnavailable}"
@@ -2116,6 +2383,10 @@ private constructor(
                 "ErrorDetails{cannotRemoveLastMember=$cannotRemoveLastMember}"
             concurrentMembershipChange != null ->
                 "ErrorDetails{concurrentMembershipChange=$concurrentMembershipChange}"
+            externalKeyValidationFailed != null ->
+                "ErrorDetails{externalKeyValidationFailed=$externalKeyValidationFailed}"
+            externalKeyValidationTimedOut != null ->
+                "ErrorDetails{externalKeyValidationTimedOut=$externalKeyValidationTimedOut}"
             keyProfileMismatch != null -> "ErrorDetails{keyProfileMismatch=$keyProfileMismatch}"
             workspacePolicyViolation != null ->
                 "ErrorDetails{workspacePolicyViolation=$workspacePolicyViolation}"
@@ -2134,6 +2405,18 @@ private constructor(
             heartbeatPreconditionFailed != null ->
                 "ErrorDetails{heartbeatPreconditionFailed=$heartbeatPreconditionFailed}"
             invalidMetadata != null -> "ErrorDetails{invalidMetadata=$invalidMetadata}"
+            cannotSignOutPrimaryOwner != null ->
+                "ErrorDetails{cannotSignOutPrimaryOwner=$cannotSignOutPrimaryOwner}"
+            cannotSignOutSelf != null -> "ErrorDetails{cannotSignOutSelf=$cannotSignOutSelf}"
+            organizationNotEnrolledInBeta != null ->
+                "ErrorDetails{organizationNotEnrolledInBeta=$organizationNotEnrolledInBeta}"
+            cannotSignOutManagedMember != null ->
+                "ErrorDetails{cannotSignOutManagedMember=$cannotSignOutManagedMember}"
+            cannotSignOutMembershipAdmin != null ->
+                "ErrorDetails{cannotSignOutMembershipAdmin=$cannotSignOutMembershipAdmin}"
+            cannotSignOutOwner != null -> "ErrorDetails{cannotSignOutOwner=$cannotSignOutOwner}"
+            cannotSignOutPrivilegedMember != null ->
+                "ErrorDetails{cannotSignOutPrivilegedMember=$cannotSignOutPrivilegedMember}"
             billingFrozen != null -> "ErrorDetails{billingFrozen=$billingFrozen}"
             spendLimitsAdminApiWritesNotEnabled != null ->
                 "ErrorDetails{spendLimitsAdminApiWritesNotEnabled=$spendLimitsAdminApiWritesNotEnabled}"
@@ -2365,6 +2648,14 @@ private constructor(
         ) = ErrorDetails(enforcedSpendLimitReached = enforcedSpendLimitReached)
 
         /**
+         * The request would exceed a ramp limit, which caps how fast usage can grow. Retry after
+         * the time in the `retry-after` header.
+         */
+        @JvmStatic
+        fun ofRampLimitExceeded(rampLimitExceeded: RampLimitExceededErrorDetails) =
+            ErrorDetails(rampLimitExceeded = rampLimitExceeded)
+
+        /**
          * The workspace's customer-managed encryption key could not be reached. Retry the request;
          * if this continues, check that the key is available in your key management service, or
          * contact Anthropic support.
@@ -2517,6 +2808,24 @@ private constructor(
         ) = ErrorDetails(concurrentMembershipChange = concurrentMembershipChange)
 
         /**
+         * The External Key failed Anthropic's validation, so the request was refused. The message
+         * gives the reason, if there is one.
+         */
+        @JvmStatic
+        fun ofExternalKeyValidationFailed(
+            externalKeyValidationFailed: ExternalKeyValidationFailedErrorDetails
+        ) = ErrorDetails(externalKeyValidationFailed = externalKeyValidationFailed)
+
+        /**
+         * Anthropic's validation of the External Key did not finish in time, so the request was
+         * refused. Wait a moment, then send the request again.
+         */
+        @JvmStatic
+        fun ofExternalKeyValidationTimedOut(
+            externalKeyValidationTimedOut: ExternalKeyValidationTimedOutErrorDetails
+        ) = ErrorDetails(externalKeyValidationTimedOut = externalKeyValidationTimedOut)
+
+        /**
          * The External Key is bound to a user profile, and the Workspace does not have that user
          * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
          * bound to one.
@@ -2620,6 +2929,64 @@ private constructor(
         @JvmStatic
         fun ofInvalidMetadata(invalidMetadata: BetaInvalidMetadataErrorDetails) =
             ErrorDetails(invalidMetadata = invalidMetadata)
+
+        /**
+         * The member is the organization's primary owner, whom no API key or token can sign out.
+         */
+        @JvmStatic
+        fun ofCannotSignOutPrimaryOwner(
+            cannotSignOutPrimaryOwner: BetaCannotSignOutPrimaryOwnerErrorDetails
+        ) = ErrorDetails(cannotSignOutPrimaryOwner = cannotSignOutPrimaryOwner)
+
+        /** The member is the user the API key or token belongs to. */
+        @JvmStatic
+        fun ofCannotSignOutSelf(cannotSignOutSelf: BetaCannotSignOutSelfErrorDetails) =
+            ErrorDetails(cannotSignOutSelf = cannotSignOutSelf)
+
+        /**
+         * The beta that the endpoint requires is not enabled for the organization. The message
+         * names the beta value.
+         */
+        @JvmStatic
+        fun ofOrganizationNotEnrolledInBeta(
+            organizationNotEnrolledInBeta: BetaOrganizationNotEnrolledInBetaErrorDetails
+        ) = ErrorDetails(organizationNotEnrolledInBeta = organizationNotEnrolledInBeta)
+
+        /**
+         * On a public-sector deployment, only an API key or token that belongs to a person with
+         * owner permissions can sign out a member with the `managed` role.
+         */
+        @JvmStatic
+        fun ofCannotSignOutManagedMember(
+            cannotSignOutManagedMember: BetaCannotSignOutManagedMemberErrorDetails
+        ) = ErrorDetails(cannotSignOutManagedMember = cannotSignOutManagedMember)
+
+        /**
+         * The member is a membership admin, and the person the API key or token belongs to is not
+         * allowed to sign out membership admins.
+         */
+        @JvmStatic
+        fun ofCannotSignOutMembershipAdmin(
+            cannotSignOutMembershipAdmin: BetaCannotSignOutMembershipAdminErrorDetails
+        ) = ErrorDetails(cannotSignOutMembershipAdmin = cannotSignOutMembershipAdmin)
+
+        /**
+         * The member is an owner or has owner permissions, and this API key or token cannot sign
+         * them out. In a Claude Enterprise organization, an API key with the `write:members` scope
+         * can.
+         */
+        @JvmStatic
+        fun ofCannotSignOutOwner(cannotSignOutOwner: BetaCannotSignOutOwnerErrorDetails) =
+            ErrorDetails(cannotSignOutOwner = cannotSignOutOwner)
+
+        /**
+         * This OAuth token cannot sign out a membership admin or a member whose roles grant owner,
+         * user management, or identity and access management.
+         */
+        @JvmStatic
+        fun ofCannotSignOutPrivilegedMember(
+            cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails
+        ) = ErrorDetails(cannotSignOutPrivilegedMember = cannotSignOutPrivilegedMember)
 
         /**
          * Anthropic has temporarily disabled billing changes for the user account the credential
@@ -2990,6 +3357,12 @@ private constructor(
         ): T
 
         /**
+         * The request would exceed a ramp limit, which caps how fast usage can grow. Retry after
+         * the time in the `retry-after` header.
+         */
+        fun visitRampLimitExceeded(rampLimitExceeded: RampLimitExceededErrorDetails): T
+
+        /**
          * The workspace's customer-managed encryption key could not be reached. Retry the request;
          * if this continues, check that the key is available in your key management service, or
          * contact Anthropic support.
@@ -3115,6 +3488,22 @@ private constructor(
         ): T
 
         /**
+         * The External Key failed Anthropic's validation, so the request was refused. The message
+         * gives the reason, if there is one.
+         */
+        fun visitExternalKeyValidationFailed(
+            externalKeyValidationFailed: ExternalKeyValidationFailedErrorDetails
+        ): T
+
+        /**
+         * Anthropic's validation of the External Key did not finish in time, so the request was
+         * refused. Wait a moment, then send the request again.
+         */
+        fun visitExternalKeyValidationTimedOut(
+            externalKeyValidationTimedOut: ExternalKeyValidationTimedOutErrorDetails
+        ): T
+
+        /**
          * The External Key is bound to a user profile, and the Workspace does not have that user
          * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
          * bound to one.
@@ -3185,6 +3574,55 @@ private constructor(
          * message names each problem.
          */
         fun visitInvalidMetadata(invalidMetadata: BetaInvalidMetadataErrorDetails): T
+
+        /**
+         * The member is the organization's primary owner, whom no API key or token can sign out.
+         */
+        fun visitCannotSignOutPrimaryOwner(
+            cannotSignOutPrimaryOwner: BetaCannotSignOutPrimaryOwnerErrorDetails
+        ): T
+
+        /** The member is the user the API key or token belongs to. */
+        fun visitCannotSignOutSelf(cannotSignOutSelf: BetaCannotSignOutSelfErrorDetails): T
+
+        /**
+         * The beta that the endpoint requires is not enabled for the organization. The message
+         * names the beta value.
+         */
+        fun visitOrganizationNotEnrolledInBeta(
+            organizationNotEnrolledInBeta: BetaOrganizationNotEnrolledInBetaErrorDetails
+        ): T
+
+        /**
+         * On a public-sector deployment, only an API key or token that belongs to a person with
+         * owner permissions can sign out a member with the `managed` role.
+         */
+        fun visitCannotSignOutManagedMember(
+            cannotSignOutManagedMember: BetaCannotSignOutManagedMemberErrorDetails
+        ): T
+
+        /**
+         * The member is a membership admin, and the person the API key or token belongs to is not
+         * allowed to sign out membership admins.
+         */
+        fun visitCannotSignOutMembershipAdmin(
+            cannotSignOutMembershipAdmin: BetaCannotSignOutMembershipAdminErrorDetails
+        ): T
+
+        /**
+         * The member is an owner or has owner permissions, and this API key or token cannot sign
+         * them out. In a Claude Enterprise organization, an API key with the `write:members` scope
+         * can.
+         */
+        fun visitCannotSignOutOwner(cannotSignOutOwner: BetaCannotSignOutOwnerErrorDetails): T
+
+        /**
+         * This OAuth token cannot sign out a membership admin or a member whose roles grant owner,
+         * user management, or identity and access management.
+         */
+        fun visitCannotSignOutPrivilegedMember(
+            cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails
+        ): T
 
         /**
          * Anthropic has temporarily disabled billing changes for the user account the credential
@@ -3502,6 +3940,11 @@ private constructor(
                         ?.let { ErrorDetails(enforcedSpendLimitReached = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "ramp_limit_exceeded" -> {
+                    return tryDeserialize(node, jacksonTypeRef<RampLimitExceededErrorDetails>())
+                        ?.let { ErrorDetails(rampLimitExceeded = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "cmek_key_unreachable" -> {
                     return tryDeserialize(node, jacksonTypeRef<CmekKeyUnreachableErrorDetails>())
                         ?.let { ErrorDetails(cmekKeyUnreachable = it, _json = json) }
@@ -3628,6 +4071,22 @@ private constructor(
                         ?.let { ErrorDetails(concurrentMembershipChange = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "external_key_validation_failed" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ExternalKeyValidationFailedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(externalKeyValidationFailed = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "external_key_validation_timed_out" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ExternalKeyValidationTimedOutErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(externalKeyValidationTimedOut = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "key_profile_mismatch" -> {
                     return tryDeserialize(node, jacksonTypeRef<KeyProfileMismatchErrorDetails>())
                         ?.let { ErrorDetails(keyProfileMismatch = it, _json = json) }
@@ -3705,6 +4164,59 @@ private constructor(
                 "invalid_metadata" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaInvalidMetadataErrorDetails>())
                         ?.let { ErrorDetails(invalidMetadata = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_primary_owner" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCannotSignOutPrimaryOwnerErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cannotSignOutPrimaryOwner = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_self" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaCannotSignOutSelfErrorDetails>())
+                        ?.let { ErrorDetails(cannotSignOutSelf = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "organization_not_enrolled_in_beta" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaOrganizationNotEnrolledInBetaErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(organizationNotEnrolledInBeta = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_managed_member" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCannotSignOutManagedMemberErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cannotSignOutManagedMember = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_membership_admin" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCannotSignOutMembershipAdminErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cannotSignOutMembershipAdmin = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_owner" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCannotSignOutOwnerErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cannotSignOutOwner = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_privileged_member" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCannotSignOutPrivilegedMemberErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cannotSignOutPrivilegedMember = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
                 "billing_frozen" -> {
@@ -3885,6 +4397,7 @@ private constructor(
                     generator.writeObject(value.requestBodyTooLargeAfterDecoding)
                 value.enforcedSpendLimitReached != null ->
                     generator.writeObject(value.enforcedSpendLimitReached)
+                value.rampLimitExceeded != null -> generator.writeObject(value.rampLimitExceeded)
                 value.cmekKeyUnreachable != null -> generator.writeObject(value.cmekKeyUnreachable)
                 value.compactionUnavailable != null ->
                     generator.writeObject(value.compactionUnavailable)
@@ -3920,6 +4433,10 @@ private constructor(
                     generator.writeObject(value.cannotRemoveLastMember)
                 value.concurrentMembershipChange != null ->
                     generator.writeObject(value.concurrentMembershipChange)
+                value.externalKeyValidationFailed != null ->
+                    generator.writeObject(value.externalKeyValidationFailed)
+                value.externalKeyValidationTimedOut != null ->
+                    generator.writeObject(value.externalKeyValidationTimedOut)
                 value.keyProfileMismatch != null -> generator.writeObject(value.keyProfileMismatch)
                 value.workspacePolicyViolation != null ->
                     generator.writeObject(value.workspacePolicyViolation)
@@ -3939,6 +4456,18 @@ private constructor(
                 value.heartbeatPreconditionFailed != null ->
                     generator.writeObject(value.heartbeatPreconditionFailed)
                 value.invalidMetadata != null -> generator.writeObject(value.invalidMetadata)
+                value.cannotSignOutPrimaryOwner != null ->
+                    generator.writeObject(value.cannotSignOutPrimaryOwner)
+                value.cannotSignOutSelf != null -> generator.writeObject(value.cannotSignOutSelf)
+                value.organizationNotEnrolledInBeta != null ->
+                    generator.writeObject(value.organizationNotEnrolledInBeta)
+                value.cannotSignOutManagedMember != null ->
+                    generator.writeObject(value.cannotSignOutManagedMember)
+                value.cannotSignOutMembershipAdmin != null ->
+                    generator.writeObject(value.cannotSignOutMembershipAdmin)
+                value.cannotSignOutOwner != null -> generator.writeObject(value.cannotSignOutOwner)
+                value.cannotSignOutPrivilegedMember != null ->
+                    generator.writeObject(value.cannotSignOutPrivilegedMember)
                 value.billingFrozen != null -> generator.writeObject(value.billingFrozen)
                 value.spendLimitsAdminApiWritesNotEnabled != null ->
                     generator.writeObject(value.spendLimitsAdminApiWritesNotEnabled)
@@ -4069,6 +4598,8 @@ private constructor(
             val ENFORCED_SPEND_LIMIT_REACHED =
                 ErrorCode(JsonField.of("enforced_spend_limit_reached"))
 
+            @JvmField val RAMP_LIMIT_EXCEEDED = ErrorCode(JsonField.of("ramp_limit_exceeded"))
+
             @JvmField val CMEK_KEY_UNREACHABLE = ErrorCode(JsonField.of("cmek_key_unreachable"))
 
             @JvmField val COMPACTION_UNAVAILABLE = ErrorCode(JsonField.of("compaction_unavailable"))
@@ -4124,6 +4655,14 @@ private constructor(
             val CONCURRENT_MEMBERSHIP_CHANGE =
                 ErrorCode(JsonField.of("concurrent_membership_change"))
 
+            @JvmField
+            val EXTERNAL_KEY_VALIDATION_FAILED =
+                ErrorCode(JsonField.of("external_key_validation_failed"))
+
+            @JvmField
+            val EXTERNAL_KEY_VALIDATION_TIMED_OUT =
+                ErrorCode(JsonField.of("external_key_validation_timed_out"))
+
             @JvmField val KEY_PROFILE_MISMATCH = ErrorCode(JsonField.of("key_profile_mismatch"))
 
             @JvmField
@@ -4155,6 +4694,30 @@ private constructor(
                 ErrorCode(JsonField.of("heartbeat_precondition_failed"))
 
             @JvmField val INVALID_METADATA = ErrorCode(JsonField.of("invalid_metadata"))
+
+            @JvmField
+            val CANNOT_SIGN_OUT_PRIMARY_OWNER =
+                ErrorCode(JsonField.of("cannot_sign_out_primary_owner"))
+
+            @JvmField val CANNOT_SIGN_OUT_SELF = ErrorCode(JsonField.of("cannot_sign_out_self"))
+
+            @JvmField
+            val ORGANIZATION_NOT_ENROLLED_IN_BETA =
+                ErrorCode(JsonField.of("organization_not_enrolled_in_beta"))
+
+            @JvmField
+            val CANNOT_SIGN_OUT_MANAGED_MEMBER =
+                ErrorCode(JsonField.of("cannot_sign_out_managed_member"))
+
+            @JvmField
+            val CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN =
+                ErrorCode(JsonField.of("cannot_sign_out_membership_admin"))
+
+            @JvmField val CANNOT_SIGN_OUT_OWNER = ErrorCode(JsonField.of("cannot_sign_out_owner"))
+
+            @JvmField
+            val CANNOT_SIGN_OUT_PRIVILEGED_MEMBER =
+                ErrorCode(JsonField.of("cannot_sign_out_privileged_member"))
 
             @JvmField val BILLING_FROZEN = ErrorCode(JsonField.of("billing_frozen"))
 
@@ -4232,6 +4795,7 @@ private constructor(
                     "skill_read_blocked_undecryptable" -> SKILL_READ_BLOCKED_UNDECRYPTABLE
                     "request_body_too_large_after_decoding" -> REQUEST_BODY_TOO_LARGE_AFTER_DECODING
                     "enforced_spend_limit_reached" -> ENFORCED_SPEND_LIMIT_REACHED
+                    "ramp_limit_exceeded" -> RAMP_LIMIT_EXCEEDED
                     "cmek_key_unreachable" -> CMEK_KEY_UNREACHABLE
                     "compaction_unavailable" -> COMPACTION_UNAVAILABLE
                     "storage_quota_exceeded" -> STORAGE_QUOTA_EXCEEDED
@@ -4252,6 +4816,8 @@ private constructor(
                     "rbac_group_owner_access_unconfirmed" -> RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED
                     "cannot_remove_last_member" -> CANNOT_REMOVE_LAST_MEMBER
                     "concurrent_membership_change" -> CONCURRENT_MEMBERSHIP_CHANGE
+                    "external_key_validation_failed" -> EXTERNAL_KEY_VALIDATION_FAILED
+                    "external_key_validation_timed_out" -> EXTERNAL_KEY_VALIDATION_TIMED_OUT
                     "key_profile_mismatch" -> KEY_PROFILE_MISMATCH
                     "workspace_policy_violation" -> WORKSPACE_POLICY_VIOLATION
                     "external_key_changed" -> EXTERNAL_KEY_CHANGED
@@ -4263,6 +4829,13 @@ private constructor(
                     "environment_update_disabled" -> ENVIRONMENT_UPDATE_DISABLED
                     "heartbeat_precondition_failed" -> HEARTBEAT_PRECONDITION_FAILED
                     "invalid_metadata" -> INVALID_METADATA
+                    "cannot_sign_out_primary_owner" -> CANNOT_SIGN_OUT_PRIMARY_OWNER
+                    "cannot_sign_out_self" -> CANNOT_SIGN_OUT_SELF
+                    "organization_not_enrolled_in_beta" -> ORGANIZATION_NOT_ENROLLED_IN_BETA
+                    "cannot_sign_out_managed_member" -> CANNOT_SIGN_OUT_MANAGED_MEMBER
+                    "cannot_sign_out_membership_admin" -> CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
+                    "cannot_sign_out_owner" -> CANNOT_SIGN_OUT_OWNER
+                    "cannot_sign_out_privileged_member" -> CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
                     "billing_frozen" -> BILLING_FROZEN
                     "spend_limits_admin_api_writes_not_enabled" ->
                         SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
@@ -4320,6 +4893,7 @@ private constructor(
             SKILL_READ_BLOCKED_UNDECRYPTABLE,
             REQUEST_BODY_TOO_LARGE_AFTER_DECODING,
             ENFORCED_SPEND_LIMIT_REACHED,
+            RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
             COMPACTION_UNAVAILABLE,
             STORAGE_QUOTA_EXCEEDED,
@@ -4339,6 +4913,8 @@ private constructor(
             RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED,
             CANNOT_REMOVE_LAST_MEMBER,
             CONCURRENT_MEMBERSHIP_CHANGE,
+            EXTERNAL_KEY_VALIDATION_FAILED,
+            EXTERNAL_KEY_VALIDATION_TIMED_OUT,
             KEY_PROFILE_MISMATCH,
             WORKSPACE_POLICY_VIOLATION,
             EXTERNAL_KEY_CHANGED,
@@ -4350,6 +4926,13 @@ private constructor(
             ENVIRONMENT_UPDATE_DISABLED,
             HEARTBEAT_PRECONDITION_FAILED,
             INVALID_METADATA,
+            CANNOT_SIGN_OUT_PRIMARY_OWNER,
+            CANNOT_SIGN_OUT_SELF,
+            ORGANIZATION_NOT_ENROLLED_IN_BETA,
+            CANNOT_SIGN_OUT_MANAGED_MEMBER,
+            CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN,
+            CANNOT_SIGN_OUT_OWNER,
+            CANNOT_SIGN_OUT_PRIVILEGED_MEMBER,
             BILLING_FROZEN,
             SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED,
             UNSUPPORTED_CHARSET,
@@ -4404,6 +4987,7 @@ private constructor(
             SKILL_READ_BLOCKED_UNDECRYPTABLE,
             REQUEST_BODY_TOO_LARGE_AFTER_DECODING,
             ENFORCED_SPEND_LIMIT_REACHED,
+            RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
             COMPACTION_UNAVAILABLE,
             STORAGE_QUOTA_EXCEEDED,
@@ -4423,6 +5007,8 @@ private constructor(
             RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED,
             CANNOT_REMOVE_LAST_MEMBER,
             CONCURRENT_MEMBERSHIP_CHANGE,
+            EXTERNAL_KEY_VALIDATION_FAILED,
+            EXTERNAL_KEY_VALIDATION_TIMED_OUT,
             KEY_PROFILE_MISMATCH,
             WORKSPACE_POLICY_VIOLATION,
             EXTERNAL_KEY_CHANGED,
@@ -4434,6 +5020,13 @@ private constructor(
             ENVIRONMENT_UPDATE_DISABLED,
             HEARTBEAT_PRECONDITION_FAILED,
             INVALID_METADATA,
+            CANNOT_SIGN_OUT_PRIMARY_OWNER,
+            CANNOT_SIGN_OUT_SELF,
+            ORGANIZATION_NOT_ENROLLED_IN_BETA,
+            CANNOT_SIGN_OUT_MANAGED_MEMBER,
+            CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN,
+            CANNOT_SIGN_OUT_OWNER,
+            CANNOT_SIGN_OUT_PRIVILEGED_MEMBER,
             BILLING_FROZEN,
             SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED,
             UNSUPPORTED_CHARSET,
@@ -4491,6 +5084,7 @@ private constructor(
                 SKILL_READ_BLOCKED_UNDECRYPTABLE -> Value.SKILL_READ_BLOCKED_UNDECRYPTABLE
                 REQUEST_BODY_TOO_LARGE_AFTER_DECODING -> Value.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
                 ENFORCED_SPEND_LIMIT_REACHED -> Value.ENFORCED_SPEND_LIMIT_REACHED
+                RAMP_LIMIT_EXCEEDED -> Value.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Value.CMEK_KEY_UNREACHABLE
                 COMPACTION_UNAVAILABLE -> Value.COMPACTION_UNAVAILABLE
                 STORAGE_QUOTA_EXCEEDED -> Value.STORAGE_QUOTA_EXCEEDED
@@ -4511,6 +5105,8 @@ private constructor(
                 RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED -> Value.RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED
                 CANNOT_REMOVE_LAST_MEMBER -> Value.CANNOT_REMOVE_LAST_MEMBER
                 CONCURRENT_MEMBERSHIP_CHANGE -> Value.CONCURRENT_MEMBERSHIP_CHANGE
+                EXTERNAL_KEY_VALIDATION_FAILED -> Value.EXTERNAL_KEY_VALIDATION_FAILED
+                EXTERNAL_KEY_VALIDATION_TIMED_OUT -> Value.EXTERNAL_KEY_VALIDATION_TIMED_OUT
                 KEY_PROFILE_MISMATCH -> Value.KEY_PROFILE_MISMATCH
                 WORKSPACE_POLICY_VIOLATION -> Value.WORKSPACE_POLICY_VIOLATION
                 EXTERNAL_KEY_CHANGED -> Value.EXTERNAL_KEY_CHANGED
@@ -4522,6 +5118,13 @@ private constructor(
                 ENVIRONMENT_UPDATE_DISABLED -> Value.ENVIRONMENT_UPDATE_DISABLED
                 HEARTBEAT_PRECONDITION_FAILED -> Value.HEARTBEAT_PRECONDITION_FAILED
                 INVALID_METADATA -> Value.INVALID_METADATA
+                CANNOT_SIGN_OUT_PRIMARY_OWNER -> Value.CANNOT_SIGN_OUT_PRIMARY_OWNER
+                CANNOT_SIGN_OUT_SELF -> Value.CANNOT_SIGN_OUT_SELF
+                ORGANIZATION_NOT_ENROLLED_IN_BETA -> Value.ORGANIZATION_NOT_ENROLLED_IN_BETA
+                CANNOT_SIGN_OUT_MANAGED_MEMBER -> Value.CANNOT_SIGN_OUT_MANAGED_MEMBER
+                CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN -> Value.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
+                CANNOT_SIGN_OUT_OWNER -> Value.CANNOT_SIGN_OUT_OWNER
+                CANNOT_SIGN_OUT_PRIVILEGED_MEMBER -> Value.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
                 BILLING_FROZEN -> Value.BILLING_FROZEN
                 SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED ->
                     Value.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
@@ -4582,6 +5185,7 @@ private constructor(
                 SKILL_READ_BLOCKED_UNDECRYPTABLE -> Known.SKILL_READ_BLOCKED_UNDECRYPTABLE
                 REQUEST_BODY_TOO_LARGE_AFTER_DECODING -> Known.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
                 ENFORCED_SPEND_LIMIT_REACHED -> Known.ENFORCED_SPEND_LIMIT_REACHED
+                RAMP_LIMIT_EXCEEDED -> Known.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Known.CMEK_KEY_UNREACHABLE
                 COMPACTION_UNAVAILABLE -> Known.COMPACTION_UNAVAILABLE
                 STORAGE_QUOTA_EXCEEDED -> Known.STORAGE_QUOTA_EXCEEDED
@@ -4602,6 +5206,8 @@ private constructor(
                 RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED -> Known.RBAC_GROUP_OWNER_ACCESS_UNCONFIRMED
                 CANNOT_REMOVE_LAST_MEMBER -> Known.CANNOT_REMOVE_LAST_MEMBER
                 CONCURRENT_MEMBERSHIP_CHANGE -> Known.CONCURRENT_MEMBERSHIP_CHANGE
+                EXTERNAL_KEY_VALIDATION_FAILED -> Known.EXTERNAL_KEY_VALIDATION_FAILED
+                EXTERNAL_KEY_VALIDATION_TIMED_OUT -> Known.EXTERNAL_KEY_VALIDATION_TIMED_OUT
                 KEY_PROFILE_MISMATCH -> Known.KEY_PROFILE_MISMATCH
                 WORKSPACE_POLICY_VIOLATION -> Known.WORKSPACE_POLICY_VIOLATION
                 EXTERNAL_KEY_CHANGED -> Known.EXTERNAL_KEY_CHANGED
@@ -4613,6 +5219,13 @@ private constructor(
                 ENVIRONMENT_UPDATE_DISABLED -> Known.ENVIRONMENT_UPDATE_DISABLED
                 HEARTBEAT_PRECONDITION_FAILED -> Known.HEARTBEAT_PRECONDITION_FAILED
                 INVALID_METADATA -> Known.INVALID_METADATA
+                CANNOT_SIGN_OUT_PRIMARY_OWNER -> Known.CANNOT_SIGN_OUT_PRIMARY_OWNER
+                CANNOT_SIGN_OUT_SELF -> Known.CANNOT_SIGN_OUT_SELF
+                ORGANIZATION_NOT_ENROLLED_IN_BETA -> Known.ORGANIZATION_NOT_ENROLLED_IN_BETA
+                CANNOT_SIGN_OUT_MANAGED_MEMBER -> Known.CANNOT_SIGN_OUT_MANAGED_MEMBER
+                CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN -> Known.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
+                CANNOT_SIGN_OUT_OWNER -> Known.CANNOT_SIGN_OUT_OWNER
+                CANNOT_SIGN_OUT_PRIVILEGED_MEMBER -> Known.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
                 BILLING_FROZEN -> Known.BILLING_FROZEN
                 SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED ->
                     Known.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED

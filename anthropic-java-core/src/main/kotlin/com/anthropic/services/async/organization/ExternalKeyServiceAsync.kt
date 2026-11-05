@@ -33,10 +33,7 @@ interface ExternalKeyServiceAsync {
     /**
      * Create an external key config owned by the caller's organization.
      *
-     * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException The request depends on
-     *   a user profile that does not exist in the organization or is no longer active. The request
-     *   either names this user profile by ID, or names a resource, such as an External Key, that is
-     *   bound to it.
+     * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
      */
     fun create(params: ExternalKeyCreateParams): CompletableFuture<ExternalKey> =
         create(params, RequestOptions.none())
@@ -90,8 +87,6 @@ interface ExternalKeyServiceAsync {
      * identity to decrypt.
      *
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyInWorkspacePolicyException
-     *   The External Key can't be deleted or reconfigured while the organization's Workspace Policy
-     *   lists it as an allowed key.
      */
     fun update(externalKeyId: String): CompletableFuture<ExternalKey> =
         update(externalKeyId, ExternalKeyUpdateParams.none())
@@ -156,8 +151,6 @@ interface ExternalKeyServiceAsync {
      * The request is rejected if any workspace still references this config.
      *
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyInWorkspacePolicyException
-     *   The External Key can't be deleted or reconfigured while the organization's Workspace Policy
-     *   lists it as an allowed key.
      */
     fun delete(externalKeyId: String): CompletableFuture<ExternalKeyDeleteResponse> =
         delete(externalKeyId, ExternalKeyDeleteParams.none())

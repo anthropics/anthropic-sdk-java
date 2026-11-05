@@ -28,6 +28,7 @@ import com.anthropic.errors.RateLimitException
 import com.anthropic.helpers.FakeHttpClient
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaOutputConfig
+import com.anthropic.models.beta.messages.BetaThinkingConfigBetweenTools
 import com.anthropic.models.beta.messages.MessageCountTokensParams as BetaMessageCountTokensParams
 import com.anthropic.models.beta.messages.MessageCreateParams as BetaMessageCreateParams
 import com.anthropic.models.beta.messages.batches.BatchCreateParams as BetaBatchCreateParams
@@ -35,6 +36,7 @@ import com.anthropic.models.messages.JsonOutputFormat
 import com.anthropic.models.messages.MessageCountTokensParams
 import com.anthropic.models.messages.MessageCreateParams
 import com.anthropic.models.messages.OutputConfig
+import com.anthropic.models.messages.ThinkingConfigBetweenTools
 import com.anthropic.models.messages.batches.BatchCreateParams
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
@@ -217,6 +219,55 @@ internal class ApiCallSpansTest : TracingTestSupport() {
         }
         assertThat(stable.strings("anthropic.beta")).containsExactly("client-beta")
         assertThat(beta.strings("anthropic.beta")).containsExactly("params-beta")
+    }
+
+    @Test
+    fun messagesCreate_withThinkingBetweenTools_recordsTheThinkingType() {
+        stubMessage()
+
+        client
+            .messages()
+            .create(
+                messageParams()
+                    .toBuilder()
+                    .thinking(ThinkingConfigBetweenTools.builder().build())
+                    .build()
+            )
+        client
+            .beta()
+            .messages()
+            .create(
+                betaMessageParams()
+                    .toBuilder()
+                    .thinking(BetaThinkingConfigBetweenTools.builder().build())
+                    .build()
+            )
+
+        assertThat(recorder.spans).hasSize(2).allSatisfy { span ->
+            assertThat(span.string("anthropic.thinking.type")).isEqualTo("between_tools")
+            assertThat(span.long("anthropic.thinking.budget_tokens")).isNull()
+        }
+    }
+
+    @Test
+    fun messagesCreateStreaming_recordsTheResponseHeaders() {
+        stubFor(
+            post(urlPathEqualTo("/v1/messages"))
+                .willReturn(
+                    ok(STREAM_BODY)
+                        .withHeader("Content-Type", "text/event-stream")
+                        .withHeader("request-id", "req_1")
+                        .withHeader("anthropic-organization-id", "org_1")
+                        .withHeader("anthropic-workspace-id", "wrkspc_1")
+                )
+        )
+
+        client.messages().createStreaming(messageParams()).use { it.stream().forEach {} }
+
+        val span = recorder.only()
+        assertThat(span.string("anthropic.request.id")).isEqualTo("req_1")
+        assertThat(span.string("anthropic.organization.id")).isEqualTo("org_1")
+        assertThat(span.string("anthropic.workspace.id")).isEqualTo("wrkspc_1")
     }
 
     @Test

@@ -16,7 +16,6 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
-import com.anthropic.internal.telemetry.recordSessionsCreateResponse
 import com.anthropic.internal.telemetry.startSessionsCreate
 import com.anthropic.models.beta.sessions.BetaManagedAgentsDeletedSession
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSession
@@ -169,7 +168,6 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
                             }
                         }
                         .also { client.recordCreatedId("anthropic.session.id", it._id()) }
-                        .also { recordSessionsCreateResponse(clientOptions, call, it) }
                 }
             }
         }

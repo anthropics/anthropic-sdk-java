@@ -20,6 +20,9 @@ import java.util.Optional
  * Two paths overlap when one is an ancestor of the other, such as `/notes` and `/notes/todo.md`. To
  * free the path, rename or delete the memory that `conflicting_memory_id` references, then retry.
  * To change that memory instead of creating a new one, update it.
+ *
+ * To handle the error in code, use `conflicting_path` and `conflicting_memory_id` instead of
+ * `message`.
  */
 class BetaManagedAgentsMemoryPathConflictError
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -76,9 +79,6 @@ private constructor(
     fun conflictingPath(): Optional<String> = conflictingPath.getOptional("conflicting_path")
 
     /**
-     * A human-readable explanation of the conflict. To handle the error in code, use
-     * `conflicting_path` and `conflicting_memory_id` instead.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -204,10 +204,6 @@ private constructor(
             this.conflictingPath = conflictingPath
         }
 
-        /**
-         * A human-readable explanation of the conflict. To handle the error in code, use
-         * `conflicting_path` and `conflicting_memory_id` instead.
-         */
         fun message(message: String) = message(JsonField.of(message))
 
         /**

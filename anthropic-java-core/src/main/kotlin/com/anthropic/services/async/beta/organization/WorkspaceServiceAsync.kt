@@ -39,19 +39,12 @@ interface WorkspaceServiceAsync {
     /**
      * Create Workspace
      *
-     * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException The External
-     *   Key is bound to a user profile, and the Workspace does not have that user profile. A
-     *   Workspace can use only a key bound to its own user profile or a key that isn't bound to
-     *   one.
-     * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException The request depends on
-     *   a user profile that does not exist in the organization or is no longer active. The request
-     *   either names this user profile by ID, or names a resource, such as an External Key, that is
-     *   bound to it.
-     * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException The
-     *   request breaks the organization's Workspace Policy. The message says which rule it broke;
-     *   an organization admin can see and change the policy in the Console.
-     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException The
-     *   external key changed while the request was validating it. Send the request again.
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
+     * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
+     * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
+     * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
      */
     fun create(params: WorkspaceCreateParams): CompletableFuture<BetaWorkspace> =
         create(params, RequestOptions.none())
@@ -100,19 +93,12 @@ interface WorkspaceServiceAsync {
     /**
      * Update Workspace
      *
-     * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException The External
-     *   Key is bound to a user profile, and the Workspace does not have that user profile. A
-     *   Workspace can use only a key bound to its own user profile or a key that isn't bound to
-     *   one.
-     * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException The request depends on
-     *   a user profile that does not exist in the organization or is no longer active. The request
-     *   either names this user profile by ID, or names a resource, such as an External Key, that is
-     *   bound to it.
-     * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException The
-     *   request breaks the organization's Workspace Policy. The message says which rule it broke;
-     *   an organization admin can see and change the policy in the Console.
-     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException The
-     *   external key changed while the request was validating it. Send the request again.
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
+     * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
+     * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
+     * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
      */
     fun update(workspaceId: String): CompletableFuture<BetaWorkspace> =
         update(workspaceId, WorkspaceUpdateParams.none())

@@ -31,16 +31,34 @@ protected constructor(message: String, cause: Throwable? = null) :
 
     abstract fun body(): JsonValue
 
-    /** `error.message` of [body], or empty if it can't be read as this type. */
+    /**
+     * A human-readable explanation of the error. Its wording can change, so don't match on it.
+     *
+     * `error.message` of [body], or empty if it can't be read as this type.
+     */
     fun apiMessage(): Optional<String> = body().valueAt("error", "message")
 
-    /** `error.type` of [body], or empty if it can't be read as this type. */
+    /**
+     * The broad category of the error.
+     *
+     * `error.type` of [body], or empty if it can't be read as this type.
+     */
     fun type(): Optional<ErrorType> = body().valueAt("error", "type")
 
-    /** `error.details.error_code` of [body], or empty if it can't be read as this type. */
+    /**
+     * A stable code that names the cause.
+     *
+     * `error.details.error_code` of [body], or empty if it can't be read as this type.
+     */
     fun errorCode(): Optional<String> = body().valueAt("error", "details", "error_code")
 
-    /** `error.details` of [body], or empty if it can't be read as this type. */
+    /**
+     * Machine-readable detail about the cause of the error. `error_code` names the cause; branch on
+     * it rather than on `message`. Absent when the error has no code. Treat an unrecognized
+     * `error_code` as the bare `type`.
+     *
+     * `error.details` of [body], or empty if it can't be read as this type.
+     */
     fun errorDetails(): Optional<ErrorDetails> = body().valueAt("error", "details")
 
     /**

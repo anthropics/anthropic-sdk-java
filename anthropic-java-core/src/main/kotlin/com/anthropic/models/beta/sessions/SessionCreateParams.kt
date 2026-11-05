@@ -16,6 +16,7 @@ import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
+import com.anthropic.core.opentelemetry.putField
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -33,6 +34,8 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import io.opentelemetry.api.common.AttributeKey
+import io.opentelemetry.api.common.Attributes
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -685,7 +688,44 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     override fun _spanData(): SpanData =
-        SpanData(name = "anthropic.sessions.create", route = "/v1/sessions")
+        SpanData(
+            name = "anthropic.sessions.create",
+            route = "/v1/sessions",
+            requestAttributes = {
+                Attributes.builder()
+                    .putField(
+                        AttributeKey.stringKey("anthropic.session.environment.id"),
+                        _environmentId(),
+                    )
+                    .build()
+            },
+            responseAttributes = { response ->
+                if (response is BetaManagedAgentsSession) {
+                    Attributes.builder()
+                        .putField(
+                            AttributeKey.stringKey("gen_ai.agent.name"),
+                            response._agent().asKnown().getOrNull()?._name(),
+                        )
+                        .putField(
+                            AttributeKey.stringKey("gen_ai.request.model"),
+                            response
+                                ._agent()
+                                .asKnown()
+                                .getOrNull()
+                                ?._model()
+                                ?.asKnown()
+                                ?.getOrNull()
+                                ?._id()
+                                ?.asKnown()
+                                ?.getOrNull()
+                                ?._value(),
+                        )
+                        .build()
+                } else {
+                    Attributes.empty()
+                }
+            },
+        )
 
     /** Request parameters for creating a `session`. */
     class Body

@@ -53,7 +53,6 @@ interface MemberService {
      * Update Workspace Member
      *
      * @throws com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
-     *   The workspace has reached the member limit that Anthropic set for it.
      */
     fun update(userId: String, params: MemberUpdateParams): WorkspaceMember =
         update(userId, params, RequestOptions.none())
@@ -107,7 +106,6 @@ interface MemberService {
      * Create Workspace Member
      *
      * @throws com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
-     *   The workspace has reached the member limit that Anthropic set for it.
      */
     fun add(workspaceId: String, params: MemberAddParams): WorkspaceMember =
         add(workspaceId, params, RequestOptions.none())

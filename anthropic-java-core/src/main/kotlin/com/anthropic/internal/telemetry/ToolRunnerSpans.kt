@@ -22,9 +22,8 @@ import kotlin.jvm.optionals.getOrNull
  * first request is for [model] and has [params], as a child of the current span. `null` when the
  * client emits no spans. The runner sets its status and ends it.
  *
- * Whether [params] set a JSON output format is read here, for a client that emits spans only. The
- * typed getters throw when the application set the field as raw JSON; that is logged, the span goes
- * without `gen_ai.output.type`, and the runner runs.
+ * Whether [params] set a JSON output format is read here, for a client that emits spans only. A
+ * field that the application set as raw JSON reads as not set.
  */
 @JvmSynthetic
 internal fun startToolRunnerSpan(

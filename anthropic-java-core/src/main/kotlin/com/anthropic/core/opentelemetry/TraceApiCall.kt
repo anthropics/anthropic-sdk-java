@@ -4,6 +4,7 @@ package com.anthropic.core.opentelemetry
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonField
+import com.anthropic.core.JsonValue
 import com.anthropic.core.LogLevel
 import com.anthropic.core.Params
 import com.anthropic.core.RequestOptions
@@ -25,11 +26,12 @@ import com.anthropic.internal.telemetry.GEN_AI_CONVERSATION_ID
 import com.anthropic.internal.telemetry.GEN_AI_PROVIDER_NAME
 import com.anthropic.internal.telemetry.logTelemetryFailure
 import com.anthropic.internal.telemetry.recordsContent
-import com.anthropic.internal.telemetry.setCommonApiCallAttributes
 import io.opentelemetry.api.GlobalOpenTelemetry
 import io.opentelemetry.api.OpenTelemetry
 import io.opentelemetry.api.common.AttributeKey
+import io.opentelemetry.api.common.AttributeType
 import io.opentelemetry.api.common.Attributes
+import io.opentelemetry.api.common.AttributesBuilder
 import io.opentelemetry.api.trace.Span
 import io.opentelemetry.api.trace.SpanKind
 import io.opentelemetry.api.trace.StatusCode
@@ -59,16 +61,18 @@ import kotlin.jvm.optionals.getOrNull
  * Runs [send], which sends the method's request with the client it gets and handles the response,
  * in a span when the client emits spans. The span starts with the span data of [params], as [send]
  * sends the request. It ends once the body is parsed (a streamed body: read or closed), the
- * response is closed unparsed, or the call fails.
+ * response is closed unparsed, or the call fails. [streaming] says whether the method asks for a
+ * streamed response.
  */
 @JvmSynthetic
 internal fun <T> traceApiCall(
     clientOptions: ClientOptions,
     params: Params,
+    streaming: Boolean = false,
     send: (ApiCallClient) -> HttpResponseFor<T>,
 ): HttpResponseFor<T> {
     val tracer = tracer(clientOptions) ?: return send(ApiCallClient(clientOptions))
-    return traceApiCall(ApiCallClient(clientOptions, tracer, params::_spanData), send)
+    return traceApiCall(ApiCallClient(clientOptions, tracer, params::_spanData, streaming), send)
 }
 
 /**
@@ -123,10 +127,14 @@ internal fun traceRawApiCall(
 internal fun <T> traceApiCallAsync(
     clientOptions: ClientOptions,
     params: Params,
+    streaming: Boolean = false,
     send: (ApiCallClient) -> CompletableFuture<HttpResponseFor<T>>,
 ): CompletableFuture<HttpResponseFor<T>> {
     val tracer = tracer(clientOptions) ?: return send(ApiCallClient(clientOptions))
-    return traceApiCallAsync(ApiCallClient(clientOptions, tracer, params::_spanData), send)
+    return traceApiCallAsync(
+        ApiCallClient(clientOptions, tracer, params::_spanData, streaming),
+        send,
+    )
 }
 
 /**
@@ -228,6 +236,8 @@ internal class ApiCallClient(
     private val tracer: Tracer? = null,
     /** What the span of a call starts with, while the span is still to start. */
     private var unstartedSpanData: (() -> SpanData)? = null,
+    /** Whether the method asks for a streamed response. */
+    private val streaming: Boolean = false,
     call: ApiCall? = null,
 ) : HttpClient {
 
@@ -295,6 +305,7 @@ internal class ApiCallClient(
                         request.method,
                         requestOptions,
                         parentOtelContext,
+                        streaming = streaming,
                     )
                     ?.let {
                         ApiCall(
@@ -302,6 +313,7 @@ internal class ApiCallClient(
                             clientOptions,
                             queryParams = spanData.queryParams,
                             contentQueryParams = spanData.contentQueryParams,
+                            responseAttributes = spanData.responseAttributes,
                         )
                     }
         }
@@ -314,8 +326,8 @@ internal class ApiCallClient(
 /**
  * Starts the span of an API call for a method that sets attributes of its own: [attributes] from
  * its params here, and more on [ApiCall.span] before it hands the call to [traceApiCall]. [method]
- * is the HTTP method of the request that the method sends. Returns `null` when the client emits no
- * span.
+ * is the HTTP method of the request that the method sends. [streaming] says whether the method asks
+ * for a streamed response. Returns `null` when the client emits no span.
  */
 @JvmSynthetic
 internal fun startApiCall(
@@ -324,6 +336,7 @@ internal fun startApiCall(
     method: HttpMethod,
     requestOptions: RequestOptions,
     attributes: Attributes = Attributes.empty(),
+    streaming: Boolean = false,
 ): ApiCall? {
     val tracer = tracer(clientOptions) ?: return null
     return startApiCallSpan(
@@ -334,6 +347,7 @@ internal fun startApiCall(
             requestOptions,
             Context.current(),
             attributes,
+            streaming,
         )
         ?.let {
             ApiCall(
@@ -341,6 +355,7 @@ internal fun startApiCall(
                 clientOptions,
                 queryParams = spanData.queryParams,
                 contentQueryParams = spanData.contentQueryParams,
+                responseAttributes = spanData.responseAttributes,
             )
         }
 }
@@ -354,6 +369,11 @@ internal class ApiCall(
     private val queryParams: List<String> = emptyList(),
     /** The query parameters that are content on the call's endpoint only. */
     private val contentQueryParams: List<String> = emptyList(),
+    /**
+     * What the span takes from the parsed response of the call's method, or from as much of it as a
+     * stream delivered: nothing from a value of another class.
+     */
+    val responseAttributes: (Any?) -> Attributes = { Attributes.empty() },
     /**
      * When the call started, on the [System.nanoTime] clock, to measure
      * `gen_ai.response.time_to_first_chunk` from. A span cannot report its own start time.
@@ -395,6 +415,21 @@ internal class ApiCall(
                     recordsContent(clientOptions),
                 )
             )
+        }
+    }
+
+    /**
+     * Sets on the span what it takes from [response], the parsed response. A failure to do so is
+     * logged and never fails the API call.
+     */
+    fun recordResponse(response: Any?) {
+        if (!span.isRecording) {
+            return
+        }
+        try {
+            span.setAllAttributes(responseAttributes(response))
+        } catch (e: Exception) {
+            logTelemetryFailure(clientOptions, "Could not record the response on its span", e)
         }
     }
 
@@ -454,7 +489,8 @@ private class TracedHttpResponseFor<T>(
     private val parsed = lazy {
         val data =
             try {
-                response.parse()
+                // Inside the try: recording catches no `Error`, and one still has to end the span.
+                response.parse().also { call.recordResponse(it) }
             } catch (e: Throwable) {
                 end(ApiCallOutcome.ParseFailed(response, e))
                 throw e
@@ -464,8 +500,6 @@ private class TracedHttpResponseFor<T>(
                 return@lazy data
             }
             // The stream takes the span with it, and ends it once read or closed.
-            val outcome = ApiCallOutcome.Responded(response)
-            setCommonApiCallAttributes(call.span, call.clientOptions, outcome)
             @Suppress("UNCHECKED_CAST")
             val stream =
                 endApiCallSpanWhenStreamEnds(
@@ -517,10 +551,10 @@ private fun endApiCall(call: ApiCall, outcome: ApiCallOutcome) {
     if (!call.markEnded()) {
         return
     }
-    setCommonApiCallAttributes(call.span, call.clientOptions, outcome)
     // Ending the span runs the application's span processors, whose failure is not the call's.
     try {
         call.recordResendCount()
+        setResponseHeaderAttributes(call) { outcome.headers }
         endApiCallSpan(call.span, outcome)
     } catch (e: Exception) {
         logTelemetryFailure(call.clientOptions, "Could not end the span of the API call", e)
@@ -546,17 +580,27 @@ private fun startApiCallSpan(
     requestOptions: RequestOptions,
     parentOtelContext: Context,
     attributes: Attributes = Attributes.empty(),
+    streaming: Boolean = false,
 ): Span? {
     val builder =
         tracer.spanBuilder(spanData.name).setSpanKind(SpanKind.CLIENT).setParent(parentOtelContext)
     builder.setAttribute(HTTP_REQUEST_METHOD, method.name)
     builder.setAttribute(HTTP_ROUTE, spanData.route)
+    builder.setAllAttributes(CLIENT_ATTRIBUTES)
     builder.setAttribute(GEN_AI_PROVIDER_NAME, clientOptions.openTelemetryProviderName)
     builder.setAllAttributes(serverAttributes(clientOptions.baseUrl()))
     // A Session thread is a conversation, unless the application names the conversation itself.
     (requestOptions.openTelemetry().flatMap { it.conversationId() }.getOrNull()
             ?: spanData.attributes[ANTHROPIC_SESSION_THREAD_ID])
         ?.let { builder.setAttribute(GEN_AI_CONVERSATION_ID, it) }
+    try {
+        builder.setAllAttributes(spanData.requestAttributes(clientOptions.headers))
+    } catch (e: Exception) {
+        logTelemetryFailure(clientOptions, "Could not record the request on its span", e)
+    }
+    if (streaming) {
+        spanData.streamAttribute?.let { builder.setAttribute(it, true) }
+    }
     builder.setAllAttributes(attributes)
     spanData.attributes.forEach { (attribute, id) -> builder.setAttribute(attribute, id) }
     // Starting the span runs the application's sampler, span processors and propagator, whose
@@ -583,6 +627,19 @@ internal constructor(
     @get:JvmSynthetic internal val queryParams: List<String> = emptyList(),
     /** The query parameters that are content on this endpoint only. */
     @get:JvmSynthetic internal val contentQueryParams: List<String> = emptyList(),
+    /**
+     * What the span starts with from the params, and from the headers of the client where the
+     * params set none.
+     */
+    @get:JvmSynthetic
+    internal val requestAttributes: (clientHeaders: Headers) -> Attributes = { Attributes.empty() },
+    /** The attribute that is `true` on the span of a call that asks for a streamed response. */
+    @get:JvmSynthetic internal val streamAttribute: String? = null,
+    /**
+     * What the span takes from the method's parsed response: nothing from a value of another class.
+     */
+    @get:JvmSynthetic
+    internal val responseAttributes: (response: Any?) -> Attributes = { Attributes.empty() },
 )
 
 /**
@@ -844,10 +901,22 @@ internal fun <T> endApiCallSpanWhenStreamEnds(
     if (!span.isRecording) {
         return stream
     }
-    span.setAttribute(HTTP_RESPONSE_STATUS_CODE, response.statusCode().toLong())
+    // A failure to read the response is not the call's: the application still gets the stream,
+    // whose end ends the span.
     val isEventStream =
-        call.isGet &&
-            response.headers().values("Content-Type").any { it.startsWith("text/event-stream") }
+        try {
+            span.setAttribute(HTTP_RESPONSE_STATUS_CODE, response.statusCode().toLong())
+            val headers = response.headers()
+            setResponseHeaderAttributes(call) { headers }
+            call.isGet && headers.values("Content-Type").any { it.startsWith("text/event-stream") }
+        } catch (e: Exception) {
+            logTelemetryFailure(
+                call.clientOptions,
+                "Could not record the stream's response on its span",
+                e,
+            )
+            false
+        }
     return TracedStreamResponse(stream, call, recording, isEventStream)
 }
 
@@ -1098,6 +1167,104 @@ internal fun unwrapFutureException(error: Throwable): Throwable {
     return cause
 }
 
+/**
+ * Sets on the span of [call] the attributes that come from the response's [headers], each from the
+ * first value that is not empty. The HTTP client gives the headers, so reading them can fail: that
+ * is logged, and the span goes without them.
+ */
+private fun setResponseHeaderAttributes(call: ApiCall, headers: () -> Headers?) {
+    val span = call.span
+    if (!span.isRecording) {
+        return
+    }
+    try {
+        val values = headers() ?: return
+        for ((attribute, header) in RESPONSE_HEADER_ATTRIBUTES) {
+            values
+                .values(header)
+                .firstOrNull { it.isNotEmpty() }
+                ?.let { span.setAttribute(attribute, it) }
+        }
+    } catch (e: Exception) {
+        logTelemetryFailure(
+            call.clientOptions,
+            "Could not record the response's headers on its span",
+            e,
+        )
+    }
+}
+
+/**
+ * Puts the value of [field] as the attribute [key]. A field that is `null` or not set, or whose
+ * value is not of the key's type, sets nothing, so that a request or a response that this SDK
+ * version does not know gets no attribute rather than a wrong one.
+ */
+@JvmSynthetic
+internal fun AttributesBuilder.putField(
+    key: AttributeKey<*>,
+    field: JsonField<*>?,
+): AttributesBuilder {
+    val value: Any? =
+        when (key.type) {
+            AttributeType.STRING -> field?.asString()?.getOrNull()
+            AttributeType.BOOLEAN -> field?.asBoolean()?.getOrNull()
+            AttributeType.LONG -> field?.asNumber()?.getOrNull()?.let(::integerOrNull)
+            AttributeType.DOUBLE -> field?.asNumber()?.getOrNull()?.toDouble()
+            AttributeType.STRING_ARRAY -> itemsOrNull(field) { it.asString().getOrNull() }
+            AttributeType.BOOLEAN_ARRAY -> itemsOrNull(field) { it.asBoolean().getOrNull() }
+            AttributeType.LONG_ARRAY ->
+                itemsOrNull(field) { it.asNumber().getOrNull()?.let(::integerOrNull) }
+            AttributeType.DOUBLE_ARRAY ->
+                itemsOrNull(field) { it.asNumber().getOrNull()?.toDouble() }
+            // A type that a newer OpenTelemetry API adds.
+            else -> null
+        }
+    if (value != null) {
+        @Suppress("UNCHECKED_CAST") put(key as AttributeKey<Any>, value)
+    }
+    return this
+}
+
+/**
+ * [number] when it is a `Byte`, a `Short`, an `Int` or a `Long`, or `null`: converting a number of
+ * any other class can change it.
+ */
+@JvmSynthetic
+internal fun integerOrNull(number: Number): Long? =
+    when (number) {
+        is Byte,
+        is Short,
+        is Int,
+        is Long -> number.toLong()
+        else -> null
+    }
+
+/** The items of [field], an array, each as [item] has it, or `null` unless [item] has every one. */
+private fun <T : Any> itemsOrNull(field: JsonField<*>?, item: (JsonValue) -> T?): List<T>? =
+    field?.asArray()?.getOrNull()?.map { item(it) ?: return null }
+
+/**
+ * Puts [values], the values of one header, as the attribute [key]: for a key of an array of
+ * strings, each item between commas, and for any other key the values as they are, joined with
+ * commas. A header without an item sets nothing.
+ */
+@JvmSynthetic
+internal fun AttributesBuilder.putHeader(
+    key: AttributeKey<*>,
+    values: List<String>,
+): AttributesBuilder {
+    val items = values.flatMap { it.split(',') }.map { it.trim() }.filter { it.isNotEmpty() }
+    if (items.isEmpty()) {
+        return this
+    }
+    @Suppress("UNCHECKED_CAST")
+    return if (key.type == AttributeType.STRING_ARRAY) {
+        put(key as AttributeKey<List<String>>, items)
+    } else {
+        put(key as AttributeKey<String>, values.joinToString(","))
+    }
+}
+
 // Copies of the semantic conventions' constants, so that the SDK does not depend on their artifact.
 
 /** The `error.type` attribute: what kind of error an operation failed with. */
@@ -1153,6 +1320,21 @@ internal val SERVER_ADDRESS: AttributeKey<String> = AttributeKey.stringKey("serv
 /** The `url.scheme` attribute: the scheme of the URL of the call's first request. */
 @get:JvmSynthetic
 internal val URL_SCHEME: AttributeKey<String> = AttributeKey.stringKey("url.scheme")
+
+/** The attributes that every span starts with. */
+private val CLIENT_ATTRIBUTES: Attributes =
+    Attributes.builder().put("gen_ai.provider.name", "anthropic").build()
+
+/**
+ * Maps the attributes that every span gets from the headers of its response to the names of those
+ * headers.
+ */
+private val RESPONSE_HEADER_ATTRIBUTES =
+    listOf(
+        "anthropic.request.id" to "request-id",
+        "anthropic.organization.id" to "anthropic-organization-id",
+        "anthropic.workspace.id" to "anthropic-workspace-id",
+    )
 
 /** Where a request finds the API call that sends it, in the call's OpenTelemetry context. */
 @get:JvmSynthetic

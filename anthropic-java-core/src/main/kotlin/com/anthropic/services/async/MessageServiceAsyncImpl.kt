@@ -23,8 +23,6 @@ import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.helpers.warnIfThinkingEnabled
-import com.anthropic.internal.telemetry.recordCountTokensResponse
-import com.anthropic.internal.telemetry.startCountTokens
 import com.anthropic.internal.telemetry.startMessagesCreate
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.MessageCountTokensParams
@@ -214,8 +212,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val call = startCountTokens(clientOptions, requestOptions, params)
-            return traceApiCallAsync(clientOptions, call) { client ->
+            return traceApiCallAsync(clientOptions, params) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
                     .thenApply { response ->
@@ -227,7 +224,6 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                         it.validate()
                                     }
                                 }
-                                .also { recordCountTokensResponse(clientOptions, call, it) }
                         }
                     }
             }

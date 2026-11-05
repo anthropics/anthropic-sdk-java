@@ -40,13 +40,8 @@ interface WorkService {
      *
      * Retrieve detailed information about a specific work item.
      *
-     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
-     *   the Claude Code workspace, and the user who created it is no longer a member of the
-     *   organization or of that workspace.
-     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
-     *   organization for trust and safety reasons. An organization disabled for any other reason,
-     *   such as billing, does not get this code. `appeal_url`, when present, is where the
-     *   organization can appeal.
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun retrieve(workId: String, params: WorkRetrieveParams): BetaSelfHostedWork =
         retrieve(workId, params, RequestOptions.none())
@@ -75,16 +70,9 @@ interface WorkService {
      *
      * Update work item metadata with merge semantics.
      *
-     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
-     *   the Claude Code workspace, and the user who created it is no longer a member of the
-     *   organization or of that workspace.
-     * @throws com.anthropic.models.beta.environments.BetaInvalidMetadataException `metadata` has
-     *   too many keys, a key or value that is too long, or a reserved key. The message names each
-     *   problem.
-     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
-     *   organization for trust and safety reasons. An organization disabled for any other reason,
-     *   such as billing, does not get this code. `appeal_url`, when present, is where the
-     *   organization can appeal.
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.beta.environments.BetaInvalidMetadataException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun update(workId: String, params: WorkUpdateParams): BetaSelfHostedWork =
         update(workId, params, RequestOptions.none())
@@ -173,8 +161,6 @@ interface WorkService {
      * Record a heartbeat for a work item to maintain the lease.
      *
      * @throws com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedException
-     *   `expected_last_heartbeat` does not match the stored heartbeat, so another worker may hold
-     *   the lease.
      */
     fun heartbeat(
         workId: String,
@@ -240,13 +226,8 @@ interface WorkService {
     /**
      * Get statistics about the work queue for an environment.
      *
-     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
-     *   the Claude Code workspace, and the user who created it is no longer a member of the
-     *   organization or of that workspace.
-     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
-     *   organization for trust and safety reasons. An organization disabled for any other reason,
-     *   such as billing, does not get this code. `appeal_url`, when present, is where the
-     *   organization can appeal.
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun stats(environmentId: String): BetaSelfHostedWorkQueueStats =
         stats(environmentId, WorkStatsParams.none())
@@ -286,13 +267,8 @@ interface WorkService {
      *
      * Stop a work item, initiating graceful or forced shutdown.
      *
-     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException The API key belongs to
-     *   the Claude Code workspace, and the user who created it is no longer a member of the
-     *   organization or of that workspace.
-     * @throws com.anthropic.models.OrganizationOnHoldException Anthropic has disabled the
-     *   organization for trust and safety reasons. An organization disabled for any other reason,
-     *   such as billing, does not get this code. `appeal_url`, when present, is where the
-     *   organization can appeal.
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun stop(workId: String, params: WorkStopParams): BetaSelfHostedWork =
         stop(workId, params, RequestOptions.none())
