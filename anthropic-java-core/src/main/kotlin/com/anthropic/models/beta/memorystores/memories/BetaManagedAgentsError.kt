@@ -123,6 +123,9 @@ private constructor(
      * Two paths overlap when one is an ancestor of the other, such as `/notes` and
      * `/notes/todo.md`. To free the path, rename or delete the memory that `conflicting_memory_id`
      * references, then retry. To change that memory instead of creating a new one, update it.
+     *
+     * To handle the error in code, use `conflicting_path` and `conflicting_memory_id` instead of
+     * `message`.
      */
     fun memoryPathConflict(): Optional<BetaManagedAgentsMemoryPathConflictError> =
         Optional.ofNullable(memoryPathConflict)
@@ -193,6 +196,9 @@ private constructor(
      * Two paths overlap when one is an ancestor of the other, such as `/notes` and
      * `/notes/todo.md`. To free the path, rename or delete the memory that `conflicting_memory_id`
      * references, then retry. To change that memory instead of creating a new one, update it.
+     *
+     * To handle the error in code, use `conflicting_path` and `conflicting_memory_id` instead of
+     * `message`.
      */
     fun asMemoryPathConflict(): BetaManagedAgentsMemoryPathConflictError =
         memoryPathConflict.getOrThrow("memoryPathConflict")
@@ -484,6 +490,9 @@ private constructor(
          * `/notes/todo.md`. To free the path, rename or delete the memory that
          * `conflicting_memory_id` references, then retry. To change that memory instead of creating
          * a new one, update it.
+         *
+         * To handle the error in code, use `conflicting_path` and `conflicting_memory_id` instead
+         * of `message`.
          */
         @JvmStatic
         fun ofMemoryPathConflict(memoryPathConflict: BetaManagedAgentsMemoryPathConflictError) =
@@ -542,6 +551,9 @@ private constructor(
          * `/notes/todo.md`. To free the path, rename or delete the memory that
          * `conflicting_memory_id` references, then retry. To change that memory instead of creating
          * a new one, update it.
+         *
+         * To handle the error in code, use `conflicting_path` and `conflicting_memory_id` instead
+         * of `message`.
          */
         fun visitMemoryPathConflict(memoryPathConflict: BetaManagedAgentsMemoryPathConflictError): T
 

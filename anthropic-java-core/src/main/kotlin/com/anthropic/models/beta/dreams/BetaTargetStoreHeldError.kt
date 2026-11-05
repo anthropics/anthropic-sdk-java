@@ -49,9 +49,6 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * A human-readable explanation of why the memory store can't be used yet, with the ID of the
-     * dream that is using it when the server can identify it.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -110,10 +107,6 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
-        /**
-         * A human-readable explanation of why the memory store can't be used yet, with the ID of
-         * the dream that is using it when the server can identify it.
-         */
         fun message(message: String) = message(JsonField.of(message))
 
         /**
