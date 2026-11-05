@@ -9,6 +9,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaErrorDetails
 import com.anthropic.models.beta.BetaUnsupportedCharsetErrorDetails
 import com.anthropic.models.beta.environments.BetaEnvironmentArchivedErrorDetails
 import com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledErrorDetails
@@ -32,6 +33,12 @@ import com.anthropic.models.beta.organization.plugins.BetaScanFailedErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaScanPendingErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaSkillNameTakenErrorDetails
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutManagedMemberErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutMembershipAdminErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutOwnerErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrimaryOwnerErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrivilegedMemberErrorDetails
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutSelfErrorDetails
 import com.anthropic.models.files.FileExpiredErrorDetails
 import com.anthropic.models.files.FileNotDownloadableErrorDetails
 import com.anthropic.models.files.StorageQuotaExceededErrorDetails
@@ -153,6 +160,15 @@ private constructor(
     private val environmentUpdateDisabled: BetaEnvironmentUpdateDisabledErrorDetails? = null,
     private val heartbeatPreconditionFailed: BetaHeartbeatPreconditionFailedErrorDetails? = null,
     private val invalidMetadata: BetaInvalidMetadataErrorDetails? = null,
+    private val cannotSignOutPrimaryOwner: BetaCannotSignOutPrimaryOwnerErrorDetails? = null,
+    private val cannotSignOutSelf: BetaCannotSignOutSelfErrorDetails? = null,
+    private val organizationNotEnrolledInBeta: BetaOrganizationNotEnrolledInBetaErrorDetails? =
+        null,
+    private val cannotSignOutManagedMember: BetaCannotSignOutManagedMemberErrorDetails? = null,
+    private val cannotSignOutMembershipAdmin: BetaCannotSignOutMembershipAdminErrorDetails? = null,
+    private val cannotSignOutOwner: BetaCannotSignOutOwnerErrorDetails? = null,
+    private val cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails? =
+        null,
     private val billingFrozen: BetaBillingFrozenErrorDetails? = null,
     private val spendLimitsAdminApiWritesNotEnabled:
         BetaSpendLimitsAdminApiWritesNotEnabledErrorDetails? =
@@ -247,6 +263,13 @@ private constructor(
             environmentUpdateDisabled != null -> ErrorCode.ENVIRONMENT_UPDATE_DISABLED
             heartbeatPreconditionFailed != null -> ErrorCode.HEARTBEAT_PRECONDITION_FAILED
             invalidMetadata != null -> ErrorCode.INVALID_METADATA
+            cannotSignOutPrimaryOwner != null -> ErrorCode.CANNOT_SIGN_OUT_PRIMARY_OWNER
+            cannotSignOutSelf != null -> ErrorCode.CANNOT_SIGN_OUT_SELF
+            organizationNotEnrolledInBeta != null -> ErrorCode.ORGANIZATION_NOT_ENROLLED_IN_BETA
+            cannotSignOutManagedMember != null -> ErrorCode.CANNOT_SIGN_OUT_MANAGED_MEMBER
+            cannotSignOutMembershipAdmin != null -> ErrorCode.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
+            cannotSignOutOwner != null -> ErrorCode.CANNOT_SIGN_OUT_OWNER
+            cannotSignOutPrivilegedMember != null -> ErrorCode.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
             billingFrozen != null -> ErrorCode.BILLING_FROZEN
             spendLimitsAdminApiWritesNotEnabled != null ->
                 ErrorCode.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
@@ -334,6 +357,13 @@ private constructor(
             environmentUpdateDisabled != null -> Optional.empty()
             heartbeatPreconditionFailed != null -> Optional.empty()
             invalidMetadata != null -> Optional.empty()
+            cannotSignOutPrimaryOwner != null -> Optional.empty()
+            cannotSignOutSelf != null -> Optional.empty()
+            organizationNotEnrolledInBeta != null -> Optional.empty()
+            cannotSignOutManagedMember != null -> Optional.empty()
+            cannotSignOutMembershipAdmin != null -> Optional.empty()
+            cannotSignOutOwner != null -> Optional.empty()
+            cannotSignOutPrivilegedMember != null -> Optional.empty()
             billingFrozen != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
@@ -414,6 +444,13 @@ private constructor(
             environmentUpdateDisabled != null -> Optional.empty()
             heartbeatPreconditionFailed != null -> Optional.empty()
             invalidMetadata != null -> Optional.empty()
+            cannotSignOutPrimaryOwner != null -> Optional.empty()
+            cannotSignOutSelf != null -> Optional.empty()
+            organizationNotEnrolledInBeta != null -> Optional.empty()
+            cannotSignOutManagedMember != null -> Optional.empty()
+            cannotSignOutMembershipAdmin != null -> Optional.empty()
+            cannotSignOutOwner != null -> Optional.empty()
+            cannotSignOutPrivilegedMember != null -> Optional.empty()
             billingFrozen != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
@@ -494,6 +531,13 @@ private constructor(
             environmentUpdateDisabled != null -> Optional.empty()
             heartbeatPreconditionFailed != null -> Optional.empty()
             invalidMetadata != null -> Optional.empty()
+            cannotSignOutPrimaryOwner != null -> Optional.empty()
+            cannotSignOutSelf != null -> Optional.empty()
+            organizationNotEnrolledInBeta != null -> Optional.empty()
+            cannotSignOutManagedMember != null -> Optional.empty()
+            cannotSignOutMembershipAdmin != null -> Optional.empty()
+            cannotSignOutOwner != null -> Optional.empty()
+            cannotSignOutPrivilegedMember != null -> Optional.empty()
             billingFrozen != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
@@ -874,6 +918,49 @@ private constructor(
     fun invalidMetadata(): Optional<BetaInvalidMetadataErrorDetails> =
         Optional.ofNullable(invalidMetadata)
 
+    /** The member is the organization's primary owner, whom no API key or token can sign out. */
+    fun cannotSignOutPrimaryOwner(): Optional<BetaCannotSignOutPrimaryOwnerErrorDetails> =
+        Optional.ofNullable(cannotSignOutPrimaryOwner)
+
+    /** The member is the user the API key or token belongs to. */
+    fun cannotSignOutSelf(): Optional<BetaCannotSignOutSelfErrorDetails> =
+        Optional.ofNullable(cannotSignOutSelf)
+
+    /**
+     * The beta that the endpoint requires is not enabled for the organization. The message names
+     * the beta value.
+     */
+    fun organizationNotEnrolledInBeta(): Optional<BetaOrganizationNotEnrolledInBetaErrorDetails> =
+        Optional.ofNullable(organizationNotEnrolledInBeta)
+
+    /**
+     * On a public-sector deployment, only an API key or token that belongs to a person with owner
+     * permissions can sign out a member with the `managed` role.
+     */
+    fun cannotSignOutManagedMember(): Optional<BetaCannotSignOutManagedMemberErrorDetails> =
+        Optional.ofNullable(cannotSignOutManagedMember)
+
+    /**
+     * The member is a membership admin, and the person the API key or token belongs to is not
+     * allowed to sign out membership admins.
+     */
+    fun cannotSignOutMembershipAdmin(): Optional<BetaCannotSignOutMembershipAdminErrorDetails> =
+        Optional.ofNullable(cannotSignOutMembershipAdmin)
+
+    /**
+     * The member is an owner or has owner permissions, and this API key or token cannot sign them
+     * out. In a Claude Enterprise organization, an API key with the `write:members` scope can.
+     */
+    fun cannotSignOutOwner(): Optional<BetaCannotSignOutOwnerErrorDetails> =
+        Optional.ofNullable(cannotSignOutOwner)
+
+    /**
+     * This OAuth token cannot sign out a membership admin or a member whose roles grant owner, user
+     * management, or identity and access management.
+     */
+    fun cannotSignOutPrivilegedMember(): Optional<BetaCannotSignOutPrivilegedMemberErrorDetails> =
+        Optional.ofNullable(cannotSignOutPrivilegedMember)
+
     /**
      * Anthropic has temporarily disabled billing changes for the user account the credential
      * belongs to. Contact support.
@@ -1091,6 +1178,20 @@ private constructor(
     fun isHeartbeatPreconditionFailed(): Boolean = heartbeatPreconditionFailed != null
 
     fun isInvalidMetadata(): Boolean = invalidMetadata != null
+
+    fun isCannotSignOutPrimaryOwner(): Boolean = cannotSignOutPrimaryOwner != null
+
+    fun isCannotSignOutSelf(): Boolean = cannotSignOutSelf != null
+
+    fun isOrganizationNotEnrolledInBeta(): Boolean = organizationNotEnrolledInBeta != null
+
+    fun isCannotSignOutManagedMember(): Boolean = cannotSignOutManagedMember != null
+
+    fun isCannotSignOutMembershipAdmin(): Boolean = cannotSignOutMembershipAdmin != null
+
+    fun isCannotSignOutOwner(): Boolean = cannotSignOutOwner != null
+
+    fun isCannotSignOutPrivilegedMember(): Boolean = cannotSignOutPrivilegedMember != null
 
     fun isBillingFrozen(): Boolean = billingFrozen != null
 
@@ -1487,6 +1588,49 @@ private constructor(
     fun asInvalidMetadata(): BetaInvalidMetadataErrorDetails =
         invalidMetadata.getOrThrow("invalidMetadata")
 
+    /** The member is the organization's primary owner, whom no API key or token can sign out. */
+    fun asCannotSignOutPrimaryOwner(): BetaCannotSignOutPrimaryOwnerErrorDetails =
+        cannotSignOutPrimaryOwner.getOrThrow("cannotSignOutPrimaryOwner")
+
+    /** The member is the user the API key or token belongs to. */
+    fun asCannotSignOutSelf(): BetaCannotSignOutSelfErrorDetails =
+        cannotSignOutSelf.getOrThrow("cannotSignOutSelf")
+
+    /**
+     * The beta that the endpoint requires is not enabled for the organization. The message names
+     * the beta value.
+     */
+    fun asOrganizationNotEnrolledInBeta(): BetaOrganizationNotEnrolledInBetaErrorDetails =
+        organizationNotEnrolledInBeta.getOrThrow("organizationNotEnrolledInBeta")
+
+    /**
+     * On a public-sector deployment, only an API key or token that belongs to a person with owner
+     * permissions can sign out a member with the `managed` role.
+     */
+    fun asCannotSignOutManagedMember(): BetaCannotSignOutManagedMemberErrorDetails =
+        cannotSignOutManagedMember.getOrThrow("cannotSignOutManagedMember")
+
+    /**
+     * The member is a membership admin, and the person the API key or token belongs to is not
+     * allowed to sign out membership admins.
+     */
+    fun asCannotSignOutMembershipAdmin(): BetaCannotSignOutMembershipAdminErrorDetails =
+        cannotSignOutMembershipAdmin.getOrThrow("cannotSignOutMembershipAdmin")
+
+    /**
+     * The member is an owner or has owner permissions, and this API key or token cannot sign them
+     * out. In a Claude Enterprise organization, an API key with the `write:members` scope can.
+     */
+    fun asCannotSignOutOwner(): BetaCannotSignOutOwnerErrorDetails =
+        cannotSignOutOwner.getOrThrow("cannotSignOutOwner")
+
+    /**
+     * This OAuth token cannot sign out a membership admin or a member whose roles grant owner, user
+     * management, or identity and access management.
+     */
+    fun asCannotSignOutPrivilegedMember(): BetaCannotSignOutPrivilegedMemberErrorDetails =
+        cannotSignOutPrivilegedMember.getOrThrow("cannotSignOutPrivilegedMember")
+
     /**
      * Anthropic has temporarily disabled billing changes for the user account the credential
      * belongs to. Contact support.
@@ -1719,6 +1863,18 @@ private constructor(
             heartbeatPreconditionFailed != null ->
                 visitor.visitHeartbeatPreconditionFailed(heartbeatPreconditionFailed)
             invalidMetadata != null -> visitor.visitInvalidMetadata(invalidMetadata)
+            cannotSignOutPrimaryOwner != null ->
+                visitor.visitCannotSignOutPrimaryOwner(cannotSignOutPrimaryOwner)
+            cannotSignOutSelf != null -> visitor.visitCannotSignOutSelf(cannotSignOutSelf)
+            organizationNotEnrolledInBeta != null ->
+                visitor.visitOrganizationNotEnrolledInBeta(organizationNotEnrolledInBeta)
+            cannotSignOutManagedMember != null ->
+                visitor.visitCannotSignOutManagedMember(cannotSignOutManagedMember)
+            cannotSignOutMembershipAdmin != null ->
+                visitor.visitCannotSignOutMembershipAdmin(cannotSignOutMembershipAdmin)
+            cannotSignOutOwner != null -> visitor.visitCannotSignOutOwner(cannotSignOutOwner)
+            cannotSignOutPrivilegedMember != null ->
+                visitor.visitCannotSignOutPrivilegedMember(cannotSignOutPrivilegedMember)
             billingFrozen != null -> visitor.visitBillingFrozen(billingFrozen)
             spendLimitsAdminApiWritesNotEnabled != null ->
                 visitor.visitSpendLimitsAdminApiWritesNotEnabled(
@@ -1827,6 +1983,13 @@ private constructor(
             environmentUpdateDisabled != null -> environmentUpdateDisabled.validate()
             heartbeatPreconditionFailed != null -> heartbeatPreconditionFailed.validate()
             invalidMetadata != null -> invalidMetadata.validate()
+            cannotSignOutPrimaryOwner != null -> cannotSignOutPrimaryOwner.validate()
+            cannotSignOutSelf != null -> cannotSignOutSelf.validate()
+            organizationNotEnrolledInBeta != null -> organizationNotEnrolledInBeta.validate()
+            cannotSignOutManagedMember != null -> cannotSignOutManagedMember.validate()
+            cannotSignOutMembershipAdmin != null -> cannotSignOutMembershipAdmin.validate()
+            cannotSignOutOwner != null -> cannotSignOutOwner.validate()
+            cannotSignOutPrivilegedMember != null -> cannotSignOutPrivilegedMember.validate()
             billingFrozen != null -> billingFrozen.validate()
             spendLimitsAdminApiWritesNotEnabled != null ->
                 spendLimitsAdminApiWritesNotEnabled.validate()
@@ -1929,6 +2092,13 @@ private constructor(
             environmentUpdateDisabled != null -> environmentUpdateDisabled.validity()
             heartbeatPreconditionFailed != null -> heartbeatPreconditionFailed.validity()
             invalidMetadata != null -> invalidMetadata.validity()
+            cannotSignOutPrimaryOwner != null -> cannotSignOutPrimaryOwner.validity()
+            cannotSignOutSelf != null -> cannotSignOutSelf.validity()
+            organizationNotEnrolledInBeta != null -> organizationNotEnrolledInBeta.validity()
+            cannotSignOutManagedMember != null -> cannotSignOutManagedMember.validity()
+            cannotSignOutMembershipAdmin != null -> cannotSignOutMembershipAdmin.validity()
+            cannotSignOutOwner != null -> cannotSignOutOwner.validity()
+            cannotSignOutPrivilegedMember != null -> cannotSignOutPrivilegedMember.validity()
             billingFrozen != null -> billingFrozen.validity()
             spendLimitsAdminApiWritesNotEnabled != null ->
                 spendLimitsAdminApiWritesNotEnabled.validity()
@@ -2019,6 +2189,13 @@ private constructor(
             environmentUpdateDisabled == other.environmentUpdateDisabled &&
             heartbeatPreconditionFailed == other.heartbeatPreconditionFailed &&
             invalidMetadata == other.invalidMetadata &&
+            cannotSignOutPrimaryOwner == other.cannotSignOutPrimaryOwner &&
+            cannotSignOutSelf == other.cannotSignOutSelf &&
+            organizationNotEnrolledInBeta == other.organizationNotEnrolledInBeta &&
+            cannotSignOutManagedMember == other.cannotSignOutManagedMember &&
+            cannotSignOutMembershipAdmin == other.cannotSignOutMembershipAdmin &&
+            cannotSignOutOwner == other.cannotSignOutOwner &&
+            cannotSignOutPrivilegedMember == other.cannotSignOutPrivilegedMember &&
             billingFrozen == other.billingFrozen &&
             spendLimitsAdminApiWritesNotEnabled == other.spendLimitsAdminApiWritesNotEnabled &&
             unsupportedCharset == other.unsupportedCharset &&
@@ -2098,6 +2275,13 @@ private constructor(
             environmentUpdateDisabled,
             heartbeatPreconditionFailed,
             invalidMetadata,
+            cannotSignOutPrimaryOwner,
+            cannotSignOutSelf,
+            organizationNotEnrolledInBeta,
+            cannotSignOutManagedMember,
+            cannotSignOutMembershipAdmin,
+            cannotSignOutOwner,
+            cannotSignOutPrivilegedMember,
             billingFrozen,
             spendLimitsAdminApiWritesNotEnabled,
             unsupportedCharset,
@@ -2221,6 +2405,18 @@ private constructor(
             heartbeatPreconditionFailed != null ->
                 "ErrorDetails{heartbeatPreconditionFailed=$heartbeatPreconditionFailed}"
             invalidMetadata != null -> "ErrorDetails{invalidMetadata=$invalidMetadata}"
+            cannotSignOutPrimaryOwner != null ->
+                "ErrorDetails{cannotSignOutPrimaryOwner=$cannotSignOutPrimaryOwner}"
+            cannotSignOutSelf != null -> "ErrorDetails{cannotSignOutSelf=$cannotSignOutSelf}"
+            organizationNotEnrolledInBeta != null ->
+                "ErrorDetails{organizationNotEnrolledInBeta=$organizationNotEnrolledInBeta}"
+            cannotSignOutManagedMember != null ->
+                "ErrorDetails{cannotSignOutManagedMember=$cannotSignOutManagedMember}"
+            cannotSignOutMembershipAdmin != null ->
+                "ErrorDetails{cannotSignOutMembershipAdmin=$cannotSignOutMembershipAdmin}"
+            cannotSignOutOwner != null -> "ErrorDetails{cannotSignOutOwner=$cannotSignOutOwner}"
+            cannotSignOutPrivilegedMember != null ->
+                "ErrorDetails{cannotSignOutPrivilegedMember=$cannotSignOutPrivilegedMember}"
             billingFrozen != null -> "ErrorDetails{billingFrozen=$billingFrozen}"
             spendLimitsAdminApiWritesNotEnabled != null ->
                 "ErrorDetails{spendLimitsAdminApiWritesNotEnabled=$spendLimitsAdminApiWritesNotEnabled}"
@@ -2733,6 +2929,64 @@ private constructor(
         @JvmStatic
         fun ofInvalidMetadata(invalidMetadata: BetaInvalidMetadataErrorDetails) =
             ErrorDetails(invalidMetadata = invalidMetadata)
+
+        /**
+         * The member is the organization's primary owner, whom no API key or token can sign out.
+         */
+        @JvmStatic
+        fun ofCannotSignOutPrimaryOwner(
+            cannotSignOutPrimaryOwner: BetaCannotSignOutPrimaryOwnerErrorDetails
+        ) = ErrorDetails(cannotSignOutPrimaryOwner = cannotSignOutPrimaryOwner)
+
+        /** The member is the user the API key or token belongs to. */
+        @JvmStatic
+        fun ofCannotSignOutSelf(cannotSignOutSelf: BetaCannotSignOutSelfErrorDetails) =
+            ErrorDetails(cannotSignOutSelf = cannotSignOutSelf)
+
+        /**
+         * The beta that the endpoint requires is not enabled for the organization. The message
+         * names the beta value.
+         */
+        @JvmStatic
+        fun ofOrganizationNotEnrolledInBeta(
+            organizationNotEnrolledInBeta: BetaOrganizationNotEnrolledInBetaErrorDetails
+        ) = ErrorDetails(organizationNotEnrolledInBeta = organizationNotEnrolledInBeta)
+
+        /**
+         * On a public-sector deployment, only an API key or token that belongs to a person with
+         * owner permissions can sign out a member with the `managed` role.
+         */
+        @JvmStatic
+        fun ofCannotSignOutManagedMember(
+            cannotSignOutManagedMember: BetaCannotSignOutManagedMemberErrorDetails
+        ) = ErrorDetails(cannotSignOutManagedMember = cannotSignOutManagedMember)
+
+        /**
+         * The member is a membership admin, and the person the API key or token belongs to is not
+         * allowed to sign out membership admins.
+         */
+        @JvmStatic
+        fun ofCannotSignOutMembershipAdmin(
+            cannotSignOutMembershipAdmin: BetaCannotSignOutMembershipAdminErrorDetails
+        ) = ErrorDetails(cannotSignOutMembershipAdmin = cannotSignOutMembershipAdmin)
+
+        /**
+         * The member is an owner or has owner permissions, and this API key or token cannot sign
+         * them out. In a Claude Enterprise organization, an API key with the `write:members` scope
+         * can.
+         */
+        @JvmStatic
+        fun ofCannotSignOutOwner(cannotSignOutOwner: BetaCannotSignOutOwnerErrorDetails) =
+            ErrorDetails(cannotSignOutOwner = cannotSignOutOwner)
+
+        /**
+         * This OAuth token cannot sign out a membership admin or a member whose roles grant owner,
+         * user management, or identity and access management.
+         */
+        @JvmStatic
+        fun ofCannotSignOutPrivilegedMember(
+            cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails
+        ) = ErrorDetails(cannotSignOutPrivilegedMember = cannotSignOutPrivilegedMember)
 
         /**
          * Anthropic has temporarily disabled billing changes for the user account the credential
@@ -3322,6 +3576,55 @@ private constructor(
         fun visitInvalidMetadata(invalidMetadata: BetaInvalidMetadataErrorDetails): T
 
         /**
+         * The member is the organization's primary owner, whom no API key or token can sign out.
+         */
+        fun visitCannotSignOutPrimaryOwner(
+            cannotSignOutPrimaryOwner: BetaCannotSignOutPrimaryOwnerErrorDetails
+        ): T
+
+        /** The member is the user the API key or token belongs to. */
+        fun visitCannotSignOutSelf(cannotSignOutSelf: BetaCannotSignOutSelfErrorDetails): T
+
+        /**
+         * The beta that the endpoint requires is not enabled for the organization. The message
+         * names the beta value.
+         */
+        fun visitOrganizationNotEnrolledInBeta(
+            organizationNotEnrolledInBeta: BetaOrganizationNotEnrolledInBetaErrorDetails
+        ): T
+
+        /**
+         * On a public-sector deployment, only an API key or token that belongs to a person with
+         * owner permissions can sign out a member with the `managed` role.
+         */
+        fun visitCannotSignOutManagedMember(
+            cannotSignOutManagedMember: BetaCannotSignOutManagedMemberErrorDetails
+        ): T
+
+        /**
+         * The member is a membership admin, and the person the API key or token belongs to is not
+         * allowed to sign out membership admins.
+         */
+        fun visitCannotSignOutMembershipAdmin(
+            cannotSignOutMembershipAdmin: BetaCannotSignOutMembershipAdminErrorDetails
+        ): T
+
+        /**
+         * The member is an owner or has owner permissions, and this API key or token cannot sign
+         * them out. In a Claude Enterprise organization, an API key with the `write:members` scope
+         * can.
+         */
+        fun visitCannotSignOutOwner(cannotSignOutOwner: BetaCannotSignOutOwnerErrorDetails): T
+
+        /**
+         * This OAuth token cannot sign out a membership admin or a member whose roles grant owner,
+         * user management, or identity and access management.
+         */
+        fun visitCannotSignOutPrivilegedMember(
+            cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails
+        ): T
+
+        /**
          * Anthropic has temporarily disabled billing changes for the user account the credential
          * belongs to. Contact support.
          */
@@ -3863,6 +4166,59 @@ private constructor(
                         ?.let { ErrorDetails(invalidMetadata = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "cannot_sign_out_primary_owner" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCannotSignOutPrimaryOwnerErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cannotSignOutPrimaryOwner = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_self" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaCannotSignOutSelfErrorDetails>())
+                        ?.let { ErrorDetails(cannotSignOutSelf = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "organization_not_enrolled_in_beta" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaOrganizationNotEnrolledInBetaErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(organizationNotEnrolledInBeta = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_managed_member" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCannotSignOutManagedMemberErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cannotSignOutManagedMember = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_membership_admin" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCannotSignOutMembershipAdminErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cannotSignOutMembershipAdmin = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_owner" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCannotSignOutOwnerErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cannotSignOutOwner = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cannot_sign_out_privileged_member" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCannotSignOutPrivilegedMemberErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cannotSignOutPrivilegedMember = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "billing_frozen" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaBillingFrozenErrorDetails>())
                         ?.let { ErrorDetails(billingFrozen = it, _json = json) }
@@ -4100,6 +4456,18 @@ private constructor(
                 value.heartbeatPreconditionFailed != null ->
                     generator.writeObject(value.heartbeatPreconditionFailed)
                 value.invalidMetadata != null -> generator.writeObject(value.invalidMetadata)
+                value.cannotSignOutPrimaryOwner != null ->
+                    generator.writeObject(value.cannotSignOutPrimaryOwner)
+                value.cannotSignOutSelf != null -> generator.writeObject(value.cannotSignOutSelf)
+                value.organizationNotEnrolledInBeta != null ->
+                    generator.writeObject(value.organizationNotEnrolledInBeta)
+                value.cannotSignOutManagedMember != null ->
+                    generator.writeObject(value.cannotSignOutManagedMember)
+                value.cannotSignOutMembershipAdmin != null ->
+                    generator.writeObject(value.cannotSignOutMembershipAdmin)
+                value.cannotSignOutOwner != null -> generator.writeObject(value.cannotSignOutOwner)
+                value.cannotSignOutPrivilegedMember != null ->
+                    generator.writeObject(value.cannotSignOutPrivilegedMember)
                 value.billingFrozen != null -> generator.writeObject(value.billingFrozen)
                 value.spendLimitsAdminApiWritesNotEnabled != null ->
                     generator.writeObject(value.spendLimitsAdminApiWritesNotEnabled)
@@ -4327,6 +4695,30 @@ private constructor(
 
             @JvmField val INVALID_METADATA = ErrorCode(JsonField.of("invalid_metadata"))
 
+            @JvmField
+            val CANNOT_SIGN_OUT_PRIMARY_OWNER =
+                ErrorCode(JsonField.of("cannot_sign_out_primary_owner"))
+
+            @JvmField val CANNOT_SIGN_OUT_SELF = ErrorCode(JsonField.of("cannot_sign_out_self"))
+
+            @JvmField
+            val ORGANIZATION_NOT_ENROLLED_IN_BETA =
+                ErrorCode(JsonField.of("organization_not_enrolled_in_beta"))
+
+            @JvmField
+            val CANNOT_SIGN_OUT_MANAGED_MEMBER =
+                ErrorCode(JsonField.of("cannot_sign_out_managed_member"))
+
+            @JvmField
+            val CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN =
+                ErrorCode(JsonField.of("cannot_sign_out_membership_admin"))
+
+            @JvmField val CANNOT_SIGN_OUT_OWNER = ErrorCode(JsonField.of("cannot_sign_out_owner"))
+
+            @JvmField
+            val CANNOT_SIGN_OUT_PRIVILEGED_MEMBER =
+                ErrorCode(JsonField.of("cannot_sign_out_privileged_member"))
+
             @JvmField val BILLING_FROZEN = ErrorCode(JsonField.of("billing_frozen"))
 
             @JvmField
@@ -4437,6 +4829,13 @@ private constructor(
                     "environment_update_disabled" -> ENVIRONMENT_UPDATE_DISABLED
                     "heartbeat_precondition_failed" -> HEARTBEAT_PRECONDITION_FAILED
                     "invalid_metadata" -> INVALID_METADATA
+                    "cannot_sign_out_primary_owner" -> CANNOT_SIGN_OUT_PRIMARY_OWNER
+                    "cannot_sign_out_self" -> CANNOT_SIGN_OUT_SELF
+                    "organization_not_enrolled_in_beta" -> ORGANIZATION_NOT_ENROLLED_IN_BETA
+                    "cannot_sign_out_managed_member" -> CANNOT_SIGN_OUT_MANAGED_MEMBER
+                    "cannot_sign_out_membership_admin" -> CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
+                    "cannot_sign_out_owner" -> CANNOT_SIGN_OUT_OWNER
+                    "cannot_sign_out_privileged_member" -> CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
                     "billing_frozen" -> BILLING_FROZEN
                     "spend_limits_admin_api_writes_not_enabled" ->
                         SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
@@ -4527,6 +4926,13 @@ private constructor(
             ENVIRONMENT_UPDATE_DISABLED,
             HEARTBEAT_PRECONDITION_FAILED,
             INVALID_METADATA,
+            CANNOT_SIGN_OUT_PRIMARY_OWNER,
+            CANNOT_SIGN_OUT_SELF,
+            ORGANIZATION_NOT_ENROLLED_IN_BETA,
+            CANNOT_SIGN_OUT_MANAGED_MEMBER,
+            CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN,
+            CANNOT_SIGN_OUT_OWNER,
+            CANNOT_SIGN_OUT_PRIVILEGED_MEMBER,
             BILLING_FROZEN,
             SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED,
             UNSUPPORTED_CHARSET,
@@ -4614,6 +5020,13 @@ private constructor(
             ENVIRONMENT_UPDATE_DISABLED,
             HEARTBEAT_PRECONDITION_FAILED,
             INVALID_METADATA,
+            CANNOT_SIGN_OUT_PRIMARY_OWNER,
+            CANNOT_SIGN_OUT_SELF,
+            ORGANIZATION_NOT_ENROLLED_IN_BETA,
+            CANNOT_SIGN_OUT_MANAGED_MEMBER,
+            CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN,
+            CANNOT_SIGN_OUT_OWNER,
+            CANNOT_SIGN_OUT_PRIVILEGED_MEMBER,
             BILLING_FROZEN,
             SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED,
             UNSUPPORTED_CHARSET,
@@ -4705,6 +5118,13 @@ private constructor(
                 ENVIRONMENT_UPDATE_DISABLED -> Value.ENVIRONMENT_UPDATE_DISABLED
                 HEARTBEAT_PRECONDITION_FAILED -> Value.HEARTBEAT_PRECONDITION_FAILED
                 INVALID_METADATA -> Value.INVALID_METADATA
+                CANNOT_SIGN_OUT_PRIMARY_OWNER -> Value.CANNOT_SIGN_OUT_PRIMARY_OWNER
+                CANNOT_SIGN_OUT_SELF -> Value.CANNOT_SIGN_OUT_SELF
+                ORGANIZATION_NOT_ENROLLED_IN_BETA -> Value.ORGANIZATION_NOT_ENROLLED_IN_BETA
+                CANNOT_SIGN_OUT_MANAGED_MEMBER -> Value.CANNOT_SIGN_OUT_MANAGED_MEMBER
+                CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN -> Value.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
+                CANNOT_SIGN_OUT_OWNER -> Value.CANNOT_SIGN_OUT_OWNER
+                CANNOT_SIGN_OUT_PRIVILEGED_MEMBER -> Value.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
                 BILLING_FROZEN -> Value.BILLING_FROZEN
                 SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED ->
                     Value.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
@@ -4799,6 +5219,13 @@ private constructor(
                 ENVIRONMENT_UPDATE_DISABLED -> Known.ENVIRONMENT_UPDATE_DISABLED
                 HEARTBEAT_PRECONDITION_FAILED -> Known.HEARTBEAT_PRECONDITION_FAILED
                 INVALID_METADATA -> Known.INVALID_METADATA
+                CANNOT_SIGN_OUT_PRIMARY_OWNER -> Known.CANNOT_SIGN_OUT_PRIMARY_OWNER
+                CANNOT_SIGN_OUT_SELF -> Known.CANNOT_SIGN_OUT_SELF
+                ORGANIZATION_NOT_ENROLLED_IN_BETA -> Known.ORGANIZATION_NOT_ENROLLED_IN_BETA
+                CANNOT_SIGN_OUT_MANAGED_MEMBER -> Known.CANNOT_SIGN_OUT_MANAGED_MEMBER
+                CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN -> Known.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
+                CANNOT_SIGN_OUT_OWNER -> Known.CANNOT_SIGN_OUT_OWNER
+                CANNOT_SIGN_OUT_PRIVILEGED_MEMBER -> Known.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
                 BILLING_FROZEN -> Known.BILLING_FROZEN
                 SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED ->
                     Known.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED

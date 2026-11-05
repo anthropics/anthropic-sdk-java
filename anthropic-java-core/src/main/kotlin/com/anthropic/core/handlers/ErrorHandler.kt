@@ -41,6 +41,7 @@ import com.anthropic.models.RampLimitExceededException
 import com.anthropic.models.RequestBodyEncodingInvalidException
 import com.anthropic.models.RequestBodyEncodingUnsupportedException
 import com.anthropic.models.RequestBodyTooLargeAfterDecodingException
+import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaException
 import com.anthropic.models.beta.BetaUnsupportedCharsetException
 import com.anthropic.models.beta.environments.BetaEnvironmentArchivedException
 import com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledException
@@ -63,6 +64,12 @@ import com.anthropic.models.beta.organization.plugins.BetaScanFailedException
 import com.anthropic.models.beta.organization.plugins.BetaScanPendingException
 import com.anthropic.models.beta.organization.plugins.BetaSkillNameTakenException
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledException
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutManagedMemberException
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutMembershipAdminException
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutOwnerException
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrimaryOwnerException
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrivilegedMemberException
+import com.anthropic.models.beta.organization.users.BetaCannotSignOutSelfException
 import com.anthropic.models.files.FileExpiredException
 import com.anthropic.models.files.FileNotDownloadableException
 import com.anthropic.models.files.StorageQuotaExceededException
@@ -267,6 +274,14 @@ private val errorCodeExceptions:
             { headers, body ->
                 CannotRemoveLastMemberException.builder().headers(headers).body(body).build()
             },
+        (400 to "cannot_sign_out_primary_owner") to
+            { headers, body ->
+                BetaCannotSignOutPrimaryOwnerException.builder().headers(headers).body(body).build()
+            },
+        (400 to "cannot_sign_out_self") to
+            { headers, body ->
+                BetaCannotSignOutSelfException.builder().headers(headers).body(body).build()
+            },
         (400 to "claude_code_key_creator_not_member") to
             { headers, body ->
                 ClaudeCodeKeyCreatorNotMemberException.builder().headers(headers).body(body).build()
@@ -366,6 +381,13 @@ private val errorCodeExceptions:
             { headers, body ->
                 OrgMemberLimitExceededException.builder().headers(headers).body(body).build()
             },
+        (400 to "organization_not_enrolled_in_beta") to
+            { headers, body ->
+                BetaOrganizationNotEnrolledInBetaException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
         (400 to "organization_on_hold") to
             { headers, body ->
                 OrganizationOnHoldException.builder().headers(headers).body(body).build()
@@ -462,6 +484,31 @@ private val errorCodeExceptions:
         (403 to "billing_frozen") to
             { headers, body ->
                 BetaBillingFrozenException.builder().headers(headers).body(body).build()
+            },
+        (403 to "cannot_sign_out_managed_member") to
+            { headers, body ->
+                BetaCannotSignOutManagedMemberException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (403 to "cannot_sign_out_membership_admin") to
+            { headers, body ->
+                BetaCannotSignOutMembershipAdminException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (403 to "cannot_sign_out_owner") to
+            { headers, body ->
+                BetaCannotSignOutOwnerException.builder().headers(headers).body(body).build()
+            },
+        (403 to "cannot_sign_out_privileged_member") to
+            { headers, body ->
+                BetaCannotSignOutPrivilegedMemberException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
             },
         (403 to "claude_tag_writes_not_enabled") to
             { headers, body ->

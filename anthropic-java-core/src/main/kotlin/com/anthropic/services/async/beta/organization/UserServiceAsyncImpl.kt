@@ -23,6 +23,7 @@ import com.anthropic.models.beta.organization.users.UserListParams
 import com.anthropic.models.beta.organization.users.UserRemoveParams
 import com.anthropic.models.beta.organization.users.UserRemoveResponse
 import com.anthropic.models.beta.organization.users.UserRetrieveParams
+import com.anthropic.models.beta.organization.users.UserSignOutParams
 import com.anthropic.models.beta.organization.users.UserUpdateParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -67,6 +68,13 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
     ): CompletableFuture<UserRemoveResponse> =
         // delete /v1/organizations/users/{user_id}
         withRawResponse().remove(params, requestOptions).thenParse()
+
+    override fun signOut(
+        params: UserSignOutParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<BetaOrganizationUser> =
+        // post /v1/organizations/users/{user_id}/sign_out
+        withRawResponse().signOut(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         UserServiceAsync.WithRawResponse {
@@ -233,6 +241,48 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
                         errorHandler.handle(response).parseable {
                             response
                                 .use { removeHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation().get()) {
+                                        it.validate()
+                                    }
+                                }
+                        }
+                    }
+            }
+        }
+
+        private val signOutHandler: Handler<BetaOrganizationUser> =
+            jsonHandler<BetaOrganizationUser>(clientOptions.jsonMapper)
+
+        override fun signOut(
+            params: UserSignOutParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BetaOrganizationUser>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("userId", params.userId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "users")
+                    .addPathParam("userId", params._pathParam(0))
+                    .addPathSegments("sign_out")
+                    .replaceHeaders("anthropic-beta", "admin-user-sign-out-2026-10-08")
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { signOutHandler.handle(it) }
                                 .also {
                                     if (requestOptions.responseValidation().get()) {
                                         it.validate()

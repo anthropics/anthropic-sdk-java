@@ -2,6 +2,8 @@ package com.anthropic.services.blocking.beta.organization
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.organization.users.UserSignOutParams
 import com.anthropic.models.beta.organization.users.UserUpdateParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -59,5 +61,21 @@ internal class UserServiceTest {
         val user = userService.remove("user_id")
 
         user.validate()
+    }
+
+    @Test
+    fun signOut() {
+        val userService =
+            client.beta().organization().users().withOptions { it.putQueryParam("beta", "true") }
+
+        val betaOrganizationUser =
+            userService.signOut(
+                UserSignOutParams.builder()
+                    .userId("user_id")
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .build()
+            )
+
+        betaOrganizationUser.validate()
     }
 }
