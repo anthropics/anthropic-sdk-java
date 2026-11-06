@@ -41,12 +41,14 @@ internal class BetaAnalyticsCostUsersItemTest {
 
         assertThat(betaAnalyticsCostUsersItem.actor())
             .isEqualTo(
-                BetaAnalyticsUserActor.builder()
-                    .deleted(true)
-                    .emailAddress("jane@example.com")
-                    .name("Jane Smith")
-                    .userId("user_01AbCdEfGhIjKlMnOpQrSt")
-                    .build()
+                BetaAnalyticsCostUsersItem.Actor.ofUser(
+                    BetaAnalyticsUserActor.builder()
+                        .deleted(true)
+                        .emailAddress("jane@example.com")
+                        .name("Jane Smith")
+                        .userId("user_01AbCdEfGhIjKlMnOpQrSt")
+                        .build()
+                )
             )
         assertThat(betaAnalyticsCostUsersItem.amount()).isEqualTo("41280.000000")
         assertThat(betaAnalyticsCostUsersItem.claudeTagCategory())

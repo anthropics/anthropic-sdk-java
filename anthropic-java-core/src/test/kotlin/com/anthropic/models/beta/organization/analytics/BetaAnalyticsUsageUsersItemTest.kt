@@ -48,12 +48,14 @@ internal class BetaAnalyticsUsageUsersItemTest {
 
         assertThat(betaAnalyticsUsageUsersItem.actor())
             .isEqualTo(
-                BetaAnalyticsUserActor.builder()
-                    .deleted(true)
-                    .emailAddress("jane@example.com")
-                    .name("Jane Smith")
-                    .userId("user_01AbCdEfGhIjKlMnOpQrSt")
-                    .build()
+                BetaAnalyticsUsageUsersItem.Actor.ofUser(
+                    BetaAnalyticsUserActor.builder()
+                        .deleted(true)
+                        .emailAddress("jane@example.com")
+                        .name("Jane Smith")
+                        .userId("user_01AbCdEfGhIjKlMnOpQrSt")
+                        .build()
+                )
             )
         assertThat(betaAnalyticsUsageUsersItem.cacheCreation())
             .isEqualTo(
