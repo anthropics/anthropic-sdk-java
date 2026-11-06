@@ -77,6 +77,9 @@ private constructor(
     private val userProfileEnforcementActionResolved:
         BetaWebhookUserProfileEnforcementActionResolvedEventData? =
         null,
+    private val userProfileProgramStatusUpdated:
+        BetaWebhookUserProfileProgramStatusUpdatedEventData? =
+        null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -130,6 +133,7 @@ private constructor(
                 Type.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
             userProfileEnforcementActionResolved != null ->
                 Type.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+            userProfileProgramStatusUpdated != null -> Type.USER_PROFILE_PROGRAM_STATUS_UPDATED
             else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
         }
 
@@ -182,6 +186,7 @@ private constructor(
             userProfileEnforcementActionOpened != null -> userProfileEnforcementActionOpened.id()
             userProfileEnforcementActionResolved != null ->
                 userProfileEnforcementActionResolved.id()
+            userProfileProgramStatusUpdated != null -> userProfileProgramStatusUpdated.id()
             else -> _json.getProperty<String>("id").getRequired("id")
         }
 
@@ -235,6 +240,8 @@ private constructor(
                 userProfileEnforcementActionOpened.organizationId()
             userProfileEnforcementActionResolved != null ->
                 userProfileEnforcementActionResolved.organizationId()
+            userProfileProgramStatusUpdated != null ->
+                userProfileProgramStatusUpdated.organizationId()
             else -> _json.getProperty<String>("organization_id").getRequired("organization_id")
         }
 
@@ -288,6 +295,7 @@ private constructor(
             sessionBudgetReached != null -> Optional.of(sessionBudgetReached.workspaceId())
             userProfileEnforcementActionOpened != null -> Optional.empty()
             userProfileEnforcementActionResolved != null -> Optional.empty()
+            userProfileProgramStatusUpdated != null -> Optional.empty()
             else -> _json.getProperty<String>("workspace_id").asKnown()
         }
 
@@ -340,6 +348,7 @@ private constructor(
             sessionBudgetReached != null -> Optional.empty()
             userProfileEnforcementActionOpened != null -> Optional.empty()
             userProfileEnforcementActionResolved != null -> Optional.empty()
+            userProfileProgramStatusUpdated != null -> Optional.empty()
             else -> _json.getProperty<String>("session_thread_id").asKnown()
         }
 
@@ -392,6 +401,7 @@ private constructor(
             sessionBudgetReached != null -> Optional.empty()
             userProfileEnforcementActionOpened != null -> Optional.empty()
             userProfileEnforcementActionResolved != null -> Optional.empty()
+            userProfileProgramStatusUpdated != null -> Optional.empty()
             else -> _json.getProperty<String>("vault_id").asKnown()
         }
 
@@ -445,6 +455,7 @@ private constructor(
                 Optional.of(userProfileEnforcementActionOpened.enforcementActionId())
             userProfileEnforcementActionResolved != null ->
                 Optional.of(userProfileEnforcementActionResolved.enforcementActionId())
+            userProfileProgramStatusUpdated != null -> Optional.empty()
             else -> _json.getProperty<String>("enforcement_action_id").asKnown()
         }
 
@@ -589,6 +600,10 @@ private constructor(
         Optional<BetaWebhookUserProfileEnforcementActionResolvedEventData> =
         Optional.ofNullable(userProfileEnforcementActionResolved)
 
+    fun userProfileProgramStatusUpdated():
+        Optional<BetaWebhookUserProfileProgramStatusUpdatedEventData> =
+        Optional.ofNullable(userProfileProgramStatusUpdated)
+
     fun isSessionCreated(): Boolean = sessionCreated != null
 
     fun isSessionPending(): Boolean = sessionPending != null
@@ -681,6 +696,8 @@ private constructor(
 
     fun isUserProfileEnforcementActionResolved(): Boolean =
         userProfileEnforcementActionResolved != null
+
+    fun isUserProfileProgramStatusUpdated(): Boolean = userProfileProgramStatusUpdated != null
 
     fun asSessionCreated(): BetaWebhookSessionCreatedEventData =
         sessionCreated.getOrThrow("sessionCreated")
@@ -816,6 +833,9 @@ private constructor(
         BetaWebhookUserProfileEnforcementActionResolvedEventData =
         userProfileEnforcementActionResolved.getOrThrow("userProfileEnforcementActionResolved")
 
+    fun asUserProfileProgramStatusUpdated(): BetaWebhookUserProfileProgramStatusUpdatedEventData =
+        userProfileProgramStatusUpdated.getOrThrow("userProfileProgramStatusUpdated")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -910,6 +930,8 @@ private constructor(
                 visitor.visitUserProfileEnforcementActionResolved(
                     userProfileEnforcementActionResolved
                 )
+            userProfileProgramStatusUpdated != null ->
+                visitor.visitUserProfileProgramStatusUpdated(userProfileProgramStatusUpdated)
             else -> visitor.unknown(_json)
         }
 
@@ -977,6 +999,7 @@ private constructor(
                 userProfileEnforcementActionOpened.validate()
             userProfileEnforcementActionResolved != null ->
                 userProfileEnforcementActionResolved.validate()
+            userProfileProgramStatusUpdated != null -> userProfileProgramStatusUpdated.validate()
             else -> throw AnthropicInvalidDataException("Unknown BetaWebhookEventData: $_json")
         }
         validated = true
@@ -1046,6 +1069,7 @@ private constructor(
                 userProfileEnforcementActionOpened.validity()
             userProfileEnforcementActionResolved != null ->
                 userProfileEnforcementActionResolved.validity()
+            userProfileProgramStatusUpdated != null -> userProfileProgramStatusUpdated.validity()
             else -> 0
         }
 
@@ -1100,7 +1124,8 @@ private constructor(
             memoryStoreDeleted == other.memoryStoreDeleted &&
             sessionBudgetReached == other.sessionBudgetReached &&
             userProfileEnforcementActionOpened == other.userProfileEnforcementActionOpened &&
-            userProfileEnforcementActionResolved == other.userProfileEnforcementActionResolved
+            userProfileEnforcementActionResolved == other.userProfileEnforcementActionResolved &&
+            userProfileProgramStatusUpdated == other.userProfileProgramStatusUpdated
     }
 
     override fun hashCode(): Int =
@@ -1151,6 +1176,7 @@ private constructor(
             sessionBudgetReached,
             userProfileEnforcementActionOpened,
             userProfileEnforcementActionResolved,
+            userProfileProgramStatusUpdated,
         )
 
     override fun toString(): String =
@@ -1232,6 +1258,8 @@ private constructor(
                 "BetaWebhookEventData{userProfileEnforcementActionOpened=$userProfileEnforcementActionOpened}"
             userProfileEnforcementActionResolved != null ->
                 "BetaWebhookEventData{userProfileEnforcementActionResolved=$userProfileEnforcementActionResolved}"
+            userProfileProgramStatusUpdated != null ->
+                "BetaWebhookEventData{userProfileProgramStatusUpdated=$userProfileProgramStatusUpdated}"
             _json != null -> "BetaWebhookEventData{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaWebhookEventData")
         }
@@ -1442,6 +1470,11 @@ private constructor(
             BetaWebhookEventData(
                 userProfileEnforcementActionResolved = userProfileEnforcementActionResolved
             )
+
+        @JvmStatic
+        fun ofUserProfileProgramStatusUpdated(
+            userProfileProgramStatusUpdated: BetaWebhookUserProfileProgramStatusUpdatedEventData
+        ) = BetaWebhookEventData(userProfileProgramStatusUpdated = userProfileProgramStatusUpdated)
     }
 
     /**
@@ -1580,6 +1613,10 @@ private constructor(
         fun visitUserProfileEnforcementActionResolved(
             userProfileEnforcementActionResolved:
                 BetaWebhookUserProfileEnforcementActionResolvedEventData
+        ): T
+
+        fun visitUserProfileProgramStatusUpdated(
+            userProfileProgramStatusUpdated: BetaWebhookUserProfileProgramStatusUpdatedEventData
         ): T
 
         /**
@@ -1961,6 +1998,15 @@ private constructor(
                             )
                         } ?: BetaWebhookEventData(_json = json)
                 }
+                "user_profile.program_status_updated" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookUserProfileProgramStatusUpdatedEventData>(),
+                        )
+                        ?.let {
+                            BetaWebhookEventData(userProfileProgramStatusUpdated = it, _json = json)
+                        } ?: BetaWebhookEventData(_json = json)
+                }
             }
 
             return BetaWebhookEventData(_json = json)
@@ -2040,6 +2086,8 @@ private constructor(
                     generator.writeObject(value.userProfileEnforcementActionOpened)
                 value.userProfileEnforcementActionResolved != null ->
                     generator.writeObject(value.userProfileEnforcementActionResolved)
+                value.userProfileProgramStatusUpdated != null ->
+                    generator.writeObject(value.userProfileProgramStatusUpdated)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaWebhookEventData")
             }
@@ -2165,6 +2213,10 @@ private constructor(
             val USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED =
                 Type(JsonField.of("user_profile.enforcement_action_resolved"))
 
+            @JvmField
+            val USER_PROFILE_PROGRAM_STATUS_UPDATED =
+                Type(JsonField.of("user_profile.program_status_updated"))
+
             @JvmStatic
             fun of(value: String): Type =
                 // Intern known values so `==` works
@@ -2217,6 +2269,7 @@ private constructor(
                         USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                     "user_profile.enforcement_action_resolved" ->
                         USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                    "user_profile.program_status_updated" -> USER_PROFILE_PROGRAM_STATUS_UPDATED
                     else -> Type(JsonField.of(value))
                 }
 
@@ -2274,6 +2327,7 @@ private constructor(
             SESSION_BUDGET_REACHED,
             USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
             USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
+            USER_PROFILE_PROGRAM_STATUS_UPDATED,
         }
 
         /**
@@ -2332,6 +2386,7 @@ private constructor(
             SESSION_BUDGET_REACHED,
             USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
             USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
+            USER_PROFILE_PROGRAM_STATUS_UPDATED,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -2393,6 +2448,7 @@ private constructor(
                     Value.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
                     Value.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                USER_PROFILE_PROGRAM_STATUS_UPDATED -> Value.USER_PROFILE_PROGRAM_STATUS_UPDATED
                 else -> Value._UNKNOWN
             }
 
@@ -2455,6 +2511,7 @@ private constructor(
                     Known.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
                     Known.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                USER_PROFILE_PROGRAM_STATUS_UPDATED -> Known.USER_PROFILE_PROGRAM_STATUS_UPDATED
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 
