@@ -19,7 +19,6 @@ import com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeErrorDe
 import com.anthropic.models.beta.environments.BetaInvalidMetadataErrorDetails
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedErrorDetails
 import com.anthropic.models.beta.environments.work.BetaWorkLeaseState
-import com.anthropic.models.beta.organization.BetaBillingFrozenErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedErrorDetails
@@ -169,7 +168,6 @@ private constructor(
     private val cannotSignOutOwner: BetaCannotSignOutOwnerErrorDetails? = null,
     private val cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails? =
         null,
-    private val billingFrozen: BetaBillingFrozenErrorDetails? = null,
     private val spendLimitsAdminApiWritesNotEnabled:
         BetaSpendLimitsAdminApiWritesNotEnabledErrorDetails? =
         null,
@@ -270,7 +268,6 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> ErrorCode.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
             cannotSignOutOwner != null -> ErrorCode.CANNOT_SIGN_OUT_OWNER
             cannotSignOutPrivilegedMember != null -> ErrorCode.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
-            billingFrozen != null -> ErrorCode.BILLING_FROZEN
             spendLimitsAdminApiWritesNotEnabled != null ->
                 ErrorCode.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
             unsupportedCharset != null -> ErrorCode.UNSUPPORTED_CHARSET
@@ -364,7 +361,6 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> Optional.empty()
             cannotSignOutOwner != null -> Optional.empty()
             cannotSignOutPrivilegedMember != null -> Optional.empty()
-            billingFrozen != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
             pluginNameTaken != null -> pluginNameTaken.pluginId()
@@ -451,7 +447,6 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> Optional.empty()
             cannotSignOutOwner != null -> Optional.empty()
             cannotSignOutPrivilegedMember != null -> Optional.empty()
-            billingFrozen != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
             pluginNameTaken != null -> Optional.empty()
@@ -538,7 +533,6 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> Optional.empty()
             cannotSignOutOwner != null -> Optional.empty()
             cannotSignOutPrivilegedMember != null -> Optional.empty()
-            billingFrozen != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
             pluginNameTaken != null -> Optional.empty()
@@ -934,8 +928,8 @@ private constructor(
         Optional.ofNullable(organizationNotEnrolledInBeta)
 
     /**
-     * On a public-sector deployment, only an API key or token that belongs to a person with owner
-     * permissions can sign out a member with the `managed` role.
+     * The member has the `managed` role, and this API key or token cannot sign them out. The error
+     * message says which keys and tokens can.
      */
     fun cannotSignOutManagedMember(): Optional<BetaCannotSignOutManagedMemberErrorDetails> =
         Optional.ofNullable(cannotSignOutManagedMember)
@@ -960,13 +954,6 @@ private constructor(
      */
     fun cannotSignOutPrivilegedMember(): Optional<BetaCannotSignOutPrivilegedMemberErrorDetails> =
         Optional.ofNullable(cannotSignOutPrivilegedMember)
-
-    /**
-     * Anthropic has temporarily disabled billing changes for the user account the credential
-     * belongs to. Contact support.
-     */
-    fun billingFrozen(): Optional<BetaBillingFrozenErrorDetails> =
-        Optional.ofNullable(billingFrozen)
 
     /**
      * The organization cannot retrieve, set or delete spend limits with an Admin API credential.
@@ -1192,8 +1179,6 @@ private constructor(
     fun isCannotSignOutOwner(): Boolean = cannotSignOutOwner != null
 
     fun isCannotSignOutPrivilegedMember(): Boolean = cannotSignOutPrivilegedMember != null
-
-    fun isBillingFrozen(): Boolean = billingFrozen != null
 
     fun isSpendLimitsAdminApiWritesNotEnabled(): Boolean =
         spendLimitsAdminApiWritesNotEnabled != null
@@ -1604,8 +1589,8 @@ private constructor(
         organizationNotEnrolledInBeta.getOrThrow("organizationNotEnrolledInBeta")
 
     /**
-     * On a public-sector deployment, only an API key or token that belongs to a person with owner
-     * permissions can sign out a member with the `managed` role.
+     * The member has the `managed` role, and this API key or token cannot sign them out. The error
+     * message says which keys and tokens can.
      */
     fun asCannotSignOutManagedMember(): BetaCannotSignOutManagedMemberErrorDetails =
         cannotSignOutManagedMember.getOrThrow("cannotSignOutManagedMember")
@@ -1630,12 +1615,6 @@ private constructor(
      */
     fun asCannotSignOutPrivilegedMember(): BetaCannotSignOutPrivilegedMemberErrorDetails =
         cannotSignOutPrivilegedMember.getOrThrow("cannotSignOutPrivilegedMember")
-
-    /**
-     * Anthropic has temporarily disabled billing changes for the user account the credential
-     * belongs to. Contact support.
-     */
-    fun asBillingFrozen(): BetaBillingFrozenErrorDetails = billingFrozen.getOrThrow("billingFrozen")
 
     /**
      * The organization cannot retrieve, set or delete spend limits with an Admin API credential.
@@ -1875,7 +1854,6 @@ private constructor(
             cannotSignOutOwner != null -> visitor.visitCannotSignOutOwner(cannotSignOutOwner)
             cannotSignOutPrivilegedMember != null ->
                 visitor.visitCannotSignOutPrivilegedMember(cannotSignOutPrivilegedMember)
-            billingFrozen != null -> visitor.visitBillingFrozen(billingFrozen)
             spendLimitsAdminApiWritesNotEnabled != null ->
                 visitor.visitSpendLimitsAdminApiWritesNotEnabled(
                     spendLimitsAdminApiWritesNotEnabled
@@ -1990,7 +1968,6 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> cannotSignOutMembershipAdmin.validate()
             cannotSignOutOwner != null -> cannotSignOutOwner.validate()
             cannotSignOutPrivilegedMember != null -> cannotSignOutPrivilegedMember.validate()
-            billingFrozen != null -> billingFrozen.validate()
             spendLimitsAdminApiWritesNotEnabled != null ->
                 spendLimitsAdminApiWritesNotEnabled.validate()
             unsupportedCharset != null -> unsupportedCharset.validate()
@@ -2099,7 +2076,6 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> cannotSignOutMembershipAdmin.validity()
             cannotSignOutOwner != null -> cannotSignOutOwner.validity()
             cannotSignOutPrivilegedMember != null -> cannotSignOutPrivilegedMember.validity()
-            billingFrozen != null -> billingFrozen.validity()
             spendLimitsAdminApiWritesNotEnabled != null ->
                 spendLimitsAdminApiWritesNotEnabled.validity()
             unsupportedCharset != null -> unsupportedCharset.validity()
@@ -2196,7 +2172,6 @@ private constructor(
             cannotSignOutMembershipAdmin == other.cannotSignOutMembershipAdmin &&
             cannotSignOutOwner == other.cannotSignOutOwner &&
             cannotSignOutPrivilegedMember == other.cannotSignOutPrivilegedMember &&
-            billingFrozen == other.billingFrozen &&
             spendLimitsAdminApiWritesNotEnabled == other.spendLimitsAdminApiWritesNotEnabled &&
             unsupportedCharset == other.unsupportedCharset &&
             pluginNameTaken == other.pluginNameTaken &&
@@ -2282,7 +2257,6 @@ private constructor(
             cannotSignOutMembershipAdmin,
             cannotSignOutOwner,
             cannotSignOutPrivilegedMember,
-            billingFrozen,
             spendLimitsAdminApiWritesNotEnabled,
             unsupportedCharset,
             pluginNameTaken,
@@ -2417,7 +2391,6 @@ private constructor(
             cannotSignOutOwner != null -> "ErrorDetails{cannotSignOutOwner=$cannotSignOutOwner}"
             cannotSignOutPrivilegedMember != null ->
                 "ErrorDetails{cannotSignOutPrivilegedMember=$cannotSignOutPrivilegedMember}"
-            billingFrozen != null -> "ErrorDetails{billingFrozen=$billingFrozen}"
             spendLimitsAdminApiWritesNotEnabled != null ->
                 "ErrorDetails{spendLimitsAdminApiWritesNotEnabled=$spendLimitsAdminApiWritesNotEnabled}"
             unsupportedCharset != null -> "ErrorDetails{unsupportedCharset=$unsupportedCharset}"
@@ -2953,8 +2926,8 @@ private constructor(
         ) = ErrorDetails(organizationNotEnrolledInBeta = organizationNotEnrolledInBeta)
 
         /**
-         * On a public-sector deployment, only an API key or token that belongs to a person with
-         * owner permissions can sign out a member with the `managed` role.
+         * The member has the `managed` role, and this API key or token cannot sign them out. The
+         * error message says which keys and tokens can.
          */
         @JvmStatic
         fun ofCannotSignOutManagedMember(
@@ -2987,14 +2960,6 @@ private constructor(
         fun ofCannotSignOutPrivilegedMember(
             cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails
         ) = ErrorDetails(cannotSignOutPrivilegedMember = cannotSignOutPrivilegedMember)
-
-        /**
-         * Anthropic has temporarily disabled billing changes for the user account the credential
-         * belongs to. Contact support.
-         */
-        @JvmStatic
-        fun ofBillingFrozen(billingFrozen: BetaBillingFrozenErrorDetails) =
-            ErrorDetails(billingFrozen = billingFrozen)
 
         /**
          * The organization cannot retrieve, set or delete spend limits with an Admin API
@@ -3594,8 +3559,8 @@ private constructor(
         ): T
 
         /**
-         * On a public-sector deployment, only an API key or token that belongs to a person with
-         * owner permissions can sign out a member with the `managed` role.
+         * The member has the `managed` role, and this API key or token cannot sign them out. The
+         * error message says which keys and tokens can.
          */
         fun visitCannotSignOutManagedMember(
             cannotSignOutManagedMember: BetaCannotSignOutManagedMemberErrorDetails
@@ -3623,12 +3588,6 @@ private constructor(
         fun visitCannotSignOutPrivilegedMember(
             cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails
         ): T
-
-        /**
-         * Anthropic has temporarily disabled billing changes for the user account the credential
-         * belongs to. Contact support.
-         */
-        fun visitBillingFrozen(billingFrozen: BetaBillingFrozenErrorDetails): T
 
         /**
          * The organization cannot retrieve, set or delete spend limits with an Admin API
@@ -4219,11 +4178,6 @@ private constructor(
                         ?.let { ErrorDetails(cannotSignOutPrivilegedMember = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
-                "billing_frozen" -> {
-                    return tryDeserialize(node, jacksonTypeRef<BetaBillingFrozenErrorDetails>())
-                        ?.let { ErrorDetails(billingFrozen = it, _json = json) }
-                        ?: ErrorDetails(_json = json)
-                }
                 "spend_limits_admin_api_writes_not_enabled" -> {
                     return tryDeserialize(
                             node,
@@ -4468,7 +4422,6 @@ private constructor(
                 value.cannotSignOutOwner != null -> generator.writeObject(value.cannotSignOutOwner)
                 value.cannotSignOutPrivilegedMember != null ->
                     generator.writeObject(value.cannotSignOutPrivilegedMember)
-                value.billingFrozen != null -> generator.writeObject(value.billingFrozen)
                 value.spendLimitsAdminApiWritesNotEnabled != null ->
                     generator.writeObject(value.spendLimitsAdminApiWritesNotEnabled)
                 value.unsupportedCharset != null -> generator.writeObject(value.unsupportedCharset)
@@ -4719,8 +4672,6 @@ private constructor(
             val CANNOT_SIGN_OUT_PRIVILEGED_MEMBER =
                 ErrorCode(JsonField.of("cannot_sign_out_privileged_member"))
 
-            @JvmField val BILLING_FROZEN = ErrorCode(JsonField.of("billing_frozen"))
-
             @JvmField
             val SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED =
                 ErrorCode(JsonField.of("spend_limits_admin_api_writes_not_enabled"))
@@ -4836,7 +4787,6 @@ private constructor(
                     "cannot_sign_out_membership_admin" -> CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
                     "cannot_sign_out_owner" -> CANNOT_SIGN_OUT_OWNER
                     "cannot_sign_out_privileged_member" -> CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
-                    "billing_frozen" -> BILLING_FROZEN
                     "spend_limits_admin_api_writes_not_enabled" ->
                         SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
                     "unsupported_charset" -> UNSUPPORTED_CHARSET
@@ -4933,7 +4883,6 @@ private constructor(
             CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN,
             CANNOT_SIGN_OUT_OWNER,
             CANNOT_SIGN_OUT_PRIVILEGED_MEMBER,
-            BILLING_FROZEN,
             SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED,
             UNSUPPORTED_CHARSET,
             PLUGIN_NAME_TAKEN,
@@ -5027,7 +4976,6 @@ private constructor(
             CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN,
             CANNOT_SIGN_OUT_OWNER,
             CANNOT_SIGN_OUT_PRIVILEGED_MEMBER,
-            BILLING_FROZEN,
             SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED,
             UNSUPPORTED_CHARSET,
             PLUGIN_NAME_TAKEN,
@@ -5125,7 +5073,6 @@ private constructor(
                 CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN -> Value.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
                 CANNOT_SIGN_OUT_OWNER -> Value.CANNOT_SIGN_OUT_OWNER
                 CANNOT_SIGN_OUT_PRIVILEGED_MEMBER -> Value.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
-                BILLING_FROZEN -> Value.BILLING_FROZEN
                 SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED ->
                     Value.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
                 UNSUPPORTED_CHARSET -> Value.UNSUPPORTED_CHARSET
@@ -5226,7 +5173,6 @@ private constructor(
                 CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN -> Known.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
                 CANNOT_SIGN_OUT_OWNER -> Known.CANNOT_SIGN_OUT_OWNER
                 CANNOT_SIGN_OUT_PRIVILEGED_MEMBER -> Known.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
-                BILLING_FROZEN -> Known.BILLING_FROZEN
                 SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED ->
                     Known.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
                 UNSUPPORTED_CHARSET -> Known.UNSUPPORTED_CHARSET

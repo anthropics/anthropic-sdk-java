@@ -50,7 +50,6 @@ import com.anthropic.models.beta.environments.BetaEnvironmentUpdateDisabledExcep
 import com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeException
 import com.anthropic.models.beta.environments.BetaInvalidMetadataException
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedException
-import com.anthropic.models.beta.organization.BetaBillingFrozenException
 import com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
 import com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
@@ -480,10 +479,6 @@ private val errorCodeExceptions:
         (403 to "api_key_scope_missing") to
             { headers, body ->
                 BetaApiKeyScopeMissingException.builder().headers(headers).body(body).build()
-            },
-        (403 to "billing_frozen") to
-            { headers, body ->
-                BetaBillingFrozenException.builder().headers(headers).body(body).build()
             },
         (403 to "cannot_sign_out_managed_member") to
             { headers, body ->
