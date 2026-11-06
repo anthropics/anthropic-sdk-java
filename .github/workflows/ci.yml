@@ -67,7 +67,7 @@ jobs:
 
       - name: Build SDK
         # Generates the Javadoc so that a Dokka failure shows here rather than when publishing.
-        run: ./scripts/build ${{ github.repository != 'anthropics/anthropic-sdk-java' && !startsWith(github.ref, 'refs/heads/stl/') && 'dokkaGeneratePublicationJavadoc' || '' }}
+        run: ./scripts/build ${{ github.repository != 'anthropics/anthropic-sdk-java' && !startsWith(github.ref, 'refs/heads/stl/') && 'dokkaGeneratePublicationJavadoc --stacktrace' || '' }}
 
   test:
     timeout-minutes: 30
