@@ -538,6 +538,10 @@ private constructor(
             val USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED =
                 EnabledEvent(JsonField.of("user_profile.enforcement_action_resolved"))
 
+            @JvmField
+            val USER_PROFILE_PROGRAM_STATUS_UPDATED =
+                EnabledEvent(JsonField.of("user_profile.program_status_updated"))
+
             @JvmStatic
             fun of(value: String): EnabledEvent =
                 // Intern known values so `==` works
@@ -546,6 +550,7 @@ private constructor(
                         USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                     "user_profile.enforcement_action_resolved" ->
                         USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                    "user_profile.program_status_updated" -> USER_PROFILE_PROGRAM_STATUS_UPDATED
                     else -> EnabledEvent(JsonField.of(value))
                 }
 
@@ -559,6 +564,7 @@ private constructor(
         enum class Known {
             USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
             USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
+            USER_PROFILE_PROGRAM_STATUS_UPDATED,
         }
 
         /**
@@ -573,6 +579,7 @@ private constructor(
         enum class Value {
             USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
             USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
+            USER_PROFILE_PROGRAM_STATUS_UPDATED,
             /**
              * An enum member indicating that [EnabledEvent] was instantiated with an unknown value.
              */
@@ -592,6 +599,7 @@ private constructor(
                     Value.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
                     Value.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                USER_PROFILE_PROGRAM_STATUS_UPDATED -> Value.USER_PROFILE_PROGRAM_STATUS_UPDATED
                 else -> Value._UNKNOWN
             }
 
@@ -610,6 +618,7 @@ private constructor(
                     Known.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
                     Known.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                USER_PROFILE_PROGRAM_STATUS_UPDATED -> Known.USER_PROFILE_PROGRAM_STATUS_UPDATED
                 else -> throw AnthropicInvalidDataException("Unknown EnabledEvent: $value")
             }
 
