@@ -42,6 +42,8 @@ interface ServiceAccountServiceAsync {
      * retargeted to grant `org:admin` scope when the target's `organization_role` is `admin`.
      * Creating an `admin`-role service account requires an interactive credential (a user OAuth
      * token or a Console session) — a workload may only create `developer`-role service accounts.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun create(params: ServiceAccountCreateParams): CompletableFuture<BetaServiceAccount> =
         create(params, RequestOptions.none())
@@ -105,6 +107,8 @@ interface ServiceAccountServiceAsync {
      * service accounts cannot be updated; this returns 400. Setting `organization_role` to `admin`
      * (even when unchanged) requires an interactive credential (a user OAuth token or a Console
      * session).
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(serviceAccountId: String): CompletableFuture<BetaServiceAccount> =
         update(serviceAccountId, ServiceAccountUpdateParams.none())
@@ -180,6 +184,8 @@ interface ServiceAccountServiceAsync {
      * Rejected with 400 if any live (non-archived) federation rule still targets this service
      * account, same as issuer archival; archive those rules first or change their target to another
      * service account.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun archive(serviceAccountId: String): CompletableFuture<BetaServiceAccount> =
         archive(serviceAccountId, ServiceAccountArchiveParams.none())

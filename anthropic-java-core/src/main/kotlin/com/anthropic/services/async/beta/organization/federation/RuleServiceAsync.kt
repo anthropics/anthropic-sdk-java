@@ -47,6 +47,8 @@ interface RuleServiceAsync {
      * `repo:YOUR_ORG/...`), or a CEL condition referencing one of those identity claims (e.g.
      * `claims.repository_owner`). OAuth callers may only manage rules whose `oauth_scope` is
      * `workspace:developer` or `workspace:inference`; other scopes require a Console session.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun create(params: RuleCreateParams): CompletableFuture<BetaFederationRule> =
         create(params, RequestOptions.none())
@@ -118,6 +120,8 @@ interface RuleServiceAsync {
      * supply a conforming `match` in the same request. OAuth callers may only manage rules whose
      * `oauth_scope` is `workspace:developer` or `workspace:inference`; other scopes require a
      * Console session.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(federationRuleId: String): CompletableFuture<BetaFederationRule> =
         update(federationRuleId, RuleUpdateParams.none())
@@ -192,6 +196,8 @@ interface RuleServiceAsync {
      * (`workspace_id` and `workspace_ids` are emptied). Tokens already minted before archive remain
      * valid until they expire. OAuth callers may only manage rules whose `oauth_scope` is
      * `workspace:developer` or `workspace:inference`; other scopes require a Console session.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun archive(federationRuleId: String): CompletableFuture<BetaFederationRule> =
         archive(federationRuleId, RuleArchiveParams.none())

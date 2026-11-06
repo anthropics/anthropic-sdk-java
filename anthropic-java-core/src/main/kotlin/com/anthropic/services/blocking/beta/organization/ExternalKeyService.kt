@@ -34,6 +34,7 @@ interface ExternalKeyService {
      * Create an external key config owned by the caller's organization.
      *
      * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun create(params: ExternalKeyCreateParams): BetaExternalKey =
         create(params, RequestOptions.none())
@@ -84,6 +85,7 @@ interface ExternalKeyService {
      * identity to decrypt.
      *
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyInWorkspacePolicyException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(externalKeyId: String): BetaExternalKey =
         update(externalKeyId, ExternalKeyUpdateParams.none())
@@ -144,6 +146,7 @@ interface ExternalKeyService {
      * The request is rejected if any workspace still references this config.
      *
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyInWorkspacePolicyException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun delete(externalKeyId: String): ExternalKeyDeleteResponse =
         delete(externalKeyId, ExternalKeyDeleteParams.none())
@@ -182,6 +185,8 @@ interface ExternalKeyService {
      * Anthropic performs an encrypt/decrypt roundtrip against the configured KMS key and waits up
      * to 30 seconds for the result. The response status is `success` if the roundtrip succeeded, or
      * `failure` with an error message if it failed or timed out.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun validate(externalKeyId: String): ExternalKeyValidateResponse =
         validate(externalKeyId, ExternalKeyValidateParams.none())

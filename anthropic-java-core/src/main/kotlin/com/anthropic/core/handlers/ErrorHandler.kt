@@ -41,6 +41,7 @@ import com.anthropic.models.RampLimitExceededException
 import com.anthropic.models.RequestBodyEncodingInvalidException
 import com.anthropic.models.RequestBodyEncodingUnsupportedException
 import com.anthropic.models.RequestBodyTooLargeAfterDecodingException
+import com.anthropic.models.SandboxEgressRestrictedException
 import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaException
 import com.anthropic.models.beta.BetaUnsupportedCharsetException
 import com.anthropic.models.beta.environments.BetaEnvironmentArchivedException
@@ -530,6 +531,10 @@ private val errorCodeExceptions:
                     .headers(headers)
                     .body(body)
                     .build()
+            },
+        (403 to "sandbox_egress_restricted") to
+            { headers, body ->
+                SandboxEgressRestrictedException.builder().headers(headers).body(body).build()
             },
         (403 to "spend_limits_admin_api_writes_not_enabled") to
             { headers, body ->

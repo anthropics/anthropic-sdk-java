@@ -66,6 +66,8 @@ interface ComplianceSettingServiceAsync {
      * enables the Compliance API, which serves its activity events, so such provisioning (including
      * re-runs) re-enables the Compliance API even after a `disabled` request. Automated
      * provisioning never disables compliance settings.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(
         params: ComplianceSettingUpdateParams

@@ -42,6 +42,7 @@ interface InviteServiceAsync {
      * @throws com.anthropic.models.organization.OrgMemberLimitExceededException
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun create(params: InviteCreateParams): CompletableFuture<OrganizationInvite> =
         create(params, RequestOptions.none())
@@ -105,7 +106,11 @@ interface InviteServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<InviteListPageAsync> =
         list(InviteListParams.none(), requestOptions)
 
-    /** Delete a pending invite. */
+    /**
+     * Delete a pending invite.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun delete(inviteId: String): CompletableFuture<InviteDeleteResponse> =
         delete(inviteId, InviteDeleteParams.none())
 

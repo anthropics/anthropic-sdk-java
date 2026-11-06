@@ -132,6 +132,7 @@ private constructor(
     private val cmekContextUnavailable: CmekContextUnavailableErrorDetails? = null,
     private val orgApiKeyLimitExceeded: OrgApiKeyLimitExceededErrorDetails? = null,
     private val workspaceApiKeyLimitExceeded: WorkspaceApiKeyLimitExceededErrorDetails? = null,
+    private val sandboxEgressRestricted: SandboxEgressRestrictedErrorDetails? = null,
     private val userProfileNotFound: UserProfileNotFoundErrorDetails? = null,
     private val externalKeyInWorkspacePolicy: ExternalKeyInWorkspacePolicyErrorDetails? = null,
     private val alreadyMember: AlreadyMemberErrorDetails? = null,
@@ -236,6 +237,7 @@ private constructor(
             cmekContextUnavailable != null -> ErrorCode.CMEK_CONTEXT_UNAVAILABLE
             orgApiKeyLimitExceeded != null -> ErrorCode.ORG_API_KEY_LIMIT_EXCEEDED
             workspaceApiKeyLimitExceeded != null -> ErrorCode.WORKSPACE_API_KEY_LIMIT_EXCEEDED
+            sandboxEgressRestricted != null -> ErrorCode.SANDBOX_EGRESS_RESTRICTED
             userProfileNotFound != null -> ErrorCode.USER_PROFILE_NOT_FOUND
             externalKeyInWorkspacePolicy != null -> ErrorCode.EXTERNAL_KEY_IN_WORKSPACE_POLICY
             alreadyMember != null -> ErrorCode.ALREADY_MEMBER
@@ -330,6 +332,7 @@ private constructor(
             cmekContextUnavailable != null -> Optional.empty()
             orgApiKeyLimitExceeded != null -> Optional.empty()
             workspaceApiKeyLimitExceeded != null -> Optional.empty()
+            sandboxEgressRestricted != null -> Optional.empty()
             userProfileNotFound != null -> Optional.empty()
             externalKeyInWorkspacePolicy != null -> Optional.empty()
             alreadyMember != null -> Optional.empty()
@@ -416,6 +419,7 @@ private constructor(
             cmekContextUnavailable != null -> Optional.empty()
             orgApiKeyLimitExceeded != null -> Optional.empty()
             workspaceApiKeyLimitExceeded != null -> Optional.empty()
+            sandboxEgressRestricted != null -> Optional.empty()
             userProfileNotFound != null -> Optional.empty()
             externalKeyInWorkspacePolicy != null -> Optional.empty()
             alreadyMember != null -> Optional.empty()
@@ -502,6 +506,7 @@ private constructor(
             cmekContextUnavailable != null -> Optional.empty()
             orgApiKeyLimitExceeded != null -> Optional.empty()
             workspaceApiKeyLimitExceeded != null -> Optional.empty()
+            sandboxEgressRestricted != null -> Optional.empty()
             userProfileNotFound != null -> Optional.empty()
             externalKeyInWorkspacePolicy != null -> Optional.empty()
             alreadyMember != null -> Optional.empty()
@@ -756,6 +761,14 @@ private constructor(
     /** The workspace has reached its limit of active API keys. */
     fun workspaceApiKeyLimitExceeded(): Optional<WorkspaceApiKeyLimitExceededErrorDetails> =
         Optional.ofNullable(workspaceApiKeyLimitExceeded)
+
+    /**
+     * The request came from a Claude sandbox with restricted network access, which is not allowed
+     * to make this change. Send it from outside the sandbox, or from a sandbox with unrestricted
+     * network access.
+     */
+    fun sandboxEgressRestricted(): Optional<SandboxEgressRestrictedErrorDetails> =
+        Optional.ofNullable(sandboxEgressRestricted)
 
     /**
      * The request depends on a user profile that does not exist in the organization or is no longer
@@ -1117,6 +1130,8 @@ private constructor(
 
     fun isWorkspaceApiKeyLimitExceeded(): Boolean = workspaceApiKeyLimitExceeded != null
 
+    fun isSandboxEgressRestricted(): Boolean = sandboxEgressRestricted != null
+
     fun isUserProfileNotFound(): Boolean = userProfileNotFound != null
 
     fun isExternalKeyInWorkspacePolicy(): Boolean = externalKeyInWorkspacePolicy != null
@@ -1415,6 +1430,14 @@ private constructor(
     /** The workspace has reached its limit of active API keys. */
     fun asWorkspaceApiKeyLimitExceeded(): WorkspaceApiKeyLimitExceededErrorDetails =
         workspaceApiKeyLimitExceeded.getOrThrow("workspaceApiKeyLimitExceeded")
+
+    /**
+     * The request came from a Claude sandbox with restricted network access, which is not allowed
+     * to make this change. Send it from outside the sandbox, or from a sandbox with unrestricted
+     * network access.
+     */
+    fun asSandboxEgressRestricted(): SandboxEgressRestrictedErrorDetails =
+        sandboxEgressRestricted.getOrThrow("sandboxEgressRestricted")
 
     /**
      * The request depends on a user profile that does not exist in the organization or is no longer
@@ -1799,6 +1822,8 @@ private constructor(
                 visitor.visitOrgApiKeyLimitExceeded(orgApiKeyLimitExceeded)
             workspaceApiKeyLimitExceeded != null ->
                 visitor.visitWorkspaceApiKeyLimitExceeded(workspaceApiKeyLimitExceeded)
+            sandboxEgressRestricted != null ->
+                visitor.visitSandboxEgressRestricted(sandboxEgressRestricted)
             userProfileNotFound != null -> visitor.visitUserProfileNotFound(userProfileNotFound)
             externalKeyInWorkspacePolicy != null ->
                 visitor.visitExternalKeyInWorkspacePolicy(externalKeyInWorkspacePolicy)
@@ -1936,6 +1961,7 @@ private constructor(
             cmekContextUnavailable != null -> cmekContextUnavailable.validate()
             orgApiKeyLimitExceeded != null -> orgApiKeyLimitExceeded.validate()
             workspaceApiKeyLimitExceeded != null -> workspaceApiKeyLimitExceeded.validate()
+            sandboxEgressRestricted != null -> sandboxEgressRestricted.validate()
             userProfileNotFound != null -> userProfileNotFound.validate()
             externalKeyInWorkspacePolicy != null -> externalKeyInWorkspacePolicy.validate()
             alreadyMember != null -> alreadyMember.validate()
@@ -2044,6 +2070,7 @@ private constructor(
             cmekContextUnavailable != null -> cmekContextUnavailable.validity()
             orgApiKeyLimitExceeded != null -> orgApiKeyLimitExceeded.validity()
             workspaceApiKeyLimitExceeded != null -> workspaceApiKeyLimitExceeded.validity()
+            sandboxEgressRestricted != null -> sandboxEgressRestricted.validity()
             userProfileNotFound != null -> userProfileNotFound.validity()
             externalKeyInWorkspacePolicy != null -> externalKeyInWorkspacePolicy.validity()
             alreadyMember != null -> alreadyMember.validity()
@@ -2140,6 +2167,7 @@ private constructor(
             cmekContextUnavailable == other.cmekContextUnavailable &&
             orgApiKeyLimitExceeded == other.orgApiKeyLimitExceeded &&
             workspaceApiKeyLimitExceeded == other.workspaceApiKeyLimitExceeded &&
+            sandboxEgressRestricted == other.sandboxEgressRestricted &&
             userProfileNotFound == other.userProfileNotFound &&
             externalKeyInWorkspacePolicy == other.externalKeyInWorkspacePolicy &&
             alreadyMember == other.alreadyMember &&
@@ -2226,6 +2254,7 @@ private constructor(
             cmekContextUnavailable,
             orgApiKeyLimitExceeded,
             workspaceApiKeyLimitExceeded,
+            sandboxEgressRestricted,
             userProfileNotFound,
             externalKeyInWorkspacePolicy,
             alreadyMember,
@@ -2338,6 +2367,8 @@ private constructor(
                 "ErrorDetails{orgApiKeyLimitExceeded=$orgApiKeyLimitExceeded}"
             workspaceApiKeyLimitExceeded != null ->
                 "ErrorDetails{workspaceApiKeyLimitExceeded=$workspaceApiKeyLimitExceeded}"
+            sandboxEgressRestricted != null ->
+                "ErrorDetails{sandboxEgressRestricted=$sandboxEgressRestricted}"
             userProfileNotFound != null -> "ErrorDetails{userProfileNotFound=$userProfileNotFound}"
             externalKeyInWorkspacePolicy != null ->
                 "ErrorDetails{externalKeyInWorkspacePolicy=$externalKeyInWorkspacePolicy}"
@@ -2683,6 +2714,16 @@ private constructor(
         fun ofWorkspaceApiKeyLimitExceeded(
             workspaceApiKeyLimitExceeded: WorkspaceApiKeyLimitExceededErrorDetails
         ) = ErrorDetails(workspaceApiKeyLimitExceeded = workspaceApiKeyLimitExceeded)
+
+        /**
+         * The request came from a Claude sandbox with restricted network access, which is not
+         * allowed to make this change. Send it from outside the sandbox, or from a sandbox with
+         * unrestricted network access.
+         */
+        @JvmStatic
+        fun ofSandboxEgressRestricted(
+            sandboxEgressRestricted: SandboxEgressRestrictedErrorDetails
+        ) = ErrorDetails(sandboxEgressRestricted = sandboxEgressRestricted)
 
         /**
          * The request depends on a user profile that does not exist in the organization or is no
@@ -3373,6 +3414,15 @@ private constructor(
         ): T
 
         /**
+         * The request came from a Claude sandbox with restricted network access, which is not
+         * allowed to make this change. Send it from outside the sandbox, or from a sandbox with
+         * unrestricted network access.
+         */
+        fun visitSandboxEgressRestricted(
+            sandboxEgressRestricted: SandboxEgressRestrictedErrorDetails
+        ): T
+
+        /**
          * The request depends on a user profile that does not exist in the organization or is no
          * longer active. The request either names this user profile by ID, or names a resource,
          * such as an External Key, that is bound to it.
@@ -3953,6 +4003,14 @@ private constructor(
                         ?.let { ErrorDetails(workspaceApiKeyLimitExceeded = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "sandbox_egress_restricted" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<SandboxEgressRestrictedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(sandboxEgressRestricted = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "user_profile_not_found" -> {
                     return tryDeserialize(node, jacksonTypeRef<UserProfileNotFoundErrorDetails>())
                         ?.let { ErrorDetails(userProfileNotFound = it, _json = json) }
@@ -4366,6 +4424,8 @@ private constructor(
                     generator.writeObject(value.orgApiKeyLimitExceeded)
                 value.workspaceApiKeyLimitExceeded != null ->
                     generator.writeObject(value.workspaceApiKeyLimitExceeded)
+                value.sandboxEgressRestricted != null ->
+                    generator.writeObject(value.sandboxEgressRestricted)
                 value.userProfileNotFound != null ->
                     generator.writeObject(value.userProfileNotFound)
                 value.externalKeyInWorkspacePolicy != null ->
@@ -4573,6 +4633,9 @@ private constructor(
             val WORKSPACE_API_KEY_LIMIT_EXCEEDED =
                 ErrorCode(JsonField.of("workspace_api_key_limit_exceeded"))
 
+            @JvmField
+            val SANDBOX_EGRESS_RESTRICTED = ErrorCode(JsonField.of("sandbox_egress_restricted"))
+
             @JvmField val USER_PROFILE_NOT_FOUND = ErrorCode(JsonField.of("user_profile_not_found"))
 
             @JvmField
@@ -4755,6 +4818,7 @@ private constructor(
                     "cmek_context_unavailable" -> CMEK_CONTEXT_UNAVAILABLE
                     "org_api_key_limit_exceeded" -> ORG_API_KEY_LIMIT_EXCEEDED
                     "workspace_api_key_limit_exceeded" -> WORKSPACE_API_KEY_LIMIT_EXCEEDED
+                    "sandbox_egress_restricted" -> SANDBOX_EGRESS_RESTRICTED
                     "user_profile_not_found" -> USER_PROFILE_NOT_FOUND
                     "external_key_in_workspace_policy" -> EXTERNAL_KEY_IN_WORKSPACE_POLICY
                     "already_member" -> ALREADY_MEMBER
@@ -4852,6 +4916,7 @@ private constructor(
             CMEK_CONTEXT_UNAVAILABLE,
             ORG_API_KEY_LIMIT_EXCEEDED,
             WORKSPACE_API_KEY_LIMIT_EXCEEDED,
+            SANDBOX_EGRESS_RESTRICTED,
             USER_PROFILE_NOT_FOUND,
             EXTERNAL_KEY_IN_WORKSPACE_POLICY,
             ALREADY_MEMBER,
@@ -4945,6 +5010,7 @@ private constructor(
             CMEK_CONTEXT_UNAVAILABLE,
             ORG_API_KEY_LIMIT_EXCEEDED,
             WORKSPACE_API_KEY_LIMIT_EXCEEDED,
+            SANDBOX_EGRESS_RESTRICTED,
             USER_PROFILE_NOT_FOUND,
             EXTERNAL_KEY_IN_WORKSPACE_POLICY,
             ALREADY_MEMBER,
@@ -5041,6 +5107,7 @@ private constructor(
                 CMEK_CONTEXT_UNAVAILABLE -> Value.CMEK_CONTEXT_UNAVAILABLE
                 ORG_API_KEY_LIMIT_EXCEEDED -> Value.ORG_API_KEY_LIMIT_EXCEEDED
                 WORKSPACE_API_KEY_LIMIT_EXCEEDED -> Value.WORKSPACE_API_KEY_LIMIT_EXCEEDED
+                SANDBOX_EGRESS_RESTRICTED -> Value.SANDBOX_EGRESS_RESTRICTED
                 USER_PROFILE_NOT_FOUND -> Value.USER_PROFILE_NOT_FOUND
                 EXTERNAL_KEY_IN_WORKSPACE_POLICY -> Value.EXTERNAL_KEY_IN_WORKSPACE_POLICY
                 ALREADY_MEMBER -> Value.ALREADY_MEMBER
@@ -5141,6 +5208,7 @@ private constructor(
                 CMEK_CONTEXT_UNAVAILABLE -> Known.CMEK_CONTEXT_UNAVAILABLE
                 ORG_API_KEY_LIMIT_EXCEEDED -> Known.ORG_API_KEY_LIMIT_EXCEEDED
                 WORKSPACE_API_KEY_LIMIT_EXCEEDED -> Known.WORKSPACE_API_KEY_LIMIT_EXCEEDED
+                SANDBOX_EGRESS_RESTRICTED -> Known.SANDBOX_EGRESS_RESTRICTED
                 USER_PROFILE_NOT_FOUND -> Known.USER_PROFILE_NOT_FOUND
                 EXTERNAL_KEY_IN_WORKSPACE_POLICY -> Known.EXTERNAL_KEY_IN_WORKSPACE_POLICY
                 ALREADY_MEMBER -> Known.ALREADY_MEMBER

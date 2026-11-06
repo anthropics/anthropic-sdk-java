@@ -56,6 +56,7 @@ interface MemberServiceAsync {
      * Update Workspace Member
      *
      * @throws com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(userId: String, params: MemberUpdateParams): CompletableFuture<BetaWorkspaceMember> =
         update(userId, params, RequestOptions.none())
@@ -117,6 +118,7 @@ interface MemberServiceAsync {
      * Create Workspace Member
      *
      * @throws com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun add(workspaceId: String, params: MemberAddParams): CompletableFuture<BetaWorkspaceMember> =
         add(workspaceId, params, RequestOptions.none())
@@ -139,7 +141,11 @@ interface MemberServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaWorkspaceMember>
 
-    /** Delete Workspace Member */
+    /**
+     * Delete Workspace Member
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun remove(
         userId: String,
         params: MemberRemoveParams,

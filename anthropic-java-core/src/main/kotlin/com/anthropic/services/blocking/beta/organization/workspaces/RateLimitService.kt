@@ -35,6 +35,8 @@ interface RateLimitService {
      * Returns the targeted group's entry with this request applied, in the shape `GET
      * /v1/organizations/workspaces/{workspace_id}/rate_limits` returns. Changes take effect within
      * about an hour.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(rateLimitId: String, params: RateLimitUpdateParams): BetaWorkspaceRateLimit =
         update(rateLimitId, params, RequestOptions.none())

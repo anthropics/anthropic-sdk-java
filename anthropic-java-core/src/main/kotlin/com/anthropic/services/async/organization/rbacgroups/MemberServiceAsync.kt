@@ -74,6 +74,7 @@ interface MemberServiceAsync {
      *
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun add(rbacGroupId: String, params: MemberAddParams): CompletableFuture<RbacGroupMember> =
         add(rbacGroupId, params, RequestOptions.none())
@@ -105,6 +106,7 @@ interface MemberServiceAsync {
      *
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun remove(
         userId: String,

@@ -81,6 +81,8 @@ interface WorkspaceService {
      * the target is a member (it is implicitly a member of the default workspace). Archived rules
      * are rejected with 400. OAuth callers may only manage rules whose `oauth_scope` is
      * `workspace:developer` or `workspace:inference`; other scopes require a Console session.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun add(federationRuleId: String, params: WorkspaceAddParams): FederationRuleWorkspace =
         add(federationRuleId, params, RequestOptions.none())
@@ -113,6 +115,8 @@ interface WorkspaceService {
      * Idempotent; succeeds even if the enablement was already removed. OAuth callers may only
      * manage rules whose `oauth_scope` is `workspace:developer` or `workspace:inference`; other
      * scopes require a Console session.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun remove(workspaceId: String, params: WorkspaceRemoveParams): WorkspaceRemoveResponse =
         remove(workspaceId, params, RequestOptions.none())

@@ -44,6 +44,7 @@ interface WorkspaceService {
      * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
      * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
      * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
      */
     fun create(params: WorkspaceCreateParams): BetaWorkspace = create(params, RequestOptions.none())
@@ -93,6 +94,7 @@ interface WorkspaceService {
      * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
      * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
      * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
      */
     fun update(workspaceId: String): BetaWorkspace =
@@ -141,7 +143,11 @@ interface WorkspaceService {
     fun list(requestOptions: RequestOptions): WorkspaceListPage =
         list(WorkspaceListParams.none(), requestOptions)
 
-    /** Archive Workspace */
+    /**
+     * Archive Workspace
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun archive(workspaceId: String): BetaWorkspace =
         archive(workspaceId, WorkspaceArchiveParams.none())
 

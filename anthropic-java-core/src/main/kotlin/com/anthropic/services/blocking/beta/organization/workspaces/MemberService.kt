@@ -53,6 +53,7 @@ interface MemberService {
      * Update Workspace Member
      *
      * @throws com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(userId: String, params: MemberUpdateParams): BetaWorkspaceMember =
         update(userId, params, RequestOptions.none())
@@ -107,6 +108,7 @@ interface MemberService {
      * Create Workspace Member
      *
      * @throws com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun add(workspaceId: String, params: MemberAddParams): BetaWorkspaceMember =
         add(workspaceId, params, RequestOptions.none())
@@ -128,7 +130,11 @@ interface MemberService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaWorkspaceMember
 
-    /** Delete Workspace Member */
+    /**
+     * Delete Workspace Member
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun remove(userId: String, params: MemberRemoveParams): MemberRemoveResponse =
         remove(userId, params, RequestOptions.none())
 

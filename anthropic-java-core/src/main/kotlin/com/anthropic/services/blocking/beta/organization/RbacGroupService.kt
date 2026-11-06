@@ -36,6 +36,8 @@ interface RbacGroupService {
      * type `"direct"`.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun create(params: RbacGroupCreateParams): BetaRbacGroup = create(params, RequestOptions.none())
 
@@ -86,6 +88,8 @@ interface RbacGroupService {
      * provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(rbacGroupId: String): BetaRbacGroup =
         update(rbacGroupId, RbacGroupUpdateParams.none())
@@ -145,6 +149,7 @@ interface RbacGroupService {
      *
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun delete(rbacGroupId: String): BetaDeletedRbacGroup =
         delete(rbacGroupId, RbacGroupDeleteParams.none())

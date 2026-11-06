@@ -58,7 +58,11 @@ interface UserService {
     fun retrieve(userId: String, requestOptions: RequestOptions): BetaOrganizationUser =
         retrieve(userId, UserRetrieveParams.none(), requestOptions)
 
-    /** Update a member's organization role. */
+    /**
+     * Update a member's organization role.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun update(userId: String, params: UserUpdateParams): BetaOrganizationUser =
         update(userId, params, RequestOptions.none())
 
@@ -100,6 +104,7 @@ interface UserService {
      * Remove a member from the organization.
      *
      * @throws com.anthropic.models.organization.users.CannotRemoveLastMemberException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.ConcurrentMembershipChangeException
      */
     fun remove(userId: String): UserRemoveResponse = remove(userId, UserRemoveParams.none())
@@ -163,6 +168,7 @@ interface UserService {
      * @throws com.anthropic.models.beta.organization.users.BetaCannotSignOutOwnerException
      * @throws
      *   com.anthropic.models.beta.organization.users.BetaCannotSignOutPrivilegedMemberException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun signOut(userId: String): BetaOrganizationUser = signOut(userId, UserSignOutParams.none())
 

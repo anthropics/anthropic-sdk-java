@@ -178,6 +178,8 @@ interface WebhookService {
      * webhook endpoints on for each organization; until yours is on, requests also return `404`.
      * Organization webhook endpoints are in beta and are not available to organizations with HIPAA
      * readiness enabled.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun delete(webhookEndpointId: String): BetaDeletedOrganizationWebhookEndpoint =
         delete(webhookEndpointId, WebhookDeleteParams.none())
@@ -223,6 +225,8 @@ interface WebhookService {
      * webhook endpoints on for each organization; until yours is on, requests also return `404`.
      * Organization webhook endpoints are in beta and are not available to organizations with HIPAA
      * readiness enabled.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun regenerateSigningSecret(
         webhookEndpointId: String
