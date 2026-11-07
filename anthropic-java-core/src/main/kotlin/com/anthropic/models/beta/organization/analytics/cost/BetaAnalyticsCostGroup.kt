@@ -44,6 +44,7 @@ private constructor(
     private val environmentId: JsonField<String>,
     private val inferenceGeo: JsonField<BetaAnalyticsUsageCostInferenceGeo>,
     private val model: JsonField<String>,
+    private val organizationId: JsonField<String>,
     private val product: JsonField<String>,
     private val rbacGroupId: JsonField<String>,
     private val serviceTier: JsonField<BetaAnalyticsServiceTier>,
@@ -88,6 +89,9 @@ private constructor(
         @ExcludeMissing
         inferenceGeo: JsonField<BetaAnalyticsUsageCostInferenceGeo> = JsonMissing.of(),
         @JsonProperty("model") @ExcludeMissing model: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("organization_id")
+        @ExcludeMissing
+        organizationId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("product") @ExcludeMissing product: JsonField<String> = JsonMissing.of(),
         @JsonProperty("rbac_group_id")
         @ExcludeMissing
@@ -124,6 +128,7 @@ private constructor(
         environmentId,
         inferenceGeo,
         model,
+        organizationId,
         product,
         rbacGroupId,
         serviceTier,
@@ -261,6 +266,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun model(): Optional<String> = model.getOptional("model")
+
+    /**
+     * UUID of the child organization the usage belongs to, on a parent organization's report across
+     * its children. Null unless `organization_id` is in `group_by[]`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun organizationId(): Optional<String> = organizationId.getOptional("organization_id")
 
     /**
      * Product surface that produced the usage or cost. Null unless product is in `group_by[]`; it
@@ -459,6 +473,15 @@ private constructor(
     @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<String> = model
 
     /**
+     * Returns the raw JSON value of [organizationId].
+     *
+     * Unlike [organizationId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("organization_id")
+    @ExcludeMissing
+    fun _organizationId(): JsonField<String> = organizationId
+
+    /**
      * Returns the raw JSON value of [product].
      *
      * Unlike [product], this method doesn't throw if the JSON field has an unexpected type.
@@ -564,6 +587,7 @@ private constructor(
          * .environmentId()
          * .inferenceGeo()
          * .model()
+         * .organizationId()
          * .product()
          * .rbacGroupId()
          * .serviceTier()
@@ -593,6 +617,7 @@ private constructor(
         private var environmentId: JsonField<String>? = null
         private var inferenceGeo: JsonField<BetaAnalyticsUsageCostInferenceGeo>? = null
         private var model: JsonField<String>? = null
+        private var organizationId: JsonField<String>? = null
         private var product: JsonField<String>? = null
         private var rbacGroupId: JsonField<String>? = null
         private var serviceTier: JsonField<BetaAnalyticsServiceTier>? = null
@@ -618,6 +643,7 @@ private constructor(
             environmentId = betaAnalyticsCostGroup.environmentId
             inferenceGeo = betaAnalyticsCostGroup.inferenceGeo
             model = betaAnalyticsCostGroup.model
+            organizationId = betaAnalyticsCostGroup.organizationId
             product = betaAnalyticsCostGroup.product
             rbacGroupId = betaAnalyticsCostGroup.rbacGroupId
             serviceTier = betaAnalyticsCostGroup.serviceTier
@@ -930,6 +956,28 @@ private constructor(
         fun model(model: JsonField<String>) = apply { this.model = model }
 
         /**
+         * UUID of the child organization the usage belongs to, on a parent organization's report
+         * across its children. Null unless `organization_id` is in `group_by[]`.
+         */
+        fun organizationId(organizationId: String?) =
+            organizationId(JsonField.ofNullable(organizationId))
+
+        /** Alias for calling [Builder.organizationId] with `organizationId.orElse(null)`. */
+        fun organizationId(organizationId: Optional<String>) =
+            organizationId(organizationId.getOrNull())
+
+        /**
+         * Sets [Builder.organizationId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.organizationId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun organizationId(organizationId: JsonField<String>) = apply {
+            this.organizationId = organizationId
+        }
+
+        /**
          * Product surface that produced the usage or cost. Null unless product is in `group_by[]`;
          * it can also be null on grouped rows whose usage cannot be attributed to a known surface.
          * Values include `chat`, `claude_code`, `cowork`, `office_agent`, `claude_in_chrome`,
@@ -1158,6 +1206,7 @@ private constructor(
          * .environmentId()
          * .inferenceGeo()
          * .model()
+         * .organizationId()
          * .product()
          * .rbacGroupId()
          * .serviceTier()
@@ -1185,6 +1234,7 @@ private constructor(
                 checkRequired("environmentId", environmentId),
                 checkRequired("inferenceGeo", inferenceGeo),
                 checkRequired("model", model),
+                checkRequired("organizationId", organizationId),
                 checkRequired("product", product),
                 checkRequired("rbacGroupId", rbacGroupId),
                 checkRequired("serviceTier", serviceTier),
@@ -1225,6 +1275,7 @@ private constructor(
         environmentId()
         inferenceGeo().ifPresent { it.validate() }
         model()
+        organizationId()
         product()
         rbacGroupId()
         serviceTier().ifPresent { it.validate() }
@@ -1264,6 +1315,7 @@ private constructor(
             (if (environmentId.asKnown().isPresent) 1 else 0) +
             (inferenceGeo.asKnown().getOrNull()?.validity() ?: 0) +
             (if (model.asKnown().isPresent) 1 else 0) +
+            (if (organizationId.asKnown().isPresent) 1 else 0) +
             (if (product.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
             (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1292,6 +1344,7 @@ private constructor(
             environmentId == other.environmentId &&
             inferenceGeo == other.inferenceGeo &&
             model == other.model &&
+            organizationId == other.organizationId &&
             product == other.product &&
             rbacGroupId == other.rbacGroupId &&
             serviceTier == other.serviceTier &&
@@ -1318,6 +1371,7 @@ private constructor(
             environmentId,
             inferenceGeo,
             model,
+            organizationId,
             product,
             rbacGroupId,
             serviceTier,
@@ -1334,5 +1388,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsCostGroup{actor=$actor, actorType=$actorType, agentId=$agentId, apiKeyId=$apiKeyId, claudeTagCategory=$claudeTagCategory, claudeTagUserId=$claudeTagUserId, contextWindow=$contextWindow, costType=$costType, deploymentId=$deploymentId, environmentId=$environmentId, inferenceGeo=$inferenceGeo, model=$model, product=$product, rbacGroupId=$rbacGroupId, serviceTier=$serviceTier, sessionId=$sessionId, slackChannelId=$slackChannelId, speed=$speed, tokenType=$tokenType, userProfileId=$userProfileId, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsCostGroup{actor=$actor, actorType=$actorType, agentId=$agentId, apiKeyId=$apiKeyId, claudeTagCategory=$claudeTagCategory, claudeTagUserId=$claudeTagUserId, contextWindow=$contextWindow, costType=$costType, deploymentId=$deploymentId, environmentId=$environmentId, inferenceGeo=$inferenceGeo, model=$model, organizationId=$organizationId, product=$product, rbacGroupId=$rbacGroupId, serviceTier=$serviceTier, sessionId=$sessionId, slackChannelId=$slackChannelId, speed=$speed, tokenType=$tokenType, userProfileId=$userProfileId, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
 }
