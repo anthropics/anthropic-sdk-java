@@ -16,6 +16,7 @@ internal class BetaClaudeTagSettingSourcesTest {
                 .slackChannelGuestPolicy("slack_channel_id")
                 .addSlackChannelInstruction("slack_channel_id")
                 .slackChannelModel("slack_channel_id")
+                .slackChannelReplyMode("slack_channel_id")
                 .build()
 
         assertThat(betaClaudeTagSettingSources.enabled())
@@ -27,6 +28,8 @@ internal class BetaClaudeTagSettingSourcesTest {
         assertThat(betaClaudeTagSettingSources.instructions())
             .containsExactly(BetaClaudeTagSettingSource.ofSlackChannel("slack_channel_id"))
         assertThat(betaClaudeTagSettingSources.model())
+            .contains(BetaClaudeTagSettingSource.ofSlackChannel("slack_channel_id"))
+        assertThat(betaClaudeTagSettingSources.replyMode())
             .contains(BetaClaudeTagSettingSource.ofSlackChannel("slack_channel_id"))
     }
 
@@ -40,6 +43,7 @@ internal class BetaClaudeTagSettingSourcesTest {
                 .slackChannelGuestPolicy("slack_channel_id")
                 .addSlackChannelInstruction("slack_channel_id")
                 .slackChannelModel("slack_channel_id")
+                .slackChannelReplyMode("slack_channel_id")
                 .build()
 
         val roundtrippedBetaClaudeTagSettingSources =

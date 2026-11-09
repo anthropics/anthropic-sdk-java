@@ -3,6 +3,7 @@ package com.anthropic.models.beta.organization.claudetag.slackchannels
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagGuestPolicyAllow
+import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagReplyModeAutomatic
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagSettingsCreate
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagSlackChannelIdentifiers
 import org.assertj.core.api.Assertions.assertThat
@@ -27,6 +28,7 @@ internal class SlackChannelCreateParamsTest {
                     .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                     .instructions("instructions")
                     .model("x")
+                    .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                     .build()
             )
             .build()
@@ -50,6 +52,7 @@ internal class SlackChannelCreateParamsTest {
                         .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                         .instructions("instructions")
                         .model("x")
+                        .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                         .build()
                 )
                 .build()
@@ -103,6 +106,7 @@ internal class SlackChannelCreateParamsTest {
                         .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                         .instructions("instructions")
                         .model("x")
+                        .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                         .build()
                 )
                 .build()
@@ -124,6 +128,7 @@ internal class SlackChannelCreateParamsTest {
                     .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                     .instructions("instructions")
                     .model("x")
+                    .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                     .build()
             )
     }

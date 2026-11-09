@@ -3,6 +3,7 @@ package com.anthropic.models.beta.organization.claudetag.slackchannels
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagGuestPolicyAllow
+import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagReplyModeAutomatic
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagSettingsUpdate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -21,6 +22,7 @@ internal class SlackChannelUpdateParamsTest {
                     .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                     .instructions("instructions")
                     .model("x")
+                    .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                     .build()
             )
             .build()
@@ -52,6 +54,7 @@ internal class SlackChannelUpdateParamsTest {
                         .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                         .instructions("instructions")
                         .model("x")
+                        .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                         .build()
                 )
                 .build()
@@ -96,6 +99,7 @@ internal class SlackChannelUpdateParamsTest {
                         .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                         .instructions("instructions")
                         .model("x")
+                        .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                         .build()
                 )
                 .build()
@@ -110,6 +114,7 @@ internal class SlackChannelUpdateParamsTest {
                     .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                     .instructions("instructions")
                     .model("x")
+                    .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                     .build()
             )
     }

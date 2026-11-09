@@ -4,6 +4,7 @@ import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagGuestPolicyAllow
+import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagReplyModeAutomatic
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagSettingsCreate
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagSettingsUpdate
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagSlackChannelIdentifiers
@@ -48,6 +49,7 @@ internal class SlackChannelServiceTest {
                             .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                             .instructions("instructions")
                             .model("x")
+                            .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                             .build()
                     )
                     .build()
@@ -94,6 +96,7 @@ internal class SlackChannelServiceTest {
                             .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                             .instructions("instructions")
                             .model("x")
+                            .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                             .build()
                     )
                     .build()
