@@ -72,7 +72,7 @@ internal class HttpRequestTest {
                 runCatching { builder.replaceAllPathSegments("model", segment) }.exceptionOrNull()
             )
             .isInstanceOf(IllegalStateException::class.java)
-            .hasMessageContaining("dot-segment")
+            .hasMessageStartingWith("Path segment \"$segment\" is a dot-segment")
     }
 
     @ParameterizedTest

@@ -599,9 +599,7 @@ internal class BedrockBackendTest {
 
         assertThatThrownBy { backend.prepareRequest(request) }
             .isExactlyInstanceOf(IllegalStateException::class.java)
-            .hasMessageStartingWith(
-                "Path segment \"${model.substringBefore(';')}\" is a dot-segment"
-            )
+            .hasMessageStartingWith("Path segment \"$model\" is a dot-segment")
     }
 
     @ParameterizedTest
