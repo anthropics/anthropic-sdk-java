@@ -25,14 +25,11 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        /**
-         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
-         * sciences
-         */
+        /** Built for the most ambitious work in coding, enterprise workflows, and the sciences */
         @JvmField val CLAUDE_FABLE_5_2 = Model(JsonField.of("claude-fable-5-2"))
 
         /**
-         * Frontier intelligence for cybersecurity and life sciences research, available through
+         * Built for the most demanding cybersecurity and life sciences research, available through
          * verification programs
          */
         @JvmField val CLAUDE_MYTHOS_5_2 = Model(JsonField.of("claude-mythos-5-2"))
@@ -150,13 +147,10 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [Model]'s known values. */
     enum class Known {
-        /**
-         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
-         * sciences
-         */
+        /** Built for the most ambitious work in coding, enterprise workflows, and the sciences */
         CLAUDE_FABLE_5_2,
         /**
-         * Frontier intelligence for cybersecurity and life sciences research, available through
+         * Built for the most demanding cybersecurity and life sciences research, available through
          * verification programs
          */
         CLAUDE_MYTHOS_5_2,
@@ -225,13 +219,10 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
-        /**
-         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
-         * sciences
-         */
+        /** Built for the most ambitious work in coding, enterprise workflows, and the sciences */
         CLAUDE_FABLE_5_2,
         /**
-         * Frontier intelligence for cybersecurity and life sciences research, available through
+         * Built for the most demanding cybersecurity and life sciences research, available through
          * verification programs
          */
         CLAUDE_MYTHOS_5_2,
