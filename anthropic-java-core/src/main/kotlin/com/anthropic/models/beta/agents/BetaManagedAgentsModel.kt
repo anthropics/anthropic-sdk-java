@@ -26,8 +26,8 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
     companion object {
 
         /**
-         * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
-         * enterprise workflows
+         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
+         * sciences
          */
         @JvmField val CLAUDE_FABLE_5_2 = BetaManagedAgentsModel(JsonField.of("claude-fable-5-2"))
 
@@ -130,8 +130,8 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
     /** An enum containing [BetaManagedAgentsModel]'s known values. */
     enum class Known {
         /**
-         * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
-         * enterprise workflows
+         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
+         * sciences
          */
         CLAUDE_FABLE_5_2,
         /** Fastest model for high-volume, real-time tasks */
@@ -188,8 +188,8 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
      */
     enum class Value {
         /**
-         * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
-         * enterprise workflows
+         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
+         * sciences
          */
         CLAUDE_FABLE_5_2,
         /** Fastest model for high-volume, real-time tasks */

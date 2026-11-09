@@ -26,14 +26,14 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
     companion object {
 
         /**
-         * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
-         * enterprise workflows
+         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
+         * sciences
          */
         @JvmField val CLAUDE_FABLE_5_2 = Model(JsonField.of("claude-fable-5-2"))
 
         /**
-         * Our most capable model for cybersecurity and biology research, available through trusted
-         * access programs
+         * Frontier intelligence for cybersecurity and life sciences research, available through
+         * verification programs
          */
         @JvmField val CLAUDE_MYTHOS_5_2 = Model(JsonField.of("claude-mythos-5-2"))
 
@@ -151,13 +151,13 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
     /** An enum containing [Model]'s known values. */
     enum class Known {
         /**
-         * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
-         * enterprise workflows
+         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
+         * sciences
          */
         CLAUDE_FABLE_5_2,
         /**
-         * Our most capable model for cybersecurity and biology research, available through trusted
-         * access programs
+         * Frontier intelligence for cybersecurity and life sciences research, available through
+         * verification programs
          */
         CLAUDE_MYTHOS_5_2,
         /** Fastest model for high-volume, real-time tasks */
@@ -226,13 +226,13 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
      */
     enum class Value {
         /**
-         * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
-         * enterprise workflows
+         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
+         * sciences
          */
         CLAUDE_FABLE_5_2,
         /**
-         * Our most capable model for cybersecurity and biology research, available through trusted
-         * access programs
+         * Frontier intelligence for cybersecurity and life sciences research, available through
+         * verification programs
          */
         CLAUDE_MYTHOS_5_2,
         /** Fastest model for high-volume, real-time tasks */
