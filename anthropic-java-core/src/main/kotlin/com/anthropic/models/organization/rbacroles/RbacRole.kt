@@ -57,9 +57,9 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
-     * Name of the RBAC Role. For a role created by Anthropic, this name can differ from the label
-     * claude.ai shows, and Anthropic may change the name. To keep a lasting reference to a role,
-     * store its `id`.
+     * Name of the RBAC Role. For a role created by Anthropic, this is Anthropic's name for the
+     * access that the role grants. Anthropic may change this name, so to keep a lasting reference
+     * to a role, store its `id`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -195,9 +195,9 @@ private constructor(
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /**
-         * Name of the RBAC Role. For a role created by Anthropic, this name can differ from the
-         * label claude.ai shows, and Anthropic may change the name. To keep a lasting reference to
-         * a role, store its `id`.
+         * Name of the RBAC Role. For a role created by Anthropic, this is Anthropic's name for the
+         * access that the role grants. Anthropic may change this name, so to keep a lasting
+         * reference to a role, store its `id`.
          */
         fun displayName(displayName: String) = displayName(JsonField.of(displayName))
 
