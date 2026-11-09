@@ -64,10 +64,11 @@ private constructor(
     fun geo(): Optional<Geo> = body.geo()
 
     /**
-     * ID of a user profile to bind the key to. Omit this field for a key that isn't bound to a user
-     * profile. Such a key can be attached to a Workspace whatever its user profile. The binding
-     * cannot be changed later. A key bound to a user profile can only be attached to a Workspace
-     * that has the same user profile.
+     * ID of a user profile to bind the key to. A user profile represents one of your customers:
+     * bind a customer's key to that customer's user profile. A key bound to a user profile can only
+     * be attached to a Workspace that has the same user profile, and the binding cannot be changed
+     * later. Omit this field only for your organization's own key, because a key created without a
+     * user profile ID can be attached to any Workspace, including another customer's.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -225,10 +226,12 @@ private constructor(
         fun geo(geo: JsonField<Geo>) = apply { body.geo(geo) }
 
         /**
-         * ID of a user profile to bind the key to. Omit this field for a key that isn't bound to a
-         * user profile. Such a key can be attached to a Workspace whatever its user profile. The
-         * binding cannot be changed later. A key bound to a user profile can only be attached to a
-         * Workspace that has the same user profile.
+         * ID of a user profile to bind the key to. A user profile represents one of your customers:
+         * bind a customer's key to that customer's user profile. A key bound to a user profile can
+         * only be attached to a Workspace that has the same user profile, and the binding cannot be
+         * changed later. Omit this field only for your organization's own key, because a key
+         * created without a user profile ID can be attached to any Workspace, including another
+         * customer's.
          */
         fun userProfileId(userProfileId: String?) = apply { body.userProfileId(userProfileId) }
 
@@ -445,10 +448,12 @@ private constructor(
         fun geo(): Optional<Geo> = geo.getOptional("geo")
 
         /**
-         * ID of a user profile to bind the key to. Omit this field for a key that isn't bound to a
-         * user profile. Such a key can be attached to a Workspace whatever its user profile. The
-         * binding cannot be changed later. A key bound to a user profile can only be attached to a
-         * Workspace that has the same user profile.
+         * ID of a user profile to bind the key to. A user profile represents one of your customers:
+         * bind a customer's key to that customer's user profile. A key bound to a user profile can
+         * only be attached to a Workspace that has the same user profile, and the binding cannot be
+         * changed later. Omit this field only for your organization's own key, because a key
+         * created without a user profile ID can be attached to any Workspace, including another
+         * customer's.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -631,10 +636,12 @@ private constructor(
             fun geo(geo: JsonField<Geo>) = apply { this.geo = geo }
 
             /**
-             * ID of a user profile to bind the key to. Omit this field for a key that isn't bound
-             * to a user profile. Such a key can be attached to a Workspace whatever its user
-             * profile. The binding cannot be changed later. A key bound to a user profile can only
-             * be attached to a Workspace that has the same user profile.
+             * ID of a user profile to bind the key to. A user profile represents one of your
+             * customers: bind a customer's key to that customer's user profile. A key bound to a
+             * user profile can only be attached to a Workspace that has the same user profile, and
+             * the binding cannot be changed later. Omit this field only for your organization's own
+             * key, because a key created without a user profile ID can be attached to any
+             * Workspace, including another customer's.
              */
             fun userProfileId(userProfileId: String?) =
                 userProfileId(JsonField.ofNullable(userProfileId))
