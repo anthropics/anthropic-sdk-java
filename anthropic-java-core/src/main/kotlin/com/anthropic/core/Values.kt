@@ -466,7 +466,7 @@ class JsonNull : JsonValue() {
 
         private val INSTANCE: JsonNull = JsonNull()
 
-        /** Returns the singleton instance of [JsonMissing]. */
+        /** Returns the singleton instance of [JsonNull]. */
         @JsonCreator @JvmStatic fun of() = INSTANCE
     }
 }

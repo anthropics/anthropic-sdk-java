@@ -4,8 +4,8 @@ plugins {
 }
 
 extensions.configure<org.jetbrains.dokka.gradle.DokkaExtension> {
-    // Dokka generates in an isolated worker process whose default heap cap is a quarter of physical
-    // memory. Cap it explicitly so concurrent generations plus the Gradle and Kotlin daemons stay
-    // within the CI runner's 16 GB (see `org.gradle.jvmargs` in `gradle.properties`).
-    dokkaGeneratorIsolation.set(ProcessIsolation { maxHeapSize.set("3g") })
+    // Dokka generates modules' docs in separate worker processes, several at once, each with this
+    // heap cap. If the cap is too low for the largest module, the task fails at an arbitrary symbol
+    // with "Error in translating of symbol", and the message says nothing about memory.
+    dokkaGeneratorIsolation.set(ProcessIsolation { maxHeapSize.set("6g") })
 }

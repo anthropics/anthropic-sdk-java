@@ -52,6 +52,7 @@ private constructor(
     private val models: List<String>?,
     private val order: BetaAnalyticsUsageCostSortOrder?,
     private val orderBy: BetaAnalyticsCostOrderBy?,
+    private val organizationIds: List<String>?,
     private val page: String?,
     private val products: List<BetaAnalyticsUsageCostProductFilter>?,
     private val rbacGroupIds: List<String>?,
@@ -201,6 +202,14 @@ private constructor(
      */
     fun orderBy(): Optional<BetaAnalyticsCostOrderBy> = Optional.ofNullable(orderBy)
 
+    /**
+     * Filter a parent organization's report to specific child organizations, by organization UUID
+     * or `org_` ID; an ID that is not one of its child organizations matches nothing. Requires an
+     * API key created at the parent organization level. Use `group_by[]=organization_id` to break
+     * out per-organization values.
+     */
+    fun organizationIds(): Optional<List<String>> = Optional.ofNullable(organizationIds)
+
     /** Opaque cursor from a previous response's `next_page` field. */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
@@ -314,6 +323,7 @@ private constructor(
         private var models: MutableList<String>? = null
         private var order: BetaAnalyticsUsageCostSortOrder? = null
         private var orderBy: BetaAnalyticsCostOrderBy? = null
+        private var organizationIds: MutableList<String>? = null
         private var page: String? = null
         private var products: MutableList<BetaAnalyticsUsageCostProductFilter>? = null
         private var rbacGroupIds: MutableList<String>? = null
@@ -348,6 +358,7 @@ private constructor(
             models = costListParams.models?.toMutableList()
             order = costListParams.order
             orderBy = costListParams.orderBy
+            organizationIds = costListParams.organizationIds?.toMutableList()
             page = costListParams.page
             products = costListParams.products?.toMutableList()
             rbacGroupIds = costListParams.rbacGroupIds?.toMutableList()
@@ -705,6 +716,29 @@ private constructor(
         /** Alias for calling [Builder.orderBy] with `orderBy.orElse(null)`. */
         fun orderBy(orderBy: Optional<BetaAnalyticsCostOrderBy>) = orderBy(orderBy.getOrNull())
 
+        /**
+         * Filter a parent organization's report to specific child organizations, by organization
+         * UUID or `org_` ID; an ID that is not one of its child organizations matches nothing.
+         * Requires an API key created at the parent organization level. Use
+         * `group_by[]=organization_id` to break out per-organization values.
+         */
+        fun organizationIds(organizationIds: List<String>?) = apply {
+            this.organizationIds = organizationIds?.toMutableList()
+        }
+
+        /** Alias for calling [Builder.organizationIds] with `organizationIds.orElse(null)`. */
+        fun organizationIds(organizationIds: Optional<List<String>>) =
+            organizationIds(organizationIds.getOrNull())
+
+        /**
+         * Adds a single [String] to [organizationIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addOrganizationId(organizationId: String) = apply {
+            organizationIds = (organizationIds ?: mutableListOf()).apply { add(organizationId) }
+        }
+
         /** Opaque cursor from a previous response's `next_page` field. */
         fun page(page: String?) = apply { this.page = page }
 
@@ -1053,6 +1087,7 @@ private constructor(
                 models?.toImmutable(),
                 order,
                 orderBy,
+                organizationIds?.toImmutable(),
                 page,
                 products?.toImmutable(),
                 rbacGroupIds?.toImmutable(),
@@ -1109,6 +1144,7 @@ private constructor(
                 models?.forEach { put("models[]", it) }
                 order?.let { put("order", it.toString()) }
                 orderBy?.let { put("order_by", it.toString()) }
+                organizationIds?.forEach { put("organization_ids[]", it) }
                 page?.let { put("page", it) }
                 products?.forEach { put("products[]", it.toString()) }
                 rbacGroupIds?.forEach { put("rbac_group_ids[]", it) }
@@ -1146,6 +1182,7 @@ private constructor(
                     "models",
                     "order",
                     "order_by",
+                    "organization_ids",
                     "page",
                     "products",
                     "rbac_group_ids",
@@ -1184,6 +1221,7 @@ private constructor(
             models == other.models &&
             order == other.order &&
             orderBy == other.orderBy &&
+            organizationIds == other.organizationIds &&
             page == other.page &&
             products == other.products &&
             rbacGroupIds == other.rbacGroupIds &&
@@ -1219,6 +1257,7 @@ private constructor(
             models,
             order,
             orderBy,
+            organizationIds,
             page,
             products,
             rbacGroupIds,
@@ -1235,5 +1274,5 @@ private constructor(
         )
 
     override fun toString() =
-        "CostListParams{startingAt=$startingAt, actorIds=$actorIds, actorTypes=$actorTypes, agentIds=$agentIds, apiKeyIds=$apiKeyIds, claudeTagCategories=$claudeTagCategories, claudeTagUserIds=$claudeTagUserIds, contextWindows=$contextWindows, deploymentIds=$deploymentIds, endingAt=$endingAt, environmentIds=$environmentIds, excludeDeletedUsers=$excludeDeletedUsers, groupBy=$groupBy, inferenceGeos=$inferenceGeos, limit=$limit, models=$models, order=$order, orderBy=$orderBy, page=$page, products=$products, rbacGroupIds=$rbacGroupIds, serviceTiers=$serviceTiers, sessionIds=$sessionIds, slackChannelIds=$slackChannelIds, speeds=$speeds, timeBucketWidth=$timeBucketWidth, userProfileIds=$userProfileIds, workspaceIds=$workspaceIds, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CostListParams{startingAt=$startingAt, actorIds=$actorIds, actorTypes=$actorTypes, agentIds=$agentIds, apiKeyIds=$apiKeyIds, claudeTagCategories=$claudeTagCategories, claudeTagUserIds=$claudeTagUserIds, contextWindows=$contextWindows, deploymentIds=$deploymentIds, endingAt=$endingAt, environmentIds=$environmentIds, excludeDeletedUsers=$excludeDeletedUsers, groupBy=$groupBy, inferenceGeos=$inferenceGeos, limit=$limit, models=$models, order=$order, orderBy=$orderBy, organizationIds=$organizationIds, page=$page, products=$products, rbacGroupIds=$rbacGroupIds, serviceTiers=$serviceTiers, sessionIds=$sessionIds, slackChannelIds=$slackChannelIds, speeds=$speeds, timeBucketWidth=$timeBucketWidth, userProfileIds=$userProfileIds, workspaceIds=$workspaceIds, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

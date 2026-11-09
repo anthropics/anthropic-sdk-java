@@ -86,6 +86,8 @@ interface WorkspaceService {
      * explicit member of the workspace, its `workspace_role` is replaced with the value supplied
      * here. Archived workspaces return 400. Archived service accounts cannot be added and are
      * rejected.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun add(
         serviceAccountId: String,
@@ -123,6 +125,8 @@ interface WorkspaceService {
      * returns 200 but is a no-op and the membership persists; deleting an explicit
      * default-workspace row reverts to the implicit `workspace_user` membership. Archived
      * workspaces return 400.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun remove(workspaceId: String, params: WorkspaceRemoveParams): WorkspaceRemoveResponse =
         remove(workspaceId, params, RequestOptions.none())

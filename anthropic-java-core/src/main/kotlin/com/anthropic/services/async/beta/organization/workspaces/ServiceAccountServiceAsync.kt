@@ -77,6 +77,8 @@ interface ServiceAccountServiceAsync {
      * to set a role on the implicit default-workspace membership, add the service account
      * explicitly with `POST /workspaces/{workspace_id}/service_accounts`. Archived workspaces
      * return 400. Archived service accounts cannot be updated and are rejected.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(
         serviceAccountId: String,
@@ -164,6 +166,8 @@ interface ServiceAccountServiceAsync {
      * adding it explicitly assigns a chosen role. If the service account is already an explicit
      * member of the workspace, its `workspace_role` is replaced with the value supplied here.
      * Archived workspaces return 400. Archived service accounts cannot be added and are rejected.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun add(
         workspaceId: String,
@@ -200,6 +204,8 @@ interface ServiceAccountServiceAsync {
      * against the implicit default-workspace membership returns 200 but is a no-op and the
      * membership persists; deleting an explicit default-workspace row reverts to the implicit
      * `workspace_user` membership. Archived workspaces return 400.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun remove(
         serviceAccountId: String,

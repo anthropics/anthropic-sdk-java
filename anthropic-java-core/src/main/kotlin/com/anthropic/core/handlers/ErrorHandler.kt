@@ -41,6 +41,7 @@ import com.anthropic.models.RampLimitExceededException
 import com.anthropic.models.RequestBodyEncodingInvalidException
 import com.anthropic.models.RequestBodyEncodingUnsupportedException
 import com.anthropic.models.RequestBodyTooLargeAfterDecodingException
+import com.anthropic.models.SandboxEgressRestrictedException
 import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaException
 import com.anthropic.models.beta.BetaUnsupportedCharsetException
 import com.anthropic.models.beta.environments.BetaEnvironmentArchivedException
@@ -50,7 +51,6 @@ import com.anthropic.models.beta.environments.BetaEnvironmentUpdateDisabledExcep
 import com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeException
 import com.anthropic.models.beta.environments.BetaInvalidMetadataException
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedException
-import com.anthropic.models.beta.organization.BetaBillingFrozenException
 import com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
 import com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
@@ -481,10 +481,6 @@ private val errorCodeExceptions:
             { headers, body ->
                 BetaApiKeyScopeMissingException.builder().headers(headers).body(body).build()
             },
-        (403 to "billing_frozen") to
-            { headers, body ->
-                BetaBillingFrozenException.builder().headers(headers).body(body).build()
-            },
         (403 to "cannot_sign_out_managed_member") to
             { headers, body ->
                 BetaCannotSignOutManagedMemberException.builder()
@@ -535,6 +531,10 @@ private val errorCodeExceptions:
                     .headers(headers)
                     .body(body)
                     .build()
+            },
+        (403 to "sandbox_egress_restricted") to
+            { headers, body ->
+                SandboxEgressRestrictedException.builder().headers(headers).body(body).build()
             },
         (403 to "spend_limits_admin_api_writes_not_enabled") to
             { headers, body ->

@@ -58,7 +58,11 @@ interface UserService {
     fun retrieve(userId: String, requestOptions: RequestOptions): BetaOrganizationUser =
         retrieve(userId, UserRetrieveParams.none(), requestOptions)
 
-    /** Update a member's organization role. */
+    /**
+     * Update a member's organization role.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun update(userId: String, params: UserUpdateParams): BetaOrganizationUser =
         update(userId, params, RequestOptions.none())
 
@@ -100,6 +104,7 @@ interface UserService {
      * Remove a member from the organization.
      *
      * @throws com.anthropic.models.organization.users.CannotRemoveLastMemberException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.ConcurrentMembershipChangeException
      */
     fun remove(userId: String): UserRemoveResponse = remove(userId, UserRemoveParams.none())
@@ -149,10 +154,10 @@ interface UserService {
      * ended.
      *
      * Every request must include the beta header `anthropic-beta: admin-user-sign-out-2026-10-08`.
-     * A request without it returns `400`. Sign-out is in beta. Anthropic turns it on for each
-     * organization and has turned it on for every Claude Enterprise organization; until yours is
-     * on, requests also return `400`. In a Claude Enterprise organization, an API key needs the
-     * `write:members` scope; a key without it gets `403`.
+     * A request without it returns `400`. Sign-out is in beta for Claude Enterprise organizations.
+     * In an organization where it is not enabled, a request returns `400` with `error_code`
+     * `organization_not_enrolled_in_beta`. In a Claude Enterprise organization, an API key needs
+     * the `write:members` scope; a key without it gets `403`.
      *
      * @throws com.anthropic.models.beta.organization.users.BetaCannotSignOutPrimaryOwnerException
      * @throws com.anthropic.models.beta.organization.users.BetaCannotSignOutSelfException
@@ -163,6 +168,7 @@ interface UserService {
      * @throws com.anthropic.models.beta.organization.users.BetaCannotSignOutOwnerException
      * @throws
      *   com.anthropic.models.beta.organization.users.BetaCannotSignOutPrivilegedMemberException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun signOut(userId: String): BetaOrganizationUser = signOut(userId, UserSignOutParams.none())
 

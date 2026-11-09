@@ -104,6 +104,8 @@ interface IncreaseRequestServiceAsync {
      * Writes a per-user spend limit at `amount` for the requester and transitions the request to
      * `approved`. `period` defaults to the period the member was blocked on. Anthropic emails the
      * requester unless `suppress_notification` is set.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun approve(
         spendLimitIncreaseRequestId: String,
@@ -138,6 +140,8 @@ interface IncreaseRequestServiceAsync {
      *
      * Idempotent on `denied`; denying an already-`approved` request returns
      * 400. Anthropic emails the requester unless `suppress_notification` is set.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun deny(spendLimitIncreaseRequestId: String): CompletableFuture<SpendLimitIncreaseRequest> =
         deny(spendLimitIncreaseRequestId, IncreaseRequestDenyParams.none())

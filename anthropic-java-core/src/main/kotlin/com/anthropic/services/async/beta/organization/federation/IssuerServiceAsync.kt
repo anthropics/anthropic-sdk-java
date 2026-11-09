@@ -41,6 +41,8 @@ interface IssuerServiceAsync {
      * is `discovery` and no `discovery_base` is set, the issuer URL must be publicly reachable over
      * HTTPS so Anthropic can fetch the discovery document; for `explicit_url` and `inline` modes
      * the issuer URL is only matched as the JWT's `iss` claim and is not fetched.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun create(params: IssuerCreateParams): CompletableFuture<BetaFederationIssuer> =
         create(params, RequestOptions.none())
@@ -105,6 +107,8 @@ interface IssuerServiceAsync {
      *
      * Updating an issuer that backs a rule with a scope outside `workspace:developer` or
      * `workspace:inference` requires a Console session.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(federationIssuerId: String): CompletableFuture<BetaFederationIssuer> =
         update(federationIssuerId, IssuerUpdateParams.none())
@@ -177,6 +181,8 @@ interface IssuerServiceAsync {
      * Idempotent; re-archiving returns the issuer with its original `archived_at`. Rejected with
      * 400 if any live (non-archived) federation rule still references the issuer; archive those
      * rules first (a rule's issuer cannot be changed), or recreate them against another issuer.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun archive(federationIssuerId: String): CompletableFuture<BetaFederationIssuer> =
         archive(federationIssuerId, IssuerArchiveParams.none())

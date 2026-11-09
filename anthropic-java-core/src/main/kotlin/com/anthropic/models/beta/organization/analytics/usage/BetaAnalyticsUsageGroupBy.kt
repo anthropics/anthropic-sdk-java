@@ -43,6 +43,8 @@ class BetaAnalyticsUsageGroupBy private constructor(private val value: JsonField
 
         @JvmField val MODEL = BetaAnalyticsUsageGroupBy(JsonField.of("model"))
 
+        @JvmField val ORGANIZATION_ID = BetaAnalyticsUsageGroupBy(JsonField.of("organization_id"))
+
         @JvmField val PRODUCT = BetaAnalyticsUsageGroupBy(JsonField.of("product"))
 
         @JvmField val RBAC_GROUP_ID = BetaAnalyticsUsageGroupBy(JsonField.of("rbac_group_id"))
@@ -74,6 +76,7 @@ class BetaAnalyticsUsageGroupBy private constructor(private val value: JsonField
                 "environment_id" -> ENVIRONMENT_ID
                 "inference_geo" -> INFERENCE_GEO
                 "model" -> MODEL
+                "organization_id" -> ORGANIZATION_ID
                 "product" -> PRODUCT
                 "rbac_group_id" -> RBAC_GROUP_ID
                 "service_tier" -> SERVICE_TIER
@@ -104,6 +107,7 @@ class BetaAnalyticsUsageGroupBy private constructor(private val value: JsonField
         ENVIRONMENT_ID,
         INFERENCE_GEO,
         MODEL,
+        ORGANIZATION_ID,
         PRODUCT,
         RBAC_GROUP_ID,
         SERVICE_TIER,
@@ -136,6 +140,7 @@ class BetaAnalyticsUsageGroupBy private constructor(private val value: JsonField
         ENVIRONMENT_ID,
         INFERENCE_GEO,
         MODEL,
+        ORGANIZATION_ID,
         PRODUCT,
         RBAC_GROUP_ID,
         SERVICE_TIER,
@@ -171,6 +176,7 @@ class BetaAnalyticsUsageGroupBy private constructor(private val value: JsonField
             ENVIRONMENT_ID -> Value.ENVIRONMENT_ID
             INFERENCE_GEO -> Value.INFERENCE_GEO
             MODEL -> Value.MODEL
+            ORGANIZATION_ID -> Value.ORGANIZATION_ID
             PRODUCT -> Value.PRODUCT
             RBAC_GROUP_ID -> Value.RBAC_GROUP_ID
             SERVICE_TIER -> Value.SERVICE_TIER
@@ -203,6 +209,7 @@ class BetaAnalyticsUsageGroupBy private constructor(private val value: JsonField
             ENVIRONMENT_ID -> Known.ENVIRONMENT_ID
             INFERENCE_GEO -> Known.INFERENCE_GEO
             MODEL -> Known.MODEL
+            ORGANIZATION_ID -> Known.ORGANIZATION_ID
             PRODUCT -> Known.PRODUCT
             RBAC_GROUP_ID -> Known.RBAC_GROUP_ID
             SERVICE_TIER -> Known.SERVICE_TIER

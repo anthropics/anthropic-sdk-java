@@ -1,4 +1,4 @@
-package com.anthropic.models.beta.organization
+package com.anthropic.models
 
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -12,10 +12,11 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Anthropic has temporarily disabled billing changes for the user account the credential belongs
- * to. Contact support.
+ * The request came from a Claude sandbox with restricted network access, which is not allowed to
+ * make this change. Send it from outside the sandbox, or from a sandbox with unrestricted network
+ * access.
  */
-class BetaBillingFrozenException
+class SandboxEgressRestrictedException
 private constructor(headers: Headers, body: JsonValue, cause: Throwable?) :
     PermissionDeniedException(headers, body, cause) {
 
@@ -25,9 +26,9 @@ private constructor(headers: Headers, body: JsonValue, cause: Throwable?) :
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun details(): BetaBillingFrozenErrorDetails =
+    fun details(): SandboxEgressRestrictedErrorDetails =
         body()
-            .valueAt<JsonField<BetaBillingFrozenErrorDetails>>("error", "details")
+            .valueAt<JsonField<SandboxEgressRestrictedErrorDetails>>("error", "details")
             .orElse(JsonMissing.of())
             .getRequired("details")
 
@@ -36,7 +37,8 @@ private constructor(headers: Headers, body: JsonValue, cause: Throwable?) :
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [BetaBillingFrozenException].
+         * Returns a mutable builder for constructing an instance of
+         * [SandboxEgressRestrictedException].
          *
          * The following fields are required:
          * ```java
@@ -47,7 +49,7 @@ private constructor(headers: Headers, body: JsonValue, cause: Throwable?) :
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaBillingFrozenException]. */
+    /** A builder for [SandboxEgressRestrictedException]. */
     class Builder internal constructor() : PermissionDeniedException.Builder() {
 
         private var headers: Headers? = null
@@ -55,11 +57,12 @@ private constructor(headers: Headers, body: JsonValue, cause: Throwable?) :
         private var cause: Throwable? = null
 
         @JvmSynthetic
-        internal fun from(betaBillingFrozenException: BetaBillingFrozenException) = apply {
-            headers = betaBillingFrozenException.headers()
-            body = betaBillingFrozenException.body()
-            cause = betaBillingFrozenException.cause
-        }
+        internal fun from(sandboxEgressRestrictedException: SandboxEgressRestrictedException) =
+            apply {
+                headers = sandboxEgressRestrictedException.headers()
+                body = sandboxEgressRestrictedException.body()
+                cause = sandboxEgressRestrictedException.cause
+            }
 
         override fun headers(headers: Headers) = apply { this.headers = headers }
 
@@ -71,7 +74,7 @@ private constructor(headers: Headers, body: JsonValue, cause: Throwable?) :
         override fun cause(cause: Optional<Throwable>) = cause(cause.getOrNull())
 
         /**
-         * Returns an immutable instance of [BetaBillingFrozenException].
+         * Returns an immutable instance of [SandboxEgressRestrictedException].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -83,8 +86,8 @@ private constructor(headers: Headers, body: JsonValue, cause: Throwable?) :
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        override fun build(): BetaBillingFrozenException =
-            BetaBillingFrozenException(
+        override fun build(): SandboxEgressRestrictedException =
+            SandboxEgressRestrictedException(
                 checkRequired("headers", headers),
                 checkRequired("body", body),
                 cause,

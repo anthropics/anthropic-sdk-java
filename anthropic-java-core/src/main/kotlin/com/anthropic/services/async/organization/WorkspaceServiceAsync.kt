@@ -44,6 +44,7 @@ interface WorkspaceServiceAsync {
      * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
      * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
      * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
      */
     fun create(params: WorkspaceCreateParams): CompletableFuture<Workspace> =
@@ -98,6 +99,7 @@ interface WorkspaceServiceAsync {
      * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
      * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
      * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
      */
     fun update(workspaceId: String): CompletableFuture<Workspace> =
@@ -149,7 +151,11 @@ interface WorkspaceServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<WorkspaceListPageAsync> =
         list(WorkspaceListParams.none(), requestOptions)
 
-    /** Archive Workspace */
+    /**
+     * Archive Workspace
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun archive(workspaceId: String): CompletableFuture<Workspace> =
         archive(workspaceId, WorkspaceArchiveParams.none())
 

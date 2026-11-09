@@ -182,6 +182,8 @@ interface WebhookServiceAsync {
      * webhook endpoints on for each organization; until yours is on, requests also return `404`.
      * Organization webhook endpoints are in beta and are not available to organizations with HIPAA
      * readiness enabled.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun delete(
         webhookEndpointId: String
@@ -231,6 +233,8 @@ interface WebhookServiceAsync {
      * webhook endpoints on for each organization; until yours is on, requests also return `404`.
      * Organization webhook endpoints are in beta and are not available to organizations with HIPAA
      * readiness enabled.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun regenerateSigningSecret(
         webhookEndpointId: String

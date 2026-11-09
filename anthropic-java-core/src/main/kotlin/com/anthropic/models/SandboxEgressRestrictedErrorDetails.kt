@@ -1,4 +1,4 @@
-package com.anthropic.models.beta.organization
+package com.anthropic.models
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonMissing
@@ -12,10 +12,11 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * Anthropic has temporarily disabled billing changes for the user account the credential belongs
- * to. Contact support.
+ * The request came from a Claude sandbox with restricted network access, which is not allowed to
+ * make this change. Send it from outside the sandbox, or from a sandbox with unrestricted network
+ * access.
  */
-class BetaBillingFrozenErrorDetails
+class SandboxEgressRestrictedErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val errorCode: JsonValue,
@@ -30,7 +31,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("billing_frozen")
+     * JsonValue.from("sandbox_egress_restricted")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -54,21 +55,24 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [BetaBillingFrozenErrorDetails].
+         * [SandboxEgressRestrictedErrorDetails].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaBillingFrozenErrorDetails]. */
+    /** A builder for [SandboxEgressRestrictedErrorDetails]. */
     class Builder internal constructor() {
 
-        private var errorCode: JsonValue = JsonValue.from("billing_frozen")
+        private var errorCode: JsonValue = JsonValue.from("sandbox_egress_restricted")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaBillingFrozenErrorDetails: BetaBillingFrozenErrorDetails) = apply {
-            errorCode = betaBillingFrozenErrorDetails.errorCode
-            additionalProperties = betaBillingFrozenErrorDetails.additionalProperties.toMutableMap()
+        internal fun from(
+            sandboxEgressRestrictedErrorDetails: SandboxEgressRestrictedErrorDetails
+        ) = apply {
+            errorCode = sandboxEgressRestrictedErrorDetails.errorCode
+            additionalProperties =
+                sandboxEgressRestrictedErrorDetails.additionalProperties.toMutableMap()
         }
 
         /**
@@ -77,7 +81,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("billing_frozen")
+         * JsonValue.from("sandbox_egress_restricted")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -105,12 +109,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaBillingFrozenErrorDetails].
+         * Returns an immutable instance of [SandboxEgressRestrictedErrorDetails].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): BetaBillingFrozenErrorDetails =
-            BetaBillingFrozenErrorDetails(errorCode, additionalProperties.toMutableMap())
+        fun build(): SandboxEgressRestrictedErrorDetails =
+            SandboxEgressRestrictedErrorDetails(errorCode, additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -123,13 +127,13 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BetaBillingFrozenErrorDetails = apply {
+    fun validate(): SandboxEgressRestrictedErrorDetails = apply {
         if (validated) {
             return@apply
         }
 
         _errorCode().let {
-            if (it != JsonValue.from("billing_frozen")) {
+            if (it != JsonValue.from("sandbox_egress_restricted")) {
                 throw AnthropicInvalidDataException("'errorCode' is invalid, received $it")
             }
         }
@@ -151,14 +155,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        errorCode.let { if (it == JsonValue.from("billing_frozen")) 1 else 0 }
+        errorCode.let { if (it == JsonValue.from("sandbox_egress_restricted")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is BetaBillingFrozenErrorDetails &&
+        return other is SandboxEgressRestrictedErrorDetails &&
             errorCode == other.errorCode &&
             additionalProperties == other.additionalProperties
     }
@@ -168,5 +172,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaBillingFrozenErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
+        "SandboxEgressRestrictedErrorDetails{errorCode=$errorCode, additionalProperties=$additionalProperties}"
 }

@@ -68,6 +68,7 @@ interface MemberService {
      *
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun add(rbacGroupId: String, params: MemberAddParams): RbacGroupMember =
         add(rbacGroupId, params, RequestOptions.none())
@@ -97,6 +98,7 @@ interface MemberService {
      *
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun remove(userId: String, params: MemberRemoveParams): DeletedRbacGroupMember =
         remove(userId, params, RequestOptions.none())

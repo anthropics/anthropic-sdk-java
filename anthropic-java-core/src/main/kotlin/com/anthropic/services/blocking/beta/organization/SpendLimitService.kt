@@ -106,7 +106,7 @@ interface SpendLimitService {
      * deletes its organization and workspace limits, but not its `usage_tier` limit. Deleting
      * organization and workspace limits through the API is in an early access preview.
      *
-     * @throws com.anthropic.models.beta.organization.BetaBillingFrozenException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws
      *   com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledException
      */
@@ -151,7 +151,7 @@ interface SpendLimitService {
      * those limits is in an early access preview. To request access, contact your Anthropic account
      * team.
      *
-     * @throws com.anthropic.models.beta.organization.BetaBillingFrozenException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws
      *   com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledException
      */

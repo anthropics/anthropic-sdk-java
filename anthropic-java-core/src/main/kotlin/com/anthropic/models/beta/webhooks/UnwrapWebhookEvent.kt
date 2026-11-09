@@ -483,6 +483,19 @@ private constructor(
             )
 
         /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofUserProfileProgramStatusUpdated(userProfileProgramStatusUpdated)`.
+         */
+        fun data(
+            userProfileProgramStatusUpdated: BetaWebhookUserProfileProgramStatusUpdatedEventData
+        ) =
+            data(
+                BetaWebhookEventData.ofUserProfileProgramStatusUpdated(
+                    userProfileProgramStatusUpdated
+                )
+            )
+
+        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the

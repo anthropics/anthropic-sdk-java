@@ -42,6 +42,7 @@ interface InviteService {
      * @throws com.anthropic.models.organization.OrgMemberLimitExceededException
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
      * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun create(params: InviteCreateParams): OrganizationInvite =
         create(params, RequestOptions.none())
@@ -100,7 +101,11 @@ interface InviteService {
     fun list(requestOptions: RequestOptions): InviteListPage =
         list(InviteListParams.none(), requestOptions)
 
-    /** Delete a pending invite. */
+    /**
+     * Delete a pending invite.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun delete(inviteId: String): InviteDeleteResponse = delete(inviteId, InviteDeleteParams.none())
 
     /** @see delete */

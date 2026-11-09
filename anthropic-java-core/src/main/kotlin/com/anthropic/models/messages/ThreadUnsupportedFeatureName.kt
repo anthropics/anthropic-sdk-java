@@ -34,8 +34,6 @@ class ThreadUnsupportedFeatureName private constructor(private val value: JsonFi
 
         @JvmField val THINKING = ThreadUnsupportedFeatureName(JsonField.of("thinking"))
 
-        @JvmField val ZDR = ThreadUnsupportedFeatureName(JsonField.of("zdr"))
-
         @JvmStatic
         fun of(value: String): ThreadUnsupportedFeatureName =
             // Intern known values so `==` works
@@ -46,7 +44,6 @@ class ThreadUnsupportedFeatureName private constructor(private val value: JsonFi
                 "hipaa" -> HIPAA
                 "inference_hooks" -> INFERENCE_HOOKS
                 "thinking" -> THINKING
-                "zdr" -> ZDR
                 else -> ThreadUnsupportedFeatureName(JsonField.of(value))
             }
 
@@ -64,7 +61,6 @@ class ThreadUnsupportedFeatureName private constructor(private val value: JsonFi
         HIPAA,
         INFERENCE_HOOKS,
         THINKING,
-        ZDR,
     }
 
     /**
@@ -85,7 +81,6 @@ class ThreadUnsupportedFeatureName private constructor(private val value: JsonFi
         HIPAA,
         INFERENCE_HOOKS,
         THINKING,
-        ZDR,
         /**
          * An enum member indicating that [ThreadUnsupportedFeatureName] was instantiated with an
          * unknown value.
@@ -108,7 +103,6 @@ class ThreadUnsupportedFeatureName private constructor(private val value: JsonFi
             HIPAA -> Value.HIPAA
             INFERENCE_HOOKS -> Value.INFERENCE_HOOKS
             THINKING -> Value.THINKING
-            ZDR -> Value.ZDR
             else -> Value._UNKNOWN
         }
 
@@ -128,7 +122,6 @@ class ThreadUnsupportedFeatureName private constructor(private val value: JsonFi
             HIPAA -> Known.HIPAA
             INFERENCE_HOOKS -> Known.INFERENCE_HOOKS
             THINKING -> Known.THINKING
-            ZDR -> Known.ZDR
             else ->
                 throw AnthropicInvalidDataException("Unknown ThreadUnsupportedFeatureName: $value")
         }

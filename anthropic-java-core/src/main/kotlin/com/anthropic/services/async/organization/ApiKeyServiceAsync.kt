@@ -62,6 +62,7 @@ interface ApiKeyServiceAsync {
      *
      * @throws com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededException
      * @throws com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(apiKeyId: String): CompletableFuture<ApiKey> =
         update(apiKeyId, ApiKeyUpdateParams.none())

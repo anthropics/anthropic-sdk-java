@@ -25,6 +25,12 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
 
     companion object {
 
+        /**
+         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
+         * sciences
+         */
+        @JvmField val CLAUDE_FABLE_5_2 = BetaManagedAgentsModel(JsonField.of("claude-fable-5-2"))
+
         /** Fastest model for high-volume, real-time tasks */
         @JvmField val CLAUDE_HAIKU_5_5 = BetaManagedAgentsModel(JsonField.of("claude-haiku-5-5"))
 
@@ -94,6 +100,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
         fun of(value: String): BetaManagedAgentsModel =
             // Intern known values so `==` works
             when (value) {
+                "claude-fable-5-2" -> CLAUDE_FABLE_5_2
                 "claude-haiku-5-5" -> CLAUDE_HAIKU_5_5
                 "claude-sonnet-5-5" -> CLAUDE_SONNET_5_5
                 "claude-opus-5-5" -> CLAUDE_OPUS_5_5
@@ -122,6 +129,11 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
 
     /** An enum containing [BetaManagedAgentsModel]'s known values. */
     enum class Known {
+        /**
+         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
+         * sciences
+         */
+        CLAUDE_FABLE_5_2,
         /** Fastest model for high-volume, real-time tasks */
         CLAUDE_HAIKU_5_5,
         /** Efficient model for coding and agents */
@@ -175,6 +187,11 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /**
+         * Frontier intelligence for ambitious work in coding, enterprise workflows, and the
+         * sciences
+         */
+        CLAUDE_FABLE_5_2,
         /** Fastest model for high-volume, real-time tasks */
         CLAUDE_HAIKU_5_5,
         /** Efficient model for coding and agents */
@@ -232,6 +249,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_FABLE_5_2 -> Value.CLAUDE_FABLE_5_2
             CLAUDE_HAIKU_5_5 -> Value.CLAUDE_HAIKU_5_5
             CLAUDE_SONNET_5_5 -> Value.CLAUDE_SONNET_5_5
             CLAUDE_OPUS_5_5 -> Value.CLAUDE_OPUS_5_5
@@ -262,6 +280,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_FABLE_5_2 -> Known.CLAUDE_FABLE_5_2
             CLAUDE_HAIKU_5_5 -> Known.CLAUDE_HAIKU_5_5
             CLAUDE_SONNET_5_5 -> Known.CLAUDE_SONNET_5_5
             CLAUDE_OPUS_5_5 -> Known.CLAUDE_OPUS_5_5

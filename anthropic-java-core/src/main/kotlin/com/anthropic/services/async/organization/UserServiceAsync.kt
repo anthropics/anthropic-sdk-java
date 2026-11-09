@@ -62,7 +62,11 @@ interface UserServiceAsync {
     ): CompletableFuture<OrganizationUser> =
         retrieve(userId, UserRetrieveParams.none(), requestOptions)
 
-    /** Update a member's organization role. */
+    /**
+     * Update a member's organization role.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun update(userId: String, params: UserUpdateParams): CompletableFuture<OrganizationUser> =
         update(userId, params, RequestOptions.none())
 
@@ -105,6 +109,7 @@ interface UserServiceAsync {
      * Remove a member from the organization.
      *
      * @throws com.anthropic.models.organization.users.CannotRemoveLastMemberException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.ConcurrentMembershipChangeException
      */
     fun remove(userId: String): CompletableFuture<UserRemoveResponse> =

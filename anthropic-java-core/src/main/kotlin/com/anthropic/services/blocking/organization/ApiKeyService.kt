@@ -59,6 +59,7 @@ interface ApiKeyService {
      *
      * @throws com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededException
      * @throws com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(apiKeyId: String): ApiKey = update(apiKeyId, ApiKeyUpdateParams.none())
 
