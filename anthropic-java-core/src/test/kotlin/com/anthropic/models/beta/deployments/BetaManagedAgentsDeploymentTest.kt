@@ -36,14 +36,8 @@ internal class BetaManagedAgentsDeploymentTest {
                 )
                 .metadata(BetaManagedAgentsDeployment.Metadata.builder().build())
                 .name("Daily order report")
-                .pausedReason(BetaManagedAgentsManualDeploymentPausedReason.builder().build())
-                .addResource(
-                    BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
-                        .url("url")
-                        .branchCheckout("main")
-                        .mountPath("mount_path")
-                        .build()
-                )
+                .pausedReason(null)
+                .resources(listOf())
                 .schedule(
                     BetaManagedAgentsSchedule.builder()
                         .expression("0 9 * * 1-5")
@@ -92,22 +86,8 @@ internal class BetaManagedAgentsDeploymentTest {
         assertThat(betaManagedAgentsDeployment.metadata())
             .isEqualTo(BetaManagedAgentsDeployment.Metadata.builder().build())
         assertThat(betaManagedAgentsDeployment.name()).isEqualTo("Daily order report")
-        assertThat(betaManagedAgentsDeployment.pausedReason())
-            .contains(
-                BetaManagedAgentsDeploymentPausedReason.ofManual(
-                    BetaManagedAgentsManualDeploymentPausedReason.builder().build()
-                )
-            )
-        assertThat(betaManagedAgentsDeployment.resources())
-            .containsExactly(
-                BetaManagedAgentsSessionResourceConfig.ofGitHubRepository(
-                    BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
-                        .url("url")
-                        .branchCheckout("main")
-                        .mountPath("mount_path")
-                        .build()
-                )
-            )
+        assertThat(betaManagedAgentsDeployment.pausedReason()).isEmpty
+        assertThat(betaManagedAgentsDeployment.resources()).containsExactly()
         assertThat(betaManagedAgentsDeployment.schedule())
             .contains(
                 BetaManagedAgentsSchedule.builder()
@@ -157,14 +137,8 @@ internal class BetaManagedAgentsDeploymentTest {
                 )
                 .metadata(BetaManagedAgentsDeployment.Metadata.builder().build())
                 .name("Daily order report")
-                .pausedReason(BetaManagedAgentsManualDeploymentPausedReason.builder().build())
-                .addResource(
-                    BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
-                        .url("url")
-                        .branchCheckout("main")
-                        .mountPath("mount_path")
-                        .build()
-                )
+                .pausedReason(null)
+                .resources(listOf())
                 .schedule(
                     BetaManagedAgentsSchedule.builder()
                         .expression("0 9 * * 1-5")

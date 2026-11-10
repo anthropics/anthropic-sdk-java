@@ -1,6 +1,5 @@
 package com.anthropic.models.userprofiles
 
-import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
@@ -18,15 +17,7 @@ internal class UserProfileListPageResponseTest {
                         .id("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                         .accessType(UserProfileAccessType.APPLICATION)
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                        .addEnforcementAction(
-                            UserProfileEnforcementActionRestriction.builder()
-                                .id("enac_011CZkZCu8hGbp5mYRQgUmz9")
-                                .action(UserProfileEnforcementActionNextStep.VERIFY)
-                                .expiresAt(null)
-                                .openedAt(OffsetDateTime.parse("2026-10-02T19:30:00Z"))
-                                .reason(UserProfileEnforcementActionReason.FRAUD_OR_ABUSE)
-                                .build()
-                        )
+                        .enforcementActions(listOf())
                         .enforcementStatus(UserProfileEnforcementStatus.UNRESTRICTED)
                         .externalUserDetails(
                             UserProfileExternalUserDetails.builder()
@@ -45,37 +36,12 @@ internal class UserProfileListPageResponseTest {
                             UserProfilePrograms.builder()
                                 .cyber(
                                     UserProfileCyberProgram.builder()
-                                        .requirements(
-                                            UserProfileCyberRequirements.builder()
-                                                .dataRetention(true)
-                                                .humanReview(true)
-                                                .build()
-                                        )
+                                        .requirements(null)
                                         .status(UserProfileProgramStatus.ACTIVE)
                                         .tiers(UserProfileCyberProgram.Tiers.builder().build())
                                         .build()
                                 )
-                                .efs(
-                                    UserProfileEfsProgram.builder()
-                                        .features(
-                                            UserProfileEfsProgram.Features.builder()
-                                                .putAdditionalProperty(
-                                                    "data_retention_exemption",
-                                                    JsonValue.from(mapOf("status" to "inactive")),
-                                                )
-                                                .putAdditionalProperty(
-                                                    "cmek",
-                                                    JsonValue.from(mapOf("status" to "active")),
-                                                )
-                                                .putAdditionalProperty(
-                                                    "storage",
-                                                    JsonValue.from(mapOf("status" to "inactive")),
-                                                )
-                                                .build()
-                                        )
-                                        .status(UserProfileProgramStatus.ACTIVE)
-                                        .build()
-                                )
+                                .efs(null)
                                 .build()
                         )
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -90,15 +56,7 @@ internal class UserProfileListPageResponseTest {
                     .id("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                     .accessType(UserProfileAccessType.APPLICATION)
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                    .addEnforcementAction(
-                        UserProfileEnforcementActionRestriction.builder()
-                            .id("enac_011CZkZCu8hGbp5mYRQgUmz9")
-                            .action(UserProfileEnforcementActionNextStep.VERIFY)
-                            .expiresAt(null)
-                            .openedAt(OffsetDateTime.parse("2026-10-02T19:30:00Z"))
-                            .reason(UserProfileEnforcementActionReason.FRAUD_OR_ABUSE)
-                            .build()
-                    )
+                    .enforcementActions(listOf())
                     .enforcementStatus(UserProfileEnforcementStatus.UNRESTRICTED)
                     .externalUserDetails(
                         UserProfileExternalUserDetails.builder()
@@ -117,37 +75,12 @@ internal class UserProfileListPageResponseTest {
                         UserProfilePrograms.builder()
                             .cyber(
                                 UserProfileCyberProgram.builder()
-                                    .requirements(
-                                        UserProfileCyberRequirements.builder()
-                                            .dataRetention(true)
-                                            .humanReview(true)
-                                            .build()
-                                    )
+                                    .requirements(null)
                                     .status(UserProfileProgramStatus.ACTIVE)
                                     .tiers(UserProfileCyberProgram.Tiers.builder().build())
                                     .build()
                             )
-                            .efs(
-                                UserProfileEfsProgram.builder()
-                                    .features(
-                                        UserProfileEfsProgram.Features.builder()
-                                            .putAdditionalProperty(
-                                                "data_retention_exemption",
-                                                JsonValue.from(mapOf("status" to "inactive")),
-                                            )
-                                            .putAdditionalProperty(
-                                                "cmek",
-                                                JsonValue.from(mapOf("status" to "active")),
-                                            )
-                                            .putAdditionalProperty(
-                                                "storage",
-                                                JsonValue.from(mapOf("status" to "inactive")),
-                                            )
-                                            .build()
-                                    )
-                                    .status(UserProfileProgramStatus.ACTIVE)
-                                    .build()
-                            )
+                            .efs(null)
                             .build()
                     )
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -167,15 +100,7 @@ internal class UserProfileListPageResponseTest {
                         .id("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                         .accessType(UserProfileAccessType.APPLICATION)
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                        .addEnforcementAction(
-                            UserProfileEnforcementActionRestriction.builder()
-                                .id("enac_011CZkZCu8hGbp5mYRQgUmz9")
-                                .action(UserProfileEnforcementActionNextStep.VERIFY)
-                                .expiresAt(null)
-                                .openedAt(OffsetDateTime.parse("2026-10-02T19:30:00Z"))
-                                .reason(UserProfileEnforcementActionReason.FRAUD_OR_ABUSE)
-                                .build()
-                        )
+                        .enforcementActions(listOf())
                         .enforcementStatus(UserProfileEnforcementStatus.UNRESTRICTED)
                         .externalUserDetails(
                             UserProfileExternalUserDetails.builder()
@@ -194,37 +119,12 @@ internal class UserProfileListPageResponseTest {
                             UserProfilePrograms.builder()
                                 .cyber(
                                     UserProfileCyberProgram.builder()
-                                        .requirements(
-                                            UserProfileCyberRequirements.builder()
-                                                .dataRetention(true)
-                                                .humanReview(true)
-                                                .build()
-                                        )
+                                        .requirements(null)
                                         .status(UserProfileProgramStatus.ACTIVE)
                                         .tiers(UserProfileCyberProgram.Tiers.builder().build())
                                         .build()
                                 )
-                                .efs(
-                                    UserProfileEfsProgram.builder()
-                                        .features(
-                                            UserProfileEfsProgram.Features.builder()
-                                                .putAdditionalProperty(
-                                                    "data_retention_exemption",
-                                                    JsonValue.from(mapOf("status" to "inactive")),
-                                                )
-                                                .putAdditionalProperty(
-                                                    "cmek",
-                                                    JsonValue.from(mapOf("status" to "active")),
-                                                )
-                                                .putAdditionalProperty(
-                                                    "storage",
-                                                    JsonValue.from(mapOf("status" to "inactive")),
-                                                )
-                                                .build()
-                                        )
-                                        .status(UserProfileProgramStatus.ACTIVE)
-                                        .build()
-                                )
+                                .efs(null)
                                 .build()
                         )
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))

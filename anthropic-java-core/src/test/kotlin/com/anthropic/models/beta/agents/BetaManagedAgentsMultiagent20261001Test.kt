@@ -30,12 +30,7 @@ internal class BetaManagedAgentsMultiagent20261001Test {
                         .inlineAgents(
                             BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
                         )
-                        .addPredefinedAgent(
-                            BetaManagedAgentsAgentReference.builder()
-                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .version(1)
-                                .build()
-                        )
+                        .predefinedAgents(listOf())
                         .build()
                 )
                 .build()
@@ -69,12 +64,7 @@ internal class BetaManagedAgentsMultiagent20261001Test {
                         .inlineAgents(
                             BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
                         )
-                        .addPredefinedAgent(
-                            BetaManagedAgentsAgentReference.builder()
-                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .version(1)
-                                .build()
-                        )
+                        .predefinedAgents(listOf())
                         .build()
                 )
             )
@@ -104,12 +94,7 @@ internal class BetaManagedAgentsMultiagent20261001Test {
                         .inlineAgents(
                             BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
                         )
-                        .addPredefinedAgent(
-                            BetaManagedAgentsAgentReference.builder()
-                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .version(1)
-                                .build()
-                        )
+                        .predefinedAgents(listOf())
                         .build()
                 )
                 .build()

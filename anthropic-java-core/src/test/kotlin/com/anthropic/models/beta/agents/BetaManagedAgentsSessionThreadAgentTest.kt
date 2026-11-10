@@ -16,12 +16,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                 .executionIdentity(
                     BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
                 )
-                .addMcpServer(
-                    BetaManagedAgentsMcpServerUrlDefinition.builder()
-                        .name("example-mcp")
-                        .url("https://example-server.modelcontextprotocol.io/sse")
-                        .build()
-                )
+                .mcpServers(listOf())
                 .model(
                     BetaManagedAgentsModelConfig.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
@@ -31,22 +26,13 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                         .build()
                 )
                 .name("Researcher")
-                .addSkill(
-                    BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
-                )
+                .skills(listOf())
                 .system(
                     "You are a research subagent that gathers and summarises sources for the coordinating agent."
                 )
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401.builder()
-                        .addConfig(
-                            BetaManagedAgentsBashToolConfig.builder()
-                                .enabled(true)
-                                .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                )
-                                .build()
-                        )
+                        .configs(listOf())
                         .defaultConfig(
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
@@ -70,13 +56,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                     BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
                 )
             )
-        assertThat(betaManagedAgentsSessionThreadAgent.mcpServers())
-            .containsExactly(
-                BetaManagedAgentsMcpServerUrlDefinition.builder()
-                    .name("example-mcp")
-                    .url("https://example-server.modelcontextprotocol.io/sse")
-                    .build()
-            )
+        assertThat(betaManagedAgentsSessionThreadAgent.mcpServers()).containsExactly()
         assertThat(betaManagedAgentsSessionThreadAgent.model())
             .isEqualTo(
                 BetaManagedAgentsModelConfig.builder()
@@ -87,12 +67,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                     .build()
             )
         assertThat(betaManagedAgentsSessionThreadAgent.name()).isEqualTo("Researcher")
-        assertThat(betaManagedAgentsSessionThreadAgent.skills())
-            .containsExactly(
-                BetaManagedAgentsSessionThreadAgent.Skill.ofAnthropic(
-                    BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
-                )
-            )
+        assertThat(betaManagedAgentsSessionThreadAgent.skills()).containsExactly()
         assertThat(betaManagedAgentsSessionThreadAgent.system())
             .contains(
                 "You are a research subagent that gathers and summarises sources for the coordinating agent."
@@ -101,14 +76,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
             .containsExactly(
                 BetaManagedAgentsSessionThreadAgent.Tool.ofAgentToolset20260401(
                     BetaManagedAgentsAgentToolset20260401.builder()
-                        .addConfig(
-                            BetaManagedAgentsBashToolConfig.builder()
-                                .enabled(true)
-                                .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                )
-                                .build()
-                        )
+                        .configs(listOf())
                         .defaultConfig(
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
@@ -133,12 +101,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                 .executionIdentity(
                     BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
                 )
-                .addMcpServer(
-                    BetaManagedAgentsMcpServerUrlDefinition.builder()
-                        .name("example-mcp")
-                        .url("https://example-server.modelcontextprotocol.io/sse")
-                        .build()
-                )
+                .mcpServers(listOf())
                 .model(
                     BetaManagedAgentsModelConfig.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
@@ -148,22 +111,13 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                         .build()
                 )
                 .name("Researcher")
-                .addSkill(
-                    BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
-                )
+                .skills(listOf())
                 .system(
                     "You are a research subagent that gathers and summarises sources for the coordinating agent."
                 )
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401.builder()
-                        .addConfig(
-                            BetaManagedAgentsBashToolConfig.builder()
-                                .enabled(true)
-                                .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                )
-                                .build()
-                        )
+                        .configs(listOf())
                         .defaultConfig(
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)

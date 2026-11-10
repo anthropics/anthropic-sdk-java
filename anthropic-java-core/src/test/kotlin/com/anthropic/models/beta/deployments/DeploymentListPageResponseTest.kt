@@ -40,16 +40,8 @@ internal class DeploymentListPageResponseTest {
                         )
                         .metadata(BetaManagedAgentsDeployment.Metadata.builder().build())
                         .name("Daily order report")
-                        .pausedReason(
-                            BetaManagedAgentsManualDeploymentPausedReason.builder().build()
-                        )
-                        .addResource(
-                            BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
-                                .url("url")
-                                .branchCheckout("main")
-                                .mountPath("mount_path")
-                                .build()
-                        )
+                        .pausedReason(null)
+                        .resources(listOf())
                         .schedule(
                             BetaManagedAgentsSchedule.builder()
                                 .expression("0 9 * * 1-5")
@@ -98,14 +90,8 @@ internal class DeploymentListPageResponseTest {
                     )
                     .metadata(BetaManagedAgentsDeployment.Metadata.builder().build())
                     .name("Daily order report")
-                    .pausedReason(BetaManagedAgentsManualDeploymentPausedReason.builder().build())
-                    .addResource(
-                        BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
-                            .url("url")
-                            .branchCheckout("main")
-                            .mountPath("mount_path")
-                            .build()
-                    )
+                    .pausedReason(null)
+                    .resources(listOf())
                     .schedule(
                         BetaManagedAgentsSchedule.builder()
                             .expression("0 9 * * 1-5")
@@ -161,16 +147,8 @@ internal class DeploymentListPageResponseTest {
                         )
                         .metadata(BetaManagedAgentsDeployment.Metadata.builder().build())
                         .name("Daily order report")
-                        .pausedReason(
-                            BetaManagedAgentsManualDeploymentPausedReason.builder().build()
-                        )
-                        .addResource(
-                            BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
-                                .url("url")
-                                .branchCheckout("main")
-                                .mountPath("mount_path")
-                                .build()
-                        )
+                        .pausedReason(null)
+                        .resources(listOf())
                         .schedule(
                             BetaManagedAgentsSchedule.builder()
                                 .expression("0 9 * * 1-5")
