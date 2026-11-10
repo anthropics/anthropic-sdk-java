@@ -2,6 +2,7 @@ package com.anthropic.models.beta.organization.claudetag.slackchannels
 
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagGuestPolicyAllow
+import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagReplyModeAutomatic
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagSettingSources
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagSettings
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagSlackChannelIdentifiers
@@ -27,6 +28,7 @@ internal class SlackChannelListPageResponseTest {
                                 .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                                 .instructions("instructions")
                                 .model("model")
+                                .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                                 .build()
                         )
                         .slack(
@@ -42,6 +44,7 @@ internal class SlackChannelListPageResponseTest {
                                 .slackChannelGuestPolicy("slack_channel_id")
                                 .addSlackChannelInstruction("slack_channel_id")
                                 .slackChannelModel("slack_channel_id")
+                                .slackChannelReplyMode("slack_channel_id")
                                 .build()
                         )
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -62,6 +65,7 @@ internal class SlackChannelListPageResponseTest {
                             .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                             .instructions("instructions")
                             .model("model")
+                            .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                             .build()
                     )
                     .slack(
@@ -77,6 +81,7 @@ internal class SlackChannelListPageResponseTest {
                             .slackChannelGuestPolicy("slack_channel_id")
                             .addSlackChannelInstruction("slack_channel_id")
                             .slackChannelModel("slack_channel_id")
+                            .slackChannelReplyMode("slack_channel_id")
                             .build()
                     )
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -101,6 +106,7 @@ internal class SlackChannelListPageResponseTest {
                                 .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                                 .instructions("instructions")
                                 .model("model")
+                                .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                                 .build()
                         )
                         .slack(
@@ -116,6 +122,7 @@ internal class SlackChannelListPageResponseTest {
                                 .slackChannelGuestPolicy("slack_channel_id")
                                 .addSlackChannelInstruction("slack_channel_id")
                                 .slackChannelModel("slack_channel_id")
+                                .slackChannelReplyMode("slack_channel_id")
                                 .build()
                         )
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))

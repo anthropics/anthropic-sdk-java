@@ -5,12 +5,8 @@ import com.anthropic.models.beta.BetaCurrency
 import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
-import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAskPolicy
-import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
-import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsEffortLow
-import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
@@ -40,12 +36,7 @@ internal class ThreadListPageResponseTest {
                                     BetaManagedAgentsServiceAccountExecutionIdentity.builder()
                                         .build()
                                 )
-                                .addMcpServer(
-                                    BetaManagedAgentsMcpServerUrlDefinition.builder()
-                                        .name("example-mcp")
-                                        .url("https://example-server.modelcontextprotocol.io/sse")
-                                        .build()
-                                )
+                                .mcpServers(listOf())
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
                                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
@@ -55,26 +46,13 @@ internal class ThreadListPageResponseTest {
                                         .build()
                                 )
                                 .name("Researcher")
-                                .addSkill(
-                                    BetaManagedAgentsAnthropicSkill.builder()
-                                        .skillId("xlsx")
-                                        .version("1")
-                                        .build()
-                                )
+                                .skills(listOf())
                                 .system(
                                     "You are a research subagent that gathers and summarises sources for the coordinating agent."
                                 )
                                 .addTool(
                                     BetaManagedAgentsAgentToolset20260401.builder()
-                                        .addConfig(
-                                            BetaManagedAgentsBashToolConfig.builder()
-                                                .enabled(true)
-                                                .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                        .build()
-                                                )
-                                                .build()
-                                        )
+                                        .configs(listOf())
                                         .defaultConfig(
                                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                                 .enabled(true)
@@ -145,12 +123,7 @@ internal class ThreadListPageResponseTest {
                             .executionIdentity(
                                 BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
                             )
-                            .addMcpServer(
-                                BetaManagedAgentsMcpServerUrlDefinition.builder()
-                                    .name("example-mcp")
-                                    .url("https://example-server.modelcontextprotocol.io/sse")
-                                    .build()
-                            )
+                            .mcpServers(listOf())
                             .model(
                                 BetaManagedAgentsModelConfig.builder()
                                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
@@ -160,25 +133,13 @@ internal class ThreadListPageResponseTest {
                                     .build()
                             )
                             .name("Researcher")
-                            .addSkill(
-                                BetaManagedAgentsAnthropicSkill.builder()
-                                    .skillId("xlsx")
-                                    .version("1")
-                                    .build()
-                            )
+                            .skills(listOf())
                             .system(
                                 "You are a research subagent that gathers and summarises sources for the coordinating agent."
                             )
                             .addTool(
                                 BetaManagedAgentsAgentToolset20260401.builder()
-                                    .addConfig(
-                                        BetaManagedAgentsBashToolConfig.builder()
-                                            .enabled(true)
-                                            .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                            )
-                                            .build()
-                                    )
+                                    .configs(listOf())
                                     .defaultConfig(
                                         BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                             .enabled(true)
@@ -255,12 +216,7 @@ internal class ThreadListPageResponseTest {
                                     BetaManagedAgentsServiceAccountExecutionIdentity.builder()
                                         .build()
                                 )
-                                .addMcpServer(
-                                    BetaManagedAgentsMcpServerUrlDefinition.builder()
-                                        .name("example-mcp")
-                                        .url("https://example-server.modelcontextprotocol.io/sse")
-                                        .build()
-                                )
+                                .mcpServers(listOf())
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
                                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
@@ -270,26 +226,13 @@ internal class ThreadListPageResponseTest {
                                         .build()
                                 )
                                 .name("Researcher")
-                                .addSkill(
-                                    BetaManagedAgentsAnthropicSkill.builder()
-                                        .skillId("xlsx")
-                                        .version("1")
-                                        .build()
-                                )
+                                .skills(listOf())
                                 .system(
                                     "You are a research subagent that gathers and summarises sources for the coordinating agent."
                                 )
                                 .addTool(
                                     BetaManagedAgentsAgentToolset20260401.builder()
-                                        .addConfig(
-                                            BetaManagedAgentsBashToolConfig.builder()
-                                                .enabled(true)
-                                                .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                        .build()
-                                                )
-                                                .build()
-                                        )
+                                        .configs(listOf())
                                         .defaultConfig(
                                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                                 .enabled(true)
@@ -359,12 +302,7 @@ internal class ThreadListPageResponseTest {
                             .executionIdentity(
                                 BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
                             )
-                            .addMcpServer(
-                                BetaManagedAgentsMcpServerUrlDefinition.builder()
-                                    .name("example-mcp")
-                                    .url("https://example-server.modelcontextprotocol.io/sse")
-                                    .build()
-                            )
+                            .mcpServers(listOf())
                             .model(
                                 BetaManagedAgentsModelConfig.builder()
                                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
@@ -374,25 +312,13 @@ internal class ThreadListPageResponseTest {
                                     .build()
                             )
                             .name("Researcher")
-                            .addSkill(
-                                BetaManagedAgentsAnthropicSkill.builder()
-                                    .skillId("xlsx")
-                                    .version("1")
-                                    .build()
-                            )
+                            .skills(listOf())
                             .system(
                                 "You are a research subagent that gathers and summarises sources for the coordinating agent."
                             )
                             .addTool(
                                 BetaManagedAgentsAgentToolset20260401.builder()
-                                    .addConfig(
-                                        BetaManagedAgentsBashToolConfig.builder()
-                                            .enabled(true)
-                                            .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                            )
-                                            .build()
-                                    )
+                                    .configs(listOf())
                                     .defaultConfig(
                                         BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                             .enabled(true)
@@ -466,12 +392,7 @@ internal class ThreadListPageResponseTest {
                                     BetaManagedAgentsServiceAccountExecutionIdentity.builder()
                                         .build()
                                 )
-                                .addMcpServer(
-                                    BetaManagedAgentsMcpServerUrlDefinition.builder()
-                                        .name("example-mcp")
-                                        .url("https://example-server.modelcontextprotocol.io/sse")
-                                        .build()
-                                )
+                                .mcpServers(listOf())
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
                                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
@@ -481,26 +402,13 @@ internal class ThreadListPageResponseTest {
                                         .build()
                                 )
                                 .name("Researcher")
-                                .addSkill(
-                                    BetaManagedAgentsAnthropicSkill.builder()
-                                        .skillId("xlsx")
-                                        .version("1")
-                                        .build()
-                                )
+                                .skills(listOf())
                                 .system(
                                     "You are a research subagent that gathers and summarises sources for the coordinating agent."
                                 )
                                 .addTool(
                                     BetaManagedAgentsAgentToolset20260401.builder()
-                                        .addConfig(
-                                            BetaManagedAgentsBashToolConfig.builder()
-                                                .enabled(true)
-                                                .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                        .build()
-                                                )
-                                                .build()
-                                        )
+                                        .configs(listOf())
                                         .defaultConfig(
                                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                                 .enabled(true)

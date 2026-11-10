@@ -108,10 +108,9 @@ private constructor(
         fun replaceAllPathSegments(vararg pathSegments: String) = apply {
             this.pathSegments =
                 pathSegments
-                    // Some servers drop ";" and what follows it before routing, so "..;x" can be
-                    // routed as "..".
                     .onEach {
-                        checkPathSegment(checkMinLength("pathSegment", it.substringBefore(';'), 1))
+                        checkMinLength("pathSegment", it.substringBefore(';'), 1)
+                        checkPathSegment(it)
                     }
                     .toMutableList()
         }

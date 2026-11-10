@@ -16,12 +16,7 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
-                .stopDetails(
-                    BetaManagedAgentsSessionRefusalStopDetails.builder()
-                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
-                        .explanation("explanation")
-                        .build()
-                )
+                .stopDetails(null)
                 .stopReason(BetaManagedAgentsSessionEndTurn.builder().build())
                 .build()
 
@@ -33,13 +28,7 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.sessionThreadId())
             .isEqualTo("sthr_011CZkZVWa6oJjw1rgXZpnBt")
-        assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.stopDetails())
-            .contains(
-                BetaManagedAgentsSessionRefusalStopDetails.builder()
-                    .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
-                    .explanation("explanation")
-                    .build()
-            )
+        assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.stopDetails()).isEmpty
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.stopReason())
             .isEqualTo(
                 BetaManagedAgentsSessionThreadStatusIdleEvent.StopReason.ofEndTurn(
@@ -57,12 +46,7 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
-                .stopDetails(
-                    BetaManagedAgentsSessionRefusalStopDetails.builder()
-                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
-                        .explanation("explanation")
-                        .build()
-                )
+                .stopDetails(null)
                 .stopReason(BetaManagedAgentsSessionEndTurn.builder().build())
                 .build()
 

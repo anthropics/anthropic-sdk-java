@@ -2,18 +2,15 @@ package com.anthropic.models.beta.messages.batches
 
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.messages.BetaCacheCreation
-import com.anthropic.models.beta.messages.BetaCitationCharLocation
 import com.anthropic.models.beta.messages.BetaClearToolUses20250919EditResponse
 import com.anthropic.models.beta.messages.BetaContainer
 import com.anthropic.models.beta.messages.BetaContainerSkill
 import com.anthropic.models.beta.messages.BetaContextManagementResponse
-import com.anthropic.models.beta.messages.BetaDiagnostics
 import com.anthropic.models.beta.messages.BetaFallbackCreditRedeemed
 import com.anthropic.models.beta.messages.BetaFallbackCreditUsage
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageIterationUsage
 import com.anthropic.models.beta.messages.BetaOutputTokensDetails
-import com.anthropic.models.beta.messages.BetaRefusalStopDetails
 import com.anthropic.models.beta.messages.BetaServerToolUsage
 import com.anthropic.models.beta.messages.BetaStopReason
 import com.anthropic.models.beta.messages.BetaTextBlock
@@ -50,16 +47,7 @@ internal class BetaMessageBatchIndividualResponseTest {
                         )
                         .addContent(
                             BetaTextBlock.builder()
-                                .addCitation(
-                                    BetaCitationCharLocation.builder()
-                                        .citedText("The grass is green. The sky is blue.")
-                                        .documentIndex(0L)
-                                        .documentTitle("My Document")
-                                        .endCharIndex(0L)
-                                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                        .startCharIndex(0L)
-                                        .build()
-                                )
+                                .citations(null)
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
@@ -73,21 +61,9 @@ internal class BetaMessageBatchIndividualResponseTest {
                                 )
                                 .build()
                         )
-                        .diagnostics(
-                            BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build()
-                        )
+                        .diagnostics(null)
                         .model(Model.CLAUDE_OPUS_5_5)
-                        .stopDetails(
-                            BetaRefusalStopDetails.builder()
-                                .category(BetaRefusalStopDetails.Category.CYBER)
-                                .explanation(
-                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
-                                )
-                                .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
-                                .fallbackHasPrefillClaim(true)
-                                .recommendedModel("claude-opus-4-8")
-                                .build()
-                        )
+                        .stopDetails(null)
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -168,16 +144,7 @@ internal class BetaMessageBatchIndividualResponseTest {
                         )
                         .addContent(
                             BetaTextBlock.builder()
-                                .addCitation(
-                                    BetaCitationCharLocation.builder()
-                                        .citedText("The grass is green. The sky is blue.")
-                                        .documentIndex(0L)
-                                        .documentTitle("My Document")
-                                        .endCharIndex(0L)
-                                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                        .startCharIndex(0L)
-                                        .build()
-                                )
+                                .citations(null)
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
@@ -191,21 +158,9 @@ internal class BetaMessageBatchIndividualResponseTest {
                                 )
                                 .build()
                         )
-                        .diagnostics(
-                            BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build()
-                        )
+                        .diagnostics(null)
                         .model(Model.CLAUDE_OPUS_5_5)
-                        .stopDetails(
-                            BetaRefusalStopDetails.builder()
-                                .category(BetaRefusalStopDetails.Category.CYBER)
-                                .explanation(
-                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
-                                )
-                                .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
-                                .fallbackHasPrefillClaim(true)
-                                .recommendedModel("claude-opus-4-8")
-                                .build()
-                        )
+                        .stopDetails(null)
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
                         .usage(
@@ -290,16 +245,7 @@ internal class BetaMessageBatchIndividualResponseTest {
                         )
                         .addContent(
                             BetaTextBlock.builder()
-                                .addCitation(
-                                    BetaCitationCharLocation.builder()
-                                        .citedText("The grass is green. The sky is blue.")
-                                        .documentIndex(0L)
-                                        .documentTitle("My Document")
-                                        .endCharIndex(0L)
-                                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                        .startCharIndex(0L)
-                                        .build()
-                                )
+                                .citations(null)
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
@@ -313,21 +259,9 @@ internal class BetaMessageBatchIndividualResponseTest {
                                 )
                                 .build()
                         )
-                        .diagnostics(
-                            BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build()
-                        )
+                        .diagnostics(null)
                         .model(Model.CLAUDE_OPUS_5_5)
-                        .stopDetails(
-                            BetaRefusalStopDetails.builder()
-                                .category(BetaRefusalStopDetails.Category.CYBER)
-                                .explanation(
-                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
-                                )
-                                .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
-                                .fallbackHasPrefillClaim(true)
-                                .recommendedModel("claude-opus-4-8")
-                                .build()
-                        )
+                        .stopDetails(null)
                         .stopReason(BetaStopReason.END_TURN)
                         .stopSequence(null)
                         .usage(

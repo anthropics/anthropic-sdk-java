@@ -15,6 +15,7 @@ dependencies {
     api(platform(libs.google.auth.bom))
     api(libs.google.auth.oauth2.http)
 
+    testImplementation(project(":anthropic-java-client-okhttp"))
     testImplementation(kotlin("test"))
     testImplementation(libs.assertj)
     testImplementation(libs.junit.jupiter.api)

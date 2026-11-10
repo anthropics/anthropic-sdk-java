@@ -2,7 +2,6 @@ package com.anthropic.models.beta.agents
 
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
-import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -40,37 +39,7 @@ internal class BetaManagedAgentsAgentTest {
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                         .build()
                 )
-                .multiagent(
-                    BetaManagedAgentsMultiagent20261001.builder()
-                        .advisor(BetaManagedAgentsMultiagentAdvisorDisabled.builder().build())
-                        .subagents(
-                            BetaManagedAgentsMultiagentSubagentsEnabled.builder()
-                                .inlineAgents(
-                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
-                                )
-                                .addPredefinedAgent(
-                                    BetaManagedAgentsAgentReference.builder()
-                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                        .version(1)
-                                        .build()
-                                )
-                                .build()
-                        )
-                        .workflows(
-                            BetaManagedAgentsMultiagentWorkflowsEnabled.builder()
-                                .inlineAgents(
-                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
-                                )
-                                .addPredefinedAgent(
-                                    BetaManagedAgentsAgentReference.builder()
-                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                        .version(1)
-                                        .build()
-                                )
-                                .build()
-                        )
-                        .build()
-                )
+                .multiagent(null)
                 .name("My First Agent")
                 .addSkill(
                     BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
@@ -86,14 +55,7 @@ internal class BetaManagedAgentsAgentTest {
                 )
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401.builder()
-                        .addConfig(
-                            BetaManagedAgentsBashToolConfig.builder()
-                                .enabled(true)
-                                .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                )
-                                .build()
-                        )
+                        .configs(listOf())
                         .defaultConfig(
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
@@ -142,40 +104,7 @@ internal class BetaManagedAgentsAgentTest {
                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                     .build()
             )
-        assertThat(betaManagedAgentsAgent.multiagent())
-            .contains(
-                BetaManagedAgentsMultiagent.ofMultiagent20261001(
-                    BetaManagedAgentsMultiagent20261001.builder()
-                        .advisor(BetaManagedAgentsMultiagentAdvisorDisabled.builder().build())
-                        .subagents(
-                            BetaManagedAgentsMultiagentSubagentsEnabled.builder()
-                                .inlineAgents(
-                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
-                                )
-                                .addPredefinedAgent(
-                                    BetaManagedAgentsAgentReference.builder()
-                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                        .version(1)
-                                        .build()
-                                )
-                                .build()
-                        )
-                        .workflows(
-                            BetaManagedAgentsMultiagentWorkflowsEnabled.builder()
-                                .inlineAgents(
-                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
-                                )
-                                .addPredefinedAgent(
-                                    BetaManagedAgentsAgentReference.builder()
-                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                        .version(1)
-                                        .build()
-                                )
-                                .build()
-                        )
-                        .build()
-                )
-            )
+        assertThat(betaManagedAgentsAgent.multiagent()).isEmpty
         assertThat(betaManagedAgentsAgent.name()).isEqualTo("My First Agent")
         assertThat(betaManagedAgentsAgent.skills())
             .containsExactly(
@@ -197,14 +126,7 @@ internal class BetaManagedAgentsAgentTest {
             .containsExactly(
                 BetaManagedAgentsAgent.Tool.ofAgentToolset20260401(
                     BetaManagedAgentsAgentToolset20260401.builder()
-                        .addConfig(
-                            BetaManagedAgentsBashToolConfig.builder()
-                                .enabled(true)
-                                .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                )
-                                .build()
-                        )
+                        .configs(listOf())
                         .defaultConfig(
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
@@ -252,37 +174,7 @@ internal class BetaManagedAgentsAgentTest {
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                         .build()
                 )
-                .multiagent(
-                    BetaManagedAgentsMultiagent20261001.builder()
-                        .advisor(BetaManagedAgentsMultiagentAdvisorDisabled.builder().build())
-                        .subagents(
-                            BetaManagedAgentsMultiagentSubagentsEnabled.builder()
-                                .inlineAgents(
-                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
-                                )
-                                .addPredefinedAgent(
-                                    BetaManagedAgentsAgentReference.builder()
-                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                        .version(1)
-                                        .build()
-                                )
-                                .build()
-                        )
-                        .workflows(
-                            BetaManagedAgentsMultiagentWorkflowsEnabled.builder()
-                                .inlineAgents(
-                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
-                                )
-                                .addPredefinedAgent(
-                                    BetaManagedAgentsAgentReference.builder()
-                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                        .version(1)
-                                        .build()
-                                )
-                                .build()
-                        )
-                        .build()
-                )
+                .multiagent(null)
                 .name("My First Agent")
                 .addSkill(
                     BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
@@ -298,14 +190,7 @@ internal class BetaManagedAgentsAgentTest {
                 )
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401.builder()
-                        .addConfig(
-                            BetaManagedAgentsBashToolConfig.builder()
-                                .enabled(true)
-                                .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                )
-                                .build()
-                        )
+                        .configs(listOf())
                         .defaultConfig(
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)

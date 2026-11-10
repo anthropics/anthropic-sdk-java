@@ -143,20 +143,40 @@ private constructor(
     }
 
     override fun authorizeRequest(request: HttpRequest): HttpRequest {
+        val escapedRequest = escapeModelSemicolons(request)
+
         // Authorization already provided (e.g. by an interceptor) wins over backend credentials.
-        if (request.headers.names().contains(HEADER_AUTHORIZATION)) {
-            return request
+        if (escapedRequest.headers.names().contains(HEADER_AUTHORIZATION)) {
+            return escapedRequest
         }
 
         googleCredentials.refreshIfExpired()
 
-        return request
+        return escapedRequest
             .toBuilder()
             .putHeader(HEADER_AUTHORIZATION, "Bearer ${googleCredentials.accessToken.tokenValue}")
             .build()
     }
 
     override fun close() {}
+
+    // A server that drops ";" and the rest of a path segment would drop the method name after the
+    // model. Only the resolved URL can hold "%3B": the "%" of a path segment is sent as "%25".
+    private fun escapeModelSemicolons(request: HttpRequest): HttpRequest {
+        val url = request.baseUrl
+        val path = url.substringBefore('?').substringBefore('#')
+        val endpoint = path.substringAfterLast('/')
+
+        if (';' !in endpoint) {
+            return request
+        }
+
+        val escapedEndpoint = endpoint.replace(";", "%3B")
+        return request
+            .toBuilder()
+            .baseUrl(url.replaceRange(path.length - endpoint.length, path.length, escapedEndpoint))
+            .build()
+    }
 
     /**
      * A builder for a [VertexBackend] used to connect an Anthropic client to an Anthropic model on

@@ -4,11 +4,8 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
-import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
-import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsEffortLow
 import com.anthropic.models.beta.agents.BetaManagedAgentsExecutionIdentity
-import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
@@ -26,12 +23,7 @@ internal class BetaManagedAgentsInlineAgentTest {
                 .executionIdentity(
                     BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
                 )
-                .addMcpServer(
-                    BetaManagedAgentsMcpServerUrlDefinition.builder()
-                        .name("example-mcp")
-                        .url("https://example-server.modelcontextprotocol.io/sse")
-                        .build()
-                )
+                .mcpServers(listOf())
                 .model(
                     BetaManagedAgentsModelConfig.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
@@ -41,20 +33,11 @@ internal class BetaManagedAgentsInlineAgentTest {
                         .build()
                 )
                 .name("pdf-reader-3")
-                .addSkill(
-                    BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
-                )
+                .skills(listOf())
                 .system("You extract tables precisely. Output CSV only.")
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401.builder()
-                        .addConfig(
-                            BetaManagedAgentsBashToolConfig.builder()
-                                .enabled(true)
-                                .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                )
-                                .build()
-                        )
+                        .configs(listOf())
                         .defaultConfig(
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
@@ -74,13 +57,7 @@ internal class BetaManagedAgentsInlineAgentTest {
                     BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
                 )
             )
-        assertThat(betaManagedAgentsInlineAgent.mcpServers())
-            .containsExactly(
-                BetaManagedAgentsMcpServerUrlDefinition.builder()
-                    .name("example-mcp")
-                    .url("https://example-server.modelcontextprotocol.io/sse")
-                    .build()
-            )
+        assertThat(betaManagedAgentsInlineAgent.mcpServers()).containsExactly()
         assertThat(betaManagedAgentsInlineAgent.model())
             .isEqualTo(
                 BetaManagedAgentsModelConfig.builder()
@@ -91,26 +68,14 @@ internal class BetaManagedAgentsInlineAgentTest {
                     .build()
             )
         assertThat(betaManagedAgentsInlineAgent.name()).isEqualTo("pdf-reader-3")
-        assertThat(betaManagedAgentsInlineAgent.skills())
-            .containsExactly(
-                BetaManagedAgentsInlineAgent.Skill.ofAnthropic(
-                    BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
-                )
-            )
+        assertThat(betaManagedAgentsInlineAgent.skills()).containsExactly()
         assertThat(betaManagedAgentsInlineAgent.system())
             .contains("You extract tables precisely. Output CSV only.")
         assertThat(betaManagedAgentsInlineAgent.tools())
             .containsExactly(
                 BetaManagedAgentsInlineAgent.Tool.ofAgentToolset20260401(
                     BetaManagedAgentsAgentToolset20260401.builder()
-                        .addConfig(
-                            BetaManagedAgentsBashToolConfig.builder()
-                                .enabled(true)
-                                .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                )
-                                .build()
-                        )
+                        .configs(listOf())
                         .defaultConfig(
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)
@@ -133,12 +98,7 @@ internal class BetaManagedAgentsInlineAgentTest {
                 .executionIdentity(
                     BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
                 )
-                .addMcpServer(
-                    BetaManagedAgentsMcpServerUrlDefinition.builder()
-                        .name("example-mcp")
-                        .url("https://example-server.modelcontextprotocol.io/sse")
-                        .build()
-                )
+                .mcpServers(listOf())
                 .model(
                     BetaManagedAgentsModelConfig.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
@@ -148,20 +108,11 @@ internal class BetaManagedAgentsInlineAgentTest {
                         .build()
                 )
                 .name("pdf-reader-3")
-                .addSkill(
-                    BetaManagedAgentsAnthropicSkill.builder().skillId("xlsx").version("1").build()
-                )
+                .skills(listOf())
                 .system("You extract tables precisely. Output CSV only.")
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401.builder()
-                        .addConfig(
-                            BetaManagedAgentsBashToolConfig.builder()
-                                .enabled(true)
-                                .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                )
-                                .build()
-                        )
+                        .configs(listOf())
                         .defaultConfig(
                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                 .enabled(true)

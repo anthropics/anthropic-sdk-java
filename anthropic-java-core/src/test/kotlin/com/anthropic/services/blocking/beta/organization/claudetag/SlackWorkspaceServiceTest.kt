@@ -4,6 +4,7 @@ import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagGuestPolicyAllow
+import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagReplyModeAutomatic
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagSettingsUpdate
 import com.anthropic.models.beta.organization.claudetag.slackworkspaces.SlackWorkspaceRetrieveParams
 import com.anthropic.models.beta.organization.claudetag.slackworkspaces.SlackWorkspaceUpdateParams
@@ -57,6 +58,7 @@ internal class SlackWorkspaceServiceTest {
                             .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                             .instructions("instructions")
                             .model("x")
+                            .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                             .build()
                     )
                     .build()

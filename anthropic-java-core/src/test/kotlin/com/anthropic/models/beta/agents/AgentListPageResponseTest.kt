@@ -41,41 +41,7 @@ internal class AgentListPageResponseTest {
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
-                        .multiagent(
-                            BetaManagedAgentsMultiagent20261001.builder()
-                                .advisor(
-                                    BetaManagedAgentsMultiagentAdvisorDisabled.builder().build()
-                                )
-                                .subagents(
-                                    BetaManagedAgentsMultiagentSubagentsEnabled.builder()
-                                        .inlineAgents(
-                                            BetaManagedAgentsMultiagentInlineAgentsEnabled.builder()
-                                                .build()
-                                        )
-                                        .addPredefinedAgent(
-                                            BetaManagedAgentsAgentReference.builder()
-                                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                                .version(1)
-                                                .build()
-                                        )
-                                        .build()
-                                )
-                                .workflows(
-                                    BetaManagedAgentsMultiagentWorkflowsEnabled.builder()
-                                        .inlineAgents(
-                                            BetaManagedAgentsMultiagentInlineAgentsEnabled.builder()
-                                                .build()
-                                        )
-                                        .addPredefinedAgent(
-                                            BetaManagedAgentsAgentReference.builder()
-                                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                                .version(1)
-                                                .build()
-                                        )
-                                        .build()
-                                )
-                                .build()
-                        )
+                        .multiagent(null)
                         .name("My First Agent")
                         .addSkill(
                             BetaManagedAgentsAnthropicSkill.builder()
@@ -94,14 +60,7 @@ internal class AgentListPageResponseTest {
                         )
                         .addTool(
                             BetaManagedAgentsAgentToolset20260401.builder()
-                                .addConfig(
-                                    BetaManagedAgentsBashToolConfig.builder()
-                                        .enabled(true)
-                                        .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                        )
-                                        .build()
-                                )
+                                .configs(listOf())
                                 .defaultConfig(
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
@@ -148,39 +107,7 @@ internal class AgentListPageResponseTest {
                             .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                             .build()
                     )
-                    .multiagent(
-                        BetaManagedAgentsMultiagent20261001.builder()
-                            .advisor(BetaManagedAgentsMultiagentAdvisorDisabled.builder().build())
-                            .subagents(
-                                BetaManagedAgentsMultiagentSubagentsEnabled.builder()
-                                    .inlineAgents(
-                                        BetaManagedAgentsMultiagentInlineAgentsEnabled.builder()
-                                            .build()
-                                    )
-                                    .addPredefinedAgent(
-                                        BetaManagedAgentsAgentReference.builder()
-                                            .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                            .version(1)
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                            .workflows(
-                                BetaManagedAgentsMultiagentWorkflowsEnabled.builder()
-                                    .inlineAgents(
-                                        BetaManagedAgentsMultiagentInlineAgentsEnabled.builder()
-                                            .build()
-                                    )
-                                    .addPredefinedAgent(
-                                        BetaManagedAgentsAgentReference.builder()
-                                            .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                            .version(1)
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                            .build()
-                    )
+                    .multiagent(null)
                     .name("My First Agent")
                     .addSkill(
                         BetaManagedAgentsAnthropicSkill.builder()
@@ -199,14 +126,7 @@ internal class AgentListPageResponseTest {
                     )
                     .addTool(
                         BetaManagedAgentsAgentToolset20260401.builder()
-                            .addConfig(
-                                BetaManagedAgentsBashToolConfig.builder()
-                                    .enabled(true)
-                                    .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                    )
-                                    .build()
-                            )
+                            .configs(listOf())
                             .defaultConfig(
                                 BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                     .enabled(true)
@@ -257,41 +177,7 @@ internal class AgentListPageResponseTest {
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
-                        .multiagent(
-                            BetaManagedAgentsMultiagent20261001.builder()
-                                .advisor(
-                                    BetaManagedAgentsMultiagentAdvisorDisabled.builder().build()
-                                )
-                                .subagents(
-                                    BetaManagedAgentsMultiagentSubagentsEnabled.builder()
-                                        .inlineAgents(
-                                            BetaManagedAgentsMultiagentInlineAgentsEnabled.builder()
-                                                .build()
-                                        )
-                                        .addPredefinedAgent(
-                                            BetaManagedAgentsAgentReference.builder()
-                                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                                .version(1)
-                                                .build()
-                                        )
-                                        .build()
-                                )
-                                .workflows(
-                                    BetaManagedAgentsMultiagentWorkflowsEnabled.builder()
-                                        .inlineAgents(
-                                            BetaManagedAgentsMultiagentInlineAgentsEnabled.builder()
-                                                .build()
-                                        )
-                                        .addPredefinedAgent(
-                                            BetaManagedAgentsAgentReference.builder()
-                                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                                .version(1)
-                                                .build()
-                                        )
-                                        .build()
-                                )
-                                .build()
-                        )
+                        .multiagent(null)
                         .name("My First Agent")
                         .addSkill(
                             BetaManagedAgentsAnthropicSkill.builder()
@@ -310,14 +196,7 @@ internal class AgentListPageResponseTest {
                         )
                         .addTool(
                             BetaManagedAgentsAgentToolset20260401.builder()
-                                .addConfig(
-                                    BetaManagedAgentsBashToolConfig.builder()
-                                        .enabled(true)
-                                        .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                        )
-                                        .build()
-                                )
+                                .configs(listOf())
                                 .defaultConfig(
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)

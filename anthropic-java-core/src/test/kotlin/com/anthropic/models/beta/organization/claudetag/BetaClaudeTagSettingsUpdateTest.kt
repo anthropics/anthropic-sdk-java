@@ -16,6 +16,7 @@ internal class BetaClaudeTagSettingsUpdateTest {
                 .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                 .instructions("instructions")
                 .model("x")
+                .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                 .build()
 
         assertThat(betaClaudeTagSettingsUpdate.enabled()).contains(true)
@@ -26,6 +27,12 @@ internal class BetaClaudeTagSettingsUpdateTest {
             )
         assertThat(betaClaudeTagSettingsUpdate.instructions()).contains("instructions")
         assertThat(betaClaudeTagSettingsUpdate.model()).contains("x")
+        assertThat(betaClaudeTagSettingsUpdate.replyMode())
+            .contains(
+                BetaClaudeTagReplyMode.ofAutomatic(
+                    BetaClaudeTagReplyModeAutomatic.builder().build()
+                )
+            )
     }
 
     @Test
@@ -38,6 +45,7 @@ internal class BetaClaudeTagSettingsUpdateTest {
                 .guestPolicy(BetaClaudeTagGuestPolicyAllow.builder().build())
                 .instructions("instructions")
                 .model("x")
+                .replyMode(BetaClaudeTagReplyModeAutomatic.builder().build())
                 .build()
 
         val roundtrippedBetaClaudeTagSettingsUpdate =

@@ -26,6 +26,7 @@ private constructor(
     private val guestPolicy: JsonField<BetaClaudeTagGuestPolicy>,
     private val instructions: JsonField<String>,
     private val model: JsonField<String>,
+    private val replyMode: JsonField<BetaClaudeTagReplyMode>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -42,7 +43,10 @@ private constructor(
         @ExcludeMissing
         instructions: JsonField<String> = JsonMissing.of(),
         @JsonProperty("model") @ExcludeMissing model: JsonField<String> = JsonMissing.of(),
-    ) : this(enabled, environmentId, guestPolicy, instructions, model, mutableMapOf())
+        @JsonProperty("reply_mode")
+        @ExcludeMissing
+        replyMode: JsonField<BetaClaudeTagReplyMode> = JsonMissing.of(),
+    ) : this(enabled, environmentId, guestPolicy, instructions, model, replyMode, mutableMapOf())
 
     /**
      * Whether Claude is on. `true` on a channel turns Claude on in it even when its workspace
@@ -55,7 +59,8 @@ private constructor(
 
     /**
      * The environment Claude's sessions run in: the identifier of an active environment of the
-     * organization, starting with `env_`. Null clears it.
+     * organization, starting with `env_`, or of a self-hosted runner pool of the organization that
+     * every member may use, starting with `ccpool_`. Null clears it.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -87,6 +92,19 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun model(): Optional<String> = model.getOptional("model")
+
+    /**
+     * How Claude takes part in the channel: `automatic`, `mention_only`, `always_awake` or
+     * `thread`. Only a channel takes one: an update of a workspace that sends a value is refused,
+     * and one that sends null changes nothing. Null never clears it: sent to a channel that stores
+     * none it changes nothing, and sent to a channel that stores one it is refused, because a
+     * stored reply mode can be changed but never cleared; a caller that wants Claude's default
+     * behavior sends `automatic`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun replyMode(): Optional<BetaClaudeTagReplyMode> = replyMode.getOptional("reply_mode")
 
     /**
      * Returns the raw JSON value of [enabled].
@@ -129,6 +147,15 @@ private constructor(
      */
     @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<String> = model
 
+    /**
+     * Returns the raw JSON value of [replyMode].
+     *
+     * Unlike [replyMode], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("reply_mode")
+    @ExcludeMissing
+    fun _replyMode(): JsonField<BetaClaudeTagReplyMode> = replyMode
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -157,6 +184,7 @@ private constructor(
         private var guestPolicy: JsonField<BetaClaudeTagGuestPolicy> = JsonMissing.of()
         private var instructions: JsonField<String> = JsonMissing.of()
         private var model: JsonField<String> = JsonMissing.of()
+        private var replyMode: JsonField<BetaClaudeTagReplyMode> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -166,6 +194,7 @@ private constructor(
             guestPolicy = betaClaudeTagSettingsCreate.guestPolicy
             instructions = betaClaudeTagSettingsCreate.instructions
             model = betaClaudeTagSettingsCreate.model
+            replyMode = betaClaudeTagSettingsCreate.replyMode
             additionalProperties = betaClaudeTagSettingsCreate.additionalProperties.toMutableMap()
         }
 
@@ -195,7 +224,8 @@ private constructor(
 
         /**
          * The environment Claude's sessions run in: the identifier of an active environment of the
-         * organization, starting with `env_`. Null clears it.
+         * organization, starting with `env_`, or of a self-hosted runner pool of the organization
+         * that every member may use, starting with `ccpool_`. Null clears it.
          */
         fun environmentId(environmentId: String?) =
             environmentId(JsonField.ofNullable(environmentId))
@@ -286,6 +316,52 @@ private constructor(
          */
         fun model(model: JsonField<String>) = apply { this.model = model }
 
+        /**
+         * How Claude takes part in the channel: `automatic`, `mention_only`, `always_awake` or
+         * `thread`. Only a channel takes one: an update of a workspace that sends a value is
+         * refused, and one that sends null changes nothing. Null never clears it: sent to a channel
+         * that stores none it changes nothing, and sent to a channel that stores one it is refused,
+         * because a stored reply mode can be changed but never cleared; a caller that wants
+         * Claude's default behavior sends `automatic`.
+         */
+        fun replyMode(replyMode: BetaClaudeTagReplyMode?) =
+            replyMode(JsonField.ofNullable(replyMode))
+
+        /** Alias for calling [Builder.replyMode] with `replyMode.orElse(null)`. */
+        fun replyMode(replyMode: Optional<BetaClaudeTagReplyMode>) =
+            replyMode(replyMode.getOrNull())
+
+        /**
+         * Sets [Builder.replyMode] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.replyMode] with a well-typed [BetaClaudeTagReplyMode]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun replyMode(replyMode: JsonField<BetaClaudeTagReplyMode>) = apply {
+            this.replyMode = replyMode
+        }
+
+        /** Alias for calling [replyMode] with `BetaClaudeTagReplyMode.ofAutomatic(automatic)`. */
+        fun replyMode(automatic: BetaClaudeTagReplyModeAutomatic) =
+            replyMode(BetaClaudeTagReplyMode.ofAutomatic(automatic))
+
+        /**
+         * Alias for calling [replyMode] with `BetaClaudeTagReplyMode.ofMentionOnly(mentionOnly)`.
+         */
+        fun replyMode(mentionOnly: BetaClaudeTagReplyModeMentionOnly) =
+            replyMode(BetaClaudeTagReplyMode.ofMentionOnly(mentionOnly))
+
+        /**
+         * Alias for calling [replyMode] with `BetaClaudeTagReplyMode.ofAlwaysAwake(alwaysAwake)`.
+         */
+        fun replyMode(alwaysAwake: BetaClaudeTagReplyModeAlwaysAwake) =
+            replyMode(BetaClaudeTagReplyMode.ofAlwaysAwake(alwaysAwake))
+
+        /** Alias for calling [replyMode] with `BetaClaudeTagReplyMode.ofThread(thread)`. */
+        fun replyMode(thread: BetaClaudeTagReplyModeThread) =
+            replyMode(BetaClaudeTagReplyMode.ofThread(thread))
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -317,6 +393,7 @@ private constructor(
                 guestPolicy,
                 instructions,
                 model,
+                replyMode,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -341,6 +418,7 @@ private constructor(
         guestPolicy().ifPresent { it.validate() }
         instructions()
         model()
+        replyMode().ifPresent { it.validate() }
         validated = true
     }
 
@@ -363,7 +441,8 @@ private constructor(
             (if (environmentId.asKnown().isPresent) 1 else 0) +
             (guestPolicy.asKnown().getOrNull()?.validity() ?: 0) +
             (if (instructions.asKnown().isPresent) 1 else 0) +
-            (if (model.asKnown().isPresent) 1 else 0)
+            (if (model.asKnown().isPresent) 1 else 0) +
+            (replyMode.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -376,15 +455,24 @@ private constructor(
             guestPolicy == other.guestPolicy &&
             instructions == other.instructions &&
             model == other.model &&
+            replyMode == other.replyMode &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(enabled, environmentId, guestPolicy, instructions, model, additionalProperties)
+        Objects.hash(
+            enabled,
+            environmentId,
+            guestPolicy,
+            instructions,
+            model,
+            replyMode,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaClaudeTagSettingsCreate{enabled=$enabled, environmentId=$environmentId, guestPolicy=$guestPolicy, instructions=$instructions, model=$model, additionalProperties=$additionalProperties}"
+        "BetaClaudeTagSettingsCreate{enabled=$enabled, environmentId=$environmentId, guestPolicy=$guestPolicy, instructions=$instructions, model=$model, replyMode=$replyMode, additionalProperties=$additionalProperties}"
 }

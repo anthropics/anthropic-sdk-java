@@ -29,19 +29,7 @@ internal class BetaMessageTest {
                         .build()
                 )
                 .addContent(
-                    BetaTextBlock.builder()
-                        .addCitation(
-                            BetaCitationCharLocation.builder()
-                                .citedText("The grass is green. The sky is blue.")
-                                .documentIndex(0L)
-                                .documentTitle("My Document")
-                                .endCharIndex(0L)
-                                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                .startCharIndex(0L)
-                                .build()
-                        )
-                        .text("Hi! My name is Claude.")
-                        .build()
+                    BetaTextBlock.builder().citations(null).text("Hi! My name is Claude.").build()
                 )
                 .contextManagement(
                     BetaContextManagementResponse.builder()
@@ -53,19 +41,9 @@ internal class BetaMessageTest {
                         )
                         .build()
                 )
-                .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
+                .diagnostics(null)
                 .model(Model.CLAUDE_OPUS_5_5)
-                .stopDetails(
-                    BetaRefusalStopDetails.builder()
-                        .category(BetaRefusalStopDetails.Category.CYBER)
-                        .explanation(
-                            "This request was declined because it conflicts with Anthropic's Usage Policy."
-                        )
-                        .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
-                        .fallbackHasPrefillClaim(true)
-                        .recommendedModel("claude-opus-4-8")
-                        .build()
-                )
+                .stopDetails(null)
                 .stopReason(BetaStopReason.END_TURN)
                 .stopSequence(null)
                 .usage(
@@ -140,19 +118,7 @@ internal class BetaMessageTest {
         assertThat(betaMessage.content())
             .containsExactly(
                 BetaContentBlock.ofText(
-                    BetaTextBlock.builder()
-                        .addCitation(
-                            BetaCitationCharLocation.builder()
-                                .citedText("The grass is green. The sky is blue.")
-                                .documentIndex(0L)
-                                .documentTitle("My Document")
-                                .endCharIndex(0L)
-                                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                .startCharIndex(0L)
-                                .build()
-                        )
-                        .text("Hi! My name is Claude.")
-                        .build()
+                    BetaTextBlock.builder().citations(null).text("Hi! My name is Claude.").build()
                 )
             )
         assertThat(betaMessage.contextManagement())
@@ -166,21 +132,9 @@ internal class BetaMessageTest {
                     )
                     .build()
             )
-        assertThat(betaMessage.diagnostics())
-            .contains(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
+        assertThat(betaMessage.diagnostics()).isEmpty
         assertThat(betaMessage.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
-        assertThat(betaMessage.stopDetails())
-            .contains(
-                BetaRefusalStopDetails.builder()
-                    .category(BetaRefusalStopDetails.Category.CYBER)
-                    .explanation(
-                        "This request was declined because it conflicts with Anthropic's Usage Policy."
-                    )
-                    .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
-                    .fallbackHasPrefillClaim(true)
-                    .recommendedModel("claude-opus-4-8")
-                    .build()
-            )
+        assertThat(betaMessage.stopDetails()).isEmpty
         assertThat(betaMessage.stopReason()).contains(BetaStopReason.END_TURN)
         assertThat(betaMessage.stopSequence()).isEmpty
         assertThat(betaMessage.usage())
@@ -260,19 +214,7 @@ internal class BetaMessageTest {
                         .build()
                 )
                 .addContent(
-                    BetaTextBlock.builder()
-                        .addCitation(
-                            BetaCitationCharLocation.builder()
-                                .citedText("The grass is green. The sky is blue.")
-                                .documentIndex(0L)
-                                .documentTitle("My Document")
-                                .endCharIndex(0L)
-                                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                .startCharIndex(0L)
-                                .build()
-                        )
-                        .text("Hi! My name is Claude.")
-                        .build()
+                    BetaTextBlock.builder().citations(null).text("Hi! My name is Claude.").build()
                 )
                 .contextManagement(
                     BetaContextManagementResponse.builder()
@@ -284,19 +226,9 @@ internal class BetaMessageTest {
                         )
                         .build()
                 )
-                .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
+                .diagnostics(null)
                 .model(Model.CLAUDE_OPUS_5_5)
-                .stopDetails(
-                    BetaRefusalStopDetails.builder()
-                        .category(BetaRefusalStopDetails.Category.CYBER)
-                        .explanation(
-                            "This request was declined because it conflicts with Anthropic's Usage Policy."
-                        )
-                        .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
-                        .fallbackHasPrefillClaim(true)
-                        .recommendedModel("claude-opus-4-8")
-                        .build()
-                )
+                .stopDetails(null)
                 .stopReason(BetaStopReason.END_TURN)
                 .stopSequence(null)
                 .usage(
@@ -393,19 +325,7 @@ internal class BetaMessageTest {
                         .build()
                 )
                 .addContent(
-                    BetaTextBlock.builder()
-                        .addCitation(
-                            BetaCitationCharLocation.builder()
-                                .citedText("The grass is green. The sky is blue.")
-                                .documentIndex(0L)
-                                .documentTitle("My Document")
-                                .endCharIndex(0L)
-                                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                .startCharIndex(0L)
-                                .build()
-                        )
-                        .text("Hi! My name is Claude.")
-                        .build()
+                    BetaTextBlock.builder().citations(null).text("Hi! My name is Claude.").build()
                 )
                 .contextManagement(
                     BetaContextManagementResponse.builder()
@@ -417,19 +337,9 @@ internal class BetaMessageTest {
                         )
                         .build()
                 )
-                .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
+                .diagnostics(null)
                 .model(Model.CLAUDE_OPUS_5_5)
-                .stopDetails(
-                    BetaRefusalStopDetails.builder()
-                        .category(BetaRefusalStopDetails.Category.CYBER)
-                        .explanation(
-                            "This request was declined because it conflicts with Anthropic's Usage Policy."
-                        )
-                        .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
-                        .fallbackHasPrefillClaim(true)
-                        .recommendedModel("claude-opus-4-8")
-                        .build()
-                )
+                .stopDetails(null)
                 .stopReason(BetaStopReason.END_TURN)
                 .stopSequence(null)
                 .usage(

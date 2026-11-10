@@ -32,6 +32,7 @@ private constructor(
     private val guestPolicy: JsonField<BetaClaudeTagSettingSource>,
     private val instructions: JsonField<List<BetaClaudeTagSettingSource>>,
     private val model: JsonField<BetaClaudeTagSettingSource>,
+    private val replyMode: JsonField<BetaClaudeTagSettingSource>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -52,7 +53,10 @@ private constructor(
         @JsonProperty("model")
         @ExcludeMissing
         model: JsonField<BetaClaudeTagSettingSource> = JsonMissing.of(),
-    ) : this(enabled, environmentId, guestPolicy, instructions, model, mutableMapOf())
+        @JsonProperty("reply_mode")
+        @ExcludeMissing
+        replyMode: JsonField<BetaClaudeTagSettingSource> = JsonMissing.of(),
+    ) : this(enabled, environmentId, guestPolicy, instructions, model, replyMode, mutableMapOf())
 
     /**
      * The settings level `enabled` comes from.
@@ -96,6 +100,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun model(): Optional<BetaClaudeTagSettingSource> = model.getOptional("model")
+
+    /**
+     * The settings level `reply_mode` comes from: the channel when it stores one. With
+     * `include_inherited=true` and no stored mode it is `default`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun replyMode(): Optional<BetaClaudeTagSettingSource> = replyMode.getOptional("reply_mode")
 
     /**
      * Returns the raw JSON value of [enabled].
@@ -142,6 +155,15 @@ private constructor(
     @ExcludeMissing
     fun _model(): JsonField<BetaClaudeTagSettingSource> = model
 
+    /**
+     * Returns the raw JSON value of [replyMode].
+     *
+     * Unlike [replyMode], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("reply_mode")
+    @ExcludeMissing
+    fun _replyMode(): JsonField<BetaClaudeTagSettingSource> = replyMode
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -166,6 +188,7 @@ private constructor(
          * .guestPolicy()
          * .instructions()
          * .model()
+         * .replyMode()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -179,6 +202,7 @@ private constructor(
         private var guestPolicy: JsonField<BetaClaudeTagSettingSource>? = null
         private var instructions: JsonField<MutableList<BetaClaudeTagSettingSource>>? = null
         private var model: JsonField<BetaClaudeTagSettingSource>? = null
+        private var replyMode: JsonField<BetaClaudeTagSettingSource>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -191,6 +215,7 @@ private constructor(
                     .map { it.toMutableList() }
                     .takeUnless { it.isMissing() }
             model = betaClaudeTagSettingSources.model
+            replyMode = betaClaudeTagSettingSources.replyMode
             additionalProperties = betaClaudeTagSettingSources.additionalProperties.toMutableMap()
         }
 
@@ -775,6 +800,123 @@ private constructor(
         fun slackGridChannelModel(slack: BetaClaudeTagSlackChannelIdentifiers) =
             model(BetaClaudeTagSlackGridChannelSettingSource.builder().slack(slack).build())
 
+        /**
+         * The settings level `reply_mode` comes from: the channel when it stores one. With
+         * `include_inherited=true` and no stored mode it is `default`.
+         */
+        fun replyMode(replyMode: BetaClaudeTagSettingSource?) =
+            replyMode(JsonField.ofNullable(replyMode))
+
+        /** Alias for calling [Builder.replyMode] with `replyMode.orElse(null)`. */
+        fun replyMode(replyMode: Optional<BetaClaudeTagSettingSource>) =
+            replyMode(replyMode.getOrNull())
+
+        /**
+         * Sets [Builder.replyMode] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.replyMode] with a well-typed
+         * [BetaClaudeTagSettingSource] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun replyMode(replyMode: JsonField<BetaClaudeTagSettingSource>) = apply {
+            this.replyMode = replyMode
+        }
+
+        /**
+         * Alias for calling [replyMode] with
+         * `BetaClaudeTagSettingSource.ofSlackChannel(slackChannel)`.
+         */
+        fun replyMode(slackChannel: BetaClaudeTagSlackChannelSettingSource) =
+            replyMode(BetaClaudeTagSettingSource.ofSlackChannel(slackChannel))
+
+        /**
+         * Alias for calling [replyMode] with the following:
+         * ```java
+         * BetaClaudeTagSlackChannelSettingSource.builder()
+         *     .slackChannelId(slackChannelId)
+         *     .build()
+         * ```
+         */
+        fun slackChannelReplyMode(slackChannelId: String) =
+            replyMode(
+                BetaClaudeTagSlackChannelSettingSource.builder()
+                    .slackChannelId(slackChannelId)
+                    .build()
+            )
+
+        /**
+         * Alias for calling [replyMode] with
+         * `BetaClaudeTagSettingSource.ofSlackWorkspace(slackWorkspace)`.
+         */
+        fun replyMode(slackWorkspace: BetaClaudeTagSlackWorkspaceSettingSource) =
+            replyMode(BetaClaudeTagSettingSource.ofSlackWorkspace(slackWorkspace))
+
+        /**
+         * Alias for calling [replyMode] with the following:
+         * ```java
+         * BetaClaudeTagSlackWorkspaceSettingSource.builder()
+         *     .slackWorkspaceId(slackWorkspaceId)
+         *     .build()
+         * ```
+         */
+        fun slackWorkspaceReplyMode(slackWorkspaceId: String) =
+            replyMode(
+                BetaClaudeTagSlackWorkspaceSettingSource.builder()
+                    .slackWorkspaceId(slackWorkspaceId)
+                    .build()
+            )
+
+        /**
+         * Alias for calling [replyMode] with
+         * `BetaClaudeTagSettingSource.ofSlackParentChannel(slackParentChannel)`.
+         */
+        fun replyMode(slackParentChannel: BetaClaudeTagSlackParentChannelSettingSource) =
+            replyMode(BetaClaudeTagSettingSource.ofSlackParentChannel(slackParentChannel))
+
+        /**
+         * Alias for calling [replyMode] with the following:
+         * ```java
+         * BetaClaudeTagSlackParentChannelSettingSource.builder()
+         *     .slackChannelId(slackChannelId)
+         *     .build()
+         * ```
+         */
+        fun slackParentChannelReplyMode(slackChannelId: String) =
+            replyMode(
+                BetaClaudeTagSlackParentChannelSettingSource.builder()
+                    .slackChannelId(slackChannelId)
+                    .build()
+            )
+
+        /**
+         * Alias for calling [replyMode] with
+         * `BetaClaudeTagSettingSource.ofSlackDefault(slackDefault)`.
+         */
+        fun replyMode(slackDefault: BetaClaudeTagSlackDefaultSettingSource) =
+            replyMode(BetaClaudeTagSettingSource.ofSlackDefault(slackDefault))
+
+        /** Alias for calling [replyMode] with `BetaClaudeTagSettingSource.ofDefault(default_)`. */
+        fun replyMode(default_: BetaClaudeTagDefaultSettingSource) =
+            replyMode(BetaClaudeTagSettingSource.ofDefault(default_))
+
+        /**
+         * Alias for calling [replyMode] with
+         * `BetaClaudeTagSettingSource.ofSlackGridChannel(slackGridChannel)`.
+         */
+        fun replyMode(slackGridChannel: BetaClaudeTagSlackGridChannelSettingSource) =
+            replyMode(BetaClaudeTagSettingSource.ofSlackGridChannel(slackGridChannel))
+
+        /**
+         * Alias for calling [replyMode] with the following:
+         * ```java
+         * BetaClaudeTagSlackGridChannelSettingSource.builder()
+         *     .slack(slack)
+         *     .build()
+         * ```
+         */
+        fun slackGridChannelReplyMode(slack: BetaClaudeTagSlackChannelIdentifiers) =
+            replyMode(BetaClaudeTagSlackGridChannelSettingSource.builder().slack(slack).build())
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -806,6 +948,7 @@ private constructor(
          * .guestPolicy()
          * .instructions()
          * .model()
+         * .replyMode()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -817,6 +960,7 @@ private constructor(
                 checkRequired("guestPolicy", guestPolicy),
                 checkRequired("instructions", instructions).map { it.toImmutable() },
                 checkRequired("model", model),
+                checkRequired("replyMode", replyMode),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -841,6 +985,7 @@ private constructor(
         guestPolicy().ifPresent { it.validate() }
         instructions().forEach { it.validate() }
         model().ifPresent { it.validate() }
+        replyMode().ifPresent { it.validate() }
         validated = true
     }
 
@@ -863,7 +1008,8 @@ private constructor(
             (environmentId.asKnown().getOrNull()?.validity() ?: 0) +
             (guestPolicy.asKnown().getOrNull()?.validity() ?: 0) +
             (instructions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (model.asKnown().getOrNull()?.validity() ?: 0)
+            (model.asKnown().getOrNull()?.validity() ?: 0) +
+            (replyMode.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -876,15 +1022,24 @@ private constructor(
             guestPolicy == other.guestPolicy &&
             instructions == other.instructions &&
             model == other.model &&
+            replyMode == other.replyMode &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(enabled, environmentId, guestPolicy, instructions, model, additionalProperties)
+        Objects.hash(
+            enabled,
+            environmentId,
+            guestPolicy,
+            instructions,
+            model,
+            replyMode,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaClaudeTagSettingSources{enabled=$enabled, environmentId=$environmentId, guestPolicy=$guestPolicy, instructions=$instructions, model=$model, additionalProperties=$additionalProperties}"
+        "BetaClaudeTagSettingSources{enabled=$enabled, environmentId=$environmentId, guestPolicy=$guestPolicy, instructions=$instructions, model=$model, replyMode=$replyMode, additionalProperties=$additionalProperties}"
 }
