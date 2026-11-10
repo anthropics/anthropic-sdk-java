@@ -4,4 +4,6 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-find . -name "*.kt" -not -path "./buildSrc/build/*" -print0 | xargs -0 -r ktfmt --kotlinlang-style "$@"
+# -s lets GNU xargs give one ktfmt process up to 1000000 bytes of paths. By default it splits the list at
+# 128 KiB, and each part starts a new JVM. macOS allows a command 1 MiB, and its xargs also splits at 5,000 files.
+find . -name "*.kt" -not -path "./buildSrc/build/*" -print0 | xargs -0 -r -s 1000000 ktfmt --kotlinlang-style "$@"
