@@ -59,7 +59,8 @@ private constructor(
 
     /**
      * The environment Claude's sessions run in: the identifier of an active environment of the
-     * organization, starting with `env_`. Null clears it.
+     * organization, starting with `env_`, or of a self-hosted runner pool of the organization that
+     * every member may use, starting with `ccpool_`. Null clears it.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -223,7 +224,8 @@ private constructor(
 
         /**
          * The environment Claude's sessions run in: the identifier of an active environment of the
-         * organization, starting with `env_`. Null clears it.
+         * organization, starting with `env_`, or of a self-hosted runner pool of the organization
+         * that every member may use, starting with `ccpool_`. Null clears it.
          */
         fun environmentId(environmentId: String?) =
             environmentId(JsonField.ofNullable(environmentId))
