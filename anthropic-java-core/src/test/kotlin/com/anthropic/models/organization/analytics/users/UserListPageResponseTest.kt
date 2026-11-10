@@ -6,6 +6,7 @@ import com.anthropic.models.organization.analytics.AnalyticsChatCoworkUnifiedMet
 import com.anthropic.models.organization.analytics.AnalyticsChatCoworkUnifiedSessionsMetrics
 import com.anthropic.models.organization.analytics.AnalyticsChatMetrics
 import com.anthropic.models.organization.analytics.AnalyticsClaudeCodeMetrics
+import com.anthropic.models.organization.analytics.AnalyticsClaudeTagMetrics
 import com.anthropic.models.organization.analytics.AnalyticsCoreCodeMetrics
 import com.anthropic.models.organization.analytics.AnalyticsCoworkMetrics
 import com.anthropic.models.organization.analytics.AnalyticsDesignMetrics
@@ -220,6 +221,12 @@ internal class UserListPageResponseTest {
                                 )
                                 .build()
                         )
+                        .claudeTagMetrics(
+                            AnalyticsClaudeTagMetrics.builder()
+                                .activeDayCount(0L)
+                                .activeMessageCount(0L)
+                                .build()
+                        )
                         .lastActivityDate(LocalDate.parse("2019-12-27"))
                         .rbacGroupId("rbac_group_id")
                         .rbacGroupName("rbac_group_name")
@@ -417,6 +424,12 @@ internal class UserListPageResponseTest {
                                     .writeToolCount(0L)
                                     .build()
                             )
+                            .build()
+                    )
+                    .claudeTagMetrics(
+                        AnalyticsClaudeTagMetrics.builder()
+                            .activeDayCount(0L)
+                            .activeMessageCount(0L)
                             .build()
                     )
                     .lastActivityDate(LocalDate.parse("2019-12-27"))
@@ -622,6 +635,12 @@ internal class UserListPageResponseTest {
                                         .writeToolCount(0L)
                                         .build()
                                 )
+                                .build()
+                        )
+                        .claudeTagMetrics(
+                            AnalyticsClaudeTagMetrics.builder()
+                                .activeDayCount(0L)
+                                .activeMessageCount(0L)
                                 .build()
                         )
                         .lastActivityDate(LocalDate.parse("2019-12-27"))

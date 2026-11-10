@@ -30,6 +30,7 @@ private constructor(
     private val user: JsonField<AnalyticsUser>,
     private val webSearchCount: JsonField<Long>,
     private val chatCoworkUnifiedMetrics: JsonField<AnalyticsChatCoworkUnifiedMetrics>,
+    private val claudeTagMetrics: JsonField<AnalyticsClaudeTagMetrics>,
     private val lastActivityDate: JsonField<LocalDate>,
     private val rbacGroupId: JsonField<String>,
     private val rbacGroupName: JsonField<String>,
@@ -66,6 +67,9 @@ private constructor(
         @JsonProperty("chat_cowork_unified_metrics")
         @ExcludeMissing
         chatCoworkUnifiedMetrics: JsonField<AnalyticsChatCoworkUnifiedMetrics> = JsonMissing.of(),
+        @JsonProperty("claude_tag_metrics")
+        @ExcludeMissing
+        claudeTagMetrics: JsonField<AnalyticsClaudeTagMetrics> = JsonMissing.of(),
         @JsonProperty("last_activity_date")
         @ExcludeMissing
         lastActivityDate: JsonField<LocalDate> = JsonMissing.of(),
@@ -86,6 +90,7 @@ private constructor(
         user,
         webSearchCount,
         chatCoworkUnifiedMetrics,
+        claudeTagMetrics,
         lastActivityDate,
         rbacGroupId,
         rbacGroupName,
@@ -177,6 +182,18 @@ private constructor(
      */
     fun chatCoworkUnifiedMetrics(): Optional<AnalyticsChatCoworkUnifiedMetrics> =
         chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
+
+    /**
+     * Claude Tag activity in Slack by a user who has linked a Claude account. Activity by Slack
+     * users who have not linked an account appears only in the `/summaries` Claude Tag counts, so
+     * these rows do not add up to those counts. Omitted from the response on deployments that do
+     * not offer Claude Tag reporting.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun claudeTagMetrics(): Optional<AnalyticsClaudeTagMetrics> =
+        claudeTagMetrics.getOptional("claude_tag_metrics")
 
     /**
      * Most recent UTC day (YYYY-MM-DD) on which the user had any counted activity, within the
@@ -306,6 +323,16 @@ private constructor(
         chatCoworkUnifiedMetrics
 
     /**
+     * Returns the raw JSON value of [claudeTagMetrics].
+     *
+     * Unlike [claudeTagMetrics], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("claude_tag_metrics")
+    @ExcludeMissing
+    fun _claudeTagMetrics(): JsonField<AnalyticsClaudeTagMetrics> = claudeTagMetrics
+
+    /**
      * Returns the raw JSON value of [lastActivityDate].
      *
      * Unlike [lastActivityDate], this method doesn't throw if the JSON field has an unexpected
@@ -380,6 +407,7 @@ private constructor(
         private var webSearchCount: JsonField<Long>? = null
         private var chatCoworkUnifiedMetrics: JsonField<AnalyticsChatCoworkUnifiedMetrics> =
             JsonMissing.of()
+        private var claudeTagMetrics: JsonField<AnalyticsClaudeTagMetrics> = JsonMissing.of()
         private var lastActivityDate: JsonField<LocalDate> = JsonMissing.of()
         private var rbacGroupId: JsonField<String> = JsonMissing.of()
         private var rbacGroupName: JsonField<String> = JsonMissing.of()
@@ -397,6 +425,7 @@ private constructor(
             user = analyticsUserActivity.user
             webSearchCount = analyticsUserActivity.webSearchCount
             chatCoworkUnifiedMetrics = analyticsUserActivity.chatCoworkUnifiedMetrics
+            claudeTagMetrics = analyticsUserActivity.claudeTagMetrics
             lastActivityDate = analyticsUserActivity.lastActivityDate
             rbacGroupId = analyticsUserActivity.rbacGroupId
             rbacGroupName = analyticsUserActivity.rbacGroupName
@@ -584,6 +613,30 @@ private constructor(
         ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
 
         /**
+         * Claude Tag activity in Slack by a user who has linked a Claude account. Activity by Slack
+         * users who have not linked an account appears only in the `/summaries` Claude Tag counts,
+         * so these rows do not add up to those counts. Omitted from the response on deployments
+         * that do not offer Claude Tag reporting.
+         */
+        fun claudeTagMetrics(claudeTagMetrics: AnalyticsClaudeTagMetrics?) =
+            claudeTagMetrics(JsonField.ofNullable(claudeTagMetrics))
+
+        /** Alias for calling [Builder.claudeTagMetrics] with `claudeTagMetrics.orElse(null)`. */
+        fun claudeTagMetrics(claudeTagMetrics: Optional<AnalyticsClaudeTagMetrics>) =
+            claudeTagMetrics(claudeTagMetrics.getOrNull())
+
+        /**
+         * Sets [Builder.claudeTagMetrics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.claudeTagMetrics] with a well-typed
+         * [AnalyticsClaudeTagMetrics] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun claudeTagMetrics(claudeTagMetrics: JsonField<AnalyticsClaudeTagMetrics>) = apply {
+            this.claudeTagMetrics = claudeTagMetrics
+        }
+
+        /**
          * Most recent UTC day (YYYY-MM-DD) on which the user had any counted activity, within the
          * requested window: equal to the requested `date` in single-day mode, and to the latest
          * active day from `starting_date` (inclusive) to `ending_date` (exclusive) in date-range
@@ -704,6 +757,7 @@ private constructor(
                 checkRequired("user", user),
                 checkRequired("webSearchCount", webSearchCount),
                 chatCoworkUnifiedMetrics,
+                claudeTagMetrics,
                 lastActivityDate,
                 rbacGroupId,
                 rbacGroupName,
@@ -736,6 +790,7 @@ private constructor(
         user().ifPresent { it.validate() }
         webSearchCount()
         chatCoworkUnifiedMetrics().ifPresent { it.validate() }
+        claudeTagMetrics().ifPresent { it.validate() }
         lastActivityDate()
         rbacGroupId()
         rbacGroupName()
@@ -767,6 +822,7 @@ private constructor(
             (user.asKnown().getOrNull()?.validity() ?: 0) +
             (if (webSearchCount.asKnown().isPresent) 1 else 0) +
             (chatCoworkUnifiedMetrics.asKnown().getOrNull()?.validity() ?: 0) +
+            (claudeTagMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (if (lastActivityDate.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupName.asKnown().isPresent) 1 else 0)
@@ -787,6 +843,7 @@ private constructor(
             user == other.user &&
             webSearchCount == other.webSearchCount &&
             chatCoworkUnifiedMetrics == other.chatCoworkUnifiedMetrics &&
+            claudeTagMetrics == other.claudeTagMetrics &&
             lastActivityDate == other.lastActivityDate &&
             rbacGroupId == other.rbacGroupId &&
             rbacGroupName == other.rbacGroupName &&
@@ -805,6 +862,7 @@ private constructor(
             user,
             webSearchCount,
             chatCoworkUnifiedMetrics,
+            claudeTagMetrics,
             lastActivityDate,
             rbacGroupId,
             rbacGroupName,
@@ -815,5 +873,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AnalyticsUserActivity{chatMetrics=$chatMetrics, claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, designMetrics=$designMetrics, distinctUserCount=$distinctUserCount, officeMetrics=$officeMetrics, scienceMetrics=$scienceMetrics, user=$user, webSearchCount=$webSearchCount, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, lastActivityDate=$lastActivityDate, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, additionalProperties=$additionalProperties}"
+        "AnalyticsUserActivity{chatMetrics=$chatMetrics, claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, designMetrics=$designMetrics, distinctUserCount=$distinctUserCount, officeMetrics=$officeMetrics, scienceMetrics=$scienceMetrics, user=$user, webSearchCount=$webSearchCount, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, claudeTagMetrics=$claudeTagMetrics, lastActivityDate=$lastActivityDate, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, additionalProperties=$additionalProperties}"
 }

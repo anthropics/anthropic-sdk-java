@@ -6,6 +6,7 @@ import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatCoworkU
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatCoworkUnifiedSessionsMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsClaudeCodeMetrics
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsClaudeTagMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsCoreCodeMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsCoworkMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsDesignMetrics
@@ -223,6 +224,12 @@ internal class UserListPageResponseTest {
                                 )
                                 .build()
                         )
+                        .claudeTagMetrics(
+                            BetaAnalyticsClaudeTagMetrics.builder()
+                                .activeDayCount(0L)
+                                .activeMessageCount(0L)
+                                .build()
+                        )
                         .lastActivityDate(LocalDate.parse("2019-12-27"))
                         .rbacGroupId("rbac_group_id")
                         .rbacGroupName("rbac_group_name")
@@ -422,6 +429,12 @@ internal class UserListPageResponseTest {
                                     .writeToolCount(0L)
                                     .build()
                             )
+                            .build()
+                    )
+                    .claudeTagMetrics(
+                        BetaAnalyticsClaudeTagMetrics.builder()
+                            .activeDayCount(0L)
+                            .activeMessageCount(0L)
                             .build()
                     )
                     .lastActivityDate(LocalDate.parse("2019-12-27"))
@@ -630,6 +643,12 @@ internal class UserListPageResponseTest {
                                         .writeToolCount(0L)
                                         .build()
                                 )
+                                .build()
+                        )
+                        .claudeTagMetrics(
+                            BetaAnalyticsClaudeTagMetrics.builder()
+                                .activeDayCount(0L)
+                                .activeMessageCount(0L)
                                 .build()
                         )
                         .lastActivityDate(LocalDate.parse("2019-12-27"))

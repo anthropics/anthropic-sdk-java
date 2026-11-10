@@ -45,6 +45,9 @@ private constructor(
     private val claudeDesignDailyActiveUserCount: JsonField<Long>,
     private val claudeDesignMonthlyActiveUserCount: JsonField<Long>,
     private val claudeDesignWeeklyActiveUserCount: JsonField<Long>,
+    private val claudeTagDailyActiveUserCount: JsonField<Long>,
+    private val claudeTagMonthlyActiveUserCount: JsonField<Long>,
+    private val claudeTagWeeklyActiveUserCount: JsonField<Long>,
     private val officeAgentDailyActiveUserCount: JsonField<Long>,
     private val officeAgentMonthlyActiveUserCount: JsonField<Long>,
     private val officeAgentWeeklyActiveUserCount: JsonField<Long>,
@@ -132,6 +135,15 @@ private constructor(
         @JsonProperty("claude_design_weekly_active_user_count")
         @ExcludeMissing
         claudeDesignWeeklyActiveUserCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("claude_tag_daily_active_user_count")
+        @ExcludeMissing
+        claudeTagDailyActiveUserCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("claude_tag_monthly_active_user_count")
+        @ExcludeMissing
+        claudeTagMonthlyActiveUserCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("claude_tag_weekly_active_user_count")
+        @ExcludeMissing
+        claudeTagWeeklyActiveUserCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("office_agent_daily_active_user_count")
         @ExcludeMissing
         officeAgentDailyActiveUserCount: JsonField<Long> = JsonMissing.of(),
@@ -179,6 +191,9 @@ private constructor(
         claudeDesignDailyActiveUserCount,
         claudeDesignMonthlyActiveUserCount,
         claudeDesignWeeklyActiveUserCount,
+        claudeTagDailyActiveUserCount,
+        claudeTagMonthlyActiveUserCount,
+        claudeTagWeeklyActiveUserCount,
         officeAgentDailyActiveUserCount,
         officeAgentMonthlyActiveUserCount,
         officeAgentWeeklyActiveUserCount,
@@ -434,6 +449,48 @@ private constructor(
      */
     fun claudeDesignWeeklyActiveUserCount(): Optional<Long> =
         claudeDesignWeeklyActiveUserCount.getOptional("claude_design_weekly_active_user_count")
+
+    /**
+     * Number of Slack users active in Claude Tag on the requested day. Counts distinct Slack users,
+     * including users who have not linked a Claude account, so it can exceed
+     * `daily_active_user_count` and `assigned_seat_count`. Null on a day with no measured value,
+     * when Claude Tag data cannot be read for the request, and when the response is scoped to an
+     * RBAC group, because an unlinked user belongs to no group. Omitted from the response on
+     * deployments that do not offer Claude Tag reporting.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun claudeTagDailyActiveUserCount(): Optional<Long> =
+        claudeTagDailyActiveUserCount.getOptional("claude_tag_daily_active_user_count")
+
+    /**
+     * Number of Slack users active in Claude Tag in the 28-day rolling window. Counts distinct
+     * Slack users, including users who have not linked a Claude account, so it can exceed
+     * `daily_active_user_count` and `assigned_seat_count`. Null on a day with no measured value,
+     * when Claude Tag data cannot be read for the request, and when the response is scoped to an
+     * RBAC group, because an unlinked user belongs to no group. Omitted from the response on
+     * deployments that do not offer Claude Tag reporting.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun claudeTagMonthlyActiveUserCount(): Optional<Long> =
+        claudeTagMonthlyActiveUserCount.getOptional("claude_tag_monthly_active_user_count")
+
+    /**
+     * Number of Slack users active in Claude Tag in the 7-day rolling window. Counts distinct Slack
+     * users, including users who have not linked a Claude account, so it can exceed
+     * `daily_active_user_count` and `assigned_seat_count`. Null on a day with no measured value,
+     * when Claude Tag data cannot be read for the request, and when the response is scoped to an
+     * RBAC group, because an unlinked user belongs to no group. Omitted from the response on
+     * deployments that do not offer Claude Tag reporting.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun claudeTagWeeklyActiveUserCount(): Optional<Long> =
+        claudeTagWeeklyActiveUserCount.getOptional("claude_tag_weekly_active_user_count")
 
     /**
      * Number of users with Claude in Office activity on the requested day. Omitted from the
@@ -758,6 +815,36 @@ private constructor(
     fun _claudeDesignWeeklyActiveUserCount(): JsonField<Long> = claudeDesignWeeklyActiveUserCount
 
     /**
+     * Returns the raw JSON value of [claudeTagDailyActiveUserCount].
+     *
+     * Unlike [claudeTagDailyActiveUserCount], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("claude_tag_daily_active_user_count")
+    @ExcludeMissing
+    fun _claudeTagDailyActiveUserCount(): JsonField<Long> = claudeTagDailyActiveUserCount
+
+    /**
+     * Returns the raw JSON value of [claudeTagMonthlyActiveUserCount].
+     *
+     * Unlike [claudeTagMonthlyActiveUserCount], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("claude_tag_monthly_active_user_count")
+    @ExcludeMissing
+    fun _claudeTagMonthlyActiveUserCount(): JsonField<Long> = claudeTagMonthlyActiveUserCount
+
+    /**
+     * Returns the raw JSON value of [claudeTagWeeklyActiveUserCount].
+     *
+     * Unlike [claudeTagWeeklyActiveUserCount], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("claude_tag_weekly_active_user_count")
+    @ExcludeMissing
+    fun _claudeTagWeeklyActiveUserCount(): JsonField<Long> = claudeTagWeeklyActiveUserCount
+
+    /**
      * Returns the raw JSON value of [officeAgentDailyActiveUserCount].
      *
      * Unlike [officeAgentDailyActiveUserCount], this method doesn't throw if the JSON field has an
@@ -893,6 +980,9 @@ private constructor(
         private var claudeDesignDailyActiveUserCount: JsonField<Long> = JsonMissing.of()
         private var claudeDesignMonthlyActiveUserCount: JsonField<Long> = JsonMissing.of()
         private var claudeDesignWeeklyActiveUserCount: JsonField<Long> = JsonMissing.of()
+        private var claudeTagDailyActiveUserCount: JsonField<Long> = JsonMissing.of()
+        private var claudeTagMonthlyActiveUserCount: JsonField<Long> = JsonMissing.of()
+        private var claudeTagWeeklyActiveUserCount: JsonField<Long> = JsonMissing.of()
         private var officeAgentDailyActiveUserCount: JsonField<Long> = JsonMissing.of()
         private var officeAgentMonthlyActiveUserCount: JsonField<Long> = JsonMissing.of()
         private var officeAgentWeeklyActiveUserCount: JsonField<Long> = JsonMissing.of()
@@ -945,6 +1035,12 @@ private constructor(
                     analyticsSingleDayActivitySummary.claudeDesignMonthlyActiveUserCount
                 claudeDesignWeeklyActiveUserCount =
                     analyticsSingleDayActivitySummary.claudeDesignWeeklyActiveUserCount
+                claudeTagDailyActiveUserCount =
+                    analyticsSingleDayActivitySummary.claudeTagDailyActiveUserCount
+                claudeTagMonthlyActiveUserCount =
+                    analyticsSingleDayActivitySummary.claudeTagMonthlyActiveUserCount
+                claudeTagWeeklyActiveUserCount =
+                    analyticsSingleDayActivitySummary.claudeTagWeeklyActiveUserCount
                 officeAgentDailyActiveUserCount =
                     analyticsSingleDayActivitySummary.officeAgentDailyActiveUserCount
                 officeAgentMonthlyActiveUserCount =
@@ -1673,6 +1769,119 @@ private constructor(
             }
 
         /**
+         * Number of Slack users active in Claude Tag on the requested day. Counts distinct Slack
+         * users, including users who have not linked a Claude account, so it can exceed
+         * `daily_active_user_count` and `assigned_seat_count`. Null on a day with no measured
+         * value, when Claude Tag data cannot be read for the request, and when the response is
+         * scoped to an RBAC group, because an unlinked user belongs to no group. Omitted from the
+         * response on deployments that do not offer Claude Tag reporting.
+         */
+        fun claudeTagDailyActiveUserCount(claudeTagDailyActiveUserCount: Long?) =
+            claudeTagDailyActiveUserCount(JsonField.ofNullable(claudeTagDailyActiveUserCount))
+
+        /**
+         * Alias for [Builder.claudeTagDailyActiveUserCount].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun claudeTagDailyActiveUserCount(claudeTagDailyActiveUserCount: Long) =
+            claudeTagDailyActiveUserCount(claudeTagDailyActiveUserCount as Long?)
+
+        /**
+         * Alias for calling [Builder.claudeTagDailyActiveUserCount] with
+         * `claudeTagDailyActiveUserCount.orElse(null)`.
+         */
+        fun claudeTagDailyActiveUserCount(claudeTagDailyActiveUserCount: Optional<Long>) =
+            claudeTagDailyActiveUserCount(claudeTagDailyActiveUserCount.getOrNull())
+
+        /**
+         * Sets [Builder.claudeTagDailyActiveUserCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.claudeTagDailyActiveUserCount] with a well-typed [Long]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun claudeTagDailyActiveUserCount(claudeTagDailyActiveUserCount: JsonField<Long>) = apply {
+            this.claudeTagDailyActiveUserCount = claudeTagDailyActiveUserCount
+        }
+
+        /**
+         * Number of Slack users active in Claude Tag in the 28-day rolling window. Counts distinct
+         * Slack users, including users who have not linked a Claude account, so it can exceed
+         * `daily_active_user_count` and `assigned_seat_count`. Null on a day with no measured
+         * value, when Claude Tag data cannot be read for the request, and when the response is
+         * scoped to an RBAC group, because an unlinked user belongs to no group. Omitted from the
+         * response on deployments that do not offer Claude Tag reporting.
+         */
+        fun claudeTagMonthlyActiveUserCount(claudeTagMonthlyActiveUserCount: Long?) =
+            claudeTagMonthlyActiveUserCount(JsonField.ofNullable(claudeTagMonthlyActiveUserCount))
+
+        /**
+         * Alias for [Builder.claudeTagMonthlyActiveUserCount].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun claudeTagMonthlyActiveUserCount(claudeTagMonthlyActiveUserCount: Long) =
+            claudeTagMonthlyActiveUserCount(claudeTagMonthlyActiveUserCount as Long?)
+
+        /**
+         * Alias for calling [Builder.claudeTagMonthlyActiveUserCount] with
+         * `claudeTagMonthlyActiveUserCount.orElse(null)`.
+         */
+        fun claudeTagMonthlyActiveUserCount(claudeTagMonthlyActiveUserCount: Optional<Long>) =
+            claudeTagMonthlyActiveUserCount(claudeTagMonthlyActiveUserCount.getOrNull())
+
+        /**
+         * Sets [Builder.claudeTagMonthlyActiveUserCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.claudeTagMonthlyActiveUserCount] with a well-typed
+         * [Long] value instead. This method is primarily for setting the field to an undocumented
+         * or not yet supported value.
+         */
+        fun claudeTagMonthlyActiveUserCount(claudeTagMonthlyActiveUserCount: JsonField<Long>) =
+            apply {
+                this.claudeTagMonthlyActiveUserCount = claudeTagMonthlyActiveUserCount
+            }
+
+        /**
+         * Number of Slack users active in Claude Tag in the 7-day rolling window. Counts distinct
+         * Slack users, including users who have not linked a Claude account, so it can exceed
+         * `daily_active_user_count` and `assigned_seat_count`. Null on a day with no measured
+         * value, when Claude Tag data cannot be read for the request, and when the response is
+         * scoped to an RBAC group, because an unlinked user belongs to no group. Omitted from the
+         * response on deployments that do not offer Claude Tag reporting.
+         */
+        fun claudeTagWeeklyActiveUserCount(claudeTagWeeklyActiveUserCount: Long?) =
+            claudeTagWeeklyActiveUserCount(JsonField.ofNullable(claudeTagWeeklyActiveUserCount))
+
+        /**
+         * Alias for [Builder.claudeTagWeeklyActiveUserCount].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun claudeTagWeeklyActiveUserCount(claudeTagWeeklyActiveUserCount: Long) =
+            claudeTagWeeklyActiveUserCount(claudeTagWeeklyActiveUserCount as Long?)
+
+        /**
+         * Alias for calling [Builder.claudeTagWeeklyActiveUserCount] with
+         * `claudeTagWeeklyActiveUserCount.orElse(null)`.
+         */
+        fun claudeTagWeeklyActiveUserCount(claudeTagWeeklyActiveUserCount: Optional<Long>) =
+            claudeTagWeeklyActiveUserCount(claudeTagWeeklyActiveUserCount.getOrNull())
+
+        /**
+         * Sets [Builder.claudeTagWeeklyActiveUserCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.claudeTagWeeklyActiveUserCount] with a well-typed [Long]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun claudeTagWeeklyActiveUserCount(claudeTagWeeklyActiveUserCount: JsonField<Long>) =
+            apply {
+                this.claudeTagWeeklyActiveUserCount = claudeTagWeeklyActiveUserCount
+            }
+
+        /**
          * Number of users with Claude in Office activity on the requested day. Omitted from the
          * response while the per-product breakdown is not enabled for this organization.
          */
@@ -1981,6 +2190,9 @@ private constructor(
                 claudeDesignDailyActiveUserCount,
                 claudeDesignMonthlyActiveUserCount,
                 claudeDesignWeeklyActiveUserCount,
+                claudeTagDailyActiveUserCount,
+                claudeTagMonthlyActiveUserCount,
+                claudeTagWeeklyActiveUserCount,
                 officeAgentDailyActiveUserCount,
                 officeAgentMonthlyActiveUserCount,
                 officeAgentWeeklyActiveUserCount,
@@ -2032,6 +2244,9 @@ private constructor(
         claudeDesignDailyActiveUserCount()
         claudeDesignMonthlyActiveUserCount()
         claudeDesignWeeklyActiveUserCount()
+        claudeTagDailyActiveUserCount()
+        claudeTagMonthlyActiveUserCount()
+        claudeTagWeeklyActiveUserCount()
         officeAgentDailyActiveUserCount()
         officeAgentMonthlyActiveUserCount()
         officeAgentWeeklyActiveUserCount()
@@ -2082,6 +2297,9 @@ private constructor(
             (if (claudeDesignDailyActiveUserCount.asKnown().isPresent) 1 else 0) +
             (if (claudeDesignMonthlyActiveUserCount.asKnown().isPresent) 1 else 0) +
             (if (claudeDesignWeeklyActiveUserCount.asKnown().isPresent) 1 else 0) +
+            (if (claudeTagDailyActiveUserCount.asKnown().isPresent) 1 else 0) +
+            (if (claudeTagMonthlyActiveUserCount.asKnown().isPresent) 1 else 0) +
+            (if (claudeTagWeeklyActiveUserCount.asKnown().isPresent) 1 else 0) +
             (if (officeAgentDailyActiveUserCount.asKnown().isPresent) 1 else 0) +
             (if (officeAgentMonthlyActiveUserCount.asKnown().isPresent) 1 else 0) +
             (if (officeAgentWeeklyActiveUserCount.asKnown().isPresent) 1 else 0) +
@@ -2123,6 +2341,9 @@ private constructor(
             claudeDesignDailyActiveUserCount == other.claudeDesignDailyActiveUserCount &&
             claudeDesignMonthlyActiveUserCount == other.claudeDesignMonthlyActiveUserCount &&
             claudeDesignWeeklyActiveUserCount == other.claudeDesignWeeklyActiveUserCount &&
+            claudeTagDailyActiveUserCount == other.claudeTagDailyActiveUserCount &&
+            claudeTagMonthlyActiveUserCount == other.claudeTagMonthlyActiveUserCount &&
+            claudeTagWeeklyActiveUserCount == other.claudeTagWeeklyActiveUserCount &&
             officeAgentDailyActiveUserCount == other.officeAgentDailyActiveUserCount &&
             officeAgentMonthlyActiveUserCount == other.officeAgentMonthlyActiveUserCount &&
             officeAgentWeeklyActiveUserCount == other.officeAgentWeeklyActiveUserCount &&
@@ -2160,6 +2381,9 @@ private constructor(
             claudeDesignDailyActiveUserCount,
             claudeDesignMonthlyActiveUserCount,
             claudeDesignWeeklyActiveUserCount,
+            claudeTagDailyActiveUserCount,
+            claudeTagMonthlyActiveUserCount,
+            claudeTagWeeklyActiveUserCount,
             officeAgentDailyActiveUserCount,
             officeAgentMonthlyActiveUserCount,
             officeAgentWeeklyActiveUserCount,
@@ -2174,5 +2398,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AnalyticsSingleDayActivitySummary{assignedSeatCount=$assignedSeatCount, coworkDailyActiveUserCount=$coworkDailyActiveUserCount, coworkMonthlyActiveUserCount=$coworkMonthlyActiveUserCount, coworkWeeklyActiveUserCount=$coworkWeeklyActiveUserCount, dailyActiveUserCount=$dailyActiveUserCount, dailyAdoptionRate=$dailyAdoptionRate, endingAt=$endingAt, monthlyActiveUserCount=$monthlyActiveUserCount, monthlyAdoptionRate=$monthlyAdoptionRate, pendingInviteCount=$pendingInviteCount, startingAt=$startingAt, weeklyActiveUserCount=$weeklyActiveUserCount, weeklyAdoptionRate=$weeklyAdoptionRate, chatCoworkUnifiedDailyActiveUserCount=$chatCoworkUnifiedDailyActiveUserCount, chatCoworkUnifiedMonthlyActiveUserCount=$chatCoworkUnifiedMonthlyActiveUserCount, chatCoworkUnifiedWeeklyActiveUserCount=$chatCoworkUnifiedWeeklyActiveUserCount, chatDailyActiveUserCount=$chatDailyActiveUserCount, chatMonthlyActiveUserCount=$chatMonthlyActiveUserCount, chatWeeklyActiveUserCount=$chatWeeklyActiveUserCount, claudeCodeDailyActiveUserCount=$claudeCodeDailyActiveUserCount, claudeCodeMonthlyActiveUserCount=$claudeCodeMonthlyActiveUserCount, claudeCodeWeeklyActiveUserCount=$claudeCodeWeeklyActiveUserCount, claudeDesignDailyActiveUserCount=$claudeDesignDailyActiveUserCount, claudeDesignMonthlyActiveUserCount=$claudeDesignMonthlyActiveUserCount, claudeDesignWeeklyActiveUserCount=$claudeDesignWeeklyActiveUserCount, officeAgentDailyActiveUserCount=$officeAgentDailyActiveUserCount, officeAgentMonthlyActiveUserCount=$officeAgentMonthlyActiveUserCount, officeAgentWeeklyActiveUserCount=$officeAgentWeeklyActiveUserCount, scienceDailyActiveUserCount=$scienceDailyActiveUserCount, scienceEntitledUserCount=$scienceEntitledUserCount, scienceMonthlyActiveUserCount=$scienceMonthlyActiveUserCount, scienceWeeklyActiveUserCount=$scienceWeeklyActiveUserCount, additionalProperties=$additionalProperties}"
+        "AnalyticsSingleDayActivitySummary{assignedSeatCount=$assignedSeatCount, coworkDailyActiveUserCount=$coworkDailyActiveUserCount, coworkMonthlyActiveUserCount=$coworkMonthlyActiveUserCount, coworkWeeklyActiveUserCount=$coworkWeeklyActiveUserCount, dailyActiveUserCount=$dailyActiveUserCount, dailyAdoptionRate=$dailyAdoptionRate, endingAt=$endingAt, monthlyActiveUserCount=$monthlyActiveUserCount, monthlyAdoptionRate=$monthlyAdoptionRate, pendingInviteCount=$pendingInviteCount, startingAt=$startingAt, weeklyActiveUserCount=$weeklyActiveUserCount, weeklyAdoptionRate=$weeklyAdoptionRate, chatCoworkUnifiedDailyActiveUserCount=$chatCoworkUnifiedDailyActiveUserCount, chatCoworkUnifiedMonthlyActiveUserCount=$chatCoworkUnifiedMonthlyActiveUserCount, chatCoworkUnifiedWeeklyActiveUserCount=$chatCoworkUnifiedWeeklyActiveUserCount, chatDailyActiveUserCount=$chatDailyActiveUserCount, chatMonthlyActiveUserCount=$chatMonthlyActiveUserCount, chatWeeklyActiveUserCount=$chatWeeklyActiveUserCount, claudeCodeDailyActiveUserCount=$claudeCodeDailyActiveUserCount, claudeCodeMonthlyActiveUserCount=$claudeCodeMonthlyActiveUserCount, claudeCodeWeeklyActiveUserCount=$claudeCodeWeeklyActiveUserCount, claudeDesignDailyActiveUserCount=$claudeDesignDailyActiveUserCount, claudeDesignMonthlyActiveUserCount=$claudeDesignMonthlyActiveUserCount, claudeDesignWeeklyActiveUserCount=$claudeDesignWeeklyActiveUserCount, claudeTagDailyActiveUserCount=$claudeTagDailyActiveUserCount, claudeTagMonthlyActiveUserCount=$claudeTagMonthlyActiveUserCount, claudeTagWeeklyActiveUserCount=$claudeTagWeeklyActiveUserCount, officeAgentDailyActiveUserCount=$officeAgentDailyActiveUserCount, officeAgentMonthlyActiveUserCount=$officeAgentMonthlyActiveUserCount, officeAgentWeeklyActiveUserCount=$officeAgentWeeklyActiveUserCount, scienceDailyActiveUserCount=$scienceDailyActiveUserCount, scienceEntitledUserCount=$scienceEntitledUserCount, scienceMonthlyActiveUserCount=$scienceMonthlyActiveUserCount, scienceWeeklyActiveUserCount=$scienceWeeklyActiveUserCount, additionalProperties=$additionalProperties}"
 }
