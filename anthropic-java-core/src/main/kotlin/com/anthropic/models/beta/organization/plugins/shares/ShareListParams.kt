@@ -58,7 +58,8 @@ private constructor(
      * the organization the key was created in, given as the organization's UUID or its
      * `org_`-prefixed ID. A value that is neither returns a 400; an organization that is not a
      * child of the key's parent, or where the Plugins API is not available, returns a 404. Any
-     * other key may pass only its own organization's ID here; another organization returns a 404.
+     * other key may pass only its own organization's ID here; another organization returns a 404. A
+     * key with no organization of its own must always pass `organization_id`.
      */
     fun organizationId(): Optional<String> = Optional.ofNullable(organizationId)
 
@@ -144,7 +145,7 @@ private constructor(
          * `org_`-prefixed ID. A value that is neither returns a 400; an organization that is not a
          * child of the key's parent, or where the Plugins API is not available, returns a 404. Any
          * other key may pass only its own organization's ID here; another organization returns
-         * a 404.
+         * a 404. A key with no organization of its own must always pass `organization_id`.
          */
         fun organizationId(organizationId: String?) = apply { this.organizationId = organizationId }
 
