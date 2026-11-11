@@ -59,8 +59,9 @@ private constructor(
     fun ask(): Optional<BetaManagedAgentsAgentAutoEvaluatedPermissionAsk> = Optional.ofNullable(ask)
 
     /**
-     * The server judged the invocation high-risk; it does not execute and a synthetic error tool
-     * result is appended.
+     * The server judged the invocation high-risk, or reached no judgement and did not hold it for
+     * client approval (for example, because the organization is out of credits or has reached a
+     * spend limit); it does not execute and a synthetic error tool result is appended.
      */
     fun deny(): Optional<BetaManagedAgentsAgentAutoEvaluatedPermissionDeny> =
         Optional.ofNullable(deny)
@@ -78,8 +79,9 @@ private constructor(
     fun asAsk(): BetaManagedAgentsAgentAutoEvaluatedPermissionAsk = ask.getOrThrow("ask")
 
     /**
-     * The server judged the invocation high-risk; it does not execute and a synthetic error tool
-     * result is appended.
+     * The server judged the invocation high-risk, or reached no judgement and did not hold it for
+     * client approval (for example, because the organization is out of credits or has reached a
+     * spend limit); it does not execute and a synthetic error tool result is appended.
      */
     fun asDeny(): BetaManagedAgentsAgentAutoEvaluatedPermissionDeny = deny.getOrThrow("deny")
 
@@ -215,8 +217,10 @@ private constructor(
             ofAsk(BetaManagedAgentsAgentAutoEvaluatedPermissionAsk.of(reasonCode))
 
         /**
-         * The server judged the invocation high-risk; it does not execute and a synthetic error
-         * tool result is appended.
+         * The server judged the invocation high-risk, or reached no judgement and did not hold it
+         * for client approval (for example, because the organization is out of credits or has
+         * reached a spend limit); it does not execute and a synthetic error tool result is
+         * appended.
          */
         @JvmStatic
         fun ofDeny(deny: BetaManagedAgentsAgentAutoEvaluatedPermissionDeny) =
@@ -244,8 +248,10 @@ private constructor(
         fun visitAsk(ask: BetaManagedAgentsAgentAutoEvaluatedPermissionAsk): T
 
         /**
-         * The server judged the invocation high-risk; it does not execute and a synthetic error
-         * tool result is appended.
+         * The server judged the invocation high-risk, or reached no judgement and did not hold it
+         * for client approval (for example, because the organization is out of credits or has
+         * reached a spend limit); it does not execute and a synthetic error tool result is
+         * appended.
          */
         fun visitDeny(deny: BetaManagedAgentsAgentAutoEvaluatedPermissionDeny): T
 
