@@ -32,9 +32,12 @@ internal class WebhookServiceTest {
                     .addEnabledEvent(
                         WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                     )
-                    .url("x")
+                    .addEnabledEvent(
+                        WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                    )
+                    .url("https://example.com/anthropic-webhooks")
                     .description("description")
-                    .name("name")
+                    .name("Enforcement actions")
                     .build()
             )
 

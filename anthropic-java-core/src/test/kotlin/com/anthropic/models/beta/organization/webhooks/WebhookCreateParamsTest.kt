@@ -14,9 +14,12 @@ internal class WebhookCreateParamsTest {
             .addEnabledEvent(
                 WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
             )
-            .url("x")
+            .addEnabledEvent(
+                WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+            )
+            .url("https://example.com/anthropic-webhooks")
             .description("description")
-            .name("name")
+            .name("Enforcement actions")
             .build()
     }
 
@@ -28,9 +31,12 @@ internal class WebhookCreateParamsTest {
                 .addEnabledEvent(
                     WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 )
-                .url("x")
+                .addEnabledEvent(
+                    WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                )
+                .url("https://example.com/anthropic-webhooks")
                 .description("description")
-                .name("name")
+                .name("Enforcement actions")
                 .build()
 
         val headers = params._headers()
@@ -53,7 +59,10 @@ internal class WebhookCreateParamsTest {
                 .addEnabledEvent(
                     WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 )
-                .url("x")
+                .addEnabledEvent(
+                    WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                )
+                .url("https://example.com/anthropic-webhooks")
                 .build()
 
         val headers = params._headers()
@@ -69,20 +78,24 @@ internal class WebhookCreateParamsTest {
                 .addEnabledEvent(
                     WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 )
-                .url("x")
+                .addEnabledEvent(
+                    WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                )
+                .url("https://example.com/anthropic-webhooks")
                 .description("description")
-                .name("name")
+                .name("Enforcement actions")
                 .build()
 
         val body = params._body()
 
         assertThat(body.enabledEvents())
             .containsExactly(
-                WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+                WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
+                WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
             )
-        assertThat(body.url()).isEqualTo("x")
+        assertThat(body.url()).isEqualTo("https://example.com/anthropic-webhooks")
         assertThat(body.description()).contains("description")
-        assertThat(body.name()).contains("name")
+        assertThat(body.name()).contains("Enforcement actions")
     }
 
     @Test
@@ -92,15 +105,19 @@ internal class WebhookCreateParamsTest {
                 .addEnabledEvent(
                     WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 )
-                .url("x")
+                .addEnabledEvent(
+                    WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
+                )
+                .url("https://example.com/anthropic-webhooks")
                 .build()
 
         val body = params._body()
 
         assertThat(body.enabledEvents())
             .containsExactly(
-                WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+                WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
+                WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
             )
-        assertThat(body.url()).isEqualTo("x")
+        assertThat(body.url()).isEqualTo("https://example.com/anthropic-webhooks")
     }
 }
