@@ -55,6 +55,7 @@ import com.anthropic.models.messages.ToolNameConflictErrorDetails
 import com.anthropic.models.messages.ToolReferenceUnresolvedErrorDetails
 import com.anthropic.models.organization.ConcurrentMembershipChangeErrorDetails
 import com.anthropic.models.organization.OrgMemberLimitExceededErrorDetails
+import com.anthropic.models.organization.RbacRoleNotFoundErrorDetails
 import com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededErrorDetails
 import com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededErrorDetails
 import com.anthropic.models.organization.externalkeys.ExternalKeyChangedErrorDetails
@@ -143,6 +144,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -253,6 +256,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -360,6 +365,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -467,6 +474,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -572,6 +581,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -679,6 +690,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -786,6 +799,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -893,6 +908,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -1000,6 +1017,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -1109,6 +1128,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -1216,6 +1237,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -1326,6 +1349,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -1436,6 +1461,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -1544,6 +1571,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -1651,6 +1680,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -1761,6 +1792,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -1868,6 +1901,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -1975,6 +2010,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -2082,6 +2119,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -2192,6 +2231,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -2301,6 +2342,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -2406,6 +2449,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -2513,6 +2558,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -2621,6 +2668,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -2731,6 +2780,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -2838,6 +2889,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -2945,6 +2998,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -3050,6 +3105,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -3155,6 +3212,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -3262,6 +3321,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -3367,6 +3428,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -3472,6 +3535,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -3576,6 +3641,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -3683,6 +3750,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -3792,6 +3861,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -3899,6 +3970,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -4006,6 +4079,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -4113,6 +4188,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -4220,6 +4297,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -4329,6 +4408,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -4436,6 +4517,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -4543,6 +4626,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -4648,6 +4733,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -4755,6 +4842,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -4865,6 +4954,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -4972,6 +5063,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -5079,6 +5172,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -5186,6 +5281,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -5296,6 +5393,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -5403,6 +5502,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -5509,6 +5610,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -5616,6 +5719,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).contains(externalKeyChanged)
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -5723,6 +5828,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.workspaceMemberLimitExceeded())
             .contains(workspaceMemberLimitExceeded)
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -5832,6 +5939,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported())
             .contains(organizationTypeNotSupported)
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -5869,6 +5978,222 @@ internal class ErrorDetailsTest {
             ErrorDetails.ofOrganizationTypeNotSupported(
                 OrganizationTypeNotSupportedErrorDetails.builder().build()
             )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofParentOrganizationRequired() {
+        val parentOrganizationRequired = ParentOrganizationRequiredErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofParentOrganizationRequired(parentOrganizationRequired)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).contains(parentOrganizationRequired)
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+    }
+
+    @Test
+    fun ofParentOrganizationRequiredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofParentOrganizationRequired(
+                ParentOrganizationRequiredErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofRbacRoleNotFound() {
+        val rbacRoleNotFound = RbacRoleNotFoundErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofRbacRoleNotFound(rbacRoleNotFound)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).contains(rbacRoleNotFound)
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+    }
+
+    @Test
+    fun ofRbacRoleNotFoundRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofRbacRoleNotFound(RbacRoleNotFoundErrorDetails.builder().build())
 
         val roundtrippedErrorDetails =
             jsonMapper.readValue(
@@ -5939,6 +6264,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).contains(environmentCreateDisabled)
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -6046,6 +6373,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).contains(environmentArchived)
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -6153,6 +6482,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).contains(invalidConfigTypeChange)
@@ -6260,6 +6591,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -6375,6 +6708,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -6489,6 +6824,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -6594,6 +6931,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -6701,6 +7040,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -6808,6 +7149,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -6917,6 +7260,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -7025,6 +7370,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -7133,6 +7480,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -7240,6 +7589,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -7350,6 +7701,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -7458,6 +7811,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -7564,6 +7919,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -7671,6 +8028,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -7780,6 +8139,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -7890,6 +8251,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -7995,6 +8358,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -8102,6 +8467,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -8210,6 +8577,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -8315,6 +8684,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -8424,6 +8795,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -8536,6 +8909,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -8644,6 +9019,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -8755,6 +9132,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
@@ -8865,6 +9244,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalKeyChanged()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
         assertThat(errorDetails.environmentCreateDisabled()).isEmpty
         assertThat(errorDetails.environmentArchived()).isEmpty
         assertThat(errorDetails.invalidConfigTypeChange()).isEmpty

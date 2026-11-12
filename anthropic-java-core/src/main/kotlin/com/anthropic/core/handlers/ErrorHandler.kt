@@ -37,6 +37,7 @@ import com.anthropic.models.CmekKeyUnreachableException
 import com.anthropic.models.EnforcedSpendLimitReachedException
 import com.anthropic.models.OrganizationOnHoldException
 import com.anthropic.models.OrganizationTypeNotSupportedException
+import com.anthropic.models.ParentOrganizationRequiredException
 import com.anthropic.models.RampLimitExceededException
 import com.anthropic.models.RequestBodyEncodingInvalidException
 import com.anthropic.models.RequestBodyEncodingUnsupportedException
@@ -92,6 +93,7 @@ import com.anthropic.models.messages.ToolNameConflictException
 import com.anthropic.models.messages.ToolReferenceUnresolvedException
 import com.anthropic.models.organization.ConcurrentMembershipChangeException
 import com.anthropic.models.organization.OrgMemberLimitExceededException
+import com.anthropic.models.organization.RbacRoleNotFoundException
 import com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededException
 import com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededException
 import com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
@@ -396,6 +398,10 @@ private val errorCodeExceptions:
             { headers, body ->
                 OrganizationTypeNotSupportedException.builder().headers(headers).body(body).build()
             },
+        (400 to "parent_organization_required") to
+            { headers, body ->
+                ParentOrganizationRequiredException.builder().headers(headers).body(body).build()
+            },
         (400 to "rbac_group_grants_owner_access") to
             { headers, body ->
                 RbacGroupGrantsOwnerAccessException.builder().headers(headers).body(body).build()
@@ -550,6 +556,10 @@ private val errorCodeExceptions:
         (404 to "file_expired") to
             { headers, body ->
                 FileExpiredException.builder().headers(headers).body(body).build()
+            },
+        (404 to "rbac_role_not_found") to
+            { headers, body ->
+                RbacRoleNotFoundException.builder().headers(headers).body(body).build()
             },
         (404 to "slack_channel_set_up_environment_not_found") to
             { headers, body ->

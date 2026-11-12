@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import kotlin.jvm.optionals.getOrNull
 
 class RbacRole
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -20,6 +21,7 @@ private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val displayName: JsonField<String>,
+    private val source: JsonField<RbacRoleSource>,
     private val type: JsonValue,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -34,11 +36,14 @@ private constructor(
         @JsonProperty("display_name")
         @ExcludeMissing
         displayName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("source")
+        @ExcludeMissing
+        source: JsonField<RbacRoleSource> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(id, createdAt, displayName, type, updatedAt, mutableMapOf())
+    ) : this(id, createdAt, displayName, source, type, updatedAt, mutableMapOf())
 
     /**
      * ID of the RBAC Role.
@@ -57,14 +62,23 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
-     * Name of the RBAC Role. For a role created by Anthropic, this is Anthropic's name for the
-     * access that the role grants. Anthropic may change this name, so to keep a lasting reference
-     * to a role, store its `id`.
+     * Name of the RBAC Role. For a built-in role, this is Anthropic's name for the access that the
+     * role grants. Anthropic may change this name, so to keep a lasting reference to a role, store
+     * its `id`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun displayName(): String = displayName.getRequired("display_name")
+
+    /**
+     * Whether the RBAC Role is built-in or custom. More values of `type` may be added, so do not
+     * treat every role that is not `built_in` as `custom`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun source(): RbacRoleSource = source.getRequired("source")
 
     /**
      * Object type.
@@ -115,6 +129,13 @@ private constructor(
     fun _displayName(): JsonField<String> = displayName
 
     /**
+     * Returns the raw JSON value of [source].
+     *
+     * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<RbacRoleSource> = source
+
+    /**
      * Returns the raw JSON value of [updatedAt].
      *
      * Unlike [updatedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -145,6 +166,7 @@ private constructor(
          * .id()
          * .createdAt()
          * .displayName()
+         * .source()
          * .updatedAt()
          * ```
          */
@@ -157,6 +179,7 @@ private constructor(
         private var id: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var displayName: JsonField<String>? = null
+        private var source: JsonField<RbacRoleSource>? = null
         private var type: JsonValue = JsonValue.from("rbac_role")
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -166,6 +189,7 @@ private constructor(
             id = rbacRole.id
             createdAt = rbacRole.createdAt
             displayName = rbacRole.displayName
+            source = rbacRole.source
             type = rbacRole.type
             updatedAt = rbacRole.updatedAt
             additionalProperties = rbacRole.additionalProperties.toMutableMap()
@@ -195,9 +219,9 @@ private constructor(
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /**
-         * Name of the RBAC Role. For a role created by Anthropic, this is Anthropic's name for the
-         * access that the role grants. Anthropic may change this name, so to keep a lasting
-         * reference to a role, store its `id`.
+         * Name of the RBAC Role. For a built-in role, this is Anthropic's name for the access that
+         * the role grants. Anthropic may change this name, so to keep a lasting reference to a
+         * role, store its `id`.
          */
         fun displayName(displayName: String) = displayName(JsonField.of(displayName))
 
@@ -209,6 +233,27 @@ private constructor(
          * value.
          */
         fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
+
+        /**
+         * Whether the RBAC Role is built-in or custom. More values of `type` may be added, so do
+         * not treat every role that is not `built_in` as `custom`.
+         */
+        fun source(source: RbacRoleSource) = source(JsonField.of(source))
+
+        /**
+         * Sets [Builder.source] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.source] with a well-typed [RbacRoleSource] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun source(source: JsonField<RbacRoleSource>) = apply { this.source = source }
+
+        /** Alias for calling [source] with `RbacRoleSource.ofBuiltIn(builtIn)`. */
+        fun source(builtIn: RbacRoleSourceBuiltIn) = source(RbacRoleSource.ofBuiltIn(builtIn))
+
+        /** Alias for calling [source] with `RbacRoleSource.ofCustom(custom)`. */
+        fun source(custom: RbacRoleSourceCustom) = source(RbacRoleSource.ofCustom(custom))
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -265,6 +310,7 @@ private constructor(
          * .id()
          * .createdAt()
          * .displayName()
+         * .source()
          * .updatedAt()
          * ```
          *
@@ -275,6 +321,7 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("displayName", displayName),
+                checkRequired("source", source),
                 type,
                 checkRequired("updatedAt", updatedAt),
                 additionalProperties.toMutableMap(),
@@ -299,6 +346,7 @@ private constructor(
         id()
         createdAt()
         displayName()
+        source().validate()
         _type().let {
             if (it != JsonValue.from("rbac_role")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -326,6 +374,7 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (displayName.asKnown().isPresent) 1 else 0) +
+            (source.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("rbac_role")) 1 else 0 } +
             (if (updatedAt.asKnown().isPresent) 1 else 0)
 
@@ -338,17 +387,18 @@ private constructor(
             id == other.id &&
             createdAt == other.createdAt &&
             displayName == other.displayName &&
+            source == other.source &&
             type == other.type &&
             updatedAt == other.updatedAt &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, displayName, type, updatedAt, additionalProperties)
+        Objects.hash(id, createdAt, displayName, source, type, updatedAt, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "RbacRole{id=$id, createdAt=$createdAt, displayName=$displayName, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "RbacRole{id=$id, createdAt=$createdAt, displayName=$displayName, source=$source, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

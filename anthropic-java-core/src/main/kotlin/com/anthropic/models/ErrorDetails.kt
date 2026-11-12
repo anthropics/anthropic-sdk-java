@@ -60,6 +60,7 @@ import com.anthropic.models.messages.ToolNameConflictErrorDetails
 import com.anthropic.models.messages.ToolReferenceUnresolvedErrorDetails
 import com.anthropic.models.organization.ConcurrentMembershipChangeErrorDetails
 import com.anthropic.models.organization.OrgMemberLimitExceededErrorDetails
+import com.anthropic.models.organization.RbacRoleNotFoundErrorDetails
 import com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededErrorDetails
 import com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededErrorDetails
 import com.anthropic.models.organization.externalkeys.ExternalKeyChangedErrorDetails
@@ -154,6 +155,8 @@ private constructor(
     private val externalKeyChanged: ExternalKeyChangedErrorDetails? = null,
     private val workspaceMemberLimitExceeded: WorkspaceMemberLimitExceededErrorDetails? = null,
     private val organizationTypeNotSupported: OrganizationTypeNotSupportedErrorDetails? = null,
+    private val parentOrganizationRequired: ParentOrganizationRequiredErrorDetails? = null,
+    private val rbacRoleNotFound: RbacRoleNotFoundErrorDetails? = null,
     private val environmentCreateDisabled: BetaEnvironmentCreateDisabledErrorDetails? = null,
     private val environmentArchived: BetaEnvironmentArchivedErrorDetails? = null,
     private val invalidConfigTypeChange: BetaInvalidConfigTypeChangeErrorDetails? = null,
@@ -257,6 +260,8 @@ private constructor(
             externalKeyChanged != null -> ErrorCode.EXTERNAL_KEY_CHANGED
             workspaceMemberLimitExceeded != null -> ErrorCode.WORKSPACE_MEMBER_LIMIT_EXCEEDED
             organizationTypeNotSupported != null -> ErrorCode.ORGANIZATION_TYPE_NOT_SUPPORTED
+            parentOrganizationRequired != null -> ErrorCode.PARENT_ORGANIZATION_REQUIRED
+            rbacRoleNotFound != null -> ErrorCode.RBAC_ROLE_NOT_FOUND
             environmentCreateDisabled != null -> ErrorCode.ENVIRONMENT_CREATE_DISABLED
             environmentArchived != null -> ErrorCode.ENVIRONMENT_ARCHIVED
             invalidConfigTypeChange != null -> ErrorCode.INVALID_CONFIG_TYPE_CHANGE
@@ -351,6 +356,8 @@ private constructor(
             externalKeyChanged != null -> Optional.empty()
             workspaceMemberLimitExceeded != null -> Optional.empty()
             organizationTypeNotSupported != null -> Optional.empty()
+            parentOrganizationRequired != null -> Optional.empty()
+            rbacRoleNotFound != null -> Optional.empty()
             environmentCreateDisabled != null -> Optional.empty()
             environmentArchived != null -> Optional.empty()
             invalidConfigTypeChange != null -> Optional.empty()
@@ -438,6 +445,8 @@ private constructor(
             externalKeyChanged != null -> Optional.empty()
             workspaceMemberLimitExceeded != null -> Optional.empty()
             organizationTypeNotSupported != null -> Optional.empty()
+            parentOrganizationRequired != null -> Optional.empty()
+            rbacRoleNotFound != null -> Optional.empty()
             environmentCreateDisabled != null -> Optional.empty()
             environmentArchived != null -> Optional.empty()
             invalidConfigTypeChange != null -> Optional.empty()
@@ -525,6 +534,8 @@ private constructor(
             externalKeyChanged != null -> Optional.empty()
             workspaceMemberLimitExceeded != null -> Optional.empty()
             organizationTypeNotSupported != null -> Optional.empty()
+            parentOrganizationRequired != null -> Optional.empty()
+            rbacRoleNotFound != null -> Optional.empty()
             environmentCreateDisabled != null -> Optional.empty()
             environmentArchived != null -> Optional.empty()
             invalidConfigTypeChange != null -> Optional.empty()
@@ -888,6 +899,17 @@ private constructor(
         Optional.ofNullable(organizationTypeNotSupported)
 
     /**
+     * The endpoint serves only organizations that belong to a parent organization, and this
+     * organization belongs to none.
+     */
+    fun parentOrganizationRequired(): Optional<ParentOrganizationRequiredErrorDetails> =
+        Optional.ofNullable(parentOrganizationRequired)
+
+    /** No RBAC Role with this ID was found. */
+    fun rbacRoleNotFound(): Optional<RbacRoleNotFoundErrorDetails> =
+        Optional.ofNullable(rbacRoleNotFound)
+
+    /**
      * Anthropic has turned off creating environments for this organization. Existing environments
      * still work.
      */
@@ -1168,6 +1190,10 @@ private constructor(
     fun isWorkspaceMemberLimitExceeded(): Boolean = workspaceMemberLimitExceeded != null
 
     fun isOrganizationTypeNotSupported(): Boolean = organizationTypeNotSupported != null
+
+    fun isParentOrganizationRequired(): Boolean = parentOrganizationRequired != null
+
+    fun isRbacRoleNotFound(): Boolean = rbacRoleNotFound != null
 
     fun isEnvironmentCreateDisabled(): Boolean = environmentCreateDisabled != null
 
@@ -1559,6 +1585,17 @@ private constructor(
         organizationTypeNotSupported.getOrThrow("organizationTypeNotSupported")
 
     /**
+     * The endpoint serves only organizations that belong to a parent organization, and this
+     * organization belongs to none.
+     */
+    fun asParentOrganizationRequired(): ParentOrganizationRequiredErrorDetails =
+        parentOrganizationRequired.getOrThrow("parentOrganizationRequired")
+
+    /** No RBAC Role with this ID was found. */
+    fun asRbacRoleNotFound(): RbacRoleNotFoundErrorDetails =
+        rbacRoleNotFound.getOrThrow("rbacRoleNotFound")
+
+    /**
      * Anthropic has turned off creating environments for this organization. Existing environments
      * still work.
      */
@@ -1857,6 +1894,9 @@ private constructor(
                 visitor.visitWorkspaceMemberLimitExceeded(workspaceMemberLimitExceeded)
             organizationTypeNotSupported != null ->
                 visitor.visitOrganizationTypeNotSupported(organizationTypeNotSupported)
+            parentOrganizationRequired != null ->
+                visitor.visitParentOrganizationRequired(parentOrganizationRequired)
+            rbacRoleNotFound != null -> visitor.visitRbacRoleNotFound(rbacRoleNotFound)
             environmentCreateDisabled != null ->
                 visitor.visitEnvironmentCreateDisabled(environmentCreateDisabled)
             environmentArchived != null -> visitor.visitEnvironmentArchived(environmentArchived)
@@ -1981,6 +2021,8 @@ private constructor(
             externalKeyChanged != null -> externalKeyChanged.validate()
             workspaceMemberLimitExceeded != null -> workspaceMemberLimitExceeded.validate()
             organizationTypeNotSupported != null -> organizationTypeNotSupported.validate()
+            parentOrganizationRequired != null -> parentOrganizationRequired.validate()
+            rbacRoleNotFound != null -> rbacRoleNotFound.validate()
             environmentCreateDisabled != null -> environmentCreateDisabled.validate()
             environmentArchived != null -> environmentArchived.validate()
             invalidConfigTypeChange != null -> invalidConfigTypeChange.validate()
@@ -2090,6 +2132,8 @@ private constructor(
             externalKeyChanged != null -> externalKeyChanged.validity()
             workspaceMemberLimitExceeded != null -> workspaceMemberLimitExceeded.validity()
             organizationTypeNotSupported != null -> organizationTypeNotSupported.validity()
+            parentOrganizationRequired != null -> parentOrganizationRequired.validity()
+            rbacRoleNotFound != null -> rbacRoleNotFound.validity()
             environmentCreateDisabled != null -> environmentCreateDisabled.validity()
             environmentArchived != null -> environmentArchived.validity()
             invalidConfigTypeChange != null -> invalidConfigTypeChange.validity()
@@ -2187,6 +2231,8 @@ private constructor(
             externalKeyChanged == other.externalKeyChanged &&
             workspaceMemberLimitExceeded == other.workspaceMemberLimitExceeded &&
             organizationTypeNotSupported == other.organizationTypeNotSupported &&
+            parentOrganizationRequired == other.parentOrganizationRequired &&
+            rbacRoleNotFound == other.rbacRoleNotFound &&
             environmentCreateDisabled == other.environmentCreateDisabled &&
             environmentArchived == other.environmentArchived &&
             invalidConfigTypeChange == other.invalidConfigTypeChange &&
@@ -2273,6 +2319,8 @@ private constructor(
             externalKeyChanged,
             workspaceMemberLimitExceeded,
             organizationTypeNotSupported,
+            parentOrganizationRequired,
+            rbacRoleNotFound,
             environmentCreateDisabled,
             environmentArchived,
             invalidConfigTypeChange,
@@ -2400,6 +2448,9 @@ private constructor(
                 "ErrorDetails{workspaceMemberLimitExceeded=$workspaceMemberLimitExceeded}"
             organizationTypeNotSupported != null ->
                 "ErrorDetails{organizationTypeNotSupported=$organizationTypeNotSupported}"
+            parentOrganizationRequired != null ->
+                "ErrorDetails{parentOrganizationRequired=$parentOrganizationRequired}"
+            rbacRoleNotFound != null -> "ErrorDetails{rbacRoleNotFound=$rbacRoleNotFound}"
             environmentCreateDisabled != null ->
                 "ErrorDetails{environmentCreateDisabled=$environmentCreateDisabled}"
             environmentArchived != null -> "ErrorDetails{environmentArchived=$environmentArchived}"
@@ -2884,6 +2935,20 @@ private constructor(
         fun ofOrganizationTypeNotSupported(
             organizationTypeNotSupported: OrganizationTypeNotSupportedErrorDetails
         ) = ErrorDetails(organizationTypeNotSupported = organizationTypeNotSupported)
+
+        /**
+         * The endpoint serves only organizations that belong to a parent organization, and this
+         * organization belongs to none.
+         */
+        @JvmStatic
+        fun ofParentOrganizationRequired(
+            parentOrganizationRequired: ParentOrganizationRequiredErrorDetails
+        ) = ErrorDetails(parentOrganizationRequired = parentOrganizationRequired)
+
+        /** No RBAC Role with this ID was found. */
+        @JvmStatic
+        fun ofRbacRoleNotFound(rbacRoleNotFound: RbacRoleNotFoundErrorDetails) =
+            ErrorDetails(rbacRoleNotFound = rbacRoleNotFound)
 
         /**
          * Anthropic has turned off creating environments for this organization. Existing
@@ -3550,6 +3615,17 @@ private constructor(
         ): T
 
         /**
+         * The endpoint serves only organizations that belong to a parent organization, and this
+         * organization belongs to none.
+         */
+        fun visitParentOrganizationRequired(
+            parentOrganizationRequired: ParentOrganizationRequiredErrorDetails
+        ): T
+
+        /** No RBAC Role with this ID was found. */
+        fun visitRbacRoleNotFound(rbacRoleNotFound: RbacRoleNotFoundErrorDetails): T
+
+        /**
          * Anthropic has turned off creating environments for this organization. Existing
          * environments still work.
          */
@@ -4138,6 +4214,19 @@ private constructor(
                         ?.let { ErrorDetails(organizationTypeNotSupported = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "parent_organization_required" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ParentOrganizationRequiredErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(parentOrganizationRequired = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "rbac_role_not_found" -> {
+                    return tryDeserialize(node, jacksonTypeRef<RbacRoleNotFoundErrorDetails>())
+                        ?.let { ErrorDetails(rbacRoleNotFound = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "environment_create_disabled" -> {
                     return tryDeserialize(
                             node,
@@ -4459,6 +4548,9 @@ private constructor(
                     generator.writeObject(value.workspaceMemberLimitExceeded)
                 value.organizationTypeNotSupported != null ->
                     generator.writeObject(value.organizationTypeNotSupported)
+                value.parentOrganizationRequired != null ->
+                    generator.writeObject(value.parentOrganizationRequired)
+                value.rbacRoleNotFound != null -> generator.writeObject(value.rbacRoleNotFound)
                 value.environmentCreateDisabled != null ->
                     generator.writeObject(value.environmentCreateDisabled)
                 value.environmentArchived != null ->
@@ -4695,6 +4787,12 @@ private constructor(
                 ErrorCode(JsonField.of("organization_type_not_supported"))
 
             @JvmField
+            val PARENT_ORGANIZATION_REQUIRED =
+                ErrorCode(JsonField.of("parent_organization_required"))
+
+            @JvmField val RBAC_ROLE_NOT_FOUND = ErrorCode(JsonField.of("rbac_role_not_found"))
+
+            @JvmField
             val ENVIRONMENT_CREATE_DISABLED = ErrorCode(JsonField.of("environment_create_disabled"))
 
             @JvmField val ENVIRONMENT_ARCHIVED = ErrorCode(JsonField.of("environment_archived"))
@@ -4838,6 +4936,8 @@ private constructor(
                     "external_key_changed" -> EXTERNAL_KEY_CHANGED
                     "workspace_member_limit_exceeded" -> WORKSPACE_MEMBER_LIMIT_EXCEEDED
                     "organization_type_not_supported" -> ORGANIZATION_TYPE_NOT_SUPPORTED
+                    "parent_organization_required" -> PARENT_ORGANIZATION_REQUIRED
+                    "rbac_role_not_found" -> RBAC_ROLE_NOT_FOUND
                     "environment_create_disabled" -> ENVIRONMENT_CREATE_DISABLED
                     "environment_archived" -> ENVIRONMENT_ARCHIVED
                     "invalid_config_type_change" -> INVALID_CONFIG_TYPE_CHANGE
@@ -4935,6 +5035,8 @@ private constructor(
             EXTERNAL_KEY_CHANGED,
             WORKSPACE_MEMBER_LIMIT_EXCEEDED,
             ORGANIZATION_TYPE_NOT_SUPPORTED,
+            PARENT_ORGANIZATION_REQUIRED,
+            RBAC_ROLE_NOT_FOUND,
             ENVIRONMENT_CREATE_DISABLED,
             ENVIRONMENT_ARCHIVED,
             INVALID_CONFIG_TYPE_CHANGE,
@@ -5029,6 +5131,8 @@ private constructor(
             EXTERNAL_KEY_CHANGED,
             WORKSPACE_MEMBER_LIMIT_EXCEEDED,
             ORGANIZATION_TYPE_NOT_SUPPORTED,
+            PARENT_ORGANIZATION_REQUIRED,
+            RBAC_ROLE_NOT_FOUND,
             ENVIRONMENT_CREATE_DISABLED,
             ENVIRONMENT_ARCHIVED,
             INVALID_CONFIG_TYPE_CHANGE,
@@ -5127,6 +5231,8 @@ private constructor(
                 EXTERNAL_KEY_CHANGED -> Value.EXTERNAL_KEY_CHANGED
                 WORKSPACE_MEMBER_LIMIT_EXCEEDED -> Value.WORKSPACE_MEMBER_LIMIT_EXCEEDED
                 ORGANIZATION_TYPE_NOT_SUPPORTED -> Value.ORGANIZATION_TYPE_NOT_SUPPORTED
+                PARENT_ORGANIZATION_REQUIRED -> Value.PARENT_ORGANIZATION_REQUIRED
+                RBAC_ROLE_NOT_FOUND -> Value.RBAC_ROLE_NOT_FOUND
                 ENVIRONMENT_CREATE_DISABLED -> Value.ENVIRONMENT_CREATE_DISABLED
                 ENVIRONMENT_ARCHIVED -> Value.ENVIRONMENT_ARCHIVED
                 INVALID_CONFIG_TYPE_CHANGE -> Value.INVALID_CONFIG_TYPE_CHANGE
@@ -5228,6 +5334,8 @@ private constructor(
                 EXTERNAL_KEY_CHANGED -> Known.EXTERNAL_KEY_CHANGED
                 WORKSPACE_MEMBER_LIMIT_EXCEEDED -> Known.WORKSPACE_MEMBER_LIMIT_EXCEEDED
                 ORGANIZATION_TYPE_NOT_SUPPORTED -> Known.ORGANIZATION_TYPE_NOT_SUPPORTED
+                PARENT_ORGANIZATION_REQUIRED -> Known.PARENT_ORGANIZATION_REQUIRED
+                RBAC_ROLE_NOT_FOUND -> Known.RBAC_ROLE_NOT_FOUND
                 ENVIRONMENT_CREATE_DISABLED -> Known.ENVIRONMENT_CREATE_DISABLED
                 ENVIRONMENT_ARCHIVED -> Known.ENVIRONMENT_ARCHIVED
                 INVALID_CONFIG_TYPE_CHANGE -> Known.INVALID_CONFIG_TYPE_CHANGE

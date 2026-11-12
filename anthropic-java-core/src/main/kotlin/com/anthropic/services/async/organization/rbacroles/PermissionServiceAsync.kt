@@ -26,6 +26,10 @@ interface PermissionServiceAsync {
      * List the permissions an RBAC Role grants.
      *
      * The RBAC Roles API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.OrganizationTypeNotSupportedException
+     * @throws com.anthropic.models.ParentOrganizationRequiredException
+     * @throws com.anthropic.models.organization.RbacRoleNotFoundException
      */
     fun list(rbacRoleId: String): CompletableFuture<PermissionListPageAsync> =
         list(rbacRoleId, PermissionListParams.none())
