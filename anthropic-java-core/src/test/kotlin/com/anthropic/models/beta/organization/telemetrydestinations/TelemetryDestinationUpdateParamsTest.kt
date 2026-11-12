@@ -12,7 +12,7 @@ internal class TelemetryDestinationUpdateParamsTest {
     fun create() {
         TelemetryDestinationUpdateParams.builder()
             .destinationId("destination_id")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .displayName("display_name")
             .endpointUrl("endpoint_url")
             .headers(
@@ -48,7 +48,7 @@ internal class TelemetryDestinationUpdateParamsTest {
         val params =
             TelemetryDestinationUpdateParams.builder()
                 .destinationId("destination_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .displayName("display_name")
                 .endpointUrl("endpoint_url")
                 .headers(
@@ -75,7 +75,7 @@ internal class TelemetryDestinationUpdateParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "telemetry-destinations-2026-08-11")
+                        listOf("computer-use-2024-10-22", "telemetry-destinations-2026-08-11")
                             .joinToString(","),
                     )
                     .build()
@@ -97,7 +97,7 @@ internal class TelemetryDestinationUpdateParamsTest {
         val params =
             TelemetryDestinationUpdateParams.builder()
                 .destinationId("destination_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .displayName("display_name")
                 .endpointUrl("endpoint_url")
                 .headers(

@@ -25,7 +25,7 @@ internal class DeploymentRunServiceAsyncTest {
             deploymentRunServiceAsync.retrieve(
                 DeploymentRunRetrieveParams.builder()
                     .deploymentRunId("deployment_run_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

@@ -14,7 +14,7 @@ internal class EventStreamParamsTest {
         EventStreamParams.builder()
             .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
             .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .build()
     }
@@ -34,7 +34,7 @@ internal class EventStreamParamsTest {
             EventStreamParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                 .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 
@@ -45,7 +45,7 @@ internal class EventStreamParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "managed-agents-2026-04-01")
+                        listOf("computer-use-2024-10-22", "managed-agents-2026-04-01")
                             .joinToString(","),
                     )
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
@@ -68,7 +68,7 @@ internal class EventStreamParamsTest {
             EventStreamParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                 .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 

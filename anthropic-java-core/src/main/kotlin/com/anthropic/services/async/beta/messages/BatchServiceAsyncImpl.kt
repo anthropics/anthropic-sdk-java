@@ -8,7 +8,6 @@ import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.jsonlHandler
 import com.anthropic.core.http.AsyncStreamResponse
-import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
@@ -40,12 +39,6 @@ import kotlin.jvm.optionals.getOrNull
 
 class BatchServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     BatchServiceAsync {
-
-    companion object {
-
-        private val DEFAULT_HEADERS =
-            Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-    }
 
     private val withRawResponse: BatchServiceAsync.WithRawResponse by lazy {
         WithRawResponseImpl(clientOptions)
@@ -126,7 +119,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -171,7 +163,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -207,7 +198,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions =
@@ -255,7 +245,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -297,7 +286,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
                     .addPathSegments("cancel")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -340,7 +328,6 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
                     .addPathSegments("results")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "application/x-jsonl")
                     .build()
                     .prepareAsync(clientOptions, params)

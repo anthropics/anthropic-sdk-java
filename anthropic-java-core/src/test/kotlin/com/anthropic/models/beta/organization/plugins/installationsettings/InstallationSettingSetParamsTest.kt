@@ -12,7 +12,7 @@ internal class InstallationSettingSetParamsTest {
         InstallationSettingSetParams.builder()
             .pluginId("plugin_id")
             .target("target")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .installationPreference(InstallationSettingSetParams.InstallationPreference.REQUIRED)
             .build()
     }
@@ -40,7 +40,7 @@ internal class InstallationSettingSetParamsTest {
             InstallationSettingSetParams.builder()
                 .pluginId("plugin_id")
                 .target("target")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .installationPreference(
                     InstallationSettingSetParams.InstallationPreference.REQUIRED
                 )
@@ -53,8 +53,7 @@ internal class InstallationSettingSetParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "ce-plugins-2026-09-01")
-                            .joinToString(","),
+                        listOf("computer-use-2024-10-22", "ce-plugins-2026-09-01").joinToString(","),
                     )
                     .build()
             )
@@ -82,7 +81,7 @@ internal class InstallationSettingSetParamsTest {
             InstallationSettingSetParams.builder()
                 .pluginId("plugin_id")
                 .target("target")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .installationPreference(
                     InstallationSettingSetParams.InstallationPreference.REQUIRED
                 )

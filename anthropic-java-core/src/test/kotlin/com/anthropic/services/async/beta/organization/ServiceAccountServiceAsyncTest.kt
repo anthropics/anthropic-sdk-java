@@ -29,7 +29,7 @@ internal class ServiceAccountServiceAsyncTest {
         val betaServiceAccountFuture =
             serviceAccountServiceAsync.create(
                 ServiceAccountCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .name("ci-deploy-bot")
                     .description("description")
                     .organizationRole(ServiceAccountCreateParams.OrganizationRole.ADMIN)
@@ -51,7 +51,7 @@ internal class ServiceAccountServiceAsyncTest {
             serviceAccountServiceAsync.retrieve(
                 ServiceAccountRetrieveParams.builder()
                     .serviceAccountId("service_account_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -70,7 +70,7 @@ internal class ServiceAccountServiceAsyncTest {
             serviceAccountServiceAsync.update(
                 ServiceAccountUpdateParams.builder()
                     .serviceAccountId("service_account_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .description("description")
                     .organizationRole(ServiceAccountUpdateParams.OrganizationRole.ADMIN)
                     .build()
@@ -104,7 +104,7 @@ internal class ServiceAccountServiceAsyncTest {
             serviceAccountServiceAsync.archive(
                 ServiceAccountArchiveParams.builder()
                     .serviceAccountId("service_account_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

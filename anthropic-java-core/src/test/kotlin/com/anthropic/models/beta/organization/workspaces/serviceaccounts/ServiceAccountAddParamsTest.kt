@@ -12,7 +12,7 @@ internal class ServiceAccountAddParamsTest {
     fun create() {
         ServiceAccountAddParams.builder()
             .workspaceId("workspace_id")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .serviceAccountId("service_account_id")
             .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
             .build()
@@ -37,7 +37,7 @@ internal class ServiceAccountAddParamsTest {
         val params =
             ServiceAccountAddParams.builder()
                 .workspaceId("workspace_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .serviceAccountId("service_account_id")
                 .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
@@ -47,7 +47,7 @@ internal class ServiceAccountAddParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
+                    .put("anthropic-beta", listOf("computer-use-2024-10-22").joinToString(","))
                     .build()
             )
     }
@@ -71,7 +71,7 @@ internal class ServiceAccountAddParamsTest {
         val params =
             ServiceAccountAddParams.builder()
                 .workspaceId("workspace_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .serviceAccountId("service_account_id")
                 .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()

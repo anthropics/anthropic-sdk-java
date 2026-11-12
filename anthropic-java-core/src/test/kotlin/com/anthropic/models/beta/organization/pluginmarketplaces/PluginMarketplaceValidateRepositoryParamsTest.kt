@@ -10,7 +10,7 @@ internal class PluginMarketplaceValidateRepositoryParamsTest {
     @Test
     fun create() {
         PluginMarketplaceValidateRepositoryParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .repositoryUrl("https://github.com/example-org/example-marketplace")
             .ref("main")
             .build()
@@ -20,7 +20,7 @@ internal class PluginMarketplaceValidateRepositoryParamsTest {
     fun headers() {
         val params =
             PluginMarketplaceValidateRepositoryParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .repositoryUrl("https://github.com/example-org/example-marketplace")
                 .ref("main")
                 .build()
@@ -32,8 +32,7 @@ internal class PluginMarketplaceValidateRepositoryParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "ce-plugins-2026-09-01")
-                            .joinToString(","),
+                        listOf("computer-use-2024-10-22", "ce-plugins-2026-09-01").joinToString(","),
                     )
                     .build()
             )
@@ -55,7 +54,7 @@ internal class PluginMarketplaceValidateRepositoryParamsTest {
     fun body() {
         val params =
             PluginMarketplaceValidateRepositoryParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .repositoryUrl("https://github.com/example-org/example-marketplace")
                 .ref("main")
                 .build()

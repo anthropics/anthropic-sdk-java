@@ -12,7 +12,7 @@ internal class EnvironmentUpdateParamsTest {
     fun create() {
         EnvironmentUpdateParams.builder()
             .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .config(
                 BetaCloudConfigParams.builder()
@@ -63,7 +63,7 @@ internal class EnvironmentUpdateParamsTest {
         val params =
             EnvironmentUpdateParams.builder()
                 .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .config(
                     BetaCloudConfigParams.builder()
@@ -105,7 +105,7 @@ internal class EnvironmentUpdateParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "managed-agents-2026-04-01")
+                        listOf("computer-use-2024-10-22", "managed-agents-2026-04-01")
                             .joinToString(","),
                     )
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
@@ -128,7 +128,7 @@ internal class EnvironmentUpdateParamsTest {
         val params =
             EnvironmentUpdateParams.builder()
                 .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .config(
                     BetaCloudConfigParams.builder()

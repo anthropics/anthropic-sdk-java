@@ -29,7 +29,7 @@ internal class TargetServiceAsyncTest {
             targetServiceAsync.create(
                 TargetCreateParams.builder()
                     .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .slackChannelTarget("xxxxxxxx")
                     .build()
             )
@@ -50,7 +50,7 @@ internal class TargetServiceAsyncTest {
                 TargetRetrieveParams.builder()
                     .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
                     .targetId("btgt_01SvpyRQK3nN6eH9uhRA7n1qHq8TzW5mKc2YbX7vNd4RfJ")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -83,7 +83,7 @@ internal class TargetServiceAsyncTest {
                 TargetDeleteParams.builder()
                     .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
                     .targetId("btgt_01SvpyRQK3nN6eH9uhRA7n1qHq8TzW5mKc2YbX7vNd4RfJ")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

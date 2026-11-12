@@ -30,7 +30,7 @@ internal class WorkspaceServiceAsyncTest {
         val betaWorkspaceFuture =
             workspaceServiceAsync.create(
                 WorkspaceCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .name("x")
                     .dataResidency(
                         BetaDataResidencyCreateConfig.builder()

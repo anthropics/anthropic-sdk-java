@@ -10,7 +10,7 @@ internal class WebhookCreateParamsTest {
     @Test
     fun create() {
         WebhookCreateParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .addEnabledEvent(
                 WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
             )
@@ -24,7 +24,7 @@ internal class WebhookCreateParamsTest {
     fun headers() {
         val params =
             WebhookCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .addEnabledEvent(
                     WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 )
@@ -40,8 +40,7 @@ internal class WebhookCreateParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "webhooks-2026-10-07")
-                            .joinToString(","),
+                        listOf("computer-use-2024-10-22", "webhooks-2026-10-07").joinToString(","),
                     )
                     .build()
             )
@@ -66,7 +65,7 @@ internal class WebhookCreateParamsTest {
     fun body() {
         val params =
             WebhookCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .addEnabledEvent(
                     WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 )

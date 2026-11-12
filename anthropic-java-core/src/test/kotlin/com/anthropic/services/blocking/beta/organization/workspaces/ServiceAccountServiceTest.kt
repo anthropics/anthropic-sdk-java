@@ -32,7 +32,7 @@ internal class ServiceAccountServiceTest {
                 ServiceAccountRetrieveParams.builder()
                     .workspaceId("workspace_id")
                     .serviceAccountId("service_account_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -51,7 +51,7 @@ internal class ServiceAccountServiceTest {
                 ServiceAccountUpdateParams.builder()
                     .workspaceId("workspace_id")
                     .serviceAccountId("service_account_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                     .build()
             )
@@ -82,7 +82,7 @@ internal class ServiceAccountServiceTest {
             serviceAccountService.add(
                 ServiceAccountAddParams.builder()
                     .workspaceId("workspace_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .serviceAccountId("service_account_id")
                     .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                     .build()
@@ -103,7 +103,7 @@ internal class ServiceAccountServiceTest {
                 ServiceAccountRemoveParams.builder()
                     .workspaceId("workspace_id")
                     .serviceAccountId("service_account_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

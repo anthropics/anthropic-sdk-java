@@ -36,7 +36,7 @@ internal class WorkServiceAsyncTest {
                 WorkRetrieveParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .workId("work_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -55,7 +55,7 @@ internal class WorkServiceAsyncTest {
                 WorkUpdateParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .workId("work_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .betaSelfHostedWorkUpdateRequest(
                         BetaSelfHostedWorkUpdateRequest.of(
@@ -92,7 +92,7 @@ internal class WorkServiceAsyncTest {
                 WorkAckParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .workId("work_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -112,7 +112,7 @@ internal class WorkServiceAsyncTest {
                     .workId("work_id")
                     .desiredTtlSeconds(0L)
                     .expectedLastHeartbeat("expected_last_heartbeat")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -131,7 +131,7 @@ internal class WorkServiceAsyncTest {
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .blockMs(1L)
                     .reclaimOlderThanMs(1L)
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .anthropicWorkerId("Anthropic-Worker-ID")
                     .build()
             )
@@ -150,7 +150,7 @@ internal class WorkServiceAsyncTest {
             workServiceAsync.stats(
                 WorkStatsParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -169,7 +169,7 @@ internal class WorkServiceAsyncTest {
                 WorkStopParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .workId("work_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .betaSelfHostedWorkStopRequest(
                         BetaSelfHostedWorkStopRequest.builder().force(true).build()

@@ -30,7 +30,7 @@ internal class IssuerServiceAsyncTest {
         val betaFederationIssuerFuture =
             issuerServiceAsync.create(
                 IssuerCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .issuerUrl("x")
                     .name("x")
                     .checkJti(true)
@@ -59,7 +59,7 @@ internal class IssuerServiceAsyncTest {
             issuerServiceAsync.retrieve(
                 IssuerRetrieveParams.builder()
                     .federationIssuerId("federation_issuer_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -78,7 +78,7 @@ internal class IssuerServiceAsyncTest {
             issuerServiceAsync.update(
                 IssuerUpdateParams.builder()
                     .federationIssuerId("federation_issuer_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .checkJti(true)
                     .issuerUrl("x")
                     .jwks(
@@ -121,7 +121,7 @@ internal class IssuerServiceAsyncTest {
             issuerServiceAsync.archive(
                 IssuerArchiveParams.builder()
                     .federationIssuerId("federation_issuer_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

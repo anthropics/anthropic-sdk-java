@@ -35,7 +35,7 @@ internal class TelemetryDestinationServiceAsyncTest {
         val betaTelemetryDestinationFuture =
             telemetryDestinationServiceAsync.create(
                 TelemetryDestinationCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .endpointUrl("x")
                     .workspaces(BetaTelemetryDestinationWorkspacesAllParams.builder().build())
                     .displayName("display_name")
@@ -70,7 +70,7 @@ internal class TelemetryDestinationServiceAsyncTest {
             telemetryDestinationServiceAsync.retrieve(
                 TelemetryDestinationRetrieveParams.builder()
                     .destinationId("destination_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -89,7 +89,7 @@ internal class TelemetryDestinationServiceAsyncTest {
             telemetryDestinationServiceAsync.update(
                 TelemetryDestinationUpdateParams.builder()
                     .destinationId("destination_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .displayName("display_name")
                     .endpointUrl("endpoint_url")
                     .headers(
@@ -138,7 +138,7 @@ internal class TelemetryDestinationServiceAsyncTest {
             telemetryDestinationServiceAsync.delete(
                 TelemetryDestinationDeleteParams.builder()
                     .destinationId("destination_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -157,7 +157,7 @@ internal class TelemetryDestinationServiceAsyncTest {
             telemetryDestinationServiceAsync.test(
                 TelemetryDestinationTestParams.builder()
                     .destinationId("destination_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

@@ -39,7 +39,7 @@ internal class VersionServiceAsyncTest {
             versionServiceAsync.create(
                 VersionCreateParams.builder()
                     .pluginId("plugin_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .addFile("Example data".byteInputStream())
                     .releaseNotes("release_notes")
                     .build()
@@ -62,7 +62,7 @@ internal class VersionServiceAsyncTest {
                     .pluginId("plugin_id")
                     .version("version")
                     .organizationId("organization_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -101,7 +101,7 @@ internal class VersionServiceAsyncTest {
                     .pluginId("plugin_id")
                     .version("version")
                     .organizationId("organization_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

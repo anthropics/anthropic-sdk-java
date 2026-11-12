@@ -32,7 +32,7 @@ internal class SlackWorkspaceServiceTest {
                 SlackWorkspaceRetrieveParams.builder()
                     .id("slws_01Hq8TzW5mKc2YbX7vNd4RfJ")
                     .includeInherited(true)
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -50,7 +50,7 @@ internal class SlackWorkspaceServiceTest {
             slackWorkspaceService.update(
                 SlackWorkspaceUpdateParams.builder()
                     .id("slws_01Hq8TzW5mKc2YbX7vNd4RfJ")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .settings(
                         BetaClaudeTagSettingsUpdate.builder()
                             .enabled(true)

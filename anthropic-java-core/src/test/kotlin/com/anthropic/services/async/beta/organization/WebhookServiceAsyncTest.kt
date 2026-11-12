@@ -28,7 +28,7 @@ internal class WebhookServiceAsyncTest {
         val betaNewOrganizationWebhookEndpointFuture =
             webhookServiceAsync.create(
                 WebhookCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .addEnabledEvent(
                         WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                     )
@@ -51,7 +51,7 @@ internal class WebhookServiceAsyncTest {
             webhookServiceAsync.retrieve(
                 WebhookRetrieveParams.builder()
                     .webhookEndpointId("webhook_endpoint_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -68,7 +68,7 @@ internal class WebhookServiceAsyncTest {
             webhookServiceAsync.update(
                 WebhookUpdateParams.builder()
                     .webhookEndpointId("webhook_endpoint_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .description("description")
                     .addEnabledEvent(
                         WebhookUpdateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
@@ -103,7 +103,7 @@ internal class WebhookServiceAsyncTest {
             webhookServiceAsync.delete(
                 WebhookDeleteParams.builder()
                     .webhookEndpointId("webhook_endpoint_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -121,7 +121,7 @@ internal class WebhookServiceAsyncTest {
             webhookServiceAsync.regenerateSigningSecret(
                 WebhookRegenerateSigningSecretParams.builder()
                     .webhookEndpointId("webhook_endpoint_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

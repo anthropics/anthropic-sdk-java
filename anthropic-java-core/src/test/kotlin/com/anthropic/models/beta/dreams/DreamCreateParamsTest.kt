@@ -10,7 +10,7 @@ internal class DreamCreateParamsTest {
     @Test
     fun create() {
         DreamCreateParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .addMemoryStoreInput("x")
             .model("string")
@@ -23,7 +23,7 @@ internal class DreamCreateParamsTest {
     fun headers() {
         val params =
             DreamCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .addMemoryStoreInput("x")
                 .model("string")
@@ -38,8 +38,7 @@ internal class DreamCreateParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "dreaming-2026-04-21")
-                            .joinToString(","),
+                        listOf("computer-use-2024-10-22", "dreaming-2026-04-21").joinToString(","),
                     )
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -59,7 +58,7 @@ internal class DreamCreateParamsTest {
     fun body() {
         val params =
             DreamCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .addMemoryStoreInput("x")
                 .model("string")

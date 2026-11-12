@@ -49,7 +49,7 @@ internal class EventServiceTest {
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

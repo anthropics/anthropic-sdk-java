@@ -27,7 +27,7 @@ internal class BundleServiceAsyncTest {
             bundleServiceAsync.retrieve(
                 BundleRetrieveParams.builder()
                     .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

@@ -32,7 +32,7 @@ internal class EnvironmentServiceAsyncTest {
         val betaEnvironmentFuture =
             environmentServiceAsync.create(
                 EnvironmentCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .name("python-data-analysis")
                     .config(
@@ -81,7 +81,7 @@ internal class EnvironmentServiceAsyncTest {
             environmentServiceAsync.retrieve(
                 EnvironmentRetrieveParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -99,7 +99,7 @@ internal class EnvironmentServiceAsyncTest {
             environmentServiceAsync.update(
                 EnvironmentUpdateParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .config(
                         BetaCloudConfigParams.builder()
@@ -159,7 +159,7 @@ internal class EnvironmentServiceAsyncTest {
             environmentServiceAsync.delete(
                 EnvironmentDeleteParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -177,7 +177,7 @@ internal class EnvironmentServiceAsyncTest {
             environmentServiceAsync.archive(
                 EnvironmentArchiveParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

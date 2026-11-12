@@ -19,7 +19,7 @@ internal class DeploymentListParamsTest {
             .limit(0)
             .page("page")
             .status(BetaManagedAgentsDeploymentStatus.ACTIVE)
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .build()
     }
@@ -35,7 +35,7 @@ internal class DeploymentListParamsTest {
                 .limit(0)
                 .page("page")
                 .status(BetaManagedAgentsDeploymentStatus.ACTIVE)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 
@@ -46,7 +46,7 @@ internal class DeploymentListParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "managed-agents-2026-04-01")
+                        listOf("computer-use-2024-10-22", "managed-agents-2026-04-01")
                             .joinToString(","),
                     )
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
@@ -74,7 +74,7 @@ internal class DeploymentListParamsTest {
                 .limit(0)
                 .page("page")
                 .status(BetaManagedAgentsDeploymentStatus.ACTIVE)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 

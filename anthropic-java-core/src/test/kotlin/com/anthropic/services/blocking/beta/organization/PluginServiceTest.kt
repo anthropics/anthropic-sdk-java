@@ -27,7 +27,7 @@ internal class PluginServiceTest {
         val betaPlugin =
             pluginService.create(
                 PluginCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .addFile("Example data".byteInputStream())
                     .marketplaceId("marketplace_id")
                     .releaseNotes("release_notes")
@@ -47,7 +47,7 @@ internal class PluginServiceTest {
                 PluginRetrieveParams.builder()
                     .pluginId("plugin_id")
                     .organizationId("organization_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -63,7 +63,7 @@ internal class PluginServiceTest {
             pluginService.update(
                 PluginUpdateParams.builder()
                     .pluginId("plugin_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .servedVersionId("pluginver_01KaZmQpRsTuVwXyZ2b4c6d8")
                     .build()
             )
@@ -90,7 +90,7 @@ internal class PluginServiceTest {
             pluginService.delete(
                 PluginDeleteParams.builder()
                     .pluginId("plugin_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

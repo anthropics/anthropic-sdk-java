@@ -28,7 +28,7 @@ internal class WebhookServiceTest {
         val betaNewOrganizationWebhookEndpoint =
             webhookService.create(
                 WebhookCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .addEnabledEvent(
                         WebhookCreateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                     )
@@ -50,7 +50,7 @@ internal class WebhookServiceTest {
             webhookService.retrieve(
                 WebhookRetrieveParams.builder()
                     .webhookEndpointId("webhook_endpoint_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -66,7 +66,7 @@ internal class WebhookServiceTest {
             webhookService.update(
                 WebhookUpdateParams.builder()
                     .webhookEndpointId("webhook_endpoint_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .description("description")
                     .addEnabledEvent(
                         WebhookUpdateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
@@ -99,7 +99,7 @@ internal class WebhookServiceTest {
             webhookService.delete(
                 WebhookDeleteParams.builder()
                     .webhookEndpointId("webhook_endpoint_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -115,7 +115,7 @@ internal class WebhookServiceTest {
             webhookService.regenerateSigningSecret(
                 WebhookRegenerateSigningSecretParams.builder()
                     .webhookEndpointId("webhook_endpoint_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

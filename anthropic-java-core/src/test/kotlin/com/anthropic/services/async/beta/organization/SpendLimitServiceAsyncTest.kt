@@ -66,7 +66,7 @@ internal class SpendLimitServiceAsyncTest {
         val betaSpendLimitFuture =
             spendLimitServiceAsync.set(
                 SpendLimitSetParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .amount("50000")
                     .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
                     .period(BetaSpendLimitPeriod.DAILY)

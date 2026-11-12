@@ -7,7 +7,6 @@ import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
 import com.anthropic.core.handlers.jsonlHandler
-import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
@@ -36,12 +35,6 @@ import kotlin.jvm.optionals.getOrNull
 
 class BatchServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     BatchService {
-
-    companion object {
-
-        private val DEFAULT_HEADERS =
-            Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
-    }
 
     private val withRawResponse: BatchService.WithRawResponse by lazy {
         WithRawResponseImpl(clientOptions)
@@ -116,7 +109,6 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -156,7 +148,6 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -189,7 +180,6 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions =
@@ -233,7 +223,6 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
@@ -272,7 +261,6 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
                     .addPathSegments("cancel")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
@@ -312,7 +300,6 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .addPathSegments("v1", "messages", "batches")
                     .addPathParam("messageBatchId", params._pathParam(0))
                     .addPathSegments("results")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "application/x-jsonl")
                     .build()
                     .prepare(clientOptions, params)

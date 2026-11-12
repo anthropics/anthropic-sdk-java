@@ -31,7 +31,7 @@ internal class UserProfileServiceAsyncTest {
         val betaUserProfileFuture =
             userProfileServiceAsync.create(
                 UserProfileCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                     .externalId("x")
@@ -69,7 +69,7 @@ internal class UserProfileServiceAsyncTest {
             userProfileServiceAsync.retrieve(
                 UserProfileRetrieveParams.builder()
                     .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -87,7 +87,7 @@ internal class UserProfileServiceAsyncTest {
             userProfileServiceAsync.update(
                 UserProfileUpdateParams.builder()
                     .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                     .externalId("x")
@@ -140,7 +140,7 @@ internal class UserProfileServiceAsyncTest {
             userProfileServiceAsync.delete(
                 UserProfileDeleteParams.builder()
                     .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -158,7 +158,7 @@ internal class UserProfileServiceAsyncTest {
             userProfileServiceAsync.createEnrollmentUrl(
                 UserProfileCreateEnrollmentUrlParams.builder()
                     .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

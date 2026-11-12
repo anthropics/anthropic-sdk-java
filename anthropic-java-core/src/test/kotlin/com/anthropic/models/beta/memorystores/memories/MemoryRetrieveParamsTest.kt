@@ -14,7 +14,7 @@ internal class MemoryRetrieveParamsTest {
             .memoryStoreId("memory_store_id")
             .memoryId("memory_id")
             .view(BetaManagedAgentsMemoryView.BASIC)
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .build()
     }
@@ -40,7 +40,7 @@ internal class MemoryRetrieveParamsTest {
                 .memoryStoreId("memory_store_id")
                 .memoryId("memory_id")
                 .view(BetaManagedAgentsMemoryView.BASIC)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 
@@ -51,7 +51,7 @@ internal class MemoryRetrieveParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "agent-memory-2026-07-22")
+                        listOf("computer-use-2024-10-22", "agent-memory-2026-07-22")
                             .joinToString(","),
                     )
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
@@ -79,7 +79,7 @@ internal class MemoryRetrieveParamsTest {
                 .memoryStoreId("memory_store_id")
                 .memoryId("memory_id")
                 .view(BetaManagedAgentsMemoryView.BASIC)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 

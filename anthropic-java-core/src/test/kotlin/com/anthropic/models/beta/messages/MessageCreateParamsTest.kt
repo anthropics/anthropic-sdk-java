@@ -13,7 +13,7 @@ internal class MessageCreateParamsTest {
     @Test
     fun create() {
         MessageCreateParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .userProfileId("anthropic-user-profile-id")
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .maxTokens(1024L)
@@ -165,7 +165,7 @@ internal class MessageCreateParamsTest {
     fun headers() {
         val params =
             MessageCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .userProfileId("anthropic-user-profile-id")
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .maxTokens(1024L)
@@ -321,7 +321,7 @@ internal class MessageCreateParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
+                    .put("anthropic-beta", listOf("computer-use-2024-10-22").joinToString(","))
                     .put("anthropic-user-profile-id", "anthropic-user-profile-id")
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -346,7 +346,7 @@ internal class MessageCreateParamsTest {
     fun body() {
         val params =
             MessageCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .userProfileId("anthropic-user-profile-id")
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .maxTokens(1024L)

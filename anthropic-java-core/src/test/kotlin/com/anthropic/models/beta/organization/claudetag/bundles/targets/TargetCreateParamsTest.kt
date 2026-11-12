@@ -11,7 +11,7 @@ internal class TargetCreateParamsTest {
     fun create() {
         TargetCreateParams.builder()
             .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .slackChannelTarget("xxxxxxxx")
             .build()
     }
@@ -34,7 +34,7 @@ internal class TargetCreateParamsTest {
         val params =
             TargetCreateParams.builder()
                 .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .slackChannelTarget("xxxxxxxx")
                 .build()
 
@@ -45,7 +45,7 @@ internal class TargetCreateParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "experimental-claude-tag-2026-10-21")
+                        listOf("computer-use-2024-10-22", "experimental-claude-tag-2026-10-21")
                             .joinToString(","),
                     )
                     .build()
@@ -70,7 +70,7 @@ internal class TargetCreateParamsTest {
         val params =
             TargetCreateParams.builder()
                 .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .slackChannelTarget("xxxxxxxx")
                 .build()
 

@@ -26,9 +26,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
     companion object {
 
         @JvmField
-        val MESSAGE_BATCHES_2024_09_24 = AnthropicBeta(JsonField.of("message-batches-2024-09-24"))
-
-        @JvmField
         val COMPUTER_USE_2024_10_22 = AnthropicBeta(JsonField.of("computer-use-2024-10-22"))
 
         @JvmField
@@ -173,6 +170,10 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
 
         @Deprecated("This value is no longer needed. Remove it from your requests.")
         @JvmField
+        val MESSAGE_BATCHES_2024_09_24 = AnthropicBeta(JsonField.of("message-batches-2024-09-24"))
+
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        @JvmField
         val PROMPT_CACHING_2024_07_31 = AnthropicBeta(JsonField.of("prompt-caching-2024-07-31"))
 
         @Deprecated("This value is no longer needed. Remove it from your requests.")
@@ -218,7 +219,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         fun of(value: String): AnthropicBeta =
             // Intern known values so `==` works
             when (value) {
-                "message-batches-2024-09-24" -> MESSAGE_BATCHES_2024_09_24
                 "computer-use-2024-10-22" -> COMPUTER_USE_2024_10_22
                 "computer-use-2025-01-24" -> COMPUTER_USE_2025_01_24
                 "output-128k-2025-02-19" -> OUTPUT_128K_2025_02_19
@@ -269,6 +269,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
                 "message-threads-2026-08-12" -> MESSAGE_THREADS_2026_08_12
                 "analytics-usage-cost-2026-08-24" -> ANALYTICS_USAGE_COST_2026_08_24
                 "experimental-claude-tag-2026-10-21" -> EXPERIMENTAL_CLAUDE_TAG_2026_10_21
+                "message-batches-2024-09-24" -> MESSAGE_BATCHES_2024_09_24
                 "prompt-caching-2024-07-31" -> PROMPT_CACHING_2024_07_31
                 "pdfs-2024-09-25" -> PDFS_2024_09_25
                 "token-counting-2024-11-01" -> TOKEN_COUNTING_2024_11_01
@@ -289,7 +290,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
 
     /** An enum containing [AnthropicBeta]'s known values. */
     enum class Known {
-        MESSAGE_BATCHES_2024_09_24,
         COMPUTER_USE_2024_10_22,
         COMPUTER_USE_2025_01_24,
         OUTPUT_128K_2025_02_19,
@@ -336,6 +336,8 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         MESSAGE_THREADS_2026_08_12,
         ANALYTICS_USAGE_COST_2026_08_24,
         EXPERIMENTAL_CLAUDE_TAG_2026_10_21,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        MESSAGE_BATCHES_2024_09_24,
         @Deprecated("This value is no longer needed. Remove it from your requests.")
         PROMPT_CACHING_2024_07_31,
         @Deprecated("This value is no longer needed. Remove it from your requests.")
@@ -370,7 +372,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
-        MESSAGE_BATCHES_2024_09_24,
         COMPUTER_USE_2024_10_22,
         COMPUTER_USE_2025_01_24,
         OUTPUT_128K_2025_02_19,
@@ -417,6 +418,8 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         MESSAGE_THREADS_2026_08_12,
         ANALYTICS_USAGE_COST_2026_08_24,
         EXPERIMENTAL_CLAUDE_TAG_2026_10_21,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        MESSAGE_BATCHES_2024_09_24,
         @Deprecated("This value is no longer needed. Remove it from your requests.")
         PROMPT_CACHING_2024_07_31,
         @Deprecated("This value is no longer needed. Remove it from your requests.")
@@ -454,7 +457,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
      */
     fun value(): Value =
         when (this) {
-            MESSAGE_BATCHES_2024_09_24 -> Value.MESSAGE_BATCHES_2024_09_24
             COMPUTER_USE_2024_10_22 -> Value.COMPUTER_USE_2024_10_22
             COMPUTER_USE_2025_01_24 -> Value.COMPUTER_USE_2025_01_24
             OUTPUT_128K_2025_02_19 -> Value.OUTPUT_128K_2025_02_19
@@ -505,6 +507,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             MESSAGE_THREADS_2026_08_12 -> Value.MESSAGE_THREADS_2026_08_12
             ANALYTICS_USAGE_COST_2026_08_24 -> Value.ANALYTICS_USAGE_COST_2026_08_24
             EXPERIMENTAL_CLAUDE_TAG_2026_10_21 -> Value.EXPERIMENTAL_CLAUDE_TAG_2026_10_21
+            MESSAGE_BATCHES_2024_09_24 -> Value.MESSAGE_BATCHES_2024_09_24
             PROMPT_CACHING_2024_07_31 -> Value.PROMPT_CACHING_2024_07_31
             PDFS_2024_09_25 -> Value.PDFS_2024_09_25
             TOKEN_COUNTING_2024_11_01 -> Value.TOKEN_COUNTING_2024_11_01
@@ -527,7 +530,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
      */
     fun known(): Known =
         when (this) {
-            MESSAGE_BATCHES_2024_09_24 -> Known.MESSAGE_BATCHES_2024_09_24
             COMPUTER_USE_2024_10_22 -> Known.COMPUTER_USE_2024_10_22
             COMPUTER_USE_2025_01_24 -> Known.COMPUTER_USE_2025_01_24
             OUTPUT_128K_2025_02_19 -> Known.OUTPUT_128K_2025_02_19
@@ -578,6 +580,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             MESSAGE_THREADS_2026_08_12 -> Known.MESSAGE_THREADS_2026_08_12
             ANALYTICS_USAGE_COST_2026_08_24 -> Known.ANALYTICS_USAGE_COST_2026_08_24
             EXPERIMENTAL_CLAUDE_TAG_2026_10_21 -> Known.EXPERIMENTAL_CLAUDE_TAG_2026_10_21
+            MESSAGE_BATCHES_2024_09_24 -> Known.MESSAGE_BATCHES_2024_09_24
             PROMPT_CACHING_2024_07_31 -> Known.PROMPT_CACHING_2024_07_31
             PDFS_2024_09_25 -> Known.PDFS_2024_09_25
             TOKEN_COUNTING_2024_11_01 -> Known.TOKEN_COUNTING_2024_11_01

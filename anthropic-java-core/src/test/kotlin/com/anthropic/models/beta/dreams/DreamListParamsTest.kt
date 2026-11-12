@@ -18,7 +18,7 @@ internal class DreamListParamsTest {
             .limit(0)
             .page("page")
             .addStatus(BetaDreamStatus.PENDING)
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .build()
     }
@@ -33,7 +33,7 @@ internal class DreamListParamsTest {
                 .limit(0)
                 .page("page")
                 .addStatus(BetaDreamStatus.PENDING)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 
@@ -44,8 +44,7 @@ internal class DreamListParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "dreaming-2026-04-21")
-                            .joinToString(","),
+                        listOf("computer-use-2024-10-22", "dreaming-2026-04-21").joinToString(","),
                     )
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -71,7 +70,7 @@ internal class DreamListParamsTest {
                 .limit(0)
                 .page("page")
                 .addStatus(BetaDreamStatus.PENDING)
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 

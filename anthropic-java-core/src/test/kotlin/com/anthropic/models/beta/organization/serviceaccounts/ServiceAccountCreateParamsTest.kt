@@ -10,7 +10,7 @@ internal class ServiceAccountCreateParamsTest {
     @Test
     fun create() {
         ServiceAccountCreateParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .name("ci-deploy-bot")
             .description("description")
             .organizationRole(ServiceAccountCreateParams.OrganizationRole.ADMIN)
@@ -21,7 +21,7 @@ internal class ServiceAccountCreateParamsTest {
     fun headers() {
         val params =
             ServiceAccountCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .name("ci-deploy-bot")
                 .description("description")
                 .organizationRole(ServiceAccountCreateParams.OrganizationRole.ADMIN)
@@ -32,7 +32,7 @@ internal class ServiceAccountCreateParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
+                    .put("anthropic-beta", listOf("computer-use-2024-10-22").joinToString(","))
                     .build()
             )
     }
@@ -50,7 +50,7 @@ internal class ServiceAccountCreateParamsTest {
     fun body() {
         val params =
             ServiceAccountCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .name("ci-deploy-bot")
                 .description("description")
                 .organizationRole(ServiceAccountCreateParams.OrganizationRole.ADMIN)

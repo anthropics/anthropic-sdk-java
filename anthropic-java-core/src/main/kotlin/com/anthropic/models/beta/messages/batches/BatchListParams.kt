@@ -287,12 +287,7 @@ private constructor(
             .apply {
                 betas?.let {
                     if (it.isNotEmpty()) {
-                        put(
-                            "anthropic-beta",
-                            it.map { it.toString() }
-                                .let { it + (listOf("message-batches-2024-09-24") - it) }
-                                .joinToString(","),
-                        )
+                        put("anthropic-beta", it.joinToString(","))
                     }
                 }
                 workspaceId?.let { put("anthropic-workspace-id", it) }

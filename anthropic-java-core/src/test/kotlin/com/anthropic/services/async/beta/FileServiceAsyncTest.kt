@@ -49,7 +49,7 @@ internal class FileServiceAsyncTest {
             fileServiceAsync.delete(
                 FileDeleteParams.builder()
                     .fileId("file_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -72,7 +72,7 @@ internal class FileServiceAsyncTest {
             fileServiceAsync.download(
                 FileDownloadParams.builder()
                     .fileId("file_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -90,7 +90,7 @@ internal class FileServiceAsyncTest {
             fileServiceAsync.retrieveMetadata(
                 FileRetrieveMetadataParams.builder()
                     .fileId("file_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -107,7 +107,7 @@ internal class FileServiceAsyncTest {
         val betaFileMetadataFuture =
             fileServiceAsync.upload(
                 FileUploadParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .file("Example data".byteInputStream())
                     .expiresInSeconds(3600L)

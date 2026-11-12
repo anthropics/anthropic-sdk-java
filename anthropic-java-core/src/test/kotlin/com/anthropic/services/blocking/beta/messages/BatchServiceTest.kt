@@ -53,7 +53,7 @@ internal class BatchServiceTest {
         val betaMessageBatch =
             batchService.create(
                 BatchCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .userProfileId("anthropic-user-profile-id")
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addRequest(
@@ -262,7 +262,7 @@ internal class BatchServiceTest {
             batchService.retrieve(
                 BatchRetrieveParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -289,7 +289,7 @@ internal class BatchServiceTest {
             batchService.delete(
                 BatchDeleteParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -306,7 +306,7 @@ internal class BatchServiceTest {
             batchService.cancel(
                 BatchCancelParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -323,7 +323,7 @@ internal class BatchServiceTest {
             batchService.resultsStreaming(
                 BatchResultsParams.builder()
                     .messageBatchId("message_batch_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

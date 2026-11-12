@@ -27,7 +27,7 @@ internal class DreamServiceTest {
         val betaDream =
             dreamService.create(
                 DreamCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addMemoryStoreInput("x")
                     .model("string")
@@ -47,7 +47,7 @@ internal class DreamServiceTest {
             dreamService.retrieve(
                 DreamRetrieveParams.builder()
                     .dreamId("dream_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -72,7 +72,7 @@ internal class DreamServiceTest {
             dreamService.archive(
                 DreamArchiveParams.builder()
                     .dreamId("dream_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -88,7 +88,7 @@ internal class DreamServiceTest {
             dreamService.cancel(
                 DreamCancelParams.builder()
                     .dreamId("dream_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

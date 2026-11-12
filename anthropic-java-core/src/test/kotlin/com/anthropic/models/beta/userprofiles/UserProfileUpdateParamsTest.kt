@@ -13,7 +13,7 @@ internal class UserProfileUpdateParamsTest {
     fun create() {
         UserProfileUpdateParams.builder()
             .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
             .externalId("x")
@@ -55,7 +55,7 @@ internal class UserProfileUpdateParamsTest {
         val params =
             UserProfileUpdateParams.builder()
                 .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                 .externalId("x")
@@ -88,7 +88,7 @@ internal class UserProfileUpdateParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "user-profiles-2026-08-18")
+                        listOf("computer-use-2024-10-22", "user-profiles-2026-08-18")
                             .joinToString(","),
                     )
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
@@ -113,7 +113,7 @@ internal class UserProfileUpdateParamsTest {
         val params =
             UserProfileUpdateParams.builder()
                 .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                 .externalId("x")

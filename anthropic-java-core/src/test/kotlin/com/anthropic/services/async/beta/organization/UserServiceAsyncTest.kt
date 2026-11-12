@@ -76,7 +76,7 @@ internal class UserServiceAsyncTest {
             userServiceAsync.signOut(
                 UserSignOutParams.builder()
                     .userId("user_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
