@@ -10,6 +10,13 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.google.auth.oauth2.AccessToken
 import com.google.auth.oauth2.GoogleCredentials
+import com.sun.net.httpserver.HttpServer
+import java.net.InetSocketAddress
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.security.KeyPairGenerator
+import java.util.Base64
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -67,6 +74,49 @@ internal class VertexBackendTest {
             }
             .isExactlyInstanceOf(IllegalStateException::class.java)
             .hasMessageContaining("project")
+    }
+
+    @Test
+    fun fromEnvRequestsCloudPlatformScope() {
+        val tokenRequests = CopyOnWriteArrayList<String>()
+        val tokenServer = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0)
+        tokenServer.createContext("/token") { exchange ->
+            tokenRequests += exchange.requestBody.reader().readText()
+            val response = """{"access_token":"$ACCESS_TOKEN","expires_in":3600}""".toByteArray()
+            exchange.sendResponseHeaders(200, response.size.toLong())
+            exchange.responseBody.use { it.write(response) }
+        }
+        val keyPairGenerator = KeyPairGenerator.getInstance("RSA").apply { initialize(2048) }
+        val privateKey = keyPairGenerator.generateKeyPair().private
+        val serviceAccountKey =
+            mapOf(
+                "type" to "service_account",
+                "client_id" to "fake",
+                "client_email" to "fake@fake-project.example.invalid",
+                "private_key_id" to "fake",
+                "private_key" to
+                    "-----BEGIN PRIVATE KEY-----\n" +
+                        Base64.getEncoder().encodeToString(privateKey.encoded) +
+                        "\n-----END PRIVATE KEY-----\n",
+                "token_uri" to "http://127.0.0.1:${tokenServer.address.port}/token",
+            )
+        // The build script sets the variables that `fromEnv()` reads. Only one test can do this:
+        // the Google library keeps the first default credentials it resolves.
+        val keyFile = Paths.get(System.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+
+        tokenServer.start()
+        try {
+            Files.write(keyFile, jsonMapper().writeValueAsBytes(serviceAccountKey))
+            VertexBackend.fromEnv().authorizeRequest(createRequest(null))
+        } finally {
+            Files.deleteIfExists(keyFile)
+            tokenServer.stop(0)
+        }
+
+        val assertion = tokenRequests.single().substringAfter("assertion=").substringBefore('&')
+        val claims = jsonMapper().readTree(Base64.getUrlDecoder().decode(assertion.split('.')[1]))
+        assertThat(claims["scope"].asText())
+            .isEqualTo("https://www.googleapis.com/auth/cloud-platform")
     }
 
     @Test
