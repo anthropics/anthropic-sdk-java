@@ -18,7 +18,8 @@ import kotlin.jvm.optionals.getOrNull
 
 /**
  * A named set of access that Claude can use in a Slack channel or a Slack workspace: connectors,
- * repositories and credentials. Created and edited in claude.ai.
+ * repositories and credentials. Created and edited in claude.ai; Update Bundle also changes its
+ * instructions.
  */
 class BetaClaudeTagBundle
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -27,6 +28,7 @@ private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
     private val description: JsonField<String>,
     private val displayName: JsonField<String>,
+    private val instructions: JsonField<String>,
     private val type: JsonValue,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -44,11 +46,14 @@ private constructor(
         @JsonProperty("display_name")
         @ExcludeMissing
         displayName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("instructions")
+        @ExcludeMissing
+        instructions: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(id, createdAt, description, displayName, type, updatedAt, mutableMapOf())
+    ) : this(id, createdAt, description, displayName, instructions, type, updatedAt, mutableMapOf())
 
     /**
      * The Bundle's identifier. Starts with `capp_`.
@@ -81,6 +86,15 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun displayName(): String = displayName.getRequired("display_name")
+
+    /**
+     * Instructions for Claude, added to the instructions of every session that can use the Bundle.
+     * Null when it has none.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun instructions(): Optional<String> = instructions.getOptional("instructions")
 
     /**
      * Expected to always return the following:
@@ -134,6 +148,15 @@ private constructor(
     fun _displayName(): JsonField<String> = displayName
 
     /**
+     * Returns the raw JSON value of [instructions].
+     *
+     * Unlike [instructions], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("instructions")
+    @ExcludeMissing
+    fun _instructions(): JsonField<String> = instructions
+
+    /**
      * Returns the raw JSON value of [updatedAt].
      *
      * Unlike [updatedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -165,6 +188,7 @@ private constructor(
          * .createdAt()
          * .description()
          * .displayName()
+         * .instructions()
          * .updatedAt()
          * ```
          */
@@ -178,6 +202,7 @@ private constructor(
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var description: JsonField<String>? = null
         private var displayName: JsonField<String>? = null
+        private var instructions: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("bundle")
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -188,6 +213,7 @@ private constructor(
             createdAt = betaClaudeTagBundle.createdAt
             description = betaClaudeTagBundle.description
             displayName = betaClaudeTagBundle.displayName
+            instructions = betaClaudeTagBundle.instructions
             type = betaClaudeTagBundle.type
             updatedAt = betaClaudeTagBundle.updatedAt
             additionalProperties = betaClaudeTagBundle.additionalProperties.toMutableMap()
@@ -242,6 +268,26 @@ private constructor(
          * value.
          */
         fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
+
+        /**
+         * Instructions for Claude, added to the instructions of every session that can use the
+         * Bundle. Null when it has none.
+         */
+        fun instructions(instructions: String?) = instructions(JsonField.ofNullable(instructions))
+
+        /** Alias for calling [Builder.instructions] with `instructions.orElse(null)`. */
+        fun instructions(instructions: Optional<String>) = instructions(instructions.getOrNull())
+
+        /**
+         * Sets [Builder.instructions] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.instructions] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun instructions(instructions: JsonField<String>) = apply {
+            this.instructions = instructions
+        }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -299,6 +345,7 @@ private constructor(
          * .createdAt()
          * .description()
          * .displayName()
+         * .instructions()
          * .updatedAt()
          * ```
          *
@@ -310,6 +357,7 @@ private constructor(
                 checkRequired("createdAt", createdAt),
                 checkRequired("description", description),
                 checkRequired("displayName", displayName),
+                checkRequired("instructions", instructions),
                 type,
                 checkRequired("updatedAt", updatedAt),
                 additionalProperties.toMutableMap(),
@@ -335,6 +383,7 @@ private constructor(
         createdAt()
         description()
         displayName()
+        instructions()
         _type().let {
             if (it != JsonValue.from("bundle")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -363,6 +412,7 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
             (if (displayName.asKnown().isPresent) 1 else 0) +
+            (if (instructions.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("bundle")) 1 else 0 } +
             (if (updatedAt.asKnown().isPresent) 1 else 0)
 
@@ -376,17 +426,27 @@ private constructor(
             createdAt == other.createdAt &&
             description == other.description &&
             displayName == other.displayName &&
+            instructions == other.instructions &&
             type == other.type &&
             updatedAt == other.updatedAt &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, description, displayName, type, updatedAt, additionalProperties)
+        Objects.hash(
+            id,
+            createdAt,
+            description,
+            displayName,
+            instructions,
+            type,
+            updatedAt,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaClaudeTagBundle{id=$id, createdAt=$createdAt, description=$description, displayName=$displayName, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "BetaClaudeTagBundle{id=$id, createdAt=$createdAt, description=$description, displayName=$displayName, instructions=$instructions, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

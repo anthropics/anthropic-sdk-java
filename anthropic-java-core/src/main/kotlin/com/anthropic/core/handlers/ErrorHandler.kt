@@ -53,6 +53,8 @@ import com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeExcepti
 import com.anthropic.models.beta.environments.BetaInvalidMetadataException
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedException
 import com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+import com.anthropic.models.beta.organization.claudetag.BetaBundleAttachmentNotSupportedException
+import com.anthropic.models.beta.organization.claudetag.BetaBundleOnCallException
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
 import com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
 import com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
@@ -264,6 +266,17 @@ private val errorCodeExceptions:
         (400 to "available_tools_limit_exceeded") to
             { headers, body ->
                 AvailableToolsLimitExceededException.builder().headers(headers).body(body).build()
+            },
+        (400 to "bundle_attachment_not_supported") to
+            { headers, body ->
+                BetaBundleAttachmentNotSupportedException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (400 to "bundle_on_call") to
+            { headers, body ->
+                BetaBundleOnCallException.builder().headers(headers).body(body).build()
             },
         (400 to "cannot_invite_emails_with_unverified_domains") to
             { headers, body ->

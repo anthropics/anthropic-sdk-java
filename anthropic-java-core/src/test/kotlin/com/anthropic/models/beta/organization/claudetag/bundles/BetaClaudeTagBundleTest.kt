@@ -16,6 +16,7 @@ internal class BetaClaudeTagBundleTest {
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .description("description")
                 .displayName("display_name")
+                .instructions("instructions")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
@@ -24,6 +25,7 @@ internal class BetaClaudeTagBundleTest {
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaClaudeTagBundle.description()).contains("description")
         assertThat(betaClaudeTagBundle.displayName()).isEqualTo("display_name")
+        assertThat(betaClaudeTagBundle.instructions()).contains("instructions")
         assertThat(betaClaudeTagBundle.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
@@ -37,6 +39,7 @@ internal class BetaClaudeTagBundleTest {
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .description("description")
                 .displayName("display_name")
+                .instructions("instructions")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 

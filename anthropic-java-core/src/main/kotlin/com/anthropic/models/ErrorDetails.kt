@@ -20,6 +20,8 @@ import com.anthropic.models.beta.environments.BetaInvalidMetadataErrorDetails
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedErrorDetails
 import com.anthropic.models.beta.environments.work.BetaWorkLeaseState
 import com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingErrorDetails
+import com.anthropic.models.beta.organization.claudetag.BetaBundleAttachmentNotSupportedErrorDetails
+import com.anthropic.models.beta.organization.claudetag.BetaBundleOnCallErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredErrorDetails
@@ -199,6 +201,8 @@ private constructor(
     private val slackChannelSetUpSettingsConflict:
         BetaSlackChannelSetUpSettingsConflictErrorDetails? =
         null,
+    private val bundleAttachmentNotSupported: BetaBundleAttachmentNotSupportedErrorDetails? = null,
+    private val bundleOnCall: BetaBundleOnCallErrorDetails? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -296,6 +300,8 @@ private constructor(
                 ErrorCode.SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND
             slackChannelSetUpSettingsConflict != null ->
                 ErrorCode.SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT
+            bundleAttachmentNotSupported != null -> ErrorCode.BUNDLE_ATTACHMENT_NOT_SUPPORTED
+            bundleOnCall != null -> ErrorCode.BUNDLE_ON_CALL
             else ->
                 ErrorCode.of(_json?.asObject()?.getOrNull()?.get("error_code") ?: JsonMissing.of())
         }
@@ -386,6 +392,8 @@ private constructor(
             environmentNotFound != null -> Optional.empty()
             slackChannelSetUpEnvironmentNotFound != null -> Optional.empty()
             slackChannelSetUpSettingsConflict != null -> Optional.empty()
+            bundleAttachmentNotSupported != null -> Optional.empty()
+            bundleOnCall != null -> Optional.empty()
             else -> _json.getProperty<String>("plugin_id").asKnown()
         }
 
@@ -475,6 +483,8 @@ private constructor(
             environmentNotFound != null -> Optional.empty()
             slackChannelSetUpEnvironmentNotFound != null -> Optional.empty()
             slackChannelSetUpSettingsConflict != null -> Optional.empty()
+            bundleAttachmentNotSupported != null -> Optional.empty()
+            bundleOnCall != null -> Optional.empty()
             else -> _json.getProperty<String>("plugin_version_id").asKnown()
         }
 
@@ -567,6 +577,8 @@ private constructor(
                 Optional.of(slackChannelSetUpEnvironmentNotFound.slackChannelId())
             slackChannelSetUpSettingsConflict != null ->
                 Optional.of(slackChannelSetUpSettingsConflict.slackChannelId())
+            bundleAttachmentNotSupported != null -> Optional.empty()
+            bundleOnCall != null -> Optional.empty()
             else -> _json.getProperty<String>("slack_channel_id").asKnown()
         }
 
@@ -1082,6 +1094,16 @@ private constructor(
         Optional<BetaSlackChannelSetUpSettingsConflictErrorDetails> =
         Optional.ofNullable(slackChannelSetUpSettingsConflict)
 
+    /**
+     * The Bundle has an attachment this API does not support editing, so its instructions can be
+     * changed only in claude.ai.
+     */
+    fun bundleAttachmentNotSupported(): Optional<BetaBundleAttachmentNotSupportedErrorDetails> =
+        Optional.ofNullable(bundleAttachmentNotSupported)
+
+    /** This Bundle's instructions are managed in claude.ai and can't be changed through the API. */
+    fun bundleOnCall(): Optional<BetaBundleOnCallErrorDetails> = Optional.ofNullable(bundleOnCall)
+
     fun isAvailableToolsLimitExceeded(): Boolean = availableToolsLimitExceeded != null
 
     fun isClaudeCodeKeyCreatorNotMember(): Boolean = claudeCodeKeyCreatorNotMember != null
@@ -1253,6 +1275,10 @@ private constructor(
         slackChannelSetUpEnvironmentNotFound != null
 
     fun isSlackChannelSetUpSettingsConflict(): Boolean = slackChannelSetUpSettingsConflict != null
+
+    fun isBundleAttachmentNotSupported(): Boolean = bundleAttachmentNotSupported != null
+
+    fun isBundleOnCall(): Boolean = bundleOnCall != null
 
     /** The tools available after a message exceed a limit on their number or their size. */
     fun asAvailableToolsLimitExceeded(): AvailableToolsLimitExceededErrorDetails =
@@ -1765,6 +1791,16 @@ private constructor(
     fun asSlackChannelSetUpSettingsConflict(): BetaSlackChannelSetUpSettingsConflictErrorDetails =
         slackChannelSetUpSettingsConflict.getOrThrow("slackChannelSetUpSettingsConflict")
 
+    /**
+     * The Bundle has an attachment this API does not support editing, so its instructions can be
+     * changed only in claude.ai.
+     */
+    fun asBundleAttachmentNotSupported(): BetaBundleAttachmentNotSupportedErrorDetails =
+        bundleAttachmentNotSupported.getOrThrow("bundleAttachmentNotSupported")
+
+    /** This Bundle's instructions are managed in claude.ai and can't be changed through the API. */
+    fun asBundleOnCall(): BetaBundleOnCallErrorDetails = bundleOnCall.getOrThrow("bundleOnCall")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -1947,6 +1983,9 @@ private constructor(
                 )
             slackChannelSetUpSettingsConflict != null ->
                 visitor.visitSlackChannelSetUpSettingsConflict(slackChannelSetUpSettingsConflict)
+            bundleAttachmentNotSupported != null ->
+                visitor.visitBundleAttachmentNotSupported(bundleAttachmentNotSupported)
+            bundleOnCall != null -> visitor.visitBundleOnCall(bundleOnCall)
             else -> visitor.unknown(_json)
         }
 
@@ -2056,6 +2095,8 @@ private constructor(
                 slackChannelSetUpEnvironmentNotFound.validate()
             slackChannelSetUpSettingsConflict != null ->
                 slackChannelSetUpSettingsConflict.validate()
+            bundleAttachmentNotSupported != null -> bundleAttachmentNotSupported.validate()
+            bundleOnCall != null -> bundleOnCall.validate()
             else -> throw AnthropicInvalidDataException("Unknown ErrorDetails: $_json")
         }
         validated = true
@@ -2167,6 +2208,8 @@ private constructor(
                 slackChannelSetUpEnvironmentNotFound.validity()
             slackChannelSetUpSettingsConflict != null ->
                 slackChannelSetUpSettingsConflict.validity()
+            bundleAttachmentNotSupported != null -> bundleAttachmentNotSupported.validity()
+            bundleOnCall != null -> bundleOnCall.validity()
             else -> 0
         }
 
@@ -2260,7 +2303,9 @@ private constructor(
             organizationLevelScopedApiKeyRequired == other.organizationLevelScopedApiKeyRequired &&
             environmentNotFound == other.environmentNotFound &&
             slackChannelSetUpEnvironmentNotFound == other.slackChannelSetUpEnvironmentNotFound &&
-            slackChannelSetUpSettingsConflict == other.slackChannelSetUpSettingsConflict
+            slackChannelSetUpSettingsConflict == other.slackChannelSetUpSettingsConflict &&
+            bundleAttachmentNotSupported == other.bundleAttachmentNotSupported &&
+            bundleOnCall == other.bundleOnCall
     }
 
     override fun hashCode(): Int =
@@ -2349,6 +2394,8 @@ private constructor(
             environmentNotFound,
             slackChannelSetUpEnvironmentNotFound,
             slackChannelSetUpSettingsConflict,
+            bundleAttachmentNotSupported,
+            bundleOnCall,
         )
 
     override fun toString(): String =
@@ -2495,6 +2542,9 @@ private constructor(
                 "ErrorDetails{slackChannelSetUpEnvironmentNotFound=$slackChannelSetUpEnvironmentNotFound}"
             slackChannelSetUpSettingsConflict != null ->
                 "ErrorDetails{slackChannelSetUpSettingsConflict=$slackChannelSetUpSettingsConflict}"
+            bundleAttachmentNotSupported != null ->
+                "ErrorDetails{bundleAttachmentNotSupported=$bundleAttachmentNotSupported}"
+            bundleOnCall != null -> "ErrorDetails{bundleOnCall=$bundleOnCall}"
             _json != null -> "ErrorDetails{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ErrorDetails")
         }
@@ -3248,6 +3298,22 @@ private constructor(
             ofSlackChannelSetUpSettingsConflict(
                 BetaSlackChannelSetUpSettingsConflictErrorDetails.of(slackChannelId)
             )
+
+        /**
+         * The Bundle has an attachment this API does not support editing, so its instructions can
+         * be changed only in claude.ai.
+         */
+        @JvmStatic
+        fun ofBundleAttachmentNotSupported(
+            bundleAttachmentNotSupported: BetaBundleAttachmentNotSupportedErrorDetails
+        ) = ErrorDetails(bundleAttachmentNotSupported = bundleAttachmentNotSupported)
+
+        /**
+         * This Bundle's instructions are managed in claude.ai and can't be changed through the API.
+         */
+        @JvmStatic
+        fun ofBundleOnCall(bundleOnCall: BetaBundleOnCallErrorDetails) =
+            ErrorDetails(bundleOnCall = bundleOnCall)
     }
 
     /**
@@ -3810,6 +3876,19 @@ private constructor(
         fun visitSlackChannelSetUpSettingsConflict(
             slackChannelSetUpSettingsConflict: BetaSlackChannelSetUpSettingsConflictErrorDetails
         ): T
+
+        /**
+         * The Bundle has an attachment this API does not support editing, so its instructions can
+         * be changed only in claude.ai.
+         */
+        fun visitBundleAttachmentNotSupported(
+            bundleAttachmentNotSupported: BetaBundleAttachmentNotSupportedErrorDetails
+        ): T
+
+        /**
+         * This Bundle's instructions are managed in claude.ai and can't be changed through the API.
+         */
+        fun visitBundleOnCall(bundleOnCall: BetaBundleOnCallErrorDetails): T
 
         /**
          * Maps an unknown variant of [ErrorDetails] to a value of type [T].
@@ -4436,6 +4515,19 @@ private constructor(
                         ?.let { ErrorDetails(slackChannelSetUpSettingsConflict = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "bundle_attachment_not_supported" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaBundleAttachmentNotSupportedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(bundleAttachmentNotSupported = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "bundle_on_call" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaBundleOnCallErrorDetails>())
+                        ?.let { ErrorDetails(bundleOnCall = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
             }
 
             return ErrorDetails(_json = json)
@@ -4598,6 +4690,9 @@ private constructor(
                     generator.writeObject(value.slackChannelSetUpEnvironmentNotFound)
                 value.slackChannelSetUpSettingsConflict != null ->
                     generator.writeObject(value.slackChannelSetUpSettingsConflict)
+                value.bundleAttachmentNotSupported != null ->
+                    generator.writeObject(value.bundleAttachmentNotSupported)
+                value.bundleOnCall != null -> generator.writeObject(value.bundleOnCall)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ErrorDetails")
             }
@@ -4877,6 +4972,12 @@ private constructor(
             val SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT =
                 ErrorCode(JsonField.of("slack_channel_set_up_settings_conflict"))
 
+            @JvmField
+            val BUNDLE_ATTACHMENT_NOT_SUPPORTED =
+                ErrorCode(JsonField.of("bundle_attachment_not_supported"))
+
+            @JvmField val BUNDLE_ON_CALL = ErrorCode(JsonField.of("bundle_on_call"))
+
             @JvmStatic
             fun of(value: String): ErrorCode =
                 // Intern known values so `==` works
@@ -4970,6 +5071,8 @@ private constructor(
                         SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND
                     "slack_channel_set_up_settings_conflict" ->
                         SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT
+                    "bundle_attachment_not_supported" -> BUNDLE_ATTACHMENT_NOT_SUPPORTED
+                    "bundle_on_call" -> BUNDLE_ON_CALL
                     else -> ErrorCode(JsonField.of(value))
                 }
 
@@ -5065,6 +5168,8 @@ private constructor(
             ENVIRONMENT_NOT_FOUND,
             SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND,
             SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT,
+            BUNDLE_ATTACHMENT_NOT_SUPPORTED,
+            BUNDLE_ON_CALL,
         }
 
         /**
@@ -5161,6 +5266,8 @@ private constructor(
             ENVIRONMENT_NOT_FOUND,
             SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND,
             SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT,
+            BUNDLE_ATTACHMENT_NOT_SUPPORTED,
+            BUNDLE_ON_CALL,
             /**
              * An enum member indicating that [ErrorCode] was instantiated with an unknown value.
              */
@@ -5265,6 +5372,8 @@ private constructor(
                     Value.SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND
                 SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT ->
                     Value.SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT
+                BUNDLE_ATTACHMENT_NOT_SUPPORTED -> Value.BUNDLE_ATTACHMENT_NOT_SUPPORTED
+                BUNDLE_ON_CALL -> Value.BUNDLE_ON_CALL
                 else -> Value._UNKNOWN
             }
 
@@ -5368,6 +5477,8 @@ private constructor(
                     Known.SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND
                 SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT ->
                     Known.SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT
+                BUNDLE_ATTACHMENT_NOT_SUPPORTED -> Known.BUNDLE_ATTACHMENT_NOT_SUPPORTED
+                BUNDLE_ON_CALL -> Known.BUNDLE_ON_CALL
                 else -> throw AnthropicInvalidDataException("Unknown ErrorCode: $value")
             }
 

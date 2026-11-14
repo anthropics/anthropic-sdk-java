@@ -14,6 +14,8 @@ import com.anthropic.models.beta.environments.BetaInvalidMetadataErrorDetails
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedErrorDetails
 import com.anthropic.models.beta.environments.work.BetaWorkLeaseState
 import com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingErrorDetails
+import com.anthropic.models.beta.organization.claudetag.BetaBundleAttachmentNotSupportedErrorDetails
+import com.anthropic.models.beta.organization.claudetag.BetaBundleOnCallErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredErrorDetails
@@ -174,6 +176,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -286,6 +290,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -395,6 +401,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -504,6 +512,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -611,6 +621,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -720,6 +732,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -829,6 +843,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -938,6 +954,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -1047,6 +1065,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -1158,6 +1178,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -1267,6 +1289,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -1379,6 +1403,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -1491,6 +1517,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -1601,6 +1629,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -1710,6 +1740,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -1822,6 +1854,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -1931,6 +1965,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -2040,6 +2076,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -2149,6 +2187,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -2261,6 +2301,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -2372,6 +2414,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -2479,6 +2523,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -2588,6 +2634,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -2698,6 +2746,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -2810,6 +2860,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -2919,6 +2971,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -3028,6 +3082,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -3135,6 +3191,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -3242,6 +3300,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -3351,6 +3411,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -3458,6 +3520,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -3565,6 +3629,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -3671,6 +3737,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -3780,6 +3848,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -3891,6 +3961,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -4000,6 +4072,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -4109,6 +4183,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -4218,6 +4294,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -4327,6 +4405,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -4438,6 +4518,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -4547,6 +4629,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -4656,6 +4740,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -4763,6 +4849,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -4872,6 +4960,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -4984,6 +5074,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -5093,6 +5185,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -5202,6 +5296,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -5311,6 +5407,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -5423,6 +5521,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -5532,6 +5632,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -5640,6 +5742,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -5749,6 +5853,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -5858,6 +5964,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -5969,6 +6077,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -6078,6 +6188,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -6187,6 +6299,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -6294,6 +6408,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -6403,6 +6519,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -6512,6 +6630,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -6621,6 +6741,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -6738,6 +6860,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -6854,6 +6978,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -6961,6 +7087,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -7070,6 +7198,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -7180,6 +7310,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -7290,6 +7422,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -7401,6 +7535,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -7510,6 +7646,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -7620,6 +7758,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -7732,6 +7872,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -7841,6 +7983,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -7949,6 +8093,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -8058,6 +8204,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -8169,6 +8317,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -8281,6 +8431,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -8388,6 +8540,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -8498,6 +8652,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -8607,6 +8763,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -8714,6 +8872,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -8826,6 +8986,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -8940,6 +9102,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -9049,6 +9213,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentNotFound()).contains(environmentNotFound)
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -9163,6 +9329,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound())
             .contains(slackChannelSetUpEnvironmentNotFound)
         assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -9275,6 +9443,8 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
         assertThat(errorDetails.slackChannelSetUpSettingsConflict())
             .contains(slackChannelSetUpSettingsConflict)
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
     }
 
     @Test
@@ -9284,6 +9454,228 @@ internal class ErrorDetailsTest {
             ErrorDetails.ofSlackChannelSetUpSettingsConflict(
                 BetaSlackChannelSetUpSettingsConflictErrorDetails.of("slack_channel_id")
             )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofBundleAttachmentNotSupported() {
+        val bundleAttachmentNotSupported =
+            BetaBundleAttachmentNotSupportedErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofBundleAttachmentNotSupported(bundleAttachmentNotSupported)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported())
+            .contains(bundleAttachmentNotSupported)
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofBundleAttachmentNotSupportedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofBundleAttachmentNotSupported(
+                BetaBundleAttachmentNotSupportedErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofBundleOnCall() {
+        val bundleOnCall = BetaBundleOnCallErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofBundleOnCall(bundleOnCall)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).contains(bundleOnCall)
+    }
+
+    @Test
+    fun ofBundleOnCallRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofBundleOnCall(BetaBundleOnCallErrorDetails.builder().build())
 
         val roundtrippedErrorDetails =
             jsonMapper.readValue(

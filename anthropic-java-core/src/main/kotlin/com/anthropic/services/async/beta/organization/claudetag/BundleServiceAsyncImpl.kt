@@ -12,6 +12,7 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCallAsync
@@ -21,6 +22,7 @@ import com.anthropic.models.beta.organization.claudetag.bundles.BundleListPageAs
 import com.anthropic.models.beta.organization.claudetag.bundles.BundleListPageResponse
 import com.anthropic.models.beta.organization.claudetag.bundles.BundleListParams
 import com.anthropic.models.beta.organization.claudetag.bundles.BundleRetrieveParams
+import com.anthropic.models.beta.organization.claudetag.bundles.BundleUpdateParams
 import com.anthropic.services.async.beta.organization.claudetag.bundles.TargetServiceAsync
 import com.anthropic.services.async.beta.organization.claudetag.bundles.TargetServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
@@ -55,6 +57,13 @@ class BundleServiceAsyncImpl internal constructor(private val clientOptions: Cli
     ): CompletableFuture<BetaClaudeTagBundle> =
         // get /v1/organizations/claude_tag/bundles/{bundle_id}
         withRawResponse().retrieve(params, requestOptions).thenParse()
+
+    override fun update(
+        params: BundleUpdateParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<BetaClaudeTagBundle> =
+        // post /v1/organizations/claude_tag/bundles/{bundle_id}
+        withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: BundleListParams,
@@ -112,6 +121,47 @@ class BundleServiceAsyncImpl internal constructor(private val clientOptions: Cli
                         errorHandler.handle(response).parseable {
                             response
                                 .use { retrieveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation().get()) {
+                                        it.validate()
+                                    }
+                                }
+                        }
+                    }
+            }
+        }
+
+        private val updateHandler: Handler<BetaClaudeTagBundle> =
+            jsonHandler<BetaClaudeTagBundle>(clientOptions.jsonMapper)
+
+        override fun update(
+            params: BundleUpdateParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BetaClaudeTagBundle>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("bundleId", params.bundleId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "claude_tag", "bundles")
+                    .addPathParam("bundleId", params._pathParam(0))
+                    .putAllHeaders(DEFAULT_HEADERS)
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { updateHandler.handle(it) }
                                 .also {
                                     if (requestOptions.responseValidation().get()) {
                                         it.validate()
