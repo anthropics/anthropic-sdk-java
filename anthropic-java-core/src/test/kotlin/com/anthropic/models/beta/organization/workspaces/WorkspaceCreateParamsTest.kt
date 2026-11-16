@@ -12,7 +12,7 @@ internal class WorkspaceCreateParamsTest {
     fun create() {
         WorkspaceCreateParams.builder()
             .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-            .name("x")
+            .name("Workspace Name")
             .dataResidency(
                 BetaDataResidencyCreateConfig.builder()
                     .allowedInferenceGeosUnrestricted()
@@ -37,7 +37,7 @@ internal class WorkspaceCreateParamsTest {
         val params =
             WorkspaceCreateParams.builder()
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .name("x")
+                .name("Workspace Name")
                 .dataResidency(
                     BetaDataResidencyCreateConfig.builder()
                         .allowedInferenceGeosUnrestricted()
@@ -70,7 +70,7 @@ internal class WorkspaceCreateParamsTest {
 
     @Test
     fun headersWithoutOptionalFields() {
-        val params = WorkspaceCreateParams.builder().name("x").build()
+        val params = WorkspaceCreateParams.builder().name("Workspace Name").build()
 
         val headers = params._headers()
 
@@ -82,7 +82,7 @@ internal class WorkspaceCreateParamsTest {
         val params =
             WorkspaceCreateParams.builder()
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .name("x")
+                .name("Workspace Name")
                 .dataResidency(
                     BetaDataResidencyCreateConfig.builder()
                         .allowedInferenceGeosUnrestricted()
@@ -105,7 +105,7 @@ internal class WorkspaceCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("Workspace Name")
         assertThat(body.dataResidency())
             .contains(
                 BetaDataResidencyCreateConfig.builder()
@@ -128,10 +128,10 @@ internal class WorkspaceCreateParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = WorkspaceCreateParams.builder().name("x").build()
+        val params = WorkspaceCreateParams.builder().name("Workspace Name").build()
 
         val body = params._body()
 
-        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("Workspace Name")
     }
 }
