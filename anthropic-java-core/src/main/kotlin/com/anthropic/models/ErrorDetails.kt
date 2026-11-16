@@ -881,9 +881,8 @@ private constructor(
         Optional.ofNullable(externalKeyValidationTimedOut)
 
     /**
-     * The External Key is bound to a user profile, and the Workspace does not have that user
-     * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
-     * bound to one.
+     * After this request, the External Key and the Workspace would not have the same user profile.
+     * A key and its Workspace must have the same user profile, or both have none.
      */
     fun keyProfileMismatch(): Optional<KeyProfileMismatchErrorDetails> =
         Optional.ofNullable(keyProfileMismatch)
@@ -1581,9 +1580,8 @@ private constructor(
         externalKeyValidationTimedOut.getOrThrow("externalKeyValidationTimedOut")
 
     /**
-     * The External Key is bound to a user profile, and the Workspace does not have that user
-     * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
-     * bound to one.
+     * After this request, the External Key and the Workspace would not have the same user profile.
+     * A key and its Workspace must have the same user profile, or both have none.
      */
     fun asKeyProfileMismatch(): KeyProfileMismatchErrorDetails =
         keyProfileMismatch.getOrThrow("keyProfileMismatch")
@@ -2941,9 +2939,8 @@ private constructor(
         ) = ErrorDetails(externalKeyValidationTimedOut = externalKeyValidationTimedOut)
 
         /**
-         * The External Key is bound to a user profile, and the Workspace does not have that user
-         * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
-         * bound to one.
+         * After this request, the External Key and the Workspace would not have the same user
+         * profile. A key and its Workspace must have the same user profile, or both have none.
          */
         @JvmStatic
         fun ofKeyProfileMismatch(keyProfileMismatch: KeyProfileMismatchErrorDetails) =
@@ -3650,9 +3647,8 @@ private constructor(
         ): T
 
         /**
-         * The External Key is bound to a user profile, and the Workspace does not have that user
-         * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
-         * bound to one.
+         * After this request, the External Key and the Workspace would not have the same user
+         * profile. A key and its Workspace must have the same user profile, or both have none.
          */
         fun visitKeyProfileMismatch(keyProfileMismatch: KeyProfileMismatchErrorDetails): T
 
