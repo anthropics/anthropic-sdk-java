@@ -31,6 +31,33 @@ internal class ObjectMappersTest {
         assertThat(json).isEqualTo("{\"is_active\":true}")
     }
 
+    internal class ClassWithNullableField(@get:JsonProperty("field") val field: Map<String, Any?>?)
+
+    @Test
+    fun write_whenMapContainsNull_keepsNull() {
+        val value = ClassWithNullableField(mapOf("a" to null, "b" to mapOf("c" to null)))
+
+        val json = jsonMapper().writeValueAsString(value)
+
+        assertThat(json).isEqualTo("{\"field\":{\"a\":null,\"b\":{\"c\":null}}}")
+    }
+
+    @Test
+    fun write_whenJsonValueIsFromMapThatContainsNull_keepsNull() {
+        val value = JsonValue.from(mapOf("a" to null, "b" to mapOf("c" to null)))
+
+        val json = jsonMapper().writeValueAsString(value)
+
+        assertThat(json).isEqualTo("{\"a\":null,\"b\":{\"c\":null}}")
+    }
+
+    @Test
+    fun write_whenFieldIsNull_omitsField() {
+        val json = jsonMapper().writeValueAsString(ClassWithNullableField(null))
+
+        assertThat(json).isEqualTo("{}")
+    }
+
     internal class Class(@get:JsonProperty("field") @JsonProperty("field") val field: String)
 
     enum class ShapeTestCase(val value: Any, val kClass: KClass<*>) {
