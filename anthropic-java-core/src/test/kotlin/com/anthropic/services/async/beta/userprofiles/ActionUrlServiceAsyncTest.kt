@@ -28,7 +28,7 @@ internal class ActionUrlServiceAsyncTest {
             actionUrlServiceAsync.create(
                 ActionUrlCreateParams.builder()
                     .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .action(BetaUserProfileEnrollEndUserAction.builder().build())
                     .build()

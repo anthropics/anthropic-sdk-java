@@ -12,6 +12,7 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
@@ -20,6 +21,7 @@ import com.anthropic.models.beta.organization.claudetag.bundles.BundleListPage
 import com.anthropic.models.beta.organization.claudetag.bundles.BundleListPageResponse
 import com.anthropic.models.beta.organization.claudetag.bundles.BundleListParams
 import com.anthropic.models.beta.organization.claudetag.bundles.BundleRetrieveParams
+import com.anthropic.models.beta.organization.claudetag.bundles.BundleUpdateParams
 import com.anthropic.services.blocking.beta.organization.claudetag.bundles.TargetService
 import com.anthropic.services.blocking.beta.organization.claudetag.bundles.TargetServiceImpl
 import java.util.function.Consumer
@@ -53,6 +55,13 @@ class BundleServiceImpl internal constructor(private val clientOptions: ClientOp
     ): BetaClaudeTagBundle =
         // get /v1/organizations/claude_tag/bundles/{bundle_id}
         withRawResponse().retrieve(params, requestOptions).parse()
+
+    override fun update(
+        params: BundleUpdateParams,
+        requestOptions: RequestOptions,
+    ): BetaClaudeTagBundle =
+        // post /v1/organizations/claude_tag/bundles/{bundle_id}
+        withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: BundleListParams, requestOptions: RequestOptions): BundleListPage =
         // get /v1/organizations/claude_tag/bundles
@@ -105,6 +114,44 @@ class BundleServiceImpl internal constructor(private val clientOptions: ClientOp
                 errorHandler.handle(response).parseable {
                     response
                         .use { retrieveHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation().get()) {
+                                it.validate()
+                            }
+                        }
+                }
+            }
+        }
+
+        private val updateHandler: Handler<BetaClaudeTagBundle> =
+            jsonHandler<BetaClaudeTagBundle>(clientOptions.jsonMapper)
+
+        override fun update(
+            params: BundleUpdateParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaClaudeTagBundle> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("bundleId", params.bundleId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "claude_tag", "bundles")
+                    .addPathParam("bundleId", params._pathParam(0))
+                    .putAllHeaders(DEFAULT_HEADERS)
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions =
+                requestOptions
+                    .applyDefaults(RequestOptions.from(clientOptions))
+                    .withQualifiers(mapOf("beta" to "true"))
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { updateHandler.handle(it) }
                         .also {
                             if (requestOptions.responseValidation().get()) {
                                 it.validate()

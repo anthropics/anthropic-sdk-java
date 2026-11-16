@@ -39,7 +39,7 @@ internal class EventServiceAsyncTest {
             eventServiceAsync.send(
                 EventSendParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addUserMessageEvent(
                         listOf(
@@ -65,7 +65,7 @@ internal class EventServiceAsyncTest {
                 EventStreamParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

@@ -36,7 +36,8 @@ echo "==> Done looking for Kotlin files"
 
 if [[ -n "$kt_files" ]]; then
     echo "==> will format Kotlin files"
-    echo "$kt_files" | tr '\n' '\0' | xargs -0 ktfmt --kotlinlang-style "$@"
+    # -s is explained in scripts/kotlin-format.
+    echo "$kt_files" | tr '\n' '\0' | xargs -0 -s 1000000 ktfmt --kotlinlang-style "$@"
 else
     echo "No Kotlin files to format -- expected outcome during incremental formatting"
 fi

@@ -40,9 +40,7 @@ private constructor(
     fun data(): List<BetaPluginShare> = data.getRequired("data")
 
     /**
-     * Token to provide in as `page` in the subsequent request to retrieve the next page of data. A
-     * page may hold fewer than `limit` shares, even none, while this is set; keep following it
-     * until it is null.
+     * Token to provide in as `page` in the subsequent request to retrieve the next page of data.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -131,8 +129,7 @@ private constructor(
 
         /**
          * Token to provide in as `page` in the subsequent request to retrieve the next page of
-         * data. A page may hold fewer than `limit` shares, even none, while this is set; keep
-         * following it until it is null.
+         * data.
          */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 

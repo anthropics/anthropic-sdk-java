@@ -11,7 +11,7 @@ internal class SlackChannelDeleteParamsTest {
     fun create() {
         SlackChannelDeleteParams.builder()
             .id("slch_01SvpyRQK3nN6eH9uhRA7n1q")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .build()
     }
 
@@ -29,7 +29,7 @@ internal class SlackChannelDeleteParamsTest {
         val params =
             SlackChannelDeleteParams.builder()
                 .id("slch_01SvpyRQK3nN6eH9uhRA7n1q")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .build()
 
         val headers = params._headers()
@@ -39,7 +39,7 @@ internal class SlackChannelDeleteParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "experimental-claude-tag-2026-10-21")
+                        listOf("computer-use-2024-10-22", "experimental-claude-tag-2026-10-21")
                             .joinToString(","),
                     )
                     .build()

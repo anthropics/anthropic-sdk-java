@@ -37,6 +37,7 @@ import com.anthropic.models.CmekKeyUnreachableException
 import com.anthropic.models.EnforcedSpendLimitReachedException
 import com.anthropic.models.OrganizationOnHoldException
 import com.anthropic.models.OrganizationTypeNotSupportedException
+import com.anthropic.models.ParentOrganizationRequiredException
 import com.anthropic.models.RampLimitExceededException
 import com.anthropic.models.RequestBodyEncodingInvalidException
 import com.anthropic.models.RequestBodyEncodingUnsupportedException
@@ -52,6 +53,8 @@ import com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeExcepti
 import com.anthropic.models.beta.environments.BetaInvalidMetadataException
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedException
 import com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+import com.anthropic.models.beta.organization.claudetag.BetaBundleAttachmentNotSupportedException
+import com.anthropic.models.beta.organization.claudetag.BetaBundleOnCallException
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
 import com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
 import com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
@@ -92,6 +95,7 @@ import com.anthropic.models.messages.ToolNameConflictException
 import com.anthropic.models.messages.ToolReferenceUnresolvedException
 import com.anthropic.models.organization.ConcurrentMembershipChangeException
 import com.anthropic.models.organization.OrgMemberLimitExceededException
+import com.anthropic.models.organization.RbacRoleNotFoundException
 import com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededException
 import com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededException
 import com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
@@ -263,6 +267,17 @@ private val errorCodeExceptions:
             { headers, body ->
                 AvailableToolsLimitExceededException.builder().headers(headers).body(body).build()
             },
+        (400 to "bundle_attachment_not_supported") to
+            { headers, body ->
+                BetaBundleAttachmentNotSupportedException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (400 to "bundle_on_call") to
+            { headers, body ->
+                BetaBundleOnCallException.builder().headers(headers).body(body).build()
+            },
         (400 to "cannot_invite_emails_with_unverified_domains") to
             { headers, body ->
                 CannotInviteEmailsWithUnverifiedDomainsException.builder()
@@ -395,6 +410,10 @@ private val errorCodeExceptions:
         (400 to "organization_type_not_supported") to
             { headers, body ->
                 OrganizationTypeNotSupportedException.builder().headers(headers).body(body).build()
+            },
+        (400 to "parent_organization_required") to
+            { headers, body ->
+                ParentOrganizationRequiredException.builder().headers(headers).body(body).build()
             },
         (400 to "rbac_group_grants_owner_access") to
             { headers, body ->
@@ -550,6 +569,10 @@ private val errorCodeExceptions:
         (404 to "file_expired") to
             { headers, body ->
                 FileExpiredException.builder().headers(headers).body(body).build()
+            },
+        (404 to "rbac_role_not_found") to
+            { headers, body ->
+                RbacRoleNotFoundException.builder().headers(headers).body(body).build()
             },
         (404 to "slack_channel_set_up_environment_not_found") to
             { headers, body ->

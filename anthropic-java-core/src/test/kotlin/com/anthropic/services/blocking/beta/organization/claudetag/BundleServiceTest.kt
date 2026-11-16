@@ -4,6 +4,7 @@ import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.organization.claudetag.bundles.BundleRetrieveParams
+import com.anthropic.models.beta.organization.claudetag.bundles.BundleUpdateParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -27,7 +28,26 @@ internal class BundleServiceTest {
             bundleService.retrieve(
                 BundleRetrieveParams.builder()
                     .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
+                    .build()
+            )
+
+        betaClaudeTagBundle.validate()
+    }
+
+    @Test
+    fun update() {
+        val bundleService =
+            client.beta().organization().claudeTag().bundles().withOptions {
+                it.putQueryParam("beta", "true")
+            }
+
+        val betaClaudeTagBundle =
+            bundleService.update(
+                BundleUpdateParams.builder()
+                    .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
+                    .instructions("instructions")
                     .build()
             )
 

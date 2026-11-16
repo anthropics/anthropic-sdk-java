@@ -11,7 +11,7 @@ internal class UserSignOutParamsTest {
     fun create() {
         UserSignOutParams.builder()
             .userId("user_id")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .build()
     }
 
@@ -29,7 +29,7 @@ internal class UserSignOutParamsTest {
         val params =
             UserSignOutParams.builder()
                 .userId("user_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .build()
 
         val headers = params._headers()
@@ -39,7 +39,7 @@ internal class UserSignOutParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "admin-user-sign-out-2026-10-08")
+                        listOf("computer-use-2024-10-22", "admin-user-sign-out-2026-10-08")
                             .joinToString(","),
                     )
                     .build()

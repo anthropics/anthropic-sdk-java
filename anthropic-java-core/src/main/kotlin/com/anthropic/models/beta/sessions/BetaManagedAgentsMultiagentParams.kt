@@ -40,8 +40,9 @@ private constructor(
         }
 
     /**
-     * A coordinator topology: the session's primary thread orchestrates work by spawning session
-     * threads, each running an agent drawn from the `agents` roster.
+     * Recommendation: use `multiagent_20261001` instead of `coordinator`. A coordinator topology:
+     * the session's primary thread orchestrates work by spawning session threads, each running an
+     * agent drawn from the `agents` roster.
      */
     fun coordinator(): Optional<BetaManagedAgentsMultiagentCoordinatorParams> =
         Optional.ofNullable(coordinator)
@@ -65,8 +66,9 @@ private constructor(
     fun isMultiagent20261001(): Boolean = multiagent20261001 != null
 
     /**
-     * A coordinator topology: the session's primary thread orchestrates work by spawning session
-     * threads, each running an agent drawn from the `agents` roster.
+     * Recommendation: use `multiagent_20261001` instead of `coordinator`. A coordinator topology:
+     * the session's primary thread orchestrates work by spawning session threads, each running an
+     * agent drawn from the `agents` roster.
      */
     fun asCoordinator(): BetaManagedAgentsMultiagentCoordinatorParams =
         coordinator.getOrThrow("coordinator")
@@ -194,8 +196,9 @@ private constructor(
     companion object {
 
         /**
-         * A coordinator topology: the session's primary thread orchestrates work by spawning
-         * session threads, each running an agent drawn from the `agents` roster.
+         * Recommendation: use `multiagent_20261001` instead of `coordinator`. A coordinator
+         * topology: the session's primary thread orchestrates work by spawning session threads,
+         * each running an agent drawn from the `agents` roster.
          */
         @JvmStatic
         fun ofCoordinator(coordinator: BetaManagedAgentsMultiagentCoordinatorParams) =
@@ -232,8 +235,9 @@ private constructor(
     interface Visitor<out T> {
 
         /**
-         * A coordinator topology: the session's primary thread orchestrates work by spawning
-         * session threads, each running an agent drawn from the `agents` roster.
+         * Recommendation: use `multiagent_20261001` instead of `coordinator`. A coordinator
+         * topology: the session's primary thread orchestrates work by spawning session threads,
+         * each running an agent drawn from the `agents` roster.
          */
         fun visitCoordinator(coordinator: BetaManagedAgentsMultiagentCoordinatorParams): T
 

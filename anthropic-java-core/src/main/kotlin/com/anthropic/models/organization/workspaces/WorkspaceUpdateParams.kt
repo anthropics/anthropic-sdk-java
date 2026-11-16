@@ -83,7 +83,8 @@ private constructor(
      * ID of a user profile to attach to the Workspace. Every inference request through the
      * Workspace must then name this user profile; the API rejects a request that names none or a
      * different one. Once set, it can't be replaced or removed (sending the same ID again changes
-     * nothing); only deleting the user profile clears it. The default Workspace can't have a user
+     * nothing); only deleting the user profile clears it. It can't be set on a Workspace whose
+     * External Key isn't bound to this user profile. The default Workspace can't have a user
      * profile.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -274,8 +275,9 @@ private constructor(
          * ID of a user profile to attach to the Workspace. Every inference request through the
          * Workspace must then name this user profile; the API rejects a request that names none or
          * a different one. Once set, it can't be replaced or removed (sending the same ID again
-         * changes nothing); only deleting the user profile clears it. The default Workspace can't
-         * have a user profile.
+         * changes nothing); only deleting the user profile clears it. It can't be set on a
+         * Workspace whose External Key isn't bound to this user profile. The default Workspace
+         * can't have a user profile.
          */
         fun userProfileId(userProfileId: String) = apply { body.userProfileId(userProfileId) }
 
@@ -533,8 +535,9 @@ private constructor(
          * ID of a user profile to attach to the Workspace. Every inference request through the
          * Workspace must then name this user profile; the API rejects a request that names none or
          * a different one. Once set, it can't be replaced or removed (sending the same ID again
-         * changes nothing); only deleting the user profile clears it. The default Workspace can't
-         * have a user profile.
+         * changes nothing); only deleting the user profile clears it. It can't be set on a
+         * Workspace whose External Key isn't bound to this user profile. The default Workspace
+         * can't have a user profile.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -724,7 +727,8 @@ private constructor(
              * ID of a user profile to attach to the Workspace. Every inference request through the
              * Workspace must then name this user profile; the API rejects a request that names none
              * or a different one. Once set, it can't be replaced or removed (sending the same ID
-             * again changes nothing); only deleting the user profile clears it. The default
+             * again changes nothing); only deleting the user profile clears it. It can't be set on
+             * a Workspace whose External Key isn't bound to this user profile. The default
              * Workspace can't have a user profile.
              */
             fun userProfileId(userProfileId: String) = userProfileId(JsonField.of(userProfileId))

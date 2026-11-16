@@ -265,7 +265,8 @@ private constructor(
          * The server decides each tool call individually: it judges, from the tool, its input, and
          * the session content so far, whether the call is safe to execute or high-risk, and
          * evaluates it to allow when judged safe and to deny when judged high-risk. A call the
-         * server cannot reach a judgement on evaluates to ask.
+         * server cannot reach a judgement on evaluates to ask, or for some causes to deny, for
+         * example when the organization is out of credits or has reached a spend limit.
          */
         fun auto(): Optional<BetaManagedAgentsAutoPolicy> = Optional.ofNullable(auto)
 
@@ -286,7 +287,8 @@ private constructor(
          * The server decides each tool call individually: it judges, from the tool, its input, and
          * the session content so far, whether the call is safe to execute or high-risk, and
          * evaluates it to allow when judged safe and to deny when judged high-risk. A call the
-         * server cannot reach a judgement on evaluates to ask.
+         * server cannot reach a judgement on evaluates to ask, or for some causes to deny, for
+         * example when the organization is out of credits or has reached a spend limit.
          */
         fun asAuto(): BetaManagedAgentsAutoPolicy = auto.getOrThrow("auto")
 
@@ -415,7 +417,8 @@ private constructor(
              * The server decides each tool call individually: it judges, from the tool, its input,
              * and the session content so far, whether the call is safe to execute or high-risk, and
              * evaluates it to allow when judged safe and to deny when judged high-risk. A call the
-             * server cannot reach a judgement on evaluates to ask.
+             * server cannot reach a judgement on evaluates to ask, or for some causes to deny, for
+             * example when the organization is out of credits or has reached a spend limit.
              */
             @JvmStatic fun ofAuto(auto: BetaManagedAgentsAutoPolicy) = PermissionPolicy(auto = auto)
         }
@@ -436,7 +439,8 @@ private constructor(
              * The server decides each tool call individually: it judges, from the tool, its input,
              * and the session content so far, whether the call is safe to execute or high-risk, and
              * evaluates it to allow when judged safe and to deny when judged high-risk. A call the
-             * server cannot reach a judgement on evaluates to ask.
+             * server cannot reach a judgement on evaluates to ask, or for some causes to deny, for
+             * example when the organization is out of credits or has reached a spend limit.
              */
             fun visitAuto(auto: BetaManagedAgentsAutoPolicy): T
 

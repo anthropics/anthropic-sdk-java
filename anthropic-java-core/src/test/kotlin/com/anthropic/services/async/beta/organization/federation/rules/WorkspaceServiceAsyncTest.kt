@@ -41,7 +41,7 @@ internal class WorkspaceServiceAsyncTest {
             workspaceServiceAsync.add(
                 WorkspaceAddParams.builder()
                     .federationRuleId("federation_rule_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("workspace_id")
                     .build()
             )
@@ -62,7 +62,7 @@ internal class WorkspaceServiceAsyncTest {
                 WorkspaceRemoveParams.builder()
                     .federationRuleId("federation_rule_id")
                     .workspaceId("workspace_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

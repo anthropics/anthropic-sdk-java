@@ -15,7 +15,7 @@ internal class WorkHeartbeatParamsTest {
             .workId("work_id")
             .desiredTtlSeconds(0L)
             .expectedLastHeartbeat("expected_last_heartbeat")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .build()
     }
 
@@ -41,7 +41,7 @@ internal class WorkHeartbeatParamsTest {
                 .workId("work_id")
                 .desiredTtlSeconds(0L)
                 .expectedLastHeartbeat("expected_last_heartbeat")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .build()
 
         val headers = params._headers()
@@ -51,7 +51,7 @@ internal class WorkHeartbeatParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "managed-agents-2026-04-01")
+                        listOf("computer-use-2024-10-22", "managed-agents-2026-04-01")
                             .joinToString(","),
                     )
                     .build()
@@ -79,7 +79,7 @@ internal class WorkHeartbeatParamsTest {
                 .workId("work_id")
                 .desiredTtlSeconds(0L)
                 .expectedLastHeartbeat("expected_last_heartbeat")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .build()
 
         val queryParams = params._queryParams()

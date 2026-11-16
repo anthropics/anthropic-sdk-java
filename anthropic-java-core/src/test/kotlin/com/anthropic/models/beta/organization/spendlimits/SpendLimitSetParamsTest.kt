@@ -10,7 +10,7 @@ internal class SpendLimitSetParamsTest {
     @Test
     fun create() {
         SpendLimitSetParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .amount("50000")
             .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
             .period(BetaSpendLimitPeriod.DAILY)
@@ -21,7 +21,7 @@ internal class SpendLimitSetParamsTest {
     fun headers() {
         val params =
             SpendLimitSetParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .amount("50000")
                 .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .period(BetaSpendLimitPeriod.DAILY)
@@ -32,7 +32,7 @@ internal class SpendLimitSetParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
+                    .put("anthropic-beta", listOf("computer-use-2024-10-22").joinToString(","))
                     .build()
             )
     }
@@ -54,7 +54,7 @@ internal class SpendLimitSetParamsTest {
     fun body() {
         val params =
             SpendLimitSetParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .amount("50000")
                 .userScope("user_01WxYzAbCdEfGhJkMnPqRsTu")
                 .period(BetaSpendLimitPeriod.DAILY)

@@ -40,7 +40,7 @@ internal class SessionServiceTest {
         val betaManagedAgentsSession =
             sessionService.create(
                 SessionCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .agent("agent_011CZkYpogX7uDKUyvBTophP")
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
@@ -87,7 +87,7 @@ internal class SessionServiceTest {
             sessionService.retrieve(
                 SessionRetrieveParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -104,7 +104,7 @@ internal class SessionServiceTest {
             sessionService.update(
                 SessionUpdateParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .agent(
                         BetaManagedAgentsSessionAgentUpdate.builder()
@@ -177,7 +177,7 @@ internal class SessionServiceTest {
             sessionService.delete(
                 SessionDeleteParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -194,7 +194,7 @@ internal class SessionServiceTest {
             sessionService.archive(
                 SessionArchiveParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

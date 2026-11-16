@@ -20,6 +20,8 @@ import com.anthropic.models.beta.environments.BetaInvalidMetadataErrorDetails
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedErrorDetails
 import com.anthropic.models.beta.environments.work.BetaWorkLeaseState
 import com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingErrorDetails
+import com.anthropic.models.beta.organization.claudetag.BetaBundleAttachmentNotSupportedErrorDetails
+import com.anthropic.models.beta.organization.claudetag.BetaBundleOnCallErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredErrorDetails
@@ -60,6 +62,7 @@ import com.anthropic.models.messages.ToolNameConflictErrorDetails
 import com.anthropic.models.messages.ToolReferenceUnresolvedErrorDetails
 import com.anthropic.models.organization.ConcurrentMembershipChangeErrorDetails
 import com.anthropic.models.organization.OrgMemberLimitExceededErrorDetails
+import com.anthropic.models.organization.RbacRoleNotFoundErrorDetails
 import com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededErrorDetails
 import com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededErrorDetails
 import com.anthropic.models.organization.externalkeys.ExternalKeyChangedErrorDetails
@@ -154,6 +157,8 @@ private constructor(
     private val externalKeyChanged: ExternalKeyChangedErrorDetails? = null,
     private val workspaceMemberLimitExceeded: WorkspaceMemberLimitExceededErrorDetails? = null,
     private val organizationTypeNotSupported: OrganizationTypeNotSupportedErrorDetails? = null,
+    private val parentOrganizationRequired: ParentOrganizationRequiredErrorDetails? = null,
+    private val rbacRoleNotFound: RbacRoleNotFoundErrorDetails? = null,
     private val environmentCreateDisabled: BetaEnvironmentCreateDisabledErrorDetails? = null,
     private val environmentArchived: BetaEnvironmentArchivedErrorDetails? = null,
     private val invalidConfigTypeChange: BetaInvalidConfigTypeChangeErrorDetails? = null,
@@ -196,6 +201,8 @@ private constructor(
     private val slackChannelSetUpSettingsConflict:
         BetaSlackChannelSetUpSettingsConflictErrorDetails? =
         null,
+    private val bundleAttachmentNotSupported: BetaBundleAttachmentNotSupportedErrorDetails? = null,
+    private val bundleOnCall: BetaBundleOnCallErrorDetails? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -257,6 +264,8 @@ private constructor(
             externalKeyChanged != null -> ErrorCode.EXTERNAL_KEY_CHANGED
             workspaceMemberLimitExceeded != null -> ErrorCode.WORKSPACE_MEMBER_LIMIT_EXCEEDED
             organizationTypeNotSupported != null -> ErrorCode.ORGANIZATION_TYPE_NOT_SUPPORTED
+            parentOrganizationRequired != null -> ErrorCode.PARENT_ORGANIZATION_REQUIRED
+            rbacRoleNotFound != null -> ErrorCode.RBAC_ROLE_NOT_FOUND
             environmentCreateDisabled != null -> ErrorCode.ENVIRONMENT_CREATE_DISABLED
             environmentArchived != null -> ErrorCode.ENVIRONMENT_ARCHIVED
             invalidConfigTypeChange != null -> ErrorCode.INVALID_CONFIG_TYPE_CHANGE
@@ -291,6 +300,8 @@ private constructor(
                 ErrorCode.SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND
             slackChannelSetUpSettingsConflict != null ->
                 ErrorCode.SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT
+            bundleAttachmentNotSupported != null -> ErrorCode.BUNDLE_ATTACHMENT_NOT_SUPPORTED
+            bundleOnCall != null -> ErrorCode.BUNDLE_ON_CALL
             else ->
                 ErrorCode.of(_json?.asObject()?.getOrNull()?.get("error_code") ?: JsonMissing.of())
         }
@@ -351,6 +362,8 @@ private constructor(
             externalKeyChanged != null -> Optional.empty()
             workspaceMemberLimitExceeded != null -> Optional.empty()
             organizationTypeNotSupported != null -> Optional.empty()
+            parentOrganizationRequired != null -> Optional.empty()
+            rbacRoleNotFound != null -> Optional.empty()
             environmentCreateDisabled != null -> Optional.empty()
             environmentArchived != null -> Optional.empty()
             invalidConfigTypeChange != null -> Optional.empty()
@@ -379,6 +392,8 @@ private constructor(
             environmentNotFound != null -> Optional.empty()
             slackChannelSetUpEnvironmentNotFound != null -> Optional.empty()
             slackChannelSetUpSettingsConflict != null -> Optional.empty()
+            bundleAttachmentNotSupported != null -> Optional.empty()
+            bundleOnCall != null -> Optional.empty()
             else -> _json.getProperty<String>("plugin_id").asKnown()
         }
 
@@ -438,6 +453,8 @@ private constructor(
             externalKeyChanged != null -> Optional.empty()
             workspaceMemberLimitExceeded != null -> Optional.empty()
             organizationTypeNotSupported != null -> Optional.empty()
+            parentOrganizationRequired != null -> Optional.empty()
+            rbacRoleNotFound != null -> Optional.empty()
             environmentCreateDisabled != null -> Optional.empty()
             environmentArchived != null -> Optional.empty()
             invalidConfigTypeChange != null -> Optional.empty()
@@ -466,6 +483,8 @@ private constructor(
             environmentNotFound != null -> Optional.empty()
             slackChannelSetUpEnvironmentNotFound != null -> Optional.empty()
             slackChannelSetUpSettingsConflict != null -> Optional.empty()
+            bundleAttachmentNotSupported != null -> Optional.empty()
+            bundleOnCall != null -> Optional.empty()
             else -> _json.getProperty<String>("plugin_version_id").asKnown()
         }
 
@@ -525,6 +544,8 @@ private constructor(
             externalKeyChanged != null -> Optional.empty()
             workspaceMemberLimitExceeded != null -> Optional.empty()
             organizationTypeNotSupported != null -> Optional.empty()
+            parentOrganizationRequired != null -> Optional.empty()
+            rbacRoleNotFound != null -> Optional.empty()
             environmentCreateDisabled != null -> Optional.empty()
             environmentArchived != null -> Optional.empty()
             invalidConfigTypeChange != null -> Optional.empty()
@@ -556,6 +577,8 @@ private constructor(
                 Optional.of(slackChannelSetUpEnvironmentNotFound.slackChannelId())
             slackChannelSetUpSettingsConflict != null ->
                 Optional.of(slackChannelSetUpSettingsConflict.slackChannelId())
+            bundleAttachmentNotSupported != null -> Optional.empty()
+            bundleOnCall != null -> Optional.empty()
             else -> _json.getProperty<String>("slack_channel_id").asKnown()
         }
 
@@ -858,9 +881,8 @@ private constructor(
         Optional.ofNullable(externalKeyValidationTimedOut)
 
     /**
-     * The External Key is bound to a user profile, and the Workspace does not have that user
-     * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
-     * bound to one.
+     * After this request, the External Key and the Workspace would not have the same user profile.
+     * A key and its Workspace must have the same user profile, or both have none.
      */
     fun keyProfileMismatch(): Optional<KeyProfileMismatchErrorDetails> =
         Optional.ofNullable(keyProfileMismatch)
@@ -886,6 +908,17 @@ private constructor(
      */
     fun organizationTypeNotSupported(): Optional<OrganizationTypeNotSupportedErrorDetails> =
         Optional.ofNullable(organizationTypeNotSupported)
+
+    /**
+     * The endpoint serves only organizations that belong to a parent organization, and this
+     * organization belongs to none.
+     */
+    fun parentOrganizationRequired(): Optional<ParentOrganizationRequiredErrorDetails> =
+        Optional.ofNullable(parentOrganizationRequired)
+
+    /** No RBAC Role with this ID was found. */
+    fun rbacRoleNotFound(): Optional<RbacRoleNotFoundErrorDetails> =
+        Optional.ofNullable(rbacRoleNotFound)
 
     /**
      * Anthropic has turned off creating environments for this organization. Existing environments
@@ -1060,6 +1093,16 @@ private constructor(
         Optional<BetaSlackChannelSetUpSettingsConflictErrorDetails> =
         Optional.ofNullable(slackChannelSetUpSettingsConflict)
 
+    /**
+     * The Bundle has an attachment this API does not support editing, so its instructions can be
+     * changed only in claude.ai.
+     */
+    fun bundleAttachmentNotSupported(): Optional<BetaBundleAttachmentNotSupportedErrorDetails> =
+        Optional.ofNullable(bundleAttachmentNotSupported)
+
+    /** This Bundle's instructions are managed in claude.ai and can't be changed through the API. */
+    fun bundleOnCall(): Optional<BetaBundleOnCallErrorDetails> = Optional.ofNullable(bundleOnCall)
+
     fun isAvailableToolsLimitExceeded(): Boolean = availableToolsLimitExceeded != null
 
     fun isClaudeCodeKeyCreatorNotMember(): Boolean = claudeCodeKeyCreatorNotMember != null
@@ -1169,6 +1212,10 @@ private constructor(
 
     fun isOrganizationTypeNotSupported(): Boolean = organizationTypeNotSupported != null
 
+    fun isParentOrganizationRequired(): Boolean = parentOrganizationRequired != null
+
+    fun isRbacRoleNotFound(): Boolean = rbacRoleNotFound != null
+
     fun isEnvironmentCreateDisabled(): Boolean = environmentCreateDisabled != null
 
     fun isEnvironmentArchived(): Boolean = environmentArchived != null
@@ -1227,6 +1274,10 @@ private constructor(
         slackChannelSetUpEnvironmentNotFound != null
 
     fun isSlackChannelSetUpSettingsConflict(): Boolean = slackChannelSetUpSettingsConflict != null
+
+    fun isBundleAttachmentNotSupported(): Boolean = bundleAttachmentNotSupported != null
+
+    fun isBundleOnCall(): Boolean = bundleOnCall != null
 
     /** The tools available after a message exceed a limit on their number or their size. */
     fun asAvailableToolsLimitExceeded(): AvailableToolsLimitExceededErrorDetails =
@@ -1529,9 +1580,8 @@ private constructor(
         externalKeyValidationTimedOut.getOrThrow("externalKeyValidationTimedOut")
 
     /**
-     * The External Key is bound to a user profile, and the Workspace does not have that user
-     * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
-     * bound to one.
+     * After this request, the External Key and the Workspace would not have the same user profile.
+     * A key and its Workspace must have the same user profile, or both have none.
      */
     fun asKeyProfileMismatch(): KeyProfileMismatchErrorDetails =
         keyProfileMismatch.getOrThrow("keyProfileMismatch")
@@ -1557,6 +1607,17 @@ private constructor(
      */
     fun asOrganizationTypeNotSupported(): OrganizationTypeNotSupportedErrorDetails =
         organizationTypeNotSupported.getOrThrow("organizationTypeNotSupported")
+
+    /**
+     * The endpoint serves only organizations that belong to a parent organization, and this
+     * organization belongs to none.
+     */
+    fun asParentOrganizationRequired(): ParentOrganizationRequiredErrorDetails =
+        parentOrganizationRequired.getOrThrow("parentOrganizationRequired")
+
+    /** No RBAC Role with this ID was found. */
+    fun asRbacRoleNotFound(): RbacRoleNotFoundErrorDetails =
+        rbacRoleNotFound.getOrThrow("rbacRoleNotFound")
 
     /**
      * Anthropic has turned off creating environments for this organization. Existing environments
@@ -1728,6 +1789,16 @@ private constructor(
     fun asSlackChannelSetUpSettingsConflict(): BetaSlackChannelSetUpSettingsConflictErrorDetails =
         slackChannelSetUpSettingsConflict.getOrThrow("slackChannelSetUpSettingsConflict")
 
+    /**
+     * The Bundle has an attachment this API does not support editing, so its instructions can be
+     * changed only in claude.ai.
+     */
+    fun asBundleAttachmentNotSupported(): BetaBundleAttachmentNotSupportedErrorDetails =
+        bundleAttachmentNotSupported.getOrThrow("bundleAttachmentNotSupported")
+
+    /** This Bundle's instructions are managed in claude.ai and can't be changed through the API. */
+    fun asBundleOnCall(): BetaBundleOnCallErrorDetails = bundleOnCall.getOrThrow("bundleOnCall")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -1857,6 +1928,9 @@ private constructor(
                 visitor.visitWorkspaceMemberLimitExceeded(workspaceMemberLimitExceeded)
             organizationTypeNotSupported != null ->
                 visitor.visitOrganizationTypeNotSupported(organizationTypeNotSupported)
+            parentOrganizationRequired != null ->
+                visitor.visitParentOrganizationRequired(parentOrganizationRequired)
+            rbacRoleNotFound != null -> visitor.visitRbacRoleNotFound(rbacRoleNotFound)
             environmentCreateDisabled != null ->
                 visitor.visitEnvironmentCreateDisabled(environmentCreateDisabled)
             environmentArchived != null -> visitor.visitEnvironmentArchived(environmentArchived)
@@ -1907,6 +1981,9 @@ private constructor(
                 )
             slackChannelSetUpSettingsConflict != null ->
                 visitor.visitSlackChannelSetUpSettingsConflict(slackChannelSetUpSettingsConflict)
+            bundleAttachmentNotSupported != null ->
+                visitor.visitBundleAttachmentNotSupported(bundleAttachmentNotSupported)
+            bundleOnCall != null -> visitor.visitBundleOnCall(bundleOnCall)
             else -> visitor.unknown(_json)
         }
 
@@ -1981,6 +2058,8 @@ private constructor(
             externalKeyChanged != null -> externalKeyChanged.validate()
             workspaceMemberLimitExceeded != null -> workspaceMemberLimitExceeded.validate()
             organizationTypeNotSupported != null -> organizationTypeNotSupported.validate()
+            parentOrganizationRequired != null -> parentOrganizationRequired.validate()
+            rbacRoleNotFound != null -> rbacRoleNotFound.validate()
             environmentCreateDisabled != null -> environmentCreateDisabled.validate()
             environmentArchived != null -> environmentArchived.validate()
             invalidConfigTypeChange != null -> invalidConfigTypeChange.validate()
@@ -2014,6 +2093,8 @@ private constructor(
                 slackChannelSetUpEnvironmentNotFound.validate()
             slackChannelSetUpSettingsConflict != null ->
                 slackChannelSetUpSettingsConflict.validate()
+            bundleAttachmentNotSupported != null -> bundleAttachmentNotSupported.validate()
+            bundleOnCall != null -> bundleOnCall.validate()
             else -> throw AnthropicInvalidDataException("Unknown ErrorDetails: $_json")
         }
         validated = true
@@ -2090,6 +2171,8 @@ private constructor(
             externalKeyChanged != null -> externalKeyChanged.validity()
             workspaceMemberLimitExceeded != null -> workspaceMemberLimitExceeded.validity()
             organizationTypeNotSupported != null -> organizationTypeNotSupported.validity()
+            parentOrganizationRequired != null -> parentOrganizationRequired.validity()
+            rbacRoleNotFound != null -> rbacRoleNotFound.validity()
             environmentCreateDisabled != null -> environmentCreateDisabled.validity()
             environmentArchived != null -> environmentArchived.validity()
             invalidConfigTypeChange != null -> invalidConfigTypeChange.validity()
@@ -2123,6 +2206,8 @@ private constructor(
                 slackChannelSetUpEnvironmentNotFound.validity()
             slackChannelSetUpSettingsConflict != null ->
                 slackChannelSetUpSettingsConflict.validity()
+            bundleAttachmentNotSupported != null -> bundleAttachmentNotSupported.validity()
+            bundleOnCall != null -> bundleOnCall.validity()
             else -> 0
         }
 
@@ -2187,6 +2272,8 @@ private constructor(
             externalKeyChanged == other.externalKeyChanged &&
             workspaceMemberLimitExceeded == other.workspaceMemberLimitExceeded &&
             organizationTypeNotSupported == other.organizationTypeNotSupported &&
+            parentOrganizationRequired == other.parentOrganizationRequired &&
+            rbacRoleNotFound == other.rbacRoleNotFound &&
             environmentCreateDisabled == other.environmentCreateDisabled &&
             environmentArchived == other.environmentArchived &&
             invalidConfigTypeChange == other.invalidConfigTypeChange &&
@@ -2214,7 +2301,9 @@ private constructor(
             organizationLevelScopedApiKeyRequired == other.organizationLevelScopedApiKeyRequired &&
             environmentNotFound == other.environmentNotFound &&
             slackChannelSetUpEnvironmentNotFound == other.slackChannelSetUpEnvironmentNotFound &&
-            slackChannelSetUpSettingsConflict == other.slackChannelSetUpSettingsConflict
+            slackChannelSetUpSettingsConflict == other.slackChannelSetUpSettingsConflict &&
+            bundleAttachmentNotSupported == other.bundleAttachmentNotSupported &&
+            bundleOnCall == other.bundleOnCall
     }
 
     override fun hashCode(): Int =
@@ -2273,6 +2362,8 @@ private constructor(
             externalKeyChanged,
             workspaceMemberLimitExceeded,
             organizationTypeNotSupported,
+            parentOrganizationRequired,
+            rbacRoleNotFound,
             environmentCreateDisabled,
             environmentArchived,
             invalidConfigTypeChange,
@@ -2301,6 +2392,8 @@ private constructor(
             environmentNotFound,
             slackChannelSetUpEnvironmentNotFound,
             slackChannelSetUpSettingsConflict,
+            bundleAttachmentNotSupported,
+            bundleOnCall,
         )
 
     override fun toString(): String =
@@ -2400,6 +2493,9 @@ private constructor(
                 "ErrorDetails{workspaceMemberLimitExceeded=$workspaceMemberLimitExceeded}"
             organizationTypeNotSupported != null ->
                 "ErrorDetails{organizationTypeNotSupported=$organizationTypeNotSupported}"
+            parentOrganizationRequired != null ->
+                "ErrorDetails{parentOrganizationRequired=$parentOrganizationRequired}"
+            rbacRoleNotFound != null -> "ErrorDetails{rbacRoleNotFound=$rbacRoleNotFound}"
             environmentCreateDisabled != null ->
                 "ErrorDetails{environmentCreateDisabled=$environmentCreateDisabled}"
             environmentArchived != null -> "ErrorDetails{environmentArchived=$environmentArchived}"
@@ -2444,6 +2540,9 @@ private constructor(
                 "ErrorDetails{slackChannelSetUpEnvironmentNotFound=$slackChannelSetUpEnvironmentNotFound}"
             slackChannelSetUpSettingsConflict != null ->
                 "ErrorDetails{slackChannelSetUpSettingsConflict=$slackChannelSetUpSettingsConflict}"
+            bundleAttachmentNotSupported != null ->
+                "ErrorDetails{bundleAttachmentNotSupported=$bundleAttachmentNotSupported}"
+            bundleOnCall != null -> "ErrorDetails{bundleOnCall=$bundleOnCall}"
             _json != null -> "ErrorDetails{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ErrorDetails")
         }
@@ -2840,9 +2939,8 @@ private constructor(
         ) = ErrorDetails(externalKeyValidationTimedOut = externalKeyValidationTimedOut)
 
         /**
-         * The External Key is bound to a user profile, and the Workspace does not have that user
-         * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
-         * bound to one.
+         * After this request, the External Key and the Workspace would not have the same user
+         * profile. A key and its Workspace must have the same user profile, or both have none.
          */
         @JvmStatic
         fun ofKeyProfileMismatch(keyProfileMismatch: KeyProfileMismatchErrorDetails) =
@@ -2884,6 +2982,20 @@ private constructor(
         fun ofOrganizationTypeNotSupported(
             organizationTypeNotSupported: OrganizationTypeNotSupportedErrorDetails
         ) = ErrorDetails(organizationTypeNotSupported = organizationTypeNotSupported)
+
+        /**
+         * The endpoint serves only organizations that belong to a parent organization, and this
+         * organization belongs to none.
+         */
+        @JvmStatic
+        fun ofParentOrganizationRequired(
+            parentOrganizationRequired: ParentOrganizationRequiredErrorDetails
+        ) = ErrorDetails(parentOrganizationRequired = parentOrganizationRequired)
+
+        /** No RBAC Role with this ID was found. */
+        @JvmStatic
+        fun ofRbacRoleNotFound(rbacRoleNotFound: RbacRoleNotFoundErrorDetails) =
+            ErrorDetails(rbacRoleNotFound = rbacRoleNotFound)
 
         /**
          * Anthropic has turned off creating environments for this organization. Existing
@@ -3183,6 +3295,22 @@ private constructor(
             ofSlackChannelSetUpSettingsConflict(
                 BetaSlackChannelSetUpSettingsConflictErrorDetails.of(slackChannelId)
             )
+
+        /**
+         * The Bundle has an attachment this API does not support editing, so its instructions can
+         * be changed only in claude.ai.
+         */
+        @JvmStatic
+        fun ofBundleAttachmentNotSupported(
+            bundleAttachmentNotSupported: BetaBundleAttachmentNotSupportedErrorDetails
+        ) = ErrorDetails(bundleAttachmentNotSupported = bundleAttachmentNotSupported)
+
+        /**
+         * This Bundle's instructions are managed in claude.ai and can't be changed through the API.
+         */
+        @JvmStatic
+        fun ofBundleOnCall(bundleOnCall: BetaBundleOnCallErrorDetails) =
+            ErrorDetails(bundleOnCall = bundleOnCall)
     }
 
     /**
@@ -3519,9 +3647,8 @@ private constructor(
         ): T
 
         /**
-         * The External Key is bound to a user profile, and the Workspace does not have that user
-         * profile. A Workspace can use only a key bound to its own user profile or a key that isn't
-         * bound to one.
+         * After this request, the External Key and the Workspace would not have the same user
+         * profile. A key and its Workspace must have the same user profile, or both have none.
          */
         fun visitKeyProfileMismatch(keyProfileMismatch: KeyProfileMismatchErrorDetails): T
 
@@ -3548,6 +3675,17 @@ private constructor(
         fun visitOrganizationTypeNotSupported(
             organizationTypeNotSupported: OrganizationTypeNotSupportedErrorDetails
         ): T
+
+        /**
+         * The endpoint serves only organizations that belong to a parent organization, and this
+         * organization belongs to none.
+         */
+        fun visitParentOrganizationRequired(
+            parentOrganizationRequired: ParentOrganizationRequiredErrorDetails
+        ): T
+
+        /** No RBAC Role with this ID was found. */
+        fun visitRbacRoleNotFound(rbacRoleNotFound: RbacRoleNotFoundErrorDetails): T
 
         /**
          * Anthropic has turned off creating environments for this organization. Existing
@@ -3734,6 +3872,19 @@ private constructor(
         fun visitSlackChannelSetUpSettingsConflict(
             slackChannelSetUpSettingsConflict: BetaSlackChannelSetUpSettingsConflictErrorDetails
         ): T
+
+        /**
+         * The Bundle has an attachment this API does not support editing, so its instructions can
+         * be changed only in claude.ai.
+         */
+        fun visitBundleAttachmentNotSupported(
+            bundleAttachmentNotSupported: BetaBundleAttachmentNotSupportedErrorDetails
+        ): T
+
+        /**
+         * This Bundle's instructions are managed in claude.ai and can't be changed through the API.
+         */
+        fun visitBundleOnCall(bundleOnCall: BetaBundleOnCallErrorDetails): T
 
         /**
          * Maps an unknown variant of [ErrorDetails] to a value of type [T].
@@ -4138,6 +4289,19 @@ private constructor(
                         ?.let { ErrorDetails(organizationTypeNotSupported = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "parent_organization_required" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ParentOrganizationRequiredErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(parentOrganizationRequired = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "rbac_role_not_found" -> {
+                    return tryDeserialize(node, jacksonTypeRef<RbacRoleNotFoundErrorDetails>())
+                        ?.let { ErrorDetails(rbacRoleNotFound = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "environment_create_disabled" -> {
                     return tryDeserialize(
                             node,
@@ -4347,6 +4511,19 @@ private constructor(
                         ?.let { ErrorDetails(slackChannelSetUpSettingsConflict = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "bundle_attachment_not_supported" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaBundleAttachmentNotSupportedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(bundleAttachmentNotSupported = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "bundle_on_call" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaBundleOnCallErrorDetails>())
+                        ?.let { ErrorDetails(bundleOnCall = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
             }
 
             return ErrorDetails(_json = json)
@@ -4459,6 +4636,9 @@ private constructor(
                     generator.writeObject(value.workspaceMemberLimitExceeded)
                 value.organizationTypeNotSupported != null ->
                     generator.writeObject(value.organizationTypeNotSupported)
+                value.parentOrganizationRequired != null ->
+                    generator.writeObject(value.parentOrganizationRequired)
+                value.rbacRoleNotFound != null -> generator.writeObject(value.rbacRoleNotFound)
                 value.environmentCreateDisabled != null ->
                     generator.writeObject(value.environmentCreateDisabled)
                 value.environmentArchived != null ->
@@ -4506,6 +4686,9 @@ private constructor(
                     generator.writeObject(value.slackChannelSetUpEnvironmentNotFound)
                 value.slackChannelSetUpSettingsConflict != null ->
                     generator.writeObject(value.slackChannelSetUpSettingsConflict)
+                value.bundleAttachmentNotSupported != null ->
+                    generator.writeObject(value.bundleAttachmentNotSupported)
+                value.bundleOnCall != null -> generator.writeObject(value.bundleOnCall)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ErrorDetails")
             }
@@ -4695,6 +4878,12 @@ private constructor(
                 ErrorCode(JsonField.of("organization_type_not_supported"))
 
             @JvmField
+            val PARENT_ORGANIZATION_REQUIRED =
+                ErrorCode(JsonField.of("parent_organization_required"))
+
+            @JvmField val RBAC_ROLE_NOT_FOUND = ErrorCode(JsonField.of("rbac_role_not_found"))
+
+            @JvmField
             val ENVIRONMENT_CREATE_DISABLED = ErrorCode(JsonField.of("environment_create_disabled"))
 
             @JvmField val ENVIRONMENT_ARCHIVED = ErrorCode(JsonField.of("environment_archived"))
@@ -4779,6 +4968,12 @@ private constructor(
             val SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT =
                 ErrorCode(JsonField.of("slack_channel_set_up_settings_conflict"))
 
+            @JvmField
+            val BUNDLE_ATTACHMENT_NOT_SUPPORTED =
+                ErrorCode(JsonField.of("bundle_attachment_not_supported"))
+
+            @JvmField val BUNDLE_ON_CALL = ErrorCode(JsonField.of("bundle_on_call"))
+
             @JvmStatic
             fun of(value: String): ErrorCode =
                 // Intern known values so `==` works
@@ -4838,6 +5033,8 @@ private constructor(
                     "external_key_changed" -> EXTERNAL_KEY_CHANGED
                     "workspace_member_limit_exceeded" -> WORKSPACE_MEMBER_LIMIT_EXCEEDED
                     "organization_type_not_supported" -> ORGANIZATION_TYPE_NOT_SUPPORTED
+                    "parent_organization_required" -> PARENT_ORGANIZATION_REQUIRED
+                    "rbac_role_not_found" -> RBAC_ROLE_NOT_FOUND
                     "environment_create_disabled" -> ENVIRONMENT_CREATE_DISABLED
                     "environment_archived" -> ENVIRONMENT_ARCHIVED
                     "invalid_config_type_change" -> INVALID_CONFIG_TYPE_CHANGE
@@ -4870,6 +5067,8 @@ private constructor(
                         SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND
                     "slack_channel_set_up_settings_conflict" ->
                         SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT
+                    "bundle_attachment_not_supported" -> BUNDLE_ATTACHMENT_NOT_SUPPORTED
+                    "bundle_on_call" -> BUNDLE_ON_CALL
                     else -> ErrorCode(JsonField.of(value))
                 }
 
@@ -4935,6 +5134,8 @@ private constructor(
             EXTERNAL_KEY_CHANGED,
             WORKSPACE_MEMBER_LIMIT_EXCEEDED,
             ORGANIZATION_TYPE_NOT_SUPPORTED,
+            PARENT_ORGANIZATION_REQUIRED,
+            RBAC_ROLE_NOT_FOUND,
             ENVIRONMENT_CREATE_DISABLED,
             ENVIRONMENT_ARCHIVED,
             INVALID_CONFIG_TYPE_CHANGE,
@@ -4963,6 +5164,8 @@ private constructor(
             ENVIRONMENT_NOT_FOUND,
             SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND,
             SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT,
+            BUNDLE_ATTACHMENT_NOT_SUPPORTED,
+            BUNDLE_ON_CALL,
         }
 
         /**
@@ -5029,6 +5232,8 @@ private constructor(
             EXTERNAL_KEY_CHANGED,
             WORKSPACE_MEMBER_LIMIT_EXCEEDED,
             ORGANIZATION_TYPE_NOT_SUPPORTED,
+            PARENT_ORGANIZATION_REQUIRED,
+            RBAC_ROLE_NOT_FOUND,
             ENVIRONMENT_CREATE_DISABLED,
             ENVIRONMENT_ARCHIVED,
             INVALID_CONFIG_TYPE_CHANGE,
@@ -5057,6 +5262,8 @@ private constructor(
             ENVIRONMENT_NOT_FOUND,
             SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND,
             SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT,
+            BUNDLE_ATTACHMENT_NOT_SUPPORTED,
+            BUNDLE_ON_CALL,
             /**
              * An enum member indicating that [ErrorCode] was instantiated with an unknown value.
              */
@@ -5127,6 +5334,8 @@ private constructor(
                 EXTERNAL_KEY_CHANGED -> Value.EXTERNAL_KEY_CHANGED
                 WORKSPACE_MEMBER_LIMIT_EXCEEDED -> Value.WORKSPACE_MEMBER_LIMIT_EXCEEDED
                 ORGANIZATION_TYPE_NOT_SUPPORTED -> Value.ORGANIZATION_TYPE_NOT_SUPPORTED
+                PARENT_ORGANIZATION_REQUIRED -> Value.PARENT_ORGANIZATION_REQUIRED
+                RBAC_ROLE_NOT_FOUND -> Value.RBAC_ROLE_NOT_FOUND
                 ENVIRONMENT_CREATE_DISABLED -> Value.ENVIRONMENT_CREATE_DISABLED
                 ENVIRONMENT_ARCHIVED -> Value.ENVIRONMENT_ARCHIVED
                 INVALID_CONFIG_TYPE_CHANGE -> Value.INVALID_CONFIG_TYPE_CHANGE
@@ -5159,6 +5368,8 @@ private constructor(
                     Value.SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND
                 SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT ->
                     Value.SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT
+                BUNDLE_ATTACHMENT_NOT_SUPPORTED -> Value.BUNDLE_ATTACHMENT_NOT_SUPPORTED
+                BUNDLE_ON_CALL -> Value.BUNDLE_ON_CALL
                 else -> Value._UNKNOWN
             }
 
@@ -5228,6 +5439,8 @@ private constructor(
                 EXTERNAL_KEY_CHANGED -> Known.EXTERNAL_KEY_CHANGED
                 WORKSPACE_MEMBER_LIMIT_EXCEEDED -> Known.WORKSPACE_MEMBER_LIMIT_EXCEEDED
                 ORGANIZATION_TYPE_NOT_SUPPORTED -> Known.ORGANIZATION_TYPE_NOT_SUPPORTED
+                PARENT_ORGANIZATION_REQUIRED -> Known.PARENT_ORGANIZATION_REQUIRED
+                RBAC_ROLE_NOT_FOUND -> Known.RBAC_ROLE_NOT_FOUND
                 ENVIRONMENT_CREATE_DISABLED -> Known.ENVIRONMENT_CREATE_DISABLED
                 ENVIRONMENT_ARCHIVED -> Known.ENVIRONMENT_ARCHIVED
                 INVALID_CONFIG_TYPE_CHANGE -> Known.INVALID_CONFIG_TYPE_CHANGE
@@ -5260,6 +5473,8 @@ private constructor(
                     Known.SLACK_CHANNEL_SET_UP_ENVIRONMENT_NOT_FOUND
                 SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT ->
                     Known.SLACK_CHANNEL_SET_UP_SETTINGS_CONFLICT
+                BUNDLE_ATTACHMENT_NOT_SUPPORTED -> Known.BUNDLE_ATTACHMENT_NOT_SUPPORTED
+                BUNDLE_ON_CALL -> Known.BUNDLE_ON_CALL
                 else -> throw AnthropicInvalidDataException("Unknown ErrorCode: $value")
             }
 

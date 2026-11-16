@@ -50,7 +50,7 @@ internal class UsageListParamsTest {
             .timeBucketWidth(BetaAnalyticsTimeBucketWidth.DAY)
             .addUserProfileId("uprof_01M33NeYUQK2WV9PpYcsPHLi")
             .addWorkspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .build()
     }
 
@@ -87,7 +87,7 @@ internal class UsageListParamsTest {
                 .timeBucketWidth(BetaAnalyticsTimeBucketWidth.DAY)
                 .addUserProfileId("uprof_01M33NeYUQK2WV9PpYcsPHLi")
                 .addWorkspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .build()
 
         val headers = params._headers()
@@ -97,7 +97,7 @@ internal class UsageListParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "analytics-usage-cost-2026-08-24")
+                        listOf("computer-use-2024-10-22", "analytics-usage-cost-2026-08-24")
                             .joinToString(","),
                     )
                     .build()
@@ -149,7 +149,7 @@ internal class UsageListParamsTest {
                 .timeBucketWidth(BetaAnalyticsTimeBucketWidth.DAY)
                 .addUserProfileId("uprof_01M33NeYUQK2WV9PpYcsPHLi")
                 .addWorkspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .build()
 
         val queryParams = params._queryParams()

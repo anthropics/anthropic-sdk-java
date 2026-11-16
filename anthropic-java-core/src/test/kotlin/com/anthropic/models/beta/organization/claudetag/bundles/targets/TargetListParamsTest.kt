@@ -14,7 +14,7 @@ internal class TargetListParamsTest {
             .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
             .limit(0)
             .page("page")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .build()
     }
 
@@ -34,7 +34,7 @@ internal class TargetListParamsTest {
                 .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
                 .limit(0)
                 .page("page")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .build()
 
         val headers = params._headers()
@@ -44,7 +44,7 @@ internal class TargetListParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "experimental-claude-tag-2026-10-21")
+                        listOf("computer-use-2024-10-22", "experimental-claude-tag-2026-10-21")
                             .joinToString(","),
                     )
                     .build()
@@ -67,7 +67,7 @@ internal class TargetListParamsTest {
                 .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
                 .limit(0)
                 .page("page")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .build()
 
         val queryParams = params._queryParams()

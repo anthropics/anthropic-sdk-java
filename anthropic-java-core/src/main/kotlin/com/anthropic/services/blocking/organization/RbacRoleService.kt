@@ -31,6 +31,10 @@ interface RbacRoleService {
      * Retrieve an RBAC Role by ID.
      *
      * The RBAC Roles API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.OrganizationTypeNotSupportedException
+     * @throws com.anthropic.models.ParentOrganizationRequiredException
+     * @throws com.anthropic.models.organization.RbacRoleNotFoundException
      */
     fun retrieve(rbacRoleId: String): RbacRole = retrieve(rbacRoleId, RbacRoleRetrieveParams.none())
 
@@ -64,6 +68,9 @@ interface RbacRoleService {
      * List RBAC Roles in the organization.
      *
      * The RBAC Roles API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.OrganizationTypeNotSupportedException
+     * @throws com.anthropic.models.ParentOrganizationRequiredException
      */
     fun list(): RbacRoleListPage = list(RbacRoleListParams.none())
 

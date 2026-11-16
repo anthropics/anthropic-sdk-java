@@ -41,6 +41,7 @@ private constructor(
         private const val ENV_PROJECT = "ANTHROPIC_VERTEX_PROJECT_ID"
         private const val HEADER_ANTHROPIC_VERSION = "anthropic-version"
         private const val HEADER_AUTHORIZATION = "Authorization"
+        private const val SCOPE = "https://www.googleapis.com/auth/cloud-platform"
 
         @JvmStatic fun builder() = Builder()
 
@@ -198,7 +199,7 @@ private constructor(
 
         fun fromEnv() = apply {
             try {
-                googleCredentials = GoogleCredentials.getApplicationDefault()
+                googleCredentials = GoogleCredentials.getApplicationDefault().createScoped(SCOPE)
             } catch (e: Exception) {
                 throw IllegalStateException("Google OAuth2 credentials could not be resolved.", e)
             }

@@ -31,7 +31,7 @@ internal class PluginMarketplaceServiceAsyncTest {
                 PluginMarketplaceRetrieveParams.builder()
                     .marketplaceId("marketplace_id")
                     .organizationId("organization_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -50,7 +50,7 @@ internal class PluginMarketplaceServiceAsyncTest {
             pluginMarketplaceServiceAsync.update(
                 PluginMarketplaceUpdateParams.builder()
                     .marketplaceId("marketplace_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .defaultInstallationPreference(
                         PluginMarketplaceUpdateParams.DefaultInstallationPreference.AVAILABLE
                     )
@@ -84,7 +84,7 @@ internal class PluginMarketplaceServiceAsyncTest {
         val betaPluginMarketplaceValidationReportFuture =
             pluginMarketplaceServiceAsync.validateArchive(
                 PluginMarketplaceValidateArchiveParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .archive("Example data".byteInputStream())
                     .build()
             )
@@ -104,7 +104,7 @@ internal class PluginMarketplaceServiceAsyncTest {
         val betaPluginMarketplaceValidationReportFuture =
             pluginMarketplaceServiceAsync.validateRepository(
                 PluginMarketplaceValidateRepositoryParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .repositoryUrl("https://github.com/example-org/example-marketplace")
                     .ref("main")
                     .build()

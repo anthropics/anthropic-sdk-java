@@ -29,7 +29,7 @@ internal class MemoryStoreServiceAsyncTest {
         val betaManagedAgentsMemoryStoreFuture =
             memoryStoreServiceAsync.create(
                 MemoryStoreCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .name("x")
                     .description("description")
@@ -54,7 +54,7 @@ internal class MemoryStoreServiceAsyncTest {
             memoryStoreServiceAsync.retrieve(
                 MemoryStoreRetrieveParams.builder()
                     .memoryStoreId("memory_store_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -72,7 +72,7 @@ internal class MemoryStoreServiceAsyncTest {
             memoryStoreServiceAsync.update(
                 MemoryStoreUpdateParams.builder()
                     .memoryStoreId("memory_store_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .description("description")
                     .metadata(
@@ -108,7 +108,7 @@ internal class MemoryStoreServiceAsyncTest {
             memoryStoreServiceAsync.delete(
                 MemoryStoreDeleteParams.builder()
                     .memoryStoreId("memory_store_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -126,7 +126,7 @@ internal class MemoryStoreServiceAsyncTest {
             memoryStoreServiceAsync.archive(
                 MemoryStoreArchiveParams.builder()
                     .memoryStoreId("memory_store_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

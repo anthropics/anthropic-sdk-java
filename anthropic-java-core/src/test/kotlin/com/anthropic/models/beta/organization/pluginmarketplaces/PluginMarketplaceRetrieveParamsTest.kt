@@ -13,7 +13,7 @@ internal class PluginMarketplaceRetrieveParamsTest {
         PluginMarketplaceRetrieveParams.builder()
             .marketplaceId("marketplace_id")
             .organizationId("organization_id")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .build()
     }
 
@@ -33,7 +33,7 @@ internal class PluginMarketplaceRetrieveParamsTest {
             PluginMarketplaceRetrieveParams.builder()
                 .marketplaceId("marketplace_id")
                 .organizationId("organization_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .build()
 
         val headers = params._headers()
@@ -43,8 +43,7 @@ internal class PluginMarketplaceRetrieveParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "ce-plugins-2026-09-01")
-                            .joinToString(","),
+                        listOf("computer-use-2024-10-22", "ce-plugins-2026-09-01").joinToString(","),
                     )
                     .build()
             )
@@ -66,7 +65,7 @@ internal class PluginMarketplaceRetrieveParamsTest {
             PluginMarketplaceRetrieveParams.builder()
                 .marketplaceId("marketplace_id")
                 .organizationId("organization_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .build()
 
         val queryParams = params._queryParams()

@@ -43,7 +43,7 @@ internal class AgentServiceTest {
         val betaManagedAgentsAgent =
             agentService.create(
                 AgentCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                     .name("My First Agent")
@@ -137,7 +137,7 @@ internal class AgentServiceTest {
                 AgentRetrieveParams.builder()
                     .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                     .version(0)
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -153,7 +153,7 @@ internal class AgentServiceTest {
             agentService.update(
                 AgentUpdateParams.builder()
                     .agentId("agent_011CZkYpogX7uDKUyvBTophP")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .description("updated")
                     .awsRoleExecutionIdentity("arn:aws:iam::228601553692:role/T")
@@ -245,7 +245,7 @@ internal class AgentServiceTest {
             agentService.archive(
                 AgentArchiveParams.builder()
                     .agentId("agent_011CZkYpogX7uDKUyvBTophP")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

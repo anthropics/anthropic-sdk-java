@@ -50,7 +50,7 @@ internal class MessageServiceTest {
         val betaMessage =
             messageService.create(
                 MessageCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .userProfileId("anthropic-user-profile-id")
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .maxTokens(1024L)
@@ -222,7 +222,7 @@ internal class MessageServiceTest {
         val betaMessageStreamResponse =
             messageService.createStreaming(
                 MessageCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .userProfileId("anthropic-user-profile-id")
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .maxTokens(1024L)
@@ -396,7 +396,7 @@ internal class MessageServiceTest {
         val betaMessageTokensCount =
             messageService.countTokens(
                 MessageCountTokensParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .userProfileId("anthropic-user-profile-id")
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addUserMessage("Hello, world")

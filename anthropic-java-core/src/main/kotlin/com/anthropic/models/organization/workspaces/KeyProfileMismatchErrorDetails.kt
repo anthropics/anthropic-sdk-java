@@ -12,8 +12,8 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * The External Key is bound to a user profile, and the Workspace does not have that user profile. A
- * Workspace can use only a key bound to its own user profile or a key that isn't bound to one.
+ * After this request, the External Key and the Workspace would not have the same user profile. A
+ * key and its Workspace must have the same user profile, or both have none.
  */
 class KeyProfileMismatchErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)

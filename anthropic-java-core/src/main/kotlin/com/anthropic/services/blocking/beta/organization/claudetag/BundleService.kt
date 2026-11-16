@@ -7,6 +7,7 @@ import com.anthropic.models.beta.organization.claudetag.bundles.BetaClaudeTagBun
 import com.anthropic.models.beta.organization.claudetag.bundles.BundleListPage
 import com.anthropic.models.beta.organization.claudetag.bundles.BundleListParams
 import com.anthropic.models.beta.organization.claudetag.bundles.BundleRetrieveParams
+import com.anthropic.models.beta.organization.claudetag.bundles.BundleUpdateParams
 import com.anthropic.services.blocking.beta.organization.claudetag.bundles.TargetService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
@@ -68,6 +69,55 @@ interface BundleService {
     /** @see retrieve */
     fun retrieve(bundleId: String, requestOptions: RequestOptions): BetaClaudeTagBundle =
         retrieve(bundleId, BundleRetrieveParams.none(), requestOptions)
+
+    /**
+     * Change a Bundle's instructions. The update is partial: a field left out is unchanged, and
+     * `instructions` sent as null or as an empty string clears them. The later of two updates wins.
+     * Sessions that start after the change use the new instructions; sessions already running keep
+     * the ones they started with. Some Bundles are managed in claude.ai, and an update of one
+     * returns 400.
+     *
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaBundleAttachmentNotSupportedException
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaBundleOnCallException
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictException
+     */
+    fun update(bundleId: String): BetaClaudeTagBundle = update(bundleId, BundleUpdateParams.none())
+
+    /** @see update */
+    fun update(
+        bundleId: String,
+        params: BundleUpdateParams = BundleUpdateParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): BetaClaudeTagBundle = update(params.toBuilder().bundleId(bundleId).build(), requestOptions)
+
+    /** @see update */
+    fun update(
+        bundleId: String,
+        params: BundleUpdateParams = BundleUpdateParams.none(),
+    ): BetaClaudeTagBundle = update(bundleId, params, RequestOptions.none())
+
+    /** @see update */
+    fun update(
+        params: BundleUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): BetaClaudeTagBundle
+
+    /** @see update */
+    fun update(params: BundleUpdateParams): BetaClaudeTagBundle =
+        update(params, RequestOptions.none())
+
+    /** @see update */
+    fun update(bundleId: String, requestOptions: RequestOptions): BetaClaudeTagBundle =
+        update(bundleId, BundleUpdateParams.none(), requestOptions)
 
     /**
      * List the organization's Bundles, newest first by `created_at`. A Bundle that Claude Tag
@@ -152,6 +202,50 @@ interface BundleService {
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaClaudeTagBundle> =
             retrieve(bundleId, BundleRetrieveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /v1/organizations/claude_tag/bundles/{bundle_id}`,
+         * but is otherwise the same as [BundleService.update].
+         */
+        @MustBeClosed
+        fun update(bundleId: String): HttpResponseFor<BetaClaudeTagBundle> =
+            update(bundleId, BundleUpdateParams.none())
+
+        /** @see update */
+        @MustBeClosed
+        fun update(
+            bundleId: String,
+            params: BundleUpdateParams = BundleUpdateParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaClaudeTagBundle> =
+            update(params.toBuilder().bundleId(bundleId).build(), requestOptions)
+
+        /** @see update */
+        @MustBeClosed
+        fun update(
+            bundleId: String,
+            params: BundleUpdateParams = BundleUpdateParams.none(),
+        ): HttpResponseFor<BetaClaudeTagBundle> = update(bundleId, params, RequestOptions.none())
+
+        /** @see update */
+        @MustBeClosed
+        fun update(
+            params: BundleUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaClaudeTagBundle>
+
+        /** @see update */
+        @MustBeClosed
+        fun update(params: BundleUpdateParams): HttpResponseFor<BetaClaudeTagBundle> =
+            update(params, RequestOptions.none())
+
+        /** @see update */
+        @MustBeClosed
+        fun update(
+            bundleId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaClaudeTagBundle> =
+            update(bundleId, BundleUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/claude_tag/bundles`, but is

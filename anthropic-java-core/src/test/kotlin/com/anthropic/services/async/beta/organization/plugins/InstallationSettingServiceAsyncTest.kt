@@ -42,7 +42,7 @@ internal class InstallationSettingServiceAsyncTest {
                 InstallationSettingRemoveParams.builder()
                     .pluginId("plugin_id")
                     .target("target")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -62,7 +62,7 @@ internal class InstallationSettingServiceAsyncTest {
                 InstallationSettingSetParams.builder()
                     .pluginId("plugin_id")
                     .target("target")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .installationPreference(
                         InstallationSettingSetParams.InstallationPreference.REQUIRED
                     )

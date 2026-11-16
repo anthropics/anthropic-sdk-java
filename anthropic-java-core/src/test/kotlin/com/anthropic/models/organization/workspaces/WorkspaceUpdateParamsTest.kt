@@ -18,7 +18,7 @@ internal class WorkspaceUpdateParamsTest {
             )
             .displayColor("#6C5BB9")
             .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
-            .name("x")
+            .name("Workspace Name")
             .tags(
                 WorkspaceUpdateParams.Tags.builder()
                     .putAdditionalProperty("env", JsonValue.from("prod"))
@@ -51,7 +51,7 @@ internal class WorkspaceUpdateParamsTest {
                 )
                 .displayColor("#6C5BB9")
                 .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
-                .name("x")
+                .name("Workspace Name")
                 .tags(
                     WorkspaceUpdateParams.Tags.builder()
                         .putAdditionalProperty("env", JsonValue.from("prod"))
@@ -72,7 +72,7 @@ internal class WorkspaceUpdateParamsTest {
             )
         assertThat(body.displayColor()).contains("#6C5BB9")
         assertThat(body.externalKeyId()).contains("ekey_01SDCCSbTxrXDpWc1phhtcfK")
-        assertThat(body.name()).contains("x")
+        assertThat(body.name()).contains("Workspace Name")
         assertThat(body.tags())
             .contains(
                 WorkspaceUpdateParams.Tags.builder()

@@ -11,8 +11,8 @@ internal class WorkspaceCreateParamsTest {
     @Test
     fun create() {
         WorkspaceCreateParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-            .name("x")
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
+            .name("Workspace Name")
             .dataResidency(
                 BetaDataResidencyCreateConfig.builder()
                     .allowedInferenceGeosUnrestricted()
@@ -36,8 +36,8 @@ internal class WorkspaceCreateParamsTest {
     fun headers() {
         val params =
             WorkspaceCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .name("x")
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
+                .name("Workspace Name")
                 .dataResidency(
                     BetaDataResidencyCreateConfig.builder()
                         .allowedInferenceGeosUnrestricted()
@@ -63,14 +63,14 @@ internal class WorkspaceCreateParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
+                    .put("anthropic-beta", listOf("computer-use-2024-10-22").joinToString(","))
                     .build()
             )
     }
 
     @Test
     fun headersWithoutOptionalFields() {
-        val params = WorkspaceCreateParams.builder().name("x").build()
+        val params = WorkspaceCreateParams.builder().name("Workspace Name").build()
 
         val headers = params._headers()
 
@@ -81,8 +81,8 @@ internal class WorkspaceCreateParamsTest {
     fun body() {
         val params =
             WorkspaceCreateParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .name("x")
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
+                .name("Workspace Name")
                 .dataResidency(
                     BetaDataResidencyCreateConfig.builder()
                         .allowedInferenceGeosUnrestricted()
@@ -105,7 +105,7 @@ internal class WorkspaceCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("Workspace Name")
         assertThat(body.dataResidency())
             .contains(
                 BetaDataResidencyCreateConfig.builder()
@@ -128,10 +128,10 @@ internal class WorkspaceCreateParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = WorkspaceCreateParams.builder().name("x").build()
+        val params = WorkspaceCreateParams.builder().name("Workspace Name").build()
 
         val body = params._body()
 
-        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("Workspace Name")
     }
 }

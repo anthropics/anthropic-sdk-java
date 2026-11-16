@@ -21,3 +21,10 @@ dependencies {
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.params)
 }
+
+tasks.test {
+    // `VertexBackend.fromEnv()` reads the process environment, which a test cannot set.
+    environment("GOOGLE_APPLICATION_CREDENTIALS", temporaryDir.resolve("service-account.json"))
+    environment("CLOUD_ML_REGION", "us-central1")
+    environment("ANTHROPIC_VERTEX_PROJECT_ID", "vertex-project-12345-b6")
+}

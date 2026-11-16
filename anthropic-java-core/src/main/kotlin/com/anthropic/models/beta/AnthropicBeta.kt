@@ -26,29 +26,12 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
     companion object {
 
         @JvmField
-        val MESSAGE_BATCHES_2024_09_24 = AnthropicBeta(JsonField.of("message-batches-2024-09-24"))
-
-        @JvmField
-        val PROMPT_CACHING_2024_07_31 = AnthropicBeta(JsonField.of("prompt-caching-2024-07-31"))
-
-        @JvmField
         val COMPUTER_USE_2024_10_22 = AnthropicBeta(JsonField.of("computer-use-2024-10-22"))
 
         @JvmField
         val COMPUTER_USE_2025_01_24 = AnthropicBeta(JsonField.of("computer-use-2025-01-24"))
 
-        @JvmField val PDFS_2024_09_25 = AnthropicBeta(JsonField.of("pdfs-2024-09-25"))
-
-        @JvmField
-        val TOKEN_COUNTING_2024_11_01 = AnthropicBeta(JsonField.of("token-counting-2024-11-01"))
-
-        @JvmField
-        val TOKEN_EFFICIENT_TOOLS_2025_02_19 =
-            AnthropicBeta(JsonField.of("token-efficient-tools-2025-02-19"))
-
         @JvmField val OUTPUT_128K_2025_02_19 = AnthropicBeta(JsonField.of("output-128k-2025-02-19"))
-
-        @JvmField val FILES_API_2025_04_14 = AnthropicBeta(JsonField.of("files-api-2025-04-14"))
 
         @JvmField val MCP_CLIENT_2025_04_04 = AnthropicBeta(JsonField.of("mcp-client-2025-04-04"))
 
@@ -65,10 +48,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         @JvmField
         val CODE_EXECUTION_2025_05_22 = AnthropicBeta(JsonField.of("code-execution-2025-05-22"))
 
-        @JvmField
-        val EXTENDED_CACHE_TTL_2025_04_11 =
-            AnthropicBeta(JsonField.of("extended-cache-ttl-2025-04-11"))
-
         @JvmField val CONTEXT_1M_2025_08_07 = AnthropicBeta(JsonField.of("context-1m-2025-08-07"))
 
         @JvmField
@@ -78,8 +57,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         @JvmField
         val MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26 =
             AnthropicBeta(JsonField.of("model-context-window-exceeded-2025-08-26"))
-
-        @JvmField val SKILLS_2025_10_02 = AnthropicBeta(JsonField.of("skills-2025-10-02"))
 
         @JvmField val FAST_MODE_2026_02_01 = AnthropicBeta(JsonField.of("fast-mode-2026-02-01"))
 
@@ -99,9 +76,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
 
         @JvmField
         val MANAGED_AGENTS_2026_04_01 = AnthropicBeta(JsonField.of("managed-agents-2026-04-01"))
-
-        @JvmField
-        val CACHE_DIAGNOSIS_2026_04_07 = AnthropicBeta(JsonField.of("cache-diagnosis-2026-04-07"))
 
         @JvmField val DREAMING_2026_04_21 = AnthropicBeta(JsonField.of("dreaming-2026-04-21"))
 
@@ -149,10 +123,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             AnthropicBeta(JsonField.of("thinking-display-updates-2026-08-18"))
 
         @JvmField
-        val CE_USER_MANAGEMENT_2026_07_13 =
-            AnthropicBeta(JsonField.of("ce-user-management-2026-07-13"))
-
-        @JvmField
         val MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01 =
             AnthropicBeta(JsonField.of("mid-conversation-output-config-2026-07-01"))
 
@@ -198,30 +168,69 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         val EXPERIMENTAL_CLAUDE_TAG_2026_10_21 =
             AnthropicBeta(JsonField.of("experimental-claude-tag-2026-10-21"))
 
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        @JvmField
+        val MESSAGE_BATCHES_2024_09_24 = AnthropicBeta(JsonField.of("message-batches-2024-09-24"))
+
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        @JvmField
+        val PROMPT_CACHING_2024_07_31 = AnthropicBeta(JsonField.of("prompt-caching-2024-07-31"))
+
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        @JvmField
+        val PDFS_2024_09_25 = AnthropicBeta(JsonField.of("pdfs-2024-09-25"))
+
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        @JvmField
+        val TOKEN_COUNTING_2024_11_01 = AnthropicBeta(JsonField.of("token-counting-2024-11-01"))
+
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        @JvmField
+        val TOKEN_EFFICIENT_TOOLS_2025_02_19 =
+            AnthropicBeta(JsonField.of("token-efficient-tools-2025-02-19"))
+
+        @Deprecated(
+            "Sending this value selects the beta response shapes. Removing it moves you to the current shapes, so follow the migration steps: https://platform.claude.com/docs/en/build-with-claude/files#migrate-from-files-api-2025-04-14"
+        )
+        @JvmField
+        val FILES_API_2025_04_14 = AnthropicBeta(JsonField.of("files-api-2025-04-14"))
+
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        @JvmField
+        val EXTENDED_CACHE_TTL_2025_04_11 =
+            AnthropicBeta(JsonField.of("extended-cache-ttl-2025-04-11"))
+
+        @Deprecated(
+            "Sending this value selects the beta response shapes. Removing it moves you to the current shapes, so follow the migration steps: https://platform.claude.com/docs/en/build-with-claude/skills-guide#migrate-from-skills-2025-10-02"
+        )
+        @JvmField
+        val SKILLS_2025_10_02 = AnthropicBeta(JsonField.of("skills-2025-10-02"))
+
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        @JvmField
+        val CACHE_DIAGNOSIS_2026_04_07 = AnthropicBeta(JsonField.of("cache-diagnosis-2026-04-07"))
+
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        @JvmField
+        val CE_USER_MANAGEMENT_2026_07_13 =
+            AnthropicBeta(JsonField.of("ce-user-management-2026-07-13"))
+
         @JvmStatic
         fun of(value: String): AnthropicBeta =
             // Intern known values so `==` works
             when (value) {
-                "message-batches-2024-09-24" -> MESSAGE_BATCHES_2024_09_24
-                "prompt-caching-2024-07-31" -> PROMPT_CACHING_2024_07_31
                 "computer-use-2024-10-22" -> COMPUTER_USE_2024_10_22
                 "computer-use-2025-01-24" -> COMPUTER_USE_2025_01_24
-                "pdfs-2024-09-25" -> PDFS_2024_09_25
-                "token-counting-2024-11-01" -> TOKEN_COUNTING_2024_11_01
-                "token-efficient-tools-2025-02-19" -> TOKEN_EFFICIENT_TOOLS_2025_02_19
                 "output-128k-2025-02-19" -> OUTPUT_128K_2025_02_19
-                "files-api-2025-04-14" -> FILES_API_2025_04_14
                 "mcp-client-2025-04-04" -> MCP_CLIENT_2025_04_04
                 "mcp-client-2025-11-20" -> MCP_CLIENT_2025_11_20
                 "dev-full-thinking-2025-05-14" -> DEV_FULL_THINKING_2025_05_14
                 "interleaved-thinking-2025-05-14" -> INTERLEAVED_THINKING_2025_05_14
                 "code-execution-2025-05-22" -> CODE_EXECUTION_2025_05_22
-                "extended-cache-ttl-2025-04-11" -> EXTENDED_CACHE_TTL_2025_04_11
                 "context-1m-2025-08-07" -> CONTEXT_1M_2025_08_07
                 "context-management-2025-06-27" -> CONTEXT_MANAGEMENT_2025_06_27
                 "model-context-window-exceeded-2025-08-26" ->
                     MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26
-                "skills-2025-10-02" -> SKILLS_2025_10_02
                 "fast-mode-2026-02-01" -> FAST_MODE_2026_02_01
                 "output-300k-2026-03-24" -> OUTPUT_300K_2026_03_24
                 "user-profiles-2026-03-24" -> USER_PROFILES_2026_03_24
@@ -229,7 +238,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
                 "user-profiles-2026-09-04" -> USER_PROFILES_2026_09_04
                 "advisor-tool-2026-03-01" -> ADVISOR_TOOL_2026_03_01
                 "managed-agents-2026-04-01" -> MANAGED_AGENTS_2026_04_01
-                "cache-diagnosis-2026-04-07" -> CACHE_DIAGNOSIS_2026_04_07
                 "dreaming-2026-04-21" -> DREAMING_2026_04_21
                 "thinking-token-count-2026-05-13" -> THINKING_TOKEN_COUNT_2026_05_13
                 "server-side-fallback-2026-06-01" -> SERVER_SIDE_FALLBACK_2026_06_01
@@ -245,7 +253,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
                 "structured-outputs-2025-11-13" -> STRUCTURED_OUTPUTS_2025_11_13
                 "task-budgets-2026-03-13" -> TASK_BUDGETS_2026_03_13
                 "thinking-display-updates-2026-08-18" -> THINKING_DISPLAY_UPDATES_2026_08_18
-                "ce-user-management-2026-07-13" -> CE_USER_MANAGEMENT_2026_07_13
                 "mid-conversation-output-config-2026-07-01" ->
                     MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01
                 "thinking-binding-controls-2026-08-01" -> THINKING_BINDING_CONTROLS_2026_08_01
@@ -262,6 +269,16 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
                 "message-threads-2026-08-12" -> MESSAGE_THREADS_2026_08_12
                 "analytics-usage-cost-2026-08-24" -> ANALYTICS_USAGE_COST_2026_08_24
                 "experimental-claude-tag-2026-10-21" -> EXPERIMENTAL_CLAUDE_TAG_2026_10_21
+                "message-batches-2024-09-24" -> MESSAGE_BATCHES_2024_09_24
+                "prompt-caching-2024-07-31" -> PROMPT_CACHING_2024_07_31
+                "pdfs-2024-09-25" -> PDFS_2024_09_25
+                "token-counting-2024-11-01" -> TOKEN_COUNTING_2024_11_01
+                "token-efficient-tools-2025-02-19" -> TOKEN_EFFICIENT_TOOLS_2025_02_19
+                "files-api-2025-04-14" -> FILES_API_2025_04_14
+                "extended-cache-ttl-2025-04-11" -> EXTENDED_CACHE_TTL_2025_04_11
+                "skills-2025-10-02" -> SKILLS_2025_10_02
+                "cache-diagnosis-2026-04-07" -> CACHE_DIAGNOSIS_2026_04_07
+                "ce-user-management-2026-07-13" -> CE_USER_MANAGEMENT_2026_07_13
                 else -> AnthropicBeta(JsonField.of(value))
             }
 
@@ -273,25 +290,17 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
 
     /** An enum containing [AnthropicBeta]'s known values. */
     enum class Known {
-        MESSAGE_BATCHES_2024_09_24,
-        PROMPT_CACHING_2024_07_31,
         COMPUTER_USE_2024_10_22,
         COMPUTER_USE_2025_01_24,
-        PDFS_2024_09_25,
-        TOKEN_COUNTING_2024_11_01,
-        TOKEN_EFFICIENT_TOOLS_2025_02_19,
         OUTPUT_128K_2025_02_19,
-        FILES_API_2025_04_14,
         MCP_CLIENT_2025_04_04,
         MCP_CLIENT_2025_11_20,
         DEV_FULL_THINKING_2025_05_14,
         INTERLEAVED_THINKING_2025_05_14,
         CODE_EXECUTION_2025_05_22,
-        EXTENDED_CACHE_TTL_2025_04_11,
         CONTEXT_1M_2025_08_07,
         CONTEXT_MANAGEMENT_2025_06_27,
         MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26,
-        SKILLS_2025_10_02,
         FAST_MODE_2026_02_01,
         OUTPUT_300K_2026_03_24,
         USER_PROFILES_2026_03_24,
@@ -299,7 +308,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         USER_PROFILES_2026_09_04,
         ADVISOR_TOOL_2026_03_01,
         MANAGED_AGENTS_2026_04_01,
-        CACHE_DIAGNOSIS_2026_04_07,
         DREAMING_2026_04_21,
         THINKING_TOKEN_COUNT_2026_05_13,
         SERVER_SIDE_FALLBACK_2026_06_01,
@@ -314,7 +322,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         STRUCTURED_OUTPUTS_2025_11_13,
         TASK_BUDGETS_2026_03_13,
         THINKING_DISPLAY_UPDATES_2026_08_18,
-        CE_USER_MANAGEMENT_2026_07_13,
         MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01,
         THINKING_BINDING_CONTROLS_2026_08_01,
         MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21,
@@ -329,6 +336,30 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         MESSAGE_THREADS_2026_08_12,
         ANALYTICS_USAGE_COST_2026_08_24,
         EXPERIMENTAL_CLAUDE_TAG_2026_10_21,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        MESSAGE_BATCHES_2024_09_24,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        PROMPT_CACHING_2024_07_31,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        PDFS_2024_09_25,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        TOKEN_COUNTING_2024_11_01,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        TOKEN_EFFICIENT_TOOLS_2025_02_19,
+        @Deprecated(
+            "Sending this value selects the beta response shapes. Removing it moves you to the current shapes, so follow the migration steps: https://platform.claude.com/docs/en/build-with-claude/files#migrate-from-files-api-2025-04-14"
+        )
+        FILES_API_2025_04_14,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        EXTENDED_CACHE_TTL_2025_04_11,
+        @Deprecated(
+            "Sending this value selects the beta response shapes. Removing it moves you to the current shapes, so follow the migration steps: https://platform.claude.com/docs/en/build-with-claude/skills-guide#migrate-from-skills-2025-10-02"
+        )
+        SKILLS_2025_10_02,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        CACHE_DIAGNOSIS_2026_04_07,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        CE_USER_MANAGEMENT_2026_07_13,
     }
 
     /**
@@ -341,25 +372,17 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
-        MESSAGE_BATCHES_2024_09_24,
-        PROMPT_CACHING_2024_07_31,
         COMPUTER_USE_2024_10_22,
         COMPUTER_USE_2025_01_24,
-        PDFS_2024_09_25,
-        TOKEN_COUNTING_2024_11_01,
-        TOKEN_EFFICIENT_TOOLS_2025_02_19,
         OUTPUT_128K_2025_02_19,
-        FILES_API_2025_04_14,
         MCP_CLIENT_2025_04_04,
         MCP_CLIENT_2025_11_20,
         DEV_FULL_THINKING_2025_05_14,
         INTERLEAVED_THINKING_2025_05_14,
         CODE_EXECUTION_2025_05_22,
-        EXTENDED_CACHE_TTL_2025_04_11,
         CONTEXT_1M_2025_08_07,
         CONTEXT_MANAGEMENT_2025_06_27,
         MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26,
-        SKILLS_2025_10_02,
         FAST_MODE_2026_02_01,
         OUTPUT_300K_2026_03_24,
         USER_PROFILES_2026_03_24,
@@ -367,7 +390,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         USER_PROFILES_2026_09_04,
         ADVISOR_TOOL_2026_03_01,
         MANAGED_AGENTS_2026_04_01,
-        CACHE_DIAGNOSIS_2026_04_07,
         DREAMING_2026_04_21,
         THINKING_TOKEN_COUNT_2026_05_13,
         SERVER_SIDE_FALLBACK_2026_06_01,
@@ -382,7 +404,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         STRUCTURED_OUTPUTS_2025_11_13,
         TASK_BUDGETS_2026_03_13,
         THINKING_DISPLAY_UPDATES_2026_08_18,
-        CE_USER_MANAGEMENT_2026_07_13,
         MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01,
         THINKING_BINDING_CONTROLS_2026_08_01,
         MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21,
@@ -397,6 +418,30 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         MESSAGE_THREADS_2026_08_12,
         ANALYTICS_USAGE_COST_2026_08_24,
         EXPERIMENTAL_CLAUDE_TAG_2026_10_21,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        MESSAGE_BATCHES_2024_09_24,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        PROMPT_CACHING_2024_07_31,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        PDFS_2024_09_25,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        TOKEN_COUNTING_2024_11_01,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        TOKEN_EFFICIENT_TOOLS_2025_02_19,
+        @Deprecated(
+            "Sending this value selects the beta response shapes. Removing it moves you to the current shapes, so follow the migration steps: https://platform.claude.com/docs/en/build-with-claude/files#migrate-from-files-api-2025-04-14"
+        )
+        FILES_API_2025_04_14,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        EXTENDED_CACHE_TTL_2025_04_11,
+        @Deprecated(
+            "Sending this value selects the beta response shapes. Removing it moves you to the current shapes, so follow the migration steps: https://platform.claude.com/docs/en/build-with-claude/skills-guide#migrate-from-skills-2025-10-02"
+        )
+        SKILLS_2025_10_02,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        CACHE_DIAGNOSIS_2026_04_07,
+        @Deprecated("This value is no longer needed. Remove it from your requests.")
+        CE_USER_MANAGEMENT_2026_07_13,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -412,26 +457,18 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
      */
     fun value(): Value =
         when (this) {
-            MESSAGE_BATCHES_2024_09_24 -> Value.MESSAGE_BATCHES_2024_09_24
-            PROMPT_CACHING_2024_07_31 -> Value.PROMPT_CACHING_2024_07_31
             COMPUTER_USE_2024_10_22 -> Value.COMPUTER_USE_2024_10_22
             COMPUTER_USE_2025_01_24 -> Value.COMPUTER_USE_2025_01_24
-            PDFS_2024_09_25 -> Value.PDFS_2024_09_25
-            TOKEN_COUNTING_2024_11_01 -> Value.TOKEN_COUNTING_2024_11_01
-            TOKEN_EFFICIENT_TOOLS_2025_02_19 -> Value.TOKEN_EFFICIENT_TOOLS_2025_02_19
             OUTPUT_128K_2025_02_19 -> Value.OUTPUT_128K_2025_02_19
-            FILES_API_2025_04_14 -> Value.FILES_API_2025_04_14
             MCP_CLIENT_2025_04_04 -> Value.MCP_CLIENT_2025_04_04
             MCP_CLIENT_2025_11_20 -> Value.MCP_CLIENT_2025_11_20
             DEV_FULL_THINKING_2025_05_14 -> Value.DEV_FULL_THINKING_2025_05_14
             INTERLEAVED_THINKING_2025_05_14 -> Value.INTERLEAVED_THINKING_2025_05_14
             CODE_EXECUTION_2025_05_22 -> Value.CODE_EXECUTION_2025_05_22
-            EXTENDED_CACHE_TTL_2025_04_11 -> Value.EXTENDED_CACHE_TTL_2025_04_11
             CONTEXT_1M_2025_08_07 -> Value.CONTEXT_1M_2025_08_07
             CONTEXT_MANAGEMENT_2025_06_27 -> Value.CONTEXT_MANAGEMENT_2025_06_27
             MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26 ->
                 Value.MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26
-            SKILLS_2025_10_02 -> Value.SKILLS_2025_10_02
             FAST_MODE_2026_02_01 -> Value.FAST_MODE_2026_02_01
             OUTPUT_300K_2026_03_24 -> Value.OUTPUT_300K_2026_03_24
             USER_PROFILES_2026_03_24 -> Value.USER_PROFILES_2026_03_24
@@ -439,7 +476,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             USER_PROFILES_2026_09_04 -> Value.USER_PROFILES_2026_09_04
             ADVISOR_TOOL_2026_03_01 -> Value.ADVISOR_TOOL_2026_03_01
             MANAGED_AGENTS_2026_04_01 -> Value.MANAGED_AGENTS_2026_04_01
-            CACHE_DIAGNOSIS_2026_04_07 -> Value.CACHE_DIAGNOSIS_2026_04_07
             DREAMING_2026_04_21 -> Value.DREAMING_2026_04_21
             THINKING_TOKEN_COUNT_2026_05_13 -> Value.THINKING_TOKEN_COUNT_2026_05_13
             SERVER_SIDE_FALLBACK_2026_06_01 -> Value.SERVER_SIDE_FALLBACK_2026_06_01
@@ -455,7 +491,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             STRUCTURED_OUTPUTS_2025_11_13 -> Value.STRUCTURED_OUTPUTS_2025_11_13
             TASK_BUDGETS_2026_03_13 -> Value.TASK_BUDGETS_2026_03_13
             THINKING_DISPLAY_UPDATES_2026_08_18 -> Value.THINKING_DISPLAY_UPDATES_2026_08_18
-            CE_USER_MANAGEMENT_2026_07_13 -> Value.CE_USER_MANAGEMENT_2026_07_13
             MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01 ->
                 Value.MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01
             THINKING_BINDING_CONTROLS_2026_08_01 -> Value.THINKING_BINDING_CONTROLS_2026_08_01
@@ -472,6 +507,16 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             MESSAGE_THREADS_2026_08_12 -> Value.MESSAGE_THREADS_2026_08_12
             ANALYTICS_USAGE_COST_2026_08_24 -> Value.ANALYTICS_USAGE_COST_2026_08_24
             EXPERIMENTAL_CLAUDE_TAG_2026_10_21 -> Value.EXPERIMENTAL_CLAUDE_TAG_2026_10_21
+            MESSAGE_BATCHES_2024_09_24 -> Value.MESSAGE_BATCHES_2024_09_24
+            PROMPT_CACHING_2024_07_31 -> Value.PROMPT_CACHING_2024_07_31
+            PDFS_2024_09_25 -> Value.PDFS_2024_09_25
+            TOKEN_COUNTING_2024_11_01 -> Value.TOKEN_COUNTING_2024_11_01
+            TOKEN_EFFICIENT_TOOLS_2025_02_19 -> Value.TOKEN_EFFICIENT_TOOLS_2025_02_19
+            FILES_API_2025_04_14 -> Value.FILES_API_2025_04_14
+            EXTENDED_CACHE_TTL_2025_04_11 -> Value.EXTENDED_CACHE_TTL_2025_04_11
+            SKILLS_2025_10_02 -> Value.SKILLS_2025_10_02
+            CACHE_DIAGNOSIS_2026_04_07 -> Value.CACHE_DIAGNOSIS_2026_04_07
+            CE_USER_MANAGEMENT_2026_07_13 -> Value.CE_USER_MANAGEMENT_2026_07_13
             else -> Value._UNKNOWN
         }
 
@@ -485,26 +530,18 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
      */
     fun known(): Known =
         when (this) {
-            MESSAGE_BATCHES_2024_09_24 -> Known.MESSAGE_BATCHES_2024_09_24
-            PROMPT_CACHING_2024_07_31 -> Known.PROMPT_CACHING_2024_07_31
             COMPUTER_USE_2024_10_22 -> Known.COMPUTER_USE_2024_10_22
             COMPUTER_USE_2025_01_24 -> Known.COMPUTER_USE_2025_01_24
-            PDFS_2024_09_25 -> Known.PDFS_2024_09_25
-            TOKEN_COUNTING_2024_11_01 -> Known.TOKEN_COUNTING_2024_11_01
-            TOKEN_EFFICIENT_TOOLS_2025_02_19 -> Known.TOKEN_EFFICIENT_TOOLS_2025_02_19
             OUTPUT_128K_2025_02_19 -> Known.OUTPUT_128K_2025_02_19
-            FILES_API_2025_04_14 -> Known.FILES_API_2025_04_14
             MCP_CLIENT_2025_04_04 -> Known.MCP_CLIENT_2025_04_04
             MCP_CLIENT_2025_11_20 -> Known.MCP_CLIENT_2025_11_20
             DEV_FULL_THINKING_2025_05_14 -> Known.DEV_FULL_THINKING_2025_05_14
             INTERLEAVED_THINKING_2025_05_14 -> Known.INTERLEAVED_THINKING_2025_05_14
             CODE_EXECUTION_2025_05_22 -> Known.CODE_EXECUTION_2025_05_22
-            EXTENDED_CACHE_TTL_2025_04_11 -> Known.EXTENDED_CACHE_TTL_2025_04_11
             CONTEXT_1M_2025_08_07 -> Known.CONTEXT_1M_2025_08_07
             CONTEXT_MANAGEMENT_2025_06_27 -> Known.CONTEXT_MANAGEMENT_2025_06_27
             MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26 ->
                 Known.MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26
-            SKILLS_2025_10_02 -> Known.SKILLS_2025_10_02
             FAST_MODE_2026_02_01 -> Known.FAST_MODE_2026_02_01
             OUTPUT_300K_2026_03_24 -> Known.OUTPUT_300K_2026_03_24
             USER_PROFILES_2026_03_24 -> Known.USER_PROFILES_2026_03_24
@@ -512,7 +549,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             USER_PROFILES_2026_09_04 -> Known.USER_PROFILES_2026_09_04
             ADVISOR_TOOL_2026_03_01 -> Known.ADVISOR_TOOL_2026_03_01
             MANAGED_AGENTS_2026_04_01 -> Known.MANAGED_AGENTS_2026_04_01
-            CACHE_DIAGNOSIS_2026_04_07 -> Known.CACHE_DIAGNOSIS_2026_04_07
             DREAMING_2026_04_21 -> Known.DREAMING_2026_04_21
             THINKING_TOKEN_COUNT_2026_05_13 -> Known.THINKING_TOKEN_COUNT_2026_05_13
             SERVER_SIDE_FALLBACK_2026_06_01 -> Known.SERVER_SIDE_FALLBACK_2026_06_01
@@ -528,7 +564,6 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             STRUCTURED_OUTPUTS_2025_11_13 -> Known.STRUCTURED_OUTPUTS_2025_11_13
             TASK_BUDGETS_2026_03_13 -> Known.TASK_BUDGETS_2026_03_13
             THINKING_DISPLAY_UPDATES_2026_08_18 -> Known.THINKING_DISPLAY_UPDATES_2026_08_18
-            CE_USER_MANAGEMENT_2026_07_13 -> Known.CE_USER_MANAGEMENT_2026_07_13
             MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01 ->
                 Known.MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01
             THINKING_BINDING_CONTROLS_2026_08_01 -> Known.THINKING_BINDING_CONTROLS_2026_08_01
@@ -545,6 +580,16 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             MESSAGE_THREADS_2026_08_12 -> Known.MESSAGE_THREADS_2026_08_12
             ANALYTICS_USAGE_COST_2026_08_24 -> Known.ANALYTICS_USAGE_COST_2026_08_24
             EXPERIMENTAL_CLAUDE_TAG_2026_10_21 -> Known.EXPERIMENTAL_CLAUDE_TAG_2026_10_21
+            MESSAGE_BATCHES_2024_09_24 -> Known.MESSAGE_BATCHES_2024_09_24
+            PROMPT_CACHING_2024_07_31 -> Known.PROMPT_CACHING_2024_07_31
+            PDFS_2024_09_25 -> Known.PDFS_2024_09_25
+            TOKEN_COUNTING_2024_11_01 -> Known.TOKEN_COUNTING_2024_11_01
+            TOKEN_EFFICIENT_TOOLS_2025_02_19 -> Known.TOKEN_EFFICIENT_TOOLS_2025_02_19
+            FILES_API_2025_04_14 -> Known.FILES_API_2025_04_14
+            EXTENDED_CACHE_TTL_2025_04_11 -> Known.EXTENDED_CACHE_TTL_2025_04_11
+            SKILLS_2025_10_02 -> Known.SKILLS_2025_10_02
+            CACHE_DIAGNOSIS_2026_04_07 -> Known.CACHE_DIAGNOSIS_2026_04_07
+            CE_USER_MANAGEMENT_2026_07_13 -> Known.CE_USER_MANAGEMENT_2026_07_13
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

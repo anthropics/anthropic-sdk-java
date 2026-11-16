@@ -28,7 +28,7 @@ internal class TunnelServiceAsyncTest {
         val betaTunnelFuture =
             tunnelServiceAsync.create(
                 TunnelCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .displayName("x")
                     .build()
@@ -47,7 +47,7 @@ internal class TunnelServiceAsyncTest {
             tunnelServiceAsync.retrieve(
                 TunnelRetrieveParams.builder()
                     .tunnelId("tunnel_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -76,7 +76,7 @@ internal class TunnelServiceAsyncTest {
             tunnelServiceAsync.archive(
                 TunnelArchiveParams.builder()
                     .tunnelId("tunnel_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -94,7 +94,7 @@ internal class TunnelServiceAsyncTest {
             tunnelServiceAsync.revealToken(
                 TunnelRevealTokenParams.builder()
                     .tunnelId("tunnel_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -112,7 +112,7 @@ internal class TunnelServiceAsyncTest {
             tunnelServiceAsync.rotateToken(
                 TunnelRotateTokenParams.builder()
                     .tunnelId("tunnel_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .reason("reason")
                     .build()

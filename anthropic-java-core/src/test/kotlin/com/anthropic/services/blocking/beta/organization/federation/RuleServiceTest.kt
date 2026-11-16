@@ -32,7 +32,7 @@ internal class RuleServiceTest {
         val betaFederationRule =
             ruleService.create(
                 RuleCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .issuerId("issuer_id")
                     .match(
                         BetaFederationRuleMatch.builder()
@@ -80,7 +80,7 @@ internal class RuleServiceTest {
             ruleService.retrieve(
                 RuleRetrieveParams.builder()
                     .federationRuleId("federation_rule_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 
@@ -98,7 +98,7 @@ internal class RuleServiceTest {
             ruleService.update(
                 RuleUpdateParams.builder()
                     .federationRuleId("federation_rule_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .appliesToAllWorkspaces(true)
                     .attributes(
                         RuleUpdateParams.Attributes.builder()
@@ -157,7 +157,7 @@ internal class RuleServiceTest {
             ruleService.archive(
                 RuleArchiveParams.builder()
                     .federationRuleId("federation_rule_id")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .build()
             )
 

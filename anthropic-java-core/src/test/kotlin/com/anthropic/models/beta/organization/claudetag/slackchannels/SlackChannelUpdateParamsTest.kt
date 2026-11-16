@@ -14,7 +14,7 @@ internal class SlackChannelUpdateParamsTest {
     fun create() {
         SlackChannelUpdateParams.builder()
             .id("slch_01SvpyRQK3nN6eH9uhRA7n1q")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .settings(
                 BetaClaudeTagSettingsUpdate.builder()
                     .enabled(true)
@@ -46,7 +46,7 @@ internal class SlackChannelUpdateParamsTest {
         val params =
             SlackChannelUpdateParams.builder()
                 .id("slch_01SvpyRQK3nN6eH9uhRA7n1q")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .settings(
                     BetaClaudeTagSettingsUpdate.builder()
                         .enabled(true)
@@ -66,7 +66,7 @@ internal class SlackChannelUpdateParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "experimental-claude-tag-2026-10-21")
+                        listOf("computer-use-2024-10-22", "experimental-claude-tag-2026-10-21")
                             .joinToString(","),
                     )
                     .build()
@@ -91,7 +91,7 @@ internal class SlackChannelUpdateParamsTest {
         val params =
             SlackChannelUpdateParams.builder()
                 .id("slch_01SvpyRQK3nN6eH9uhRA7n1q")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .settings(
                     BetaClaudeTagSettingsUpdate.builder()
                         .enabled(true)

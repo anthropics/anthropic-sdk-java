@@ -12,7 +12,7 @@ internal class PluginMarketplaceValidateArchiveParamsTest {
     @Test
     fun create() {
         PluginMarketplaceValidateArchiveParams.builder()
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .archive("Example data".byteInputStream())
             .build()
     }
@@ -21,7 +21,7 @@ internal class PluginMarketplaceValidateArchiveParamsTest {
     fun headers() {
         val params =
             PluginMarketplaceValidateArchiveParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .archive("Example data".byteInputStream())
                 .build()
 
@@ -32,8 +32,7 @@ internal class PluginMarketplaceValidateArchiveParamsTest {
                 Headers.builder()
                     .put(
                         "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "ce-plugins-2026-09-01")
-                            .joinToString(","),
+                        listOf("computer-use-2024-10-22", "ce-plugins-2026-09-01").joinToString(","),
                     )
                     .build()
             )
@@ -55,7 +54,7 @@ internal class PluginMarketplaceValidateArchiveParamsTest {
     fun body() {
         val params =
             PluginMarketplaceValidateArchiveParams.builder()
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .archive("Example data".byteInputStream())
                 .build()
 

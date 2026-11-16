@@ -13,7 +13,7 @@ internal class ServiceAccountUpdateParamsTest {
         ServiceAccountUpdateParams.builder()
             .workspaceId("workspace_id")
             .serviceAccountId("service_account_id")
-            .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
             .build()
     }
@@ -39,7 +39,7 @@ internal class ServiceAccountUpdateParamsTest {
             ServiceAccountUpdateParams.builder()
                 .workspaceId("workspace_id")
                 .serviceAccountId("service_account_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 
@@ -48,7 +48,7 @@ internal class ServiceAccountUpdateParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
+                    .put("anthropic-beta", listOf("computer-use-2024-10-22").joinToString(","))
                     .build()
             )
     }
@@ -73,7 +73,7 @@ internal class ServiceAccountUpdateParamsTest {
             ServiceAccountUpdateParams.builder()
                 .workspaceId("workspace_id")
                 .serviceAccountId("service_account_id")
-                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 

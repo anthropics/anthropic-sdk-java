@@ -30,8 +30,8 @@ internal class WorkspaceServiceTest {
         val betaWorkspace =
             workspaceService.create(
                 WorkspaceCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .name("x")
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
+                    .name("Workspace Name")
                     .dataResidency(
                         BetaDataResidencyCreateConfig.builder()
                             .allowedInferenceGeosUnrestricted()
@@ -89,7 +89,7 @@ internal class WorkspaceServiceTest {
                     )
                     .displayColor("#6C5BB9")
                     .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
-                    .name("x")
+                    .name("Workspace Name")
                     .tags(
                         WorkspaceUpdateParams.Tags.builder()
                             .putAdditionalProperty("env", JsonValue.from("prod"))

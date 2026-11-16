@@ -9,7 +9,7 @@ internal class WorkspaceCreateParamsTest {
     @Test
     fun create() {
         WorkspaceCreateParams.builder()
-            .name("x")
+            .name("Workspace Name")
             .dataResidency(
                 DataResidencyCreateConfig.builder()
                     .allowedInferenceGeosUnrestricted()
@@ -33,7 +33,7 @@ internal class WorkspaceCreateParamsTest {
     fun body() {
         val params =
             WorkspaceCreateParams.builder()
-                .name("x")
+                .name("Workspace Name")
                 .dataResidency(
                     DataResidencyCreateConfig.builder()
                         .allowedInferenceGeosUnrestricted()
@@ -54,7 +54,7 @@ internal class WorkspaceCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("Workspace Name")
         assertThat(body.dataResidency())
             .contains(
                 DataResidencyCreateConfig.builder()
@@ -77,10 +77,10 @@ internal class WorkspaceCreateParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = WorkspaceCreateParams.builder().name("x").build()
+        val params = WorkspaceCreateParams.builder().name("Workspace Name").build()
 
         val body = params._body()
 
-        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("Workspace Name")
     }
 }

@@ -15,6 +15,7 @@ internal class RbacRoleTest {
                 .id("rbac_role_016J8xVtKpDq3Wy9ZmN2hR4s")
                 .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .displayName("Project Editor")
+                .source(RbacRoleSourceBuiltIn.builder().build())
                 .updatedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .build()
 
@@ -22,6 +23,8 @@ internal class RbacRoleTest {
         assertThat(rbacRole.createdAt())
             .isEqualTo(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
         assertThat(rbacRole.displayName()).isEqualTo("Project Editor")
+        assertThat(rbacRole.source())
+            .isEqualTo(RbacRoleSource.ofBuiltIn(RbacRoleSourceBuiltIn.builder().build()))
         assertThat(rbacRole.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
     }
@@ -34,6 +37,7 @@ internal class RbacRoleTest {
                 .id("rbac_role_016J8xVtKpDq3Wy9ZmN2hR4s")
                 .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .displayName("Project Editor")
+                .source(RbacRoleSourceBuiltIn.builder().build())
                 .updatedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .build()
 

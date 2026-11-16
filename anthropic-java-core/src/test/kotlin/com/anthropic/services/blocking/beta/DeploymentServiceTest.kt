@@ -37,7 +37,7 @@ internal class DeploymentServiceTest {
         val betaManagedAgentsDeployment =
             deploymentService.create(
                 DeploymentCreateParams.builder()
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .agent("string")
                     .environmentId("x")
@@ -91,7 +91,7 @@ internal class DeploymentServiceTest {
             deploymentService.retrieve(
                 DeploymentRetrieveParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -108,7 +108,7 @@ internal class DeploymentServiceTest {
             deploymentService.update(
                 DeploymentUpdateParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .agent("string")
                     .budget(
@@ -172,7 +172,7 @@ internal class DeploymentServiceTest {
             deploymentService.archive(
                 DeploymentArchiveParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -189,7 +189,7 @@ internal class DeploymentServiceTest {
             deploymentService.pause(
                 DeploymentPauseParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -206,7 +206,7 @@ internal class DeploymentServiceTest {
             deploymentService.run(
                 DeploymentRunParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -223,7 +223,7 @@ internal class DeploymentServiceTest {
             deploymentService.unpause(
                 DeploymentUnpauseParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
-                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
