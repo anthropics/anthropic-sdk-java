@@ -152,6 +152,16 @@ private constructor(
     fun model(): Model = body.model()
 
     /**
+     * Declares which organization is billed when this body is sent to `/v1/messages`. Accepted here
+     * so that you can count the tokens of the exact body you will send, and otherwise ignored:
+     * counting tokens bills nobody, so no user profile is required.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun billingPolicy(): Optional<BetaBillingPolicy> = body.billingPolicy()
+
+    /**
      * Top-level cache control automatically applies a cache_control marker to the last cacheable
      * block in the request.
      *
@@ -357,6 +367,13 @@ private constructor(
     fun _model(): JsonField<Model> = body._model()
 
     /**
+     * Returns the raw JSON value of [billingPolicy].
+     *
+     * Unlike [billingPolicy], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _billingPolicy(): JsonField<BetaBillingPolicy> = body._billingPolicy()
+
+    /**
      * Returns the raw JSON value of [cacheControl].
      *
      * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
@@ -532,9 +549,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [messages]
          * - [model]
+         * - [billingPolicy]
          * - [cacheControl]
          * - [compaction]
-         * - [contextManagement]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -729,6 +746,30 @@ private constructor(
          * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(value: String) = apply { body.model(value) }
+
+        /**
+         * Declares which organization is billed when this body is sent to `/v1/messages`. Accepted
+         * here so that you can count the tokens of the exact body you will send, and otherwise
+         * ignored: counting tokens bills nobody, so no user profile is required.
+         */
+        fun billingPolicy(billingPolicy: BetaBillingPolicy?) = apply {
+            body.billingPolicy(billingPolicy)
+        }
+
+        /** Alias for calling [Builder.billingPolicy] with `billingPolicy.orElse(null)`. */
+        fun billingPolicy(billingPolicy: Optional<BetaBillingPolicy>) =
+            billingPolicy(billingPolicy.getOrNull())
+
+        /**
+         * Sets [Builder.billingPolicy] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.billingPolicy] with a well-typed [BetaBillingPolicy]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun billingPolicy(billingPolicy: JsonField<BetaBillingPolicy>) = apply {
+            body.billingPolicy(billingPolicy)
+        }
 
         /**
          * Top-level cache control automatically applies a cache_control marker to the last
@@ -1499,6 +1540,7 @@ private constructor(
     private constructor(
         private val messages: JsonField<List<BetaMessageParam>>,
         private val model: JsonField<Model>,
+        private val billingPolicy: JsonField<BetaBillingPolicy>,
         private val cacheControl: JsonField<BetaCacheControlEphemeral>,
         private val compaction: JsonField<BetaCompactionConfig>,
         private val contextManagement: JsonField<BetaContextManagementConfig>,
@@ -1519,6 +1561,9 @@ private constructor(
             @ExcludeMissing
             messages: JsonField<List<BetaMessageParam>> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+            @JsonProperty("billing_policy")
+            @ExcludeMissing
+            billingPolicy: JsonField<BetaBillingPolicy> = JsonMissing.of(),
             @JsonProperty("cache_control")
             @ExcludeMissing
             cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
@@ -1549,6 +1594,7 @@ private constructor(
         ) : this(
             messages,
             model,
+            billingPolicy,
             cacheControl,
             compaction,
             contextManagement,
@@ -1638,6 +1684,17 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
+
+        /**
+         * Declares which organization is billed when this body is sent to `/v1/messages`. Accepted
+         * here so that you can count the tokens of the exact body you will send, and otherwise
+         * ignored: counting tokens bills nobody, so no user profile is required.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun billingPolicy(): Optional<BetaBillingPolicy> =
+            billingPolicy.getOptional("billing_policy")
 
         /**
          * Top-level cache control automatically applies a cache_control marker to the last
@@ -1852,6 +1909,16 @@ private constructor(
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
         /**
+         * Returns the raw JSON value of [billingPolicy].
+         *
+         * Unlike [billingPolicy], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("billing_policy")
+        @ExcludeMissing
+        fun _billingPolicy(): JsonField<BetaBillingPolicy> = billingPolicy
+
+        /**
          * Returns the raw JSON value of [cacheControl].
          *
          * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected
@@ -1980,6 +2047,7 @@ private constructor(
 
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
             private var model: JsonField<Model>? = null
+            private var billingPolicy: JsonField<BetaBillingPolicy> = JsonMissing.of()
             private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
             private var compaction: JsonField<BetaCompactionConfig> = JsonMissing.of()
             private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
@@ -1998,6 +2066,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 messages = body.messages.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 model = body.model
+                billingPolicy = body.billingPolicy
                 cacheControl = body.cacheControl
                 compaction = body.compaction
                 contextManagement = body.contextManagement
@@ -2220,6 +2289,29 @@ private constructor(
              * value.
              */
             fun model(value: String) = model(Model.of(value))
+
+            /**
+             * Declares which organization is billed when this body is sent to `/v1/messages`.
+             * Accepted here so that you can count the tokens of the exact body you will send, and
+             * otherwise ignored: counting tokens bills nobody, so no user profile is required.
+             */
+            fun billingPolicy(billingPolicy: BetaBillingPolicy?) =
+                billingPolicy(JsonField.ofNullable(billingPolicy))
+
+            /** Alias for calling [Builder.billingPolicy] with `billingPolicy.orElse(null)`. */
+            fun billingPolicy(billingPolicy: Optional<BetaBillingPolicy>) =
+                billingPolicy(billingPolicy.getOrNull())
+
+            /**
+             * Sets [Builder.billingPolicy] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.billingPolicy] with a well-typed [BetaBillingPolicy]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun billingPolicy(billingPolicy: JsonField<BetaBillingPolicy>) = apply {
+                this.billingPolicy = billingPolicy
+            }
 
             /**
              * Top-level cache control automatically applies a cache_control marker to the last
@@ -2836,6 +2928,7 @@ private constructor(
                 Body(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
+                    billingPolicy,
                     cacheControl,
                     compaction,
                     contextManagement,
@@ -2869,6 +2962,7 @@ private constructor(
 
             messages().forEach { it.validate() }
             model()
+            billingPolicy().ifPresent { it.validate() }
             cacheControl().ifPresent { it.validate() }
             compaction().ifPresent { it.validate() }
             contextManagement().ifPresent { it.validate() }
@@ -2901,6 +2995,7 @@ private constructor(
         internal fun validity(): Int =
             (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
+                (billingPolicy.asKnown().getOrNull()?.validity() ?: 0) +
                 (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
                 (compaction.asKnown().getOrNull()?.validity() ?: 0) +
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2921,6 +3016,7 @@ private constructor(
             return other is Body &&
                 messages == other.messages &&
                 model == other.model &&
+                billingPolicy == other.billingPolicy &&
                 cacheControl == other.cacheControl &&
                 compaction == other.compaction &&
                 contextManagement == other.contextManagement &&
@@ -2939,6 +3035,7 @@ private constructor(
             Objects.hash(
                 messages,
                 model,
+                billingPolicy,
                 cacheControl,
                 compaction,
                 contextManagement,
@@ -2957,7 +3054,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, model=$model, cacheControl=$cacheControl, compaction=$compaction, contextManagement=$contextManagement, mcpServers=$mcpServers, outputConfig=$outputConfig, outputFormat=$outputFormat, speed=$speed, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, billingPolicy=$billingPolicy, cacheControl=$cacheControl, compaction=$compaction, contextManagement=$contextManagement, mcpServers=$mcpServers, outputConfig=$outputConfig, outputFormat=$outputFormat, speed=$speed, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /**

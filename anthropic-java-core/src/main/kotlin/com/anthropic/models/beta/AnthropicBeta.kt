@@ -215,6 +215,10 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         val CE_USER_MANAGEMENT_2026_07_13 =
             AnthropicBeta(JsonField.of("ce-user-management-2026-07-13"))
 
+        @JvmField
+        val USER_PROFILES_BILLING_2026_10_01 =
+            AnthropicBeta(JsonField.of("user-profiles-billing-2026-10-01"))
+
         @JvmStatic
         fun of(value: String): AnthropicBeta =
             // Intern known values so `==` works
@@ -279,6 +283,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
                 "skills-2025-10-02" -> SKILLS_2025_10_02
                 "cache-diagnosis-2026-04-07" -> CACHE_DIAGNOSIS_2026_04_07
                 "ce-user-management-2026-07-13" -> CE_USER_MANAGEMENT_2026_07_13
+                "user-profiles-billing-2026-10-01" -> USER_PROFILES_BILLING_2026_10_01
                 else -> AnthropicBeta(JsonField.of(value))
             }
 
@@ -360,6 +365,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         CACHE_DIAGNOSIS_2026_04_07,
         @Deprecated("This value is no longer needed. Remove it from your requests.")
         CE_USER_MANAGEMENT_2026_07_13,
+        USER_PROFILES_BILLING_2026_10_01,
     }
 
     /**
@@ -442,6 +448,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         CACHE_DIAGNOSIS_2026_04_07,
         @Deprecated("This value is no longer needed. Remove it from your requests.")
         CE_USER_MANAGEMENT_2026_07_13,
+        USER_PROFILES_BILLING_2026_10_01,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -517,6 +524,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             SKILLS_2025_10_02 -> Value.SKILLS_2025_10_02
             CACHE_DIAGNOSIS_2026_04_07 -> Value.CACHE_DIAGNOSIS_2026_04_07
             CE_USER_MANAGEMENT_2026_07_13 -> Value.CE_USER_MANAGEMENT_2026_07_13
+            USER_PROFILES_BILLING_2026_10_01 -> Value.USER_PROFILES_BILLING_2026_10_01
             else -> Value._UNKNOWN
         }
 
@@ -590,6 +598,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             SKILLS_2025_10_02 -> Known.SKILLS_2025_10_02
             CACHE_DIAGNOSIS_2026_04_07 -> Known.CACHE_DIAGNOSIS_2026_04_07
             CE_USER_MANAGEMENT_2026_07_13 -> Known.CE_USER_MANAGEMENT_2026_07_13
+            USER_PROFILES_BILLING_2026_10_01 -> Known.USER_PROFILES_BILLING_2026_10_01
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

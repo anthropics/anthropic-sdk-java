@@ -4,6 +4,8 @@ import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.JsonValue
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.messages.BetaBillTo
+import com.anthropic.models.beta.messages.BetaBillingPolicy
 import com.anthropic.models.beta.messages.BetaCacheControlEphemeral
 import com.anthropic.models.beta.messages.BetaCitationCharLocationParam
 import com.anthropic.models.beta.messages.BetaClearToolUses20250919Edit
@@ -56,6 +58,7 @@ internal class MessageServiceTest {
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_5_5)
+                    .billingPolicy(BetaBillingPolicy.builder().billTo(BetaBillTo.SELF).build())
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -228,6 +231,7 @@ internal class MessageServiceTest {
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_5_5)
+                    .billingPolicy(BetaBillingPolicy.builder().billTo(BetaBillTo.SELF).build())
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -401,6 +405,7 @@ internal class MessageServiceTest {
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_5_5)
+                    .billingPolicy(BetaBillingPolicy.builder().billTo(BetaBillTo.SELF).build())
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
