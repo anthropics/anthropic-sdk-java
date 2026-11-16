@@ -73,9 +73,7 @@ internal class WebhookServiceAsyncTest {
                     .webhookEndpointId("webhook_endpoint_id")
                     .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .description("description")
-                    .addEnabledEvent(
-                        WebhookUpdateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
-                    )
+                    .addEnabledEvent(WebhookUpdateParams.EnabledEvent.EXTERNAL_KEY_FAILED)
                     .name("name")
                     .state(WebhookUpdateParams.State.DISABLED)
                     .url("x")

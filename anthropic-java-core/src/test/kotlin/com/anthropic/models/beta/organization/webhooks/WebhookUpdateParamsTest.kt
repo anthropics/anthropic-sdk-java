@@ -14,9 +14,7 @@ internal class WebhookUpdateParamsTest {
             .webhookEndpointId("webhook_endpoint_id")
             .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .description("description")
-            .addEnabledEvent(
-                WebhookUpdateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
-            )
+            .addEnabledEvent(WebhookUpdateParams.EnabledEvent.EXTERNAL_KEY_FAILED)
             .name("name")
             .state(WebhookUpdateParams.State.DISABLED)
             .url("x")
@@ -39,9 +37,7 @@ internal class WebhookUpdateParamsTest {
                 .webhookEndpointId("webhook_endpoint_id")
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .description("description")
-                .addEnabledEvent(
-                    WebhookUpdateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
-                )
+                .addEnabledEvent(WebhookUpdateParams.EnabledEvent.EXTERNAL_KEY_FAILED)
                 .name("name")
                 .state(WebhookUpdateParams.State.DISABLED)
                 .url("x")
@@ -76,9 +72,7 @@ internal class WebhookUpdateParamsTest {
                 .webhookEndpointId("webhook_endpoint_id")
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .description("description")
-                .addEnabledEvent(
-                    WebhookUpdateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
-                )
+                .addEnabledEvent(WebhookUpdateParams.EnabledEvent.EXTERNAL_KEY_FAILED)
                 .name("name")
                 .state(WebhookUpdateParams.State.DISABLED)
                 .url("x")
@@ -88,9 +82,7 @@ internal class WebhookUpdateParamsTest {
 
         assertThat(body.description()).contains("description")
         assertThat(body.enabledEvents().getOrNull())
-            .containsExactly(
-                WebhookUpdateParams.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
-            )
+            .containsExactly(WebhookUpdateParams.EnabledEvent.EXTERNAL_KEY_FAILED)
         assertThat(body.name()).contains("name")
         assertThat(body.state()).contains(WebhookUpdateParams.State.DISABLED)
         assertThat(body.url()).contains("x")

@@ -16,10 +16,7 @@ internal class BetaOrganizationWebhookEndpointTest {
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .description("description")
                 .disabledReason("disabled_reason")
-                .addEnabledEvent(
-                    BetaOrganizationWebhookEndpoint.EnabledEvent
-                        .USER_PROFILE_ENFORCEMENT_ACTION_OPENED
-                )
+                .addEnabledEvent(BetaOrganizationWebhookEndpoint.EnabledEvent.EXTERNAL_KEY_FAILED)
                 .name("name")
                 .state(BetaOrganizationWebhookEndpointState.DISABLED)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -32,9 +29,7 @@ internal class BetaOrganizationWebhookEndpointTest {
         assertThat(betaOrganizationWebhookEndpoint.description()).isEqualTo("description")
         assertThat(betaOrganizationWebhookEndpoint.disabledReason()).isEqualTo("disabled_reason")
         assertThat(betaOrganizationWebhookEndpoint.enabledEvents())
-            .containsExactly(
-                BetaOrganizationWebhookEndpoint.EnabledEvent.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
-            )
+            .containsExactly(BetaOrganizationWebhookEndpoint.EnabledEvent.EXTERNAL_KEY_FAILED)
         assertThat(betaOrganizationWebhookEndpoint.name()).isEqualTo("name")
         assertThat(betaOrganizationWebhookEndpoint.state())
             .isEqualTo(BetaOrganizationWebhookEndpointState.DISABLED)
@@ -52,10 +47,7 @@ internal class BetaOrganizationWebhookEndpointTest {
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .description("description")
                 .disabledReason("disabled_reason")
-                .addEnabledEvent(
-                    BetaOrganizationWebhookEndpoint.EnabledEvent
-                        .USER_PROFILE_ENFORCEMENT_ACTION_OPENED
-                )
+                .addEnabledEvent(BetaOrganizationWebhookEndpoint.EnabledEvent.EXTERNAL_KEY_FAILED)
                 .name("name")
                 .state(BetaOrganizationWebhookEndpointState.DISABLED)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
