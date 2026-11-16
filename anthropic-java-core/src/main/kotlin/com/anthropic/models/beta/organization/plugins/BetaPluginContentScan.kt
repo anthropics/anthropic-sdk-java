@@ -45,8 +45,17 @@ private constructor(
 
     /**
      * The primary mechanism behind a `warn` or `fail`, such as `credential-exposure` or
-     * `guardrail-tampering`; a mechanism this API does not yet name reads as `other`. Null on a
-     * `pass`, whenever `assessment` is null, and when no mechanism is reported for the verdict.
+     * `guardrail-tampering`; a mechanism this API does not yet name reads as `other`. Read `status`
+     * first: on an `errored` scan it is not a finding but why there is no verdict:
+     * `scan-invalid-archive`, the scan refused the version's archive, or could not process it,
+     * before checking what its files say, and running it again will not help, so change the files
+     * and store a new version; `scan-did-not-finish`, the scan did not finish or its result is no
+     * longer available, so retry the scan in claude.ai if it offers a retry; `scan-unavailable`,
+     * the scan could not run or its result cannot be read right now, so read the version again
+     * later, then retry the scan in claude.ai if it offers a retry. If these steps do not help,
+     * contact support. Null on a `pass`, while a scan runs, and when no mechanism is reported for
+     * the verdict. On an errored scan, null means that a compliance configuration ruled out the
+     * scan.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -150,8 +159,17 @@ private constructor(
 
         /**
          * The primary mechanism behind a `warn` or `fail`, such as `credential-exposure` or
-         * `guardrail-tampering`; a mechanism this API does not yet name reads as `other`. Null on a
-         * `pass`, whenever `assessment` is null, and when no mechanism is reported for the verdict.
+         * `guardrail-tampering`; a mechanism this API does not yet name reads as `other`. Read
+         * `status` first: on an `errored` scan it is not a finding but why there is no verdict:
+         * `scan-invalid-archive`, the scan refused the version's archive, or could not process it,
+         * before checking what its files say, and running it again will not help, so change the
+         * files and store a new version; `scan-did-not-finish`, the scan did not finish or its
+         * result is no longer available, so retry the scan in claude.ai if it offers a retry;
+         * `scan-unavailable`, the scan could not run or its result cannot be read right now, so
+         * read the version again later, then retry the scan in claude.ai if it offers a retry. If
+         * these steps do not help, contact support. Null on a `pass`, while a scan runs, and when
+         * no mechanism is reported for the verdict. On an errored scan, null means that a
+         * compliance configuration ruled out the scan.
          */
         fun reason(reason: String?) = reason(JsonField.ofNullable(reason))
 
