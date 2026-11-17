@@ -17,8 +17,7 @@ internal class BetaNewOrganizationWebhookEndpointTest {
                 .description("description")
                 .disabledReason("disabled_reason")
                 .addEnabledEvent(
-                    BetaNewOrganizationWebhookEndpoint.EnabledEvent
-                        .USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+                    BetaNewOrganizationWebhookEndpoint.EnabledEvent.EXTERNAL_KEY_FAILED
                 )
                 .name("name")
                 .signingSecret("signing_secret")
@@ -33,10 +32,7 @@ internal class BetaNewOrganizationWebhookEndpointTest {
         assertThat(betaNewOrganizationWebhookEndpoint.description()).isEqualTo("description")
         assertThat(betaNewOrganizationWebhookEndpoint.disabledReason()).isEqualTo("disabled_reason")
         assertThat(betaNewOrganizationWebhookEndpoint.enabledEvents())
-            .containsExactly(
-                BetaNewOrganizationWebhookEndpoint.EnabledEvent
-                    .USER_PROFILE_ENFORCEMENT_ACTION_OPENED
-            )
+            .containsExactly(BetaNewOrganizationWebhookEndpoint.EnabledEvent.EXTERNAL_KEY_FAILED)
         assertThat(betaNewOrganizationWebhookEndpoint.name()).isEqualTo("name")
         assertThat(betaNewOrganizationWebhookEndpoint.signingSecret()).isEqualTo("signing_secret")
         assertThat(betaNewOrganizationWebhookEndpoint.state())
@@ -56,8 +52,7 @@ internal class BetaNewOrganizationWebhookEndpointTest {
                 .description("description")
                 .disabledReason("disabled_reason")
                 .addEnabledEvent(
-                    BetaNewOrganizationWebhookEndpoint.EnabledEvent
-                        .USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+                    BetaNewOrganizationWebhookEndpoint.EnabledEvent.EXTERNAL_KEY_FAILED
                 )
                 .name("name")
                 .signingSecret("signing_secret")

@@ -12,13 +12,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Note: these endpoints are called automatically by the pre-built environment worker provided in
- * the SDKs and CLI, for orchestrating sessions with self-hosted sandbox environments. They are
- * included here as a reference; you do not need to invoke them directly.
- *
- * Stop a work item, initiating graceful or forced shutdown.
- */
+/** Stop a work item, initiating graceful or forced shutdown. */
 class WorkStopParams
 private constructor(
     private val environmentId: String,

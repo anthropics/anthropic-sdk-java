@@ -19,6 +19,7 @@ internal class MessageCreateParamsTest {
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_5_5)
+            .billingPolicy(BetaBillingPolicy.builder().billTo(BetaBillTo.SELF).build())
             .cacheControl(
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -171,6 +172,7 @@ internal class MessageCreateParamsTest {
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_5_5)
+                .billingPolicy(BetaBillingPolicy.builder().billTo(BetaBillTo.SELF).build())
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -352,6 +354,7 @@ internal class MessageCreateParamsTest {
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_5_5)
+                .billingPolicy(BetaBillingPolicy.builder().billTo(BetaBillTo.SELF).build())
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -507,6 +510,8 @@ internal class MessageCreateParamsTest {
                 )
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
+        assertThat(body.billingPolicy())
+            .contains(BetaBillingPolicy.builder().billTo(BetaBillTo.SELF).build())
         assertThat(body.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()

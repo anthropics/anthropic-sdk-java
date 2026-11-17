@@ -35,7 +35,7 @@ private constructor(
 
     /**
      * Full ARN of the AWS KMS key. On Claude Platform on AWS, alias ARNs are rejected, and your
-     * organization's own key must be a single-Region key in your organization's AWS account.
+     * organization's own key must be a single-Region key.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -144,7 +144,7 @@ private constructor(
 
         /**
          * Full ARN of the AWS KMS key. On Claude Platform on AWS, alias ARNs are rejected, and your
-         * organization's own key must be a single-Region key in your organization's AWS account.
+         * organization's own key must be a single-Region key.
          */
         fun kmsArn(kmsArn: String) = kmsArn(JsonField.of(kmsArn))
 

@@ -496,6 +496,20 @@ private constructor(
             )
 
         /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofExternalKeyFailed(externalKeyFailed)`.
+         */
+        fun data(externalKeyFailed: BetaWebhookExternalKeyFailedEventData) =
+            data(BetaWebhookEventData.ofExternalKeyFailed(externalKeyFailed))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofExternalKeyRecovered(externalKeyRecovered)`.
+         */
+        fun data(externalKeyRecovered: BetaWebhookExternalKeyRecoveredEventData) =
+            data(BetaWebhookEventData.ofExternalKeyRecovered(externalKeyRecovered))
+
+        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the

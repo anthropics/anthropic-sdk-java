@@ -102,7 +102,9 @@ private val JSON_MAPPER: JsonMapper =
                 .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
                 .setCoercion(CoercionInputShape.Array, CoercionAction.Fail)
         }
-        .serializationInclusion(JsonInclude.Include.NON_ABSENT)
+        .defaultPropertyInclusion(
+            JsonInclude.Value.construct(JsonInclude.Include.NON_ABSENT, JsonInclude.Include.ALWAYS)
+        )
         .disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
         .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)

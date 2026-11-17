@@ -80,6 +80,13 @@ internal constructor(
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
+     * @see MessageCreateParams.billingPolicy
+     */
+    fun billingPolicy(): Optional<BetaBillingPolicy> = delegate.billingPolicy()
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      * @see MessageCreateParams.cacheControl
      */
     fun cacheControl(): Optional<BetaCacheControlEphemeral> = delegate.cacheControl()
@@ -232,6 +239,13 @@ internal constructor(
      * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _model(): JsonField<Model> = delegate._model()
+
+    /**
+     * Returns the raw JSON value of [billingPolicy].
+     *
+     * Unlike [billingPolicy], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _billingPolicy(): JsonField<BetaBillingPolicy> = delegate._billingPolicy()
 
     /**
      * Returns the raw JSON value of [cacheControl].
@@ -589,6 +603,26 @@ internal constructor(
          * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(value: String) = apply { delegate.model(value) }
+
+        /** @see MessageCreateParams.Builder.billingPolicy */
+        fun billingPolicy(billingPolicy: BetaBillingPolicy?) = apply {
+            delegate.billingPolicy(billingPolicy)
+        }
+
+        /** Alias for calling [Builder.billingPolicy] with `billingPolicy.orElse(null)`. */
+        fun billingPolicy(billingPolicy: Optional<BetaBillingPolicy>) =
+            billingPolicy(billingPolicy.getOrNull())
+
+        /**
+         * Sets [Builder.billingPolicy] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.billingPolicy] with a well-typed [BetaBillingPolicy]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun billingPolicy(billingPolicy: JsonField<BetaBillingPolicy>) = apply {
+            delegate.billingPolicy(billingPolicy)
+        }
 
         /** @see MessageCreateParams.Builder.cacheControl */
         fun cacheControl(cacheControl: BetaCacheControlEphemeral?) = apply {

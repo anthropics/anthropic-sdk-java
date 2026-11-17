@@ -796,6 +796,11 @@ private constructor(
 
         companion object {
 
+            @JvmField val EXTERNAL_KEY_FAILED = EnabledEvent(JsonField.of("external_key.failed"))
+
+            @JvmField
+            val EXTERNAL_KEY_RECOVERED = EnabledEvent(JsonField.of("external_key.recovered"))
+
             @JvmField
             val USER_PROFILE_ENFORCEMENT_ACTION_OPENED =
                 EnabledEvent(JsonField.of("user_profile.enforcement_action_opened"))
@@ -812,6 +817,8 @@ private constructor(
             fun of(value: String): EnabledEvent =
                 // Intern known values so `==` works
                 when (value) {
+                    "external_key.failed" -> EXTERNAL_KEY_FAILED
+                    "external_key.recovered" -> EXTERNAL_KEY_RECOVERED
                     "user_profile.enforcement_action_opened" ->
                         USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                     "user_profile.enforcement_action_resolved" ->
@@ -828,6 +835,8 @@ private constructor(
 
         /** An enum containing [EnabledEvent]'s known values. */
         enum class Known {
+            EXTERNAL_KEY_FAILED,
+            EXTERNAL_KEY_RECOVERED,
             USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
             USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
             USER_PROFILE_PROGRAM_STATUS_UPDATED,
@@ -843,6 +852,8 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            EXTERNAL_KEY_FAILED,
+            EXTERNAL_KEY_RECOVERED,
             USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
             USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
             USER_PROFILE_PROGRAM_STATUS_UPDATED,
@@ -861,6 +872,8 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
+                EXTERNAL_KEY_FAILED -> Value.EXTERNAL_KEY_FAILED
+                EXTERNAL_KEY_RECOVERED -> Value.EXTERNAL_KEY_RECOVERED
                 USER_PROFILE_ENFORCEMENT_ACTION_OPENED ->
                     Value.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
@@ -880,6 +893,8 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
+                EXTERNAL_KEY_FAILED -> Known.EXTERNAL_KEY_FAILED
+                EXTERNAL_KEY_RECOVERED -> Known.EXTERNAL_KEY_RECOVERED
                 USER_PROFILE_ENFORCEMENT_ACTION_OPENED ->
                     Known.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->

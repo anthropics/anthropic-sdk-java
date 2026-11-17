@@ -81,7 +81,10 @@ import com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceeded
 import com.anthropic.models.organization.workspaces.WorkspacePolicyField
 import com.anthropic.models.organization.workspaces.WorkspacePolicyViolationErrorDetails
 import com.anthropic.models.skills.SkillReadBlockedUndecryptableErrorDetails
+import com.anthropic.models.userprofiles.UserProfileBillingNotAuthorizedErrorDetails
+import com.anthropic.models.userprofiles.UserProfileNotBillableErrorDetails
 import com.anthropic.models.userprofiles.UserProfileNotFoundErrorDetails
+import com.anthropic.models.userprofiles.UserProfileRequiredErrorDetails
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -121,10 +124,21 @@ private constructor(
     private val threadUnsupportedRequest: ThreadUnsupportedRequestErrorDetails? = null,
     private val toolNameConflict: ToolNameConflictErrorDetails? = null,
     private val toolReferenceUnresolved: ToolReferenceUnresolvedErrorDetails? = null,
+    private val userProfileRequired: UserProfileRequiredErrorDetails? = null,
+    private val linkedOrganizationBillingUnavailable:
+        LinkedOrganizationBillingUnavailableErrorDetails? =
+        null,
+    private val linkedOrganizationSpendLimitReached:
+        LinkedOrganizationSpendLimitReachedErrorDetails? =
+        null,
+    private val userProfileBillingNotAuthorized: UserProfileBillingNotAuthorizedErrorDetails? =
+        null,
+    private val userProfileNotBillable: UserProfileNotBillableErrorDetails? = null,
     private val threadNotFound: ThreadNotFoundErrorDetails? = null,
     private val skillReadBlockedUndecryptable: SkillReadBlockedUndecryptableErrorDetails? = null,
     private val requestBodyTooLargeAfterDecoding: RequestBodyTooLargeAfterDecodingErrorDetails? =
         null,
+    private val contractSpendLimitReached: ContractSpendLimitReachedErrorDetails? = null,
     private val enforcedSpendLimitReached: EnforcedSpendLimitReachedErrorDetails? = null,
     private val rampLimitExceeded: RampLimitExceededErrorDetails? = null,
     private val cmekKeyUnreachable: CmekKeyUnreachableErrorDetails? = null,
@@ -230,10 +244,18 @@ private constructor(
             threadUnsupportedRequest != null -> ErrorCode.THREAD_UNSUPPORTED_REQUEST
             toolNameConflict != null -> ErrorCode.TOOL_NAME_CONFLICT
             toolReferenceUnresolved != null -> ErrorCode.TOOL_REFERENCE_UNRESOLVED
+            userProfileRequired != null -> ErrorCode.USER_PROFILE_REQUIRED
+            linkedOrganizationBillingUnavailable != null ->
+                ErrorCode.LINKED_ORGANIZATION_BILLING_UNAVAILABLE
+            linkedOrganizationSpendLimitReached != null ->
+                ErrorCode.LINKED_ORGANIZATION_SPEND_LIMIT_REACHED
+            userProfileBillingNotAuthorized != null -> ErrorCode.USER_PROFILE_BILLING_NOT_AUTHORIZED
+            userProfileNotBillable != null -> ErrorCode.USER_PROFILE_NOT_BILLABLE
             threadNotFound != null -> ErrorCode.THREAD_NOT_FOUND
             skillReadBlockedUndecryptable != null -> ErrorCode.SKILL_READ_BLOCKED_UNDECRYPTABLE
             requestBodyTooLargeAfterDecoding != null ->
                 ErrorCode.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
+            contractSpendLimitReached != null -> ErrorCode.CONTRACT_SPEND_LIMIT_REACHED
             enforcedSpendLimitReached != null -> ErrorCode.ENFORCED_SPEND_LIMIT_REACHED
             rampLimitExceeded != null -> ErrorCode.RAMP_LIMIT_EXCEEDED
             cmekKeyUnreachable != null -> ErrorCode.CMEK_KEY_UNREACHABLE
@@ -330,9 +352,15 @@ private constructor(
             threadUnsupportedRequest != null -> Optional.empty()
             toolNameConflict != null -> Optional.empty()
             toolReferenceUnresolved != null -> Optional.empty()
+            userProfileRequired != null -> Optional.empty()
+            linkedOrganizationBillingUnavailable != null -> Optional.empty()
+            linkedOrganizationSpendLimitReached != null -> Optional.empty()
+            userProfileBillingNotAuthorized != null -> Optional.empty()
+            userProfileNotBillable != null -> Optional.empty()
             threadNotFound != null -> Optional.empty()
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
+            contractSpendLimitReached != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
@@ -421,9 +449,15 @@ private constructor(
             threadUnsupportedRequest != null -> Optional.empty()
             toolNameConflict != null -> Optional.empty()
             toolReferenceUnresolved != null -> Optional.empty()
+            userProfileRequired != null -> Optional.empty()
+            linkedOrganizationBillingUnavailable != null -> Optional.empty()
+            linkedOrganizationSpendLimitReached != null -> Optional.empty()
+            userProfileBillingNotAuthorized != null -> Optional.empty()
+            userProfileNotBillable != null -> Optional.empty()
             threadNotFound != null -> Optional.empty()
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
+            contractSpendLimitReached != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
@@ -512,9 +546,15 @@ private constructor(
             threadUnsupportedRequest != null -> Optional.empty()
             toolNameConflict != null -> Optional.empty()
             toolReferenceUnresolved != null -> Optional.empty()
+            userProfileRequired != null -> Optional.empty()
+            linkedOrganizationBillingUnavailable != null -> Optional.empty()
+            linkedOrganizationSpendLimitReached != null -> Optional.empty()
+            userProfileBillingNotAuthorized != null -> Optional.empty()
+            userProfileNotBillable != null -> Optional.empty()
             threadNotFound != null -> Optional.empty()
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
+            contractSpendLimitReached != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
@@ -714,6 +754,45 @@ private constructor(
         Optional.ofNullable(toolReferenceUnresolved)
 
     /**
+     * The request sets `billing_policy.bill_to` to `"user_profile"` but names no user profile. Name
+     * the profile to bill in the `anthropic-user-profile-id` header.
+     */
+    fun userProfileRequired(): Optional<UserProfileRequiredErrorDetails> =
+        Optional.ofNullable(userProfileRequired)
+
+    /**
+     * Anthropic cannot currently bill the organization linked to the request's user profile, for a
+     * reason that lies with that organization's own account. The response does not say what the
+     * reason is.
+     */
+    fun linkedOrganizationBillingUnavailable():
+        Optional<LinkedOrganizationBillingUnavailableErrorDetails> =
+        Optional.ofNullable(linkedOrganizationBillingUnavailable)
+
+    /**
+     * The organization linked to the request's user profile has reached a spend limit that it set,
+     * or lacks credit for the request. The response does not say which applies.
+     */
+    fun linkedOrganizationSpendLimitReached():
+        Optional<LinkedOrganizationSpendLimitReachedErrorDetails> =
+        Optional.ofNullable(linkedOrganizationSpendLimitReached)
+
+    /**
+     * The customer that the named user profile represents has not authorized the caller to bill
+     * them, or the authorization that the request's credential uses has ended. The response does
+     * not say which applies.
+     */
+    fun userProfileBillingNotAuthorized(): Optional<UserProfileBillingNotAuthorizedErrorDetails> =
+        Optional.ofNullable(userProfileBillingNotAuthorized)
+
+    /**
+     * The caller is not allowed to bill the user profile that the request names. The response gives
+     * no more specific error code and does not say what the reason is.
+     */
+    fun userProfileNotBillable(): Optional<UserProfileNotBillableErrorDetails> =
+        Optional.ofNullable(userProfileNotBillable)
+
+    /**
      * No usable Thread state was found for `previous_message_id`. Replay the full conversation with
      * `thread: {"type": "create"}` to start a new Thread.
      */
@@ -729,6 +808,10 @@ private constructor(
     /** The compressed request body exceeds the request size limit once decoded. */
     fun requestBodyTooLargeAfterDecoding(): Optional<RequestBodyTooLargeAfterDecodingErrorDetails> =
         Optional.ofNullable(requestBodyTooLargeAfterDecoding)
+
+    /** The organization has reached the spend limit of its contract. */
+    fun contractSpendLimitReached(): Optional<ContractSpendLimitReachedErrorDetails> =
+        Optional.ofNullable(contractSpendLimitReached)
 
     /** The organization has crossed the monthly API usage threshold of its API tier. */
     fun enforcedSpendLimitReached(): Optional<EnforcedSpendLimitReachedErrorDetails> =
@@ -1147,11 +1230,25 @@ private constructor(
 
     fun isToolReferenceUnresolved(): Boolean = toolReferenceUnresolved != null
 
+    fun isUserProfileRequired(): Boolean = userProfileRequired != null
+
+    fun isLinkedOrganizationBillingUnavailable(): Boolean =
+        linkedOrganizationBillingUnavailable != null
+
+    fun isLinkedOrganizationSpendLimitReached(): Boolean =
+        linkedOrganizationSpendLimitReached != null
+
+    fun isUserProfileBillingNotAuthorized(): Boolean = userProfileBillingNotAuthorized != null
+
+    fun isUserProfileNotBillable(): Boolean = userProfileNotBillable != null
+
     fun isThreadNotFound(): Boolean = threadNotFound != null
 
     fun isSkillReadBlockedUndecryptable(): Boolean = skillReadBlockedUndecryptable != null
 
     fun isRequestBodyTooLargeAfterDecoding(): Boolean = requestBodyTooLargeAfterDecoding != null
+
+    fun isContractSpendLimitReached(): Boolean = contractSpendLimitReached != null
 
     fun isEnforcedSpendLimitReached(): Boolean = enforcedSpendLimitReached != null
 
@@ -1411,6 +1508,43 @@ private constructor(
         toolReferenceUnresolved.getOrThrow("toolReferenceUnresolved")
 
     /**
+     * The request sets `billing_policy.bill_to` to `"user_profile"` but names no user profile. Name
+     * the profile to bill in the `anthropic-user-profile-id` header.
+     */
+    fun asUserProfileRequired(): UserProfileRequiredErrorDetails =
+        userProfileRequired.getOrThrow("userProfileRequired")
+
+    /**
+     * Anthropic cannot currently bill the organization linked to the request's user profile, for a
+     * reason that lies with that organization's own account. The response does not say what the
+     * reason is.
+     */
+    fun asLinkedOrganizationBillingUnavailable(): LinkedOrganizationBillingUnavailableErrorDetails =
+        linkedOrganizationBillingUnavailable.getOrThrow("linkedOrganizationBillingUnavailable")
+
+    /**
+     * The organization linked to the request's user profile has reached a spend limit that it set,
+     * or lacks credit for the request. The response does not say which applies.
+     */
+    fun asLinkedOrganizationSpendLimitReached(): LinkedOrganizationSpendLimitReachedErrorDetails =
+        linkedOrganizationSpendLimitReached.getOrThrow("linkedOrganizationSpendLimitReached")
+
+    /**
+     * The customer that the named user profile represents has not authorized the caller to bill
+     * them, or the authorization that the request's credential uses has ended. The response does
+     * not say which applies.
+     */
+    fun asUserProfileBillingNotAuthorized(): UserProfileBillingNotAuthorizedErrorDetails =
+        userProfileBillingNotAuthorized.getOrThrow("userProfileBillingNotAuthorized")
+
+    /**
+     * The caller is not allowed to bill the user profile that the request names. The response gives
+     * no more specific error code and does not say what the reason is.
+     */
+    fun asUserProfileNotBillable(): UserProfileNotBillableErrorDetails =
+        userProfileNotBillable.getOrThrow("userProfileNotBillable")
+
+    /**
      * No usable Thread state was found for `previous_message_id`. Replay the full conversation with
      * `thread: {"type": "create"}` to start a new Thread.
      */
@@ -1426,6 +1560,10 @@ private constructor(
     /** The compressed request body exceeds the request size limit once decoded. */
     fun asRequestBodyTooLargeAfterDecoding(): RequestBodyTooLargeAfterDecodingErrorDetails =
         requestBodyTooLargeAfterDecoding.getOrThrow("requestBodyTooLargeAfterDecoding")
+
+    /** The organization has reached the spend limit of its contract. */
+    fun asContractSpendLimitReached(): ContractSpendLimitReachedErrorDetails =
+        contractSpendLimitReached.getOrThrow("contractSpendLimitReached")
 
     /** The organization has crossed the monthly API usage threshold of its API tier. */
     fun asEnforcedSpendLimitReached(): EnforcedSpendLimitReachedErrorDetails =
@@ -1873,11 +2011,26 @@ private constructor(
             toolNameConflict != null -> visitor.visitToolNameConflict(toolNameConflict)
             toolReferenceUnresolved != null ->
                 visitor.visitToolReferenceUnresolved(toolReferenceUnresolved)
+            userProfileRequired != null -> visitor.visitUserProfileRequired(userProfileRequired)
+            linkedOrganizationBillingUnavailable != null ->
+                visitor.visitLinkedOrganizationBillingUnavailable(
+                    linkedOrganizationBillingUnavailable
+                )
+            linkedOrganizationSpendLimitReached != null ->
+                visitor.visitLinkedOrganizationSpendLimitReached(
+                    linkedOrganizationSpendLimitReached
+                )
+            userProfileBillingNotAuthorized != null ->
+                visitor.visitUserProfileBillingNotAuthorized(userProfileBillingNotAuthorized)
+            userProfileNotBillable != null ->
+                visitor.visitUserProfileNotBillable(userProfileNotBillable)
             threadNotFound != null -> visitor.visitThreadNotFound(threadNotFound)
             skillReadBlockedUndecryptable != null ->
                 visitor.visitSkillReadBlockedUndecryptable(skillReadBlockedUndecryptable)
             requestBodyTooLargeAfterDecoding != null ->
                 visitor.visitRequestBodyTooLargeAfterDecoding(requestBodyTooLargeAfterDecoding)
+            contractSpendLimitReached != null ->
+                visitor.visitContractSpendLimitReached(contractSpendLimitReached)
             enforcedSpendLimitReached != null ->
                 visitor.visitEnforcedSpendLimitReached(enforcedSpendLimitReached)
             rampLimitExceeded != null -> visitor.visitRampLimitExceeded(rampLimitExceeded)
@@ -2025,9 +2178,17 @@ private constructor(
             threadUnsupportedRequest != null -> threadUnsupportedRequest.validate()
             toolNameConflict != null -> toolNameConflict.validate()
             toolReferenceUnresolved != null -> toolReferenceUnresolved.validate()
+            userProfileRequired != null -> userProfileRequired.validate()
+            linkedOrganizationBillingUnavailable != null ->
+                linkedOrganizationBillingUnavailable.validate()
+            linkedOrganizationSpendLimitReached != null ->
+                linkedOrganizationSpendLimitReached.validate()
+            userProfileBillingNotAuthorized != null -> userProfileBillingNotAuthorized.validate()
+            userProfileNotBillable != null -> userProfileNotBillable.validate()
             threadNotFound != null -> threadNotFound.validate()
             skillReadBlockedUndecryptable != null -> skillReadBlockedUndecryptable.validate()
             requestBodyTooLargeAfterDecoding != null -> requestBodyTooLargeAfterDecoding.validate()
+            contractSpendLimitReached != null -> contractSpendLimitReached.validate()
             enforcedSpendLimitReached != null -> enforcedSpendLimitReached.validate()
             rampLimitExceeded != null -> rampLimitExceeded.validate()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validate()
@@ -2138,9 +2299,17 @@ private constructor(
             threadUnsupportedRequest != null -> threadUnsupportedRequest.validity()
             toolNameConflict != null -> toolNameConflict.validity()
             toolReferenceUnresolved != null -> toolReferenceUnresolved.validity()
+            userProfileRequired != null -> userProfileRequired.validity()
+            linkedOrganizationBillingUnavailable != null ->
+                linkedOrganizationBillingUnavailable.validity()
+            linkedOrganizationSpendLimitReached != null ->
+                linkedOrganizationSpendLimitReached.validity()
+            userProfileBillingNotAuthorized != null -> userProfileBillingNotAuthorized.validity()
+            userProfileNotBillable != null -> userProfileNotBillable.validity()
             threadNotFound != null -> threadNotFound.validity()
             skillReadBlockedUndecryptable != null -> skillReadBlockedUndecryptable.validity()
             requestBodyTooLargeAfterDecoding != null -> requestBodyTooLargeAfterDecoding.validity()
+            contractSpendLimitReached != null -> contractSpendLimitReached.validity()
             enforcedSpendLimitReached != null -> enforcedSpendLimitReached.validity()
             rampLimitExceeded != null -> rampLimitExceeded.validity()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validity()
@@ -2239,9 +2408,15 @@ private constructor(
             threadUnsupportedRequest == other.threadUnsupportedRequest &&
             toolNameConflict == other.toolNameConflict &&
             toolReferenceUnresolved == other.toolReferenceUnresolved &&
+            userProfileRequired == other.userProfileRequired &&
+            linkedOrganizationBillingUnavailable == other.linkedOrganizationBillingUnavailable &&
+            linkedOrganizationSpendLimitReached == other.linkedOrganizationSpendLimitReached &&
+            userProfileBillingNotAuthorized == other.userProfileBillingNotAuthorized &&
+            userProfileNotBillable == other.userProfileNotBillable &&
             threadNotFound == other.threadNotFound &&
             skillReadBlockedUndecryptable == other.skillReadBlockedUndecryptable &&
             requestBodyTooLargeAfterDecoding == other.requestBodyTooLargeAfterDecoding &&
+            contractSpendLimitReached == other.contractSpendLimitReached &&
             enforcedSpendLimitReached == other.enforcedSpendLimitReached &&
             rampLimitExceeded == other.rampLimitExceeded &&
             cmekKeyUnreachable == other.cmekKeyUnreachable &&
@@ -2330,9 +2505,15 @@ private constructor(
             threadUnsupportedRequest,
             toolNameConflict,
             toolReferenceUnresolved,
+            userProfileRequired,
+            linkedOrganizationBillingUnavailable,
+            linkedOrganizationSpendLimitReached,
+            userProfileBillingNotAuthorized,
+            userProfileNotBillable,
             threadNotFound,
             skillReadBlockedUndecryptable,
             requestBodyTooLargeAfterDecoding,
+            contractSpendLimitReached,
             enforcedSpendLimitReached,
             rampLimitExceeded,
             cmekKeyUnreachable,
@@ -2439,11 +2620,22 @@ private constructor(
             toolNameConflict != null -> "ErrorDetails{toolNameConflict=$toolNameConflict}"
             toolReferenceUnresolved != null ->
                 "ErrorDetails{toolReferenceUnresolved=$toolReferenceUnresolved}"
+            userProfileRequired != null -> "ErrorDetails{userProfileRequired=$userProfileRequired}"
+            linkedOrganizationBillingUnavailable != null ->
+                "ErrorDetails{linkedOrganizationBillingUnavailable=$linkedOrganizationBillingUnavailable}"
+            linkedOrganizationSpendLimitReached != null ->
+                "ErrorDetails{linkedOrganizationSpendLimitReached=$linkedOrganizationSpendLimitReached}"
+            userProfileBillingNotAuthorized != null ->
+                "ErrorDetails{userProfileBillingNotAuthorized=$userProfileBillingNotAuthorized}"
+            userProfileNotBillable != null ->
+                "ErrorDetails{userProfileNotBillable=$userProfileNotBillable}"
             threadNotFound != null -> "ErrorDetails{threadNotFound=$threadNotFound}"
             skillReadBlockedUndecryptable != null ->
                 "ErrorDetails{skillReadBlockedUndecryptable=$skillReadBlockedUndecryptable}"
             requestBodyTooLargeAfterDecoding != null ->
                 "ErrorDetails{requestBodyTooLargeAfterDecoding=$requestBodyTooLargeAfterDecoding}"
+            contractSpendLimitReached != null ->
+                "ErrorDetails{contractSpendLimitReached=$contractSpendLimitReached}"
             enforcedSpendLimitReached != null ->
                 "ErrorDetails{enforcedSpendLimitReached=$enforcedSpendLimitReached}"
             rampLimitExceeded != null -> "ErrorDetails{rampLimitExceeded=$rampLimitExceeded}"
@@ -2722,6 +2914,54 @@ private constructor(
         ) = ErrorDetails(toolReferenceUnresolved = toolReferenceUnresolved)
 
         /**
+         * The request sets `billing_policy.bill_to` to `"user_profile"` but names no user profile.
+         * Name the profile to bill in the `anthropic-user-profile-id` header.
+         */
+        @JvmStatic
+        fun ofUserProfileRequired(userProfileRequired: UserProfileRequiredErrorDetails) =
+            ErrorDetails(userProfileRequired = userProfileRequired)
+
+        /**
+         * Anthropic cannot currently bill the organization linked to the request's user profile,
+         * for a reason that lies with that organization's own account. The response does not say
+         * what the reason is.
+         */
+        @JvmStatic
+        fun ofLinkedOrganizationBillingUnavailable(
+            linkedOrganizationBillingUnavailable: LinkedOrganizationBillingUnavailableErrorDetails
+        ) =
+            ErrorDetails(
+                linkedOrganizationBillingUnavailable = linkedOrganizationBillingUnavailable
+            )
+
+        /**
+         * The organization linked to the request's user profile has reached a spend limit that it
+         * set, or lacks credit for the request. The response does not say which applies.
+         */
+        @JvmStatic
+        fun ofLinkedOrganizationSpendLimitReached(
+            linkedOrganizationSpendLimitReached: LinkedOrganizationSpendLimitReachedErrorDetails
+        ) = ErrorDetails(linkedOrganizationSpendLimitReached = linkedOrganizationSpendLimitReached)
+
+        /**
+         * The customer that the named user profile represents has not authorized the caller to bill
+         * them, or the authorization that the request's credential uses has ended. The response
+         * does not say which applies.
+         */
+        @JvmStatic
+        fun ofUserProfileBillingNotAuthorized(
+            userProfileBillingNotAuthorized: UserProfileBillingNotAuthorizedErrorDetails
+        ) = ErrorDetails(userProfileBillingNotAuthorized = userProfileBillingNotAuthorized)
+
+        /**
+         * The caller is not allowed to bill the user profile that the request names. The response
+         * gives no more specific error code and does not say what the reason is.
+         */
+        @JvmStatic
+        fun ofUserProfileNotBillable(userProfileNotBillable: UserProfileNotBillableErrorDetails) =
+            ErrorDetails(userProfileNotBillable = userProfileNotBillable)
+
+        /**
          * No usable Thread state was found for `previous_message_id`. Replay the full conversation
          * with `thread: {"type": "create"}` to start a new Thread.
          */
@@ -2743,6 +2983,12 @@ private constructor(
         fun ofRequestBodyTooLargeAfterDecoding(
             requestBodyTooLargeAfterDecoding: RequestBodyTooLargeAfterDecodingErrorDetails
         ) = ErrorDetails(requestBodyTooLargeAfterDecoding = requestBodyTooLargeAfterDecoding)
+
+        /** The organization has reached the spend limit of its contract. */
+        @JvmStatic
+        fun ofContractSpendLimitReached(
+            contractSpendLimitReached: ContractSpendLimitReachedErrorDetails
+        ) = ErrorDetails(contractSpendLimitReached = contractSpendLimitReached)
 
         /** The organization has crossed the monthly API usage threshold of its API tier. */
         @JvmStatic
@@ -3467,6 +3713,46 @@ private constructor(
         ): T
 
         /**
+         * The request sets `billing_policy.bill_to` to `"user_profile"` but names no user profile.
+         * Name the profile to bill in the `anthropic-user-profile-id` header.
+         */
+        fun visitUserProfileRequired(userProfileRequired: UserProfileRequiredErrorDetails): T
+
+        /**
+         * Anthropic cannot currently bill the organization linked to the request's user profile,
+         * for a reason that lies with that organization's own account. The response does not say
+         * what the reason is.
+         */
+        fun visitLinkedOrganizationBillingUnavailable(
+            linkedOrganizationBillingUnavailable: LinkedOrganizationBillingUnavailableErrorDetails
+        ): T
+
+        /**
+         * The organization linked to the request's user profile has reached a spend limit that it
+         * set, or lacks credit for the request. The response does not say which applies.
+         */
+        fun visitLinkedOrganizationSpendLimitReached(
+            linkedOrganizationSpendLimitReached: LinkedOrganizationSpendLimitReachedErrorDetails
+        ): T
+
+        /**
+         * The customer that the named user profile represents has not authorized the caller to bill
+         * them, or the authorization that the request's credential uses has ended. The response
+         * does not say which applies.
+         */
+        fun visitUserProfileBillingNotAuthorized(
+            userProfileBillingNotAuthorized: UserProfileBillingNotAuthorizedErrorDetails
+        ): T
+
+        /**
+         * The caller is not allowed to bill the user profile that the request names. The response
+         * gives no more specific error code and does not say what the reason is.
+         */
+        fun visitUserProfileNotBillable(
+            userProfileNotBillable: UserProfileNotBillableErrorDetails
+        ): T
+
+        /**
          * No usable Thread state was found for `previous_message_id`. Replay the full conversation
          * with `thread: {"type": "create"}` to start a new Thread.
          */
@@ -3483,6 +3769,11 @@ private constructor(
         /** The compressed request body exceeds the request size limit once decoded. */
         fun visitRequestBodyTooLargeAfterDecoding(
             requestBodyTooLargeAfterDecoding: RequestBodyTooLargeAfterDecodingErrorDetails
+        ): T
+
+        /** The organization has reached the spend limit of its contract. */
+        fun visitContractSpendLimitReached(
+            contractSpendLimitReached: ContractSpendLimitReachedErrorDetails
         ): T
 
         /** The organization has crossed the monthly API usage threshold of its API tier. */
@@ -4071,6 +4362,45 @@ private constructor(
                         ?.let { ErrorDetails(toolReferenceUnresolved = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "user_profile_required" -> {
+                    return tryDeserialize(node, jacksonTypeRef<UserProfileRequiredErrorDetails>())
+                        ?.let { ErrorDetails(userProfileRequired = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "linked_organization_billing_unavailable" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<LinkedOrganizationBillingUnavailableErrorDetails>(),
+                        )
+                        ?.let {
+                            ErrorDetails(linkedOrganizationBillingUnavailable = it, _json = json)
+                        } ?: ErrorDetails(_json = json)
+                }
+                "linked_organization_spend_limit_reached" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<LinkedOrganizationSpendLimitReachedErrorDetails>(),
+                        )
+                        ?.let {
+                            ErrorDetails(linkedOrganizationSpendLimitReached = it, _json = json)
+                        } ?: ErrorDetails(_json = json)
+                }
+                "user_profile_billing_not_authorized" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<UserProfileBillingNotAuthorizedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(userProfileBillingNotAuthorized = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "user_profile_not_billable" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<UserProfileNotBillableErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(userProfileNotBillable = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "thread_not_found" -> {
                     return tryDeserialize(node, jacksonTypeRef<ThreadNotFoundErrorDetails>())?.let {
                         ErrorDetails(threadNotFound = it, _json = json)
@@ -4090,6 +4420,14 @@ private constructor(
                             jacksonTypeRef<RequestBodyTooLargeAfterDecodingErrorDetails>(),
                         )
                         ?.let { ErrorDetails(requestBodyTooLargeAfterDecoding = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "contract_spend_limit_reached" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ContractSpendLimitReachedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(contractSpendLimitReached = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
                 "enforced_spend_limit_reached" -> {
@@ -4579,11 +4917,23 @@ private constructor(
                 value.toolNameConflict != null -> generator.writeObject(value.toolNameConflict)
                 value.toolReferenceUnresolved != null ->
                     generator.writeObject(value.toolReferenceUnresolved)
+                value.userProfileRequired != null ->
+                    generator.writeObject(value.userProfileRequired)
+                value.linkedOrganizationBillingUnavailable != null ->
+                    generator.writeObject(value.linkedOrganizationBillingUnavailable)
+                value.linkedOrganizationSpendLimitReached != null ->
+                    generator.writeObject(value.linkedOrganizationSpendLimitReached)
+                value.userProfileBillingNotAuthorized != null ->
+                    generator.writeObject(value.userProfileBillingNotAuthorized)
+                value.userProfileNotBillable != null ->
+                    generator.writeObject(value.userProfileNotBillable)
                 value.threadNotFound != null -> generator.writeObject(value.threadNotFound)
                 value.skillReadBlockedUndecryptable != null ->
                     generator.writeObject(value.skillReadBlockedUndecryptable)
                 value.requestBodyTooLargeAfterDecoding != null ->
                     generator.writeObject(value.requestBodyTooLargeAfterDecoding)
+                value.contractSpendLimitReached != null ->
+                    generator.writeObject(value.contractSpendLimitReached)
                 value.enforcedSpendLimitReached != null ->
                     generator.writeObject(value.enforcedSpendLimitReached)
                 value.rampLimitExceeded != null -> generator.writeObject(value.rampLimitExceeded)
@@ -4780,6 +5130,23 @@ private constructor(
             @JvmField
             val TOOL_REFERENCE_UNRESOLVED = ErrorCode(JsonField.of("tool_reference_unresolved"))
 
+            @JvmField val USER_PROFILE_REQUIRED = ErrorCode(JsonField.of("user_profile_required"))
+
+            @JvmField
+            val LINKED_ORGANIZATION_BILLING_UNAVAILABLE =
+                ErrorCode(JsonField.of("linked_organization_billing_unavailable"))
+
+            @JvmField
+            val LINKED_ORGANIZATION_SPEND_LIMIT_REACHED =
+                ErrorCode(JsonField.of("linked_organization_spend_limit_reached"))
+
+            @JvmField
+            val USER_PROFILE_BILLING_NOT_AUTHORIZED =
+                ErrorCode(JsonField.of("user_profile_billing_not_authorized"))
+
+            @JvmField
+            val USER_PROFILE_NOT_BILLABLE = ErrorCode(JsonField.of("user_profile_not_billable"))
+
             @JvmField val THREAD_NOT_FOUND = ErrorCode(JsonField.of("thread_not_found"))
 
             @JvmField
@@ -4789,6 +5156,10 @@ private constructor(
             @JvmField
             val REQUEST_BODY_TOO_LARGE_AFTER_DECODING =
                 ErrorCode(JsonField.of("request_body_too_large_after_decoding"))
+
+            @JvmField
+            val CONTRACT_SPEND_LIMIT_REACHED =
+                ErrorCode(JsonField.of("contract_spend_limit_reached"))
 
             @JvmField
             val ENFORCED_SPEND_LIMIT_REACHED =
@@ -5000,9 +5371,17 @@ private constructor(
                     "thread_unsupported_request" -> THREAD_UNSUPPORTED_REQUEST
                     "tool_name_conflict" -> TOOL_NAME_CONFLICT
                     "tool_reference_unresolved" -> TOOL_REFERENCE_UNRESOLVED
+                    "user_profile_required" -> USER_PROFILE_REQUIRED
+                    "linked_organization_billing_unavailable" ->
+                        LINKED_ORGANIZATION_BILLING_UNAVAILABLE
+                    "linked_organization_spend_limit_reached" ->
+                        LINKED_ORGANIZATION_SPEND_LIMIT_REACHED
+                    "user_profile_billing_not_authorized" -> USER_PROFILE_BILLING_NOT_AUTHORIZED
+                    "user_profile_not_billable" -> USER_PROFILE_NOT_BILLABLE
                     "thread_not_found" -> THREAD_NOT_FOUND
                     "skill_read_blocked_undecryptable" -> SKILL_READ_BLOCKED_UNDECRYPTABLE
                     "request_body_too_large_after_decoding" -> REQUEST_BODY_TOO_LARGE_AFTER_DECODING
+                    "contract_spend_limit_reached" -> CONTRACT_SPEND_LIMIT_REACHED
                     "enforced_spend_limit_reached" -> ENFORCED_SPEND_LIMIT_REACHED
                     "ramp_limit_exceeded" -> RAMP_LIMIT_EXCEEDED
                     "cmek_key_unreachable" -> CMEK_KEY_UNREACHABLE
@@ -5102,9 +5481,15 @@ private constructor(
             THREAD_UNSUPPORTED_REQUEST,
             TOOL_NAME_CONFLICT,
             TOOL_REFERENCE_UNRESOLVED,
+            USER_PROFILE_REQUIRED,
+            LINKED_ORGANIZATION_BILLING_UNAVAILABLE,
+            LINKED_ORGANIZATION_SPEND_LIMIT_REACHED,
+            USER_PROFILE_BILLING_NOT_AUTHORIZED,
+            USER_PROFILE_NOT_BILLABLE,
             THREAD_NOT_FOUND,
             SKILL_READ_BLOCKED_UNDECRYPTABLE,
             REQUEST_BODY_TOO_LARGE_AFTER_DECODING,
+            CONTRACT_SPEND_LIMIT_REACHED,
             ENFORCED_SPEND_LIMIT_REACHED,
             RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
@@ -5200,9 +5585,15 @@ private constructor(
             THREAD_UNSUPPORTED_REQUEST,
             TOOL_NAME_CONFLICT,
             TOOL_REFERENCE_UNRESOLVED,
+            USER_PROFILE_REQUIRED,
+            LINKED_ORGANIZATION_BILLING_UNAVAILABLE,
+            LINKED_ORGANIZATION_SPEND_LIMIT_REACHED,
+            USER_PROFILE_BILLING_NOT_AUTHORIZED,
+            USER_PROFILE_NOT_BILLABLE,
             THREAD_NOT_FOUND,
             SKILL_READ_BLOCKED_UNDECRYPTABLE,
             REQUEST_BODY_TOO_LARGE_AFTER_DECODING,
+            CONTRACT_SPEND_LIMIT_REACHED,
             ENFORCED_SPEND_LIMIT_REACHED,
             RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
@@ -5301,9 +5692,17 @@ private constructor(
                 THREAD_UNSUPPORTED_REQUEST -> Value.THREAD_UNSUPPORTED_REQUEST
                 TOOL_NAME_CONFLICT -> Value.TOOL_NAME_CONFLICT
                 TOOL_REFERENCE_UNRESOLVED -> Value.TOOL_REFERENCE_UNRESOLVED
+                USER_PROFILE_REQUIRED -> Value.USER_PROFILE_REQUIRED
+                LINKED_ORGANIZATION_BILLING_UNAVAILABLE ->
+                    Value.LINKED_ORGANIZATION_BILLING_UNAVAILABLE
+                LINKED_ORGANIZATION_SPEND_LIMIT_REACHED ->
+                    Value.LINKED_ORGANIZATION_SPEND_LIMIT_REACHED
+                USER_PROFILE_BILLING_NOT_AUTHORIZED -> Value.USER_PROFILE_BILLING_NOT_AUTHORIZED
+                USER_PROFILE_NOT_BILLABLE -> Value.USER_PROFILE_NOT_BILLABLE
                 THREAD_NOT_FOUND -> Value.THREAD_NOT_FOUND
                 SKILL_READ_BLOCKED_UNDECRYPTABLE -> Value.SKILL_READ_BLOCKED_UNDECRYPTABLE
                 REQUEST_BODY_TOO_LARGE_AFTER_DECODING -> Value.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
+                CONTRACT_SPEND_LIMIT_REACHED -> Value.CONTRACT_SPEND_LIMIT_REACHED
                 ENFORCED_SPEND_LIMIT_REACHED -> Value.ENFORCED_SPEND_LIMIT_REACHED
                 RAMP_LIMIT_EXCEEDED -> Value.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Value.CMEK_KEY_UNREACHABLE
@@ -5406,9 +5805,17 @@ private constructor(
                 THREAD_UNSUPPORTED_REQUEST -> Known.THREAD_UNSUPPORTED_REQUEST
                 TOOL_NAME_CONFLICT -> Known.TOOL_NAME_CONFLICT
                 TOOL_REFERENCE_UNRESOLVED -> Known.TOOL_REFERENCE_UNRESOLVED
+                USER_PROFILE_REQUIRED -> Known.USER_PROFILE_REQUIRED
+                LINKED_ORGANIZATION_BILLING_UNAVAILABLE ->
+                    Known.LINKED_ORGANIZATION_BILLING_UNAVAILABLE
+                LINKED_ORGANIZATION_SPEND_LIMIT_REACHED ->
+                    Known.LINKED_ORGANIZATION_SPEND_LIMIT_REACHED
+                USER_PROFILE_BILLING_NOT_AUTHORIZED -> Known.USER_PROFILE_BILLING_NOT_AUTHORIZED
+                USER_PROFILE_NOT_BILLABLE -> Known.USER_PROFILE_NOT_BILLABLE
                 THREAD_NOT_FOUND -> Known.THREAD_NOT_FOUND
                 SKILL_READ_BLOCKED_UNDECRYPTABLE -> Known.SKILL_READ_BLOCKED_UNDECRYPTABLE
                 REQUEST_BODY_TOO_LARGE_AFTER_DECODING -> Known.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
+                CONTRACT_SPEND_LIMIT_REACHED -> Known.CONTRACT_SPEND_LIMIT_REACHED
                 ENFORCED_SPEND_LIMIT_REACHED -> Known.ENFORCED_SPEND_LIMIT_REACHED
                 RAMP_LIMIT_EXCEEDED -> Known.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Known.CMEK_KEY_UNREACHABLE

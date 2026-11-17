@@ -175,6 +175,19 @@ private constructor(
     fun model(): Model = body.model()
 
     /**
+     * Declares which organization is billed for this request. `{"type": "billing_policy",
+     * "bill_to": "user_profile"}` bills the customer behind the user profile named in the
+     * `anthropic-user-profile-id` header, instead of your organization. If that customer has not
+     * linked an Anthropic organization to the profile, or has not allowed your organization to bill
+     * it, the request is rejected rather than billed to you. Omit the field, or send `"bill_to":
+     * "self"` (the default), to be billed as usual.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun billingPolicy(): Optional<BetaBillingPolicy> = body.billingPolicy()
+
+    /**
      * Top-level cache control automatically applies a cache_control marker to the last cacheable
      * block in the request.
      *
@@ -500,6 +513,13 @@ private constructor(
     fun _model(): JsonField<Model> = body._model()
 
     /**
+     * Returns the raw JSON value of [billingPolicy].
+     *
+     * Unlike [billingPolicy], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _billingPolicy(): JsonField<BetaBillingPolicy> = body._billingPolicy()
+
+    /**
      * Returns the raw JSON value of [cacheControl].
      *
      * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
@@ -743,8 +763,8 @@ private constructor(
          * - [maxTokens]
          * - [messages]
          * - [model]
+         * - [billingPolicy]
          * - [cacheControl]
-         * - [compaction]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -962,6 +982,33 @@ private constructor(
          * is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(value: String) = apply { body.model(value) }
+
+        /**
+         * Declares which organization is billed for this request. `{"type": "billing_policy",
+         * "bill_to": "user_profile"}` bills the customer behind the user profile named in the
+         * `anthropic-user-profile-id` header, instead of your organization. If that customer has
+         * not linked an Anthropic organization to the profile, or has not allowed your organization
+         * to bill it, the request is rejected rather than billed to you. Omit the field, or send
+         * `"bill_to": "self"` (the default), to be billed as usual.
+         */
+        fun billingPolicy(billingPolicy: BetaBillingPolicy?) = apply {
+            body.billingPolicy(billingPolicy)
+        }
+
+        /** Alias for calling [Builder.billingPolicy] with `billingPolicy.orElse(null)`. */
+        fun billingPolicy(billingPolicy: Optional<BetaBillingPolicy>) =
+            billingPolicy(billingPolicy.getOrNull())
+
+        /**
+         * Sets [Builder.billingPolicy] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.billingPolicy] with a well-typed [BetaBillingPolicy]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun billingPolicy(billingPolicy: JsonField<BetaBillingPolicy>) = apply {
+            body.billingPolicy(billingPolicy)
+        }
 
         /**
          * Top-level cache control automatically applies a cache_control marker to the last
@@ -2283,6 +2330,7 @@ private constructor(
         private val maxTokens: JsonField<Long>,
         private val messages: JsonField<List<BetaMessageParam>>,
         private val model: JsonField<Model>,
+        private val billingPolicy: JsonField<BetaBillingPolicy>,
         private val cacheControl: JsonField<BetaCacheControlEphemeral>,
         private val compaction: JsonField<BetaCompactionConfig>,
         private val container: JsonField<Container>,
@@ -2315,6 +2363,9 @@ private constructor(
             @ExcludeMissing
             messages: JsonField<List<BetaMessageParam>> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
+            @JsonProperty("billing_policy")
+            @ExcludeMissing
+            billingPolicy: JsonField<BetaBillingPolicy> = JsonMissing.of(),
             @JsonProperty("cache_control")
             @ExcludeMissing
             cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
@@ -2375,6 +2426,7 @@ private constructor(
             maxTokens,
             messages,
             model,
+            billingPolicy,
             cacheControl,
             compaction,
             container,
@@ -2491,6 +2543,20 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
+
+        /**
+         * Declares which organization is billed for this request. `{"type": "billing_policy",
+         * "bill_to": "user_profile"}` bills the customer behind the user profile named in the
+         * `anthropic-user-profile-id` header, instead of your organization. If that customer has
+         * not linked an Anthropic organization to the profile, or has not allowed your organization
+         * to bill it, the request is rejected rather than billed to you. Omit the field, or send
+         * `"bill_to": "self"` (the default), to be billed as usual.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun billingPolicy(): Optional<BetaBillingPolicy> =
+            billingPolicy.getOptional("billing_policy")
 
         /**
          * Top-level cache control automatically applies a cache_control marker to the last
@@ -2827,6 +2893,16 @@ private constructor(
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
 
         /**
+         * Returns the raw JSON value of [billingPolicy].
+         *
+         * Unlike [billingPolicy], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("billing_policy")
+        @ExcludeMissing
+        fun _billingPolicy(): JsonField<BetaBillingPolicy> = billingPolicy
+
+        /**
          * Returns the raw JSON value of [cacheControl].
          *
          * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected
@@ -3041,6 +3117,7 @@ private constructor(
             private var maxTokens: JsonField<Long>? = null
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
             private var model: JsonField<Model>? = null
+            private var billingPolicy: JsonField<BetaBillingPolicy> = JsonMissing.of()
             private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
             private var compaction: JsonField<BetaCompactionConfig> = JsonMissing.of()
             private var container: JsonField<Container> = JsonMissing.of()
@@ -3069,6 +3146,7 @@ private constructor(
                 maxTokens = body.maxTokens
                 messages = body.messages.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 model = body.model
+                billingPolicy = body.billingPolicy
                 cacheControl = body.cacheControl
                 compaction = body.compaction
                 container = body.container
@@ -3326,6 +3404,32 @@ private constructor(
              * value.
              */
             fun model(value: String) = model(Model.of(value))
+
+            /**
+             * Declares which organization is billed for this request. `{"type": "billing_policy",
+             * "bill_to": "user_profile"}` bills the customer behind the user profile named in the
+             * `anthropic-user-profile-id` header, instead of your organization. If that customer
+             * has not linked an Anthropic organization to the profile, or has not allowed your
+             * organization to bill it, the request is rejected rather than billed to you. Omit the
+             * field, or send `"bill_to": "self"` (the default), to be billed as usual.
+             */
+            fun billingPolicy(billingPolicy: BetaBillingPolicy?) =
+                billingPolicy(JsonField.ofNullable(billingPolicy))
+
+            /** Alias for calling [Builder.billingPolicy] with `billingPolicy.orElse(null)`. */
+            fun billingPolicy(billingPolicy: Optional<BetaBillingPolicy>) =
+                billingPolicy(billingPolicy.getOrNull())
+
+            /**
+             * Sets [Builder.billingPolicy] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.billingPolicy] with a well-typed [BetaBillingPolicy]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun billingPolicy(billingPolicy: JsonField<BetaBillingPolicy>) = apply {
+                this.billingPolicy = billingPolicy
+            }
 
             /**
              * Top-level cache control automatically applies a cache_control marker to the last
@@ -4248,6 +4352,7 @@ private constructor(
                     checkRequired("maxTokens", maxTokens),
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
+                    billingPolicy,
                     cacheControl,
                     compaction,
                     container,
@@ -4291,6 +4396,7 @@ private constructor(
             maxTokens()
             messages().forEach { it.validate() }
             model()
+            billingPolicy().ifPresent { it.validate() }
             cacheControl().ifPresent { it.validate() }
             compaction().ifPresent { it.validate() }
             container().ifPresent { it.validate() }
@@ -4333,6 +4439,7 @@ private constructor(
             (if (maxTokens.asKnown().isPresent) 1 else 0) +
                 (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
+                (billingPolicy.asKnown().getOrNull()?.validity() ?: 0) +
                 (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
                 (compaction.asKnown().getOrNull()?.validity() ?: 0) +
                 (container.asKnown().getOrNull()?.validity() ?: 0) +
@@ -4363,6 +4470,7 @@ private constructor(
                 maxTokens == other.maxTokens &&
                 messages == other.messages &&
                 model == other.model &&
+                billingPolicy == other.billingPolicy &&
                 cacheControl == other.cacheControl &&
                 compaction == other.compaction &&
                 container == other.container &&
@@ -4391,6 +4499,7 @@ private constructor(
                 maxTokens,
                 messages,
                 model,
+                billingPolicy,
                 cacheControl,
                 compaction,
                 container,
@@ -4418,7 +4527,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, compaction=$compaction, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, fallbackCreditToken=$fallbackCreditToken, fallbacks=$fallbacks, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, thinking=$thinking, thread=$thread, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, billingPolicy=$billingPolicy, cacheControl=$cacheControl, compaction=$compaction, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, fallbackCreditToken=$fallbackCreditToken, fallbacks=$fallbacks, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, thinking=$thinking, thread=$thread, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /** Container identifier for reuse across requests. */

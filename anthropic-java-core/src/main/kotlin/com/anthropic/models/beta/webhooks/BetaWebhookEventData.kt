@@ -80,6 +80,8 @@ private constructor(
     private val userProfileProgramStatusUpdated:
         BetaWebhookUserProfileProgramStatusUpdatedEventData? =
         null,
+    private val externalKeyFailed: BetaWebhookExternalKeyFailedEventData? = null,
+    private val externalKeyRecovered: BetaWebhookExternalKeyRecoveredEventData? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -134,6 +136,8 @@ private constructor(
             userProfileEnforcementActionResolved != null ->
                 Type.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
             userProfileProgramStatusUpdated != null -> Type.USER_PROFILE_PROGRAM_STATUS_UPDATED
+            externalKeyFailed != null -> Type.EXTERNAL_KEY_FAILED
+            externalKeyRecovered != null -> Type.EXTERNAL_KEY_RECOVERED
             else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
         }
 
@@ -187,6 +191,8 @@ private constructor(
             userProfileEnforcementActionResolved != null ->
                 userProfileEnforcementActionResolved.id()
             userProfileProgramStatusUpdated != null -> userProfileProgramStatusUpdated.id()
+            externalKeyFailed != null -> externalKeyFailed.id()
+            externalKeyRecovered != null -> externalKeyRecovered.id()
             else -> _json.getProperty<String>("id").getRequired("id")
         }
 
@@ -242,6 +248,8 @@ private constructor(
                 userProfileEnforcementActionResolved.organizationId()
             userProfileProgramStatusUpdated != null ->
                 userProfileProgramStatusUpdated.organizationId()
+            externalKeyFailed != null -> externalKeyFailed.organizationId()
+            externalKeyRecovered != null -> externalKeyRecovered.organizationId()
             else -> _json.getProperty<String>("organization_id").getRequired("organization_id")
         }
 
@@ -296,6 +304,8 @@ private constructor(
             userProfileEnforcementActionOpened != null -> Optional.empty()
             userProfileEnforcementActionResolved != null -> Optional.empty()
             userProfileProgramStatusUpdated != null -> Optional.empty()
+            externalKeyFailed != null -> Optional.empty()
+            externalKeyRecovered != null -> Optional.empty()
             else -> _json.getProperty<String>("workspace_id").asKnown()
         }
 
@@ -349,6 +359,8 @@ private constructor(
             userProfileEnforcementActionOpened != null -> Optional.empty()
             userProfileEnforcementActionResolved != null -> Optional.empty()
             userProfileProgramStatusUpdated != null -> Optional.empty()
+            externalKeyFailed != null -> Optional.empty()
+            externalKeyRecovered != null -> Optional.empty()
             else -> _json.getProperty<String>("session_thread_id").asKnown()
         }
 
@@ -402,6 +414,8 @@ private constructor(
             userProfileEnforcementActionOpened != null -> Optional.empty()
             userProfileEnforcementActionResolved != null -> Optional.empty()
             userProfileProgramStatusUpdated != null -> Optional.empty()
+            externalKeyFailed != null -> Optional.empty()
+            externalKeyRecovered != null -> Optional.empty()
             else -> _json.getProperty<String>("vault_id").asKnown()
         }
 
@@ -456,6 +470,8 @@ private constructor(
             userProfileEnforcementActionResolved != null ->
                 Optional.of(userProfileEnforcementActionResolved.enforcementActionId())
             userProfileProgramStatusUpdated != null -> Optional.empty()
+            externalKeyFailed != null -> Optional.empty()
+            externalKeyRecovered != null -> Optional.empty()
             else -> _json.getProperty<String>("enforcement_action_id").asKnown()
         }
 
@@ -604,6 +620,12 @@ private constructor(
         Optional<BetaWebhookUserProfileProgramStatusUpdatedEventData> =
         Optional.ofNullable(userProfileProgramStatusUpdated)
 
+    fun externalKeyFailed(): Optional<BetaWebhookExternalKeyFailedEventData> =
+        Optional.ofNullable(externalKeyFailed)
+
+    fun externalKeyRecovered(): Optional<BetaWebhookExternalKeyRecoveredEventData> =
+        Optional.ofNullable(externalKeyRecovered)
+
     fun isSessionCreated(): Boolean = sessionCreated != null
 
     fun isSessionPending(): Boolean = sessionPending != null
@@ -698,6 +720,10 @@ private constructor(
         userProfileEnforcementActionResolved != null
 
     fun isUserProfileProgramStatusUpdated(): Boolean = userProfileProgramStatusUpdated != null
+
+    fun isExternalKeyFailed(): Boolean = externalKeyFailed != null
+
+    fun isExternalKeyRecovered(): Boolean = externalKeyRecovered != null
 
     fun asSessionCreated(): BetaWebhookSessionCreatedEventData =
         sessionCreated.getOrThrow("sessionCreated")
@@ -836,6 +862,12 @@ private constructor(
     fun asUserProfileProgramStatusUpdated(): BetaWebhookUserProfileProgramStatusUpdatedEventData =
         userProfileProgramStatusUpdated.getOrThrow("userProfileProgramStatusUpdated")
 
+    fun asExternalKeyFailed(): BetaWebhookExternalKeyFailedEventData =
+        externalKeyFailed.getOrThrow("externalKeyFailed")
+
+    fun asExternalKeyRecovered(): BetaWebhookExternalKeyRecoveredEventData =
+        externalKeyRecovered.getOrThrow("externalKeyRecovered")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -932,6 +964,8 @@ private constructor(
                 )
             userProfileProgramStatusUpdated != null ->
                 visitor.visitUserProfileProgramStatusUpdated(userProfileProgramStatusUpdated)
+            externalKeyFailed != null -> visitor.visitExternalKeyFailed(externalKeyFailed)
+            externalKeyRecovered != null -> visitor.visitExternalKeyRecovered(externalKeyRecovered)
             else -> visitor.unknown(_json)
         }
 
@@ -1000,6 +1034,8 @@ private constructor(
             userProfileEnforcementActionResolved != null ->
                 userProfileEnforcementActionResolved.validate()
             userProfileProgramStatusUpdated != null -> userProfileProgramStatusUpdated.validate()
+            externalKeyFailed != null -> externalKeyFailed.validate()
+            externalKeyRecovered != null -> externalKeyRecovered.validate()
             else -> throw AnthropicInvalidDataException("Unknown BetaWebhookEventData: $_json")
         }
         validated = true
@@ -1070,6 +1106,8 @@ private constructor(
             userProfileEnforcementActionResolved != null ->
                 userProfileEnforcementActionResolved.validity()
             userProfileProgramStatusUpdated != null -> userProfileProgramStatusUpdated.validity()
+            externalKeyFailed != null -> externalKeyFailed.validity()
+            externalKeyRecovered != null -> externalKeyRecovered.validity()
             else -> 0
         }
 
@@ -1125,7 +1163,9 @@ private constructor(
             sessionBudgetReached == other.sessionBudgetReached &&
             userProfileEnforcementActionOpened == other.userProfileEnforcementActionOpened &&
             userProfileEnforcementActionResolved == other.userProfileEnforcementActionResolved &&
-            userProfileProgramStatusUpdated == other.userProfileProgramStatusUpdated
+            userProfileProgramStatusUpdated == other.userProfileProgramStatusUpdated &&
+            externalKeyFailed == other.externalKeyFailed &&
+            externalKeyRecovered == other.externalKeyRecovered
     }
 
     override fun hashCode(): Int =
@@ -1177,6 +1217,8 @@ private constructor(
             userProfileEnforcementActionOpened,
             userProfileEnforcementActionResolved,
             userProfileProgramStatusUpdated,
+            externalKeyFailed,
+            externalKeyRecovered,
         )
 
     override fun toString(): String =
@@ -1260,6 +1302,10 @@ private constructor(
                 "BetaWebhookEventData{userProfileEnforcementActionResolved=$userProfileEnforcementActionResolved}"
             userProfileProgramStatusUpdated != null ->
                 "BetaWebhookEventData{userProfileProgramStatusUpdated=$userProfileProgramStatusUpdated}"
+            externalKeyFailed != null ->
+                "BetaWebhookEventData{externalKeyFailed=$externalKeyFailed}"
+            externalKeyRecovered != null ->
+                "BetaWebhookEventData{externalKeyRecovered=$externalKeyRecovered}"
             _json != null -> "BetaWebhookEventData{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaWebhookEventData")
         }
@@ -1475,6 +1521,14 @@ private constructor(
         fun ofUserProfileProgramStatusUpdated(
             userProfileProgramStatusUpdated: BetaWebhookUserProfileProgramStatusUpdatedEventData
         ) = BetaWebhookEventData(userProfileProgramStatusUpdated = userProfileProgramStatusUpdated)
+
+        @JvmStatic
+        fun ofExternalKeyFailed(externalKeyFailed: BetaWebhookExternalKeyFailedEventData) =
+            BetaWebhookEventData(externalKeyFailed = externalKeyFailed)
+
+        @JvmStatic
+        fun ofExternalKeyRecovered(externalKeyRecovered: BetaWebhookExternalKeyRecoveredEventData) =
+            BetaWebhookEventData(externalKeyRecovered = externalKeyRecovered)
     }
 
     /**
@@ -1617,6 +1671,12 @@ private constructor(
 
         fun visitUserProfileProgramStatusUpdated(
             userProfileProgramStatusUpdated: BetaWebhookUserProfileProgramStatusUpdatedEventData
+        ): T
+
+        fun visitExternalKeyFailed(externalKeyFailed: BetaWebhookExternalKeyFailedEventData): T
+
+        fun visitExternalKeyRecovered(
+            externalKeyRecovered: BetaWebhookExternalKeyRecoveredEventData
         ): T
 
         /**
@@ -2007,6 +2067,22 @@ private constructor(
                             BetaWebhookEventData(userProfileProgramStatusUpdated = it, _json = json)
                         } ?: BetaWebhookEventData(_json = json)
                 }
+                "external_key.failed" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookExternalKeyFailedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(externalKeyFailed = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "external_key.recovered" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookExternalKeyRecoveredEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(externalKeyRecovered = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
             }
 
             return BetaWebhookEventData(_json = json)
@@ -2088,6 +2164,9 @@ private constructor(
                     generator.writeObject(value.userProfileEnforcementActionResolved)
                 value.userProfileProgramStatusUpdated != null ->
                     generator.writeObject(value.userProfileProgramStatusUpdated)
+                value.externalKeyFailed != null -> generator.writeObject(value.externalKeyFailed)
+                value.externalKeyRecovered != null ->
+                    generator.writeObject(value.externalKeyRecovered)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaWebhookEventData")
             }
@@ -2217,6 +2296,10 @@ private constructor(
             val USER_PROFILE_PROGRAM_STATUS_UPDATED =
                 Type(JsonField.of("user_profile.program_status_updated"))
 
+            @JvmField val EXTERNAL_KEY_FAILED = Type(JsonField.of("external_key.failed"))
+
+            @JvmField val EXTERNAL_KEY_RECOVERED = Type(JsonField.of("external_key.recovered"))
+
             @JvmStatic
             fun of(value: String): Type =
                 // Intern known values so `==` works
@@ -2270,6 +2353,8 @@ private constructor(
                     "user_profile.enforcement_action_resolved" ->
                         USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
                     "user_profile.program_status_updated" -> USER_PROFILE_PROGRAM_STATUS_UPDATED
+                    "external_key.failed" -> EXTERNAL_KEY_FAILED
+                    "external_key.recovered" -> EXTERNAL_KEY_RECOVERED
                     else -> Type(JsonField.of(value))
                 }
 
@@ -2328,6 +2413,8 @@ private constructor(
             USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
             USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
             USER_PROFILE_PROGRAM_STATUS_UPDATED,
+            EXTERNAL_KEY_FAILED,
+            EXTERNAL_KEY_RECOVERED,
         }
 
         /**
@@ -2387,6 +2474,8 @@ private constructor(
             USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
             USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
             USER_PROFILE_PROGRAM_STATUS_UPDATED,
+            EXTERNAL_KEY_FAILED,
+            EXTERNAL_KEY_RECOVERED,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -2449,6 +2538,8 @@ private constructor(
                 USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
                     Value.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
                 USER_PROFILE_PROGRAM_STATUS_UPDATED -> Value.USER_PROFILE_PROGRAM_STATUS_UPDATED
+                EXTERNAL_KEY_FAILED -> Value.EXTERNAL_KEY_FAILED
+                EXTERNAL_KEY_RECOVERED -> Value.EXTERNAL_KEY_RECOVERED
                 else -> Value._UNKNOWN
             }
 
@@ -2512,6 +2603,8 @@ private constructor(
                 USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
                     Known.USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED
                 USER_PROFILE_PROGRAM_STATUS_UPDATED -> Known.USER_PROFILE_PROGRAM_STATUS_UPDATED
+                EXTERNAL_KEY_FAILED -> Known.EXTERNAL_KEY_FAILED
+                EXTERNAL_KEY_RECOVERED -> Known.EXTERNAL_KEY_RECOVERED
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 

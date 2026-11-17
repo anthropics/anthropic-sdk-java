@@ -19,8 +19,7 @@ internal class WebhookListPageResponseTest {
                         .description("description")
                         .disabledReason("disabled_reason")
                         .addEnabledEvent(
-                            BetaOrganizationWebhookEndpoint.EnabledEvent
-                                .USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+                            BetaOrganizationWebhookEndpoint.EnabledEvent.EXTERNAL_KEY_FAILED
                         )
                         .name("name")
                         .state(BetaOrganizationWebhookEndpointState.DISABLED)
@@ -41,8 +40,7 @@ internal class WebhookListPageResponseTest {
                     .description("description")
                     .disabledReason("disabled_reason")
                     .addEnabledEvent(
-                        BetaOrganizationWebhookEndpoint.EnabledEvent
-                            .USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+                        BetaOrganizationWebhookEndpoint.EnabledEvent.EXTERNAL_KEY_FAILED
                     )
                     .name("name")
                     .state(BetaOrganizationWebhookEndpointState.DISABLED)
@@ -67,8 +65,7 @@ internal class WebhookListPageResponseTest {
                         .description("description")
                         .disabledReason("disabled_reason")
                         .addEnabledEvent(
-                            BetaOrganizationWebhookEndpoint.EnabledEvent
-                                .USER_PROFILE_ENFORCEMENT_ACTION_OPENED
+                            BetaOrganizationWebhookEndpoint.EnabledEvent.EXTERNAL_KEY_FAILED
                         )
                         .name("name")
                         .state(BetaOrganizationWebhookEndpointState.DISABLED)
