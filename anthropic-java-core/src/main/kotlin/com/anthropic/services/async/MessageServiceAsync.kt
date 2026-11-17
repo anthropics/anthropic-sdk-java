@@ -64,6 +64,10 @@ interface MessageServiceAsync {
      * @throws com.anthropic.models.messages.ThreadUnsupportedRequestException
      * @throws com.anthropic.models.messages.ToolNameConflictException
      * @throws com.anthropic.models.messages.ToolReferenceUnresolvedException
+     * @throws com.anthropic.models.userprofiles.UserProfileRequiredException
+     * @throws com.anthropic.models.LinkedOrganizationBillingUnavailableException
+     * @throws com.anthropic.models.LinkedOrganizationSpendLimitReachedException
+     * @throws com.anthropic.models.userprofiles.UserProfileNotBillableException
      * @throws com.anthropic.models.messages.ThreadNotFoundException
      * @throws com.anthropic.models.skills.SkillReadBlockedUndecryptableException
      * @throws com.anthropic.models.RequestBodyTooLargeAfterDecodingException
@@ -138,6 +142,10 @@ interface MessageServiceAsync {
      * @throws com.anthropic.models.messages.ThreadUnsupportedRequestException
      * @throws com.anthropic.models.messages.ToolNameConflictException
      * @throws com.anthropic.models.messages.ToolReferenceUnresolvedException
+     * @throws com.anthropic.models.userprofiles.UserProfileRequiredException
+     * @throws com.anthropic.models.LinkedOrganizationBillingUnavailableException
+     * @throws com.anthropic.models.LinkedOrganizationSpendLimitReachedException
+     * @throws com.anthropic.models.userprofiles.UserProfileNotBillableException
      * @throws com.anthropic.models.messages.ThreadNotFoundException
      * @throws com.anthropic.models.skills.SkillReadBlockedUndecryptableException
      * @throws com.anthropic.models.RequestBodyTooLargeAfterDecodingException

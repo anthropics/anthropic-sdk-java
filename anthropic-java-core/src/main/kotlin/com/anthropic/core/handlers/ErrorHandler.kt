@@ -19,6 +19,7 @@ import com.anthropic.errors.InternalServerException
 import com.anthropic.errors.NotFoundException
 import com.anthropic.errors.NotImplementedException
 import com.anthropic.errors.OverloadedException
+import com.anthropic.errors.PaymentRequiredException
 import com.anthropic.errors.PermissionDeniedException
 import com.anthropic.errors.PreconditionFailedException
 import com.anthropic.errors.RateLimitException
@@ -35,6 +36,8 @@ import com.anthropic.models.CmekKeyDisabledException
 import com.anthropic.models.CmekKeyNetworkBlockedException
 import com.anthropic.models.CmekKeyUnreachableException
 import com.anthropic.models.EnforcedSpendLimitReachedException
+import com.anthropic.models.LinkedOrganizationBillingUnavailableException
+import com.anthropic.models.LinkedOrganizationSpendLimitReachedException
 import com.anthropic.models.OrganizationOnHoldException
 import com.anthropic.models.OrganizationTypeNotSupportedException
 import com.anthropic.models.ParentOrganizationRequiredException
@@ -113,7 +116,9 @@ import com.anthropic.models.organization.workspaces.KeyProfileMismatchException
 import com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
 import com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
 import com.anthropic.models.skills.SkillReadBlockedUndecryptableException
+import com.anthropic.models.userprofiles.UserProfileNotBillableException
 import com.anthropic.models.userprofiles.UserProfileNotFoundException
+import com.anthropic.models.userprofiles.UserProfileRequiredException
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
@@ -166,6 +171,11 @@ internal fun errorHandler(errorBodyHandler: Handler<JsonValue>): Handler<HttpRes
                                 .build()
                         401 ->
                             throw UnauthorizedException.builder()
+                                .headers(response.headers())
+                                .body(body)
+                                .build()
+                        402 ->
+                            throw PaymentRequiredException.builder()
                                 .headers(response.headers())
                                 .body(body)
                                 .build()
@@ -484,6 +494,10 @@ private val errorCodeExceptions:
             { headers, body ->
                 UserProfileNotFoundException.builder().headers(headers).body(body).build()
             },
+        (400 to "user_profile_required") to
+            { headers, body ->
+                UserProfileRequiredException.builder().headers(headers).body(body).build()
+            },
         (400 to "workspace_api_key_limit_exceeded") to
             { headers, body ->
                 WorkspaceApiKeyLimitExceededException.builder().headers(headers).body(body).build()
@@ -495,6 +509,20 @@ private val errorCodeExceptions:
         (400 to "workspace_policy_violation") to
             { headers, body ->
                 WorkspacePolicyViolationException.builder().headers(headers).body(body).build()
+            },
+        (402 to "linked_organization_billing_unavailable") to
+            { headers, body ->
+                LinkedOrganizationBillingUnavailableException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (402 to "linked_organization_spend_limit_reached") to
+            { headers, body ->
+                LinkedOrganizationSpendLimitReachedException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
             },
         (403 to "api_key_scope_missing") to
             { headers, body ->
@@ -561,6 +589,10 @@ private val errorCodeExceptions:
                     .headers(headers)
                     .body(body)
                     .build()
+            },
+        (403 to "user_profile_not_billable") to
+            { headers, body ->
+                UserProfileNotBillableException.builder().headers(headers).body(body).build()
             },
         (404 to "environment_not_found") to
             { headers, body ->
