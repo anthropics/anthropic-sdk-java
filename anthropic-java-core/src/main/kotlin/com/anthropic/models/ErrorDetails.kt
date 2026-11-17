@@ -138,6 +138,7 @@ private constructor(
     private val skillReadBlockedUndecryptable: SkillReadBlockedUndecryptableErrorDetails? = null,
     private val requestBodyTooLargeAfterDecoding: RequestBodyTooLargeAfterDecodingErrorDetails? =
         null,
+    private val contractSpendLimitReached: ContractSpendLimitReachedErrorDetails? = null,
     private val enforcedSpendLimitReached: EnforcedSpendLimitReachedErrorDetails? = null,
     private val rampLimitExceeded: RampLimitExceededErrorDetails? = null,
     private val cmekKeyUnreachable: CmekKeyUnreachableErrorDetails? = null,
@@ -254,6 +255,7 @@ private constructor(
             skillReadBlockedUndecryptable != null -> ErrorCode.SKILL_READ_BLOCKED_UNDECRYPTABLE
             requestBodyTooLargeAfterDecoding != null ->
                 ErrorCode.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
+            contractSpendLimitReached != null -> ErrorCode.CONTRACT_SPEND_LIMIT_REACHED
             enforcedSpendLimitReached != null -> ErrorCode.ENFORCED_SPEND_LIMIT_REACHED
             rampLimitExceeded != null -> ErrorCode.RAMP_LIMIT_EXCEEDED
             cmekKeyUnreachable != null -> ErrorCode.CMEK_KEY_UNREACHABLE
@@ -358,6 +360,7 @@ private constructor(
             threadNotFound != null -> Optional.empty()
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
+            contractSpendLimitReached != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
@@ -454,6 +457,7 @@ private constructor(
             threadNotFound != null -> Optional.empty()
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
+            contractSpendLimitReached != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
@@ -550,6 +554,7 @@ private constructor(
             threadNotFound != null -> Optional.empty()
             skillReadBlockedUndecryptable != null -> Optional.empty()
             requestBodyTooLargeAfterDecoding != null -> Optional.empty()
+            contractSpendLimitReached != null -> Optional.empty()
             enforcedSpendLimitReached != null -> Optional.empty()
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
@@ -803,6 +808,10 @@ private constructor(
     /** The compressed request body exceeds the request size limit once decoded. */
     fun requestBodyTooLargeAfterDecoding(): Optional<RequestBodyTooLargeAfterDecodingErrorDetails> =
         Optional.ofNullable(requestBodyTooLargeAfterDecoding)
+
+    /** The organization has reached the spend limit of its contract. */
+    fun contractSpendLimitReached(): Optional<ContractSpendLimitReachedErrorDetails> =
+        Optional.ofNullable(contractSpendLimitReached)
 
     /** The organization has crossed the monthly API usage threshold of its API tier. */
     fun enforcedSpendLimitReached(): Optional<EnforcedSpendLimitReachedErrorDetails> =
@@ -1239,6 +1248,8 @@ private constructor(
 
     fun isRequestBodyTooLargeAfterDecoding(): Boolean = requestBodyTooLargeAfterDecoding != null
 
+    fun isContractSpendLimitReached(): Boolean = contractSpendLimitReached != null
+
     fun isEnforcedSpendLimitReached(): Boolean = enforcedSpendLimitReached != null
 
     fun isRampLimitExceeded(): Boolean = rampLimitExceeded != null
@@ -1549,6 +1560,10 @@ private constructor(
     /** The compressed request body exceeds the request size limit once decoded. */
     fun asRequestBodyTooLargeAfterDecoding(): RequestBodyTooLargeAfterDecodingErrorDetails =
         requestBodyTooLargeAfterDecoding.getOrThrow("requestBodyTooLargeAfterDecoding")
+
+    /** The organization has reached the spend limit of its contract. */
+    fun asContractSpendLimitReached(): ContractSpendLimitReachedErrorDetails =
+        contractSpendLimitReached.getOrThrow("contractSpendLimitReached")
 
     /** The organization has crossed the monthly API usage threshold of its API tier. */
     fun asEnforcedSpendLimitReached(): EnforcedSpendLimitReachedErrorDetails =
@@ -2014,6 +2029,8 @@ private constructor(
                 visitor.visitSkillReadBlockedUndecryptable(skillReadBlockedUndecryptable)
             requestBodyTooLargeAfterDecoding != null ->
                 visitor.visitRequestBodyTooLargeAfterDecoding(requestBodyTooLargeAfterDecoding)
+            contractSpendLimitReached != null ->
+                visitor.visitContractSpendLimitReached(contractSpendLimitReached)
             enforcedSpendLimitReached != null ->
                 visitor.visitEnforcedSpendLimitReached(enforcedSpendLimitReached)
             rampLimitExceeded != null -> visitor.visitRampLimitExceeded(rampLimitExceeded)
@@ -2171,6 +2188,7 @@ private constructor(
             threadNotFound != null -> threadNotFound.validate()
             skillReadBlockedUndecryptable != null -> skillReadBlockedUndecryptable.validate()
             requestBodyTooLargeAfterDecoding != null -> requestBodyTooLargeAfterDecoding.validate()
+            contractSpendLimitReached != null -> contractSpendLimitReached.validate()
             enforcedSpendLimitReached != null -> enforcedSpendLimitReached.validate()
             rampLimitExceeded != null -> rampLimitExceeded.validate()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validate()
@@ -2291,6 +2309,7 @@ private constructor(
             threadNotFound != null -> threadNotFound.validity()
             skillReadBlockedUndecryptable != null -> skillReadBlockedUndecryptable.validity()
             requestBodyTooLargeAfterDecoding != null -> requestBodyTooLargeAfterDecoding.validity()
+            contractSpendLimitReached != null -> contractSpendLimitReached.validity()
             enforcedSpendLimitReached != null -> enforcedSpendLimitReached.validity()
             rampLimitExceeded != null -> rampLimitExceeded.validity()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validity()
@@ -2397,6 +2416,7 @@ private constructor(
             threadNotFound == other.threadNotFound &&
             skillReadBlockedUndecryptable == other.skillReadBlockedUndecryptable &&
             requestBodyTooLargeAfterDecoding == other.requestBodyTooLargeAfterDecoding &&
+            contractSpendLimitReached == other.contractSpendLimitReached &&
             enforcedSpendLimitReached == other.enforcedSpendLimitReached &&
             rampLimitExceeded == other.rampLimitExceeded &&
             cmekKeyUnreachable == other.cmekKeyUnreachable &&
@@ -2493,6 +2513,7 @@ private constructor(
             threadNotFound,
             skillReadBlockedUndecryptable,
             requestBodyTooLargeAfterDecoding,
+            contractSpendLimitReached,
             enforcedSpendLimitReached,
             rampLimitExceeded,
             cmekKeyUnreachable,
@@ -2613,6 +2634,8 @@ private constructor(
                 "ErrorDetails{skillReadBlockedUndecryptable=$skillReadBlockedUndecryptable}"
             requestBodyTooLargeAfterDecoding != null ->
                 "ErrorDetails{requestBodyTooLargeAfterDecoding=$requestBodyTooLargeAfterDecoding}"
+            contractSpendLimitReached != null ->
+                "ErrorDetails{contractSpendLimitReached=$contractSpendLimitReached}"
             enforcedSpendLimitReached != null ->
                 "ErrorDetails{enforcedSpendLimitReached=$enforcedSpendLimitReached}"
             rampLimitExceeded != null -> "ErrorDetails{rampLimitExceeded=$rampLimitExceeded}"
@@ -2960,6 +2983,12 @@ private constructor(
         fun ofRequestBodyTooLargeAfterDecoding(
             requestBodyTooLargeAfterDecoding: RequestBodyTooLargeAfterDecodingErrorDetails
         ) = ErrorDetails(requestBodyTooLargeAfterDecoding = requestBodyTooLargeAfterDecoding)
+
+        /** The organization has reached the spend limit of its contract. */
+        @JvmStatic
+        fun ofContractSpendLimitReached(
+            contractSpendLimitReached: ContractSpendLimitReachedErrorDetails
+        ) = ErrorDetails(contractSpendLimitReached = contractSpendLimitReached)
 
         /** The organization has crossed the monthly API usage threshold of its API tier. */
         @JvmStatic
@@ -3742,6 +3771,11 @@ private constructor(
             requestBodyTooLargeAfterDecoding: RequestBodyTooLargeAfterDecodingErrorDetails
         ): T
 
+        /** The organization has reached the spend limit of its contract. */
+        fun visitContractSpendLimitReached(
+            contractSpendLimitReached: ContractSpendLimitReachedErrorDetails
+        ): T
+
         /** The organization has crossed the monthly API usage threshold of its API tier. */
         fun visitEnforcedSpendLimitReached(
             enforcedSpendLimitReached: EnforcedSpendLimitReachedErrorDetails
@@ -4388,6 +4422,14 @@ private constructor(
                         ?.let { ErrorDetails(requestBodyTooLargeAfterDecoding = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "contract_spend_limit_reached" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ContractSpendLimitReachedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(contractSpendLimitReached = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "enforced_spend_limit_reached" -> {
                     return tryDeserialize(
                             node,
@@ -4890,6 +4932,8 @@ private constructor(
                     generator.writeObject(value.skillReadBlockedUndecryptable)
                 value.requestBodyTooLargeAfterDecoding != null ->
                     generator.writeObject(value.requestBodyTooLargeAfterDecoding)
+                value.contractSpendLimitReached != null ->
+                    generator.writeObject(value.contractSpendLimitReached)
                 value.enforcedSpendLimitReached != null ->
                     generator.writeObject(value.enforcedSpendLimitReached)
                 value.rampLimitExceeded != null -> generator.writeObject(value.rampLimitExceeded)
@@ -5114,6 +5158,10 @@ private constructor(
                 ErrorCode(JsonField.of("request_body_too_large_after_decoding"))
 
             @JvmField
+            val CONTRACT_SPEND_LIMIT_REACHED =
+                ErrorCode(JsonField.of("contract_spend_limit_reached"))
+
+            @JvmField
             val ENFORCED_SPEND_LIMIT_REACHED =
                 ErrorCode(JsonField.of("enforced_spend_limit_reached"))
 
@@ -5333,6 +5381,7 @@ private constructor(
                     "thread_not_found" -> THREAD_NOT_FOUND
                     "skill_read_blocked_undecryptable" -> SKILL_READ_BLOCKED_UNDECRYPTABLE
                     "request_body_too_large_after_decoding" -> REQUEST_BODY_TOO_LARGE_AFTER_DECODING
+                    "contract_spend_limit_reached" -> CONTRACT_SPEND_LIMIT_REACHED
                     "enforced_spend_limit_reached" -> ENFORCED_SPEND_LIMIT_REACHED
                     "ramp_limit_exceeded" -> RAMP_LIMIT_EXCEEDED
                     "cmek_key_unreachable" -> CMEK_KEY_UNREACHABLE
@@ -5440,6 +5489,7 @@ private constructor(
             THREAD_NOT_FOUND,
             SKILL_READ_BLOCKED_UNDECRYPTABLE,
             REQUEST_BODY_TOO_LARGE_AFTER_DECODING,
+            CONTRACT_SPEND_LIMIT_REACHED,
             ENFORCED_SPEND_LIMIT_REACHED,
             RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
@@ -5543,6 +5593,7 @@ private constructor(
             THREAD_NOT_FOUND,
             SKILL_READ_BLOCKED_UNDECRYPTABLE,
             REQUEST_BODY_TOO_LARGE_AFTER_DECODING,
+            CONTRACT_SPEND_LIMIT_REACHED,
             ENFORCED_SPEND_LIMIT_REACHED,
             RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
@@ -5651,6 +5702,7 @@ private constructor(
                 THREAD_NOT_FOUND -> Value.THREAD_NOT_FOUND
                 SKILL_READ_BLOCKED_UNDECRYPTABLE -> Value.SKILL_READ_BLOCKED_UNDECRYPTABLE
                 REQUEST_BODY_TOO_LARGE_AFTER_DECODING -> Value.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
+                CONTRACT_SPEND_LIMIT_REACHED -> Value.CONTRACT_SPEND_LIMIT_REACHED
                 ENFORCED_SPEND_LIMIT_REACHED -> Value.ENFORCED_SPEND_LIMIT_REACHED
                 RAMP_LIMIT_EXCEEDED -> Value.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Value.CMEK_KEY_UNREACHABLE
@@ -5763,6 +5815,7 @@ private constructor(
                 THREAD_NOT_FOUND -> Known.THREAD_NOT_FOUND
                 SKILL_READ_BLOCKED_UNDECRYPTABLE -> Known.SKILL_READ_BLOCKED_UNDECRYPTABLE
                 REQUEST_BODY_TOO_LARGE_AFTER_DECODING -> Known.REQUEST_BODY_TOO_LARGE_AFTER_DECODING
+                CONTRACT_SPEND_LIMIT_REACHED -> Known.CONTRACT_SPEND_LIMIT_REACHED
                 ENFORCED_SPEND_LIMIT_REACHED -> Known.ENFORCED_SPEND_LIMIT_REACHED
                 RAMP_LIMIT_EXCEEDED -> Known.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Known.CMEK_KEY_UNREACHABLE

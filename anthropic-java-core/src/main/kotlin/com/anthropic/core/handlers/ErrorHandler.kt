@@ -35,6 +35,7 @@ import com.anthropic.models.CmekContextUnavailableException
 import com.anthropic.models.CmekKeyDisabledException
 import com.anthropic.models.CmekKeyNetworkBlockedException
 import com.anthropic.models.CmekKeyUnreachableException
+import com.anthropic.models.ContractSpendLimitReachedException
 import com.anthropic.models.EnforcedSpendLimitReachedException
 import com.anthropic.models.LinkedOrganizationBillingUnavailableException
 import com.anthropic.models.LinkedOrganizationSpendLimitReachedException
@@ -669,6 +670,10 @@ private val errorCodeExceptions:
                     .headers(headers)
                     .body(body)
                     .build()
+            },
+        (429 to "contract_spend_limit_reached") to
+            { headers, body ->
+                ContractSpendLimitReachedException.builder().headers(headers).body(body).build()
             },
         (429 to "enforced_spend_limit_reached") to
             { headers, body ->
