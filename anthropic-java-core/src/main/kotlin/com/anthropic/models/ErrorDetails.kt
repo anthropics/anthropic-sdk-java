@@ -81,6 +81,7 @@ import com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceeded
 import com.anthropic.models.organization.workspaces.WorkspacePolicyField
 import com.anthropic.models.organization.workspaces.WorkspacePolicyViolationErrorDetails
 import com.anthropic.models.skills.SkillReadBlockedUndecryptableErrorDetails
+import com.anthropic.models.userprofiles.UserProfileBillingNotAuthorizedErrorDetails
 import com.anthropic.models.userprofiles.UserProfileNotBillableErrorDetails
 import com.anthropic.models.userprofiles.UserProfileNotFoundErrorDetails
 import com.anthropic.models.userprofiles.UserProfileRequiredErrorDetails
@@ -129,6 +130,8 @@ private constructor(
         null,
     private val linkedOrganizationSpendLimitReached:
         LinkedOrganizationSpendLimitReachedErrorDetails? =
+        null,
+    private val userProfileBillingNotAuthorized: UserProfileBillingNotAuthorizedErrorDetails? =
         null,
     private val userProfileNotBillable: UserProfileNotBillableErrorDetails? = null,
     private val threadNotFound: ThreadNotFoundErrorDetails? = null,
@@ -245,6 +248,7 @@ private constructor(
                 ErrorCode.LINKED_ORGANIZATION_BILLING_UNAVAILABLE
             linkedOrganizationSpendLimitReached != null ->
                 ErrorCode.LINKED_ORGANIZATION_SPEND_LIMIT_REACHED
+            userProfileBillingNotAuthorized != null -> ErrorCode.USER_PROFILE_BILLING_NOT_AUTHORIZED
             userProfileNotBillable != null -> ErrorCode.USER_PROFILE_NOT_BILLABLE
             threadNotFound != null -> ErrorCode.THREAD_NOT_FOUND
             skillReadBlockedUndecryptable != null -> ErrorCode.SKILL_READ_BLOCKED_UNDECRYPTABLE
@@ -349,6 +353,7 @@ private constructor(
             userProfileRequired != null -> Optional.empty()
             linkedOrganizationBillingUnavailable != null -> Optional.empty()
             linkedOrganizationSpendLimitReached != null -> Optional.empty()
+            userProfileBillingNotAuthorized != null -> Optional.empty()
             userProfileNotBillable != null -> Optional.empty()
             threadNotFound != null -> Optional.empty()
             skillReadBlockedUndecryptable != null -> Optional.empty()
@@ -444,6 +449,7 @@ private constructor(
             userProfileRequired != null -> Optional.empty()
             linkedOrganizationBillingUnavailable != null -> Optional.empty()
             linkedOrganizationSpendLimitReached != null -> Optional.empty()
+            userProfileBillingNotAuthorized != null -> Optional.empty()
             userProfileNotBillable != null -> Optional.empty()
             threadNotFound != null -> Optional.empty()
             skillReadBlockedUndecryptable != null -> Optional.empty()
@@ -539,6 +545,7 @@ private constructor(
             userProfileRequired != null -> Optional.empty()
             linkedOrganizationBillingUnavailable != null -> Optional.empty()
             linkedOrganizationSpendLimitReached != null -> Optional.empty()
+            userProfileBillingNotAuthorized != null -> Optional.empty()
             userProfileNotBillable != null -> Optional.empty()
             threadNotFound != null -> Optional.empty()
             skillReadBlockedUndecryptable != null -> Optional.empty()
@@ -764,6 +771,14 @@ private constructor(
     fun linkedOrganizationSpendLimitReached():
         Optional<LinkedOrganizationSpendLimitReachedErrorDetails> =
         Optional.ofNullable(linkedOrganizationSpendLimitReached)
+
+    /**
+     * The customer that the named user profile represents has not authorized the caller to bill
+     * them, or the authorization that the request's credential uses has ended. The response does
+     * not say which applies.
+     */
+    fun userProfileBillingNotAuthorized(): Optional<UserProfileBillingNotAuthorizedErrorDetails> =
+        Optional.ofNullable(userProfileBillingNotAuthorized)
 
     /**
      * The caller is not allowed to bill the user profile that the request names. The response gives
@@ -1214,6 +1229,8 @@ private constructor(
     fun isLinkedOrganizationSpendLimitReached(): Boolean =
         linkedOrganizationSpendLimitReached != null
 
+    fun isUserProfileBillingNotAuthorized(): Boolean = userProfileBillingNotAuthorized != null
+
     fun isUserProfileNotBillable(): Boolean = userProfileNotBillable != null
 
     fun isThreadNotFound(): Boolean = threadNotFound != null
@@ -1500,6 +1517,14 @@ private constructor(
      */
     fun asLinkedOrganizationSpendLimitReached(): LinkedOrganizationSpendLimitReachedErrorDetails =
         linkedOrganizationSpendLimitReached.getOrThrow("linkedOrganizationSpendLimitReached")
+
+    /**
+     * The customer that the named user profile represents has not authorized the caller to bill
+     * them, or the authorization that the request's credential uses has ended. The response does
+     * not say which applies.
+     */
+    fun asUserProfileBillingNotAuthorized(): UserProfileBillingNotAuthorizedErrorDetails =
+        userProfileBillingNotAuthorized.getOrThrow("userProfileBillingNotAuthorized")
 
     /**
      * The caller is not allowed to bill the user profile that the request names. The response gives
@@ -1980,6 +2005,8 @@ private constructor(
                 visitor.visitLinkedOrganizationSpendLimitReached(
                     linkedOrganizationSpendLimitReached
                 )
+            userProfileBillingNotAuthorized != null ->
+                visitor.visitUserProfileBillingNotAuthorized(userProfileBillingNotAuthorized)
             userProfileNotBillable != null ->
                 visitor.visitUserProfileNotBillable(userProfileNotBillable)
             threadNotFound != null -> visitor.visitThreadNotFound(threadNotFound)
@@ -2139,6 +2166,7 @@ private constructor(
                 linkedOrganizationBillingUnavailable.validate()
             linkedOrganizationSpendLimitReached != null ->
                 linkedOrganizationSpendLimitReached.validate()
+            userProfileBillingNotAuthorized != null -> userProfileBillingNotAuthorized.validate()
             userProfileNotBillable != null -> userProfileNotBillable.validate()
             threadNotFound != null -> threadNotFound.validate()
             skillReadBlockedUndecryptable != null -> skillReadBlockedUndecryptable.validate()
@@ -2258,6 +2286,7 @@ private constructor(
                 linkedOrganizationBillingUnavailable.validity()
             linkedOrganizationSpendLimitReached != null ->
                 linkedOrganizationSpendLimitReached.validity()
+            userProfileBillingNotAuthorized != null -> userProfileBillingNotAuthorized.validity()
             userProfileNotBillable != null -> userProfileNotBillable.validity()
             threadNotFound != null -> threadNotFound.validity()
             skillReadBlockedUndecryptable != null -> skillReadBlockedUndecryptable.validity()
@@ -2363,6 +2392,7 @@ private constructor(
             userProfileRequired == other.userProfileRequired &&
             linkedOrganizationBillingUnavailable == other.linkedOrganizationBillingUnavailable &&
             linkedOrganizationSpendLimitReached == other.linkedOrganizationSpendLimitReached &&
+            userProfileBillingNotAuthorized == other.userProfileBillingNotAuthorized &&
             userProfileNotBillable == other.userProfileNotBillable &&
             threadNotFound == other.threadNotFound &&
             skillReadBlockedUndecryptable == other.skillReadBlockedUndecryptable &&
@@ -2458,6 +2488,7 @@ private constructor(
             userProfileRequired,
             linkedOrganizationBillingUnavailable,
             linkedOrganizationSpendLimitReached,
+            userProfileBillingNotAuthorized,
             userProfileNotBillable,
             threadNotFound,
             skillReadBlockedUndecryptable,
@@ -2573,6 +2604,8 @@ private constructor(
                 "ErrorDetails{linkedOrganizationBillingUnavailable=$linkedOrganizationBillingUnavailable}"
             linkedOrganizationSpendLimitReached != null ->
                 "ErrorDetails{linkedOrganizationSpendLimitReached=$linkedOrganizationSpendLimitReached}"
+            userProfileBillingNotAuthorized != null ->
+                "ErrorDetails{userProfileBillingNotAuthorized=$userProfileBillingNotAuthorized}"
             userProfileNotBillable != null ->
                 "ErrorDetails{userProfileNotBillable=$userProfileNotBillable}"
             threadNotFound != null -> "ErrorDetails{threadNotFound=$threadNotFound}"
@@ -2886,6 +2919,16 @@ private constructor(
         fun ofLinkedOrganizationSpendLimitReached(
             linkedOrganizationSpendLimitReached: LinkedOrganizationSpendLimitReachedErrorDetails
         ) = ErrorDetails(linkedOrganizationSpendLimitReached = linkedOrganizationSpendLimitReached)
+
+        /**
+         * The customer that the named user profile represents has not authorized the caller to bill
+         * them, or the authorization that the request's credential uses has ended. The response
+         * does not say which applies.
+         */
+        @JvmStatic
+        fun ofUserProfileBillingNotAuthorized(
+            userProfileBillingNotAuthorized: UserProfileBillingNotAuthorizedErrorDetails
+        ) = ErrorDetails(userProfileBillingNotAuthorized = userProfileBillingNotAuthorized)
 
         /**
          * The caller is not allowed to bill the user profile that the request names. The response
@@ -3664,6 +3707,15 @@ private constructor(
         ): T
 
         /**
+         * The customer that the named user profile represents has not authorized the caller to bill
+         * them, or the authorization that the request's credential uses has ended. The response
+         * does not say which applies.
+         */
+        fun visitUserProfileBillingNotAuthorized(
+            userProfileBillingNotAuthorized: UserProfileBillingNotAuthorizedErrorDetails
+        ): T
+
+        /**
          * The caller is not allowed to bill the user profile that the request names. The response
          * gives no more specific error code and does not say what the reason is.
          */
@@ -4299,6 +4351,14 @@ private constructor(
                             ErrorDetails(linkedOrganizationSpendLimitReached = it, _json = json)
                         } ?: ErrorDetails(_json = json)
                 }
+                "user_profile_billing_not_authorized" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<UserProfileBillingNotAuthorizedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(userProfileBillingNotAuthorized = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "user_profile_not_billable" -> {
                     return tryDeserialize(
                             node,
@@ -4821,6 +4881,8 @@ private constructor(
                     generator.writeObject(value.linkedOrganizationBillingUnavailable)
                 value.linkedOrganizationSpendLimitReached != null ->
                     generator.writeObject(value.linkedOrganizationSpendLimitReached)
+                value.userProfileBillingNotAuthorized != null ->
+                    generator.writeObject(value.userProfileBillingNotAuthorized)
                 value.userProfileNotBillable != null ->
                     generator.writeObject(value.userProfileNotBillable)
                 value.threadNotFound != null -> generator.writeObject(value.threadNotFound)
@@ -5033,6 +5095,10 @@ private constructor(
             @JvmField
             val LINKED_ORGANIZATION_SPEND_LIMIT_REACHED =
                 ErrorCode(JsonField.of("linked_organization_spend_limit_reached"))
+
+            @JvmField
+            val USER_PROFILE_BILLING_NOT_AUTHORIZED =
+                ErrorCode(JsonField.of("user_profile_billing_not_authorized"))
 
             @JvmField
             val USER_PROFILE_NOT_BILLABLE = ErrorCode(JsonField.of("user_profile_not_billable"))
@@ -5262,6 +5328,7 @@ private constructor(
                         LINKED_ORGANIZATION_BILLING_UNAVAILABLE
                     "linked_organization_spend_limit_reached" ->
                         LINKED_ORGANIZATION_SPEND_LIMIT_REACHED
+                    "user_profile_billing_not_authorized" -> USER_PROFILE_BILLING_NOT_AUTHORIZED
                     "user_profile_not_billable" -> USER_PROFILE_NOT_BILLABLE
                     "thread_not_found" -> THREAD_NOT_FOUND
                     "skill_read_blocked_undecryptable" -> SKILL_READ_BLOCKED_UNDECRYPTABLE
@@ -5368,6 +5435,7 @@ private constructor(
             USER_PROFILE_REQUIRED,
             LINKED_ORGANIZATION_BILLING_UNAVAILABLE,
             LINKED_ORGANIZATION_SPEND_LIMIT_REACHED,
+            USER_PROFILE_BILLING_NOT_AUTHORIZED,
             USER_PROFILE_NOT_BILLABLE,
             THREAD_NOT_FOUND,
             SKILL_READ_BLOCKED_UNDECRYPTABLE,
@@ -5470,6 +5538,7 @@ private constructor(
             USER_PROFILE_REQUIRED,
             LINKED_ORGANIZATION_BILLING_UNAVAILABLE,
             LINKED_ORGANIZATION_SPEND_LIMIT_REACHED,
+            USER_PROFILE_BILLING_NOT_AUTHORIZED,
             USER_PROFILE_NOT_BILLABLE,
             THREAD_NOT_FOUND,
             SKILL_READ_BLOCKED_UNDECRYPTABLE,
@@ -5577,6 +5646,7 @@ private constructor(
                     Value.LINKED_ORGANIZATION_BILLING_UNAVAILABLE
                 LINKED_ORGANIZATION_SPEND_LIMIT_REACHED ->
                     Value.LINKED_ORGANIZATION_SPEND_LIMIT_REACHED
+                USER_PROFILE_BILLING_NOT_AUTHORIZED -> Value.USER_PROFILE_BILLING_NOT_AUTHORIZED
                 USER_PROFILE_NOT_BILLABLE -> Value.USER_PROFILE_NOT_BILLABLE
                 THREAD_NOT_FOUND -> Value.THREAD_NOT_FOUND
                 SKILL_READ_BLOCKED_UNDECRYPTABLE -> Value.SKILL_READ_BLOCKED_UNDECRYPTABLE
@@ -5688,6 +5758,7 @@ private constructor(
                     Known.LINKED_ORGANIZATION_BILLING_UNAVAILABLE
                 LINKED_ORGANIZATION_SPEND_LIMIT_REACHED ->
                     Known.LINKED_ORGANIZATION_SPEND_LIMIT_REACHED
+                USER_PROFILE_BILLING_NOT_AUTHORIZED -> Known.USER_PROFILE_BILLING_NOT_AUTHORIZED
                 USER_PROFILE_NOT_BILLABLE -> Known.USER_PROFILE_NOT_BILLABLE
                 THREAD_NOT_FOUND -> Known.THREAD_NOT_FOUND
                 SKILL_READ_BLOCKED_UNDECRYPTABLE -> Known.SKILL_READ_BLOCKED_UNDECRYPTABLE

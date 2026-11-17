@@ -116,6 +116,7 @@ import com.anthropic.models.organization.workspaces.KeyProfileMismatchException
 import com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
 import com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
 import com.anthropic.models.skills.SkillReadBlockedUndecryptableException
+import com.anthropic.models.userprofiles.UserProfileBillingNotAuthorizedException
 import com.anthropic.models.userprofiles.UserProfileNotBillableException
 import com.anthropic.models.userprofiles.UserProfileNotFoundException
 import com.anthropic.models.userprofiles.UserProfileRequiredException
@@ -586,6 +587,13 @@ private val errorCodeExceptions:
         (403 to "spend_limits_admin_api_writes_not_enabled") to
             { headers, body ->
                 BetaSpendLimitsAdminApiWritesNotEnabledException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (403 to "user_profile_billing_not_authorized") to
+            { headers, body ->
+                UserProfileBillingNotAuthorizedException.builder()
                     .headers(headers)
                     .body(body)
                     .build()

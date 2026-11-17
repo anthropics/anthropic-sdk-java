@@ -65,6 +65,7 @@ interface MessageService {
      * @throws com.anthropic.models.userprofiles.UserProfileRequiredException
      * @throws com.anthropic.models.LinkedOrganizationBillingUnavailableException
      * @throws com.anthropic.models.LinkedOrganizationSpendLimitReachedException
+     * @throws com.anthropic.models.userprofiles.UserProfileBillingNotAuthorizedException
      * @throws com.anthropic.models.userprofiles.UserProfileNotBillableException
      * @throws com.anthropic.models.messages.ThreadNotFoundException
      * @throws com.anthropic.models.skills.SkillReadBlockedUndecryptableException
@@ -139,6 +140,7 @@ interface MessageService {
      * @throws com.anthropic.models.userprofiles.UserProfileRequiredException
      * @throws com.anthropic.models.LinkedOrganizationBillingUnavailableException
      * @throws com.anthropic.models.LinkedOrganizationSpendLimitReachedException
+     * @throws com.anthropic.models.userprofiles.UserProfileBillingNotAuthorizedException
      * @throws com.anthropic.models.userprofiles.UserProfileNotBillableException
      * @throws com.anthropic.models.messages.ThreadNotFoundException
      * @throws com.anthropic.models.skills.SkillReadBlockedUndecryptableException
