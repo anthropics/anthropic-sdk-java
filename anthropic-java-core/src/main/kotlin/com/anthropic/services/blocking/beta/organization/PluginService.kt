@@ -73,6 +73,7 @@ interface PluginService {
      * @throws com.anthropic.models.CmekKeyDisabledException
      * @throws com.anthropic.models.CmekKeyNetworkBlockedException
      * @throws com.anthropic.models.beta.BetaUnsupportedCharsetException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.beta.organization.plugins.BetaPluginNameTakenException
      * @throws com.anthropic.models.beta.organization.plugins.BetaSkillNameTakenException
      * @throws com.anthropic.models.beta.organization.plugins.BetaRegistrationPendingException
@@ -162,6 +163,7 @@ interface PluginService {
      * @throws com.anthropic.models.CmekKeyDisabledException
      * @throws com.anthropic.models.CmekKeyNetworkBlockedException
      * @throws com.anthropic.models.beta.organization.plugins.BetaScanFailedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.beta.organization.plugins.BetaScanPendingException
      * @throws com.anthropic.models.beta.organization.plugins.BetaSkillNameTakenException
      */
@@ -238,6 +240,7 @@ interface PluginService {
      * Platform (Claude Console) organizations, or to organizations with HIPAA readiness enabled.
      *
      * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun delete(pluginId: String): BetaDeletedPlugin = delete(pluginId, PluginDeleteParams.none())
 
