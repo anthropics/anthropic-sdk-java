@@ -1,5 +1,34 @@
 # Changelog
 
+## [3.10.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.9.0...v3.10.0) (2026-11-17)
+
+### Features
+
+* **api:** add beta support for the billing_policy request parameter
+* **api:** add contract_spend_limit_reached error code to messages
+* **api:** add error codes for linked billing refusals
+* **api:** add the user_profile_billing_not_authorized error code
+* **api:** add webhook events for external key failure and recovery
+
+
+### Bug Fixes
+
+* **client:** keep a map's nulls in JsonValue.from
+
+  `JsonValue.from` left out every `null` inside a `Map`, at any depth, and now keeps it, so the `null` is sent. If your map holds a `null` that means "not given", leave that key out instead.
+
+
+### Chores
+
+* **docs:** clarify which AWS KMS keys a workspace can use on Claude Platform on AWS
+* **docs:** clarify which credential work get, update and list accept
+* **docs:** clarify which uploads a plugin pin holds back
+* **docs:** note that a plugin scan's reason also covers errored scans
+
+  `content_scan.reason` on an errored scan now says why there is no verdict. It is not a security finding, so code that treats any `reason` as a concern should also check `status`.
+
+* **internal:** give Gradle and the Kotlin compiler daemon more heap
+
 ## [3.9.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.8.0...v3.9.0) (2026-11-16)
 
 ### Features
