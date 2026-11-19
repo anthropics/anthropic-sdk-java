@@ -97,6 +97,8 @@ interface InstallationSettingService {
      * without it returns `404`, exactly as if the endpoint did not exist. The Plugins API is in
      * beta and is available to Claude Enterprise organizations only. It is not available to Claude
      * Platform (Claude Console) organizations, or to organizations with HIPAA readiness enabled.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun remove(
         target: String,
@@ -141,6 +143,8 @@ interface InstallationSettingService {
      * without it returns `404`, exactly as if the endpoint did not exist. The Plugins API is in
      * beta and is available to Claude Enterprise organizations only. It is not available to Claude
      * Platform (Claude Console) organizations, or to organizations with HIPAA readiness enabled.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun set(target: String, params: InstallationSettingSetParams): BetaPluginInstallationSetting =
         set(target, params, RequestOptions.none())

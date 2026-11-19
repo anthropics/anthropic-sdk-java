@@ -19,6 +19,8 @@ import com.anthropic.services.blocking.beta.organization.AnalyticsService
 import com.anthropic.services.blocking.beta.organization.AnalyticsServiceImpl
 import com.anthropic.services.blocking.beta.organization.ApiKeyService
 import com.anthropic.services.blocking.beta.organization.ApiKeyServiceImpl
+import com.anthropic.services.blocking.beta.organization.ClaudeCodeService
+import com.anthropic.services.blocking.beta.organization.ClaudeCodeServiceImpl
 import com.anthropic.services.blocking.beta.organization.ClaudeTagService
 import com.anthropic.services.blocking.beta.organization.ClaudeTagServiceImpl
 import com.anthropic.services.blocking.beta.organization.ComplianceSettingService
@@ -102,6 +104,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
     private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptions) }
 
+    private val claudeCode: ClaudeCodeService by lazy { ClaudeCodeServiceImpl(clientOptions) }
+
     private val claudeTag: ClaudeTagService by lazy { ClaudeTagServiceImpl(clientOptions) }
 
     override fun withRawResponse(): OrganizationService.WithRawResponse = withRawResponse
@@ -142,6 +146,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
     override fun telemetryDestinations(): TelemetryDestinationService = telemetryDestinations
 
     override fun webhooks(): WebhookService = webhooks
+
+    override fun claudeCode(): ClaudeCodeService = claudeCode
 
     override fun claudeTag(): ClaudeTagService = claudeTag
 
@@ -226,6 +232,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
             WebhookServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val claudeCode: ClaudeCodeService.WithRawResponse by lazy {
+            ClaudeCodeServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val claudeTag: ClaudeTagService.WithRawResponse by lazy {
             ClaudeTagServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -273,6 +283,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
             telemetryDestinations
 
         override fun webhooks(): WebhookService.WithRawResponse = webhooks
+
+        override fun claudeCode(): ClaudeCodeService.WithRawResponse = claudeCode
 
         override fun claudeTag(): ClaudeTagService.WithRawResponse = claudeTag
 

@@ -68,6 +68,28 @@ internal class BetaRefusalFallbackInterceptorTest {
 
     @ParameterizedTest
     @ValueSource(booleans = [false, true])
+    fun ignoresStopDetailsThatAreNotARefusal(async: Boolean) {
+        val httpClient =
+            FakeHttpClient(
+                refusal("primary-model", "credit-token", stopDetailsType = "other"),
+                message("fallback-model"),
+            )
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        val requestOptions =
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build()
+        interceptedClient.execute(messagesRequest(), requestOptions, async)
+
+        assertThat(httpClient.models()).containsExactly("primary-model", "fallback-model")
+        assertThat(httpClient.bodies[1].fallbackCreditToken()).isEmpty
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
     fun prependsAFallbackSeamBlockToAServedRetry(async: Boolean) {
         val httpClient =
             FakeHttpClient(refusal("primary-model", "credit-token"), message("fallback-model"))
@@ -1422,7 +1444,11 @@ internal class BetaRefusalFallbackInterceptorTest {
         """
             .trimIndent()
 
-    private fun refusal(model: String, fallbackCreditToken: String? = null): String =
+    private fun refusal(
+        model: String,
+        fallbackCreditToken: String? = null,
+        stopDetailsType: String = "refusal",
+    ): String =
         """
         {
           "id": "msg_1",
@@ -1432,7 +1458,7 @@ internal class BetaRefusalFallbackInterceptorTest {
           "content": [],
           "stop_reason": "refusal",
           "stop_details": {
-            "type": "refusal",
+            "type": "$stopDetailsType",
             "reason": "other",
             "explanation": null,
             "fallback_credit_token": ${fallbackCreditToken?.let { "\"$it\"" }}

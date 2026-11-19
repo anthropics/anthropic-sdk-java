@@ -716,7 +716,8 @@ private constructor(
         try {
             val message = response.json(BetaMessage::class.java)
             if (message.stopReason().map(BetaStopReason.REFUSAL::equals).orElse(false)) {
-                message.stopDetails().flatMap(BetaRefusalStopDetails::fallbackCreditToken)
+                Optional.ofNullable(refusalStopDetails(response.json(ObjectNode::class.java)))
+                    .flatMap(BetaRefusalStopDetails::fallbackCreditToken)
             } else {
                 null
             }
@@ -732,11 +733,7 @@ private constructor(
      */
     private fun refusalCategory(response: HttpResponse): BetaRefusalStopDetails.Category? =
         try {
-            response
-                .json(BetaMessage::class.java)
-                .stopDetails()
-                .flatMap(BetaRefusalStopDetails::category)
-                .getOrNull()
+            refusalStopDetails(response.json(ObjectNode::class.java))?.category()?.getOrNull()
         } catch (e: AnthropicInvalidDataException) {
             null
         }
@@ -872,6 +869,12 @@ private fun ObjectNode.degradeBetweenToolsThinking() {
 //   refusal arrives; the `fallback` block's `model` field carries the serving model.
 // * Refusal text streamed before the refusal stays in the message and is resent as-is — the
 //   appended turn must match the partial output verbatim.
+
+private fun refusalStopDetails(parent: JsonNode): BetaRefusalStopDetails? =
+    parent
+        .path("stop_details")
+        .takeIf { it.path("type").asText() == "refusal" }
+        ?.let { jsonMapper().treeToValue(it, BetaRefusalStopDetails::class.java) }
 
 /**
  * Builds the `trigger` for a synthetic seam block from the refusal's stop_details category. `null`
@@ -1279,12 +1282,8 @@ private class FallbackStreamSplicer(
                             delta?._stopReason()?.asKnown()?.getOrNull() == BetaStopReason.REFUSAL
                         ) {
                             // `fallback_credit_token` is null when the refusal isn't eligible for
-                            // a fallback credit; without one we don't retry. The `stop_details`
-                            // field lenient-parses any shape, so its discriminator is re-checked.
-                            val details =
-                                delta._stopDetails().asKnown().getOrNull()?.takeIf {
-                                    it._type() == JsonValue.from("refusal")
-                                }
+                            // a fallback credit; without one we don't retry.
+                            val details = refusalStopDetails(event.path("delta"))
                             val token = details?._fallbackCreditToken()?.asKnown()?.getOrNull()
                             if (token != null && hasNext) {
                                 val usage = backfill(event.path("usage") as? ObjectNode, startUsage)
@@ -1434,7 +1433,12 @@ private class FallbackStreamSplicer(
                     refusal.delta
                         .toBuilder()
                         .stopDetails(
-                            refusal.details.toBuilder().recommendedModel(recommendedModel).build()
+                            JsonValue.from(
+                                refusal.details
+                                    .toBuilder()
+                                    .recommendedModel(recommendedModel)
+                                    .build()
+                            )
                         )
                         .build()
                 )

@@ -89,6 +89,8 @@ interface PluginMarketplaceServiceAsync {
      * without it returns `404`, exactly as if the endpoint did not exist. The Plugins API is in
      * beta and is available to Claude Enterprise organizations only. It is not available to Claude
      * Platform (Claude Console) organizations, or to organizations with HIPAA readiness enabled.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(
         marketplaceId: String,
@@ -178,6 +180,7 @@ interface PluginMarketplaceServiceAsync {
      * Platform (Claude Console) organizations, or to organizations with HIPAA readiness enabled.
      *
      * @throws com.anthropic.models.beta.BetaUnsupportedCharsetException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun validateArchive(
         params: PluginMarketplaceValidateArchiveParams
@@ -218,6 +221,8 @@ interface PluginMarketplaceServiceAsync {
      * without it returns `404`, exactly as if the endpoint did not exist. The Plugins API is in
      * beta and is available to Claude Enterprise organizations only. It is not available to Claude
      * Platform (Claude Console) organizations, or to organizations with HIPAA readiness enabled.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun validateRepository(
         params: PluginMarketplaceValidateRepositoryParams

@@ -63,7 +63,8 @@ private constructor(
     fun source(): Source = source.getRequired("source")
 
     /**
-     * The limiter type (for example, `requests_per_minute` or `input_tokens_per_minute`).
+     * The limiter type (for example, `requests_per_minute` or
+     * `input_tokens_per_minute_cache_aware`).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -199,7 +200,10 @@ private constructor(
         fun source(organization: WorkspaceRateLimitOrganizationSource) =
             source(Source.ofOrganization(organization))
 
-        /** The limiter type (for example, `requests_per_minute` or `input_tokens_per_minute`). */
+        /**
+         * The limiter type (for example, `requests_per_minute` or
+         * `input_tokens_per_minute_cache_aware`).
+         */
         fun type(type: String) = type(JsonField.of(type))
 
         /**

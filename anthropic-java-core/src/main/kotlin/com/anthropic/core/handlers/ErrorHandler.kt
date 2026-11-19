@@ -48,6 +48,7 @@ import com.anthropic.models.RequestBodyEncodingUnsupportedException
 import com.anthropic.models.RequestBodyTooLargeAfterDecodingException
 import com.anthropic.models.SandboxEgressRestrictedException
 import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaException
+import com.anthropic.models.beta.BetaRequestBodyTimeoutException
 import com.anthropic.models.beta.BetaUnsupportedCharsetException
 import com.anthropic.models.beta.environments.BetaEnvironmentArchivedException
 import com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledException
@@ -56,6 +57,11 @@ import com.anthropic.models.beta.environments.BetaEnvironmentUpdateDisabledExcep
 import com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeException
 import com.anthropic.models.beta.environments.BetaInvalidMetadataException
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedException
+import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaCmekFeatureUnsupportedException
+import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaRbacGroupManagedSettingsNotFoundException
+import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaRbacGroupOrderLimitExceededException
+import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaSettingsDocumentLimitExceededException
+import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaSettingsHistoryLimitExceededException
 import com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
 import com.anthropic.models.beta.organization.claudetag.BetaBundleAttachmentNotSupportedException
 import com.anthropic.models.beta.organization.claudetag.BetaBundleOnCallException
@@ -70,6 +76,7 @@ import com.anthropic.models.beta.organization.plugins.BetaRegistrationPendingExc
 import com.anthropic.models.beta.organization.plugins.BetaScanFailedException
 import com.anthropic.models.beta.organization.plugins.BetaScanPendingException
 import com.anthropic.models.beta.organization.plugins.BetaSkillNameTakenException
+import com.anthropic.models.beta.organization.rbacgroups.BetaRbacGroupNotFoundException
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledException
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutManagedMemberException
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutMembershipAdminException
@@ -317,6 +324,10 @@ private val errorCodeExceptions:
             { headers, body ->
                 ClaudeCodeVersionTooOldException.builder().headers(headers).body(body).build()
             },
+        (400 to "cmek_feature_unsupported") to
+            { headers, body ->
+                BetaCmekFeatureUnsupportedException.builder().headers(headers).body(body).build()
+            },
         (400 to "cmek_key_disabled") to
             { headers, body ->
                 CmekKeyDisabledException.builder().headers(headers).body(body).build()
@@ -431,6 +442,13 @@ private val errorCodeExceptions:
             { headers, body ->
                 RbacGroupGrantsOwnerAccessException.builder().headers(headers).body(body).build()
             },
+        (400 to "rbac_group_order_limit_exceeded") to
+            { headers, body ->
+                BetaRbacGroupOrderLimitExceededException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
         (400 to "rbac_group_owner_access_unconfirmed") to
             { headers, body ->
                 RbacGroupOwnerAccessUnconfirmedException.builder()
@@ -449,9 +467,27 @@ private val errorCodeExceptions:
                     .body(body)
                     .build()
             },
+        (400 to "request_body_timeout") to
+            { headers, body ->
+                BetaRequestBodyTimeoutException.builder().headers(headers).body(body).build()
+            },
         (400 to "scan_failed") to
             { headers, body ->
                 BetaScanFailedException.builder().headers(headers).body(body).build()
+            },
+        (400 to "settings_document_limit_exceeded") to
+            { headers, body ->
+                BetaSettingsDocumentLimitExceededException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (400 to "settings_history_limit_exceeded") to
+            { headers, body ->
+                BetaSettingsHistoryLimitExceededException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
             },
         (400 to "slack_channel_set_up_settings_refused") to
             { headers, body ->
@@ -610,6 +646,17 @@ private val errorCodeExceptions:
         (404 to "file_expired") to
             { headers, body ->
                 FileExpiredException.builder().headers(headers).body(body).build()
+            },
+        (404 to "rbac_group_managed_settings_not_found") to
+            { headers, body ->
+                BetaRbacGroupManagedSettingsNotFoundException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (404 to "rbac_group_not_found") to
+            { headers, body ->
+                BetaRbacGroupNotFoundException.builder().headers(headers).body(body).build()
             },
         (404 to "rbac_role_not_found") to
             { headers, body ->

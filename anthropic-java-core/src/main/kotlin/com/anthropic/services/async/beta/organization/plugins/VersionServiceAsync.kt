@@ -57,6 +57,7 @@ interface VersionServiceAsync {
      * @throws com.anthropic.models.CmekKeyDisabledException
      * @throws com.anthropic.models.CmekKeyNetworkBlockedException
      * @throws com.anthropic.models.beta.BetaUnsupportedCharsetException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.beta.organization.plugins.BetaSkillNameTakenException
      * @throws com.anthropic.models.beta.organization.plugins.BetaRegistrationPendingException
      */
@@ -191,6 +192,7 @@ interface VersionServiceAsync {
      *
      * @throws com.anthropic.models.CmekKeyDisabledException
      * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun download(version: String, params: VersionDownloadParams): CompletableFuture<HttpResponse> =
         download(version, params, RequestOptions.none())

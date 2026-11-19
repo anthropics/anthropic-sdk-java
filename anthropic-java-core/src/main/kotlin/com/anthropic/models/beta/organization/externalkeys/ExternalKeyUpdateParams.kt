@@ -34,8 +34,8 @@ import kotlin.jvm.optionals.getOrNull
  * Partially update an external key config. Omitted fields are left unchanged.
  *
  * `display_name` is always editable. `geo` and `provider_config` cannot be changed once any
- * workspace references this config, because previously encrypted data requires the original key
- * identity to decrypt.
+ * workspace references this config, and a Google Cloud key's provider and `key_name` cannot be
+ * changed at all.
  */
 class ExternalKeyUpdateParams
 private constructor(
@@ -379,7 +379,8 @@ private constructor(
      * Partial update — omitted fields are unchanged.
      *
      * `display_name` is always editable. `geo` and `provider_config` cannot be changed once any
-     * workspace references this config.
+     * workspace references this config, and a Google Cloud key's provider and `key_name` cannot be
+     * changed at all.
      */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
