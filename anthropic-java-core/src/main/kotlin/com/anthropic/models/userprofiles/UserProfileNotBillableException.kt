@@ -12,8 +12,8 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * The caller is not allowed to bill the user profile that the request names. The response gives no
- * more specific error code and does not say what the reason is.
+ * The request's user profile cannot be billed. The response gives no more specific error code and
+ * does not say what the reason is.
  */
 class UserProfileNotBillableException
 private constructor(headers: Headers, body: JsonValue, cause: Throwable?) :

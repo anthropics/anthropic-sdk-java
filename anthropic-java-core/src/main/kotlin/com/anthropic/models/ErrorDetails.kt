@@ -824,7 +824,7 @@ private constructor(
         Optional.ofNullable(linkedOrganizationSpendLimitReached)
 
     /**
-     * The customer that the named user profile represents has not authorized the caller to bill
+     * The customer that the request's user profile represents has not authorized the caller to bill
      * them, or the authorization that the request's credential uses has ended. The response does
      * not say which applies.
      */
@@ -832,8 +832,8 @@ private constructor(
         Optional.ofNullable(userProfileBillingNotAuthorized)
 
     /**
-     * The caller is not allowed to bill the user profile that the request names. The response gives
-     * no more specific error code and does not say what the reason is.
+     * The request's user profile cannot be billed. The response gives no more specific error code
+     * and does not say what the reason is.
      */
     fun userProfileNotBillable(): Optional<UserProfileNotBillableErrorDetails> =
         Optional.ofNullable(userProfileNotBillable)
@@ -1639,7 +1639,7 @@ private constructor(
         linkedOrganizationSpendLimitReached.getOrThrow("linkedOrganizationSpendLimitReached")
 
     /**
-     * The customer that the named user profile represents has not authorized the caller to bill
+     * The customer that the request's user profile represents has not authorized the caller to bill
      * them, or the authorization that the request's credential uses has ended. The response does
      * not say which applies.
      */
@@ -1647,8 +1647,8 @@ private constructor(
         userProfileBillingNotAuthorized.getOrThrow("userProfileBillingNotAuthorized")
 
     /**
-     * The caller is not allowed to bill the user profile that the request names. The response gives
-     * no more specific error code and does not say what the reason is.
+     * The request's user profile cannot be billed. The response gives no more specific error code
+     * and does not say what the reason is.
      */
     fun asUserProfileNotBillable(): UserProfileNotBillableErrorDetails =
         userProfileNotBillable.getOrThrow("userProfileNotBillable")
@@ -3153,9 +3153,9 @@ private constructor(
         ) = ErrorDetails(linkedOrganizationSpendLimitReached = linkedOrganizationSpendLimitReached)
 
         /**
-         * The customer that the named user profile represents has not authorized the caller to bill
-         * them, or the authorization that the request's credential uses has ended. The response
-         * does not say which applies.
+         * The customer that the request's user profile represents has not authorized the caller to
+         * bill them, or the authorization that the request's credential uses has ended. The
+         * response does not say which applies.
          */
         @JvmStatic
         fun ofUserProfileBillingNotAuthorized(
@@ -3163,8 +3163,8 @@ private constructor(
         ) = ErrorDetails(userProfileBillingNotAuthorized = userProfileBillingNotAuthorized)
 
         /**
-         * The caller is not allowed to bill the user profile that the request names. The response
-         * gives no more specific error code and does not say what the reason is.
+         * The request's user profile cannot be billed. The response gives no more specific error
+         * code and does not say what the reason is.
          */
         @JvmStatic
         fun ofUserProfileNotBillable(userProfileNotBillable: UserProfileNotBillableErrorDetails) =
@@ -4005,17 +4005,17 @@ private constructor(
         ): T
 
         /**
-         * The customer that the named user profile represents has not authorized the caller to bill
-         * them, or the authorization that the request's credential uses has ended. The response
-         * does not say which applies.
+         * The customer that the request's user profile represents has not authorized the caller to
+         * bill them, or the authorization that the request's credential uses has ended. The
+         * response does not say which applies.
          */
         fun visitUserProfileBillingNotAuthorized(
             userProfileBillingNotAuthorized: UserProfileBillingNotAuthorizedErrorDetails
         ): T
 
         /**
-         * The caller is not allowed to bill the user profile that the request names. The response
-         * gives no more specific error code and does not say what the reason is.
+         * The request's user profile cannot be billed. The response gives no more specific error
+         * code and does not say what the reason is.
          */
         fun visitUserProfileNotBillable(
             userProfileNotBillable: UserProfileNotBillableErrorDetails

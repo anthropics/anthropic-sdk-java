@@ -1089,6 +1089,12 @@ private constructor(
              * organization to bill it, the request is rejected rather than billed to you. Omit the
              * field, or send `"bill_to": "self"` (the default), to be billed as usual.
              *
+             * Message Batches does not currently support billing the customer behind a user
+             * profile. In a batch, omit the field or send `"bill_to": "self"`. A request in a batch
+             * that sets `"bill_to": "user_profile"` gets an `errored` result with an
+             * `invalid_request_error`, nobody is billed for it, and the batch's other requests run
+             * as usual.
+             *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
@@ -2001,6 +2007,12 @@ private constructor(
                  * profile, or has not allowed your organization to bill it, the request is rejected
                  * rather than billed to you. Omit the field, or send `"bill_to": "self"` (the
                  * default), to be billed as usual.
+                 *
+                 * Message Batches does not currently support billing the customer behind a user
+                 * profile. In a batch, omit the field or send `"bill_to": "self"`. A request in a
+                 * batch that sets `"bill_to": "user_profile"` gets an `errored` result with an
+                 * `invalid_request_error`, nobody is billed for it, and the batch's other requests
+                 * run as usual.
                  */
                 fun billingPolicy(billingPolicy: BetaBillingPolicy?) =
                     billingPolicy(JsonField.ofNullable(billingPolicy))
