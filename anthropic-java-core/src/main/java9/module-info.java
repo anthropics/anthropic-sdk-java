@@ -63,6 +63,10 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.organization.analytics.users;
     exports com.anthropic.models.beta.organization.analytics.userusagereport;
     exports com.anthropic.models.beta.organization.apikeys;
+    exports com.anthropic.models.beta.organization.claudecode.managedsettings;
+    exports com.anthropic.models.beta.organization.claudecode.managedsettings.configuration;
+    exports com.anthropic.models.beta.organization.claudecode.managedsettings.rbacgroupdefault;
+    exports com.anthropic.models.beta.organization.claudecode.managedsettings.rbacgroups;
     exports com.anthropic.models.beta.organization.claudetag;
     exports com.anthropic.models.beta.organization.claudetag.bundles;
     exports com.anthropic.models.beta.organization.claudetag.bundles.targets;
@@ -160,6 +164,8 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.beta.organization.analytics;
     exports com.anthropic.services.async.beta.organization.analytics.apps;
     exports com.anthropic.services.async.beta.organization.analytics.apps.chat;
+    exports com.anthropic.services.async.beta.organization.claudecode;
+    exports com.anthropic.services.async.beta.organization.claudecode.managedsettings;
     exports com.anthropic.services.async.beta.organization.claudetag;
     exports com.anthropic.services.async.beta.organization.claudetag.bundles;
     exports com.anthropic.services.async.beta.organization.federation;
@@ -201,6 +207,8 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.beta.organization.analytics;
     exports com.anthropic.services.blocking.beta.organization.analytics.apps;
     exports com.anthropic.services.blocking.beta.organization.analytics.apps.chat;
+    exports com.anthropic.services.blocking.beta.organization.claudecode;
+    exports com.anthropic.services.blocking.beta.organization.claudecode.managedsettings;
     exports com.anthropic.services.blocking.beta.organization.claudetag;
     exports com.anthropic.services.blocking.beta.organization.claudetag.bundles;
     exports com.anthropic.services.blocking.beta.organization.federation;

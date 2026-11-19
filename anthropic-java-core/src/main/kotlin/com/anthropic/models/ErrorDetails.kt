@@ -10,6 +10,7 @@ import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaErrorDetails
+import com.anthropic.models.beta.BetaRequestBodyTimeoutErrorDetails
 import com.anthropic.models.beta.BetaUnsupportedCharsetErrorDetails
 import com.anthropic.models.beta.environments.BetaEnvironmentArchivedErrorDetails
 import com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledErrorDetails
@@ -19,6 +20,11 @@ import com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeErrorDe
 import com.anthropic.models.beta.environments.BetaInvalidMetadataErrorDetails
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedErrorDetails
 import com.anthropic.models.beta.environments.work.BetaWorkLeaseState
+import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaCmekFeatureUnsupportedErrorDetails
+import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaRbacGroupManagedSettingsNotFoundErrorDetails
+import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaRbacGroupOrderLimitExceededErrorDetails
+import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaSettingsDocumentLimitExceededErrorDetails
+import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaSettingsHistoryLimitExceededErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaBundleAttachmentNotSupportedErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaBundleOnCallErrorDetails
@@ -33,6 +39,7 @@ import com.anthropic.models.beta.organization.plugins.BetaRegistrationPendingErr
 import com.anthropic.models.beta.organization.plugins.BetaScanFailedErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaScanPendingErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaSkillNameTakenErrorDetails
+import com.anthropic.models.beta.organization.rbacgroups.BetaRbacGroupNotFoundErrorDetails
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitsAdminApiWritesNotEnabledErrorDetails
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutManagedMemberErrorDetails
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutMembershipAdminErrorDetails
@@ -197,6 +204,16 @@ private constructor(
     private val registrationPending: BetaRegistrationPendingErrorDetails? = null,
     private val scanFailed: BetaScanFailedErrorDetails? = null,
     private val scanPending: BetaScanPendingErrorDetails? = null,
+    private val requestBodyTimeout: BetaRequestBodyTimeoutErrorDetails? = null,
+    private val settingsDocumentLimitExceeded: BetaSettingsDocumentLimitExceededErrorDetails? =
+        null,
+    private val settingsHistoryLimitExceeded: BetaSettingsHistoryLimitExceededErrorDetails? = null,
+    private val cmekFeatureUnsupported: BetaCmekFeatureUnsupportedErrorDetails? = null,
+    private val rbacGroupManagedSettingsNotFound:
+        BetaRbacGroupManagedSettingsNotFoundErrorDetails? =
+        null,
+    private val rbacGroupOrderLimitExceeded: BetaRbacGroupOrderLimitExceededErrorDetails? = null,
+    private val rbacGroupNotFound: BetaRbacGroupNotFoundErrorDetails? = null,
     private val slackChannelSetUpSettingsRefused:
         BetaSlackChannelSetUpSettingsRefusedErrorDetails? =
         null,
@@ -309,6 +326,14 @@ private constructor(
             registrationPending != null -> ErrorCode.REGISTRATION_PENDING
             scanFailed != null -> ErrorCode.SCAN_FAILED
             scanPending != null -> ErrorCode.SCAN_PENDING
+            requestBodyTimeout != null -> ErrorCode.REQUEST_BODY_TIMEOUT
+            settingsDocumentLimitExceeded != null -> ErrorCode.SETTINGS_DOCUMENT_LIMIT_EXCEEDED
+            settingsHistoryLimitExceeded != null -> ErrorCode.SETTINGS_HISTORY_LIMIT_EXCEEDED
+            cmekFeatureUnsupported != null -> ErrorCode.CMEK_FEATURE_UNSUPPORTED
+            rbacGroupManagedSettingsNotFound != null ->
+                ErrorCode.RBAC_GROUP_MANAGED_SETTINGS_NOT_FOUND
+            rbacGroupOrderLimitExceeded != null -> ErrorCode.RBAC_GROUP_ORDER_LIMIT_EXCEEDED
+            rbacGroupNotFound != null -> ErrorCode.RBAC_GROUP_NOT_FOUND
             slackChannelSetUpSettingsRefused != null ->
                 ErrorCode.SLACK_CHANNEL_SET_UP_SETTINGS_REFUSED
             apiKeyScopeMissing != null -> ErrorCode.API_KEY_SCOPE_MISSING
@@ -412,6 +437,13 @@ private constructor(
             registrationPending != null -> Optional.of(registrationPending.pluginId())
             scanFailed != null -> Optional.empty()
             scanPending != null -> Optional.empty()
+            requestBodyTimeout != null -> Optional.empty()
+            settingsDocumentLimitExceeded != null -> Optional.empty()
+            settingsHistoryLimitExceeded != null -> Optional.empty()
+            cmekFeatureUnsupported != null -> Optional.empty()
+            rbacGroupManagedSettingsNotFound != null -> Optional.empty()
+            rbacGroupOrderLimitExceeded != null -> Optional.empty()
+            rbacGroupNotFound != null -> Optional.empty()
             slackChannelSetUpSettingsRefused != null -> Optional.empty()
             apiKeyScopeMissing != null -> Optional.empty()
             claudeTagWritesNotEnabled != null -> Optional.empty()
@@ -509,6 +541,13 @@ private constructor(
             registrationPending != null -> Optional.of(registrationPending.pluginVersionId())
             scanFailed != null -> Optional.of(scanFailed.pluginVersionId())
             scanPending != null -> Optional.of(scanPending.pluginVersionId())
+            requestBodyTimeout != null -> Optional.empty()
+            settingsDocumentLimitExceeded != null -> Optional.empty()
+            settingsHistoryLimitExceeded != null -> Optional.empty()
+            cmekFeatureUnsupported != null -> Optional.empty()
+            rbacGroupManagedSettingsNotFound != null -> Optional.empty()
+            rbacGroupOrderLimitExceeded != null -> Optional.empty()
+            rbacGroupNotFound != null -> Optional.empty()
             slackChannelSetUpSettingsRefused != null -> Optional.empty()
             apiKeyScopeMissing != null -> Optional.empty()
             claudeTagWritesNotEnabled != null -> Optional.empty()
@@ -606,6 +645,13 @@ private constructor(
             registrationPending != null -> Optional.empty()
             scanFailed != null -> Optional.empty()
             scanPending != null -> Optional.empty()
+            requestBodyTimeout != null -> Optional.empty()
+            settingsDocumentLimitExceeded != null -> Optional.empty()
+            settingsHistoryLimitExceeded != null -> Optional.empty()
+            cmekFeatureUnsupported != null -> Optional.empty()
+            rbacGroupManagedSettingsNotFound != null -> Optional.empty()
+            rbacGroupOrderLimitExceeded != null -> Optional.empty()
+            rbacGroupNotFound != null -> Optional.empty()
             slackChannelSetUpSettingsRefused != null ->
                 Optional.of(slackChannelSetUpSettingsRefused.slackChannelId())
             apiKeyScopeMissing != null -> Optional.empty()
@@ -1128,6 +1174,55 @@ private constructor(
     fun scanPending(): Optional<BetaScanPendingErrorDetails> = Optional.ofNullable(scanPending)
 
     /**
+     * The request body did not finish arriving in time, so nothing was done. Send a smaller body,
+     * or send it over a faster connection.
+     */
+    fun requestBodyTimeout(): Optional<BetaRequestBodyTimeoutErrorDetails> =
+        Optional.ofNullable(requestBodyTimeout)
+
+    /**
+     * The organization has reached its limit of settings documents, counting unused ones. An owner
+     * can remove unused documents in claude.ai. Deleting a group's settings or clearing the default
+     * settings also frees a document, if nothing else uses it. None of these works once the
+     * organization has also reached its settings history limit.
+     */
+    fun settingsDocumentLimitExceeded(): Optional<BetaSettingsDocumentLimitExceededErrorDetails> =
+        Optional.ofNullable(settingsDocumentLimitExceeded)
+
+    /**
+     * The organization has reached its settings history limit, a cap on stored versions of its
+     * settings documents. Nothing in the API or claude.ai lowers the count, so contact support.
+     * Creating or deleting group settings, creating or clearing the default settings, and
+     * reordering are refused. Changing the mode still works, unless it would copy the organization
+     * settings into a new default.
+     */
+    fun settingsHistoryLimitExceeded(): Optional<BetaSettingsHistoryLimitExceededErrorDetails> =
+        Optional.ofNullable(settingsHistoryLimitExceeded)
+
+    /**
+     * This stored settings document currently cannot be read or replaced. Contact support, or, if
+     * you no longer need these settings, delete the group's settings or clear the default.
+     */
+    fun cmekFeatureUnsupported(): Optional<BetaCmekFeatureUnsupportedErrorDetails> =
+        Optional.ofNullable(cmekFeatureUnsupported)
+
+    /** This RBAC Group has no Claude Code managed settings. */
+    fun rbacGroupManagedSettingsNotFound():
+        Optional<BetaRbacGroupManagedSettingsNotFoundErrorDetails> =
+        Optional.ofNullable(rbacGroupManagedSettingsNotFound)
+
+    /**
+     * The RBAC Group order already has the most groups allowed. Delete another group's settings
+     * first.
+     */
+    fun rbacGroupOrderLimitExceeded(): Optional<BetaRbacGroupOrderLimitExceededErrorDetails> =
+        Optional.ofNullable(rbacGroupOrderLimitExceeded)
+
+    /** The RBAC Group is not one of the organization's groups. */
+    fun rbacGroupNotFound(): Optional<BetaRbacGroupNotFoundErrorDetails> =
+        Optional.ofNullable(rbacGroupNotFound)
+
+    /**
      * The request set the channel up, and `settings` was then refused. The channel stays set up
      * with every setting unset.
      */
@@ -1353,6 +1448,20 @@ private constructor(
     fun isScanFailed(): Boolean = scanFailed != null
 
     fun isScanPending(): Boolean = scanPending != null
+
+    fun isRequestBodyTimeout(): Boolean = requestBodyTimeout != null
+
+    fun isSettingsDocumentLimitExceeded(): Boolean = settingsDocumentLimitExceeded != null
+
+    fun isSettingsHistoryLimitExceeded(): Boolean = settingsHistoryLimitExceeded != null
+
+    fun isCmekFeatureUnsupported(): Boolean = cmekFeatureUnsupported != null
+
+    fun isRbacGroupManagedSettingsNotFound(): Boolean = rbacGroupManagedSettingsNotFound != null
+
+    fun isRbacGroupOrderLimitExceeded(): Boolean = rbacGroupOrderLimitExceeded != null
+
+    fun isRbacGroupNotFound(): Boolean = rbacGroupNotFound != null
 
     fun isSlackChannelSetUpSettingsRefused(): Boolean = slackChannelSetUpSettingsRefused != null
 
@@ -1882,6 +1991,54 @@ private constructor(
     fun asScanPending(): BetaScanPendingErrorDetails = scanPending.getOrThrow("scanPending")
 
     /**
+     * The request body did not finish arriving in time, so nothing was done. Send a smaller body,
+     * or send it over a faster connection.
+     */
+    fun asRequestBodyTimeout(): BetaRequestBodyTimeoutErrorDetails =
+        requestBodyTimeout.getOrThrow("requestBodyTimeout")
+
+    /**
+     * The organization has reached its limit of settings documents, counting unused ones. An owner
+     * can remove unused documents in claude.ai. Deleting a group's settings or clearing the default
+     * settings also frees a document, if nothing else uses it. None of these works once the
+     * organization has also reached its settings history limit.
+     */
+    fun asSettingsDocumentLimitExceeded(): BetaSettingsDocumentLimitExceededErrorDetails =
+        settingsDocumentLimitExceeded.getOrThrow("settingsDocumentLimitExceeded")
+
+    /**
+     * The organization has reached its settings history limit, a cap on stored versions of its
+     * settings documents. Nothing in the API or claude.ai lowers the count, so contact support.
+     * Creating or deleting group settings, creating or clearing the default settings, and
+     * reordering are refused. Changing the mode still works, unless it would copy the organization
+     * settings into a new default.
+     */
+    fun asSettingsHistoryLimitExceeded(): BetaSettingsHistoryLimitExceededErrorDetails =
+        settingsHistoryLimitExceeded.getOrThrow("settingsHistoryLimitExceeded")
+
+    /**
+     * This stored settings document currently cannot be read or replaced. Contact support, or, if
+     * you no longer need these settings, delete the group's settings or clear the default.
+     */
+    fun asCmekFeatureUnsupported(): BetaCmekFeatureUnsupportedErrorDetails =
+        cmekFeatureUnsupported.getOrThrow("cmekFeatureUnsupported")
+
+    /** This RBAC Group has no Claude Code managed settings. */
+    fun asRbacGroupManagedSettingsNotFound(): BetaRbacGroupManagedSettingsNotFoundErrorDetails =
+        rbacGroupManagedSettingsNotFound.getOrThrow("rbacGroupManagedSettingsNotFound")
+
+    /**
+     * The RBAC Group order already has the most groups allowed. Delete another group's settings
+     * first.
+     */
+    fun asRbacGroupOrderLimitExceeded(): BetaRbacGroupOrderLimitExceededErrorDetails =
+        rbacGroupOrderLimitExceeded.getOrThrow("rbacGroupOrderLimitExceeded")
+
+    /** The RBAC Group is not one of the organization's groups. */
+    fun asRbacGroupNotFound(): BetaRbacGroupNotFoundErrorDetails =
+        rbacGroupNotFound.getOrThrow("rbacGroupNotFound")
+
+    /**
      * The request set the channel up, and `settings` was then refused. The channel stays set up
      * with every setting unset.
      */
@@ -2116,6 +2273,18 @@ private constructor(
             registrationPending != null -> visitor.visitRegistrationPending(registrationPending)
             scanFailed != null -> visitor.visitScanFailed(scanFailed)
             scanPending != null -> visitor.visitScanPending(scanPending)
+            requestBodyTimeout != null -> visitor.visitRequestBodyTimeout(requestBodyTimeout)
+            settingsDocumentLimitExceeded != null ->
+                visitor.visitSettingsDocumentLimitExceeded(settingsDocumentLimitExceeded)
+            settingsHistoryLimitExceeded != null ->
+                visitor.visitSettingsHistoryLimitExceeded(settingsHistoryLimitExceeded)
+            cmekFeatureUnsupported != null ->
+                visitor.visitCmekFeatureUnsupported(cmekFeatureUnsupported)
+            rbacGroupManagedSettingsNotFound != null ->
+                visitor.visitRbacGroupManagedSettingsNotFound(rbacGroupManagedSettingsNotFound)
+            rbacGroupOrderLimitExceeded != null ->
+                visitor.visitRbacGroupOrderLimitExceeded(rbacGroupOrderLimitExceeded)
+            rbacGroupNotFound != null -> visitor.visitRbacGroupNotFound(rbacGroupNotFound)
             slackChannelSetUpSettingsRefused != null ->
                 visitor.visitSlackChannelSetUpSettingsRefused(slackChannelSetUpSettingsRefused)
             apiKeyScopeMissing != null -> visitor.visitApiKeyScopeMissing(apiKeyScopeMissing)
@@ -2242,6 +2411,13 @@ private constructor(
             registrationPending != null -> registrationPending.validate()
             scanFailed != null -> scanFailed.validate()
             scanPending != null -> scanPending.validate()
+            requestBodyTimeout != null -> requestBodyTimeout.validate()
+            settingsDocumentLimitExceeded != null -> settingsDocumentLimitExceeded.validate()
+            settingsHistoryLimitExceeded != null -> settingsHistoryLimitExceeded.validate()
+            cmekFeatureUnsupported != null -> cmekFeatureUnsupported.validate()
+            rbacGroupManagedSettingsNotFound != null -> rbacGroupManagedSettingsNotFound.validate()
+            rbacGroupOrderLimitExceeded != null -> rbacGroupOrderLimitExceeded.validate()
+            rbacGroupNotFound != null -> rbacGroupNotFound.validate()
             slackChannelSetUpSettingsRefused != null -> slackChannelSetUpSettingsRefused.validate()
             apiKeyScopeMissing != null -> apiKeyScopeMissing.validate()
             claudeTagWritesNotEnabled != null -> claudeTagWritesNotEnabled.validate()
@@ -2363,6 +2539,13 @@ private constructor(
             registrationPending != null -> registrationPending.validity()
             scanFailed != null -> scanFailed.validity()
             scanPending != null -> scanPending.validity()
+            requestBodyTimeout != null -> requestBodyTimeout.validity()
+            settingsDocumentLimitExceeded != null -> settingsDocumentLimitExceeded.validity()
+            settingsHistoryLimitExceeded != null -> settingsHistoryLimitExceeded.validity()
+            cmekFeatureUnsupported != null -> cmekFeatureUnsupported.validity()
+            rbacGroupManagedSettingsNotFound != null -> rbacGroupManagedSettingsNotFound.validity()
+            rbacGroupOrderLimitExceeded != null -> rbacGroupOrderLimitExceeded.validity()
+            rbacGroupNotFound != null -> rbacGroupNotFound.validity()
             slackChannelSetUpSettingsRefused != null -> slackChannelSetUpSettingsRefused.validity()
             apiKeyScopeMissing != null -> apiKeyScopeMissing.validity()
             claudeTagWritesNotEnabled != null -> claudeTagWritesNotEnabled.validity()
@@ -2469,6 +2652,13 @@ private constructor(
             registrationPending == other.registrationPending &&
             scanFailed == other.scanFailed &&
             scanPending == other.scanPending &&
+            requestBodyTimeout == other.requestBodyTimeout &&
+            settingsDocumentLimitExceeded == other.settingsDocumentLimitExceeded &&
+            settingsHistoryLimitExceeded == other.settingsHistoryLimitExceeded &&
+            cmekFeatureUnsupported == other.cmekFeatureUnsupported &&
+            rbacGroupManagedSettingsNotFound == other.rbacGroupManagedSettingsNotFound &&
+            rbacGroupOrderLimitExceeded == other.rbacGroupOrderLimitExceeded &&
+            rbacGroupNotFound == other.rbacGroupNotFound &&
             slackChannelSetUpSettingsRefused == other.slackChannelSetUpSettingsRefused &&
             apiKeyScopeMissing == other.apiKeyScopeMissing &&
             claudeTagWritesNotEnabled == other.claudeTagWritesNotEnabled &&
@@ -2565,6 +2755,13 @@ private constructor(
             registrationPending,
             scanFailed,
             scanPending,
+            requestBodyTimeout,
+            settingsDocumentLimitExceeded,
+            settingsHistoryLimitExceeded,
+            cmekFeatureUnsupported,
+            rbacGroupManagedSettingsNotFound,
+            rbacGroupOrderLimitExceeded,
+            rbacGroupNotFound,
             slackChannelSetUpSettingsRefused,
             apiKeyScopeMissing,
             claudeTagWritesNotEnabled,
@@ -2718,6 +2915,18 @@ private constructor(
             registrationPending != null -> "ErrorDetails{registrationPending=$registrationPending}"
             scanFailed != null -> "ErrorDetails{scanFailed=$scanFailed}"
             scanPending != null -> "ErrorDetails{scanPending=$scanPending}"
+            requestBodyTimeout != null -> "ErrorDetails{requestBodyTimeout=$requestBodyTimeout}"
+            settingsDocumentLimitExceeded != null ->
+                "ErrorDetails{settingsDocumentLimitExceeded=$settingsDocumentLimitExceeded}"
+            settingsHistoryLimitExceeded != null ->
+                "ErrorDetails{settingsHistoryLimitExceeded=$settingsHistoryLimitExceeded}"
+            cmekFeatureUnsupported != null ->
+                "ErrorDetails{cmekFeatureUnsupported=$cmekFeatureUnsupported}"
+            rbacGroupManagedSettingsNotFound != null ->
+                "ErrorDetails{rbacGroupManagedSettingsNotFound=$rbacGroupManagedSettingsNotFound}"
+            rbacGroupOrderLimitExceeded != null ->
+                "ErrorDetails{rbacGroupOrderLimitExceeded=$rbacGroupOrderLimitExceeded}"
+            rbacGroupNotFound != null -> "ErrorDetails{rbacGroupNotFound=$rbacGroupNotFound}"
             slackChannelSetUpSettingsRefused != null ->
                 "ErrorDetails{slackChannelSetUpSettingsRefused=$slackChannelSetUpSettingsRefused}"
             apiKeyScopeMissing != null -> "ErrorDetails{apiKeyScopeMissing=$apiKeyScopeMissing}"
@@ -3441,6 +3650,66 @@ private constructor(
             ofScanPending(BetaScanPendingErrorDetails.of(pluginVersionId))
 
         /**
+         * The request body did not finish arriving in time, so nothing was done. Send a smaller
+         * body, or send it over a faster connection.
+         */
+        @JvmStatic
+        fun ofRequestBodyTimeout(requestBodyTimeout: BetaRequestBodyTimeoutErrorDetails) =
+            ErrorDetails(requestBodyTimeout = requestBodyTimeout)
+
+        /**
+         * The organization has reached its limit of settings documents, counting unused ones. An
+         * owner can remove unused documents in claude.ai. Deleting a group's settings or clearing
+         * the default settings also frees a document, if nothing else uses it. None of these works
+         * once the organization has also reached its settings history limit.
+         */
+        @JvmStatic
+        fun ofSettingsDocumentLimitExceeded(
+            settingsDocumentLimitExceeded: BetaSettingsDocumentLimitExceededErrorDetails
+        ) = ErrorDetails(settingsDocumentLimitExceeded = settingsDocumentLimitExceeded)
+
+        /**
+         * The organization has reached its settings history limit, a cap on stored versions of its
+         * settings documents. Nothing in the API or claude.ai lowers the count, so contact support.
+         * Creating or deleting group settings, creating or clearing the default settings, and
+         * reordering are refused. Changing the mode still works, unless it would copy the
+         * organization settings into a new default.
+         */
+        @JvmStatic
+        fun ofSettingsHistoryLimitExceeded(
+            settingsHistoryLimitExceeded: BetaSettingsHistoryLimitExceededErrorDetails
+        ) = ErrorDetails(settingsHistoryLimitExceeded = settingsHistoryLimitExceeded)
+
+        /**
+         * This stored settings document currently cannot be read or replaced. Contact support, or,
+         * if you no longer need these settings, delete the group's settings or clear the default.
+         */
+        @JvmStatic
+        fun ofCmekFeatureUnsupported(
+            cmekFeatureUnsupported: BetaCmekFeatureUnsupportedErrorDetails
+        ) = ErrorDetails(cmekFeatureUnsupported = cmekFeatureUnsupported)
+
+        /** This RBAC Group has no Claude Code managed settings. */
+        @JvmStatic
+        fun ofRbacGroupManagedSettingsNotFound(
+            rbacGroupManagedSettingsNotFound: BetaRbacGroupManagedSettingsNotFoundErrorDetails
+        ) = ErrorDetails(rbacGroupManagedSettingsNotFound = rbacGroupManagedSettingsNotFound)
+
+        /**
+         * The RBAC Group order already has the most groups allowed. Delete another group's settings
+         * first.
+         */
+        @JvmStatic
+        fun ofRbacGroupOrderLimitExceeded(
+            rbacGroupOrderLimitExceeded: BetaRbacGroupOrderLimitExceededErrorDetails
+        ) = ErrorDetails(rbacGroupOrderLimitExceeded = rbacGroupOrderLimitExceeded)
+
+        /** The RBAC Group is not one of the organization's groups. */
+        @JvmStatic
+        fun ofRbacGroupNotFound(rbacGroupNotFound: BetaRbacGroupNotFoundErrorDetails) =
+            ErrorDetails(rbacGroupNotFound = rbacGroupNotFound)
+
+        /**
          * The request set the channel up, and `settings` was then refused. The channel stays set up
          * with every setting unset.
          */
@@ -4110,6 +4379,57 @@ private constructor(
          * scan finishes.
          */
         fun visitScanPending(scanPending: BetaScanPendingErrorDetails): T
+
+        /**
+         * The request body did not finish arriving in time, so nothing was done. Send a smaller
+         * body, or send it over a faster connection.
+         */
+        fun visitRequestBodyTimeout(requestBodyTimeout: BetaRequestBodyTimeoutErrorDetails): T
+
+        /**
+         * The organization has reached its limit of settings documents, counting unused ones. An
+         * owner can remove unused documents in claude.ai. Deleting a group's settings or clearing
+         * the default settings also frees a document, if nothing else uses it. None of these works
+         * once the organization has also reached its settings history limit.
+         */
+        fun visitSettingsDocumentLimitExceeded(
+            settingsDocumentLimitExceeded: BetaSettingsDocumentLimitExceededErrorDetails
+        ): T
+
+        /**
+         * The organization has reached its settings history limit, a cap on stored versions of its
+         * settings documents. Nothing in the API or claude.ai lowers the count, so contact support.
+         * Creating or deleting group settings, creating or clearing the default settings, and
+         * reordering are refused. Changing the mode still works, unless it would copy the
+         * organization settings into a new default.
+         */
+        fun visitSettingsHistoryLimitExceeded(
+            settingsHistoryLimitExceeded: BetaSettingsHistoryLimitExceededErrorDetails
+        ): T
+
+        /**
+         * This stored settings document currently cannot be read or replaced. Contact support, or,
+         * if you no longer need these settings, delete the group's settings or clear the default.
+         */
+        fun visitCmekFeatureUnsupported(
+            cmekFeatureUnsupported: BetaCmekFeatureUnsupportedErrorDetails
+        ): T
+
+        /** This RBAC Group has no Claude Code managed settings. */
+        fun visitRbacGroupManagedSettingsNotFound(
+            rbacGroupManagedSettingsNotFound: BetaRbacGroupManagedSettingsNotFoundErrorDetails
+        ): T
+
+        /**
+         * The RBAC Group order already has the most groups allowed. Delete another group's settings
+         * first.
+         */
+        fun visitRbacGroupOrderLimitExceeded(
+            rbacGroupOrderLimitExceeded: BetaRbacGroupOrderLimitExceededErrorDetails
+        ): T
+
+        /** The RBAC Group is not one of the organization's groups. */
+        fun visitRbacGroupNotFound(rbacGroupNotFound: BetaRbacGroupNotFoundErrorDetails): T
 
         /**
          * The request set the channel up, and `settings` was then refused. The channel stays set up
@@ -4783,6 +5103,59 @@ private constructor(
                         ?.let { ErrorDetails(scanPending = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "request_body_timeout" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaRequestBodyTimeoutErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(requestBodyTimeout = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "settings_document_limit_exceeded" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaSettingsDocumentLimitExceededErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(settingsDocumentLimitExceeded = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "settings_history_limit_exceeded" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaSettingsHistoryLimitExceededErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(settingsHistoryLimitExceeded = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "cmek_feature_unsupported" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaCmekFeatureUnsupportedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(cmekFeatureUnsupported = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "rbac_group_managed_settings_not_found" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaRbacGroupManagedSettingsNotFoundErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(rbacGroupManagedSettingsNotFound = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "rbac_group_order_limit_exceeded" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaRbacGroupOrderLimitExceededErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(rbacGroupOrderLimitExceeded = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "rbac_group_not_found" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaRbacGroupNotFoundErrorDetails>())
+                        ?.let { ErrorDetails(rbacGroupNotFound = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "slack_channel_set_up_settings_refused" -> {
                     return tryDeserialize(
                             node,
@@ -5021,6 +5394,18 @@ private constructor(
                     generator.writeObject(value.registrationPending)
                 value.scanFailed != null -> generator.writeObject(value.scanFailed)
                 value.scanPending != null -> generator.writeObject(value.scanPending)
+                value.requestBodyTimeout != null -> generator.writeObject(value.requestBodyTimeout)
+                value.settingsDocumentLimitExceeded != null ->
+                    generator.writeObject(value.settingsDocumentLimitExceeded)
+                value.settingsHistoryLimitExceeded != null ->
+                    generator.writeObject(value.settingsHistoryLimitExceeded)
+                value.cmekFeatureUnsupported != null ->
+                    generator.writeObject(value.cmekFeatureUnsupported)
+                value.rbacGroupManagedSettingsNotFound != null ->
+                    generator.writeObject(value.rbacGroupManagedSettingsNotFound)
+                value.rbacGroupOrderLimitExceeded != null ->
+                    generator.writeObject(value.rbacGroupOrderLimitExceeded)
+                value.rbacGroupNotFound != null -> generator.writeObject(value.rbacGroupNotFound)
                 value.slackChannelSetUpSettingsRefused != null ->
                     generator.writeObject(value.slackChannelSetUpSettingsRefused)
                 value.apiKeyScopeMissing != null -> generator.writeObject(value.apiKeyScopeMissing)
@@ -5311,6 +5696,29 @@ private constructor(
 
             @JvmField val SCAN_PENDING = ErrorCode(JsonField.of("scan_pending"))
 
+            @JvmField val REQUEST_BODY_TIMEOUT = ErrorCode(JsonField.of("request_body_timeout"))
+
+            @JvmField
+            val SETTINGS_DOCUMENT_LIMIT_EXCEEDED =
+                ErrorCode(JsonField.of("settings_document_limit_exceeded"))
+
+            @JvmField
+            val SETTINGS_HISTORY_LIMIT_EXCEEDED =
+                ErrorCode(JsonField.of("settings_history_limit_exceeded"))
+
+            @JvmField
+            val CMEK_FEATURE_UNSUPPORTED = ErrorCode(JsonField.of("cmek_feature_unsupported"))
+
+            @JvmField
+            val RBAC_GROUP_MANAGED_SETTINGS_NOT_FOUND =
+                ErrorCode(JsonField.of("rbac_group_managed_settings_not_found"))
+
+            @JvmField
+            val RBAC_GROUP_ORDER_LIMIT_EXCEEDED =
+                ErrorCode(JsonField.of("rbac_group_order_limit_exceeded"))
+
+            @JvmField val RBAC_GROUP_NOT_FOUND = ErrorCode(JsonField.of("rbac_group_not_found"))
+
             @JvmField
             val SLACK_CHANNEL_SET_UP_SETTINGS_REFUSED =
                 ErrorCode(JsonField.of("slack_channel_set_up_settings_refused"))
@@ -5435,6 +5843,13 @@ private constructor(
                     "registration_pending" -> REGISTRATION_PENDING
                     "scan_failed" -> SCAN_FAILED
                     "scan_pending" -> SCAN_PENDING
+                    "request_body_timeout" -> REQUEST_BODY_TIMEOUT
+                    "settings_document_limit_exceeded" -> SETTINGS_DOCUMENT_LIMIT_EXCEEDED
+                    "settings_history_limit_exceeded" -> SETTINGS_HISTORY_LIMIT_EXCEEDED
+                    "cmek_feature_unsupported" -> CMEK_FEATURE_UNSUPPORTED
+                    "rbac_group_managed_settings_not_found" -> RBAC_GROUP_MANAGED_SETTINGS_NOT_FOUND
+                    "rbac_group_order_limit_exceeded" -> RBAC_GROUP_ORDER_LIMIT_EXCEEDED
+                    "rbac_group_not_found" -> RBAC_GROUP_NOT_FOUND
                     "slack_channel_set_up_settings_refused" -> SLACK_CHANNEL_SET_UP_SETTINGS_REFUSED
                     "api_key_scope_missing" -> API_KEY_SCOPE_MISSING
                     "claude_tag_writes_not_enabled" -> CLAUDE_TAG_WRITES_NOT_ENABLED
@@ -5541,6 +5956,13 @@ private constructor(
             REGISTRATION_PENDING,
             SCAN_FAILED,
             SCAN_PENDING,
+            REQUEST_BODY_TIMEOUT,
+            SETTINGS_DOCUMENT_LIMIT_EXCEEDED,
+            SETTINGS_HISTORY_LIMIT_EXCEEDED,
+            CMEK_FEATURE_UNSUPPORTED,
+            RBAC_GROUP_MANAGED_SETTINGS_NOT_FOUND,
+            RBAC_GROUP_ORDER_LIMIT_EXCEEDED,
+            RBAC_GROUP_NOT_FOUND,
             SLACK_CHANNEL_SET_UP_SETTINGS_REFUSED,
             API_KEY_SCOPE_MISSING,
             CLAUDE_TAG_WRITES_NOT_ENABLED,
@@ -5645,6 +6067,13 @@ private constructor(
             REGISTRATION_PENDING,
             SCAN_FAILED,
             SCAN_PENDING,
+            REQUEST_BODY_TIMEOUT,
+            SETTINGS_DOCUMENT_LIMIT_EXCEEDED,
+            SETTINGS_HISTORY_LIMIT_EXCEEDED,
+            CMEK_FEATURE_UNSUPPORTED,
+            RBAC_GROUP_MANAGED_SETTINGS_NOT_FOUND,
+            RBAC_GROUP_ORDER_LIMIT_EXCEEDED,
+            RBAC_GROUP_NOT_FOUND,
             SLACK_CHANNEL_SET_UP_SETTINGS_REFUSED,
             API_KEY_SCOPE_MISSING,
             CLAUDE_TAG_WRITES_NOT_ENABLED,
@@ -5756,6 +6185,13 @@ private constructor(
                 REGISTRATION_PENDING -> Value.REGISTRATION_PENDING
                 SCAN_FAILED -> Value.SCAN_FAILED
                 SCAN_PENDING -> Value.SCAN_PENDING
+                REQUEST_BODY_TIMEOUT -> Value.REQUEST_BODY_TIMEOUT
+                SETTINGS_DOCUMENT_LIMIT_EXCEEDED -> Value.SETTINGS_DOCUMENT_LIMIT_EXCEEDED
+                SETTINGS_HISTORY_LIMIT_EXCEEDED -> Value.SETTINGS_HISTORY_LIMIT_EXCEEDED
+                CMEK_FEATURE_UNSUPPORTED -> Value.CMEK_FEATURE_UNSUPPORTED
+                RBAC_GROUP_MANAGED_SETTINGS_NOT_FOUND -> Value.RBAC_GROUP_MANAGED_SETTINGS_NOT_FOUND
+                RBAC_GROUP_ORDER_LIMIT_EXCEEDED -> Value.RBAC_GROUP_ORDER_LIMIT_EXCEEDED
+                RBAC_GROUP_NOT_FOUND -> Value.RBAC_GROUP_NOT_FOUND
                 SLACK_CHANNEL_SET_UP_SETTINGS_REFUSED -> Value.SLACK_CHANNEL_SET_UP_SETTINGS_REFUSED
                 API_KEY_SCOPE_MISSING -> Value.API_KEY_SCOPE_MISSING
                 CLAUDE_TAG_WRITES_NOT_ENABLED -> Value.CLAUDE_TAG_WRITES_NOT_ENABLED
@@ -5869,6 +6305,13 @@ private constructor(
                 REGISTRATION_PENDING -> Known.REGISTRATION_PENDING
                 SCAN_FAILED -> Known.SCAN_FAILED
                 SCAN_PENDING -> Known.SCAN_PENDING
+                REQUEST_BODY_TIMEOUT -> Known.REQUEST_BODY_TIMEOUT
+                SETTINGS_DOCUMENT_LIMIT_EXCEEDED -> Known.SETTINGS_DOCUMENT_LIMIT_EXCEEDED
+                SETTINGS_HISTORY_LIMIT_EXCEEDED -> Known.SETTINGS_HISTORY_LIMIT_EXCEEDED
+                CMEK_FEATURE_UNSUPPORTED -> Known.CMEK_FEATURE_UNSUPPORTED
+                RBAC_GROUP_MANAGED_SETTINGS_NOT_FOUND -> Known.RBAC_GROUP_MANAGED_SETTINGS_NOT_FOUND
+                RBAC_GROUP_ORDER_LIMIT_EXCEEDED -> Known.RBAC_GROUP_ORDER_LIMIT_EXCEEDED
+                RBAC_GROUP_NOT_FOUND -> Known.RBAC_GROUP_NOT_FOUND
                 SLACK_CHANNEL_SET_UP_SETTINGS_REFUSED -> Known.SLACK_CHANNEL_SET_UP_SETTINGS_REFUSED
                 API_KEY_SCOPE_MISSING -> Known.API_KEY_SCOPE_MISSING
                 CLAUDE_TAG_WRITES_NOT_ENABLED -> Known.CLAUDE_TAG_WRITES_NOT_ENABLED

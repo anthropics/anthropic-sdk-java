@@ -7,6 +7,7 @@ import com.anthropic.models.beta.organization.BetaOrganization
 import com.anthropic.models.beta.organization.OrganizationRetrieveParams
 import com.anthropic.services.async.beta.organization.AnalyticsServiceAsync
 import com.anthropic.services.async.beta.organization.ApiKeyServiceAsync
+import com.anthropic.services.async.beta.organization.ClaudeCodeServiceAsync
 import com.anthropic.services.async.beta.organization.ClaudeTagServiceAsync
 import com.anthropic.services.async.beta.organization.ComplianceSettingServiceAsync
 import com.anthropic.services.async.beta.organization.ExternalKeyServiceAsync
@@ -73,6 +74,8 @@ interface OrganizationServiceAsync {
     fun telemetryDestinations(): TelemetryDestinationServiceAsync
 
     fun webhooks(): WebhookServiceAsync
+
+    fun claudeCode(): ClaudeCodeServiceAsync
 
     fun claudeTag(): ClaudeTagServiceAsync
 
@@ -143,6 +146,8 @@ interface OrganizationServiceAsync {
         fun telemetryDestinations(): TelemetryDestinationServiceAsync.WithRawResponse
 
         fun webhooks(): WebhookServiceAsync.WithRawResponse
+
+        fun claudeCode(): ClaudeCodeServiceAsync.WithRawResponse
 
         fun claudeTag(): ClaudeTagServiceAsync.WithRawResponse
 
