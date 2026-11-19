@@ -761,6 +761,7 @@ private constructor(
                             .httpClient(interceptedHttpClient)
                             .tokenProvider(credentialResult.provider)
                             .workspaceId(credentialResult.workspaceId)
+                            .completionExecutor(completionExecutor)
                             .build()
                     is CredentialResult.Static ->
                         HeaderAuthHttpClient(interceptedHttpClient, credentialResult.credential)

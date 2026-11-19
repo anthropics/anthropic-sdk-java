@@ -1,5 +1,7 @@
 package com.anthropic.core
 
+import com.anthropic.core.auth.AccessToken
+import com.anthropic.core.auth.AccessTokenProvider
 import com.anthropic.core.auth.CredentialResult
 import com.anthropic.core.auth.InMemoryAccessTokenProvider
 import com.anthropic.core.http.Headers
@@ -15,6 +17,7 @@ import java.io.InputStream
 import java.io.PrintStream
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executor
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 import org.assertj.core.api.Assertions.assertThat
@@ -208,6 +211,41 @@ internal class ClientOptionsTest {
             .containsExactly("Bearer oauth-token-123")
         assertThat(interceptedRequests[0].headers.values("anthropic-beta"))
             .containsExactly("oauth-2025-04-20")
+    }
+
+    @Test
+    fun tokenProviderReceivesCompletionExecutor() {
+        val executors = mutableListOf<Executor>()
+        val clientOptions =
+            ClientOptions.builder()
+                .httpClient(FakeHttpClient())
+                .credentials(
+                    CredentialResult.Token(
+                        object : AccessTokenProvider {
+                            override fun get(baseUrl: String, forceRefresh: Boolean): AccessToken =
+                                throw UnsupportedOperationException()
+
+                            override fun getAsync(
+                                baseUrl: String,
+                                forceRefresh: Boolean,
+                                executor: Executor,
+                            ): CompletableFuture<AccessToken> {
+                                executors += executor
+                                return CompletableFuture.completedFuture(
+                                    AccessToken("oauth-token-123")
+                                )
+                            }
+                        }
+                    )
+                )
+                .build()
+
+        clientOptions.httpClient
+            .executeAsync(simpleGetRequest(), RequestOptions.none())
+            .get(1, TimeUnit.MINUTES)
+            .close()
+
+        assertThat(executors).containsExactly(clientOptions.completionExecutor)
     }
 
     @Test

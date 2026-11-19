@@ -4,6 +4,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.auth.AccessToken
 import com.anthropic.core.auth.AccessTokenProvider
+import com.anthropic.core.http.CompletionExecutorHttpClient
 import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import java.io.OutputStream
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 @com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)
 internal data class RefreshResponse(
@@ -99,7 +101,12 @@ internal class UserOAuthCredentials(
         return AccessToken(refreshed.accessToken!!, newExpiresAt)
     }
 
-    override fun getAsync(baseUrl: String, forceRefresh: Boolean): CompletableFuture<AccessToken> {
+    @Suppress("ForbiddenMethodCall")
+    override fun getAsync(
+        baseUrl: String,
+        forceRefresh: Boolean,
+        executor: Executor,
+    ): CompletableFuture<AccessToken> {
         val record =
             credentialsCache.readRecord()
                 ?: return failedFuture(
@@ -136,22 +143,23 @@ internal class UserOAuthCredentials(
         }
 
         val request = buildRefreshRequest(baseUrl, refreshToken, clientId)
-        return httpClient!!.executeAsync(request, TOKEN_REQUEST_OPTIONS).thenApplyAsync { response
-            ->
-            val refreshed = parseRefreshResponse(response)
-            val newExpiresAt =
-                Instant.now().plusSeconds(refreshed.expiresIn ?: DEFAULT_EXPIRES_IN_SECONDS)
-            val newRefreshToken = refreshed.refreshToken ?: refreshToken
-            credentialsCache.writeRecord(
-                CachedTokenData(
-                    type = "oauth_token",
-                    accessToken = refreshed.accessToken,
-                    expiresAt = newExpiresAt.epochSecond,
-                    refreshToken = newRefreshToken,
+        return CompletionExecutorHttpClient(httpClient!!, executor)
+            .executeAsync(request, TOKEN_REQUEST_OPTIONS)
+            .thenApply { response ->
+                val refreshed = parseRefreshResponse(response)
+                val newExpiresAt =
+                    Instant.now().plusSeconds(refreshed.expiresIn ?: DEFAULT_EXPIRES_IN_SECONDS)
+                val newRefreshToken = refreshed.refreshToken ?: refreshToken
+                credentialsCache.writeRecord(
+                    CachedTokenData(
+                        type = "oauth_token",
+                        accessToken = refreshed.accessToken,
+                        expiresAt = newExpiresAt.epochSecond,
+                        refreshToken = newRefreshToken,
+                    )
                 )
-            )
-            AccessToken(refreshed.accessToken!!, newExpiresAt)
-        }
+                AccessToken(refreshed.accessToken!!, newExpiresAt)
+            }
     }
 
     private fun <T> failedFuture(e: Throwable): CompletableFuture<T> {

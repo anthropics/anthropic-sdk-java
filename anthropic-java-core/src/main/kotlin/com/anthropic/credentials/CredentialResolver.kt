@@ -27,6 +27,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 /**
  * Implements the SDK credential-resolution chain for OAuth and federation credentials.
@@ -666,23 +667,29 @@ private constructor(
         override fun getAsync(
             baseUrl: String,
             forceRefresh: Boolean,
+            executor: Executor,
         ): CompletableFuture<AccessToken> {
             if (!forceRefresh) {
                 cache.read()?.let { cached ->
                     if (!cached.isExpired()) return CompletableFuture.completedFuture(cached)
                 }
             }
-            return delegate.getAsync(baseUrl, forceRefresh).thenApplyAsync { token ->
-                cache.writeRecord(
-                    CachedTokenData(
-                        type = "oauth_token",
-                        accessToken = token.token,
-                        expiresAt = token.expiresAt?.epochSecond,
-                        refreshToken = null,
-                    )
+            return delegate
+                .getAsync(baseUrl, forceRefresh, executor)
+                .thenApplyAsync(
+                    { token ->
+                        cache.writeRecord(
+                            CachedTokenData(
+                                type = "oauth_token",
+                                accessToken = token.token,
+                                expiresAt = token.expiresAt?.epochSecond,
+                                refreshToken = null,
+                            )
+                        )
+                        token
+                    },
+                    executor,
                 )
-                token
-            }
         }
     }
 }

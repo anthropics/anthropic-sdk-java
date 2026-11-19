@@ -5,9 +5,14 @@ import com.anthropic.core.auth.AccessToken
 import com.anthropic.core.auth.AccessTokenProvider
 import com.anthropic.internal.core.http.AuthorizingHttpClient
 import java.io.ByteArrayInputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import org.assertj.core.api.Assertions.assertThat
@@ -18,6 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource
 
 internal class AuthorizingHttpClientTest {
 
+    private val sameThreadExecutor = Executor { it.run() }
     private var openResponseCount = 0
 
     @BeforeEach
@@ -37,6 +43,7 @@ internal class AuthorizingHttpClientTest {
             AuthorizingHttpClient.builder()
                 .httpClient(httpClient)
                 .tokenProvider(tokenProvider)
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val request =
@@ -71,6 +78,7 @@ internal class AuthorizingHttpClientTest {
             AuthorizingHttpClient.builder()
                 .httpClient(httpClient)
                 .tokenProvider(tokenProvider)
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val request =
@@ -106,6 +114,7 @@ internal class AuthorizingHttpClientTest {
             AuthorizingHttpClient.builder()
                 .httpClient(httpClient)
                 .tokenProvider(tokenProvider)
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val request =
@@ -138,6 +147,7 @@ internal class AuthorizingHttpClientTest {
                 .httpClient(createMockHttpClient(200, executedRequests))
                 .tokenProvider(createTokenProvider("oauth-token-123"))
                 .workspaceId("wrkspc_client")
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val request =
@@ -164,6 +174,7 @@ internal class AuthorizingHttpClientTest {
                 .httpClient(createMockHttpClient(200, executedRequests))
                 .tokenProvider(createTokenProvider("oauth-token-123"))
                 .workspaceId("wrkspc_client")
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val request =
@@ -198,6 +209,7 @@ internal class AuthorizingHttpClientTest {
             AuthorizingHttpClient.builder()
                 .httpClient(httpClient)
                 .tokenProvider(tokenProvider)
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val request =
@@ -231,6 +243,7 @@ internal class AuthorizingHttpClientTest {
             AuthorizingHttpClient.builder()
                 .httpClient(httpClient)
                 .tokenProvider(tokenProvider)
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val nonRepeatableBody =
@@ -275,6 +288,7 @@ internal class AuthorizingHttpClientTest {
             AuthorizingHttpClient.builder()
                 .httpClient(httpClient)
                 .tokenProvider(tokenProvider)
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val request =
@@ -329,6 +343,7 @@ internal class AuthorizingHttpClientTest {
             AuthorizingHttpClient.builder()
                 .httpClient(listOf(interceptor).intercept(httpClient))
                 .tokenProvider(tokenProvider)
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val request =
@@ -376,6 +391,7 @@ internal class AuthorizingHttpClientTest {
             AuthorizingHttpClient.builder()
                 .httpClient(httpClient)
                 .tokenProvider(tokenProvider)
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         authorizingClient.close()
@@ -412,6 +428,7 @@ internal class AuthorizingHttpClientTest {
             AuthorizingHttpClient.builder()
                 .httpClient(httpClient)
                 .tokenProvider(tokenProvider)
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val request =
@@ -447,6 +464,7 @@ internal class AuthorizingHttpClientTest {
             AuthorizingHttpClient.builder()
                 .httpClient(httpClient)
                 .tokenProvider(tokenProvider)
+                .completionExecutor(sameThreadExecutor)
                 .build()
 
         val request =
@@ -465,6 +483,102 @@ internal class AuthorizingHttpClientTest {
         assertNoResponseLeaks()
     }
 
+    @Test
+    fun sendAndContinuationRunInCompletionExecutor() {
+        val stepThreadNames =
+            executeWithTokenCompletedInThread("token-provider") {
+                it.complete(AccessToken("oauth-token-123"))
+            }
+
+        assertThat(stepThreadNames)
+            .containsExactly("send" to "completion", "continuation" to "completion")
+    }
+
+    @Test
+    fun continuationRunsInCompletionExecutorWhenTokenFails() {
+        val stepThreadNames =
+            executeWithTokenCompletedInThread("token-provider") {
+                it.completeExceptionally(IOException())
+            }
+
+        assertThat(stepThreadNames).containsExactly("continuation" to "completion")
+    }
+
+    /**
+     * Executes a request with a `completionExecutor` whose thread is named `completion`, and
+     * returns each step with the name of the thread it ran in. [completeToken] runs in a new thread
+     * named [threadName], after the continuation has been chained, which would otherwise run in the
+     * thread that chains it.
+     */
+    private fun executeWithTokenCompletedInThread(
+        threadName: String,
+        completeToken: (CompletableFuture<AccessToken>) -> Unit,
+    ): List<Pair<String, String>> {
+        val completionExecutor = Executors.newSingleThreadExecutor { Thread(it, "completion") }
+        val continuationChained = CompletableFuture<Void?>()
+        val stepThreadNames = CopyOnWriteArrayList<Pair<String, String>>()
+        val tokenProvider =
+            object : AccessTokenProvider {
+                override fun get(baseUrl: String, forceRefresh: Boolean): AccessToken =
+                    throw UnsupportedOperationException()
+
+                override fun getAsync(
+                    baseUrl: String,
+                    forceRefresh: Boolean,
+                    executor: Executor,
+                ): CompletableFuture<AccessToken> {
+                    val future = CompletableFuture<AccessToken>()
+                    Thread(
+                            {
+                                continuationChained.join()
+                                completeToken(future)
+                            },
+                            threadName,
+                        )
+                        .start()
+                    return future
+                }
+            }
+        val httpClient =
+            object : HttpClient {
+                override fun execute(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse = throw UnsupportedOperationException()
+
+                override fun executeAsync(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): CompletableFuture<HttpResponse> {
+                    stepThreadNames += "send" to Thread.currentThread().name
+                    return CompletableFuture.completedFuture(createMockResponse(200))
+                }
+
+                override fun close() {}
+            }
+        val authorizingClient =
+            AuthorizingHttpClient.builder()
+                .httpClient(httpClient)
+                .tokenProvider(tokenProvider)
+                .completionExecutor(completionExecutor)
+                .build()
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl("https://api.anthropic.com")
+                .addPathSegment("messages")
+                .build()
+
+        val continuation =
+            authorizingClient.executeAsync(request).handle { _, _ ->
+                stepThreadNames += "continuation" to Thread.currentThread().name
+            }
+        continuationChained.complete(null)
+        continuation.get(1, TimeUnit.MINUTES)
+        completionExecutor.shutdown()
+        return stepThreadNames
+    }
+
     private fun createTokenProvider(
         token: String,
         onGetToken: (Boolean) -> Unit = {},
@@ -478,6 +592,7 @@ internal class AuthorizingHttpClientTest {
             override fun getAsync(
                 baseUrl: String,
                 forceRefresh: Boolean,
+                executor: Executor,
             ): CompletableFuture<AccessToken> =
                 CompletableFuture.completedFuture(get(baseUrl, forceRefresh))
         }
@@ -497,6 +612,7 @@ internal class AuthorizingHttpClientTest {
             override fun getAsync(
                 baseUrl: String,
                 forceRefresh: Boolean,
+                executor: Executor,
             ): CompletableFuture<AccessToken> =
                 CompletableFuture.completedFuture(get(baseUrl, forceRefresh))
         }

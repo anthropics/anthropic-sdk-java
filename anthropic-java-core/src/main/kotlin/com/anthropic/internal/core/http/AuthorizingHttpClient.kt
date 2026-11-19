@@ -8,6 +8,7 @@ import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -22,6 +23,7 @@ private constructor(
     private val httpClient: HttpClient,
     private val tokenCache: CachingAccessTokenProvider,
     private val workspaceId: String?,
+    private val completionExecutor: Executor,
 ) : HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
@@ -88,7 +90,8 @@ private constructor(
         request: HttpRequest,
         forceRefresh: Boolean,
     ): CompletableFuture<HttpRequest> {
-        return tokenCache.getAsync(request.baseUrl, forceRefresh).thenApply { token ->
+        return tokenCache.getAsync(request.baseUrl, forceRefresh, completionExecutor).thenApply {
+            token ->
             buildAuthorizedRequest(request, token.token)
         }
     }
@@ -122,6 +125,7 @@ private constructor(
         private var httpClient: HttpClient? = null
         private var tokenProvider: AccessTokenProvider? = null
         private var workspaceId: String? = null
+        private var completionExecutor: Executor? = null
 
         fun httpClient(httpClient: HttpClient) = apply { this.httpClient = httpClient }
 
@@ -131,11 +135,16 @@ private constructor(
 
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
+        fun completionExecutor(completionExecutor: Executor) = apply {
+            this.completionExecutor = completionExecutor
+        }
+
         fun build(): HttpClient =
             AuthorizingHttpClient(
                 checkRequired("httpClient", httpClient),
                 CachingAccessTokenProvider(checkRequired("tokenProvider", tokenProvider)),
                 workspaceId,
+                checkRequired("completionExecutor", completionExecutor),
             )
     }
 }

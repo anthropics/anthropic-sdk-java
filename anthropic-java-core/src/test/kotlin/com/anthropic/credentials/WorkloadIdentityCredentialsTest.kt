@@ -14,15 +14,21 @@ import com.anthropic.internal.credentials.WorkloadIdentityCredentials
 import com.fasterxml.jackson.module.kotlin.readValue
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.io.PrintStream
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.TimeUnit
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.junit.jupiter.api.parallel.Resources
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 
 internal class WorkloadIdentityCredentialsTest {
 
@@ -299,6 +305,87 @@ internal class WorkloadIdentityCredentialsTest {
         val betaHeader = capturedRequest!!.headers.values("anthropic-beta").joinToString(",")
         assertThat(betaHeader).contains("oauth-2025-04-20")
         assertThat(betaHeader).contains("oidc-federation-2026-04-01")
+    }
+
+    @Test
+    fun readsResponseInExecutorAsync() {
+        val executor = Executors.newSingleThreadExecutor { Thread(it, "executor") }
+        val continuationChained = CompletableFuture<Void?>()
+        val bodyThreadName = CompletableFuture<String>()
+        val response = createResponse(200, """{"access_token": "token", "expires_in": 3600}""")
+        val httpClient =
+            object : HttpClient {
+                override fun execute(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse = throw UnsupportedOperationException()
+
+                override fun executeAsync(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): CompletableFuture<HttpResponse> {
+                    val future = CompletableFuture<HttpResponse>()
+                    Thread(
+                            {
+                                continuationChained.join()
+                                future.complete(
+                                    object : HttpResponse by response {
+                                        override fun body(): InputStream {
+                                            bodyThreadName.complete(Thread.currentThread().name)
+                                            return response.body()
+                                        }
+                                    }
+                                )
+                            },
+                            "http-client",
+                        )
+                        .start()
+                    return future
+                }
+
+                override fun close() {}
+            }
+        val credentials =
+            WorkloadIdentityCredentials(
+                identityTokenProvider = InMemoryIdentityTokenProvider("identity-jwt"),
+                federationRuleId = "fdrl_123",
+                organizationId = "org_123",
+                serviceAccountId = null,
+                workspaceId = null,
+                httpClient = httpClient,
+                jsonMapper = jsonMapper(),
+            )
+
+        val token = credentials.getAsync("https://api.anthropic.com", false, executor)
+        continuationChained.complete(null)
+
+        assertThat(token.get(1, TimeUnit.MINUTES).token).isEqualTo("token")
+        assertThat(bodyThreadName).isCompletedWithValue("executor")
+        executor.shutdown()
+    }
+
+    @Test
+    fun closesResponseWhenExecutorRejectsAsync() {
+        val response = mock<HttpResponse>()
+        val credentials =
+            WorkloadIdentityCredentials(
+                identityTokenProvider = InMemoryIdentityTokenProvider("identity-jwt"),
+                federationRuleId = "fdrl_123",
+                organizationId = "org_123",
+                serviceAccountId = null,
+                workspaceId = null,
+                httpClient = MockHttpClient { response },
+                jsonMapper = jsonMapper(),
+            )
+
+        val token =
+            credentials.getAsync("https://api.anthropic.com", false) {
+                throw RejectedExecutionException()
+            }
+
+        assertThatThrownBy { token.get() }
+            .hasCauseInstanceOf(RejectedExecutionException::class.java)
+        verify(response).close()
     }
 
     /**
