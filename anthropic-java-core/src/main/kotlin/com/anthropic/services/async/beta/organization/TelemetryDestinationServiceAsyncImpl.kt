@@ -146,7 +146,10 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -192,7 +195,10 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -233,7 +239,10 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -269,7 +278,10 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -320,7 +332,10 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -362,7 +377,10 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response

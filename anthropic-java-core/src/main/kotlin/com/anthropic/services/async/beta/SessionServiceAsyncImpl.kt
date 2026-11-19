@@ -164,7 +164,10 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val call = startSessionsCreate(clientOptions, requestOptions, params)
             return traceApiCallAsync(clientOptions, call) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -205,7 +208,10 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -246,7 +252,10 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -282,7 +291,10 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -331,7 +343,10 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -373,7 +388,10 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response

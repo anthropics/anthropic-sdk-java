@@ -149,7 +149,10 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -194,7 +197,10 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -234,7 +240,10 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -269,7 +278,10 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -318,7 +330,10 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response

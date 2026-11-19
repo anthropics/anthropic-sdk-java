@@ -108,7 +108,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -153,7 +156,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -188,7 +194,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return traceRawApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response -> errorHandler.handle(response) }
             }
         }
@@ -214,7 +223,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -247,7 +259,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response

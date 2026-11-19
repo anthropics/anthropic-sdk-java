@@ -14,9 +14,9 @@ import java.util.concurrent.CompletableFuture
  * in its headers, unless the client's `propagation` is off, and with that context current, and
  * counts it as one that the call sent.
  *
- * It is the innermost client because an asynchronous step above it, such as a retry after its
- * backoff, runs where the context is no longer current. Restoring it here lets an instrumentation
- * of [httpClient] parent its attempt spans to the call span.
+ * It is the innermost client that acts on requests because an asynchronous step above it, such as a
+ * retry after its backoff, runs where the context is no longer current. Restoring it here lets an
+ * instrumentation of [httpClient] parent its attempt spans to the call span.
  */
 internal class TracingHttpClient(private val httpClient: HttpClient) : HttpClient {
 

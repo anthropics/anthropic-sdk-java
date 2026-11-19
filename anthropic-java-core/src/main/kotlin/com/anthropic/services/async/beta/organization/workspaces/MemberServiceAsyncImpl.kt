@@ -115,7 +115,10 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -157,7 +160,10 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -197,7 +203,10 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -246,7 +255,10 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response
@@ -294,7 +306,10 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .withQualifiers(mapOf("beta" to "true"))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response

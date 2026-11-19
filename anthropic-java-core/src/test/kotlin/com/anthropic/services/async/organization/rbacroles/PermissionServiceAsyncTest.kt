@@ -1,5 +1,6 @@
 package com.anthropic.services.async.organization.rbacroles
 
+import com.anthropic.CompletionExecutorAssertingInterceptor
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import org.junit.jupiter.api.Test
@@ -11,6 +12,7 @@ internal class PermissionServiceAsyncTest {
     private val client =
         AnthropicOkHttpClientAsync.builder()
             .baseUrl(TestServerExtension.BASE_URL)
+            .addInterceptor(CompletionExecutorAssertingInterceptor())
             .apiKey("my-anthropic-api-key")
             .build()
 
