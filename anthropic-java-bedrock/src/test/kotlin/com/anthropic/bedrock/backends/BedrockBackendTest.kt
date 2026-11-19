@@ -834,6 +834,33 @@ internal class BedrockBackendTest {
     }
 
     @Test
+    fun prepareRequestMovesUserProfileIdHeaderIntoBody() {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request =
+            createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
+                .toBuilder()
+                .putHeader("anthropic-user-profile-id", "uprof_1")
+                .build()
+        val preparedRequest = backend.prepareRequest(request)
+        val json = bodyToJson(jsonMapper(), preparedRequest.body().getOrNull())
+
+        assertThat(preparedRequest.headers.values("anthropic-user-profile-id")).isEmpty()
+        assertThat(json!!.get("user_profile_id").asText()).isEqualTo("uprof_1")
+    }
+
+    @Test
+    fun prepareRequestWithoutUserProfileIdAddsNoBodyField() {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request = createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
+        val preparedRequest = backend.prepareRequest(request)
+        val json = bodyToJson(jsonMapper(), preparedRequest.body().getOrNull())
+
+        assertThat(json!!.has("user_profile_id")).isFalse()
+    }
+
+    @Test
     fun authorizeRequestAlreadyAuthorized() {
         initEnv()
         val backend = BedrockBackend.fromEnv()
