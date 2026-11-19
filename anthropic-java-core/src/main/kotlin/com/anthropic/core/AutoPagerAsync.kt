@@ -71,9 +71,7 @@ private constructor(private val firstPage: PageAsync<T>, private val defaultExec
                     executor,
                 )
 
-        // Not a user callback; if `executor` rejects work, the body above never runs, so finish
-        // here.
-        @Suppress("ForbiddenMethodCall")
+        // If `executor` rejects work, the body above never runs, so finish here.
         completion.whenComplete { _, error ->
             if (state.get() != State.CLOSED && error != null) {
                 onCompleteFuture.completeExceptionally(error)

@@ -143,8 +143,6 @@ private constructor(
                 .thenCompose(Function.identity())
         }
 
-        // Not a user callback; the body must be closed whatever the outcome of the attempts.
-        @Suppress("ForbiddenMethodCall")
         return executeWithRetries(modifiedRequest, requestOptions).whenComplete { _, _ ->
             request.body().getOrNull()?.close()
         }

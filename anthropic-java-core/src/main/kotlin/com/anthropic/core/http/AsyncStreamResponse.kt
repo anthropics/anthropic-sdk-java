@@ -71,9 +71,6 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
             private val state = AtomicReference(State.NEW)
 
             init {
-                // Not a user callback; cheap bookkeeping that must run even if the executor rejects
-                // work.
-                @Suppress("ForbiddenMethodCall")
                 this@toAsync.whenComplete { _, error ->
                     // If an error occurs from the original future, then we should resolve the
                     // `onCompleteFuture` even if `subscribe` has not been called.
@@ -144,8 +141,6 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
                     return
                 }
 
-                // Not a user callback; releasing the connection must not depend on the executor.
-                @Suppress("ForbiddenMethodCall")
                 this@toAsync.whenComplete { streamResponse, _ -> streamResponse?.close() }
                 // When the stream is closed, we should always consider it closed. If it closed due
                 // to an error, then we will have already completed the future earlier, and this

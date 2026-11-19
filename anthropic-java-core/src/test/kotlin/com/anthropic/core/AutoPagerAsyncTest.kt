@@ -111,11 +111,15 @@ internal class AutoPagerAsyncTest {
         val page = PageAsyncImpl(emptyList())
         val autoPagerAsync = AutoPagerAsync.from(page, executor)
         autoPagerAsync.subscribe(handler)
+        clearInvocations(executor)
 
         page.nextPageFuture.completeExceptionally(ERROR)
 
         verify(handler, never()).onNext(any())
-        verify(handler, times(1)).onComplete(Optional.of(ERROR))
+        inOrder(executor, handler) {
+            verify(executor, times(1)).execute(any())
+            verify(handler, times(1)).onComplete(Optional.of(ERROR))
+        }
     }
 
     @Test

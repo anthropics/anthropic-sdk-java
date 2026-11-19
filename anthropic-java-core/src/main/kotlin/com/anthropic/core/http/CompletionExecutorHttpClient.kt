@@ -17,7 +17,6 @@ internal class CompletionExecutorHttpClient(
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse =
         httpClient.execute(request, requestOptions)
 
-    @Suppress("ForbiddenMethodCall")
     override fun executeAsync(
         request: HttpRequest,
         requestOptions: RequestOptions,

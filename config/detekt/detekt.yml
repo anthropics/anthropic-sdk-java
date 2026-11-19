@@ -23,21 +23,42 @@ style:
   UseRequireNotNull:
     active: true
 
-  # `*Async` over same-thread `CompletableFuture` callbacks.
+  # A `CompletableFuture` stage is chained plainly (`thenApply`) or names its executor
+  # (`thenApplyAsync(..., executor)`).
   # `.orElse(null)` is covered by `anthropic:OptionalOrElseNull`; banning `Optional.orElse` here
   # would also reject typed defaults like `orElse(0)`.
   ForbiddenMethodCall:
     active: true
-    # TODO(codegen): generated `*ServiceAsyncImpl` uses `.thenApply { ... }` for parse/validate on
-    # the completing thread; change template to `.thenApplyAsync(..., executor)` then drop services/.
-    excludes: ['**/test/**', '**/services/**']
+    excludes: ['**/test/**']
     methods:
-      - value: 'java.util.concurrent.CompletableFuture.whenComplete'
-        reason: 'Use whenCompleteAsync with an explicit executor so user callbacks never run on the completing thread.'
-      - value: 'java.util.concurrent.CompletableFuture.thenAccept'
-        reason: 'Use thenAcceptAsync with an explicit executor so user callbacks never run on the completing thread.'
-      - value: 'java.util.concurrent.CompletableFuture.thenApply'
-        reason: 'Use thenApplyAsync with an explicit executor so user callbacks never run on the completing thread.'
+      - value: 'java.util.concurrent.CompletionStage.thenApplyAsync(java.util.function.Function)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.thenAcceptAsync(java.util.function.Consumer)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.thenRunAsync(java.lang.Runnable)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.thenCombineAsync(java.util.concurrent.CompletionStage, java.util.function.BiFunction)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.thenAcceptBothAsync(java.util.concurrent.CompletionStage, java.util.function.BiConsumer)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.runAfterBothAsync(java.util.concurrent.CompletionStage, java.lang.Runnable)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.applyToEitherAsync(java.util.concurrent.CompletionStage, java.util.function.Function)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.acceptEitherAsync(java.util.concurrent.CompletionStage, java.util.function.Consumer)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.runAfterEitherAsync(java.util.concurrent.CompletionStage, java.lang.Runnable)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.thenComposeAsync(java.util.function.Function)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.whenCompleteAsync(java.util.function.BiConsumer)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletionStage.handleAsync(java.util.function.BiFunction)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletableFuture.supplyAsync(java.util.function.Supplier)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
+      - value: 'java.util.concurrent.CompletableFuture.runAsync(java.lang.Runnable)'
+        reason: 'Pass an executor: without one the stage runs on ForkJoinPool.commonPool().'
       - value: 'kotlin.io.print'
         reason: 'stdout is not the SDK output channel; warnings go to System.err.'
       - value: 'kotlin.io.println'
