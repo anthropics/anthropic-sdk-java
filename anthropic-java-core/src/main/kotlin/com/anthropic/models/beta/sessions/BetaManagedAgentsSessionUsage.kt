@@ -21,10 +21,10 @@ class BetaManagedAgentsSessionUsage
 private constructor(
     private val activeSeconds: JsonField<Double>,
     private val cacheCreation: JsonField<BetaManagedAgentsCacheCreationUsage>,
-    private val cacheReadInputTokens: JsonField<Int>,
-    private val inputTokens: JsonField<Int>,
+    private val cacheReadInputTokens: JsonField<Long>,
+    private val inputTokens: JsonField<Long>,
     private val listCost: JsonField<BetaMonetaryAmount>,
-    private val outputTokens: JsonField<Int>,
+    private val outputTokens: JsonField<Long>,
     private val serverToolUse: JsonField<BetaManagedAgentsServerToolUsage>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -39,16 +39,16 @@ private constructor(
         cacheCreation: JsonField<BetaManagedAgentsCacheCreationUsage> = JsonMissing.of(),
         @JsonProperty("cache_read_input_tokens")
         @ExcludeMissing
-        cacheReadInputTokens: JsonField<Int> = JsonMissing.of(),
+        cacheReadInputTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("input_tokens")
         @ExcludeMissing
-        inputTokens: JsonField<Int> = JsonMissing.of(),
+        inputTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("list_cost")
         @ExcludeMissing
         listCost: JsonField<BetaMonetaryAmount> = JsonMissing.of(),
         @JsonProperty("output_tokens")
         @ExcludeMissing
-        outputTokens: JsonField<Int> = JsonMissing.of(),
+        outputTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("server_tool_use")
         @ExcludeMissing
         serverToolUse: JsonField<BetaManagedAgentsServerToolUsage> = JsonMissing.of(),
@@ -89,7 +89,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun cacheReadInputTokens(): Optional<Int> =
+    fun cacheReadInputTokens(): Optional<Long> =
         cacheReadInputTokens.getOptional("cache_read_input_tokens")
 
     /**
@@ -98,7 +98,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun inputTokens(): Optional<Int> = inputTokens.getOptional("input_tokens")
+    fun inputTokens(): Optional<Long> = inputTokens.getOptional("input_tokens")
 
     /**
      * Cumulative list cost of the session across all turns, priced at public list rates. Absent
@@ -115,7 +115,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun outputTokens(): Optional<Int> = outputTokens.getOptional("output_tokens")
+    fun outputTokens(): Optional<Long> = outputTokens.getOptional("output_tokens")
 
     /**
      * Cumulative server-executed tool usage across all turns. Absent until server-tool tracking is
@@ -153,14 +153,14 @@ private constructor(
      */
     @JsonProperty("cache_read_input_tokens")
     @ExcludeMissing
-    fun _cacheReadInputTokens(): JsonField<Int> = cacheReadInputTokens
+    fun _cacheReadInputTokens(): JsonField<Long> = cacheReadInputTokens
 
     /**
      * Returns the raw JSON value of [inputTokens].
      *
      * Unlike [inputTokens], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens(): JsonField<Int> = inputTokens
+    @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens(): JsonField<Long> = inputTokens
 
     /**
      * Returns the raw JSON value of [listCost].
@@ -178,7 +178,7 @@ private constructor(
      */
     @JsonProperty("output_tokens")
     @ExcludeMissing
-    fun _outputTokens(): JsonField<Int> = outputTokens
+    fun _outputTokens(): JsonField<Long> = outputTokens
 
     /**
      * Returns the raw JSON value of [serverToolUse].
@@ -215,10 +215,10 @@ private constructor(
 
         private var activeSeconds: JsonField<Double> = JsonMissing.of()
         private var cacheCreation: JsonField<BetaManagedAgentsCacheCreationUsage> = JsonMissing.of()
-        private var cacheReadInputTokens: JsonField<Int> = JsonMissing.of()
-        private var inputTokens: JsonField<Int> = JsonMissing.of()
+        private var cacheReadInputTokens: JsonField<Long> = JsonMissing.of()
+        private var inputTokens: JsonField<Long> = JsonMissing.of()
         private var listCost: JsonField<BetaMonetaryAmount> = JsonMissing.of()
-        private var outputTokens: JsonField<Int> = JsonMissing.of()
+        private var outputTokens: JsonField<Long> = JsonMissing.of()
         private var serverToolUse: JsonField<BetaManagedAgentsServerToolUsage> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -269,30 +269,31 @@ private constructor(
         }
 
         /** Total tokens read from prompt cache. */
-        fun cacheReadInputTokens(cacheReadInputTokens: Int) =
+        fun cacheReadInputTokens(cacheReadInputTokens: Long) =
             cacheReadInputTokens(JsonField.of(cacheReadInputTokens))
 
         /**
          * Sets [Builder.cacheReadInputTokens] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.cacheReadInputTokens] with a well-typed [Int] value
+         * You should usually call [Builder.cacheReadInputTokens] with a well-typed [Long] value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun cacheReadInputTokens(cacheReadInputTokens: JsonField<Int>) = apply {
+        fun cacheReadInputTokens(cacheReadInputTokens: JsonField<Long>) = apply {
             this.cacheReadInputTokens = cacheReadInputTokens
         }
 
         /** Total input tokens consumed across all turns. */
-        fun inputTokens(inputTokens: Int) = inputTokens(JsonField.of(inputTokens))
+        fun inputTokens(inputTokens: Long) = inputTokens(JsonField.of(inputTokens))
 
         /**
          * Sets [Builder.inputTokens] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.inputTokens] with a well-typed [Int] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.inputTokens] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun inputTokens(inputTokens: JsonField<Int>) = apply { this.inputTokens = inputTokens }
+        fun inputTokens(inputTokens: JsonField<Long>) = apply { this.inputTokens = inputTokens }
 
         /**
          * Cumulative list cost of the session across all turns, priced at public list rates. Absent
@@ -313,16 +314,16 @@ private constructor(
         fun listCost(listCost: JsonField<BetaMonetaryAmount>) = apply { this.listCost = listCost }
 
         /** Total output tokens generated across all turns. */
-        fun outputTokens(outputTokens: Int) = outputTokens(JsonField.of(outputTokens))
+        fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
 
         /**
          * Sets [Builder.outputTokens] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.outputTokens] with a well-typed [Int] value instead.
+         * You should usually call [Builder.outputTokens] with a well-typed [Long] value instead.
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
-        fun outputTokens(outputTokens: JsonField<Int>) = apply { this.outputTokens = outputTokens }
+        fun outputTokens(outputTokens: JsonField<Long>) = apply { this.outputTokens = outputTokens }
 
         /**
          * Cumulative server-executed tool usage across all turns. Absent until server-tool tracking

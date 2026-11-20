@@ -11,12 +11,12 @@ internal class BetaManagedAgentsCacheCreationUsageTest {
     fun create() {
         val betaManagedAgentsCacheCreationUsage =
             BetaManagedAgentsCacheCreationUsage.builder()
-                .ephemeral1hInputTokens(0)
-                .ephemeral5mInputTokens(0)
+                .ephemeral1hInputTokens(0L)
+                .ephemeral5mInputTokens(0L)
                 .build()
 
-        assertThat(betaManagedAgentsCacheCreationUsage.ephemeral1hInputTokens()).contains(0)
-        assertThat(betaManagedAgentsCacheCreationUsage.ephemeral5mInputTokens()).contains(0)
+        assertThat(betaManagedAgentsCacheCreationUsage.ephemeral1hInputTokens()).contains(0L)
+        assertThat(betaManagedAgentsCacheCreationUsage.ephemeral5mInputTokens()).contains(0L)
     }
 
     @Test
@@ -24,8 +24,8 @@ internal class BetaManagedAgentsCacheCreationUsageTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsCacheCreationUsage =
             BetaManagedAgentsCacheCreationUsage.builder()
-                .ephemeral1hInputTokens(0)
-                .ephemeral5mInputTokens(0)
+                .ephemeral1hInputTokens(0L)
+                .ephemeral5mInputTokens(0L)
                 .build()
 
         val roundtrippedBetaManagedAgentsCacheCreationUsage =
