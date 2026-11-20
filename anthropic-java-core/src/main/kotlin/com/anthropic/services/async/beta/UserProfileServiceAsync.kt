@@ -17,6 +17,11 @@ import com.anthropic.services.async.beta.userprofiles.ActionUrlServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
+/**
+ * Register the end customers that your platform serves, so each request can name who it's for. To
+ * get started, see the
+ * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+ */
 interface UserProfileServiceAsync {
 
     /**
@@ -33,7 +38,13 @@ interface UserProfileServiceAsync {
 
     fun actionUrls(): ActionUrlServiceAsync
 
-    /** Create User Profile */
+    /**
+     * Register one of your end customers and get the ID to send on the requests you make for them.
+     *
+     * See the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles#create-a-profile-for-each-end-customer)
+     * for what to send.
+     */
     fun create(): CompletableFuture<BetaUserProfile> = create(UserProfileCreateParams.none())
 
     /** @see create */
@@ -51,7 +62,13 @@ interface UserProfileServiceAsync {
     fun create(requestOptions: RequestOptions): CompletableFuture<BetaUserProfile> =
         create(UserProfileCreateParams.none(), requestOptions)
 
-    /** Get User Profile */
+    /**
+     * Get a user profile by ID to check the details stored for it.
+     *
+     * See the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles) for
+     * how to set up and manage profiles.
+     */
     fun retrieve(userProfileId: String): CompletableFuture<BetaUserProfile> =
         retrieve(userProfileId, UserProfileRetrieveParams.none())
 
@@ -86,7 +103,13 @@ interface UserProfileServiceAsync {
     ): CompletableFuture<BetaUserProfile> =
         retrieve(userProfileId, UserProfileRetrieveParams.none(), requestOptions)
 
-    /** Update User Profile */
+    /**
+     * Change the details of a user profile, leaving the fields that you don't send as they are.
+     *
+     * See the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles#update-a-profile)
+     * for how each field is updated.
+     */
     fun update(userProfileId: String): CompletableFuture<BetaUserProfile> =
         update(userProfileId, UserProfileUpdateParams.none())
 
@@ -121,7 +144,13 @@ interface UserProfileServiceAsync {
     ): CompletableFuture<BetaUserProfile> =
         update(userProfileId, UserProfileUpdateParams.none(), requestOptions)
 
-    /** List User Profiles */
+    /**
+     * List the user profiles in your organization, newest first by default.
+     *
+     * See the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles) for
+     * how to set up and manage profiles.
+     */
     fun list(): CompletableFuture<UserProfileListPageAsync> = list(UserProfileListParams.none())
 
     /** @see list */
@@ -139,7 +168,13 @@ interface UserProfileServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<UserProfileListPageAsync> =
         list(UserProfileListParams.none(), requestOptions)
 
-    /** Delete User Profile */
+    /**
+     * Delete a user profile, for example when the end customer closes their account.
+     *
+     * Stop sending the profile's ID first. See the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles#delete-a-profile)
+     * for what happens after a delete.
+     */
     fun delete(userProfileId: String): CompletableFuture<BetaDeletedUserProfile> =
         delete(userProfileId, UserProfileDeleteParams.none())
 
@@ -175,7 +210,14 @@ interface UserProfileServiceAsync {
     ): CompletableFuture<BetaDeletedUserProfile> =
         delete(userProfileId, UserProfileDeleteParams.none(), requestOptions)
 
-    /** Create Enrollment URL */
+    /**
+     * Create a link that sends the profile's end customer to the Verification Portal from Claude
+     * Platform on AWS.
+     *
+     * On the Claude API, create an action URL instead. See
+     * [Send an end customer a link to the Verification Portal](https://platform.claude.com/docs/en/manage-claude/user-profiles-verification-portal)
+     * for when to create the link and what the end customer sees.
+     */
     fun createEnrollmentUrl(
         userProfileId: String
     ): CompletableFuture<BetaUserProfileEnrollmentUrl> =

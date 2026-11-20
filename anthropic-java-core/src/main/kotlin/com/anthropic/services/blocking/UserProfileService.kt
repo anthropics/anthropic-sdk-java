@@ -15,6 +15,11 @@ import com.anthropic.services.blocking.userprofiles.ActionUrlService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
+/**
+ * Register the end customers that your platform serves, so each request can name who it's for. To
+ * get started, see the
+ * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+ */
 interface UserProfileService {
 
     /**
@@ -31,7 +36,13 @@ interface UserProfileService {
 
     fun actionUrls(): ActionUrlService
 
-    /** Create User Profile */
+    /**
+     * Register one of your end customers and get the ID to send on the requests you make for them.
+     *
+     * See the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles#create-a-profile-for-each-end-customer)
+     * for what to send.
+     */
     fun create(): UserProfile = create(UserProfileCreateParams.none())
 
     /** @see create */
@@ -48,7 +59,13 @@ interface UserProfileService {
     fun create(requestOptions: RequestOptions): UserProfile =
         create(UserProfileCreateParams.none(), requestOptions)
 
-    /** Get User Profile */
+    /**
+     * Get a user profile by ID to check the details stored for it.
+     *
+     * See the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles) for
+     * how to set up and manage profiles.
+     */
     fun retrieve(userProfileId: String): UserProfile =
         retrieve(userProfileId, UserProfileRetrieveParams.none())
 
@@ -80,7 +97,13 @@ interface UserProfileService {
     fun retrieve(userProfileId: String, requestOptions: RequestOptions): UserProfile =
         retrieve(userProfileId, UserProfileRetrieveParams.none(), requestOptions)
 
-    /** Update User Profile */
+    /**
+     * Change the details of a user profile, leaving the fields that you don't send as they are.
+     *
+     * See the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles#update-a-profile)
+     * for how each field is updated.
+     */
     fun update(userProfileId: String): UserProfile =
         update(userProfileId, UserProfileUpdateParams.none())
 
@@ -110,7 +133,13 @@ interface UserProfileService {
     fun update(userProfileId: String, requestOptions: RequestOptions): UserProfile =
         update(userProfileId, UserProfileUpdateParams.none(), requestOptions)
 
-    /** List User Profiles */
+    /**
+     * List the user profiles in your organization, newest first by default.
+     *
+     * See the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles) for
+     * how to set up and manage profiles.
+     */
     fun list(): UserProfileListPage = list(UserProfileListParams.none())
 
     /** @see list */
@@ -127,7 +156,13 @@ interface UserProfileService {
     fun list(requestOptions: RequestOptions): UserProfileListPage =
         list(UserProfileListParams.none(), requestOptions)
 
-    /** Delete User Profile */
+    /**
+     * Delete a user profile, for example when the end customer closes their account.
+     *
+     * Stop sending the profile's ID first. See the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles#delete-a-profile)
+     * for what happens after a delete.
+     */
     fun delete(userProfileId: String): DeletedUserProfile =
         delete(userProfileId, UserProfileDeleteParams.none())
 

@@ -57,6 +57,11 @@ interface AnthropicClient {
 
     fun skills(): SkillService
 
+    /**
+     * Register the end customers that your platform serves, so each request can name who it's for.
+     * To get started, see the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+     */
     fun userProfiles(): UserProfileService
 
     fun organization(): OrganizationService
@@ -94,6 +99,11 @@ interface AnthropicClient {
 
         fun skills(): SkillService.WithRawResponse
 
+        /**
+         * Register the end customers that your platform serves, so each request can name who it's
+         * for. To get started, see the
+         * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+         */
         fun userProfiles(): UserProfileService.WithRawResponse
 
         fun organization(): OrganizationService.WithRawResponse

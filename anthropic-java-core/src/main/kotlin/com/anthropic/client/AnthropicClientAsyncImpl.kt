@@ -76,6 +76,11 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
 
     override fun skills(): SkillServiceAsync = skills
 
+    /**
+     * Register the end customers that your platform serves, so each request can name who it's for.
+     * To get started, see the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+     */
     override fun userProfiles(): UserProfileServiceAsync = userProfiles
 
     override fun organization(): OrganizationServiceAsync = organization
@@ -139,6 +144,11 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
 
         override fun skills(): SkillServiceAsync.WithRawResponse = skills
 
+        /**
+         * Register the end customers that your platform serves, so each request can name who it's
+         * for. To get started, see the
+         * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+         */
         override fun userProfiles(): UserProfileServiceAsync.WithRawResponse = userProfiles
 
         override fun organization(): OrganizationServiceAsync.WithRawResponse = organization

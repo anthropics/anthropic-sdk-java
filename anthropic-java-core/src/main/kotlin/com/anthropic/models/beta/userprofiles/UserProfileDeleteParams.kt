@@ -11,7 +11,13 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Delete User Profile */
+/**
+ * Delete a user profile, for example when the end customer closes their account.
+ *
+ * Stop sending the profile's ID first. See the
+ * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles#delete-a-profile)
+ * for what happens after a delete.
+ */
 class UserProfileDeleteParams
 private constructor(
     private val userProfileId: String?,

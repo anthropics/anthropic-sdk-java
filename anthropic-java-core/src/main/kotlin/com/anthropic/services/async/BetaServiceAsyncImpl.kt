@@ -115,6 +115,11 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     override fun webhooks(): WebhookServiceAsync = webhooks
 
+    /**
+     * Register the end customers that your platform serves, so each request can name who it's for.
+     * To get started, see the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+     */
     override fun userProfiles(): UserProfileServiceAsync = userProfiles
 
     override fun dreams(): DreamServiceAsync = dreams
@@ -221,6 +226,11 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
         override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks
 
+        /**
+         * Register the end customers that your platform serves, so each request can name who it's
+         * for. To get started, see the
+         * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+         */
         override fun userProfiles(): UserProfileServiceAsync.WithRawResponse = userProfiles
 
         override fun dreams(): DreamServiceAsync.WithRawResponse = dreams

@@ -57,6 +57,11 @@ interface AnthropicClientAsync {
 
     fun skills(): SkillServiceAsync
 
+    /**
+     * Register the end customers that your platform serves, so each request can name who it's for.
+     * To get started, see the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+     */
     fun userProfiles(): UserProfileServiceAsync
 
     fun organization(): OrganizationServiceAsync
@@ -98,6 +103,11 @@ interface AnthropicClientAsync {
 
         fun skills(): SkillServiceAsync.WithRawResponse
 
+        /**
+         * Register the end customers that your platform serves, so each request can name who it's
+         * for. To get started, see the
+         * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+         */
         fun userProfiles(): UserProfileServiceAsync.WithRawResponse
 
         fun organization(): OrganizationServiceAsync.WithRawResponse

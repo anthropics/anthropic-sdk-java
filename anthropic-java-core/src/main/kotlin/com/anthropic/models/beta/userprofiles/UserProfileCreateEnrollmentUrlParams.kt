@@ -11,7 +11,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Create Enrollment URL */
+/**
+ * Create a link that sends the profile's end customer to the Verification Portal from Claude
+ * Platform on AWS.
+ *
+ * On the Claude API, create an action URL instead. See
+ * [Send an end customer a link to the Verification Portal](https://platform.claude.com/docs/en/manage-claude/user-profiles-verification-portal)
+ * for when to create the link and what the end customer sees.
+ */
 class UserProfileCreateEnrollmentUrlParams
 private constructor(
     private val userProfileId: String?,
