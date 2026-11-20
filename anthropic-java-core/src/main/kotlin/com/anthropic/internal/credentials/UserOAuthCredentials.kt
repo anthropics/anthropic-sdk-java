@@ -101,7 +101,6 @@ internal class UserOAuthCredentials(
         return AccessToken(refreshed.accessToken!!, newExpiresAt)
     }
 
-    @Suppress("ForbiddenMethodCall")
     override fun getAsync(
         baseUrl: String,
         forceRefresh: Boolean,
