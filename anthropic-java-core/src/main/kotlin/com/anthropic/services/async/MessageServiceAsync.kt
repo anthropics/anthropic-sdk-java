@@ -55,6 +55,7 @@ interface MessageServiceAsync {
      * @throws com.anthropic.models.messages.CompactionSignatureInvalidException
      * @throws com.anthropic.models.messages.CompactionTooManyToolReferencesException
      * @throws com.anthropic.models.messages.CompactionToolChangesMismatchException
+     * @throws com.anthropic.models.messages.ImageDimensionsTooLargeException
      * @throws com.anthropic.models.OrganizationOnHoldException
      * @throws com.anthropic.models.RequestBodyEncodingInvalidException
      * @throws com.anthropic.models.RequestBodyEncodingUnsupportedException
@@ -135,6 +136,7 @@ interface MessageServiceAsync {
      * @throws com.anthropic.models.messages.CompactionSignatureInvalidException
      * @throws com.anthropic.models.messages.CompactionTooManyToolReferencesException
      * @throws com.anthropic.models.messages.CompactionToolChangesMismatchException
+     * @throws com.anthropic.models.messages.ImageDimensionsTooLargeException
      * @throws com.anthropic.models.OrganizationOnHoldException
      * @throws com.anthropic.models.RequestBodyEncodingInvalidException
      * @throws com.anthropic.models.RequestBodyEncodingUnsupportedException

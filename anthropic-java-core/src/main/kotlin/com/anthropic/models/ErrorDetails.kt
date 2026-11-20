@@ -60,6 +60,7 @@ import com.anthropic.models.messages.CompactionSignatureInvalidErrorDetails
 import com.anthropic.models.messages.CompactionTooManyToolReferencesErrorDetails
 import com.anthropic.models.messages.CompactionToolChangesMismatchErrorDetails
 import com.anthropic.models.messages.CompactionUnavailableErrorDetails
+import com.anthropic.models.messages.ImageDimensionsTooLargeErrorDetails
 import com.anthropic.models.messages.ThreadAlreadyContinuedErrorDetails
 import com.anthropic.models.messages.ThreadContinueInFlightErrorDetails
 import com.anthropic.models.messages.ThreadFingerprintMismatchErrorDetails
@@ -122,6 +123,7 @@ private constructor(
     private val compactionTooManyToolReferences: CompactionTooManyToolReferencesErrorDetails? =
         null,
     private val compactionToolChangesMismatch: CompactionToolChangesMismatchErrorDetails? = null,
+    private val imageDimensionsTooLarge: ImageDimensionsTooLargeErrorDetails? = null,
     private val organizationOnHold: OrganizationOnHoldErrorDetails? = null,
     private val requestBodyEncodingInvalid: RequestBodyEncodingInvalidErrorDetails? = null,
     private val requestBodyEncodingUnsupported: RequestBodyEncodingUnsupportedErrorDetails? = null,
@@ -252,6 +254,7 @@ private constructor(
             compactionSignatureInvalid != null -> ErrorCode.COMPACTION_SIGNATURE_INVALID
             compactionTooManyToolReferences != null -> ErrorCode.COMPACTION_TOO_MANY_TOOL_REFERENCES
             compactionToolChangesMismatch != null -> ErrorCode.COMPACTION_TOOL_CHANGES_MISMATCH
+            imageDimensionsTooLarge != null -> ErrorCode.IMAGE_DIMENSIONS_TOO_LARGE
             organizationOnHold != null -> ErrorCode.ORGANIZATION_ON_HOLD
             requestBodyEncodingInvalid != null -> ErrorCode.REQUEST_BODY_ENCODING_INVALID
             requestBodyEncodingUnsupported != null -> ErrorCode.REQUEST_BODY_ENCODING_UNSUPPORTED
@@ -368,6 +371,7 @@ private constructor(
             compactionSignatureInvalid != null -> Optional.empty()
             compactionTooManyToolReferences != null -> Optional.empty()
             compactionToolChangesMismatch != null -> Optional.empty()
+            imageDimensionsTooLarge != null -> Optional.empty()
             organizationOnHold != null -> Optional.empty()
             requestBodyEncodingInvalid != null -> Optional.empty()
             requestBodyEncodingUnsupported != null -> Optional.empty()
@@ -472,6 +476,7 @@ private constructor(
             compactionSignatureInvalid != null -> Optional.empty()
             compactionTooManyToolReferences != null -> Optional.empty()
             compactionToolChangesMismatch != null -> Optional.empty()
+            imageDimensionsTooLarge != null -> Optional.empty()
             organizationOnHold != null -> Optional.empty()
             requestBodyEncodingInvalid != null -> Optional.empty()
             requestBodyEncodingUnsupported != null -> Optional.empty()
@@ -576,6 +581,7 @@ private constructor(
             compactionSignatureInvalid != null -> Optional.empty()
             compactionTooManyToolReferences != null -> Optional.empty()
             compactionToolChangesMismatch != null -> Optional.empty()
+            imageDimensionsTooLarge != null -> Optional.empty()
             organizationOnHold != null -> Optional.empty()
             requestBodyEncodingInvalid != null -> Optional.empty()
             requestBodyEncodingUnsupported != null -> Optional.empty()
@@ -737,6 +743,14 @@ private constructor(
     /** The `compaction` block's `tool_changes` differs from what was returned with the block. */
     fun compactionToolChangesMismatch(): Optional<CompactionToolChangesMismatchErrorDetails> =
         Optional.ofNullable(compactionToolChangesMismatch)
+
+    /**
+     * The longest side of one or more images in the request exceeds the image size limit. Scale
+     * each image in `paths` so that neither side exceeds `max_side_length_pixels`, or remove it,
+     * then retry.
+     */
+    fun imageDimensionsTooLarge(): Optional<ImageDimensionsTooLargeErrorDetails> =
+        Optional.ofNullable(imageDimensionsTooLarge)
 
     /**
      * Anthropic has disabled the organization for trust and safety reasons. An organization
@@ -1307,6 +1321,8 @@ private constructor(
 
     fun isCompactionToolChangesMismatch(): Boolean = compactionToolChangesMismatch != null
 
+    fun isImageDimensionsTooLarge(): Boolean = imageDimensionsTooLarge != null
+
     fun isOrganizationOnHold(): Boolean = organizationOnHold != null
 
     fun isRequestBodyEncodingInvalid(): Boolean = requestBodyEncodingInvalid != null
@@ -1554,6 +1570,14 @@ private constructor(
     /** The `compaction` block's `tool_changes` differs from what was returned with the block. */
     fun asCompactionToolChangesMismatch(): CompactionToolChangesMismatchErrorDetails =
         compactionToolChangesMismatch.getOrThrow("compactionToolChangesMismatch")
+
+    /**
+     * The longest side of one or more images in the request exceeds the image size limit. Scale
+     * each image in `paths` so that neither side exceeds `max_side_length_pixels`, or remove it,
+     * then retry.
+     */
+    fun asImageDimensionsTooLarge(): ImageDimensionsTooLargeErrorDetails =
+        imageDimensionsTooLarge.getOrThrow("imageDimensionsTooLarge")
 
     /**
      * Anthropic has disabled the organization for trust and safety reasons. An organization
@@ -2152,6 +2176,8 @@ private constructor(
                 visitor.visitCompactionTooManyToolReferences(compactionTooManyToolReferences)
             compactionToolChangesMismatch != null ->
                 visitor.visitCompactionToolChangesMismatch(compactionToolChangesMismatch)
+            imageDimensionsTooLarge != null ->
+                visitor.visitImageDimensionsTooLarge(imageDimensionsTooLarge)
             organizationOnHold != null -> visitor.visitOrganizationOnHold(organizationOnHold)
             requestBodyEncodingInvalid != null ->
                 visitor.visitRequestBodyEncodingInvalid(requestBodyEncodingInvalid)
@@ -2338,6 +2364,7 @@ private constructor(
             compactionSignatureInvalid != null -> compactionSignatureInvalid.validate()
             compactionTooManyToolReferences != null -> compactionTooManyToolReferences.validate()
             compactionToolChangesMismatch != null -> compactionToolChangesMismatch.validate()
+            imageDimensionsTooLarge != null -> imageDimensionsTooLarge.validate()
             organizationOnHold != null -> organizationOnHold.validate()
             requestBodyEncodingInvalid != null -> requestBodyEncodingInvalid.validate()
             requestBodyEncodingUnsupported != null -> requestBodyEncodingUnsupported.validate()
@@ -2466,6 +2493,7 @@ private constructor(
             compactionSignatureInvalid != null -> compactionSignatureInvalid.validity()
             compactionTooManyToolReferences != null -> compactionTooManyToolReferences.validity()
             compactionToolChangesMismatch != null -> compactionToolChangesMismatch.validity()
+            imageDimensionsTooLarge != null -> imageDimensionsTooLarge.validity()
             organizationOnHold != null -> organizationOnHold.validity()
             requestBodyEncodingInvalid != null -> requestBodyEncodingInvalid.validity()
             requestBodyEncodingUnsupported != null -> requestBodyEncodingUnsupported.validity()
@@ -2582,6 +2610,7 @@ private constructor(
             compactionSignatureInvalid == other.compactionSignatureInvalid &&
             compactionTooManyToolReferences == other.compactionTooManyToolReferences &&
             compactionToolChangesMismatch == other.compactionToolChangesMismatch &&
+            imageDimensionsTooLarge == other.imageDimensionsTooLarge &&
             organizationOnHold == other.organizationOnHold &&
             requestBodyEncodingInvalid == other.requestBodyEncodingInvalid &&
             requestBodyEncodingUnsupported == other.requestBodyEncodingUnsupported &&
@@ -2686,6 +2715,7 @@ private constructor(
             compactionSignatureInvalid,
             compactionTooManyToolReferences,
             compactionToolChangesMismatch,
+            imageDimensionsTooLarge,
             organizationOnHold,
             requestBodyEncodingInvalid,
             requestBodyEncodingUnsupported,
@@ -2801,6 +2831,8 @@ private constructor(
                 "ErrorDetails{compactionTooManyToolReferences=$compactionTooManyToolReferences}"
             compactionToolChangesMismatch != null ->
                 "ErrorDetails{compactionToolChangesMismatch=$compactionToolChangesMismatch}"
+            imageDimensionsTooLarge != null ->
+                "ErrorDetails{imageDimensionsTooLarge=$imageDimensionsTooLarge}"
             organizationOnHold != null -> "ErrorDetails{organizationOnHold=$organizationOnHold}"
             requestBodyEncodingInvalid != null ->
                 "ErrorDetails{requestBodyEncodingInvalid=$requestBodyEncodingInvalid}"
@@ -3045,6 +3077,16 @@ private constructor(
         fun ofCompactionToolChangesMismatch(
             compactionToolChangesMismatch: CompactionToolChangesMismatchErrorDetails
         ) = ErrorDetails(compactionToolChangesMismatch = compactionToolChangesMismatch)
+
+        /**
+         * The longest side of one or more images in the request exceeds the image size limit. Scale
+         * each image in `paths` so that neither side exceeds `max_side_length_pixels`, or remove
+         * it, then retry.
+         */
+        @JvmStatic
+        fun ofImageDimensionsTooLarge(
+            imageDimensionsTooLarge: ImageDimensionsTooLargeErrorDetails
+        ) = ErrorDetails(imageDimensionsTooLarge = imageDimensionsTooLarge)
 
         /**
          * Anthropic has disabled the organization for trust and safety reasons. An organization
@@ -3915,6 +3957,15 @@ private constructor(
         ): T
 
         /**
+         * The longest side of one or more images in the request exceeds the image size limit. Scale
+         * each image in `paths` so that neither side exceeds `max_side_length_pixels`, or remove
+         * it, then retry.
+         */
+        fun visitImageDimensionsTooLarge(
+            imageDimensionsTooLarge: ImageDimensionsTooLargeErrorDetails
+        ): T
+
+        /**
          * Anthropic has disabled the organization for trust and safety reasons. An organization
          * disabled for any other reason, such as billing, does not get this code. `appeal_url`,
          * when present, is where the organization can appeal.
@@ -4616,6 +4667,14 @@ private constructor(
                         ?.let { ErrorDetails(compactionToolChangesMismatch = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "image_dimensions_too_large" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ImageDimensionsTooLargeErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(imageDimensionsTooLarge = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "organization_on_hold" -> {
                     return tryDeserialize(node, jacksonTypeRef<OrganizationOnHoldErrorDetails>())
                         ?.let { ErrorDetails(organizationOnHold = it, _json = json) }
@@ -5274,6 +5333,8 @@ private constructor(
                     generator.writeObject(value.compactionTooManyToolReferences)
                 value.compactionToolChangesMismatch != null ->
                     generator.writeObject(value.compactionToolChangesMismatch)
+                value.imageDimensionsTooLarge != null ->
+                    generator.writeObject(value.imageDimensionsTooLarge)
                 value.organizationOnHold != null -> generator.writeObject(value.organizationOnHold)
                 value.requestBodyEncodingInvalid != null ->
                     generator.writeObject(value.requestBodyEncodingInvalid)
@@ -5487,6 +5548,9 @@ private constructor(
             @JvmField
             val COMPACTION_TOOL_CHANGES_MISMATCH =
                 ErrorCode(JsonField.of("compaction_tool_changes_mismatch"))
+
+            @JvmField
+            val IMAGE_DIMENSIONS_TOO_LARGE = ErrorCode(JsonField.of("image_dimensions_too_large"))
 
             @JvmField val ORGANIZATION_ON_HOLD = ErrorCode(JsonField.of("organization_on_hold"))
 
@@ -5770,6 +5834,7 @@ private constructor(
                     "compaction_signature_invalid" -> COMPACTION_SIGNATURE_INVALID
                     "compaction_too_many_tool_references" -> COMPACTION_TOO_MANY_TOOL_REFERENCES
                     "compaction_tool_changes_mismatch" -> COMPACTION_TOOL_CHANGES_MISMATCH
+                    "image_dimensions_too_large" -> IMAGE_DIMENSIONS_TOO_LARGE
                     "organization_on_hold" -> ORGANIZATION_ON_HOLD
                     "request_body_encoding_invalid" -> REQUEST_BODY_ENCODING_INVALID
                     "request_body_encoding_unsupported" -> REQUEST_BODY_ENCODING_UNSUPPORTED
@@ -5887,6 +5952,7 @@ private constructor(
             COMPACTION_SIGNATURE_INVALID,
             COMPACTION_TOO_MANY_TOOL_REFERENCES,
             COMPACTION_TOOL_CHANGES_MISMATCH,
+            IMAGE_DIMENSIONS_TOO_LARGE,
             ORGANIZATION_ON_HOLD,
             REQUEST_BODY_ENCODING_INVALID,
             REQUEST_BODY_ENCODING_UNSUPPORTED,
@@ -5998,6 +6064,7 @@ private constructor(
             COMPACTION_SIGNATURE_INVALID,
             COMPACTION_TOO_MANY_TOOL_REFERENCES,
             COMPACTION_TOOL_CHANGES_MISMATCH,
+            IMAGE_DIMENSIONS_TOO_LARGE,
             ORGANIZATION_ON_HOLD,
             REQUEST_BODY_ENCODING_INVALID,
             REQUEST_BODY_ENCODING_UNSUPPORTED,
@@ -6112,6 +6179,7 @@ private constructor(
                 COMPACTION_SIGNATURE_INVALID -> Value.COMPACTION_SIGNATURE_INVALID
                 COMPACTION_TOO_MANY_TOOL_REFERENCES -> Value.COMPACTION_TOO_MANY_TOOL_REFERENCES
                 COMPACTION_TOOL_CHANGES_MISMATCH -> Value.COMPACTION_TOOL_CHANGES_MISMATCH
+                IMAGE_DIMENSIONS_TOO_LARGE -> Value.IMAGE_DIMENSIONS_TOO_LARGE
                 ORGANIZATION_ON_HOLD -> Value.ORGANIZATION_ON_HOLD
                 REQUEST_BODY_ENCODING_INVALID -> Value.REQUEST_BODY_ENCODING_INVALID
                 REQUEST_BODY_ENCODING_UNSUPPORTED -> Value.REQUEST_BODY_ENCODING_UNSUPPORTED
@@ -6232,6 +6300,7 @@ private constructor(
                 COMPACTION_SIGNATURE_INVALID -> Known.COMPACTION_SIGNATURE_INVALID
                 COMPACTION_TOO_MANY_TOOL_REFERENCES -> Known.COMPACTION_TOO_MANY_TOOL_REFERENCES
                 COMPACTION_TOOL_CHANGES_MISMATCH -> Known.COMPACTION_TOOL_CHANGES_MISMATCH
+                IMAGE_DIMENSIONS_TOO_LARGE -> Known.IMAGE_DIMENSIONS_TOO_LARGE
                 ORGANIZATION_ON_HOLD -> Known.ORGANIZATION_ON_HOLD
                 REQUEST_BODY_ENCODING_INVALID -> Known.REQUEST_BODY_ENCODING_INVALID
                 REQUEST_BODY_ENCODING_UNSUPPORTED -> Known.REQUEST_BODY_ENCODING_UNSUPPORTED

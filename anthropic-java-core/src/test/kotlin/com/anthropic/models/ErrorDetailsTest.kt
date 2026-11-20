@@ -54,6 +54,7 @@ import com.anthropic.models.messages.CompactionSignatureInvalidErrorDetails
 import com.anthropic.models.messages.CompactionTooManyToolReferencesErrorDetails
 import com.anthropic.models.messages.CompactionToolChangesMismatchErrorDetails
 import com.anthropic.models.messages.CompactionUnavailableErrorDetails
+import com.anthropic.models.messages.ImageDimensionsTooLargeErrorDetails
 import com.anthropic.models.messages.ThreadAlreadyContinuedErrorDetails
 import com.anthropic.models.messages.ThreadContinueInFlightErrorDetails
 import com.anthropic.models.messages.ThreadFingerprintMismatchErrorDetails
@@ -115,6 +116,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -242,6 +244,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -366,6 +369,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -490,6 +494,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -612,6 +617,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -736,6 +742,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -860,6 +867,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -984,6 +992,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -1108,6 +1117,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -1234,6 +1244,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -1358,6 +1369,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).contains(compactionSignatureInvalid)
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -1485,6 +1497,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionTooManyToolReferences())
             .contains(compactionTooManyToolReferences)
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -1612,6 +1625,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch())
             .contains(compactionToolChangesMismatch)
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -1718,6 +1732,138 @@ internal class ErrorDetailsTest {
     }
 
     @Test
+    fun ofImageDimensionsTooLarge() {
+        val imageDimensionsTooLarge =
+            ImageDimensionsTooLargeErrorDetails.builder()
+                .maxSideLengthPixels(0L)
+                .addPath("string")
+                .build()
+
+        val errorDetails = ErrorDetails.ofImageDimensionsTooLarge(imageDimensionsTooLarge)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).contains(imageDimensionsTooLarge)
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofImageDimensionsTooLargeRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofImageDimensionsTooLarge(
+                ImageDimensionsTooLargeErrorDetails.builder()
+                    .maxSideLengthPixels(0L)
+                    .addPath("string")
+                    .build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
     fun ofOrganizationOnHold() {
         val organizationOnHold =
             OrganizationOnHoldErrorDetails.builder().appealUrl("appeal_url").build()
@@ -1737,6 +1883,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).contains(organizationOnHold)
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -1861,6 +2008,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).contains(requestBodyEncodingInvalid)
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -1987,6 +2135,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported())
@@ -2112,6 +2261,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -2236,6 +2386,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -2360,6 +2511,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -2487,6 +2639,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -2613,6 +2766,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -2735,6 +2889,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -2859,6 +3014,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -2985,6 +3141,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -3112,6 +3269,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -3239,6 +3397,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -3364,6 +3523,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -3488,6 +3648,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -3612,6 +3773,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -3739,6 +3901,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -3864,6 +4027,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -3988,6 +4152,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -4112,6 +4277,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -4234,6 +4400,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -4356,6 +4523,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -4480,6 +4648,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -4602,6 +4771,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -4724,6 +4894,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -4845,6 +5016,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -4969,6 +5141,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -5094,6 +5267,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -5219,6 +5393,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -5343,6 +5518,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -5466,6 +5642,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -5591,6 +5768,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -5716,6 +5894,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -5841,6 +6020,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -5965,6 +6145,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -6087,6 +6268,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -6211,6 +6393,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -6337,6 +6520,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -6462,6 +6646,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -6586,6 +6771,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -6710,6 +6896,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -6836,6 +7023,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -6961,6 +7149,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -7084,6 +7273,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -7208,6 +7398,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -7331,6 +7522,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -7457,6 +7649,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -7582,6 +7775,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -7706,6 +7900,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -7828,6 +8023,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -7952,6 +8148,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -8076,6 +8273,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -8200,6 +8398,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -8332,6 +8531,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -8463,6 +8663,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -8585,6 +8786,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -8709,6 +8911,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -8833,6 +9036,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -8959,6 +9163,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -9084,6 +9289,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -9209,6 +9415,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -9333,6 +9540,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -9460,6 +9668,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -9585,6 +9794,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -9708,6 +9918,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -9832,6 +10043,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -9958,6 +10170,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -10085,6 +10298,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -10207,6 +10421,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -10329,6 +10544,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -10453,6 +10669,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -10579,6 +10796,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -10704,6 +10922,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -10830,6 +11049,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -10956,6 +11176,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -11080,6 +11301,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -11204,6 +11426,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -11329,6 +11552,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -11451,6 +11675,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -11577,6 +11802,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -11706,6 +11932,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -11831,6 +12058,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -11959,6 +12187,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -12086,6 +12315,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -12212,6 +12442,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
@@ -12337,6 +12568,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
         assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
         assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
         assertThat(errorDetails.organizationOnHold()).isEmpty
         assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
         assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
