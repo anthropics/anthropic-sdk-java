@@ -615,14 +615,8 @@ class BetaMessageAccumulator private constructor() {
                     // to update the final `tool_use` content block.
                     val inputJson = messageContentInputJson[index]?.toString()
 
-                    if (oldContentBlock.tracksToolInput()) {
-                        // Check that there was at least one delta, so a potentially-valid `input`
-                        // JSON string was accumulated.
-                        inputJson
-                            ?: throw AnthropicInvalidDataException(
-                                "Missing input JSON for index $index."
-                            )
-
+                    // A block with no deltas was streamed whole: its start event has the `input`.
+                    if (oldContentBlock.tracksToolInput() && inputJson != null) {
                         // Anthropic Streaming Messages API: "the final `tool_use.input`
                         // is always an _object_." However, if a tool function has no
                         // arguments, the concatenated `inputJson` can be an empty

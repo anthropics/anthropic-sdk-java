@@ -4,6 +4,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonNull
 import com.anthropic.core.JsonString
+import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.*
@@ -742,16 +743,48 @@ internal class MessageAccumulatorTest {
 
     @Test
     fun accumulateToolUseContentBlockWithoutAnyDelta() {
-        val accumulator = MessageAccumulator.create()
+        val toolUse =
+            ToolUseBlock.builder()
+                .id("toolu_1")
+                .codeExecution20250825Caller("srvtoolu_1")
+                .name("get_weather")
+                .input(JsonValue.from(mapOf("location" to "Seattle")))
+                .build()
 
-        accumulator.accumulate(messageStartEvent())
-        accumulator.accumulate(toolUseContentBlockStartEvent(1L, "1-TOOL."))
+        val contentBlock = accumulateContentBlockWithoutAnyDelta(ContentBlock.ofToolUse(toolUse))
 
-        // There must be at least one `content_block_delta` event before the end of the block to
-        // define the input JSON string.
-        assertThatThrownBy { accumulator.accumulate(contentBlockStopEvent(1L)) }
-            .isInstanceOf(AnthropicInvalidDataException::class.java)
-            .hasMessage("Missing input JSON for index 1.")
+        assertThat(contentBlock.asToolUse()).isEqualTo(toolUse)
+    }
+
+    @Test
+    fun accumulateToolUseContentBlockWithoutAnyDeltaWithEmptyInput() {
+        val toolUse =
+            ToolUseBlock.builder()
+                .id("toolu_1")
+                .codeExecution20250825Caller("srvtoolu_1")
+                .name("get_time")
+                .input(JsonValue.from(mapOf<String, Any>()))
+                .build()
+
+        val contentBlock = accumulateContentBlockWithoutAnyDelta(ContentBlock.ofToolUse(toolUse))
+
+        assertThat(contentBlock.asToolUse()).isEqualTo(toolUse)
+    }
+
+    @Test
+    fun accumulateServerToolUseContentBlockWithoutAnyDelta() {
+        val serverToolUse =
+            ServerToolUseBlock.builder()
+                .id("srvtoolu_2")
+                .codeExecution20260120Caller("srvtoolu_1")
+                .name(ServerToolUseBlock.Name.WEB_SEARCH)
+                .input(JsonValue.from(mapOf("query" to "weather in Seattle")))
+                .build()
+
+        val contentBlock =
+            accumulateContentBlockWithoutAnyDelta(ContentBlock.ofServerToolUse(serverToolUse))
+
+        assertThat(contentBlock.asServerToolUse()).isEqualTo(serverToolUse)
     }
 
     @Test
@@ -1378,6 +1411,25 @@ internal class MessageAccumulatorTest {
         RawMessageStreamEvent.ofContentBlockStop(
             RawContentBlockStopEvent.builder().index(index).build()
         )
+
+    /** Accumulates a message that streams [contentBlock] whole, and returns its only block. */
+    private fun accumulateContentBlockWithoutAnyDelta(contentBlock: ContentBlock) =
+        MessageAccumulator.create()
+            .apply {
+                accumulate(messageStartEvent())
+                accumulate(contentBlockStartEvent(0L, contentBlock))
+                accumulate(contentBlockStopEvent(0L))
+                accumulate(
+                    messageDeltaEvent(
+                        stopReason = JsonField.of(StopReason.TOOL_USE),
+                        outputTokens = 1L,
+                    )
+                )
+                accumulate(messageStopEvent())
+            }
+            .message()
+            .content()
+            .single()
 
     private fun usage(inputTokens: Long) =
         Usage.builder()

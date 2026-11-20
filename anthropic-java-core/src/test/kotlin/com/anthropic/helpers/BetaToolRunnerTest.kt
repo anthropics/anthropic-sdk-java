@@ -2087,6 +2087,37 @@ internal class BetaToolRunnerTest {
     }
 
     @Test
+    fun streamingIteration_whenToolUseHasNoDeltas_runsToolWithItsStartInput() {
+        val toolUseEvents =
+            streamEvents(
+                BetaRawContentBlockStartEvent.ContentBlock.ofToolUse(
+                    getWeatherToolUse("Whole Block City")
+                ),
+                delta = null,
+                BetaStopReason.TOOL_USE,
+            )
+        val finalEvents =
+            streamEvents(
+                BetaRawContentBlockStartEvent.ContentBlock.ofText(
+                    BetaTextBlock.builder().citations(null).text("").build()
+                ),
+                BetaRawContentBlockDelta.ofText(
+                    BetaTextDelta.builder().text("Foggy, as usual.").build()
+                ),
+                BetaStopReason.END_TURN,
+            )
+        whenever(messageService.createStreaming(any<MessageCreateParams>(), any()))
+            .thenReturn(streamResponseOf(toolUseEvents), streamResponseOf(finalEvents))
+
+        for (response in toolRunner.streaming()) {
+            response.stream().forEach { _ -> }
+        }
+
+        assertThat(toolRunner.lastToolResponse())
+            .hasValue(getWeatherToolResponse("Whole Block City"))
+    }
+
+    @Test
     fun iteration_whenPauseTurnRepeats_stopsAtMaxIterations() {
         whenever(messageService.create(any<MessageCreateParams>(), any()))
             .thenReturn(pausedServerToolUseMessage())
@@ -3983,10 +4014,10 @@ internal class BetaToolRunnerTest {
     /** The event sequence for a streamed message with a single content block. */
     private fun streamEvents(
         contentBlock: BetaRawContentBlockStartEvent.ContentBlock,
-        delta: BetaRawContentBlockDelta,
+        delta: BetaRawContentBlockDelta?,
         stopReason: BetaStopReason,
     ) =
-        listOf(
+        listOfNotNull(
             BetaRawMessageStreamEvent.ofMessageStart(
                 BetaRawMessageStartEvent.builder()
                     .message(
@@ -4003,9 +4034,11 @@ internal class BetaToolRunnerTest {
             BetaRawMessageStreamEvent.ofContentBlockStart(
                 BetaRawContentBlockStartEvent.builder().index(0L).contentBlock(contentBlock).build()
             ),
-            BetaRawMessageStreamEvent.ofContentBlockDelta(
-                BetaRawContentBlockDeltaEvent.builder().index(0L).delta(delta).build()
-            ),
+            delta?.let {
+                BetaRawMessageStreamEvent.ofContentBlockDelta(
+                    BetaRawContentBlockDeltaEvent.builder().index(0L).delta(it).build()
+                )
+            },
             BetaRawMessageStreamEvent.ofContentBlockStop(
                 BetaRawContentBlockStopEvent.builder().index(0L).build()
             ),
