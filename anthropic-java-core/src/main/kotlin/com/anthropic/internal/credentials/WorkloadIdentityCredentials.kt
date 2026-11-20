@@ -6,6 +6,7 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.auth.AccessToken
 import com.anthropic.core.auth.AccessTokenProvider
 import com.anthropic.core.auth.IdentityTokenProvider
+import com.anthropic.core.http.CompletionExecutorHttpClient
 import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import java.io.OutputStream
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 internal data class TokenResponse(
@@ -58,12 +60,17 @@ internal class WorkloadIdentityCredentials(
         return exchangeToken(baseUrl, identityToken)
     }
 
-    override fun getAsync(baseUrl: String, forceRefresh: Boolean): CompletableFuture<AccessToken> {
+    override fun getAsync(
+        baseUrl: String,
+        forceRefresh: Boolean,
+        executor: Executor,
+    ): CompletableFuture<AccessToken> {
         return identityTokenProvider
-            .getAsync()
+            .getAsync(executor)
             .thenCompose { identityToken ->
                 val request = buildRequest(baseUrl, identityToken)
-                httpClient.executeAsync(request, TOKEN_REQUEST_OPTIONS)
+                CompletionExecutorHttpClient(httpClient, executor)
+                    .executeAsync(request, TOKEN_REQUEST_OPTIONS)
             }
             .thenApply { response -> parseResponse(response) }
     }

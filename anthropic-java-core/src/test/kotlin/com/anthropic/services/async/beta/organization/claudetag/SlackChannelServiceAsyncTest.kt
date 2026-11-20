@@ -1,5 +1,6 @@
 package com.anthropic.services.async.beta.organization.claudetag
 
+import com.anthropic.CompletionExecutorAssertingInterceptor
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.models.beta.AnthropicBeta
@@ -22,6 +23,7 @@ internal class SlackChannelServiceAsyncTest {
     private val client =
         AnthropicOkHttpClientAsync.builder()
             .baseUrl(TestServerExtension.BASE_URL)
+            .addInterceptor(CompletionExecutorAssertingInterceptor())
             .apiKey("my-anthropic-api-key")
             .build()
 

@@ -12,8 +12,8 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * The caller is not allowed to bill the user profile that the request names. The response gives no
- * more specific error code and does not say what the reason is.
+ * The request's user profile cannot be billed. The response gives no more specific error code and
+ * does not say what the reason is.
  */
 class UserProfileNotBillableErrorDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)

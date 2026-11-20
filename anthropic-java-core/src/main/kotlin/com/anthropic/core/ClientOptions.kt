@@ -3,6 +3,7 @@ package com.anthropic.core
 import com.anthropic.backends.Backend
 import com.anthropic.core.auth.CredentialResult
 import com.anthropic.core.http.AsyncStreamResponse
+import com.anthropic.core.http.CompletionExecutorHttpClient
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.Interceptor
@@ -20,10 +21,17 @@ import io.opentelemetry.api.GlobalOpenTelemetry
 import java.time.Clock
 import java.time.Duration
 import java.util.Optional
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.RejectedExecutionHandler
+import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.ThreadFactory
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.jvm.optionals.getOrNull
 
@@ -74,6 +82,20 @@ private constructor(
      * needs to be overridden.
      */
     @get:JvmName("jsonMapper") val jsonMapper: JsonMapper,
+    /**
+     * The executor to use for sending requests and handling responses in asynchronous clients.
+     *
+     * Callbacks chained onto a [CompletableFuture] that a client returns also run in it, unless the
+     * future has already completed.
+     *
+     * Defaults to a dedicated thread pool of up to 64 threads. When all of them are busy, new work
+     * runs in the thread that submits it, which can be the calling thread or one of the HTTP
+     * client's threads. The first time that happens, a notice is printed to `System.err` if
+     * [logLevel] is `INFO` or above. If your callbacks block, then pass your own executor.
+     *
+     * This class takes ownership of the executor and shuts it down, if possible, when closed.
+     */
+    @get:JvmName("completionExecutor") val completionExecutor: Executor,
     /**
      * The executor to use for running [AsyncStreamResponse.Handler] callbacks.
      *
@@ -212,6 +234,7 @@ private constructor(
         private var checkJacksonVersionCompatibility: Boolean = true
         private var backend: Backend? = null
         private var jsonMapper: JsonMapper = jsonMapper()
+        private var completionExecutor: Executor? = null
         private var streamHandlerExecutor: Executor? = null
         private var sleeper: Sleeper? = null
         private var clock: Clock = Clock.systemUTC()
@@ -235,6 +258,7 @@ private constructor(
             checkJacksonVersionCompatibility = clientOptions.checkJacksonVersionCompatibility
             backend = clientOptions.backend
             jsonMapper = clientOptions.jsonMapper
+            completionExecutor = clientOptions.completionExecutor
             streamHandlerExecutor = clientOptions.streamHandlerExecutor
             sleeper = clientOptions.sleeper
             clock = clientOptions.clock
@@ -317,6 +341,26 @@ private constructor(
          * needs to be overridden.
          */
         fun jsonMapper(jsonMapper: JsonMapper) = apply { this.jsonMapper = jsonMapper }
+
+        /**
+         * The executor to use for sending requests and handling responses in asynchronous clients.
+         *
+         * Callbacks chained onto a [CompletableFuture] that a client returns also run in it, unless
+         * the future has already completed.
+         *
+         * Defaults to a dedicated thread pool of up to 64 threads. When all of them are busy, new
+         * work runs in the thread that submits it, which can be the calling thread or one of the
+         * HTTP client's threads. The first time that happens, a notice is printed to `System.err`
+         * if [logLevel] is `INFO` or above. If your callbacks block, then pass your own executor.
+         *
+         * This class takes ownership of the executor and shuts it down, if possible, when closed.
+         */
+        fun completionExecutor(completionExecutor: Executor) = apply {
+            this.completionExecutor =
+                if (completionExecutor is ExecutorService)
+                    PhantomReachableExecutorService(completionExecutor)
+                else completionExecutor
+        }
 
         /**
          * The executor to use for running [AsyncStreamResponse.Handler] callbacks.
@@ -598,6 +642,60 @@ private constructor(
          */
         fun build(): ClientOptions {
             val rawHttpClient = checkRequired("httpClient", httpClient)
+            val completionExecutor =
+                completionExecutor
+                    ?: PhantomReachableExecutorService(
+                        ThreadPoolExecutor(
+                            0,
+                            64,
+                            60,
+                            TimeUnit.SECONDS,
+                            SynchronousQueue(),
+                            object : ThreadFactory {
+
+                                private val threadFactory: ThreadFactory =
+                                    Executors.defaultThreadFactory()
+                                private val count = AtomicLong(0)
+
+                                override fun newThread(runnable: Runnable): Thread =
+                                    threadFactory.newThread(runnable).also {
+                                        it.name =
+                                            "anthropic-completion-thread-${count.getAndIncrement()}"
+                                    }
+                            },
+                            object : RejectedExecutionHandler {
+
+                                private val logLevel = this@Builder.logLevel
+                                private val logged = AtomicBoolean()
+
+                                override fun rejectedExecution(
+                                    task: Runnable,
+                                    executor: ThreadPoolExecutor,
+                                ) {
+                                    if (executor.isShutdown) {
+                                        throw RejectedExecutionException(
+                                            "Task $task rejected from $executor"
+                                        )
+                                    }
+                                    if (
+                                        logLevel.shouldLog(LogLevel.INFO) &&
+                                            logged.compareAndSet(false, true)
+                                    ) {
+                                        System.err.println(
+                                            "All 64 threads of the default " +
+                                                "`completionExecutor` were busy, so work ran " +
+                                                "in the thread that submitted it, which can " +
+                                                "be the calling thread or one of the HTTP " +
+                                                "client's threads. To avoid this, pass your " +
+                                                "own executor with the `completionExecutor` " +
+                                                "option."
+                                        )
+                                    }
+                                    task.run()
+                                }
+                            },
+                        )
+                    )
             val streamHandlerExecutor =
                 streamHandlerExecutor
                     ?: PhantomReachableExecutorService(
@@ -638,14 +736,17 @@ private constructor(
             val interceptedHttpClient =
                 interceptors.intercept(
                     LoggingHttpClient.builder()
-                        // The tracing client is innermost: on every attempt it restores the call's
-                        // context, which async steps above it lose, and adds the `traceparent`
-                        // header before the transport signs the request.
+                        // The tracing client is the innermost that acts on requests: on every
+                        // attempt it restores the call's context, which async steps above it lose,
+                        // and adds the `traceparent` header before the transport signs the request.
                         .httpClient(
                             // A performance optimization: with spans off, the tracing client would
                             // pass every request through unchanged.
-                            if (openTelemetry.traces().enabled()) TracingHttpClient(rawHttpClient)
-                            else rawHttpClient
+                            if (openTelemetry.traces().enabled())
+                                TracingHttpClient(
+                                    CompletionExecutorHttpClient(rawHttpClient, completionExecutor)
+                                )
+                            else CompletionExecutorHttpClient(rawHttpClient, completionExecutor)
                         )
                         .clock(clock)
                         .level(logLevel)
@@ -660,6 +761,7 @@ private constructor(
                             .httpClient(interceptedHttpClient)
                             .tokenProvider(credentialResult.provider)
                             .workspaceId(credentialResult.workspaceId)
+                            .completionExecutor(completionExecutor)
                             .build()
                     is CredentialResult.Static ->
                         HeaderAuthHttpClient(interceptedHttpClient, credentialResult.credential)
@@ -669,7 +771,7 @@ private constructor(
                 rawHttpClient,
                 RetryingHttpClient.builder()
                     .httpClient(authorizedHttpClient)
-                    .sleeper(sleeper)
+                    .sleeper(CompletionExecutorSleeper(sleeper, completionExecutor))
                     .clock(clock)
                     .maxRetries(maxRetries)
                     .build(),
@@ -677,6 +779,7 @@ private constructor(
                 checkJacksonVersionCompatibility,
                 backend,
                 jsonMapper,
+                completionExecutor,
                 streamHandlerExecutor,
                 sleeper,
                 clock,
@@ -715,6 +818,7 @@ private constructor(
      */
     fun close() {
         httpClient.close()
+        (completionExecutor as? ExecutorService)?.shutdown()
         (streamHandlerExecutor as? ExecutorService)?.shutdown()
         sleeper.close()
     }

@@ -97,6 +97,7 @@ import com.anthropic.models.messages.CompactionSignatureInvalidException
 import com.anthropic.models.messages.CompactionTooManyToolReferencesException
 import com.anthropic.models.messages.CompactionToolChangesMismatchException
 import com.anthropic.models.messages.CompactionUnavailableException
+import com.anthropic.models.messages.ImageDimensionsTooLargeException
 import com.anthropic.models.messages.ThreadAlreadyContinuedException
 import com.anthropic.models.messages.ThreadContinueInFlightException
 import com.anthropic.models.messages.ThreadFingerprintMismatchException
@@ -394,6 +395,10 @@ private val errorCodeExceptions:
         (400 to "file_not_downloadable") to
             { headers, body ->
                 FileNotDownloadableException.builder().headers(headers).body(body).build()
+            },
+        (400 to "image_dimensions_too_large") to
+            { headers, body ->
+                ImageDimensionsTooLargeException.builder().headers(headers).body(body).build()
             },
         (400 to "invalid_config_type_change") to
             { headers, body ->

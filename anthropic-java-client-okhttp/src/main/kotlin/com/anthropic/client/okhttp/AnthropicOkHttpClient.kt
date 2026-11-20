@@ -22,6 +22,7 @@ import java.net.Proxy
 import java.time.Clock
 import java.time.Duration
 import java.util.Optional
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import javax.net.ssl.HostnameVerifier
@@ -236,6 +237,23 @@ class AnthropicOkHttpClient private constructor() {
          * needs to be overridden.
          */
         fun jsonMapper(jsonMapper: JsonMapper) = apply { clientOptions.jsonMapper(jsonMapper) }
+
+        /**
+         * The executor to use for sending requests and handling responses in asynchronous clients.
+         *
+         * Callbacks chained onto a [CompletableFuture] that a client returns also run in it, unless
+         * the future has already completed.
+         *
+         * Defaults to a dedicated thread pool of up to 64 threads. When all of them are busy, new
+         * work runs in the thread that submits it, which can be the calling thread or one of the
+         * HTTP client's threads. The first time that happens, a notice is printed to `System.err`
+         * if [logLevel] is `INFO` or above. If your callbacks block, then pass your own executor.
+         *
+         * This class takes ownership of the executor and shuts it down, if possible, when closed.
+         */
+        fun completionExecutor(completionExecutor: Executor) = apply {
+            clientOptions.completionExecutor(completionExecutor)
+        }
 
         /**
          * The executor to use for running [AsyncStreamResponse.Handler] callbacks.

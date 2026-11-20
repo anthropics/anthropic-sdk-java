@@ -154,7 +154,6 @@ internal fun <T> traceApiCallAsync(
     return traceApiCallAsync(ApiCallClient(clientOptions, call = call), send)
 }
 
-@Suppress("ForbiddenMethodCall") // The callbacks run SDK code only.
 private fun <T> traceApiCallAsync(
     client: ApiCallClient,
     send: (ApiCallClient) -> CompletableFuture<HttpResponseFor<T>>,
@@ -198,7 +197,6 @@ private fun <T> traceApiCallAsync(
 }
 
 /** [traceRawApiCall] for an asynchronous method. */
-@Suppress("ForbiddenMethodCall") // The callback runs SDK code only.
 @JvmSynthetic
 internal fun traceRawApiCallAsync(
     clientOptions: ClientOptions,
@@ -214,7 +212,6 @@ internal fun traceRawApiCallAsync(
  * A future of the parsed body of this future's response. Canceling it cancels this one, so that the
  * span ends as canceled.
  */
-@Suppress("ForbiddenMethodCall") // The callbacks run SDK code, as the services' callbacks do.
 @JvmSynthetic
 internal fun <T> CompletableFuture<HttpResponseFor<T>>.thenParse(): CompletableFuture<T> {
     val parsed = thenApply { it.parse() }

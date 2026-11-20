@@ -10,9 +10,14 @@ import com.anthropic.internal.config.CachedTokenData
 import com.anthropic.internal.config.CredentialsCache
 import com.anthropic.internal.credentials.UserOAuthCredentials
 import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.nio.file.Path
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.TimeUnit
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -20,6 +25,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 
 internal class UserOAuthCredentialsTest {
 
@@ -407,7 +414,9 @@ internal class UserOAuthCredentialsTest {
             )
 
         if (async) {
-            assertThatThrownBy { creds.getAsync("https://api.anthropic.com", false).get() }
+            assertThatThrownBy {
+                    creds.getAsync("https://api.anthropic.com", false) { it.run() }.get()
+                }
                 .hasCauseInstanceOf(com.anthropic.errors.UnexpectedStatusCodeException::class.java)
         } else {
             assertThatThrownBy { creds.get("https://api.anthropic.com", false) }
@@ -551,10 +560,115 @@ internal class UserOAuthCredentialsTest {
             .hasMessageContaining("simulated disk failure")
     }
 
+    @Test
+    fun refreshMode_readsResponseAndWritesCacheInExecutorAsync(@TempDir tempDir: Path) {
+        val executor = Executors.newSingleThreadExecutor { Thread(it, "executor") }
+        val continuationChained = CompletableFuture<Void?>()
+        val stepThreadNames = CopyOnWriteArrayList<Pair<String, String>>()
+        val credFile = tempDir.resolve("creds.json")
+        CredentialsCache(credFile, jsonMapper())
+            .writeRecord(
+                CachedTokenData(
+                    type = "access_token",
+                    accessToken = "expired",
+                    expiresAt = Instant.now().minusSeconds(60).epochSecond,
+                    refreshToken = "rt",
+                )
+            )
+        val cache =
+            object : CredentialsCache(credFile, jsonMapper()) {
+                override fun writeRecord(record: CachedTokenData) {
+                    stepThreadNames += "write" to Thread.currentThread().name
+                }
+            }
+        val response = createResponse(200, """{"access_token": "x", "expires_in": 3600}""")
+        val client =
+            object : HttpClient {
+                override fun execute(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse = throw UnsupportedOperationException()
+
+                override fun executeAsync(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): CompletableFuture<HttpResponse> {
+                    val future = CompletableFuture<HttpResponse>()
+                    Thread(
+                            {
+                                continuationChained.join()
+                                future.complete(
+                                    object : HttpResponse by response {
+                                        override fun body(): InputStream {
+                                            stepThreadNames +=
+                                                "response body" to Thread.currentThread().name
+                                            return response.body()
+                                        }
+                                    }
+                                )
+                            },
+                            "http-client",
+                        )
+                        .start()
+                    return future
+                }
+
+                override fun close() {}
+            }
+        val creds =
+            UserOAuthCredentials(
+                credentialsCache = cache,
+                profileName = "default",
+                clientId = "client_abc",
+                httpClient = client,
+                jsonMapper = jsonMapper(),
+            )
+
+        val token = creds.getAsync("https://api.anthropic.com", false, executor)
+        continuationChained.complete(null)
+
+        assertThat(token.get(1, TimeUnit.MINUTES).token).isEqualTo("x")
+        assertThat(stepThreadNames)
+            .containsExactly("response body" to "executor", "write" to "executor")
+        executor.shutdown()
+    }
+
+    @Test
+    fun refreshMode_closesResponseWhenExecutorRejectsAsync(@TempDir tempDir: Path) {
+        val cache = CredentialsCache(tempDir.resolve("creds.json"), jsonMapper())
+        cache.writeRecord(
+            CachedTokenData(
+                type = "access_token",
+                accessToken = "expired",
+                expiresAt = Instant.now().minusSeconds(60).epochSecond,
+                refreshToken = "rt",
+            )
+        )
+        val response = mock<HttpResponse>()
+        val creds =
+            UserOAuthCredentials(
+                credentialsCache = cache,
+                profileName = "default",
+                clientId = "client_abc",
+                httpClient = MockHttpClient { response },
+                jsonMapper = jsonMapper(),
+            )
+
+        val token =
+            creds.getAsync("https://api.anthropic.com", false) {
+                throw RejectedExecutionException()
+            }
+
+        assertThatThrownBy { token.get() }
+            .hasCauseInstanceOf(RejectedExecutionException::class.java)
+        verify(response).close()
+    }
+
     // ------- Test helpers -------
 
     private fun UserOAuthCredentials.get(baseUrl: String, forceRefresh: Boolean, async: Boolean) =
-        if (async) getAsync(baseUrl, forceRefresh).get() else get(baseUrl, forceRefresh)
+        if (async) getAsync(baseUrl, forceRefresh) { it.run() }.get()
+        else get(baseUrl, forceRefresh)
 
     private fun extractBody(request: HttpRequest): String {
         val body = request.body().getOrNull() ?: return ""

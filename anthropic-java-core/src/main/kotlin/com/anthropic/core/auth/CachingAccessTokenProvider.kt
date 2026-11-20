@@ -3,6 +3,7 @@ package com.anthropic.core.auth
 import java.time.Duration
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -111,23 +112,37 @@ internal class CachingAccessTokenProvider(
             AsyncAction()
     }
 
-    override fun getAsync(baseUrl: String, forceRefresh: Boolean): CompletableFuture<AccessToken> {
-        val action = lock.withLock { planAsyncUnsafe(baseUrl, forceRefresh) }
+    override fun getAsync(
+        baseUrl: String,
+        forceRefresh: Boolean,
+        executor: Executor,
+    ): CompletableFuture<AccessToken> {
+        val action = lock.withLock { planAsyncUnsafe(baseUrl, forceRefresh, executor) }
         return when (action) {
             is AsyncAction.ReturnCached -> CompletableFuture.completedFuture(action.token)
             is AsyncAction.Join -> action.future
             is AsyncAction.Background -> {
-                launchAsyncRefresh(baseUrl, action.future, force = false, advisory = true)
+                launchAsyncRefresh(baseUrl, action.future, force = false, advisory = true, executor)
                 CompletableFuture.completedFuture(action.fallback)
             }
             is AsyncAction.Foreground -> {
-                launchAsyncRefresh(baseUrl, action.future, force = action.force, advisory = false)
+                launchAsyncRefresh(
+                    baseUrl,
+                    action.future,
+                    force = action.force,
+                    advisory = false,
+                    executor,
+                )
                 action.future
             }
         }
     }
 
-    private fun planAsyncUnsafe(baseUrl: String, forceRefresh: Boolean): AsyncAction {
+    private fun planAsyncUnsafe(
+        baseUrl: String,
+        forceRefresh: Boolean,
+        executor: Executor,
+    ): AsyncAction {
         // Force callers: can only join another force refresh; otherwise start own.
         if (forceRefresh) {
             asyncInFlight?.let { existing ->
@@ -136,7 +151,7 @@ internal class CachingAccessTokenProvider(
                 // chainAfter installs the new in-flight slot AND schedules the
                 // upstream call once `existing` finishes, so we Join here rather
                 // than Foreground (which would launch a second upstream call).
-                return AsyncAction.Join(chainAfter(existing, baseUrl))
+                return AsyncAction.Join(chainAfter(existing, baseUrl, executor))
             }
             val future = CompletableFuture<AccessToken>()
             asyncInFlight = future
@@ -185,17 +200,20 @@ internal class CachingAccessTokenProvider(
     private fun chainAfter(
         prior: CompletableFuture<AccessToken>,
         baseUrl: String,
+        executor: Executor,
     ): CompletableFuture<AccessToken> {
         val future = CompletableFuture<AccessToken>()
         // We set ourselves as the in-flight slot now so other force callers
         // arriving during `prior` will join us.
         asyncInFlight = future
         asyncInFlightForce = true
-        prior.whenComplete { _, _ ->
-            provider.getAsync(baseUrl, true).whenComplete { token, err ->
+        prior
+            .handle { _, _ -> }
+            .thenCompose { provider.getAsync(baseUrl, true, executor) }
+            .whenCompleteAsync({ _, _ -> }, executor)
+            .whenComplete { token, err ->
                 completeAsync(future, baseUrl, token, err, advisory = false)
             }
-        }
         return future
     }
 
@@ -204,8 +222,15 @@ internal class CachingAccessTokenProvider(
         future: CompletableFuture<AccessToken>,
         force: Boolean,
         advisory: Boolean,
+        executor: Executor,
     ) {
-        provider.getAsync(baseUrl, force).whenComplete { token, err ->
+        val refresh =
+            try {
+                provider.getAsync(baseUrl, force, executor)
+            } catch (e: Throwable) {
+                CompletableFuture<AccessToken>().apply { completeExceptionally(e) }
+            }
+        refresh.whenCompleteAsync({ _, _ -> }, executor).whenComplete { token, err ->
             completeAsync(future, baseUrl, token, err, advisory)
         }
     }

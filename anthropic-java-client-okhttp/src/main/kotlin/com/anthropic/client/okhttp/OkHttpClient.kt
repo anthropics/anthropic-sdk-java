@@ -164,8 +164,6 @@ private constructor(
             }
         )
 
-        // Not a user callback; cancellation and body cleanup must not depend on an executor.
-        @Suppress("ForbiddenMethodCall")
         future.whenComplete { _, e ->
             if (e is CancellationException) {
                 call.cancel()

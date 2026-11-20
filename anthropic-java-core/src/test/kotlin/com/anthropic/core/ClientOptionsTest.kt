@@ -1,5 +1,7 @@
 package com.anthropic.core
 
+import com.anthropic.core.auth.AccessToken
+import com.anthropic.core.auth.AccessTokenProvider
 import com.anthropic.core.auth.CredentialResult
 import com.anthropic.core.auth.InMemoryAccessTokenProvider
 import com.anthropic.core.http.Headers
@@ -10,12 +12,22 @@ import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.Interceptor
 import com.anthropic.core.opentelemetry.OpenTelemetryOptions
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.io.PrintStream
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executor
+import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.TimeUnit
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.parallel.ResourceLock
+import org.junit.jupiter.api.parallel.Resources
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.mock
@@ -78,6 +90,59 @@ internal class ClientOptionsTest {
                 .build()
 
         assertThat(clientOptions.interceptors).containsExactly(first, second)
+    }
+
+    @Test
+    fun completionExecutor_whenNotSetAndAllThreadsAreBusy_runsTaskInSubmittingThread() {
+        val clientOptions = ClientOptions.builder().httpClient(httpClient).build()
+        val unblock = CountDownLatch(1)
+        repeat(64) {
+            clientOptions.completionExecutor.execute { unblock.await(1, TimeUnit.MINUTES) }
+        }
+        var taskThread: Thread? = null
+
+        clientOptions.completionExecutor.execute { taskThread = Thread.currentThread() }
+
+        assertThat(taskThread).isSameAs(Thread.currentThread())
+        unblock.countDown()
+    }
+
+    @ParameterizedTest
+    @CsvSource("OFF,0", "INFO,1", "DEBUG,1")
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun completionExecutor_whenNotSetAndAllThreadsAreBusyTwice_logsOnceUnlessLogLevelIsOff(
+        logLevel: LogLevel,
+        expectedLogCount: Int,
+    ) {
+        val clientOptions =
+            ClientOptions.builder().httpClient(httpClient).logLevel(logLevel).build()
+        val unblock = CountDownLatch(1)
+        repeat(64) {
+            clientOptions.completionExecutor.execute { unblock.await(1, TimeUnit.MINUTES) }
+        }
+        val originalErr = System.err
+        val errContent = ByteArrayOutputStream()
+        System.setErr(PrintStream(errContent))
+
+        try {
+            clientOptions.completionExecutor.execute {}
+            clientOptions.completionExecutor.execute {}
+        } finally {
+            System.setErr(originalErr)
+        }
+
+        assertThat(errContent.toString("UTF-8").lines().filter { "completionExecutor" in it })
+            .hasSize(expectedLogCount)
+        unblock.countDown()
+    }
+
+    @Test
+    fun completionExecutor_whenNotSetAndClosed_rejectsTask() {
+        val clientOptions = ClientOptions.builder().httpClient(httpClient).build()
+        clientOptions.close()
+
+        assertThatThrownBy { clientOptions.completionExecutor.execute {} }
+            .isInstanceOf(RejectedExecutionException::class.java)
     }
 
     @Test
@@ -146,6 +211,41 @@ internal class ClientOptionsTest {
             .containsExactly("Bearer oauth-token-123")
         assertThat(interceptedRequests[0].headers.values("anthropic-beta"))
             .containsExactly("oauth-2025-04-20")
+    }
+
+    @Test
+    fun tokenProviderReceivesCompletionExecutor() {
+        val executors = mutableListOf<Executor>()
+        val clientOptions =
+            ClientOptions.builder()
+                .httpClient(FakeHttpClient())
+                .credentials(
+                    CredentialResult.Token(
+                        object : AccessTokenProvider {
+                            override fun get(baseUrl: String, forceRefresh: Boolean): AccessToken =
+                                throw UnsupportedOperationException()
+
+                            override fun getAsync(
+                                baseUrl: String,
+                                forceRefresh: Boolean,
+                                executor: Executor,
+                            ): CompletableFuture<AccessToken> {
+                                executors += executor
+                                return CompletableFuture.completedFuture(
+                                    AccessToken("oauth-token-123")
+                                )
+                            }
+                        }
+                    )
+                )
+                .build()
+
+        clientOptions.httpClient
+            .executeAsync(simpleGetRequest(), RequestOptions.none())
+            .get(1, TimeUnit.MINUTES)
+            .close()
+
+        assertThat(executors).containsExactly(clientOptions.completionExecutor)
     }
 
     @Test

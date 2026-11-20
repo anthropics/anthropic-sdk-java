@@ -6,9 +6,12 @@ import com.anthropic.core.auth.CachingAccessTokenProvider
 import java.time.Duration
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.Executor
 import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import org.assertj.core.api.Assertions.assertThat
@@ -18,6 +21,7 @@ import org.junit.jupiter.api.Test
 internal class CachingAccessTokenProviderTest {
 
     private val baseUrl = "https://api.anthropic.com"
+    private val sameThreadExecutor = Executor { it.run() }
 
     private fun provider(
         tokenFn: (baseUrl: String, forceRefresh: Boolean) -> AccessToken
@@ -26,20 +30,20 @@ internal class CachingAccessTokenProviderTest {
             override fun get(baseUrl: String, forceRefresh: Boolean) =
                 tokenFn(baseUrl, forceRefresh)
 
-            override fun getAsync(baseUrl: String, forceRefresh: Boolean) =
+            override fun getAsync(baseUrl: String, forceRefresh: Boolean, executor: Executor) =
                 CompletableFuture.supplyAsync { tokenFn(baseUrl, forceRefresh) }
         }
 
     private fun asyncProvider(
         tokenFn: (baseUrl: String, forceRefresh: Boolean) -> AccessToken
     ): AccessTokenProvider {
-        val executor = Executors.newCachedThreadPool()
+        val providerExecutor = Executors.newCachedThreadPool()
         return object : AccessTokenProvider {
             override fun get(baseUrl: String, forceRefresh: Boolean) =
                 tokenFn(baseUrl, forceRefresh)
 
-            override fun getAsync(baseUrl: String, forceRefresh: Boolean) =
-                CompletableFuture.supplyAsync({ tokenFn(baseUrl, forceRefresh) }, executor)
+            override fun getAsync(baseUrl: String, forceRefresh: Boolean, executor: Executor) =
+                CompletableFuture.supplyAsync({ tokenFn(baseUrl, forceRefresh) }, providerExecutor)
         }
     }
 
@@ -71,7 +75,7 @@ internal class CachingAccessTokenProviderTest {
                 }
             )
 
-        val token = cache.getAsync(baseUrl, false).get()
+        val token = cache.getAsync(baseUrl, false, sameThreadExecutor).get()
 
         assertThat(token.token).isEqualTo("tok-1")
         assertThat(calls.get()).isEqualTo(1)
@@ -127,16 +131,18 @@ internal class CachingAccessTokenProviderTest {
             )
 
         // Prime the cache.
-        assertThat(cache.getAsync(baseUrl, false).get().token).isEqualTo("stale")
+        assertThat(cache.getAsync(baseUrl, false, sameThreadExecutor).get().token)
+            .isEqualTo("stale")
 
         // Second call returns stale immediately and triggers background refresh.
-        assertThat(cache.getAsync(baseUrl, false).get().token).isEqualTo("stale")
+        assertThat(cache.getAsync(baseUrl, false, sameThreadExecutor).get().token)
+            .isEqualTo("stale")
 
         // Poll until the background refresh lands.
         val deadline = System.nanoTime() + Duration.ofSeconds(2).toNanos()
         var got: String = ""
         while (System.nanoTime() < deadline) {
-            got = cache.getAsync(baseUrl, false).get().token
+            got = cache.getAsync(baseUrl, false, sameThreadExecutor).get().token
             if (got == "refreshed") return
             Thread.sleep(1)
         }
@@ -163,10 +169,11 @@ internal class CachingAccessTokenProviderTest {
             )
 
         // Prime.
-        cache.getAsync(baseUrl, false).get()
+        cache.getAsync(baseUrl, false, sameThreadExecutor).get()
 
         // Triggers background refresh; returns stale.
-        assertThat(cache.getAsync(baseUrl, false).get().token).isEqualTo("stale")
+        assertThat(cache.getAsync(baseUrl, false, sameThreadExecutor).get().token)
+            .isEqualTo("stale")
 
         // Wait for the failing refresh to actually run.
         assertThat(refreshAttempted.await(2, TimeUnit.SECONDS)).isTrue()
@@ -174,7 +181,10 @@ internal class CachingAccessTokenProviderTest {
         // Subsequent calls within the backoff window still serve stale and must
         // not trigger further refresh attempts.
         val callsAfterFailure = calls.get()
-        repeat(3) { assertThat(cache.getAsync(baseUrl, false).get().token).isEqualTo("stale") }
+        repeat(3) {
+            assertThat(cache.getAsync(baseUrl, false, sameThreadExecutor).get().token)
+                .isEqualTo("stale")
+        }
         assertThat(calls.get()).isEqualTo(callsAfterFailure)
     }
 
@@ -211,9 +221,9 @@ internal class CachingAccessTokenProviderTest {
                 }
             )
 
-        cache.getAsync(baseUrl, false).get()
+        cache.getAsync(baseUrl, false, sameThreadExecutor).get()
 
-        assertThatThrownBy { cache.getAsync(baseUrl, false).get() }
+        assertThatThrownBy { cache.getAsync(baseUrl, false, sameThreadExecutor).get() }
             .isInstanceOf(ExecutionException::class.java)
             .hasCauseInstanceOf(RuntimeException::class.java)
             .hasMessageContaining("refresh failed")
@@ -337,7 +347,7 @@ internal class CachingAccessTokenProviderTest {
     fun concurrentAsyncCallersDeduplicate() {
         val calls = AtomicInteger(0)
         val release = CountDownLatch(1)
-        val executor = Executors.newCachedThreadPool()
+        val providerExecutor = Executors.newCachedThreadPool()
 
         val p =
             object : AccessTokenProvider {
@@ -345,24 +355,97 @@ internal class CachingAccessTokenProviderTest {
                     throw UnsupportedOperationException()
                 }
 
-                override fun getAsync(baseUrl: String, forceRefresh: Boolean) =
+                override fun getAsync(baseUrl: String, forceRefresh: Boolean, executor: Executor) =
                     CompletableFuture.supplyAsync(
                         {
                             calls.incrementAndGet()
                             release.await()
                             AccessToken("concurrent", Instant.now().plusSeconds(3600))
                         },
-                        executor,
+                        providerExecutor,
                     )
             }
         val cache = CachingAccessTokenProvider(p)
 
-        val futures = (1..10).map { cache.getAsync(baseUrl, false) }
+        val futures = (1..10).map { cache.getAsync(baseUrl, false, sameThreadExecutor) }
         // All callers have submitted; unblock the single provider call.
         Thread.sleep(50)
         release.countDown()
 
         futures.forEach { assertThat(it.get(5, TimeUnit.SECONDS).token).isEqualTo("concurrent") }
         assertThat(calls.get()).isEqualTo(1)
+    }
+
+    @Test
+    fun asyncRefreshThatThrowsDoesNotBlockLaterRefreshes() {
+        val calls = AtomicInteger(0)
+        val cache =
+            CachingAccessTokenProvider(
+                object : AccessTokenProvider {
+                    override fun get(baseUrl: String, forceRefresh: Boolean): AccessToken =
+                        throw UnsupportedOperationException()
+
+                    override fun getAsync(
+                        baseUrl: String,
+                        forceRefresh: Boolean,
+                        executor: Executor,
+                    ): CompletableFuture<AccessToken> =
+                        if (calls.getAndIncrement() == 0) throw RejectedExecutionException()
+                        else CompletableFuture.completedFuture(AccessToken("tok-2"))
+                }
+            )
+
+        assertThatThrownBy {
+                cache.getAsync(baseUrl, false, sameThreadExecutor).get(5, TimeUnit.SECONDS)
+            }
+            .isInstanceOf(ExecutionException::class.java)
+            .hasCauseInstanceOf(RejectedExecutionException::class.java)
+        assertThat(
+                cache.getAsync(baseUrl, false, sameThreadExecutor).get(5, TimeUnit.SECONDS).token
+            )
+            .isEqualTo("tok-2")
+    }
+
+    @Test
+    fun asyncRefreshesCompleteInExecutor() {
+        val executor = Executors.newSingleThreadExecutor { Thread(it, "executor") }
+        val continuationsChained = CompletableFuture<Void?>()
+        val forceRefreshes = CopyOnWriteArrayList<Boolean>()
+        val cache =
+            CachingAccessTokenProvider(
+                object : AccessTokenProvider {
+                    override fun get(baseUrl: String, forceRefresh: Boolean): AccessToken =
+                        throw UnsupportedOperationException()
+
+                    override fun getAsync(
+                        baseUrl: String,
+                        forceRefresh: Boolean,
+                        executor: Executor,
+                    ): CompletableFuture<AccessToken> {
+                        forceRefreshes += forceRefresh
+                        val future = CompletableFuture<AccessToken>()
+                        Thread(
+                                {
+                                    continuationsChained.join()
+                                    future.complete(AccessToken("tok"))
+                                },
+                                "token-provider",
+                            )
+                            .start()
+                        return future
+                    }
+                }
+            )
+
+        val refreshThreadName =
+            cache.getAsync(baseUrl, false, executor).thenApply { Thread.currentThread().name }
+        val forceRefreshThreadName =
+            cache.getAsync(baseUrl, true, executor).thenApply { Thread.currentThread().name }
+        continuationsChained.complete(null)
+
+        assertThat(refreshThreadName.get(1, TimeUnit.MINUTES)).isEqualTo("executor")
+        assertThat(forceRefreshThreadName.get(1, TimeUnit.MINUTES)).isEqualTo("executor")
+        assertThat(forceRefreshes).containsExactly(false, true)
+        executor.shutdown()
     }
 }

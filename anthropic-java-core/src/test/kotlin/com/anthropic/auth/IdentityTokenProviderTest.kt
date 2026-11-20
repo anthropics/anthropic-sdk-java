@@ -2,6 +2,9 @@ package com.anthropic.auth
 
 import com.anthropic.core.auth.FileIdentityTokenProvider
 import java.nio.file.Path
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -26,7 +29,25 @@ internal class IdentityTokenProviderTest {
 
         val provider = FileIdentityTokenProvider(tokenFile.toString())
 
-        assertThat(provider.getAsync().get()).isEqualTo("file-jwt-token")
+        assertThat(provider.getAsync { it.run() }.get()).isEqualTo("file-jwt-token")
+    }
+
+    @Test
+    fun identityTokenFileReadsInExecutorAsync(@TempDir tempDir: Path) {
+        val tokenFile = tempDir.resolve("token")
+        tokenFile.toFile().writeText("file-jwt-token")
+        val executor = Executors.newSingleThreadExecutor { Thread(it, "executor") }
+        val continuationChained = CompletableFuture<Void?>()
+        executor.execute { continuationChained.join() }
+
+        val readThreadName =
+            FileIdentityTokenProvider(tokenFile.toString()).getAsync(executor).thenApply {
+                Thread.currentThread().name
+            }
+        continuationChained.complete(null)
+
+        assertThat(readThreadName.get(1, TimeUnit.MINUTES)).isEqualTo("executor")
+        executor.shutdown()
     }
 
     @Test

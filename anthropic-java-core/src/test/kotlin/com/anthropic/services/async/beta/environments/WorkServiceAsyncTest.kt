@@ -1,5 +1,6 @@
 package com.anthropic.services.async.beta.environments
 
+import com.anthropic.CompletionExecutorAssertingInterceptor
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.core.JsonValue
@@ -23,6 +24,7 @@ internal class WorkServiceAsyncTest {
     private val client =
         AnthropicOkHttpClientAsync.builder()
             .baseUrl(TestServerExtension.BASE_URL)
+            .addInterceptor(CompletionExecutorAssertingInterceptor())
             .apiKey("my-anthropic-api-key")
             .build()
 

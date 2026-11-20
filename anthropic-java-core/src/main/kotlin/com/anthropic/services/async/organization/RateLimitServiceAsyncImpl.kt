@@ -69,7 +69,10 @@ class RateLimitServiceAsyncImpl internal constructor(private val clientOptions: 
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return traceApiCallAsync(clientOptions, params) { client ->
                 request
-                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenComposeAsync(
+                        { client.executeAsync(it, requestOptions) },
+                        clientOptions.completionExecutor,
+                    )
                     .thenApply { response ->
                         errorHandler.handle(response).parseable {
                             response

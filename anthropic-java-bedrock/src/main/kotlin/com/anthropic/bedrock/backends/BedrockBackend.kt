@@ -117,6 +117,7 @@ private constructor(
         private const val SERVICE_NAME = "bedrock-runtime"
         private const val HEADER_ANTHROPIC_BETA = "anthropic-beta"
         private const val HEADER_ANTHROPIC_VERSION = "anthropic-version"
+        private const val HEADER_USER_PROFILE_ID = "anthropic-user-profile-id"
         private const val HEADER_CONTENT_TYPE = "content-type"
         private const val HEADER_AUTHORIZATION = "authorization"
         private const val CONTENT_TYPE_JSON = "application/json"
@@ -235,6 +236,11 @@ private constructor(
             jsonBody.replace("anthropic_beta", jsonMapper.valueToTree(betaVersions))
         }
 
+        val userProfileIds = request.headers.values(HEADER_USER_PROFILE_ID)
+        if (userProfileIds.isNotEmpty() && !jsonBody.has("user_profile_id")) {
+            jsonBody.put("user_profile_id", userProfileIds.joinToString(", "))
+        }
+
         val model =
             jsonBody.remove("model")
                 ?: throw AnthropicInvalidDataException("No model found in body.")
@@ -247,10 +253,11 @@ private constructor(
             .toBuilder()
             .replaceAllPathSegments("model", modelId)
             .addPathSegment(if (isStream) "invoke-with-response-stream" else "invoke")
-            // Bedrock takes betas and the API version in the body, so the headers must not be
-            // signed or sent.
+            // Bedrock takes betas, the API version and the user profile ID in the body, so the
+            // headers must not be signed or sent.
             .removeHeaders(HEADER_ANTHROPIC_BETA)
             .removeHeaders(HEADER_ANTHROPIC_VERSION)
+            .removeHeaders(HEADER_USER_PROFILE_ID)
             .body(json(jsonMapper, jsonBody))
             .build()
     }

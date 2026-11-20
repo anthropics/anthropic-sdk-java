@@ -14,6 +14,8 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.NoCredentialsException
+import com.fasterxml.jackson.databind.ObjectWriter
+import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -21,6 +23,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -41,6 +46,7 @@ internal class CredentialResolverTest {
                 override fun getAsync(
                     baseUrl: String,
                     forceRefresh: Boolean,
+                    executor: Executor,
                 ): CompletableFuture<AccessToken> =
                     CompletableFuture.completedFuture(AccessToken("explicit-cred-token"))
             }
@@ -764,6 +770,62 @@ internal class CredentialResolverTest {
     }
 
     @Test
+    fun profileResolutionWritesToFileCacheInExecutorAsync(@TempDir tempDir: Path) {
+        val configsDir = tempDir.resolve("configs")
+        Files.createDirectories(configsDir)
+        Files.write(
+            configsDir.resolve("write-cache-profile.json"),
+            """
+            {
+                "organization_id": "org_write",
+                "authentication": {
+                    "type": "oidc_federation",
+                    "federation_rule_id": "fdrl_write",
+                    "identity_token": {
+                        "source": "value",
+                        "path": "test-jwt-token"
+                    }
+                }
+            }
+            """
+                .trimIndent()
+                .toByteArray(),
+        )
+        val executor = Executors.newSingleThreadExecutor { Thread(it, "executor") }
+        val writeThreadName = CompletableFuture<String>()
+        val resolver =
+            CredentialResolver.builder()
+                .envProfile("write-cache-profile")
+                .configDir(tempDir)
+                .httpClient(
+                    MockHttpClient {
+                        createResponse(
+                            200,
+                            """{"access_token": "new-wif-token", "expires_in": 3600}""",
+                        )
+                    }
+                )
+                .jsonMapper(
+                    object : JsonMapper(jsonMapper()) {
+                        override fun writerWithDefaultPrettyPrinter(): ObjectWriter {
+                            writeThreadName.complete(Thread.currentThread().name)
+                            return super.writerWithDefaultPrettyPrinter()
+                        }
+                    }
+                )
+                .build()
+
+        resolver
+            .resolve()
+            .provider
+            .getAsync("https://api.anthropic.com", false, executor)
+            .get(1, TimeUnit.MINUTES)
+
+        assertThat(writeThreadName).isCompletedWithValue("executor")
+        executor.shutdown()
+    }
+
+    @Test
     fun userOAuth_externallyRotated_resolvesWithoutHttpCall(@TempDir tempDir: Path) {
         val configDir = tempDir.resolve("configs")
         java.nio.file.Files.createDirectories(configDir)
@@ -950,7 +1012,8 @@ internal class CredentialResolverTest {
     }
 
     private fun AccessTokenProvider.get(baseUrl: String, forceRefresh: Boolean, async: Boolean) =
-        if (async) getAsync(baseUrl, forceRefresh).get() else get(baseUrl, forceRefresh)
+        if (async) getAsync(baseUrl, forceRefresh) { it.run() }.get()
+        else get(baseUrl, forceRefresh)
 
     private fun extractBody(request: HttpRequest): String {
         val body = request.body().getOrNull() ?: return ""
