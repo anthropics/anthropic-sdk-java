@@ -22,6 +22,17 @@ internal class WorkspaceCreateParamsTest {
             )
             .displayColor("#6C5BB9")
             .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
+            .inferenceDataPrivacy(
+                BetaInferenceDataPrivacyCreateParam.builder()
+                    .humanReview(
+                        BetaAnthropicHumanReviewParam.of(
+                            BetaAnthropicHumanReviewParam.Type.DISABLED
+                        )
+                    )
+                    .safeguardsStorage(BetaInternalStorageParam.builder().build())
+                    .transcriptsStorage(BetaInternalStorageParam.builder().build())
+                    .build()
+            )
             .tags(
                 WorkspaceCreateParams.Tags.builder()
                     .putAdditionalProperty("env", JsonValue.from("prod"))
@@ -49,6 +60,17 @@ internal class WorkspaceCreateParamsTest {
                 )
                 .displayColor("#6C5BB9")
                 .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
+                .inferenceDataPrivacy(
+                    BetaInferenceDataPrivacyCreateParam.builder()
+                        .humanReview(
+                            BetaAnthropicHumanReviewParam.of(
+                                BetaAnthropicHumanReviewParam.Type.DISABLED
+                            )
+                        )
+                        .safeguardsStorage(BetaInternalStorageParam.builder().build())
+                        .transcriptsStorage(BetaInternalStorageParam.builder().build())
+                        .build()
+                )
                 .tags(
                     WorkspaceCreateParams.Tags.builder()
                         .putAdditionalProperty("env", JsonValue.from("prod"))
@@ -94,6 +116,17 @@ internal class WorkspaceCreateParamsTest {
                 )
                 .displayColor("#6C5BB9")
                 .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
+                .inferenceDataPrivacy(
+                    BetaInferenceDataPrivacyCreateParam.builder()
+                        .humanReview(
+                            BetaAnthropicHumanReviewParam.of(
+                                BetaAnthropicHumanReviewParam.Type.DISABLED
+                            )
+                        )
+                        .safeguardsStorage(BetaInternalStorageParam.builder().build())
+                        .transcriptsStorage(BetaInternalStorageParam.builder().build())
+                        .build()
+                )
                 .tags(
                     WorkspaceCreateParams.Tags.builder()
                         .putAdditionalProperty("env", JsonValue.from("prod"))
@@ -116,6 +149,18 @@ internal class WorkspaceCreateParamsTest {
             )
         assertThat(body.displayColor()).contains("#6C5BB9")
         assertThat(body.externalKeyId()).contains("ekey_01SDCCSbTxrXDpWc1phhtcfK")
+        assertThat(body.inferenceDataPrivacy())
+            .contains(
+                BetaInferenceDataPrivacyCreateParam.builder()
+                    .humanReview(
+                        BetaAnthropicHumanReviewParam.of(
+                            BetaAnthropicHumanReviewParam.Type.DISABLED
+                        )
+                    )
+                    .safeguardsStorage(BetaInternalStorageParam.builder().build())
+                    .transcriptsStorage(BetaInternalStorageParam.builder().build())
+                    .build()
+            )
         assertThat(body.tags())
             .contains(
                 WorkspaceCreateParams.Tags.builder()

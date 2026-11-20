@@ -10,6 +10,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.AnthropicBeta
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -23,12 +24,19 @@ import kotlin.jvm.optionals.getOrNull
 class WorkspaceUpdateParams
 private constructor(
     private val workspaceId: String?,
+    private val betas: List<AnthropicBeta>?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
+
+    /**
+     * Optional. Send `efs-2026-10-01` in this header to use this endpoint's beta features:
+     * additional parameters, accepted values and response fields.
+     */
+    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
      * Data residency configuration for the workspace.
@@ -63,6 +71,19 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun externalKeyId(): Optional<String> = body.externalKeyId()
+
+    /**
+     * Changes to where the Workspace's retained inference data and transcript copies go, and to
+     * whether Anthropic's human review applies. Requires the `efs-2026-10-01` `anthropic-beta`
+     * value. An omitted member is unchanged. Cannot be null. An Admin API key can't set this field,
+     * because it doesn't belong to a user or a service account. Use an API key that belongs to one,
+     * or an OAuth token.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun inferenceDataPrivacy(): Optional<BetaInferenceDataPrivacyUpdateParam> =
+        body.inferenceDataPrivacy()
 
     /**
      * Name of the Workspace.
@@ -115,6 +136,15 @@ private constructor(
     fun _externalKeyId(): JsonField<String> = body._externalKeyId()
 
     /**
+     * Returns the raw JSON value of [inferenceDataPrivacy].
+     *
+     * Unlike [inferenceDataPrivacy], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _inferenceDataPrivacy(): JsonField<BetaInferenceDataPrivacyUpdateParam> =
+        body._inferenceDataPrivacy()
+
+    /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
@@ -157,6 +187,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var workspaceId: String? = null
+        private var betas: MutableList<AnthropicBeta>? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -164,6 +195,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(workspaceUpdateParams: WorkspaceUpdateParams) = apply {
             workspaceId = workspaceUpdateParams.workspaceId
+            betas = workspaceUpdateParams.betas?.toMutableList()
             body = workspaceUpdateParams.body.toBuilder()
             additionalHeaders = workspaceUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = workspaceUpdateParams.additionalQueryParams.toBuilder()
@@ -175,6 +207,33 @@ private constructor(
         fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
+         * Optional. Send `efs-2026-10-01` in this header to use this endpoint's beta features:
+         * additional parameters, accepted values and response fields.
+         */
+        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
+
+        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
+
+        /**
+         * Adds a single [AnthropicBeta] to [betas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
+        }
+
+        /**
+         * Sets [addBeta] to an arbitrary [String].
+         *
+         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        /**
          * Sets the entire request body.
          *
          * This is generally only useful if you are already constructing the body separately.
@@ -182,8 +241,8 @@ private constructor(
          * - [dataResidency]
          * - [displayColor]
          * - [externalKeyId]
+         * - [inferenceDataPrivacy]
          * - [name]
-         * - [tags]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -247,6 +306,37 @@ private constructor(
         fun externalKeyId(externalKeyId: JsonField<String>) = apply {
             body.externalKeyId(externalKeyId)
         }
+
+        /**
+         * Changes to where the Workspace's retained inference data and transcript copies go, and to
+         * whether Anthropic's human review applies. Requires the `efs-2026-10-01` `anthropic-beta`
+         * value. An omitted member is unchanged. Cannot be null. An Admin API key can't set this
+         * field, because it doesn't belong to a user or a service account. Use an API key that
+         * belongs to one, or an OAuth token.
+         */
+        fun inferenceDataPrivacy(inferenceDataPrivacy: BetaInferenceDataPrivacyUpdateParam?) =
+            apply {
+                body.inferenceDataPrivacy(inferenceDataPrivacy)
+            }
+
+        /**
+         * Alias for calling [Builder.inferenceDataPrivacy] with
+         * `inferenceDataPrivacy.orElse(null)`.
+         */
+        fun inferenceDataPrivacy(
+            inferenceDataPrivacy: Optional<BetaInferenceDataPrivacyUpdateParam>
+        ) = inferenceDataPrivacy(inferenceDataPrivacy.getOrNull())
+
+        /**
+         * Sets [Builder.inferenceDataPrivacy] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inferenceDataPrivacy] with a well-typed
+         * [BetaInferenceDataPrivacyUpdateParam] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun inferenceDataPrivacy(
+            inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacyUpdateParam>
+        ) = apply { body.inferenceDataPrivacy(inferenceDataPrivacy) }
 
         /** Name of the Workspace. */
         fun name(name: String) = apply { body.name(name) }
@@ -419,6 +509,7 @@ private constructor(
         fun build(): WorkspaceUpdateParams =
             WorkspaceUpdateParams(
                 workspaceId,
+                betas?.toImmutable(),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -433,7 +524,17 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.let {
+                    if (it.isNotEmpty()) {
+                        put("anthropic-beta", it.joinToString(","))
+                    }
+                }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -451,6 +552,7 @@ private constructor(
         private val dataResidency: JsonField<BetaDataResidencyUpdateConfig>,
         private val displayColor: JsonField<String>,
         private val externalKeyId: JsonField<String>,
+        private val inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacyUpdateParam>,
         private val name: JsonField<String>,
         private val tags: JsonField<Tags>,
         private val userProfileId: JsonField<String>,
@@ -468,6 +570,9 @@ private constructor(
             @JsonProperty("external_key_id")
             @ExcludeMissing
             externalKeyId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("inference_data_privacy")
+            @ExcludeMissing
+            inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacyUpdateParam> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("tags") @ExcludeMissing tags: JsonField<Tags> = JsonMissing.of(),
             @JsonProperty("user_profile_id")
@@ -477,6 +582,7 @@ private constructor(
             dataResidency,
             displayColor,
             externalKeyId,
+            inferenceDataPrivacy,
             name,
             tags,
             userProfileId,
@@ -517,6 +623,19 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun externalKeyId(): Optional<String> = externalKeyId.getOptional("external_key_id")
+
+        /**
+         * Changes to where the Workspace's retained inference data and transcript copies go, and to
+         * whether Anthropic's human review applies. Requires the `efs-2026-10-01` `anthropic-beta`
+         * value. An omitted member is unchanged. Cannot be null. An Admin API key can't set this
+         * field, because it doesn't belong to a user or a service account. Use an API key that
+         * belongs to one, or an OAuth token.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun inferenceDataPrivacy(): Optional<BetaInferenceDataPrivacyUpdateParam> =
+            inferenceDataPrivacy.getOptional("inference_data_privacy")
 
         /**
          * Name of the Workspace.
@@ -578,6 +697,17 @@ private constructor(
         fun _externalKeyId(): JsonField<String> = externalKeyId
 
         /**
+         * Returns the raw JSON value of [inferenceDataPrivacy].
+         *
+         * Unlike [inferenceDataPrivacy], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("inference_data_privacy")
+        @ExcludeMissing
+        fun _inferenceDataPrivacy(): JsonField<BetaInferenceDataPrivacyUpdateParam> =
+            inferenceDataPrivacy
+
+        /**
          * Returns the raw JSON value of [name].
          *
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
@@ -625,6 +755,8 @@ private constructor(
             private var dataResidency: JsonField<BetaDataResidencyUpdateConfig> = JsonMissing.of()
             private var displayColor: JsonField<String> = JsonMissing.of()
             private var externalKeyId: JsonField<String> = JsonMissing.of()
+            private var inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacyUpdateParam> =
+                JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var tags: JsonField<Tags> = JsonMissing.of()
             private var userProfileId: JsonField<String> = JsonMissing.of()
@@ -635,6 +767,7 @@ private constructor(
                 dataResidency = body.dataResidency
                 displayColor = body.displayColor
                 externalKeyId = body.externalKeyId
+                inferenceDataPrivacy = body.inferenceDataPrivacy
                 name = body.name
                 tags = body.tags
                 userProfileId = body.userProfileId
@@ -699,6 +832,35 @@ private constructor(
             fun externalKeyId(externalKeyId: JsonField<String>) = apply {
                 this.externalKeyId = externalKeyId
             }
+
+            /**
+             * Changes to where the Workspace's retained inference data and transcript copies go,
+             * and to whether Anthropic's human review applies. Requires the `efs-2026-10-01`
+             * `anthropic-beta` value. An omitted member is unchanged. Cannot be null. An Admin API
+             * key can't set this field, because it doesn't belong to a user or a service account.
+             * Use an API key that belongs to one, or an OAuth token.
+             */
+            fun inferenceDataPrivacy(inferenceDataPrivacy: BetaInferenceDataPrivacyUpdateParam?) =
+                inferenceDataPrivacy(JsonField.ofNullable(inferenceDataPrivacy))
+
+            /**
+             * Alias for calling [Builder.inferenceDataPrivacy] with
+             * `inferenceDataPrivacy.orElse(null)`.
+             */
+            fun inferenceDataPrivacy(
+                inferenceDataPrivacy: Optional<BetaInferenceDataPrivacyUpdateParam>
+            ) = inferenceDataPrivacy(inferenceDataPrivacy.getOrNull())
+
+            /**
+             * Sets [Builder.inferenceDataPrivacy] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.inferenceDataPrivacy] with a well-typed
+             * [BetaInferenceDataPrivacyUpdateParam] value instead. This method is primarily for
+             * setting the field to an undocumented or not yet supported value.
+             */
+            fun inferenceDataPrivacy(
+                inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacyUpdateParam>
+            ) = apply { this.inferenceDataPrivacy = inferenceDataPrivacy }
 
             /** Name of the Workspace. */
             fun name(name: String) = name(JsonField.of(name))
@@ -777,6 +939,7 @@ private constructor(
                     dataResidency,
                     displayColor,
                     externalKeyId,
+                    inferenceDataPrivacy,
                     name,
                     tags,
                     userProfileId,
@@ -803,6 +966,7 @@ private constructor(
             dataResidency().ifPresent { it.validate() }
             displayColor()
             externalKeyId()
+            inferenceDataPrivacy().ifPresent { it.validate() }
             name()
             tags().ifPresent { it.validate() }
             userProfileId()
@@ -828,6 +992,7 @@ private constructor(
             (dataResidency.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (displayColor.asKnown().isPresent) 1 else 0) +
                 (if (externalKeyId.asKnown().isPresent) 1 else 0) +
+                (inferenceDataPrivacy.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (tags.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (userProfileId.asKnown().isPresent) 1 else 0)
@@ -841,6 +1006,7 @@ private constructor(
                 dataResidency == other.dataResidency &&
                 displayColor == other.displayColor &&
                 externalKeyId == other.externalKeyId &&
+                inferenceDataPrivacy == other.inferenceDataPrivacy &&
                 name == other.name &&
                 tags == other.tags &&
                 userProfileId == other.userProfileId &&
@@ -852,6 +1018,7 @@ private constructor(
                 dataResidency,
                 displayColor,
                 externalKeyId,
+                inferenceDataPrivacy,
                 name,
                 tags,
                 userProfileId,
@@ -862,7 +1029,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{dataResidency=$dataResidency, displayColor=$displayColor, externalKeyId=$externalKeyId, name=$name, tags=$tags, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
+            "Body{dataResidency=$dataResidency, displayColor=$displayColor, externalKeyId=$externalKeyId, inferenceDataPrivacy=$inferenceDataPrivacy, name=$name, tags=$tags, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
     }
 
     /** User-defined tags as string key-value pairs. Keys may not begin with `anthropic`. */
@@ -981,14 +1148,15 @@ private constructor(
 
         return other is WorkspaceUpdateParams &&
             workspaceId == other.workspaceId &&
+            betas == other.betas &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(workspaceId, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(workspaceId, betas, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "WorkspaceUpdateParams{workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "WorkspaceUpdateParams{workspaceId=$workspaceId, betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

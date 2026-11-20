@@ -46,7 +46,7 @@ private constructor(
     @JsonProperty("error_code") @ExcludeMissing fun _errorCode(): JsonValue = errorCode
 
     /**
-     * The request field the broken rule applies to.
+     * The request field the broken rule applies to. Other values may be returned.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -123,7 +123,7 @@ private constructor(
          */
         fun errorCode(errorCode: JsonValue) = apply { this.errorCode = errorCode }
 
-        /** The request field the broken rule applies to. */
+        /** The request field the broken rule applies to. Other values may be returned. */
         fun field(field: WorkspacePolicyField) = field(JsonField.of(field))
 
         /**

@@ -1,6 +1,8 @@
 package com.anthropic.models.beta.organization.workspaces
 
 import com.anthropic.core.JsonValue
+import com.anthropic.core.http.Headers
+import com.anthropic.models.beta.AnthropicBeta
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -10,6 +12,7 @@ internal class WorkspaceUpdateParamsTest {
     fun create() {
         WorkspaceUpdateParams.builder()
             .workspaceId("workspace_id")
+            .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .dataResidency(
                 BetaDataResidencyUpdateConfig.builder()
                     .allowedInferenceGeosUnrestricted()
@@ -18,6 +21,17 @@ internal class WorkspaceUpdateParamsTest {
             )
             .displayColor("#6C5BB9")
             .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
+            .inferenceDataPrivacy(
+                BetaInferenceDataPrivacyUpdateParam.builder()
+                    .humanReview(
+                        BetaAnthropicHumanReviewParam.of(
+                            BetaAnthropicHumanReviewParam.Type.DISABLED
+                        )
+                    )
+                    .safeguardsStorage(BetaInternalStorageParam.builder().build())
+                    .transcriptsStorage(BetaInternalStorageParam.builder().build())
+                    .build()
+            )
             .name("Workspace Name")
             .tags(
                 WorkspaceUpdateParams.Tags.builder()
@@ -39,10 +53,11 @@ internal class WorkspaceUpdateParamsTest {
     }
 
     @Test
-    fun body() {
+    fun headers() {
         val params =
             WorkspaceUpdateParams.builder()
                 .workspaceId("workspace_id")
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .dataResidency(
                     BetaDataResidencyUpdateConfig.builder()
                         .allowedInferenceGeosUnrestricted()
@@ -53,6 +68,73 @@ internal class WorkspaceUpdateParamsTest {
                 )
                 .displayColor("#6C5BB9")
                 .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
+                .inferenceDataPrivacy(
+                    BetaInferenceDataPrivacyUpdateParam.builder()
+                        .humanReview(
+                            BetaAnthropicHumanReviewParam.of(
+                                BetaAnthropicHumanReviewParam.Type.DISABLED
+                            )
+                        )
+                        .safeguardsStorage(BetaInternalStorageParam.builder().build())
+                        .transcriptsStorage(BetaInternalStorageParam.builder().build())
+                        .build()
+                )
+                .name("Workspace Name")
+                .tags(
+                    WorkspaceUpdateParams.Tags.builder()
+                        .putAdditionalProperty("env", JsonValue.from("prod"))
+                        .putAdditionalProperty("team", JsonValue.from("platform"))
+                        .build()
+                )
+                .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder()
+                    .put("anthropic-beta", listOf("computer-use-2024-10-22").joinToString(","))
+                    .build()
+            )
+    }
+
+    @Test
+    fun headersWithoutOptionalFields() {
+        val params = WorkspaceUpdateParams.builder().workspaceId("workspace_id").build()
+
+        val headers = params._headers()
+
+        assertThat(headers).isEqualTo(Headers.builder().build())
+    }
+
+    @Test
+    fun body() {
+        val params =
+            WorkspaceUpdateParams.builder()
+                .workspaceId("workspace_id")
+                .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
+                .dataResidency(
+                    BetaDataResidencyUpdateConfig.builder()
+                        .allowedInferenceGeosUnrestricted()
+                        .defaultInferenceGeo(
+                            BetaDataResidencyUpdateConfig.DefaultInferenceGeo.GLOBAL
+                        )
+                        .build()
+                )
+                .displayColor("#6C5BB9")
+                .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
+                .inferenceDataPrivacy(
+                    BetaInferenceDataPrivacyUpdateParam.builder()
+                        .humanReview(
+                            BetaAnthropicHumanReviewParam.of(
+                                BetaAnthropicHumanReviewParam.Type.DISABLED
+                            )
+                        )
+                        .safeguardsStorage(BetaInternalStorageParam.builder().build())
+                        .transcriptsStorage(BetaInternalStorageParam.builder().build())
+                        .build()
+                )
                 .name("Workspace Name")
                 .tags(
                     WorkspaceUpdateParams.Tags.builder()
@@ -74,6 +156,18 @@ internal class WorkspaceUpdateParamsTest {
             )
         assertThat(body.displayColor()).contains("#6C5BB9")
         assertThat(body.externalKeyId()).contains("ekey_01SDCCSbTxrXDpWc1phhtcfK")
+        assertThat(body.inferenceDataPrivacy())
+            .contains(
+                BetaInferenceDataPrivacyUpdateParam.builder()
+                    .humanReview(
+                        BetaAnthropicHumanReviewParam.of(
+                            BetaAnthropicHumanReviewParam.Type.DISABLED
+                        )
+                    )
+                    .safeguardsStorage(BetaInternalStorageParam.builder().build())
+                    .transcriptsStorage(BetaInternalStorageParam.builder().build())
+                    .build()
+            )
         assertThat(body.name()).contains("Workspace Name")
         assertThat(body.tags())
             .contains(

@@ -5,6 +5,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
+import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -18,6 +19,7 @@ private constructor(
     private val includeArchived: Boolean?,
     private val includeDefault: Boolean?,
     private val limit: Long?,
+    private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -53,6 +55,12 @@ private constructor(
      */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
+    /**
+     * Optional. Send `efs-2026-10-01` in this header to use this endpoint's beta features:
+     * additional parameters, accepted values and response fields.
+     */
+    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -78,6 +86,7 @@ private constructor(
         private var includeArchived: Boolean? = null
         private var includeDefault: Boolean? = null
         private var limit: Long? = null
+        private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -89,6 +98,7 @@ private constructor(
             includeArchived = workspaceListParams.includeArchived
             includeDefault = workspaceListParams.includeDefault
             limit = workspaceListParams.limit
+            betas = workspaceListParams.betas?.toMutableList()
             additionalHeaders = workspaceListParams.additionalHeaders.toBuilder()
             additionalQueryParams = workspaceListParams.additionalQueryParams.toBuilder()
         }
@@ -175,6 +185,33 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        /**
+         * Optional. Send `efs-2026-10-01` in this header to use this endpoint's beta features:
+         * additional parameters, accepted values and response fields.
+         */
+        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
+
+        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
+
+        /**
+         * Adds a single [AnthropicBeta] to [betas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
+        }
+
+        /**
+         * Sets [addBeta] to an arbitrary [String].
+         *
+         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -287,12 +324,23 @@ private constructor(
                 includeArchived,
                 includeDefault,
                 limit,
+                betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.let {
+                    if (it.isNotEmpty()) {
+                        put("anthropic-beta", it.joinToString(","))
+                    }
+                }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
@@ -334,6 +382,7 @@ private constructor(
             includeArchived == other.includeArchived &&
             includeDefault == other.includeDefault &&
             limit == other.limit &&
+            betas == other.betas &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -346,10 +395,11 @@ private constructor(
             includeArchived,
             includeDefault,
             limit,
+            betas,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "WorkspaceListParams{afterId=$afterId, beforeId=$beforeId, ids=$ids, includeArchived=$includeArchived, includeDefault=$includeDefault, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "WorkspaceListParams{afterId=$afterId, beforeId=$beforeId, ids=$ids, includeArchived=$includeArchived, includeDefault=$includeDefault, limit=$limit, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

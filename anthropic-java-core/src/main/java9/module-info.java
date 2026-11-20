@@ -74,6 +74,7 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.organization.claudetag.slackworkspaces;
     exports com.anthropic.models.beta.organization.compliancesettings;
     exports com.anthropic.models.beta.organization.externalkeys;
+    exports com.anthropic.models.beta.organization.externalstorage;
     exports com.anthropic.models.beta.organization.federation.issuers;
     exports com.anthropic.models.beta.organization.federation.rules;
     exports com.anthropic.models.beta.organization.federation.rules.workspaces;

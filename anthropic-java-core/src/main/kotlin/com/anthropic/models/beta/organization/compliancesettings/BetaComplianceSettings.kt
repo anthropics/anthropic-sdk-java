@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BetaComplianceSettings
@@ -19,6 +20,7 @@ class BetaComplianceSettings
 private constructor(
     private val state: JsonField<BetaComplianceSettingsState>,
     private val type: JsonValue,
+    private val accessTransparency: JsonField<BetaAccessTransparency>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -28,7 +30,10 @@ private constructor(
         @ExcludeMissing
         state: JsonField<BetaComplianceSettingsState> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(state, type, mutableMapOf())
+        @JsonProperty("access_transparency")
+        @ExcludeMissing
+        accessTransparency: JsonField<BetaAccessTransparency> = JsonMissing.of(),
+    ) : this(state, type, accessTransparency, mutableMapOf())
 
     /**
      * Whether the Compliance API is enabled for this organization.
@@ -50,6 +55,19 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
+     * Read-only. Whether Access Transparency is on for the organization. Returned only when the
+     * request sends the `anthropic-beta: efs-2026-10-01` header and Access Transparency is
+     * available to the organization; otherwise omitted. If the status can't be read, getting
+     * Compliance Settings returns an error; an update still saves, but then reports `disabled`
+     * whatever the real status, so get the settings again to check it.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun accessTransparency(): Optional<BetaAccessTransparency> =
+        accessTransparency.getOptional("access_transparency")
+
+    /**
      * Returns the raw JSON value of [state].
      *
      * Unlike [state], this method doesn't throw if the JSON field has an unexpected type.
@@ -57,6 +75,16 @@ private constructor(
     @JsonProperty("state")
     @ExcludeMissing
     fun _state(): JsonField<BetaComplianceSettingsState> = state
+
+    /**
+     * Returns the raw JSON value of [accessTransparency].
+     *
+     * Unlike [accessTransparency], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("access_transparency")
+    @ExcludeMissing
+    fun _accessTransparency(): JsonField<BetaAccessTransparency> = accessTransparency
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -104,12 +132,14 @@ private constructor(
 
         private var state: JsonField<BetaComplianceSettingsState>? = null
         private var type: JsonValue = JsonValue.from("compliance_settings")
+        private var accessTransparency: JsonField<BetaAccessTransparency> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaComplianceSettings: BetaComplianceSettings) = apply {
             state = betaComplianceSettings.state
             type = betaComplianceSettings.type
+            accessTransparency = betaComplianceSettings.accessTransparency
             additionalProperties = betaComplianceSettings.additionalProperties.toMutableMap()
         }
 
@@ -147,6 +177,27 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
+        /**
+         * Read-only. Whether Access Transparency is on for the organization. Returned only when the
+         * request sends the `anthropic-beta: efs-2026-10-01` header and Access Transparency is
+         * available to the organization; otherwise omitted. If the status can't be read, getting
+         * Compliance Settings returns an error; an update still saves, but then reports `disabled`
+         * whatever the real status, so get the settings again to check it.
+         */
+        fun accessTransparency(accessTransparency: BetaAccessTransparency) =
+            accessTransparency(JsonField.of(accessTransparency))
+
+        /**
+         * Sets [Builder.accessTransparency] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.accessTransparency] with a well-typed
+         * [BetaAccessTransparency] value instead. This method is primarily for setting the field to
+         * an undocumented or not yet supported value.
+         */
+        fun accessTransparency(accessTransparency: JsonField<BetaAccessTransparency>) = apply {
+            this.accessTransparency = accessTransparency
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -182,6 +233,7 @@ private constructor(
             BetaComplianceSettings(
                 checkRequired("state", state),
                 type,
+                accessTransparency,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -207,6 +259,7 @@ private constructor(
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
+        accessTransparency().ifPresent { it.validate() }
         validated = true
     }
 
@@ -226,7 +279,8 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (state.asKnown().getOrNull()?.validity() ?: 0) +
-            type.let { if (it == JsonValue.from("compliance_settings")) 1 else 0 }
+            type.let { if (it == JsonValue.from("compliance_settings")) 1 else 0 } +
+            (accessTransparency.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -236,13 +290,16 @@ private constructor(
         return other is BetaComplianceSettings &&
             state == other.state &&
             type == other.type &&
+            accessTransparency == other.accessTransparency &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(state, type, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(state, type, accessTransparency, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaComplianceSettings{state=$state, type=$type, additionalProperties=$additionalProperties}"
+        "BetaComplianceSettings{state=$state, type=$type, accessTransparency=$accessTransparency, additionalProperties=$additionalProperties}"
 }

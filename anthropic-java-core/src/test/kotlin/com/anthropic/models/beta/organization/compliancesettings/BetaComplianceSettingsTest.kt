@@ -12,6 +12,7 @@ internal class BetaComplianceSettingsTest {
         val betaComplianceSettings =
             BetaComplianceSettings.builder()
                 .state(BetaComplianceSettingsStateEnabled.builder().build())
+                .accessTransparency(BetaAccessTransparency.of(BetaAccessTransparency.Type.DISABLED))
                 .build()
 
         assertThat(betaComplianceSettings.state())
@@ -20,6 +21,8 @@ internal class BetaComplianceSettingsTest {
                     BetaComplianceSettingsStateEnabled.builder().build()
                 )
             )
+        assertThat(betaComplianceSettings.accessTransparency())
+            .contains(BetaAccessTransparency.of(BetaAccessTransparency.Type.DISABLED))
     }
 
     @Test
@@ -28,6 +31,7 @@ internal class BetaComplianceSettingsTest {
         val betaComplianceSettings =
             BetaComplianceSettings.builder()
                 .state(BetaComplianceSettingsStateEnabled.builder().build())
+                .accessTransparency(BetaAccessTransparency.of(BetaAccessTransparency.Type.DISABLED))
                 .build()
 
         val roundtrippedBetaComplianceSettings =

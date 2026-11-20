@@ -39,13 +39,31 @@ interface WorkspaceService {
     /**
      * Create Workspace
      *
+     * @throws com.anthropic.models.beta.organization.BetaApprovalRequiredException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
+     * @throws
+     *   com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageNotAvailableException
+     * @throws com.anthropic.models.beta.organization.externalstorage.BetaGrantRequiredException
+     * @throws com.anthropic.models.beta.organization.BetaHumanReviewNotAvailableException
+     * @throws
+     *   com.anthropic.models.beta.organization.workspaces.BetaHumanReviewOnWithExternalStorageException
+     * @throws com.anthropic.models.beta.organization.externalstorage.BetaInvalidStorageArnException
      * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
+     * @throws com.anthropic.models.beta.organization.BetaOrganizationNotEligibleException
+     * @throws
+     *   com.anthropic.models.beta.organization.externalstorage.BetaStorageNotAttachableException
+     * @throws com.anthropic.models.organization.workspaces.StorageProfileMismatchException
+     * @throws
+     *   com.anthropic.models.beta.organization.externalstorage.BetaStorageVerificationFailedException
+     * @throws
+     *   com.anthropic.models.beta.organization.workspaces.BetaTranscriptsStorageRequiredException
      * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
      * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
      * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
+     * @throws com.anthropic.models.beta.organization.BetaAuthorizationCheckUnavailableException
+     * @throws com.anthropic.models.organization.workspaces.WorkspaceCreatedIncompleteException
      */
     fun create(params: WorkspaceCreateParams): BetaWorkspace = create(params, RequestOptions.none())
 
@@ -89,13 +107,39 @@ interface WorkspaceService {
     /**
      * Update Workspace
      *
+     * @throws com.anthropic.models.beta.organization.BetaApprovalRequiredException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
+     * @throws
+     *   com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageNotAvailableException
+     * @throws com.anthropic.models.beta.organization.externalstorage.BetaGrantRequiredException
+     * @throws com.anthropic.models.beta.organization.BetaHumanReviewNotAvailableException
+     * @throws
+     *   com.anthropic.models.beta.organization.workspaces.BetaHumanReviewOnWithExternalStorageException
+     * @throws com.anthropic.models.beta.organization.externalstorage.BetaInvalidStorageArnException
      * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
+     * @throws com.anthropic.models.beta.organization.BetaOrganizationNotEligibleException
+     * @throws
+     *   com.anthropic.models.beta.organization.externalstorage.BetaStorageAttachLimitReachedException
+     * @throws
+     *   com.anthropic.models.beta.organization.externalstorage.BetaStorageNotAttachableException
+     * @throws com.anthropic.models.organization.workspaces.StorageProfileMismatchException
+     * @throws
+     *   com.anthropic.models.beta.organization.externalstorage.BetaStorageProfileStillRequiredException
+     * @throws
+     *   com.anthropic.models.beta.organization.externalstorage.BetaStorageVerificationFailedException
+     * @throws
+     *   com.anthropic.models.beta.organization.workspaces.BetaTranscriptsStorageRequiredException
      * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
      * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
      * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
+     * @throws
+     *   com.anthropic.models.beta.organization.externalstorage.BetaStorageChangedConcurrentlyException
+     * @throws
+     *   com.anthropic.models.beta.organization.workspaces.BetaWorkspaceChangedConcurrentlyException
+     * @throws com.anthropic.models.beta.organization.BetaAuthorizationCheckUnavailableException
+     * @throws com.anthropic.models.organization.ChangeOutcomeUnknownException
      */
     fun update(workspaceId: String): BetaWorkspace =
         update(workspaceId, WorkspaceUpdateParams.none())
@@ -147,6 +191,7 @@ interface WorkspaceService {
      * Archive Workspace
      *
      * @throws com.anthropic.models.SandboxEgressRestrictedException
+     * @throws com.anthropic.models.organization.workspaces.StorageAttachedDuringArchiveException
      */
     fun archive(workspaceId: String): BetaWorkspace =
         archive(workspaceId, WorkspaceArchiveParams.none())

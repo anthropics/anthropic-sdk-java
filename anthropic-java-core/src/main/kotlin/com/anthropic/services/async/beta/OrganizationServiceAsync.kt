@@ -11,6 +11,7 @@ import com.anthropic.services.async.beta.organization.ClaudeCodeServiceAsync
 import com.anthropic.services.async.beta.organization.ClaudeTagServiceAsync
 import com.anthropic.services.async.beta.organization.ComplianceSettingServiceAsync
 import com.anthropic.services.async.beta.organization.ExternalKeyServiceAsync
+import com.anthropic.services.async.beta.organization.ExternalStorageServiceAsync
 import com.anthropic.services.async.beta.organization.FederationServiceAsync
 import com.anthropic.services.async.beta.organization.InviteServiceAsync
 import com.anthropic.services.async.beta.organization.PluginMarketplaceServiceAsync
@@ -50,6 +51,8 @@ interface OrganizationServiceAsync {
     fun invites(): InviteServiceAsync
 
     fun serviceAccounts(): ServiceAccountServiceAsync
+
+    fun externalStorage(): ExternalStorageServiceAsync
 
     fun users(): UserServiceAsync
 
@@ -122,6 +125,8 @@ interface OrganizationServiceAsync {
         fun invites(): InviteServiceAsync.WithRawResponse
 
         fun serviceAccounts(): ServiceAccountServiceAsync.WithRawResponse
+
+        fun externalStorage(): ExternalStorageServiceAsync.WithRawResponse
 
         fun users(): UserServiceAsync.WithRawResponse
 
