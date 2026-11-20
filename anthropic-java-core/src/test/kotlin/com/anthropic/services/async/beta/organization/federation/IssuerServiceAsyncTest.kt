@@ -33,8 +33,8 @@ internal class IssuerServiceAsyncTest {
             issuerServiceAsync.create(
                 IssuerCreateParams.builder()
                     .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                    .issuerUrl("x")
-                    .name("x")
+                    .issuerUrl("https://token.actions.githubusercontent.com")
+                    .name("github-actions")
                     .checkJti(true)
                     .jwks(
                         BetaJwksDiscovery.builder()

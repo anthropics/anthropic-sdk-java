@@ -33,7 +33,7 @@ internal class RuleServiceTest {
             ruleService.create(
                 RuleCreateParams.builder()
                     .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                    .issuerId("issuer_id")
+                    .issuerId("fdis_01SDCCSbTxrXDpWc1phhtcfK")
                     .match(
                         BetaFederationRuleMatch.builder()
                             .audience("audience")
@@ -46,8 +46,8 @@ internal class RuleServiceTest {
                             .subjectPrefix("subject_prefix")
                             .build()
                     )
-                    .name("x")
-                    .oauthScope("x")
+                    .name("prod-deploy-pipeline")
+                    .oauthScope("workspace:developer")
                     .target(
                         BetaServiceAccountTarget.builder()
                             .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
@@ -62,7 +62,7 @@ internal class RuleServiceTest {
                     )
                     .description("description")
                     .tokenLifetimeSeconds(60L)
-                    .workspaceId("workspace_id")
+                    .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                     .build()
             )
 

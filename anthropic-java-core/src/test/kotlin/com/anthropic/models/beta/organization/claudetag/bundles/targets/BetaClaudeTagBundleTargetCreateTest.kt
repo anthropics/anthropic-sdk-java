@@ -14,7 +14,8 @@ internal class BetaClaudeTagBundleTargetCreateTest {
 
     @Test
     fun ofSlackChannel() {
-        val slackChannel = BetaClaudeTagSlackChannelBundleTargetCreate.of("xxxxxxxx")
+        val slackChannel =
+            BetaClaudeTagSlackChannelBundleTargetCreate.of("slch_01SvpyRQK3nN6eH9uhRA7n1q")
 
         val betaClaudeTagBundleTargetCreate =
             BetaClaudeTagBundleTargetCreate.ofSlackChannel(slackChannel)
@@ -28,7 +29,7 @@ internal class BetaClaudeTagBundleTargetCreateTest {
         val jsonMapper = jsonMapper()
         val betaClaudeTagBundleTargetCreate =
             BetaClaudeTagBundleTargetCreate.ofSlackChannel(
-                BetaClaudeTagSlackChannelBundleTargetCreate.of("xxxxxxxx")
+                BetaClaudeTagSlackChannelBundleTargetCreate.of("slch_01SvpyRQK3nN6eH9uhRA7n1q")
             )
 
         val roundtrippedBetaClaudeTagBundleTargetCreate =

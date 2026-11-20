@@ -13,7 +13,7 @@ internal class ServiceAccountAddParamsTest {
         ServiceAccountAddParams.builder()
             .workspaceId("workspace_id")
             .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-            .serviceAccountId("service_account_id")
+            .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
             .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
             .build()
     }
@@ -23,7 +23,7 @@ internal class ServiceAccountAddParamsTest {
         val params =
             ServiceAccountAddParams.builder()
                 .workspaceId("workspace_id")
-                .serviceAccountId("service_account_id")
+                .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
                 .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 
@@ -38,7 +38,7 @@ internal class ServiceAccountAddParamsTest {
             ServiceAccountAddParams.builder()
                 .workspaceId("workspace_id")
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .serviceAccountId("service_account_id")
+                .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
                 .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 
@@ -57,7 +57,7 @@ internal class ServiceAccountAddParamsTest {
         val params =
             ServiceAccountAddParams.builder()
                 .workspaceId("workspace_id")
-                .serviceAccountId("service_account_id")
+                .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
                 .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 
@@ -72,13 +72,13 @@ internal class ServiceAccountAddParamsTest {
             ServiceAccountAddParams.builder()
                 .workspaceId("workspace_id")
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .serviceAccountId("service_account_id")
+                .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
                 .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 
         val body = params._body()
 
-        assertThat(body.serviceAccountId()).isEqualTo("service_account_id")
+        assertThat(body.serviceAccountId()).isEqualTo("svac_01SDCCSbTxrXDpWc1phhtcfK")
         assertThat(body.workspaceRole()).isEqualTo(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
     }
 
@@ -87,13 +87,13 @@ internal class ServiceAccountAddParamsTest {
         val params =
             ServiceAccountAddParams.builder()
                 .workspaceId("workspace_id")
-                .serviceAccountId("service_account_id")
+                .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
                 .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 
         val body = params._body()
 
-        assertThat(body.serviceAccountId()).isEqualTo("service_account_id")
+        assertThat(body.serviceAccountId()).isEqualTo("svac_01SDCCSbTxrXDpWc1phhtcfK")
         assertThat(body.workspaceRole()).isEqualTo(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
     }
 }

@@ -9,7 +9,7 @@ internal class WorkspaceAddParamsTest {
     fun create() {
         WorkspaceAddParams.builder()
             .federationRuleId("federation_rule_id")
-            .workspaceId("workspace_id")
+            .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
             .build()
     }
 
@@ -18,7 +18,7 @@ internal class WorkspaceAddParamsTest {
         val params =
             WorkspaceAddParams.builder()
                 .federationRuleId("federation_rule_id")
-                .workspaceId("workspace_id")
+                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("federation_rule_id")
@@ -31,11 +31,11 @@ internal class WorkspaceAddParamsTest {
         val params =
             WorkspaceAddParams.builder()
                 .federationRuleId("federation_rule_id")
-                .workspaceId("workspace_id")
+                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.workspaceId()).isEqualTo("workspace_id")
+        assertThat(body.workspaceId()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
     }
 }

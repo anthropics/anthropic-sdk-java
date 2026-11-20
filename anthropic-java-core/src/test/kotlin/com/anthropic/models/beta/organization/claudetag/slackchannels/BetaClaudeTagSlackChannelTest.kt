@@ -31,8 +31,8 @@ internal class BetaClaudeTagSlackChannelTest {
                 )
                 .slack(
                     BetaClaudeTagSlackChannelIdentifiers.builder()
-                        .channelId("xx")
-                        .workspaceId("xx")
+                        .channelId("C0456EFGH")
+                        .workspaceId("T0123ABCD")
                         .build()
                 )
                 .sources(
@@ -65,8 +65,8 @@ internal class BetaClaudeTagSlackChannelTest {
         assertThat(betaClaudeTagSlackChannel.slack())
             .isEqualTo(
                 BetaClaudeTagSlackChannelIdentifiers.builder()
-                    .channelId("xx")
-                    .workspaceId("xx")
+                    .channelId("C0456EFGH")
+                    .workspaceId("T0123ABCD")
                     .build()
             )
         assertThat(betaClaudeTagSlackChannel.sources())
@@ -103,8 +103,8 @@ internal class BetaClaudeTagSlackChannelTest {
                 )
                 .slack(
                     BetaClaudeTagSlackChannelIdentifiers.builder()
-                        .channelId("xx")
-                        .workspaceId("xx")
+                        .channelId("C0456EFGH")
+                        .workspaceId("T0123ABCD")
                         .build()
                 )
                 .sources(

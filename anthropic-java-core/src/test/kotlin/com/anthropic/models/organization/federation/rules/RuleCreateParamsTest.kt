@@ -9,7 +9,7 @@ internal class RuleCreateParamsTest {
     @Test
     fun create() {
         RuleCreateParams.builder()
-            .issuerId("issuer_id")
+            .issuerId("fdis_01SDCCSbTxrXDpWc1phhtcfK")
             .match(
                 FederationRuleMatch.builder()
                     .audience("audience")
@@ -22,8 +22,8 @@ internal class RuleCreateParamsTest {
                     .subjectPrefix("subject_prefix")
                     .build()
             )
-            .name("x")
-            .oauthScope("x")
+            .name("prod-deploy-pipeline")
+            .oauthScope("workspace:developer")
             .target(
                 ServiceAccountTarget.builder()
                     .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
@@ -33,7 +33,7 @@ internal class RuleCreateParamsTest {
             .appliesToAllWorkspaces(true)
             .description("description")
             .tokenLifetimeSeconds(60L)
-            .workspaceId("workspace_id")
+            .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
             .build()
     }
 
@@ -41,7 +41,7 @@ internal class RuleCreateParamsTest {
     fun body() {
         val params =
             RuleCreateParams.builder()
-                .issuerId("issuer_id")
+                .issuerId("fdis_01SDCCSbTxrXDpWc1phhtcfK")
                 .match(
                     FederationRuleMatch.builder()
                         .audience("audience")
@@ -54,8 +54,8 @@ internal class RuleCreateParamsTest {
                         .subjectPrefix("subject_prefix")
                         .build()
                 )
-                .name("x")
-                .oauthScope("x")
+                .name("prod-deploy-pipeline")
+                .oauthScope("workspace:developer")
                 .target(
                     ServiceAccountTarget.builder()
                         .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
@@ -65,12 +65,12 @@ internal class RuleCreateParamsTest {
                 .appliesToAllWorkspaces(true)
                 .description("description")
                 .tokenLifetimeSeconds(60L)
-                .workspaceId("workspace_id")
+                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.issuerId()).isEqualTo("issuer_id")
+        assertThat(body.issuerId()).isEqualTo("fdis_01SDCCSbTxrXDpWc1phhtcfK")
         assertThat(body.match())
             .isEqualTo(
                 FederationRuleMatch.builder()
@@ -84,8 +84,8 @@ internal class RuleCreateParamsTest {
                     .subjectPrefix("subject_prefix")
                     .build()
             )
-        assertThat(body.name()).isEqualTo("x")
-        assertThat(body.oauthScope()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("prod-deploy-pipeline")
+        assertThat(body.oauthScope()).isEqualTo("workspace:developer")
         assertThat(body.target())
             .isEqualTo(
                 ServiceAccountTarget.builder()
@@ -96,26 +96,26 @@ internal class RuleCreateParamsTest {
         assertThat(body.appliesToAllWorkspaces()).contains(true)
         assertThat(body.description()).contains("description")
         assertThat(body.tokenLifetimeSeconds()).contains(60L)
-        assertThat(body.workspaceId()).contains("workspace_id")
+        assertThat(body.workspaceId()).contains("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
         val params =
             RuleCreateParams.builder()
-                .issuerId("issuer_id")
+                .issuerId("fdis_01SDCCSbTxrXDpWc1phhtcfK")
                 .match(FederationRuleMatch.builder().build())
-                .name("x")
-                .oauthScope("x")
+                .name("prod-deploy-pipeline")
+                .oauthScope("workspace:developer")
                 .target(ServiceAccountTarget.of("svac_01SDCCSbTxrXDpWc1phhtcfK"))
                 .build()
 
         val body = params._body()
 
-        assertThat(body.issuerId()).isEqualTo("issuer_id")
+        assertThat(body.issuerId()).isEqualTo("fdis_01SDCCSbTxrXDpWc1phhtcfK")
         assertThat(body.match()).isEqualTo(FederationRuleMatch.builder().build())
-        assertThat(body.name()).isEqualTo("x")
-        assertThat(body.oauthScope()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("prod-deploy-pipeline")
+        assertThat(body.oauthScope()).isEqualTo("workspace:developer")
         assertThat(body.target())
             .isEqualTo(ServiceAccountTarget.of("svac_01SDCCSbTxrXDpWc1phhtcfK"))
     }

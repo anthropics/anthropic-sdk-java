@@ -72,7 +72,7 @@ internal class ServiceAccountServiceAsyncTest {
             serviceAccountServiceAsync.add(
                 ServiceAccountAddParams.builder()
                     .workspaceId("workspace_id")
-                    .serviceAccountId("service_account_id")
+                    .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
                     .workspaceRole(NoBillingWorkspaceRole.WORKSPACE_ADMIN)
                     .build()
             )

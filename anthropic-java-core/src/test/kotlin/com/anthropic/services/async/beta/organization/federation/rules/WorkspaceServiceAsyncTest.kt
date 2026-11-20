@@ -44,7 +44,7 @@ internal class WorkspaceServiceAsyncTest {
                 WorkspaceAddParams.builder()
                     .federationRuleId("federation_rule_id")
                     .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                    .workspaceId("workspace_id")
+                    .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                     .build()
             )
 
