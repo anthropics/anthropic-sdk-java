@@ -510,6 +510,20 @@ private constructor(
             data(BetaWebhookEventData.ofExternalKeyRecovered(externalKeyRecovered))
 
         /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofExternalStorageFailed(externalStorageFailed)`.
+         */
+        fun data(externalStorageFailed: BetaWebhookExternalStorageFailedEventData) =
+            data(BetaWebhookEventData.ofExternalStorageFailed(externalStorageFailed))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofExternalStorageRecovered(externalStorageRecovered)`.
+         */
+        fun data(externalStorageRecovered: BetaWebhookExternalStorageRecoveredEventData) =
+            data(BetaWebhookEventData.ofExternalStorageRecovered(externalStorageRecovered))
+
+        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the

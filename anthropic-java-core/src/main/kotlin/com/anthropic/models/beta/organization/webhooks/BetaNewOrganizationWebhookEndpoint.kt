@@ -583,6 +583,13 @@ private constructor(
             val EXTERNAL_KEY_RECOVERED = EnabledEvent(JsonField.of("external_key.recovered"))
 
             @JvmField
+            val EXTERNAL_STORAGE_FAILED = EnabledEvent(JsonField.of("external_storage.failed"))
+
+            @JvmField
+            val EXTERNAL_STORAGE_RECOVERED =
+                EnabledEvent(JsonField.of("external_storage.recovered"))
+
+            @JvmField
             val USER_PROFILE_ENFORCEMENT_ACTION_OPENED =
                 EnabledEvent(JsonField.of("user_profile.enforcement_action_opened"))
 
@@ -600,6 +607,8 @@ private constructor(
                 when (value) {
                     "external_key.failed" -> EXTERNAL_KEY_FAILED
                     "external_key.recovered" -> EXTERNAL_KEY_RECOVERED
+                    "external_storage.failed" -> EXTERNAL_STORAGE_FAILED
+                    "external_storage.recovered" -> EXTERNAL_STORAGE_RECOVERED
                     "user_profile.enforcement_action_opened" ->
                         USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                     "user_profile.enforcement_action_resolved" ->
@@ -618,6 +627,8 @@ private constructor(
         enum class Known {
             EXTERNAL_KEY_FAILED,
             EXTERNAL_KEY_RECOVERED,
+            EXTERNAL_STORAGE_FAILED,
+            EXTERNAL_STORAGE_RECOVERED,
             USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
             USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
             USER_PROFILE_PROGRAM_STATUS_UPDATED,
@@ -635,6 +646,8 @@ private constructor(
         enum class Value {
             EXTERNAL_KEY_FAILED,
             EXTERNAL_KEY_RECOVERED,
+            EXTERNAL_STORAGE_FAILED,
+            EXTERNAL_STORAGE_RECOVERED,
             USER_PROFILE_ENFORCEMENT_ACTION_OPENED,
             USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED,
             USER_PROFILE_PROGRAM_STATUS_UPDATED,
@@ -655,6 +668,8 @@ private constructor(
             when (this) {
                 EXTERNAL_KEY_FAILED -> Value.EXTERNAL_KEY_FAILED
                 EXTERNAL_KEY_RECOVERED -> Value.EXTERNAL_KEY_RECOVERED
+                EXTERNAL_STORAGE_FAILED -> Value.EXTERNAL_STORAGE_FAILED
+                EXTERNAL_STORAGE_RECOVERED -> Value.EXTERNAL_STORAGE_RECOVERED
                 USER_PROFILE_ENFORCEMENT_ACTION_OPENED ->
                     Value.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
@@ -676,6 +691,8 @@ private constructor(
             when (this) {
                 EXTERNAL_KEY_FAILED -> Known.EXTERNAL_KEY_FAILED
                 EXTERNAL_KEY_RECOVERED -> Known.EXTERNAL_KEY_RECOVERED
+                EXTERNAL_STORAGE_FAILED -> Known.EXTERNAL_STORAGE_FAILED
+                EXTERNAL_STORAGE_RECOVERED -> Known.EXTERNAL_STORAGE_RECOVERED
                 USER_PROFILE_ENFORCEMENT_ACTION_OPENED ->
                     Known.USER_PROFILE_ENFORCEMENT_ACTION_OPENED
                 USER_PROFILE_ENFORCEMENT_ACTION_RESOLVED ->
