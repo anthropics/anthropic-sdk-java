@@ -49,6 +49,7 @@ private constructor(
         BetaFallbackBlockParam.builder()
             .from(_from().map { it.toParam() })
             .to(_to().map { it.toParam() })
+            .trigger(JsonValue.from(_trigger()))
             .build()
 
     /**
