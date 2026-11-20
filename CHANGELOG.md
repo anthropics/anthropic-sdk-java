@@ -1,5 +1,35 @@
 # Changelog
 
+## [3.12.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.11.0...v3.12.0) (2026-11-20)
+
+### Features
+
+* **api:** add the image_dimensions_too_large error code
+* **client:** add completionExecutor option and run async work on it
+
+  Async requests, and callbacks chained onto the futures they return, now run on a dedicated pool of up to 64 threads instead of the HTTP client's threads or the common pool. If your callbacks block, pass your own executor with `completionExecutor`. When all 64 threads are busy, work runs in the thread that submits it, which can be the thread that made the call. An async call still in flight when the client is closed now fails with `RejectedExecutionException`.
+
+
+### Bug Fixes
+
+* **bedrock:** send the user profile ID in the request body
+
+  Amazon Bedrock reads `user_profile_id` from the request body and ignores the `anthropic-user-profile-id` header, so a profile ID given to `BedrockBackend` was not applied. `BedrockBackend` now moves it into the body of Messages requests and no longer sends the header. A `user_profile_id` already in the body takes priority over the header.
+
+  Some models on Bedrock do not support user profiles. A request to one of them with a profile ID now fails with a 400 error; before, the ID was ignored. Leave the ID off requests to those models.
+
+* **client:** run credential work on the completion executor
+
+
+### Chores
+
+* **api:** change the POM name from Anthropic API to Claude API
+
+  The group and artifact IDs don't change.
+
+* **docs:** clarify billing_policy in batches and two billing errors
+* **internal:** lint against async stages that run on the common pool
+
 ## [3.11.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.10.0...v3.11.0) (2026-11-19)
 
 ### Features
