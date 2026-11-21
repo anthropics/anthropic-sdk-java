@@ -44,6 +44,7 @@ interface BatchService {
      * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
      * @throws com.anthropic.models.CmekKeyDisabledException
      * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.WorkspaceHumanReviewDisabledException
      * @throws com.anthropic.models.EnforcedSpendLimitReachedException
      */
     fun create(params: BatchCreateParams): MessageBatch = create(params, RequestOptions.none())

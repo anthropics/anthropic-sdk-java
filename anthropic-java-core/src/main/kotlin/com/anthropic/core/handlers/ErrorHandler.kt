@@ -47,6 +47,7 @@ import com.anthropic.models.RequestBodyEncodingInvalidException
 import com.anthropic.models.RequestBodyEncodingUnsupportedException
 import com.anthropic.models.RequestBodyTooLargeAfterDecodingException
 import com.anthropic.models.SandboxEgressRestrictedException
+import com.anthropic.models.WorkspaceHumanReviewDisabledException
 import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaException
 import com.anthropic.models.beta.BetaRequestBodyTimeoutException
 import com.anthropic.models.beta.BetaUnsupportedCharsetException
@@ -651,6 +652,10 @@ private val errorCodeExceptions:
         (400 to "workspace_api_key_limit_exceeded") to
             { headers, body ->
                 WorkspaceApiKeyLimitExceededException.builder().headers(headers).body(body).build()
+            },
+        (400 to "workspace_human_review_disabled") to
+            { headers, body ->
+                WorkspaceHumanReviewDisabledException.builder().headers(headers).body(body).build()
             },
         (400 to "workspace_member_limit_exceeded") to
             { headers, body ->

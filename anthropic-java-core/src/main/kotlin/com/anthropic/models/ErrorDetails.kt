@@ -178,6 +178,7 @@ private constructor(
     private val rampLimitExceeded: RampLimitExceededErrorDetails? = null,
     private val cmekKeyUnreachable: CmekKeyUnreachableErrorDetails? = null,
     private val compactionUnavailable: CompactionUnavailableErrorDetails? = null,
+    private val workspaceHumanReviewDisabled: WorkspaceHumanReviewDisabledErrorDetails? = null,
     private val storageQuotaExceeded: StorageQuotaExceededErrorDetails? = null,
     private val fileNotDownloadable: FileNotDownloadableErrorDetails? = null,
     private val fileExpired: FileExpiredErrorDetails? = null,
@@ -335,6 +336,7 @@ private constructor(
             rampLimitExceeded != null -> ErrorCode.RAMP_LIMIT_EXCEEDED
             cmekKeyUnreachable != null -> ErrorCode.CMEK_KEY_UNREACHABLE
             compactionUnavailable != null -> ErrorCode.COMPACTION_UNAVAILABLE
+            workspaceHumanReviewDisabled != null -> ErrorCode.WORKSPACE_HUMAN_REVIEW_DISABLED
             storageQuotaExceeded != null -> ErrorCode.STORAGE_QUOTA_EXCEEDED
             fileNotDownloadable != null -> ErrorCode.FILE_NOT_DOWNLOADABLE
             fileExpired != null -> ErrorCode.FILE_EXPIRED
@@ -475,6 +477,7 @@ private constructor(
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
+            workspaceHumanReviewDisabled != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
             fileNotDownloadable != null -> Optional.empty()
             fileExpired != null -> Optional.empty()
@@ -604,6 +607,7 @@ private constructor(
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
+            workspaceHumanReviewDisabled != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
             fileNotDownloadable != null -> Optional.empty()
             fileExpired != null -> Optional.empty()
@@ -733,6 +737,7 @@ private constructor(
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
+            workspaceHumanReviewDisabled != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
             fileNotDownloadable != null -> Optional.empty()
             fileExpired != null -> Optional.empty()
@@ -1048,6 +1053,13 @@ private constructor(
     /** The compaction could not be completed for a transient server reason. Retry the request. */
     fun compactionUnavailable(): Optional<CompactionUnavailableErrorDetails> =
         Optional.ofNullable(compactionUnavailable)
+
+    /**
+     * The request's Workspace has Human Review turned off, and this operation is not available
+     * there. Use a Workspace with Human Review on.
+     */
+    fun workspaceHumanReviewDisabled(): Optional<WorkspaceHumanReviewDisabledErrorDetails> =
+        Optional.ofNullable(workspaceHumanReviewDisabled)
 
     /**
      * The organization's file storage quota is exhausted. Delete files to free up space, then retry
@@ -1700,6 +1712,8 @@ private constructor(
 
     fun isCompactionUnavailable(): Boolean = compactionUnavailable != null
 
+    fun isWorkspaceHumanReviewDisabled(): Boolean = workspaceHumanReviewDisabled != null
+
     fun isStorageQuotaExceeded(): Boolean = storageQuotaExceeded != null
 
     fun isFileNotDownloadable(): Boolean = fileNotDownloadable != null
@@ -2099,6 +2113,13 @@ private constructor(
     /** The compaction could not be completed for a transient server reason. Retry the request. */
     fun asCompactionUnavailable(): CompactionUnavailableErrorDetails =
         compactionUnavailable.getOrThrow("compactionUnavailable")
+
+    /**
+     * The request's Workspace has Human Review turned off, and this operation is not available
+     * there. Use a Workspace with Human Review on.
+     */
+    fun asWorkspaceHumanReviewDisabled(): WorkspaceHumanReviewDisabledErrorDetails =
+        workspaceHumanReviewDisabled.getOrThrow("workspaceHumanReviewDisabled")
 
     /**
      * The organization's file storage quota is exhausted. Delete files to free up space, then retry
@@ -2774,6 +2795,8 @@ private constructor(
             cmekKeyUnreachable != null -> visitor.visitCmekKeyUnreachable(cmekKeyUnreachable)
             compactionUnavailable != null ->
                 visitor.visitCompactionUnavailable(compactionUnavailable)
+            workspaceHumanReviewDisabled != null ->
+                visitor.visitWorkspaceHumanReviewDisabled(workspaceHumanReviewDisabled)
             storageQuotaExceeded != null -> visitor.visitStorageQuotaExceeded(storageQuotaExceeded)
             fileNotDownloadable != null -> visitor.visitFileNotDownloadable(fileNotDownloadable)
             fileExpired != null -> visitor.visitFileExpired(fileExpired)
@@ -2983,6 +3006,7 @@ private constructor(
             rampLimitExceeded != null -> rampLimitExceeded.validate()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validate()
             compactionUnavailable != null -> compactionUnavailable.validate()
+            workspaceHumanReviewDisabled != null -> workspaceHumanReviewDisabled.validate()
             storageQuotaExceeded != null -> storageQuotaExceeded.validate()
             fileNotDownloadable != null -> fileNotDownloadable.validate()
             fileExpired != null -> fileExpired.validate()
@@ -3136,6 +3160,7 @@ private constructor(
             rampLimitExceeded != null -> rampLimitExceeded.validity()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validity()
             compactionUnavailable != null -> compactionUnavailable.validity()
+            workspaceHumanReviewDisabled != null -> workspaceHumanReviewDisabled.validity()
             storageQuotaExceeded != null -> storageQuotaExceeded.validity()
             fileNotDownloadable != null -> fileNotDownloadable.validity()
             fileExpired != null -> fileExpired.validity()
@@ -3275,6 +3300,7 @@ private constructor(
             rampLimitExceeded == other.rampLimitExceeded &&
             cmekKeyUnreachable == other.cmekKeyUnreachable &&
             compactionUnavailable == other.compactionUnavailable &&
+            workspaceHumanReviewDisabled == other.workspaceHumanReviewDisabled &&
             storageQuotaExceeded == other.storageQuotaExceeded &&
             fileNotDownloadable == other.fileNotDownloadable &&
             fileExpired == other.fileExpired &&
@@ -3404,6 +3430,7 @@ private constructor(
             rampLimitExceeded,
             cmekKeyUnreachable,
             compactionUnavailable,
+            workspaceHumanReviewDisabled,
             storageQuotaExceeded,
             fileNotDownloadable,
             fileExpired,
@@ -3561,6 +3588,8 @@ private constructor(
             cmekKeyUnreachable != null -> "ErrorDetails{cmekKeyUnreachable=$cmekKeyUnreachable}"
             compactionUnavailable != null ->
                 "ErrorDetails{compactionUnavailable=$compactionUnavailable}"
+            workspaceHumanReviewDisabled != null ->
+                "ErrorDetails{workspaceHumanReviewDisabled=$workspaceHumanReviewDisabled}"
             storageQuotaExceeded != null ->
                 "ErrorDetails{storageQuotaExceeded=$storageQuotaExceeded}"
             fileNotDownloadable != null -> "ErrorDetails{fileNotDownloadable=$fileNotDownloadable}"
@@ -4003,6 +4032,15 @@ private constructor(
         @JvmStatic
         fun ofCompactionUnavailable(compactionUnavailable: CompactionUnavailableErrorDetails) =
             ErrorDetails(compactionUnavailable = compactionUnavailable)
+
+        /**
+         * The request's Workspace has Human Review turned off, and this operation is not available
+         * there. Use a Workspace with Human Review on.
+         */
+        @JvmStatic
+        fun ofWorkspaceHumanReviewDisabled(
+            workspaceHumanReviewDisabled: WorkspaceHumanReviewDisabledErrorDetails
+        ) = ErrorDetails(workspaceHumanReviewDisabled = workspaceHumanReviewDisabled)
 
         /**
          * The organization's file storage quota is exhausted. Delete files to free up space, then
@@ -5127,6 +5165,14 @@ private constructor(
         fun visitCompactionUnavailable(compactionUnavailable: CompactionUnavailableErrorDetails): T
 
         /**
+         * The request's Workspace has Human Review turned off, and this operation is not available
+         * there. Use a Workspace with Human Review on.
+         */
+        fun visitWorkspaceHumanReviewDisabled(
+            workspaceHumanReviewDisabled: WorkspaceHumanReviewDisabledErrorDetails
+        ): T
+
+        /**
          * The organization's file storage quota is exhausted. Delete files to free up space, then
          * retry the upload.
          */
@@ -6026,6 +6072,14 @@ private constructor(
                         ?.let { ErrorDetails(compactionUnavailable = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "workspace_human_review_disabled" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<WorkspaceHumanReviewDisabledErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(workspaceHumanReviewDisabled = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "storage_quota_exceeded" -> {
                     return tryDeserialize(node, jacksonTypeRef<StorageQuotaExceededErrorDetails>())
                         ?.let { ErrorDetails(storageQuotaExceeded = it, _json = json) }
@@ -6745,6 +6799,8 @@ private constructor(
                 value.cmekKeyUnreachable != null -> generator.writeObject(value.cmekKeyUnreachable)
                 value.compactionUnavailable != null ->
                     generator.writeObject(value.compactionUnavailable)
+                value.workspaceHumanReviewDisabled != null ->
+                    generator.writeObject(value.workspaceHumanReviewDisabled)
                 value.storageQuotaExceeded != null ->
                     generator.writeObject(value.storageQuotaExceeded)
                 value.fileNotDownloadable != null ->
@@ -7033,6 +7089,10 @@ private constructor(
             @JvmField val CMEK_KEY_UNREACHABLE = ErrorCode(JsonField.of("cmek_key_unreachable"))
 
             @JvmField val COMPACTION_UNAVAILABLE = ErrorCode(JsonField.of("compaction_unavailable"))
+
+            @JvmField
+            val WORKSPACE_HUMAN_REVIEW_DISABLED =
+                ErrorCode(JsonField.of("workspace_human_review_disabled"))
 
             @JvmField val STORAGE_QUOTA_EXCEEDED = ErrorCode(JsonField.of("storage_quota_exceeded"))
 
@@ -7349,6 +7409,7 @@ private constructor(
                     "ramp_limit_exceeded" -> RAMP_LIMIT_EXCEEDED
                     "cmek_key_unreachable" -> CMEK_KEY_UNREACHABLE
                     "compaction_unavailable" -> COMPACTION_UNAVAILABLE
+                    "workspace_human_review_disabled" -> WORKSPACE_HUMAN_REVIEW_DISABLED
                     "storage_quota_exceeded" -> STORAGE_QUOTA_EXCEEDED
                     "file_not_downloadable" -> FILE_NOT_DOWNLOADABLE
                     "file_expired" -> FILE_EXPIRED
@@ -7489,6 +7550,7 @@ private constructor(
             RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
             COMPACTION_UNAVAILABLE,
+            WORKSPACE_HUMAN_REVIEW_DISABLED,
             STORAGE_QUOTA_EXCEEDED,
             FILE_NOT_DOWNLOADABLE,
             FILE_EXPIRED,
@@ -7625,6 +7687,7 @@ private constructor(
             RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
             COMPACTION_UNAVAILABLE,
+            WORKSPACE_HUMAN_REVIEW_DISABLED,
             STORAGE_QUOTA_EXCEEDED,
             FILE_NOT_DOWNLOADABLE,
             FILE_EXPIRED,
@@ -7766,6 +7829,7 @@ private constructor(
                 RAMP_LIMIT_EXCEEDED -> Value.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Value.CMEK_KEY_UNREACHABLE
                 COMPACTION_UNAVAILABLE -> Value.COMPACTION_UNAVAILABLE
+                WORKSPACE_HUMAN_REVIEW_DISABLED -> Value.WORKSPACE_HUMAN_REVIEW_DISABLED
                 STORAGE_QUOTA_EXCEEDED -> Value.STORAGE_QUOTA_EXCEEDED
                 FILE_NOT_DOWNLOADABLE -> Value.FILE_NOT_DOWNLOADABLE
                 FILE_EXPIRED -> Value.FILE_EXPIRED
@@ -7911,6 +7975,7 @@ private constructor(
                 RAMP_LIMIT_EXCEEDED -> Known.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Known.CMEK_KEY_UNREACHABLE
                 COMPACTION_UNAVAILABLE -> Known.COMPACTION_UNAVAILABLE
+                WORKSPACE_HUMAN_REVIEW_DISABLED -> Known.WORKSPACE_HUMAN_REVIEW_DISABLED
                 STORAGE_QUOTA_EXCEEDED -> Known.STORAGE_QUOTA_EXCEEDED
                 FILE_NOT_DOWNLOADABLE -> Known.FILE_NOT_DOWNLOADABLE
                 FILE_EXPIRED -> Known.FILE_EXPIRED
