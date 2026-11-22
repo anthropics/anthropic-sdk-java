@@ -38,8 +38,7 @@ private constructor(
 
     /**
      * The Workspace's human review setting. Human review is off only while this is `disabled` and
-     * Anthropic's approval stands. If Anthropic withdraws approval, review is back on, though this
-     * field still reads `disabled`.
+     * Anthropic's approval stands.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -135,8 +134,7 @@ private constructor(
 
         /**
          * The Workspace's human review setting. Human review is off only while this is `disabled`
-         * and Anthropic's approval stands. If Anthropic withdraws approval, review is back on,
-         * though this field still reads `disabled`.
+         * and Anthropic's approval stands.
          */
         fun humanReview(humanReview: BetaAnthropicHumanReview) =
             humanReview(JsonField.of(humanReview))
