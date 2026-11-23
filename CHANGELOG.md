@@ -1,5 +1,40 @@
 # Changelog
 
+## [3.13.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.12.0...v3.13.0) (2026-11-23)
+
+### Features
+
+* **api:** add an error code to Message Batches creation
+* **api:** add External Storage to the Admin API beta
+* **api:** add webhook events for external storage failure and recovery
+* **bedrock:** support a custom base URL
+
+  `BedrockBackend` always sent requests to `https://bedrock-runtime.<region>.amazonaws.com`. Set `BedrockBackend.builder().baseUrl(...)`, or the `ANTHROPIC_BEDROCK_BASE_URL` environment variable with `fromEnv()`, to send them elsewhere, such as to a VPC interface endpoint. Requests are still signed for the configured region.
+
+
+### Bug Fixes
+
+* **api:** use 64-bit integers for Managed Agents usage token counts
+* **client:** keep a tool block's input when it streams without deltas
+* **client:** keep fields that accept any JSON when calling toParam()
+
+
+### Chores
+
+* **api:** mark Claude Opus 4.5 as deprecated (end-of-life January 22, 2027)
+* **docs:** clarify when plugin archive downloads are recorded and who gave a share
+* **docs:** correct organization-type notes in usage and cost reports
+* **docs:** describe the user profile endpoints and link to the guide
+* **docs:** use realistic example values in more request bodies
+* **internal:** remove lint suppressions that are no longer needed
+* **tests:** cancel the traced future directly in the spans test
+* **tests:** cover a response that arrives after its future is done
+
+
+### Documentation
+
+* **api:** shorten the human_review description
+
 ## [3.12.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.11.0...v3.12.0) (2026-11-20)
 
 ### Features
