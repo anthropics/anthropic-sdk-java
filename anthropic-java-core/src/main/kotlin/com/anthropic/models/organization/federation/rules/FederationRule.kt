@@ -698,6 +698,17 @@ private constructor(
         fun target(target: JsonField<ServiceAccountTarget>) = apply { this.target = target }
 
         /**
+         * Alias for calling [target] with the following:
+         * ```java
+         * ServiceAccountTarget.builder()
+         *     .serviceAccountId(serviceAccountId)
+         *     .build()
+         * ```
+         */
+        fun serviceAccountTarget(serviceAccountId: String) =
+            target(ServiceAccountTarget.builder().serviceAccountId(serviceAccountId).build())
+
+        /**
          * Lifetime in seconds of access tokens minted via this rule. Minted tokens are capped at
          * `max(60, min(this value, 2 × remaining assertion validity))` seconds.
          */
