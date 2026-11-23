@@ -308,8 +308,7 @@ private constructor(
 
     /**
      * Service tier the usage was served at. Populated only when `service_tier` is in `group_by[]`;
-     * null for usage with no service tier (for example, code execution) and for Claude Enterprise
-     * usage.
+     * null for usage with no service tier (for example, code execution).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -354,8 +353,7 @@ private constructor(
 
     /**
      * User profile the usage was attributed to, as a tagged `uprof_` ID. Populated only when
-     * `user_profile_id` is in `group_by[]`; null for usage that named no profile and for Claude
-     * Enterprise usage.
+     * `user_profile_id` is in `group_by[]`; null for usage that named no profile.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -363,9 +361,10 @@ private constructor(
     fun userProfileId(): Optional<String> = userProfileId.getOptional("user_profile_id")
 
     /**
-     * Workspace the usage occurred in, as a tagged workspace ID, including the organization's
-     * default workspace. Populated only when `workspace_id` is in `group_by[]`; null for Claude
-     * Enterprise usage.
+     * Workspace the usage occurred in, as a tagged workspace ID, including a Claude Platform
+     * organization's default workspace. Populated only when `workspace_id` is in `group_by[]`; null
+     * for usage in a Claude Enterprise organization's default workspace, which is its only
+     * workspace.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -1028,8 +1027,7 @@ private constructor(
 
         /**
          * Service tier the usage was served at. Populated only when `service_tier` is in
-         * `group_by[]`; null for usage with no service tier (for example, code execution) and for
-         * Claude Enterprise usage.
+         * `group_by[]`; null for usage with no service tier (for example, code execution).
          */
         fun serviceTier(serviceTier: BetaAnalyticsServiceTier?) =
             serviceTier(JsonField.ofNullable(serviceTier))
@@ -1129,8 +1127,7 @@ private constructor(
 
         /**
          * User profile the usage was attributed to, as a tagged `uprof_` ID. Populated only when
-         * `user_profile_id` is in `group_by[]`; null for usage that named no profile and for Claude
-         * Enterprise usage.
+         * `user_profile_id` is in `group_by[]`; null for usage that named no profile.
          */
         fun userProfileId(userProfileId: String?) =
             userProfileId(JsonField.ofNullable(userProfileId))
@@ -1151,9 +1148,10 @@ private constructor(
         }
 
         /**
-         * Workspace the usage occurred in, as a tagged workspace ID, including the organization's
-         * default workspace. Populated only when `workspace_id` is in `group_by[]`; null for Claude
-         * Enterprise usage.
+         * Workspace the usage occurred in, as a tagged workspace ID, including a Claude Platform
+         * organization's default workspace. Populated only when `workspace_id` is in `group_by[]`;
+         * null for usage in a Claude Enterprise organization's default workspace, which is its only
+         * workspace.
          */
         fun workspaceId(workspaceId: String?) = workspaceId(JsonField.ofNullable(workspaceId))
 
