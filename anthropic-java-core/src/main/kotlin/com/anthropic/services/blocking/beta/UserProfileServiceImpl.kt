@@ -32,6 +32,11 @@ import com.anthropic.services.blocking.beta.userprofiles.ActionUrlServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Register the end customers that your platform serves, so each request can name who it's for. To
+ * get started, see the
+ * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+ */
 class UserProfileServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     UserProfileService {
 

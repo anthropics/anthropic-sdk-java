@@ -21,7 +21,9 @@ import java.net.URI
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.thread
@@ -142,6 +144,33 @@ internal class OkHttpClientTest {
 
         // Should have cancelled the underlying call
         assertThat(call.isCanceled()).isTrue()
+    }
+
+    @Test
+    fun executeAsync_whenResponseArrivesAfterFutureIsDone_closesResponse() {
+        stubFor(post(urlPathEqualTo("/something")).willReturn(ok("body")))
+        val dispatcherExecutorService = Executors.newSingleThreadExecutor()
+        val httpClient =
+            httpClient.toBuilder().dispatcherExecutorService(dispatcherExecutorService).build()
+        val futureDone = CountDownLatch(1)
+        dispatcherExecutorService.execute { futureDone.await() }
+        val responseFuture =
+            httpClient.executeAsync(
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(baseUrl)
+                    .addPathSegment("something")
+                    .build()
+            )
+
+        responseFuture.completeExceptionally(TimeoutException())
+        futureDone.countDown()
+
+        dispatcherExecutorService.shutdown()
+        assertThat(dispatcherExecutorService.awaitTermination(1, TimeUnit.MINUTES)).isTrue()
+        val connectionPool = httpClient.okHttpClient.connectionPool
+        assertThat(connectionPool.connectionCount()).isEqualTo(1)
+        assertThat(connectionPool.idleConnectionCount()).isEqualTo(1)
     }
 
     @Test

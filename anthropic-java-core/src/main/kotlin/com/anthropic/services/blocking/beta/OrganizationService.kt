@@ -11,6 +11,7 @@ import com.anthropic.services.blocking.beta.organization.ClaudeCodeService
 import com.anthropic.services.blocking.beta.organization.ClaudeTagService
 import com.anthropic.services.blocking.beta.organization.ComplianceSettingService
 import com.anthropic.services.blocking.beta.organization.ExternalKeyService
+import com.anthropic.services.blocking.beta.organization.ExternalStorageService
 import com.anthropic.services.blocking.beta.organization.FederationService
 import com.anthropic.services.blocking.beta.organization.InviteService
 import com.anthropic.services.blocking.beta.organization.PluginMarketplaceService
@@ -50,6 +51,8 @@ interface OrganizationService {
     fun invites(): InviteService
 
     fun serviceAccounts(): ServiceAccountService
+
+    fun externalStorage(): ExternalStorageService
 
     fun users(): UserService
 
@@ -120,6 +123,8 @@ interface OrganizationService {
         fun invites(): InviteService.WithRawResponse
 
         fun serviceAccounts(): ServiceAccountService.WithRawResponse
+
+        fun externalStorage(): ExternalStorageService.WithRawResponse
 
         fun users(): UserService.WithRawResponse
 

@@ -18,7 +18,6 @@ import com.anthropic.core.opentelemetry.OpenTelemetryContentMode
 import com.anthropic.core.opentelemetry.OpenTelemetryOptions
 import com.anthropic.core.opentelemetry.OpenTelemetryRequestOptions
 import com.anthropic.core.opentelemetry.OpenTelemetryTraces
-import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.errors.AnthropicException
@@ -1728,12 +1727,11 @@ internal class ApiCallSpansTest : TracingTestSupport() {
         // Not `messages().create`, whose span starts before its request is sent.
         val future =
             traceApiCallAsync(clientOptions, messageParams()) { client ->
-                    apiCallClient = client
-                    prepared
-                        .thenCompose { client.executeAsync(it, RequestOptions.none()) }
-                        .thenApply { response -> response.parseable { "parsed" } }
-                }
-                .thenParse()
+                apiCallClient = client
+                prepared
+                    .thenCompose { client.executeAsync(it, RequestOptions.none()) }
+                    .thenApply { response -> response.parseable { "parsed" } }
+            }
         future.cancel(true)
         assertThrows<CancellationException> { future.get() }
         assertThat(apiCallClient.call).isNull()

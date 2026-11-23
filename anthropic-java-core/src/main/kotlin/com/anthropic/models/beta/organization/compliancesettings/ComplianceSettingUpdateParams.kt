@@ -9,13 +9,16 @@ import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
+import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.AnthropicBeta
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -36,10 +39,17 @@ import kotlin.jvm.optionals.getOrNull
  */
 class ComplianceSettingUpdateParams
 private constructor(
+    private val betas: List<AnthropicBeta>?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * Optional. Send `efs-2026-10-01` in this header to use this endpoint's beta features:
+     * additional parameters, accepted values and response fields.
+     */
+    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
      * Desired state. Accepts the string shorthand "enabled" or "disabled" in place of the object
@@ -84,16 +94,45 @@ private constructor(
     /** A builder for [ComplianceSettingUpdateParams]. */
     class Builder internal constructor() {
 
+        private var betas: MutableList<AnthropicBeta>? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(complianceSettingUpdateParams: ComplianceSettingUpdateParams) = apply {
+            betas = complianceSettingUpdateParams.betas?.toMutableList()
             body = complianceSettingUpdateParams.body.toBuilder()
             additionalHeaders = complianceSettingUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = complianceSettingUpdateParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * Optional. Send `efs-2026-10-01` in this header to use this endpoint's beta features:
+         * additional parameters, accepted values and response fields.
+         */
+        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
+
+        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
+
+        /**
+         * Adds a single [AnthropicBeta] to [betas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
+        }
+
+        /**
+         * Sets [addBeta] to an arbitrary [String].
+         *
+         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         /**
          * Sets the entire request body.
@@ -260,6 +299,7 @@ private constructor(
          */
         fun build(): ComplianceSettingUpdateParams =
             ComplianceSettingUpdateParams(
+                betas?.toImmutable(),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -268,7 +308,17 @@ private constructor(
 
     fun _body(): Body = body
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.let {
+                    if (it.isNotEmpty()) {
+                        put("anthropic-beta", it.joinToString(","))
+                    }
+                }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -492,13 +542,15 @@ private constructor(
         }
 
         return other is ComplianceSettingUpdateParams &&
+            betas == other.betas &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "ComplianceSettingUpdateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ComplianceSettingUpdateParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

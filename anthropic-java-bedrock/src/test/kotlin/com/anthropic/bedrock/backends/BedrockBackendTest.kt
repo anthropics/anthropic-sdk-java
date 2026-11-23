@@ -66,6 +66,9 @@ internal class BedrockBackendTest {
         private const val MODEL_ARN =
             "arn:aws:bedrock:$AWS_REGION:123456789012:inference-profile/us.$MODEL_ID"
         private const val ANTHROPIC_VERSION = "2024-01-01"
+        private const val CUSTOM_HOST =
+            "vpce-0123456789abcdef0.bedrock-runtime.$AWS_REGION.vpce.amazonaws.com"
+        private const val CUSTOM_BASE_URL = "https://$CUSTOM_HOST"
         private const val TEXT_DELTA =
             """{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}"""
         private const val MESSAGE_STOP = """{"type":"message_stop"}"""
@@ -79,6 +82,7 @@ internal class BedrockBackendTest {
         private const val PROP_AWS_REGION = "aws.region"
 
         private const val ENV_API_KEY = "AWS_BEARER_TOKEN_BEDROCK"
+        private const val ENV_BASE_URL = "ANTHROPIC_BEDROCK_BASE_URL"
 
         private val hasRegionInEnvironment by lazy {
             try {
@@ -373,6 +377,29 @@ internal class BedrockBackendTest {
         assertThat(AWS_REGION).isNotEqualTo(otherRegion)
         assertThat(backend.baseUrl())
             .isEqualTo("https://bedrock-runtime.$otherRegion.amazonaws.com")
+    }
+
+    @Test
+    fun baseUrlOverride() {
+        val backend =
+            BedrockBackend.builder()
+                .apiKey(API_KEY)
+                .region(Region.US_EAST_1)
+                .baseUrl(CUSTOM_BASE_URL)
+                .build()
+
+        assertThat(backend.baseUrl()).isEqualTo(CUSTOM_BASE_URL)
+    }
+
+    @Test
+    fun baseUrlFromEnv() {
+        initEnv()
+        val builder = BedrockBackend.builder().withoutApiKeyEnvVar()
+        Mockito.doReturn(CUSTOM_BASE_URL).`when`(builder).getEnv(ENV_BASE_URL)
+
+        val backend = builder.fromEnv().build()
+
+        assertThat(backend.baseUrl()).isEqualTo(CUSTOM_BASE_URL)
     }
 
     @Test
@@ -970,6 +997,29 @@ internal class BedrockBackendTest {
         assertThat(headers.names()).contains("content-type")
         assertThat(headers.values("content-type").size).isEqualTo(1)
         assertThat(headers.values("content-type")[0]).isEqualTo("application/json")
+    }
+
+    @Test
+    fun authorizeRequestSignsHostOfBaseUrlOverride() {
+        val backend =
+            BedrockBackend.builder()
+                .awsCredentials(
+                    AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+                )
+                .region(Region.US_EAST_1)
+                .baseUrl(CUSTOM_BASE_URL)
+                .build()
+        val request =
+            createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
+                .toBuilder()
+                .baseUrl(backend.baseUrl())
+                .build()
+
+        val headers = backend.authorizeRequest(request).headers
+
+        assertThat(headers.values("Host")).containsExactly(CUSTOM_HOST)
+        assertThat(headers.values("Authorization").single())
+            .contains("/$AWS_REGION/bedrock/aws4_request")
     }
 
     @Test

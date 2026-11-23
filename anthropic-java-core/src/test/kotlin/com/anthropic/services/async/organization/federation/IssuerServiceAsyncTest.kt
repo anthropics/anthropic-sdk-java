@@ -26,8 +26,8 @@ internal class IssuerServiceAsyncTest {
         val federationIssuerFuture =
             issuerServiceAsync.create(
                 IssuerCreateParams.builder()
-                    .issuerUrl("x")
-                    .name("x")
+                    .issuerUrl("https://token.actions.githubusercontent.com")
+                    .name("github-actions")
                     .checkJti(true)
                     .jwks(
                         JwksDiscovery.builder()

@@ -34,6 +34,15 @@ internal class BetaWorkspaceTest {
                         .build()
                 )
                 .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
+                .inferenceDataPrivacy(
+                    BetaInferenceDataPrivacy.builder()
+                        .humanReview(
+                            BetaAnthropicHumanReview.of(BetaAnthropicHumanReview.Type.DISABLED)
+                        )
+                        .safeguardsStorage(BetaInternalStorage.builder().build())
+                        .transcriptsStorage(BetaInternalStorage.builder().build())
+                        .build()
+                )
                 .build()
 
         assertThat(betaWorkspace.id()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
@@ -61,6 +70,16 @@ internal class BetaWorkspaceTest {
                     .build()
             )
         assertThat(betaWorkspace.userProfileId()).contains("uprof_01SDCCSbTxrXDpWc1phhtcfK")
+        assertThat(betaWorkspace.inferenceDataPrivacy())
+            .contains(
+                BetaInferenceDataPrivacy.builder()
+                    .humanReview(
+                        BetaAnthropicHumanReview.of(BetaAnthropicHumanReview.Type.DISABLED)
+                    )
+                    .safeguardsStorage(BetaInternalStorage.builder().build())
+                    .transcriptsStorage(BetaInternalStorage.builder().build())
+                    .build()
+            )
     }
 
     @Test
@@ -89,6 +108,15 @@ internal class BetaWorkspaceTest {
                         .build()
                 )
                 .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
+                .inferenceDataPrivacy(
+                    BetaInferenceDataPrivacy.builder()
+                        .humanReview(
+                            BetaAnthropicHumanReview.of(BetaAnthropicHumanReview.Type.DISABLED)
+                        )
+                        .safeguardsStorage(BetaInternalStorage.builder().build())
+                        .transcriptsStorage(BetaInternalStorage.builder().build())
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaWorkspace =

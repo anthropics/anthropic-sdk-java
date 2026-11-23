@@ -33,8 +33,8 @@ internal class SlackChannelListPageResponseTest {
                         )
                         .slack(
                             BetaClaudeTagSlackChannelIdentifiers.builder()
-                                .channelId("xx")
-                                .workspaceId("xx")
+                                .channelId("C0456EFGH")
+                                .workspaceId("T0123ABCD")
                                 .build()
                         )
                         .sources(
@@ -70,8 +70,8 @@ internal class SlackChannelListPageResponseTest {
                     )
                     .slack(
                         BetaClaudeTagSlackChannelIdentifiers.builder()
-                            .channelId("xx")
-                            .workspaceId("xx")
+                            .channelId("C0456EFGH")
+                            .workspaceId("T0123ABCD")
                             .build()
                     )
                     .sources(
@@ -111,8 +111,8 @@ internal class SlackChannelListPageResponseTest {
                         )
                         .slack(
                             BetaClaudeTagSlackChannelIdentifiers.builder()
-                                .channelId("xx")
-                                .workspaceId("xx")
+                                .channelId("C0456EFGH")
+                                .workspaceId("T0123ABCD")
                                 .build()
                         )
                         .sources(

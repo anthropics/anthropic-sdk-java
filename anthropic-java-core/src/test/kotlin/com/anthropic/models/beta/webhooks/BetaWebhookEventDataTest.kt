@@ -72,6 +72,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -155,6 +157,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -238,6 +242,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -321,6 +327,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -405,6 +413,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -488,6 +498,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -571,6 +583,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -656,6 +670,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -740,6 +756,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -823,6 +841,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -907,6 +927,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -991,6 +1013,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1076,6 +1100,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1162,6 +1188,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1248,6 +1276,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1331,6 +1361,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1414,6 +1446,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1497,6 +1531,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1582,6 +1618,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1668,6 +1706,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1754,6 +1794,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1841,6 +1883,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -1925,6 +1969,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2008,6 +2054,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2091,6 +2139,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2174,6 +2224,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2257,6 +2309,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2340,6 +2394,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2423,6 +2479,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2506,6 +2564,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2589,6 +2649,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2672,6 +2734,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2755,6 +2819,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2838,6 +2904,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -2921,6 +2989,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3005,6 +3075,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3088,6 +3160,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3171,6 +3245,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3254,6 +3330,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3337,6 +3415,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3420,6 +3500,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3503,6 +3585,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3586,6 +3670,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3669,6 +3755,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3756,6 +3844,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3843,6 +3933,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -3927,6 +4019,8 @@ internal class BetaWebhookEventDataTest {
             .contains(userProfileProgramStatusUpdated)
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -4008,6 +4102,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).contains(externalKeyFailed)
         assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -4089,6 +4185,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
         assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
         assertThat(betaWebhookEventData.externalKeyRecovered()).contains(externalKeyRecovered)
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
     }
 
     @Test
@@ -4097,6 +4195,175 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofExternalKeyRecovered(
                 BetaWebhookExternalKeyRecoveredEventData.builder()
+                    .id("id")
+                    .organizationId("organization_id")
+                    .build()
+            )
+
+        val roundtrippedBetaWebhookEventData =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaWebhookEventData),
+                jacksonTypeRef<BetaWebhookEventData>(),
+            )
+
+        assertThat(roundtrippedBetaWebhookEventData).isEqualTo(betaWebhookEventData)
+    }
+
+    @Test
+    fun ofExternalStorageFailed() {
+        val externalStorageFailed =
+            BetaWebhookExternalStorageFailedEventData.builder()
+                .id("id")
+                .organizationId("organization_id")
+                .build()
+
+        val betaWebhookEventData =
+            BetaWebhookEventData.ofExternalStorageFailed(externalStorageFailed)
+
+        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
+        assertThat(betaWebhookEventData.sessionPending()).isEmpty
+        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
+        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
+        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
+        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
+        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
+        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
+        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
+        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
+        assertThat(betaWebhookEventData.agentCreated()).isEmpty
+        assertThat(betaWebhookEventData.agentArchived()).isEmpty
+        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
+        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
+        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
+        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
+        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
+        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
+        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
+        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
+        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).contains(externalStorageFailed)
+        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+    }
+
+    @Test
+    fun ofExternalStorageFailedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaWebhookEventData =
+            BetaWebhookEventData.ofExternalStorageFailed(
+                BetaWebhookExternalStorageFailedEventData.builder()
+                    .id("id")
+                    .organizationId("organization_id")
+                    .build()
+            )
+
+        val roundtrippedBetaWebhookEventData =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaWebhookEventData),
+                jacksonTypeRef<BetaWebhookEventData>(),
+            )
+
+        assertThat(roundtrippedBetaWebhookEventData).isEqualTo(betaWebhookEventData)
+    }
+
+    @Test
+    fun ofExternalStorageRecovered() {
+        val externalStorageRecovered =
+            BetaWebhookExternalStorageRecoveredEventData.builder()
+                .id("id")
+                .organizationId("organization_id")
+                .build()
+
+        val betaWebhookEventData =
+            BetaWebhookEventData.ofExternalStorageRecovered(externalStorageRecovered)
+
+        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
+        assertThat(betaWebhookEventData.sessionPending()).isEmpty
+        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
+        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
+        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
+        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
+        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
+        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
+        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
+        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
+        assertThat(betaWebhookEventData.agentCreated()).isEmpty
+        assertThat(betaWebhookEventData.agentArchived()).isEmpty
+        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
+        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
+        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
+        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
+        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
+        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
+        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
+        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
+        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
+        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
+        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
+        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
+        assertThat(betaWebhookEventData.externalStorageRecovered())
+            .contains(externalStorageRecovered)
+    }
+
+    @Test
+    fun ofExternalStorageRecoveredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaWebhookEventData =
+            BetaWebhookEventData.ofExternalStorageRecovered(
+                BetaWebhookExternalStorageRecoveredEventData.builder()
                     .id("id")
                     .organizationId("organization_id")
                     .build()

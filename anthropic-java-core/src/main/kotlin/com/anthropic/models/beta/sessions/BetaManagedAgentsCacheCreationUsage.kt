@@ -17,8 +17,8 @@ import java.util.Optional
 class BetaManagedAgentsCacheCreationUsage
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val ephemeral1hInputTokens: JsonField<Int>,
-    private val ephemeral5mInputTokens: JsonField<Int>,
+    private val ephemeral1hInputTokens: JsonField<Long>,
+    private val ephemeral5mInputTokens: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -26,10 +26,10 @@ private constructor(
     private constructor(
         @JsonProperty("ephemeral_1h_input_tokens")
         @ExcludeMissing
-        ephemeral1hInputTokens: JsonField<Int> = JsonMissing.of(),
+        ephemeral1hInputTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("ephemeral_5m_input_tokens")
         @ExcludeMissing
-        ephemeral5mInputTokens: JsonField<Int> = JsonMissing.of(),
+        ephemeral5mInputTokens: JsonField<Long> = JsonMissing.of(),
     ) : this(ephemeral1hInputTokens, ephemeral5mInputTokens, mutableMapOf())
 
     /**
@@ -38,7 +38,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun ephemeral1hInputTokens(): Optional<Int> =
+    fun ephemeral1hInputTokens(): Optional<Long> =
         ephemeral1hInputTokens.getOptional("ephemeral_1h_input_tokens")
 
     /**
@@ -47,7 +47,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun ephemeral5mInputTokens(): Optional<Int> =
+    fun ephemeral5mInputTokens(): Optional<Long> =
         ephemeral5mInputTokens.getOptional("ephemeral_5m_input_tokens")
 
     /**
@@ -58,7 +58,7 @@ private constructor(
      */
     @JsonProperty("ephemeral_1h_input_tokens")
     @ExcludeMissing
-    fun _ephemeral1hInputTokens(): JsonField<Int> = ephemeral1hInputTokens
+    fun _ephemeral1hInputTokens(): JsonField<Long> = ephemeral1hInputTokens
 
     /**
      * Returns the raw JSON value of [ephemeral5mInputTokens].
@@ -68,7 +68,7 @@ private constructor(
      */
     @JsonProperty("ephemeral_5m_input_tokens")
     @ExcludeMissing
-    fun _ephemeral5mInputTokens(): JsonField<Int> = ephemeral5mInputTokens
+    fun _ephemeral5mInputTokens(): JsonField<Long> = ephemeral5mInputTokens
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -94,8 +94,8 @@ private constructor(
     /** A builder for [BetaManagedAgentsCacheCreationUsage]. */
     class Builder internal constructor() {
 
-        private var ephemeral1hInputTokens: JsonField<Int> = JsonMissing.of()
-        private var ephemeral5mInputTokens: JsonField<Int> = JsonMissing.of()
+        private var ephemeral1hInputTokens: JsonField<Long> = JsonMissing.of()
+        private var ephemeral5mInputTokens: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -109,32 +109,32 @@ private constructor(
         }
 
         /** Tokens used to create 1-hour ephemeral cache entries. */
-        fun ephemeral1hInputTokens(ephemeral1hInputTokens: Int) =
+        fun ephemeral1hInputTokens(ephemeral1hInputTokens: Long) =
             ephemeral1hInputTokens(JsonField.of(ephemeral1hInputTokens))
 
         /**
          * Sets [Builder.ephemeral1hInputTokens] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.ephemeral1hInputTokens] with a well-typed [Int] value
+         * You should usually call [Builder.ephemeral1hInputTokens] with a well-typed [Long] value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun ephemeral1hInputTokens(ephemeral1hInputTokens: JsonField<Int>) = apply {
+        fun ephemeral1hInputTokens(ephemeral1hInputTokens: JsonField<Long>) = apply {
             this.ephemeral1hInputTokens = ephemeral1hInputTokens
         }
 
         /** Tokens used to create 5-minute ephemeral cache entries. */
-        fun ephemeral5mInputTokens(ephemeral5mInputTokens: Int) =
+        fun ephemeral5mInputTokens(ephemeral5mInputTokens: Long) =
             ephemeral5mInputTokens(JsonField.of(ephemeral5mInputTokens))
 
         /**
          * Sets [Builder.ephemeral5mInputTokens] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.ephemeral5mInputTokens] with a well-typed [Int] value
+         * You should usually call [Builder.ephemeral5mInputTokens] with a well-typed [Long] value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun ephemeral5mInputTokens(ephemeral5mInputTokens: JsonField<Int>) = apply {
+        fun ephemeral5mInputTokens(ephemeral5mInputTokens: JsonField<Long>) = apply {
             this.ephemeral5mInputTokens = ephemeral5mInputTokens
         }
 

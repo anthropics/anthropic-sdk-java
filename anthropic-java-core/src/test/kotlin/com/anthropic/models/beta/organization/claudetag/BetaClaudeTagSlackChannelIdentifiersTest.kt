@@ -10,17 +10,23 @@ internal class BetaClaudeTagSlackChannelIdentifiersTest {
     @Test
     fun create() {
         val betaClaudeTagSlackChannelIdentifiers =
-            BetaClaudeTagSlackChannelIdentifiers.builder().channelId("xx").workspaceId("xx").build()
+            BetaClaudeTagSlackChannelIdentifiers.builder()
+                .channelId("C0456EFGH")
+                .workspaceId("T0123ABCD")
+                .build()
 
-        assertThat(betaClaudeTagSlackChannelIdentifiers.channelId()).isEqualTo("xx")
-        assertThat(betaClaudeTagSlackChannelIdentifiers.workspaceId()).isEqualTo("xx")
+        assertThat(betaClaudeTagSlackChannelIdentifiers.channelId()).isEqualTo("C0456EFGH")
+        assertThat(betaClaudeTagSlackChannelIdentifiers.workspaceId()).isEqualTo("T0123ABCD")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaClaudeTagSlackChannelIdentifiers =
-            BetaClaudeTagSlackChannelIdentifiers.builder().channelId("xx").workspaceId("xx").build()
+            BetaClaudeTagSlackChannelIdentifiers.builder()
+                .channelId("C0456EFGH")
+                .workspaceId("T0123ABCD")
+                .build()
 
         val roundtrippedBetaClaudeTagSlackChannelIdentifiers =
             jsonMapper.readValue(

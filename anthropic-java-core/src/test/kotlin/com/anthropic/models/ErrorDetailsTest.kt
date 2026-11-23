@@ -14,6 +14,10 @@ import com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeErrorDe
 import com.anthropic.models.beta.environments.BetaInvalidMetadataErrorDetails
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedErrorDetails
 import com.anthropic.models.beta.environments.work.BetaWorkLeaseState
+import com.anthropic.models.beta.organization.BetaApprovalRequiredErrorDetails
+import com.anthropic.models.beta.organization.BetaAuthorizationCheckUnavailableErrorDetails
+import com.anthropic.models.beta.organization.BetaHumanReviewNotAvailableErrorDetails
+import com.anthropic.models.beta.organization.BetaOrganizationNotEligibleErrorDetails
 import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaCmekFeatureUnsupportedErrorDetails
 import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaRbacGroupManagedSettingsNotFoundErrorDetails
 import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaRbacGroupOrderLimitExceededErrorDetails
@@ -28,6 +32,20 @@ import com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelSco
 import com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpEnvironmentNotFoundErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsRefusedErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageFailedCheck
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageInUseErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageInWorkspacePolicyErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageNotAvailableErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaGrantRequiredErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaInvalidStorageArnErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaProviderNotAllowedErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageAlreadyRegisteredErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageAttachLimitReachedErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageChangedConcurrentlyErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageNotAttachableErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageProfileStillRequiredErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageVerificationFailedErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaUnsupportedRegionErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaPluginNameTakenErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaRegistrationPendingErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaScanFailedErrorDetails
@@ -41,6 +59,10 @@ import com.anthropic.models.beta.organization.users.BetaCannotSignOutOwnerErrorD
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrimaryOwnerErrorDetails
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrivilegedMemberErrorDetails
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutSelfErrorDetails
+import com.anthropic.models.beta.organization.workspaces.BetaHumanReviewOnWithExternalStorageErrorDetails
+import com.anthropic.models.beta.organization.workspaces.BetaTranscriptsStorageRequiredErrorDetails
+import com.anthropic.models.beta.organization.workspaces.BetaWorkspaceChangedConcurrentlyErrorDetails
+import com.anthropic.models.beta.organization.workspaces.BetaWorkspaceChangedConcurrentlyField
 import com.anthropic.models.files.FileExpiredErrorDetails
 import com.anthropic.models.files.FileNotDownloadableErrorDetails
 import com.anthropic.models.files.StorageQuotaExceededErrorDetails
@@ -63,6 +85,7 @@ import com.anthropic.models.messages.ThreadUnsupportedFeatureName
 import com.anthropic.models.messages.ThreadUnsupportedRequestErrorDetails
 import com.anthropic.models.messages.ToolNameConflictErrorDetails
 import com.anthropic.models.messages.ToolReferenceUnresolvedErrorDetails
+import com.anthropic.models.organization.ChangeOutcomeUnknownErrorDetails
 import com.anthropic.models.organization.ConcurrentMembershipChangeErrorDetails
 import com.anthropic.models.organization.OrgMemberLimitExceededErrorDetails
 import com.anthropic.models.organization.RbacRoleNotFoundErrorDetails
@@ -80,6 +103,9 @@ import com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessEr
 import com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedErrorDetails
 import com.anthropic.models.organization.users.CannotRemoveLastMemberErrorDetails
 import com.anthropic.models.organization.workspaces.KeyProfileMismatchErrorDetails
+import com.anthropic.models.organization.workspaces.StorageAttachedDuringArchiveErrorDetails
+import com.anthropic.models.organization.workspaces.StorageProfileMismatchErrorDetails
+import com.anthropic.models.organization.workspaces.WorkspaceCreatedIncompleteErrorDetails
 import com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededErrorDetails
 import com.anthropic.models.organization.workspaces.WorkspacePolicyField
 import com.anthropic.models.organization.workspaces.WorkspacePolicyViolationErrorDetails
@@ -139,6 +165,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -162,6 +189,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -172,6 +203,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -179,6 +220,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -267,6 +318,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -290,6 +342,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -300,6 +356,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -307,6 +373,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -392,6 +468,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -415,6 +492,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -425,6 +506,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -432,6 +523,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -517,6 +618,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -540,6 +642,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -550,6 +656,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -557,6 +673,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -640,6 +766,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -663,6 +790,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -673,6 +804,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -680,6 +821,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -765,6 +916,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -788,6 +940,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -798,6 +954,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -805,6 +971,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -890,6 +1066,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -913,6 +1090,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -923,6 +1104,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -930,6 +1121,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -1015,6 +1216,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -1038,6 +1240,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -1048,6 +1254,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1055,6 +1271,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -1140,6 +1366,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -1163,6 +1390,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -1173,6 +1404,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1180,6 +1421,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -1267,6 +1518,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -1290,6 +1542,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -1300,6 +1556,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1307,6 +1573,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -1392,6 +1668,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -1415,6 +1692,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -1425,6 +1706,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1432,6 +1723,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -1520,6 +1821,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -1543,6 +1845,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -1553,6 +1859,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1560,6 +1876,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -1648,6 +1974,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -1671,6 +1998,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -1681,6 +2012,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1688,6 +2029,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -1777,6 +2128,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -1800,6 +2152,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -1810,6 +2166,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1817,6 +2183,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -1906,6 +2282,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -1929,6 +2306,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -1939,6 +2320,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1946,6 +2337,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -2031,6 +2432,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -2054,6 +2456,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -2064,6 +2470,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2071,6 +2487,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -2159,6 +2585,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -2182,6 +2609,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -2192,6 +2623,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2199,6 +2640,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -2284,6 +2735,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -2307,6 +2759,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -2317,6 +2773,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2324,6 +2790,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -2409,6 +2885,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -2432,6 +2909,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -2442,6 +2923,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2449,6 +2940,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -2534,6 +3035,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -2557,6 +3059,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -2567,6 +3073,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2574,6 +3090,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -2662,6 +3188,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -2685,6 +3212,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -2695,6 +3226,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2702,6 +3243,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -2789,6 +3340,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -2812,6 +3364,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -2822,6 +3378,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2829,6 +3395,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -2912,6 +3488,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -2935,6 +3512,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -2945,6 +3526,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2952,6 +3543,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -3037,6 +3638,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -3060,6 +3662,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -3070,6 +3676,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3077,6 +3693,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -3165,6 +3791,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -3188,6 +3815,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -3198,6 +3829,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3205,6 +3846,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -3293,6 +3944,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -3316,6 +3968,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -3326,6 +3982,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3333,6 +3999,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -3421,6 +4097,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -3444,6 +4121,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -3454,6 +4135,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3461,6 +4152,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -3546,6 +4247,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -3569,6 +4271,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -3579,6 +4285,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3586,6 +4302,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -3671,6 +4397,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -3694,6 +4421,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -3704,6 +4435,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3711,6 +4452,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -3797,6 +4548,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -3820,6 +4572,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -3830,6 +4586,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3837,6 +4603,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -3925,6 +4701,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -3948,6 +4725,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -3958,6 +4739,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3965,6 +4756,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -4050,6 +4851,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -4073,6 +4875,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -4083,6 +4889,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4090,6 +4906,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -4175,6 +5001,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -4198,6 +5025,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -4208,6 +5039,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4215,6 +5056,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -4300,6 +5151,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).contains(rampLimitExceeded)
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -4323,6 +5175,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -4333,6 +5189,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4340,6 +5206,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -4423,6 +5299,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).contains(cmekKeyUnreachable)
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -4446,6 +5323,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -4456,6 +5337,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4463,6 +5354,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -4546,6 +5447,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).contains(compactionUnavailable)
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -4569,6 +5471,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -4579,6 +5485,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4586,6 +5502,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -4618,6 +5544,158 @@ internal class ErrorDetailsTest {
         val errorDetails =
             ErrorDetails.ofCompactionUnavailable(
                 CompactionUnavailableErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofWorkspaceHumanReviewDisabled() {
+        val workspaceHumanReviewDisabled =
+            WorkspaceHumanReviewDisabledErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofWorkspaceHumanReviewDisabled(workspaceHumanReviewDisabled)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled())
+            .contains(workspaceHumanReviewDisabled)
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofWorkspaceHumanReviewDisabledRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofWorkspaceHumanReviewDisabled(
+                WorkspaceHumanReviewDisabledErrorDetails.builder().build()
             )
 
         val roundtrippedErrorDetails =
@@ -4671,6 +5749,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).contains(storageQuotaExceeded)
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -4694,6 +5773,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -4704,6 +5787,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4711,6 +5804,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -4794,6 +5897,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).contains(fileNotDownloadable)
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -4817,6 +5921,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -4827,6 +5935,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4834,6 +5952,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -4917,6 +6045,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).contains(fileExpired)
@@ -4940,6 +6069,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -4950,6 +6083,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4957,6 +6100,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -5039,6 +6192,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -5062,6 +6216,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -5072,6 +6230,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5079,6 +6247,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -5164,6 +6342,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -5187,6 +6366,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -5197,6 +6380,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5204,6 +6397,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -5290,6 +6493,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -5314,6 +6518,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -5324,6 +6532,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5331,6 +6549,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -5416,6 +6644,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -5439,6 +6668,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -5449,6 +6682,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5456,6 +6699,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -5541,6 +6794,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -5564,6 +6818,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -5574,6 +6832,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5581,6 +6849,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -5665,6 +6943,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -5689,6 +6968,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -5699,6 +6982,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5706,6 +6999,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -5791,6 +7094,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -5814,6 +7118,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -5824,6 +7132,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5831,6 +7149,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -5917,6 +7245,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -5941,6 +7270,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -5951,6 +7284,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5958,6 +7301,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -6043,6 +7396,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -6066,6 +7420,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -6076,6 +7434,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6083,6 +7451,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -6168,6 +7546,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -6191,6 +7570,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -6201,6 +7584,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6208,6 +7601,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -6291,6 +7694,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -6314,6 +7718,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -6324,6 +7732,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6331,6 +7749,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -6416,6 +7844,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -6439,6 +7868,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -6449,6 +7882,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6456,6 +7899,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -6543,6 +7996,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -6567,6 +8021,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -6577,6 +8035,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6584,6 +8052,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -6669,6 +8147,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -6692,6 +8171,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -6702,6 +8185,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6709,6 +8202,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -6794,6 +8297,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -6817,6 +8321,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -6827,6 +8335,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6834,6 +8352,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -6919,6 +8447,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -6942,6 +8471,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -6952,6 +8485,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6959,6 +8502,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -7046,6 +8599,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -7070,6 +8624,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -7080,6 +8638,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7087,6 +8655,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -7172,6 +8750,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -7195,6 +8774,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).contains(keyProfileMismatch)
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -7205,6 +8788,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7212,6 +8805,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -7296,6 +8899,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -7319,6 +8923,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).contains(workspacePolicyViolation)
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -7329,6 +8937,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7336,6 +8954,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -7421,6 +9049,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -7444,6 +9073,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).contains(externalKeyChanged)
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -7454,6 +9087,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7461,6 +9104,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -7492,6 +9145,605 @@ internal class ErrorDetailsTest {
         val jsonMapper = jsonMapper()
         val errorDetails =
             ErrorDetails.ofExternalKeyChanged(ExternalKeyChangedErrorDetails.builder().build())
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofWorkspaceCreatedIncomplete() {
+        val workspaceCreatedIncomplete =
+            WorkspaceCreatedIncompleteErrorDetails.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+
+        val errorDetails = ErrorDetails.ofWorkspaceCreatedIncomplete(workspaceCreatedIncomplete)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).contains(workspaceCreatedIncomplete)
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofWorkspaceCreatedIncompleteRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofWorkspaceCreatedIncomplete(
+                WorkspaceCreatedIncompleteErrorDetails.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofStorageProfileMismatch() {
+        val storageProfileMismatch = StorageProfileMismatchErrorDetails.of("field")
+
+        val errorDetails = ErrorDetails.ofStorageProfileMismatch(storageProfileMismatch)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).contains(storageProfileMismatch)
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofStorageProfileMismatchRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofStorageProfileMismatch(StorageProfileMismatchErrorDetails.of("field"))
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofChangeOutcomeUnknown() {
+        val changeOutcomeUnknown = ChangeOutcomeUnknownErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofChangeOutcomeUnknown(changeOutcomeUnknown)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).contains(changeOutcomeUnknown)
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofChangeOutcomeUnknownRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofChangeOutcomeUnknown(ChangeOutcomeUnknownErrorDetails.builder().build())
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofStorageAttachedDuringArchive() {
+        val storageAttachedDuringArchive =
+            StorageAttachedDuringArchiveErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofStorageAttachedDuringArchive(storageAttachedDuringArchive)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive())
+            .contains(storageAttachedDuringArchive)
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofStorageAttachedDuringArchiveRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofStorageAttachedDuringArchive(
+                StorageAttachedDuringArchiveErrorDetails.builder().build()
+            )
 
         val roundtrippedErrorDetails =
             jsonMapper.readValue(
@@ -7545,6 +9797,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -7568,6 +9821,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded())
             .contains(workspaceMemberLimitExceeded)
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
@@ -7579,6 +9836,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7586,6 +9853,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -7672,6 +9949,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -7695,6 +9973,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported())
             .contains(organizationTypeNotSupported)
@@ -7706,6 +9988,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7713,6 +10005,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -7798,6 +10100,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -7821,6 +10124,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).contains(parentOrganizationRequired)
@@ -7831,6 +10138,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7838,6 +10155,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -7923,6 +10250,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -7946,6 +10274,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -7956,6 +10288,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7963,6 +10305,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -8046,6 +10398,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -8069,6 +10422,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -8079,6 +10436,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8086,6 +10453,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -8171,6 +10548,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -8194,6 +10572,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -8204,6 +10586,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8211,6 +10603,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -8296,6 +10698,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -8319,6 +10722,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -8329,6 +10736,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8336,6 +10753,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -8421,6 +10848,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -8444,6 +10872,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -8454,6 +10886,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).contains(environmentUpdateDisabled)
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8461,6 +10903,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -8554,6 +11006,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -8577,6 +11030,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -8587,6 +11044,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).contains(heartbeatPreconditionFailed)
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8594,6 +11061,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -8686,6 +11163,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -8709,6 +11187,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -8719,6 +11201,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).contains(invalidMetadata)
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8726,6 +11218,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -8757,6 +11259,1523 @@ internal class ErrorDetailsTest {
         val jsonMapper = jsonMapper()
         val errorDetails =
             ErrorDetails.ofInvalidMetadata(BetaInvalidMetadataErrorDetails.builder().build())
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofGrantRequired() {
+        val grantRequired = BetaGrantRequiredErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofGrantRequired(grantRequired)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).contains(grantRequired)
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofGrantRequiredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofGrantRequired(BetaGrantRequiredErrorDetails.builder().build())
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofOrganizationNotEligible() {
+        val organizationNotEligible = BetaOrganizationNotEligibleErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofOrganizationNotEligible(organizationNotEligible)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).contains(organizationNotEligible)
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofOrganizationNotEligibleRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofOrganizationNotEligible(
+                BetaOrganizationNotEligibleErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofProviderNotAllowed() {
+        val providerNotAllowed = BetaProviderNotAllowedErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofProviderNotAllowed(providerNotAllowed)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).contains(providerNotAllowed)
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofProviderNotAllowedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofProviderNotAllowed(BetaProviderNotAllowedErrorDetails.builder().build())
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofUnsupportedRegion() {
+        val unsupportedRegion = BetaUnsupportedRegionErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofUnsupportedRegion(unsupportedRegion)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).contains(unsupportedRegion)
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofUnsupportedRegionRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofUnsupportedRegion(BetaUnsupportedRegionErrorDetails.builder().build())
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofStorageAlreadyRegistered() {
+        val storageAlreadyRegistered = BetaStorageAlreadyRegisteredErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofStorageAlreadyRegistered(storageAlreadyRegistered)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).contains(storageAlreadyRegistered)
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofStorageAlreadyRegisteredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofStorageAlreadyRegistered(
+                BetaStorageAlreadyRegisteredErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofAuthorizationCheckUnavailable() {
+        val authorizationCheckUnavailable =
+            BetaAuthorizationCheckUnavailableErrorDetails.builder().build()
+
+        val errorDetails =
+            ErrorDetails.ofAuthorizationCheckUnavailable(authorizationCheckUnavailable)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable())
+            .contains(authorizationCheckUnavailable)
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofAuthorizationCheckUnavailableRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofAuthorizationCheckUnavailable(
+                BetaAuthorizationCheckUnavailableErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofInvalidStorageArn() {
+        val invalidStorageArn = BetaInvalidStorageArnErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofInvalidStorageArn(invalidStorageArn)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).contains(invalidStorageArn)
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofInvalidStorageArnRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofInvalidStorageArn(BetaInvalidStorageArnErrorDetails.builder().build())
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofExternalStorageInUse() {
+        val externalStorageInUse = BetaExternalStorageInUseErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofExternalStorageInUse(externalStorageInUse)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).contains(externalStorageInUse)
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofExternalStorageInUseRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofExternalStorageInUse(
+                BetaExternalStorageInUseErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofExternalStorageInWorkspacePolicy() {
+        val externalStorageInWorkspacePolicy =
+            BetaExternalStorageInWorkspacePolicyErrorDetails.builder().build()
+
+        val errorDetails =
+            ErrorDetails.ofExternalStorageInWorkspacePolicy(externalStorageInWorkspacePolicy)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy())
+            .contains(externalStorageInWorkspacePolicy)
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofExternalStorageInWorkspacePolicyRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofExternalStorageInWorkspacePolicy(
+                BetaExternalStorageInWorkspacePolicyErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofStorageVerificationFailed() {
+        val storageVerificationFailed =
+            BetaStorageVerificationFailedErrorDetails.builder()
+                .addFailedCheck(
+                    BetaExternalStorageFailedCheck.builder()
+                        .check(BetaExternalStorageFailedCheck.Check.ALREADY_REGISTERED)
+                        .message("message")
+                        .role(BetaExternalStorageFailedCheck.Role.INGEST)
+                        .build()
+                )
+                .field("inference_data_privacy.safeguards_storage")
+                .build()
+
+        val errorDetails = ErrorDetails.ofStorageVerificationFailed(storageVerificationFailed)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).contains(storageVerificationFailed)
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofStorageVerificationFailedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofStorageVerificationFailed(
+                BetaStorageVerificationFailedErrorDetails.builder()
+                    .addFailedCheck(
+                        BetaExternalStorageFailedCheck.builder()
+                            .check(BetaExternalStorageFailedCheck.Check.ALREADY_REGISTERED)
+                            .message("message")
+                            .role(BetaExternalStorageFailedCheck.Role.INGEST)
+                            .build()
+                    )
+                    .field("inference_data_privacy.safeguards_storage")
+                    .build()
+            )
 
         val roundtrippedErrorDetails =
             jsonMapper.readValue(
@@ -8809,6 +12828,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -8832,6 +12852,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -8842,6 +12866,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).contains(cannotSignOutPrimaryOwner)
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8849,6 +12883,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -8934,6 +12978,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -8957,6 +13002,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -8967,6 +13016,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).contains(cannotSignOutSelf)
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8974,6 +13033,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -9059,6 +13128,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -9082,6 +13152,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -9092,6 +13166,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta())
@@ -9100,6 +13184,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -9186,6 +13280,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -9209,6 +13304,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -9219,6 +13318,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9226,6 +13335,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -9312,6 +13431,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -9335,6 +13455,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -9345,6 +13469,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9353,6 +13487,16 @@ internal class ErrorDetailsTest {
             .contains(cannotSignOutMembershipAdmin)
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -9438,6 +13582,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -9461,6 +13606,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -9471,6 +13620,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9478,6 +13637,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).contains(cannotSignOutOwner)
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -9563,6 +13732,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -9586,6 +13756,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -9596,6 +13770,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9604,6 +13788,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember())
             .contains(cannotSignOutPrivilegedMember)
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -9636,6 +13830,1525 @@ internal class ErrorDetailsTest {
         val errorDetails =
             ErrorDetails.ofCannotSignOutPrivilegedMember(
                 BetaCannotSignOutPrivilegedMemberErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofApprovalRequired() {
+        val approvalRequired =
+            BetaApprovalRequiredErrorDetails.of("inference_data_privacy.human_review")
+
+        val errorDetails = ErrorDetails.ofApprovalRequired(approvalRequired)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).contains(approvalRequired)
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofApprovalRequiredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofApprovalRequired(
+                BetaApprovalRequiredErrorDetails.of("inference_data_privacy.human_review")
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofExternalStorageNotAvailable() {
+        val externalStorageNotAvailable =
+            BetaExternalStorageNotAvailableErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofExternalStorageNotAvailable(externalStorageNotAvailable)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).contains(externalStorageNotAvailable)
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofExternalStorageNotAvailableRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofExternalStorageNotAvailable(
+                BetaExternalStorageNotAvailableErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofHumanReviewNotAvailable() {
+        val humanReviewNotAvailable = BetaHumanReviewNotAvailableErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofHumanReviewNotAvailable(humanReviewNotAvailable)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).contains(humanReviewNotAvailable)
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofHumanReviewNotAvailableRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofHumanReviewNotAvailable(
+                BetaHumanReviewNotAvailableErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofHumanReviewOnWithExternalStorage() {
+        val humanReviewOnWithExternalStorage =
+            BetaHumanReviewOnWithExternalStorageErrorDetails.builder().build()
+
+        val errorDetails =
+            ErrorDetails.ofHumanReviewOnWithExternalStorage(humanReviewOnWithExternalStorage)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage())
+            .contains(humanReviewOnWithExternalStorage)
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofHumanReviewOnWithExternalStorageRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofHumanReviewOnWithExternalStorage(
+                BetaHumanReviewOnWithExternalStorageErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofStorageNotAttachable() {
+        val storageNotAttachable =
+            BetaStorageNotAttachableErrorDetails.of("inference_data_privacy.safeguards_storage")
+
+        val errorDetails = ErrorDetails.ofStorageNotAttachable(storageNotAttachable)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).contains(storageNotAttachable)
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofStorageNotAttachableRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofStorageNotAttachable(
+                BetaStorageNotAttachableErrorDetails.of("inference_data_privacy.safeguards_storage")
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofTranscriptsStorageRequired() {
+        val transcriptsStorageRequired =
+            BetaTranscriptsStorageRequiredErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofTranscriptsStorageRequired(transcriptsStorageRequired)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).contains(transcriptsStorageRequired)
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofTranscriptsStorageRequiredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofTranscriptsStorageRequired(
+                BetaTranscriptsStorageRequiredErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofStorageAttachLimitReached() {
+        val storageAttachLimitReached = BetaStorageAttachLimitReachedErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofStorageAttachLimitReached(storageAttachLimitReached)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).contains(storageAttachLimitReached)
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofStorageAttachLimitReachedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofStorageAttachLimitReached(
+                BetaStorageAttachLimitReachedErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofStorageProfileStillRequired() {
+        val storageProfileStillRequired =
+            BetaStorageProfileStillRequiredErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofStorageProfileStillRequired(storageProfileStillRequired)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).contains(storageProfileStillRequired)
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofStorageProfileStillRequiredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofStorageProfileStillRequired(
+                BetaStorageProfileStillRequiredErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofStorageChangedConcurrently() {
+        val storageChangedConcurrently =
+            BetaStorageChangedConcurrentlyErrorDetails.of(
+                "inference_data_privacy.safeguards_storage"
+            )
+
+        val errorDetails = ErrorDetails.ofStorageChangedConcurrently(storageChangedConcurrently)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).contains(storageChangedConcurrently)
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofStorageChangedConcurrentlyRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofStorageChangedConcurrently(
+                BetaStorageChangedConcurrentlyErrorDetails.of(
+                    "inference_data_privacy.safeguards_storage"
+                )
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofWorkspaceChangedConcurrently() {
+        val workspaceChangedConcurrently =
+            BetaWorkspaceChangedConcurrentlyErrorDetails.of(
+                BetaWorkspaceChangedConcurrentlyField.INFERENCE_DATA_PRIVACY_HUMAN_REVIEW
+            )
+
+        val errorDetails = ErrorDetails.ofWorkspaceChangedConcurrently(workspaceChangedConcurrently)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently())
+            .contains(workspaceChangedConcurrently)
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofWorkspaceChangedConcurrentlyRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofWorkspaceChangedConcurrently(
+                BetaWorkspaceChangedConcurrentlyErrorDetails.of(
+                    BetaWorkspaceChangedConcurrentlyField.INFERENCE_DATA_PRIVACY_HUMAN_REVIEW
+                )
             )
 
         val roundtrippedErrorDetails =
@@ -9691,6 +15404,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -9714,6 +15428,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -9724,6 +15442,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9731,6 +15459,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled())
             .contains(spendLimitsAdminApiWritesNotEnabled)
         assertThat(errorDetails.unsupportedCharset()).isEmpty
@@ -9817,6 +15555,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -9840,6 +15579,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -9850,6 +15593,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9857,6 +15610,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).contains(unsupportedCharset)
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -9941,6 +15704,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -9964,6 +15728,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -9974,6 +15742,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9981,6 +15759,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).contains(pluginNameTaken)
@@ -10066,6 +15854,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -10089,6 +15878,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -10099,6 +15892,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10106,6 +15909,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -10193,6 +16006,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -10216,6 +16030,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -10226,6 +16044,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10233,6 +16061,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -10321,6 +16159,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -10344,6 +16183,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -10354,6 +16197,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10361,6 +16214,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -10444,6 +16307,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -10467,6 +16331,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -10477,6 +16345,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10484,6 +16362,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -10567,6 +16455,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -10590,6 +16479,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -10600,6 +16493,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10607,6 +16510,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -10692,6 +16605,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -10715,6 +16629,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -10725,6 +16643,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10732,6 +16660,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -10819,6 +16757,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -10842,6 +16781,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -10852,6 +16795,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10859,6 +16812,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -10945,6 +16908,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -10968,6 +16932,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -10978,6 +16946,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10985,6 +16963,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -11072,6 +17060,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -11095,6 +17084,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -11105,6 +17098,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11112,6 +17115,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -11199,6 +17212,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -11222,6 +17236,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -11232,6 +17250,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11239,6 +17267,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -11324,6 +17362,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -11347,6 +17386,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -11357,6 +17400,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11364,6 +17417,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -11449,6 +17512,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -11472,6 +17536,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -11482,6 +17550,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11489,6 +17567,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -11575,6 +17663,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -11598,6 +17687,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -11608,6 +17701,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11615,6 +17718,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -11698,6 +17811,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -11721,6 +17835,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -11731,6 +17849,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11738,6 +17866,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -11825,6 +17963,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -11848,6 +17987,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -11858,6 +18001,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11865,6 +18018,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -11955,6 +18118,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -11978,6 +18142,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -11988,6 +18156,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11995,6 +18173,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -12081,6 +18269,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -12104,6 +18293,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -12114,6 +18307,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12121,6 +18324,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -12210,6 +18423,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -12233,6 +18447,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -12243,6 +18461,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12250,6 +18478,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -12338,6 +18576,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -12361,6 +18600,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -12371,6 +18614,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12378,6 +18631,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -12465,6 +18728,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -12488,6 +18752,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -12498,6 +18766,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12505,6 +18783,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty
@@ -12591,6 +18879,7 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.rampLimitExceeded()).isEmpty
         assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
         assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
         assertThat(errorDetails.storageQuotaExceeded()).isEmpty
         assertThat(errorDetails.fileNotDownloadable()).isEmpty
         assertThat(errorDetails.fileExpired()).isEmpty
@@ -12614,6 +18903,10 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.keyProfileMismatch()).isEmpty
         assertThat(errorDetails.workspacePolicyViolation()).isEmpty
         assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
         assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
         assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
         assertThat(errorDetails.parentOrganizationRequired()).isEmpty
@@ -12624,6 +18917,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
         assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
         assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12631,6 +18934,16 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
         assertThat(errorDetails.cannotSignOutOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
         assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
         assertThat(errorDetails.unsupportedCharset()).isEmpty
         assertThat(errorDetails.pluginNameTaken()).isEmpty

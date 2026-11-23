@@ -71,9 +71,16 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
             BetaManagedAgentsModel(JsonField.of("claude-haiku-4-5-20251001"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_5 = BetaManagedAgentsModel(JsonField.of("claude-opus-4-5"))
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_OPUS_4_5 = BetaManagedAgentsModel(JsonField.of("claude-opus-4-5"))
 
         /** Powerful intelligence for long-running agents and coding */
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         @JvmField
         val CLAUDE_OPUS_4_5_20251101 =
             BetaManagedAgentsModel(JsonField.of("claude-opus-4-5-20251101"))
@@ -155,8 +162,14 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
         CLAUDE_SONNET_4_6,
         CLAUDE_HAIKU_4_5,
         CLAUDE_HAIKU_4_5_20251001,
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5,
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5_20251101,
         @Deprecated(
@@ -210,8 +223,14 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
         CLAUDE_SONNET_4_6,
         CLAUDE_HAIKU_4_5,
         CLAUDE_HAIKU_4_5_20251001,
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5,
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5_20251101,
         @Deprecated(

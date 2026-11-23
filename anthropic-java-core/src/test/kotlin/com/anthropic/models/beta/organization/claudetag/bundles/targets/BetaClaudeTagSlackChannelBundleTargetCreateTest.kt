@@ -10,17 +10,17 @@ internal class BetaClaudeTagSlackChannelBundleTargetCreateTest {
     @Test
     fun create() {
         val betaClaudeTagSlackChannelBundleTargetCreate =
-            BetaClaudeTagSlackChannelBundleTargetCreate.of("xxxxxxxx")
+            BetaClaudeTagSlackChannelBundleTargetCreate.of("slch_01SvpyRQK3nN6eH9uhRA7n1q")
 
         assertThat(betaClaudeTagSlackChannelBundleTargetCreate.slackChannelId())
-            .isEqualTo("xxxxxxxx")
+            .isEqualTo("slch_01SvpyRQK3nN6eH9uhRA7n1q")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaClaudeTagSlackChannelBundleTargetCreate =
-            BetaClaudeTagSlackChannelBundleTargetCreate.of("xxxxxxxx")
+            BetaClaudeTagSlackChannelBundleTargetCreate.of("slch_01SvpyRQK3nN6eH9uhRA7n1q")
 
         val roundtrippedBetaClaudeTagSlackChannelBundleTargetCreate =
             jsonMapper.readValue(

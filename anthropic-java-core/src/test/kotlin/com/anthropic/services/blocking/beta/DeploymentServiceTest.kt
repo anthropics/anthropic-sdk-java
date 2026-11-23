@@ -14,6 +14,7 @@ import com.anthropic.models.beta.deployments.DeploymentRetrieveParams
 import com.anthropic.models.beta.deployments.DeploymentRunParams
 import com.anthropic.models.beta.deployments.DeploymentUnpauseParams
 import com.anthropic.models.beta.deployments.DeploymentUpdateParams
+import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentParams
 import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsFileResourceParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
@@ -39,16 +40,21 @@ internal class DeploymentServiceTest {
                 DeploymentCreateParams.builder()
                     .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-                    .agent("string")
-                    .environmentId("x")
+                    .agent(
+                        BetaManagedAgentsAgentParams.builder()
+                            .id("agent_011CZkYpogX7uDKUyvBTophP")
+                            .version(0)
+                            .build()
+                    )
+                    .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .addUserMessageInitialEvent(
                         listOf(
                             BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                                "Where is my order #1234?"
+                                "Compile yesterday's orders into report.md."
                             )
                         )
                     )
-                    .name("x")
+                    .name("Daily order report")
                     .budget(
                         BetaManagedAgentsBudgetLimit.of(
                             BetaMonetaryAmount.builder()

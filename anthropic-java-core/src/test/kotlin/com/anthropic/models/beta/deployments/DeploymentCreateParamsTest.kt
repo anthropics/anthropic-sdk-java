@@ -5,6 +5,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.BetaCurrency
 import com.anthropic.models.beta.BetaMonetaryAmount
+import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentParams
 import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsFileResourceParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
@@ -19,16 +20,21 @@ internal class DeploymentCreateParamsTest {
         DeploymentCreateParams.builder()
             .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-            .agent("string")
-            .environmentId("x")
+            .agent(
+                BetaManagedAgentsAgentParams.builder()
+                    .id("agent_011CZkYpogX7uDKUyvBTophP")
+                    .version(0)
+                    .build()
+            )
+            .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
             .addUserMessageInitialEvent(
                 listOf(
                     BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                        "Where is my order #1234?"
+                        "Compile yesterday's orders into report.md."
                     )
                 )
             )
-            .name("x")
+            .name("Daily order report")
             .budget(
                 BetaManagedAgentsBudgetLimit.of(
                     BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
@@ -62,16 +68,21 @@ internal class DeploymentCreateParamsTest {
             DeploymentCreateParams.builder()
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-                .agent("string")
-                .environmentId("x")
+                .agent(
+                    BetaManagedAgentsAgentParams.builder()
+                        .id("agent_011CZkYpogX7uDKUyvBTophP")
+                        .version(0)
+                        .build()
+                )
+                .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                 .addUserMessageInitialEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            "Where is my order #1234?"
+                            "Compile yesterday's orders into report.md."
                         )
                     )
                 )
-                .name("x")
+                .name("Daily order report")
                 .budget(
                     BetaManagedAgentsBudgetLimit.of(
                         BetaMonetaryAmount.builder()
@@ -120,16 +131,16 @@ internal class DeploymentCreateParamsTest {
     fun headersWithoutOptionalFields() {
         val params =
             DeploymentCreateParams.builder()
-                .agent("string")
-                .environmentId("x")
+                .agent(BetaManagedAgentsAgentParams.of("agent_011CZkYpogX7uDKUyvBTophP"))
+                .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                 .addUserMessageInitialEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            "Where is my order #1234?"
+                            "Compile yesterday's orders into report.md."
                         )
                     )
                 )
-                .name("x")
+                .name("Daily order report")
                 .build()
 
         val headers = params._headers()
@@ -143,16 +154,21 @@ internal class DeploymentCreateParamsTest {
             DeploymentCreateParams.builder()
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-                .agent("string")
-                .environmentId("x")
+                .agent(
+                    BetaManagedAgentsAgentParams.builder()
+                        .id("agent_011CZkYpogX7uDKUyvBTophP")
+                        .version(0)
+                        .build()
+                )
+                .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                 .addUserMessageInitialEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            "Where is my order #1234?"
+                            "Compile yesterday's orders into report.md."
                         )
                     )
                 )
-                .name("x")
+                .name("Daily order report")
                 .budget(
                     BetaManagedAgentsBudgetLimit.of(
                         BetaMonetaryAmount.builder()
@@ -184,17 +200,25 @@ internal class DeploymentCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body.agent()).isEqualTo(DeploymentCreateParams.Agent.ofString("string"))
-        assertThat(body.environmentId()).isEqualTo("x")
+        assertThat(body.agent())
+            .isEqualTo(
+                DeploymentCreateParams.Agent.ofBetaManagedAgentsAgentParams(
+                    BetaManagedAgentsAgentParams.builder()
+                        .id("agent_011CZkYpogX7uDKUyvBTophP")
+                        .version(0)
+                        .build()
+                )
+            )
+        assertThat(body.environmentId()).isEqualTo("env_011CZkZ9X2dpNyB7HsEFoRfW")
         assertThat(body.initialEvents())
             .containsExactly(
                 BetaManagedAgentsDeploymentInitialEventParams.ofUserMessage(
                     BetaManagedAgentsUserMessageEventParams.builder()
-                        .addTextContent("Where is my order #1234?")
+                        .addTextContent("Compile yesterday's orders into report.md.")
                         .build()
                 )
             )
-        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("Daily order report")
         assertThat(body.budget())
             .contains(
                 BetaManagedAgentsBudgetLimit.of(
@@ -231,30 +255,35 @@ internal class DeploymentCreateParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             DeploymentCreateParams.builder()
-                .agent("string")
-                .environmentId("x")
+                .agent(BetaManagedAgentsAgentParams.of("agent_011CZkYpogX7uDKUyvBTophP"))
+                .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                 .addUserMessageInitialEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
-                            "Where is my order #1234?"
+                            "Compile yesterday's orders into report.md."
                         )
                     )
                 )
-                .name("x")
+                .name("Daily order report")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.agent()).isEqualTo(DeploymentCreateParams.Agent.ofString("string"))
-        assertThat(body.environmentId()).isEqualTo("x")
+        assertThat(body.agent())
+            .isEqualTo(
+                DeploymentCreateParams.Agent.ofBetaManagedAgentsAgentParams(
+                    "agent_011CZkYpogX7uDKUyvBTophP"
+                )
+            )
+        assertThat(body.environmentId()).isEqualTo("env_011CZkZ9X2dpNyB7HsEFoRfW")
         assertThat(body.initialEvents())
             .containsExactly(
                 BetaManagedAgentsDeploymentInitialEventParams.ofUserMessage(
                     BetaManagedAgentsUserMessageEventParams.builder()
-                        .addTextContent("Where is my order #1234?")
+                        .addTextContent("Compile yesterday's orders into report.md.")
                         .build()
                 )
             )
-        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("Daily order report")
     }
 }

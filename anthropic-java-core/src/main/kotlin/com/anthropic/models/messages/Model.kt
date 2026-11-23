@@ -91,10 +91,18 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val CLAUDE_HAIKU_4_5_20251001 = Model(JsonField.of("claude-haiku-4-5-20251001"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_5 = Model(JsonField.of("claude-opus-4-5"))
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_OPUS_4_5 = Model(JsonField.of("claude-opus-4-5"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_5_20251101 = Model(JsonField.of("claude-opus-4-5-20251101"))
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_OPUS_4_5_20251101 = Model(JsonField.of("claude-opus-4-5-20251101"))
 
         /** High-performance model for agents and coding */
         @Deprecated(
@@ -193,8 +201,14 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
         CLAUDE_SONNET_4_6,
         CLAUDE_HAIKU_4_5,
         CLAUDE_HAIKU_4_5_20251001,
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5,
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5_20251101,
         @Deprecated(
@@ -265,8 +279,14 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
         CLAUDE_SONNET_4_6,
         CLAUDE_HAIKU_4_5,
         CLAUDE_HAIKU_4_5_20251001,
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5,
+        @Deprecated(
+            "Will reach end-of-life on January 22, 2027. Please migrate to claude-opus-5-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5_20251101,
         @Deprecated(

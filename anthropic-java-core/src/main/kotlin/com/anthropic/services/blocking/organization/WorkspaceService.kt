@@ -46,6 +46,7 @@ interface WorkspaceService {
      * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
      * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
+     * @throws com.anthropic.models.organization.workspaces.WorkspaceCreatedIncompleteException
      */
     fun create(params: WorkspaceCreateParams): Workspace = create(params, RequestOptions.none())
 
@@ -92,10 +93,12 @@ interface WorkspaceService {
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
      * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
+     * @throws com.anthropic.models.organization.workspaces.StorageProfileMismatchException
      * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
      * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
      * @throws com.anthropic.models.SandboxEgressRestrictedException
      * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
+     * @throws com.anthropic.models.organization.ChangeOutcomeUnknownException
      */
     fun update(workspaceId: String): Workspace = update(workspaceId, WorkspaceUpdateParams.none())
 
@@ -146,6 +149,7 @@ interface WorkspaceService {
      * Archive Workspace
      *
      * @throws com.anthropic.models.SandboxEgressRestrictedException
+     * @throws com.anthropic.models.organization.workspaces.StorageAttachedDuringArchiveException
      */
     fun archive(workspaceId: String): Workspace =
         archive(workspaceId, WorkspaceArchiveParams.none())

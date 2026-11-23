@@ -36,6 +36,17 @@ internal class WorkspaceListPageResponseTest {
                                 .build()
                         )
                         .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
+                        .inferenceDataPrivacy(
+                            BetaInferenceDataPrivacy.builder()
+                                .humanReview(
+                                    BetaAnthropicHumanReview.of(
+                                        BetaAnthropicHumanReview.Type.DISABLED
+                                    )
+                                )
+                                .safeguardsStorage(BetaInternalStorage.builder().build())
+                                .transcriptsStorage(BetaInternalStorage.builder().build())
+                                .build()
+                        )
                         .build()
                 )
                 .firstId("first_id")
@@ -67,6 +78,15 @@ internal class WorkspaceListPageResponseTest {
                             .build()
                     )
                     .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
+                    .inferenceDataPrivacy(
+                        BetaInferenceDataPrivacy.builder()
+                            .humanReview(
+                                BetaAnthropicHumanReview.of(BetaAnthropicHumanReview.Type.DISABLED)
+                            )
+                            .safeguardsStorage(BetaInternalStorage.builder().build())
+                            .transcriptsStorage(BetaInternalStorage.builder().build())
+                            .build()
+                    )
                     .build()
             )
         assertThat(workspaceListPageResponse.firstId()).contains("first_id")
@@ -102,6 +122,17 @@ internal class WorkspaceListPageResponseTest {
                                 .build()
                         )
                         .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
+                        .inferenceDataPrivacy(
+                            BetaInferenceDataPrivacy.builder()
+                                .humanReview(
+                                    BetaAnthropicHumanReview.of(
+                                        BetaAnthropicHumanReview.Type.DISABLED
+                                    )
+                                )
+                                .safeguardsStorage(BetaInternalStorage.builder().build())
+                                .transcriptsStorage(BetaInternalStorage.builder().build())
+                                .build()
+                        )
                         .build()
                 )
                 .firstId("first_id")

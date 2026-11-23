@@ -26,7 +26,7 @@ internal class RuleServiceTest {
         val federationRule =
             ruleService.create(
                 RuleCreateParams.builder()
-                    .issuerId("issuer_id")
+                    .issuerId("fdis_01SDCCSbTxrXDpWc1phhtcfK")
                     .match(
                         FederationRuleMatch.builder()
                             .audience("audience")
@@ -39,8 +39,8 @@ internal class RuleServiceTest {
                             .subjectPrefix("subject_prefix")
                             .build()
                     )
-                    .name("x")
-                    .oauthScope("x")
+                    .name("prod-deploy-pipeline")
+                    .oauthScope("workspace:developer")
                     .target(
                         ServiceAccountTarget.builder()
                             .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
@@ -50,7 +50,7 @@ internal class RuleServiceTest {
                     .appliesToAllWorkspaces(true)
                     .description("description")
                     .tokenLifetimeSeconds(60L)
-                    .workspaceId("workspace_id")
+                    .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                     .build()
             )
 

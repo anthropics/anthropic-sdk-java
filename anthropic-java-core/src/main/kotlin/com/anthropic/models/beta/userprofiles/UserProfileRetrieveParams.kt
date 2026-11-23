@@ -10,7 +10,12 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get User Profile */
+/**
+ * Get a user profile by ID to check the details stored for it.
+ *
+ * See the [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles)
+ * for how to set up and manage profiles.
+ */
 class UserProfileRetrieveParams
 private constructor(
     private val userProfileId: String?,

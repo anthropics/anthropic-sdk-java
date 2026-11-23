@@ -5,9 +5,15 @@ import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.core.JsonValue
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.organization.workspaces.BetaAnthropicHumanReviewParam
 import com.anthropic.models.beta.organization.workspaces.BetaDataResidencyCreateConfig
 import com.anthropic.models.beta.organization.workspaces.BetaDataResidencyUpdateConfig
+import com.anthropic.models.beta.organization.workspaces.BetaInferenceDataPrivacyCreateParam
+import com.anthropic.models.beta.organization.workspaces.BetaInferenceDataPrivacyUpdateParam
+import com.anthropic.models.beta.organization.workspaces.BetaInternalStorageParam
+import com.anthropic.models.beta.organization.workspaces.WorkspaceArchiveParams
 import com.anthropic.models.beta.organization.workspaces.WorkspaceCreateParams
+import com.anthropic.models.beta.organization.workspaces.WorkspaceRetrieveParams
 import com.anthropic.models.beta.organization.workspaces.WorkspaceUpdateParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -45,6 +51,17 @@ internal class WorkspaceServiceAsyncTest {
                     )
                     .displayColor("#6C5BB9")
                     .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
+                    .inferenceDataPrivacy(
+                        BetaInferenceDataPrivacyCreateParam.builder()
+                            .humanReview(
+                                BetaAnthropicHumanReviewParam.of(
+                                    BetaAnthropicHumanReviewParam.Type.DISABLED
+                                )
+                            )
+                            .safeguardsStorage(BetaInternalStorageParam.builder().build())
+                            .transcriptsStorage(BetaInternalStorageParam.builder().build())
+                            .build()
+                    )
                     .tags(
                         WorkspaceCreateParams.Tags.builder()
                             .putAdditionalProperty("env", JsonValue.from("prod"))
@@ -66,7 +83,13 @@ internal class WorkspaceServiceAsyncTest {
                 it.putQueryParam("beta", "true")
             }
 
-        val betaWorkspaceFuture = workspaceServiceAsync.retrieve("workspace_id")
+        val betaWorkspaceFuture =
+            workspaceServiceAsync.retrieve(
+                WorkspaceRetrieveParams.builder()
+                    .workspaceId("workspace_id")
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
+                    .build()
+            )
 
         val betaWorkspace = betaWorkspaceFuture.get()
         betaWorkspace.validate()
@@ -83,6 +106,7 @@ internal class WorkspaceServiceAsyncTest {
             workspaceServiceAsync.update(
                 WorkspaceUpdateParams.builder()
                     .workspaceId("workspace_id")
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .dataResidency(
                         BetaDataResidencyUpdateConfig.builder()
                             .allowedInferenceGeosUnrestricted()
@@ -93,6 +117,17 @@ internal class WorkspaceServiceAsyncTest {
                     )
                     .displayColor("#6C5BB9")
                     .externalKeyId("ekey_01SDCCSbTxrXDpWc1phhtcfK")
+                    .inferenceDataPrivacy(
+                        BetaInferenceDataPrivacyUpdateParam.builder()
+                            .humanReview(
+                                BetaAnthropicHumanReviewParam.of(
+                                    BetaAnthropicHumanReviewParam.Type.DISABLED
+                                )
+                            )
+                            .safeguardsStorage(BetaInternalStorageParam.builder().build())
+                            .transcriptsStorage(BetaInternalStorageParam.builder().build())
+                            .build()
+                    )
                     .name("Workspace Name")
                     .tags(
                         WorkspaceUpdateParams.Tags.builder()
@@ -128,7 +163,13 @@ internal class WorkspaceServiceAsyncTest {
                 it.putQueryParam("beta", "true")
             }
 
-        val betaWorkspaceFuture = workspaceServiceAsync.archive("workspace_id")
+        val betaWorkspaceFuture =
+            workspaceServiceAsync.archive(
+                WorkspaceArchiveParams.builder()
+                    .workspaceId("workspace_id")
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
+                    .build()
+            )
 
         val betaWorkspace = betaWorkspaceFuture.get()
         betaWorkspace.validate()

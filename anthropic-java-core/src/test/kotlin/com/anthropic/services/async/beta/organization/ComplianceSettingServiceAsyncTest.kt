@@ -3,7 +3,9 @@ package com.anthropic.services.async.beta.organization
 import com.anthropic.CompletionExecutorAssertingInterceptor
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
+import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.organization.compliancesettings.BetaComplianceSettingsStateEnabledParam
+import com.anthropic.models.beta.organization.compliancesettings.ComplianceSettingRetrieveParams
 import com.anthropic.models.beta.organization.compliancesettings.ComplianceSettingUpdateParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -25,7 +27,12 @@ internal class ComplianceSettingServiceAsyncTest {
                 it.putQueryParam("beta", "true")
             }
 
-        val betaComplianceSettingsFuture = complianceSettingServiceAsync.retrieve()
+        val betaComplianceSettingsFuture =
+            complianceSettingServiceAsync.retrieve(
+                ComplianceSettingRetrieveParams.builder()
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
+                    .build()
+            )
 
         val betaComplianceSettings = betaComplianceSettingsFuture.get()
         betaComplianceSettings.validate()
@@ -41,6 +48,7 @@ internal class ComplianceSettingServiceAsyncTest {
         val betaComplianceSettingsFuture =
             complianceSettingServiceAsync.update(
                 ComplianceSettingUpdateParams.builder()
+                    .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .state(BetaComplianceSettingsStateEnabledParam.builder().build())
                     .build()
             )

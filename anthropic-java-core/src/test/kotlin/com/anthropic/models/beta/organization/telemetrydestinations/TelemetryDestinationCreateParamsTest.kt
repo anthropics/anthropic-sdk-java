@@ -12,7 +12,7 @@ internal class TelemetryDestinationCreateParamsTest {
     fun create() {
         TelemetryDestinationCreateParams.builder()
             .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-            .endpointUrl("x")
+            .endpointUrl("https://gateway.example.com")
             .workspaces(BetaTelemetryDestinationWorkspacesAllParams.builder().build())
             .displayName("display_name")
             .headers(
@@ -36,7 +36,7 @@ internal class TelemetryDestinationCreateParamsTest {
         val params =
             TelemetryDestinationCreateParams.builder()
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .endpointUrl("x")
+                .endpointUrl("https://gateway.example.com")
                 .workspaces(BetaTelemetryDestinationWorkspacesAllParams.builder().build())
                 .displayName("display_name")
                 .headers(
@@ -72,7 +72,7 @@ internal class TelemetryDestinationCreateParamsTest {
     fun headersWithoutOptionalFields() {
         val params =
             TelemetryDestinationCreateParams.builder()
-                .endpointUrl("x")
+                .endpointUrl("https://gateway.example.com")
                 .workspaces(BetaTelemetryDestinationWorkspacesAllParams.builder().build())
                 .build()
 
@@ -86,7 +86,7 @@ internal class TelemetryDestinationCreateParamsTest {
         val params =
             TelemetryDestinationCreateParams.builder()
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .endpointUrl("x")
+                .endpointUrl("https://gateway.example.com")
                 .workspaces(BetaTelemetryDestinationWorkspacesAllParams.builder().build())
                 .displayName("display_name")
                 .headers(
@@ -106,7 +106,7 @@ internal class TelemetryDestinationCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body.endpointUrl()).isEqualTo("x")
+        assertThat(body.endpointUrl()).isEqualTo("https://gateway.example.com")
         assertThat(body.workspaces())
             .isEqualTo(
                 BetaTelemetryDestinationWorkspacesParams.ofAll(
@@ -135,13 +135,13 @@ internal class TelemetryDestinationCreateParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             TelemetryDestinationCreateParams.builder()
-                .endpointUrl("x")
+                .endpointUrl("https://gateway.example.com")
                 .workspaces(BetaTelemetryDestinationWorkspacesAllParams.builder().build())
                 .build()
 
         val body = params._body()
 
-        assertThat(body.endpointUrl()).isEqualTo("x")
+        assertThat(body.endpointUrl()).isEqualTo("https://gateway.example.com")
         assertThat(body.workspaces())
             .isEqualTo(
                 BetaTelemetryDestinationWorkspacesParams.ofAll(

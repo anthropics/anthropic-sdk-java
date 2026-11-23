@@ -69,6 +69,7 @@ private constructor(
     private val awsCredentialsProvider: AwsCredentialsProvider?,
     private val apiKey: String?,
     @get:JvmName("region") val region: Region,
+    private val baseUrlOverride: String?,
 ) : Backend {
 
     fun awsCredentialsProvider(): Optional<AwsCredentialsProvider> =
@@ -148,6 +149,8 @@ private constructor(
          */
         private const val ENV_API_KEY = "AWS_BEARER_TOKEN_BEDROCK"
 
+        private const val ENV_BASE_URL = "ANTHROPIC_BEDROCK_BASE_URL"
+
         @JvmStatic fun builder() = Builder()
 
         /**
@@ -169,7 +172,7 @@ private constructor(
         // Could use the AWS "BedrockEndpointProvider" in "fromEnv()", but that is a large
         // dependency that brings in all the competing AWS SDK classes for Bedrock that are not
         // desired in this SDK.
-        "https://$SERVICE_NAME.$region.amazonaws.com"
+        baseUrlOverride ?: "https://$SERVICE_NAME.$region.amazonaws.com"
 
     override fun openTelemetryProviderName(): String = "aws.bedrock"
 
@@ -579,6 +582,7 @@ private constructor(
         private var awsCredentialsProvider: AwsCredentialsProvider? = null
         private var apiKey: String? = null
         private var region: Region? = null
+        private var baseUrlOverride: String? = null
 
         /**
          * Resolves the AWS credentials from the environment, or other sources configured by the
@@ -595,6 +599,9 @@ private constructor(
          *
          * The region is also resolved immediately using the default AWS region provider chain. Once
          * resolved here, the region will not be changed again.
+         *
+         * The base URL is resolved from the `ANTHROPIC_BEDROCK_BASE_URL` environment variable if
+         * set.
          *
          * When called, this method will immediately attempt to resolve the AWS credentials (or API
          * key) and region. An error will occur if they cannot be resolved.
@@ -637,6 +644,8 @@ private constructor(
             } catch (e: Exception) {
                 throw IllegalStateException("No AWS region found.", e)
             }
+
+            getEnv(ENV_BASE_URL)?.let { baseUrlOverride = it }
         }
 
         /**
@@ -685,6 +694,15 @@ private constructor(
          */
         fun region(region: Region) = apply { this.region = region }
 
+        /**
+         * Overrides the base URL for requests, such as with the URL of a VPC interface endpoint.
+         * When set, this takes precedence over the URL derived from the region, which is still used
+         * to sign requests. Alternatively, this may be resolved from the
+         * `ANTHROPIC_BEDROCK_BASE_URL` environment variable by calling [fromEnv]. If called after
+         * [fromEnv], this overrides the base URL resolved by [fromEnv].
+         */
+        fun baseUrl(baseUrl: String) = apply { this.baseUrlOverride = baseUrl }
+
         fun build(): BedrockBackend {
             if (awsCredentialsProvider != null && apiKey != null) {
                 throw IllegalStateException(
@@ -694,7 +712,12 @@ private constructor(
             if (awsCredentialsProvider == null && apiKey == null) {
                 throw IllegalStateException("No AWS credentials provider or API key was set.")
             }
-            return BedrockBackend(awsCredentialsProvider, apiKey, checkRequired("region", region))
+            return BedrockBackend(
+                awsCredentialsProvider,
+                apiKey,
+                checkRequired("region", region),
+                baseUrlOverride,
+            )
         }
     }
 }

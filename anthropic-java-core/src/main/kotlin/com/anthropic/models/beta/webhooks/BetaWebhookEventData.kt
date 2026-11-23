@@ -82,6 +82,8 @@ private constructor(
         null,
     private val externalKeyFailed: BetaWebhookExternalKeyFailedEventData? = null,
     private val externalKeyRecovered: BetaWebhookExternalKeyRecoveredEventData? = null,
+    private val externalStorageFailed: BetaWebhookExternalStorageFailedEventData? = null,
+    private val externalStorageRecovered: BetaWebhookExternalStorageRecoveredEventData? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -138,6 +140,8 @@ private constructor(
             userProfileProgramStatusUpdated != null -> Type.USER_PROFILE_PROGRAM_STATUS_UPDATED
             externalKeyFailed != null -> Type.EXTERNAL_KEY_FAILED
             externalKeyRecovered != null -> Type.EXTERNAL_KEY_RECOVERED
+            externalStorageFailed != null -> Type.EXTERNAL_STORAGE_FAILED
+            externalStorageRecovered != null -> Type.EXTERNAL_STORAGE_RECOVERED
             else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
         }
 
@@ -193,6 +197,8 @@ private constructor(
             userProfileProgramStatusUpdated != null -> userProfileProgramStatusUpdated.id()
             externalKeyFailed != null -> externalKeyFailed.id()
             externalKeyRecovered != null -> externalKeyRecovered.id()
+            externalStorageFailed != null -> externalStorageFailed.id()
+            externalStorageRecovered != null -> externalStorageRecovered.id()
             else -> _json.getProperty<String>("id").getRequired("id")
         }
 
@@ -250,6 +256,8 @@ private constructor(
                 userProfileProgramStatusUpdated.organizationId()
             externalKeyFailed != null -> externalKeyFailed.organizationId()
             externalKeyRecovered != null -> externalKeyRecovered.organizationId()
+            externalStorageFailed != null -> externalStorageFailed.organizationId()
+            externalStorageRecovered != null -> externalStorageRecovered.organizationId()
             else -> _json.getProperty<String>("organization_id").getRequired("organization_id")
         }
 
@@ -306,6 +314,8 @@ private constructor(
             userProfileProgramStatusUpdated != null -> Optional.empty()
             externalKeyFailed != null -> Optional.empty()
             externalKeyRecovered != null -> Optional.empty()
+            externalStorageFailed != null -> Optional.empty()
+            externalStorageRecovered != null -> Optional.empty()
             else -> _json.getProperty<String>("workspace_id").asKnown()
         }
 
@@ -361,6 +371,8 @@ private constructor(
             userProfileProgramStatusUpdated != null -> Optional.empty()
             externalKeyFailed != null -> Optional.empty()
             externalKeyRecovered != null -> Optional.empty()
+            externalStorageFailed != null -> Optional.empty()
+            externalStorageRecovered != null -> Optional.empty()
             else -> _json.getProperty<String>("session_thread_id").asKnown()
         }
 
@@ -416,6 +428,8 @@ private constructor(
             userProfileProgramStatusUpdated != null -> Optional.empty()
             externalKeyFailed != null -> Optional.empty()
             externalKeyRecovered != null -> Optional.empty()
+            externalStorageFailed != null -> Optional.empty()
+            externalStorageRecovered != null -> Optional.empty()
             else -> _json.getProperty<String>("vault_id").asKnown()
         }
 
@@ -472,6 +486,8 @@ private constructor(
             userProfileProgramStatusUpdated != null -> Optional.empty()
             externalKeyFailed != null -> Optional.empty()
             externalKeyRecovered != null -> Optional.empty()
+            externalStorageFailed != null -> Optional.empty()
+            externalStorageRecovered != null -> Optional.empty()
             else -> _json.getProperty<String>("enforcement_action_id").asKnown()
         }
 
@@ -626,6 +642,12 @@ private constructor(
     fun externalKeyRecovered(): Optional<BetaWebhookExternalKeyRecoveredEventData> =
         Optional.ofNullable(externalKeyRecovered)
 
+    fun externalStorageFailed(): Optional<BetaWebhookExternalStorageFailedEventData> =
+        Optional.ofNullable(externalStorageFailed)
+
+    fun externalStorageRecovered(): Optional<BetaWebhookExternalStorageRecoveredEventData> =
+        Optional.ofNullable(externalStorageRecovered)
+
     fun isSessionCreated(): Boolean = sessionCreated != null
 
     fun isSessionPending(): Boolean = sessionPending != null
@@ -724,6 +746,10 @@ private constructor(
     fun isExternalKeyFailed(): Boolean = externalKeyFailed != null
 
     fun isExternalKeyRecovered(): Boolean = externalKeyRecovered != null
+
+    fun isExternalStorageFailed(): Boolean = externalStorageFailed != null
+
+    fun isExternalStorageRecovered(): Boolean = externalStorageRecovered != null
 
     fun asSessionCreated(): BetaWebhookSessionCreatedEventData =
         sessionCreated.getOrThrow("sessionCreated")
@@ -868,6 +894,12 @@ private constructor(
     fun asExternalKeyRecovered(): BetaWebhookExternalKeyRecoveredEventData =
         externalKeyRecovered.getOrThrow("externalKeyRecovered")
 
+    fun asExternalStorageFailed(): BetaWebhookExternalStorageFailedEventData =
+        externalStorageFailed.getOrThrow("externalStorageFailed")
+
+    fun asExternalStorageRecovered(): BetaWebhookExternalStorageRecoveredEventData =
+        externalStorageRecovered.getOrThrow("externalStorageRecovered")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -966,6 +998,10 @@ private constructor(
                 visitor.visitUserProfileProgramStatusUpdated(userProfileProgramStatusUpdated)
             externalKeyFailed != null -> visitor.visitExternalKeyFailed(externalKeyFailed)
             externalKeyRecovered != null -> visitor.visitExternalKeyRecovered(externalKeyRecovered)
+            externalStorageFailed != null ->
+                visitor.visitExternalStorageFailed(externalStorageFailed)
+            externalStorageRecovered != null ->
+                visitor.visitExternalStorageRecovered(externalStorageRecovered)
             else -> visitor.unknown(_json)
         }
 
@@ -1036,6 +1072,8 @@ private constructor(
             userProfileProgramStatusUpdated != null -> userProfileProgramStatusUpdated.validate()
             externalKeyFailed != null -> externalKeyFailed.validate()
             externalKeyRecovered != null -> externalKeyRecovered.validate()
+            externalStorageFailed != null -> externalStorageFailed.validate()
+            externalStorageRecovered != null -> externalStorageRecovered.validate()
             else -> throw AnthropicInvalidDataException("Unknown BetaWebhookEventData: $_json")
         }
         validated = true
@@ -1108,6 +1146,8 @@ private constructor(
             userProfileProgramStatusUpdated != null -> userProfileProgramStatusUpdated.validity()
             externalKeyFailed != null -> externalKeyFailed.validity()
             externalKeyRecovered != null -> externalKeyRecovered.validity()
+            externalStorageFailed != null -> externalStorageFailed.validity()
+            externalStorageRecovered != null -> externalStorageRecovered.validity()
             else -> 0
         }
 
@@ -1165,7 +1205,9 @@ private constructor(
             userProfileEnforcementActionResolved == other.userProfileEnforcementActionResolved &&
             userProfileProgramStatusUpdated == other.userProfileProgramStatusUpdated &&
             externalKeyFailed == other.externalKeyFailed &&
-            externalKeyRecovered == other.externalKeyRecovered
+            externalKeyRecovered == other.externalKeyRecovered &&
+            externalStorageFailed == other.externalStorageFailed &&
+            externalStorageRecovered == other.externalStorageRecovered
     }
 
     override fun hashCode(): Int =
@@ -1219,6 +1261,8 @@ private constructor(
             userProfileProgramStatusUpdated,
             externalKeyFailed,
             externalKeyRecovered,
+            externalStorageFailed,
+            externalStorageRecovered,
         )
 
     override fun toString(): String =
@@ -1306,6 +1350,10 @@ private constructor(
                 "BetaWebhookEventData{externalKeyFailed=$externalKeyFailed}"
             externalKeyRecovered != null ->
                 "BetaWebhookEventData{externalKeyRecovered=$externalKeyRecovered}"
+            externalStorageFailed != null ->
+                "BetaWebhookEventData{externalStorageFailed=$externalStorageFailed}"
+            externalStorageRecovered != null ->
+                "BetaWebhookEventData{externalStorageRecovered=$externalStorageRecovered}"
             _json != null -> "BetaWebhookEventData{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaWebhookEventData")
         }
@@ -1529,6 +1577,16 @@ private constructor(
         @JvmStatic
         fun ofExternalKeyRecovered(externalKeyRecovered: BetaWebhookExternalKeyRecoveredEventData) =
             BetaWebhookEventData(externalKeyRecovered = externalKeyRecovered)
+
+        @JvmStatic
+        fun ofExternalStorageFailed(
+            externalStorageFailed: BetaWebhookExternalStorageFailedEventData
+        ) = BetaWebhookEventData(externalStorageFailed = externalStorageFailed)
+
+        @JvmStatic
+        fun ofExternalStorageRecovered(
+            externalStorageRecovered: BetaWebhookExternalStorageRecoveredEventData
+        ) = BetaWebhookEventData(externalStorageRecovered = externalStorageRecovered)
     }
 
     /**
@@ -1677,6 +1735,14 @@ private constructor(
 
         fun visitExternalKeyRecovered(
             externalKeyRecovered: BetaWebhookExternalKeyRecoveredEventData
+        ): T
+
+        fun visitExternalStorageFailed(
+            externalStorageFailed: BetaWebhookExternalStorageFailedEventData
+        ): T
+
+        fun visitExternalStorageRecovered(
+            externalStorageRecovered: BetaWebhookExternalStorageRecoveredEventData
         ): T
 
         /**
@@ -2083,6 +2149,22 @@ private constructor(
                         ?.let { BetaWebhookEventData(externalKeyRecovered = it, _json = json) }
                         ?: BetaWebhookEventData(_json = json)
                 }
+                "external_storage.failed" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookExternalStorageFailedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(externalStorageFailed = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "external_storage.recovered" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookExternalStorageRecoveredEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(externalStorageRecovered = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
             }
 
             return BetaWebhookEventData(_json = json)
@@ -2167,6 +2249,10 @@ private constructor(
                 value.externalKeyFailed != null -> generator.writeObject(value.externalKeyFailed)
                 value.externalKeyRecovered != null ->
                     generator.writeObject(value.externalKeyRecovered)
+                value.externalStorageFailed != null ->
+                    generator.writeObject(value.externalStorageFailed)
+                value.externalStorageRecovered != null ->
+                    generator.writeObject(value.externalStorageRecovered)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaWebhookEventData")
             }
@@ -2300,6 +2386,11 @@ private constructor(
 
             @JvmField val EXTERNAL_KEY_RECOVERED = Type(JsonField.of("external_key.recovered"))
 
+            @JvmField val EXTERNAL_STORAGE_FAILED = Type(JsonField.of("external_storage.failed"))
+
+            @JvmField
+            val EXTERNAL_STORAGE_RECOVERED = Type(JsonField.of("external_storage.recovered"))
+
             @JvmStatic
             fun of(value: String): Type =
                 // Intern known values so `==` works
@@ -2355,6 +2446,8 @@ private constructor(
                     "user_profile.program_status_updated" -> USER_PROFILE_PROGRAM_STATUS_UPDATED
                     "external_key.failed" -> EXTERNAL_KEY_FAILED
                     "external_key.recovered" -> EXTERNAL_KEY_RECOVERED
+                    "external_storage.failed" -> EXTERNAL_STORAGE_FAILED
+                    "external_storage.recovered" -> EXTERNAL_STORAGE_RECOVERED
                     else -> Type(JsonField.of(value))
                 }
 
@@ -2415,6 +2508,8 @@ private constructor(
             USER_PROFILE_PROGRAM_STATUS_UPDATED,
             EXTERNAL_KEY_FAILED,
             EXTERNAL_KEY_RECOVERED,
+            EXTERNAL_STORAGE_FAILED,
+            EXTERNAL_STORAGE_RECOVERED,
         }
 
         /**
@@ -2476,6 +2571,8 @@ private constructor(
             USER_PROFILE_PROGRAM_STATUS_UPDATED,
             EXTERNAL_KEY_FAILED,
             EXTERNAL_KEY_RECOVERED,
+            EXTERNAL_STORAGE_FAILED,
+            EXTERNAL_STORAGE_RECOVERED,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -2540,6 +2637,8 @@ private constructor(
                 USER_PROFILE_PROGRAM_STATUS_UPDATED -> Value.USER_PROFILE_PROGRAM_STATUS_UPDATED
                 EXTERNAL_KEY_FAILED -> Value.EXTERNAL_KEY_FAILED
                 EXTERNAL_KEY_RECOVERED -> Value.EXTERNAL_KEY_RECOVERED
+                EXTERNAL_STORAGE_FAILED -> Value.EXTERNAL_STORAGE_FAILED
+                EXTERNAL_STORAGE_RECOVERED -> Value.EXTERNAL_STORAGE_RECOVERED
                 else -> Value._UNKNOWN
             }
 
@@ -2605,6 +2704,8 @@ private constructor(
                 USER_PROFILE_PROGRAM_STATUS_UPDATED -> Known.USER_PROFILE_PROGRAM_STATUS_UPDATED
                 EXTERNAL_KEY_FAILED -> Known.EXTERNAL_KEY_FAILED
                 EXTERNAL_KEY_RECOVERED -> Known.EXTERNAL_KEY_RECOVERED
+                EXTERNAL_STORAGE_FAILED -> Known.EXTERNAL_STORAGE_FAILED
+                EXTERNAL_STORAGE_RECOVERED -> Known.EXTERNAL_STORAGE_RECOVERED
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 

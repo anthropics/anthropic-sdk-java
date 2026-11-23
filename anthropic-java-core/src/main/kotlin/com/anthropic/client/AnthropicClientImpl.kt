@@ -70,6 +70,11 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
 
     override fun skills(): SkillService = skills
 
+    /**
+     * Register the end customers that your platform serves, so each request can name who it's for.
+     * To get started, see the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+     */
     override fun userProfiles(): UserProfileService = userProfiles
 
     override fun organization(): OrganizationService = organization
@@ -133,6 +138,11 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
 
         override fun skills(): SkillService.WithRawResponse = skills
 
+        /**
+         * Register the end customers that your platform serves, so each request can name who it's
+         * for. To get started, see the
+         * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+         */
         override fun userProfiles(): UserProfileService.WithRawResponse = userProfiles
 
         override fun organization(): OrganizationService.WithRawResponse = organization

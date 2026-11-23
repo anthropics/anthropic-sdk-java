@@ -8,8 +8,8 @@ internal class IssuerCreateParamsTest {
     @Test
     fun create() {
         IssuerCreateParams.builder()
-            .issuerUrl("x")
-            .name("x")
+            .issuerUrl("https://token.actions.githubusercontent.com")
+            .name("github-actions")
             .checkJti(true)
             .jwks(
                 JwksDiscovery.builder()
@@ -25,8 +25,8 @@ internal class IssuerCreateParamsTest {
     fun body() {
         val params =
             IssuerCreateParams.builder()
-                .issuerUrl("x")
-                .name("x")
+                .issuerUrl("https://token.actions.githubusercontent.com")
+                .name("github-actions")
                 .checkJti(true)
                 .jwks(
                     JwksDiscovery.builder()
@@ -39,8 +39,8 @@ internal class IssuerCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body.issuerUrl()).isEqualTo("x")
-        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.issuerUrl()).isEqualTo("https://token.actions.githubusercontent.com")
+        assertThat(body.name()).isEqualTo("github-actions")
         assertThat(body.checkJti()).contains(true)
         assertThat(body.jwks())
             .contains(
@@ -56,11 +56,15 @@ internal class IssuerCreateParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = IssuerCreateParams.builder().issuerUrl("x").name("x").build()
+        val params =
+            IssuerCreateParams.builder()
+                .issuerUrl("https://token.actions.githubusercontent.com")
+                .name("github-actions")
+                .build()
 
         val body = params._body()
 
-        assertThat(body.issuerUrl()).isEqualTo("x")
-        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.issuerUrl()).isEqualTo("https://token.actions.githubusercontent.com")
+        assertThat(body.name()).isEqualTo("github-actions")
     }
 }

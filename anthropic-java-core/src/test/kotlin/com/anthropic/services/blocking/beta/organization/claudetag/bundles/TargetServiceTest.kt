@@ -30,7 +30,7 @@ internal class TargetServiceTest {
                 TargetCreateParams.builder()
                     .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
                     .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                    .slackChannelTarget("xxxxxxxx")
+                    .slackChannelTarget("slch_01SvpyRQK3nN6eH9uhRA7n1q")
                     .build()
             )
 

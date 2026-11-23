@@ -20,6 +20,10 @@ import com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeErrorDe
 import com.anthropic.models.beta.environments.BetaInvalidMetadataErrorDetails
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedErrorDetails
 import com.anthropic.models.beta.environments.work.BetaWorkLeaseState
+import com.anthropic.models.beta.organization.BetaApprovalRequiredErrorDetails
+import com.anthropic.models.beta.organization.BetaAuthorizationCheckUnavailableErrorDetails
+import com.anthropic.models.beta.organization.BetaHumanReviewNotAvailableErrorDetails
+import com.anthropic.models.beta.organization.BetaOrganizationNotEligibleErrorDetails
 import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaCmekFeatureUnsupportedErrorDetails
 import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaRbacGroupManagedSettingsNotFoundErrorDetails
 import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaRbacGroupOrderLimitExceededErrorDetails
@@ -34,6 +38,20 @@ import com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelSco
 import com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpEnvironmentNotFoundErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictErrorDetails
 import com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsRefusedErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageFailedCheck
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageInUseErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageInWorkspacePolicyErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageNotAvailableErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaGrantRequiredErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaInvalidStorageArnErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaProviderNotAllowedErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageAlreadyRegisteredErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageAttachLimitReachedErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageChangedConcurrentlyErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageNotAttachableErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageProfileStillRequiredErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageVerificationFailedErrorDetails
+import com.anthropic.models.beta.organization.externalstorage.BetaUnsupportedRegionErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaPluginNameTakenErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaRegistrationPendingErrorDetails
 import com.anthropic.models.beta.organization.plugins.BetaScanFailedErrorDetails
@@ -47,6 +65,10 @@ import com.anthropic.models.beta.organization.users.BetaCannotSignOutOwnerErrorD
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrimaryOwnerErrorDetails
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrivilegedMemberErrorDetails
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutSelfErrorDetails
+import com.anthropic.models.beta.organization.workspaces.BetaHumanReviewOnWithExternalStorageErrorDetails
+import com.anthropic.models.beta.organization.workspaces.BetaTranscriptsStorageRequiredErrorDetails
+import com.anthropic.models.beta.organization.workspaces.BetaWorkspaceChangedConcurrentlyErrorDetails
+import com.anthropic.models.beta.organization.workspaces.BetaWorkspaceChangedConcurrentlyField
 import com.anthropic.models.files.FileExpiredErrorDetails
 import com.anthropic.models.files.FileNotDownloadableErrorDetails
 import com.anthropic.models.files.StorageQuotaExceededErrorDetails
@@ -68,6 +90,7 @@ import com.anthropic.models.messages.ThreadNotFoundErrorDetails
 import com.anthropic.models.messages.ThreadUnsupportedRequestErrorDetails
 import com.anthropic.models.messages.ToolNameConflictErrorDetails
 import com.anthropic.models.messages.ToolReferenceUnresolvedErrorDetails
+import com.anthropic.models.organization.ChangeOutcomeUnknownErrorDetails
 import com.anthropic.models.organization.ConcurrentMembershipChangeErrorDetails
 import com.anthropic.models.organization.OrgMemberLimitExceededErrorDetails
 import com.anthropic.models.organization.RbacRoleNotFoundErrorDetails
@@ -85,6 +108,9 @@ import com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessEr
 import com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedErrorDetails
 import com.anthropic.models.organization.users.CannotRemoveLastMemberErrorDetails
 import com.anthropic.models.organization.workspaces.KeyProfileMismatchErrorDetails
+import com.anthropic.models.organization.workspaces.StorageAttachedDuringArchiveErrorDetails
+import com.anthropic.models.organization.workspaces.StorageProfileMismatchErrorDetails
+import com.anthropic.models.organization.workspaces.WorkspaceCreatedIncompleteErrorDetails
 import com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededErrorDetails
 import com.anthropic.models.organization.workspaces.WorkspacePolicyField
 import com.anthropic.models.organization.workspaces.WorkspacePolicyViolationErrorDetails
@@ -152,6 +178,7 @@ private constructor(
     private val rampLimitExceeded: RampLimitExceededErrorDetails? = null,
     private val cmekKeyUnreachable: CmekKeyUnreachableErrorDetails? = null,
     private val compactionUnavailable: CompactionUnavailableErrorDetails? = null,
+    private val workspaceHumanReviewDisabled: WorkspaceHumanReviewDisabledErrorDetails? = null,
     private val storageQuotaExceeded: StorageQuotaExceededErrorDetails? = null,
     private val fileNotDownloadable: FileNotDownloadableErrorDetails? = null,
     private val fileExpired: FileExpiredErrorDetails? = null,
@@ -178,6 +205,10 @@ private constructor(
     private val keyProfileMismatch: KeyProfileMismatchErrorDetails? = null,
     private val workspacePolicyViolation: WorkspacePolicyViolationErrorDetails? = null,
     private val externalKeyChanged: ExternalKeyChangedErrorDetails? = null,
+    private val workspaceCreatedIncomplete: WorkspaceCreatedIncompleteErrorDetails? = null,
+    private val storageProfileMismatch: StorageProfileMismatchErrorDetails? = null,
+    private val changeOutcomeUnknown: ChangeOutcomeUnknownErrorDetails? = null,
+    private val storageAttachedDuringArchive: StorageAttachedDuringArchiveErrorDetails? = null,
     private val workspaceMemberLimitExceeded: WorkspaceMemberLimitExceededErrorDetails? = null,
     private val organizationTypeNotSupported: OrganizationTypeNotSupportedErrorDetails? = null,
     private val parentOrganizationRequired: ParentOrganizationRequiredErrorDetails? = null,
@@ -188,6 +219,19 @@ private constructor(
     private val environmentUpdateDisabled: BetaEnvironmentUpdateDisabledErrorDetails? = null,
     private val heartbeatPreconditionFailed: BetaHeartbeatPreconditionFailedErrorDetails? = null,
     private val invalidMetadata: BetaInvalidMetadataErrorDetails? = null,
+    private val grantRequired: BetaGrantRequiredErrorDetails? = null,
+    private val organizationNotEligible: BetaOrganizationNotEligibleErrorDetails? = null,
+    private val providerNotAllowed: BetaProviderNotAllowedErrorDetails? = null,
+    private val unsupportedRegion: BetaUnsupportedRegionErrorDetails? = null,
+    private val storageAlreadyRegistered: BetaStorageAlreadyRegisteredErrorDetails? = null,
+    private val authorizationCheckUnavailable: BetaAuthorizationCheckUnavailableErrorDetails? =
+        null,
+    private val invalidStorageArn: BetaInvalidStorageArnErrorDetails? = null,
+    private val externalStorageInUse: BetaExternalStorageInUseErrorDetails? = null,
+    private val externalStorageInWorkspacePolicy:
+        BetaExternalStorageInWorkspacePolicyErrorDetails? =
+        null,
+    private val storageVerificationFailed: BetaStorageVerificationFailedErrorDetails? = null,
     private val cannotSignOutPrimaryOwner: BetaCannotSignOutPrimaryOwnerErrorDetails? = null,
     private val cannotSignOutSelf: BetaCannotSignOutSelfErrorDetails? = null,
     private val organizationNotEnrolledInBeta: BetaOrganizationNotEnrolledInBetaErrorDetails? =
@@ -197,6 +241,18 @@ private constructor(
     private val cannotSignOutOwner: BetaCannotSignOutOwnerErrorDetails? = null,
     private val cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails? =
         null,
+    private val approvalRequired: BetaApprovalRequiredErrorDetails? = null,
+    private val externalStorageNotAvailable: BetaExternalStorageNotAvailableErrorDetails? = null,
+    private val humanReviewNotAvailable: BetaHumanReviewNotAvailableErrorDetails? = null,
+    private val humanReviewOnWithExternalStorage:
+        BetaHumanReviewOnWithExternalStorageErrorDetails? =
+        null,
+    private val storageNotAttachable: BetaStorageNotAttachableErrorDetails? = null,
+    private val transcriptsStorageRequired: BetaTranscriptsStorageRequiredErrorDetails? = null,
+    private val storageAttachLimitReached: BetaStorageAttachLimitReachedErrorDetails? = null,
+    private val storageProfileStillRequired: BetaStorageProfileStillRequiredErrorDetails? = null,
+    private val storageChangedConcurrently: BetaStorageChangedConcurrentlyErrorDetails? = null,
+    private val workspaceChangedConcurrently: BetaWorkspaceChangedConcurrentlyErrorDetails? = null,
     private val spendLimitsAdminApiWritesNotEnabled:
         BetaSpendLimitsAdminApiWritesNotEnabledErrorDetails? =
         null,
@@ -280,6 +336,7 @@ private constructor(
             rampLimitExceeded != null -> ErrorCode.RAMP_LIMIT_EXCEEDED
             cmekKeyUnreachable != null -> ErrorCode.CMEK_KEY_UNREACHABLE
             compactionUnavailable != null -> ErrorCode.COMPACTION_UNAVAILABLE
+            workspaceHumanReviewDisabled != null -> ErrorCode.WORKSPACE_HUMAN_REVIEW_DISABLED
             storageQuotaExceeded != null -> ErrorCode.STORAGE_QUOTA_EXCEEDED
             fileNotDownloadable != null -> ErrorCode.FILE_NOT_DOWNLOADABLE
             fileExpired != null -> ErrorCode.FILE_EXPIRED
@@ -304,6 +361,10 @@ private constructor(
             keyProfileMismatch != null -> ErrorCode.KEY_PROFILE_MISMATCH
             workspacePolicyViolation != null -> ErrorCode.WORKSPACE_POLICY_VIOLATION
             externalKeyChanged != null -> ErrorCode.EXTERNAL_KEY_CHANGED
+            workspaceCreatedIncomplete != null -> ErrorCode.WORKSPACE_CREATED_INCOMPLETE
+            storageProfileMismatch != null -> ErrorCode.STORAGE_PROFILE_MISMATCH
+            changeOutcomeUnknown != null -> ErrorCode.CHANGE_OUTCOME_UNKNOWN
+            storageAttachedDuringArchive != null -> ErrorCode.STORAGE_ATTACHED_DURING_ARCHIVE
             workspaceMemberLimitExceeded != null -> ErrorCode.WORKSPACE_MEMBER_LIMIT_EXCEEDED
             organizationTypeNotSupported != null -> ErrorCode.ORGANIZATION_TYPE_NOT_SUPPORTED
             parentOrganizationRequired != null -> ErrorCode.PARENT_ORGANIZATION_REQUIRED
@@ -314,6 +375,17 @@ private constructor(
             environmentUpdateDisabled != null -> ErrorCode.ENVIRONMENT_UPDATE_DISABLED
             heartbeatPreconditionFailed != null -> ErrorCode.HEARTBEAT_PRECONDITION_FAILED
             invalidMetadata != null -> ErrorCode.INVALID_METADATA
+            grantRequired != null -> ErrorCode.GRANT_REQUIRED
+            organizationNotEligible != null -> ErrorCode.ORGANIZATION_NOT_ELIGIBLE
+            providerNotAllowed != null -> ErrorCode.PROVIDER_NOT_ALLOWED
+            unsupportedRegion != null -> ErrorCode.UNSUPPORTED_REGION
+            storageAlreadyRegistered != null -> ErrorCode.STORAGE_ALREADY_REGISTERED
+            authorizationCheckUnavailable != null -> ErrorCode.AUTHORIZATION_CHECK_UNAVAILABLE
+            invalidStorageArn != null -> ErrorCode.INVALID_STORAGE_ARN
+            externalStorageInUse != null -> ErrorCode.EXTERNAL_STORAGE_IN_USE
+            externalStorageInWorkspacePolicy != null ->
+                ErrorCode.EXTERNAL_STORAGE_IN_WORKSPACE_POLICY
+            storageVerificationFailed != null -> ErrorCode.STORAGE_VERIFICATION_FAILED
             cannotSignOutPrimaryOwner != null -> ErrorCode.CANNOT_SIGN_OUT_PRIMARY_OWNER
             cannotSignOutSelf != null -> ErrorCode.CANNOT_SIGN_OUT_SELF
             organizationNotEnrolledInBeta != null -> ErrorCode.ORGANIZATION_NOT_ENROLLED_IN_BETA
@@ -321,6 +393,17 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> ErrorCode.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
             cannotSignOutOwner != null -> ErrorCode.CANNOT_SIGN_OUT_OWNER
             cannotSignOutPrivilegedMember != null -> ErrorCode.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
+            approvalRequired != null -> ErrorCode.APPROVAL_REQUIRED
+            externalStorageNotAvailable != null -> ErrorCode.EXTERNAL_STORAGE_NOT_AVAILABLE
+            humanReviewNotAvailable != null -> ErrorCode.HUMAN_REVIEW_NOT_AVAILABLE
+            humanReviewOnWithExternalStorage != null ->
+                ErrorCode.HUMAN_REVIEW_ON_WITH_EXTERNAL_STORAGE
+            storageNotAttachable != null -> ErrorCode.STORAGE_NOT_ATTACHABLE
+            transcriptsStorageRequired != null -> ErrorCode.TRANSCRIPTS_STORAGE_REQUIRED
+            storageAttachLimitReached != null -> ErrorCode.STORAGE_ATTACH_LIMIT_REACHED
+            storageProfileStillRequired != null -> ErrorCode.STORAGE_PROFILE_STILL_REQUIRED
+            storageChangedConcurrently != null -> ErrorCode.STORAGE_CHANGED_CONCURRENTLY
+            workspaceChangedConcurrently != null -> ErrorCode.WORKSPACE_CHANGED_CONCURRENTLY
             spendLimitsAdminApiWritesNotEnabled != null ->
                 ErrorCode.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
             unsupportedCharset != null -> ErrorCode.UNSUPPORTED_CHARSET
@@ -394,6 +477,7 @@ private constructor(
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
+            workspaceHumanReviewDisabled != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
             fileNotDownloadable != null -> Optional.empty()
             fileExpired != null -> Optional.empty()
@@ -417,6 +501,10 @@ private constructor(
             keyProfileMismatch != null -> Optional.empty()
             workspacePolicyViolation != null -> Optional.empty()
             externalKeyChanged != null -> Optional.empty()
+            workspaceCreatedIncomplete != null -> Optional.empty()
+            storageProfileMismatch != null -> Optional.empty()
+            changeOutcomeUnknown != null -> Optional.empty()
+            storageAttachedDuringArchive != null -> Optional.empty()
             workspaceMemberLimitExceeded != null -> Optional.empty()
             organizationTypeNotSupported != null -> Optional.empty()
             parentOrganizationRequired != null -> Optional.empty()
@@ -427,6 +515,16 @@ private constructor(
             environmentUpdateDisabled != null -> Optional.empty()
             heartbeatPreconditionFailed != null -> Optional.empty()
             invalidMetadata != null -> Optional.empty()
+            grantRequired != null -> Optional.empty()
+            organizationNotEligible != null -> Optional.empty()
+            providerNotAllowed != null -> Optional.empty()
+            unsupportedRegion != null -> Optional.empty()
+            storageAlreadyRegistered != null -> Optional.empty()
+            authorizationCheckUnavailable != null -> Optional.empty()
+            invalidStorageArn != null -> Optional.empty()
+            externalStorageInUse != null -> Optional.empty()
+            externalStorageInWorkspacePolicy != null -> Optional.empty()
+            storageVerificationFailed != null -> Optional.empty()
             cannotSignOutPrimaryOwner != null -> Optional.empty()
             cannotSignOutSelf != null -> Optional.empty()
             organizationNotEnrolledInBeta != null -> Optional.empty()
@@ -434,6 +532,16 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> Optional.empty()
             cannotSignOutOwner != null -> Optional.empty()
             cannotSignOutPrivilegedMember != null -> Optional.empty()
+            approvalRequired != null -> Optional.empty()
+            externalStorageNotAvailable != null -> Optional.empty()
+            humanReviewNotAvailable != null -> Optional.empty()
+            humanReviewOnWithExternalStorage != null -> Optional.empty()
+            storageNotAttachable != null -> Optional.empty()
+            transcriptsStorageRequired != null -> Optional.empty()
+            storageAttachLimitReached != null -> Optional.empty()
+            storageProfileStillRequired != null -> Optional.empty()
+            storageChangedConcurrently != null -> Optional.empty()
+            workspaceChangedConcurrently != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
             pluginNameTaken != null -> pluginNameTaken.pluginId()
@@ -499,6 +607,7 @@ private constructor(
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
+            workspaceHumanReviewDisabled != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
             fileNotDownloadable != null -> Optional.empty()
             fileExpired != null -> Optional.empty()
@@ -522,6 +631,10 @@ private constructor(
             keyProfileMismatch != null -> Optional.empty()
             workspacePolicyViolation != null -> Optional.empty()
             externalKeyChanged != null -> Optional.empty()
+            workspaceCreatedIncomplete != null -> Optional.empty()
+            storageProfileMismatch != null -> Optional.empty()
+            changeOutcomeUnknown != null -> Optional.empty()
+            storageAttachedDuringArchive != null -> Optional.empty()
             workspaceMemberLimitExceeded != null -> Optional.empty()
             organizationTypeNotSupported != null -> Optional.empty()
             parentOrganizationRequired != null -> Optional.empty()
@@ -532,6 +645,16 @@ private constructor(
             environmentUpdateDisabled != null -> Optional.empty()
             heartbeatPreconditionFailed != null -> Optional.empty()
             invalidMetadata != null -> Optional.empty()
+            grantRequired != null -> Optional.empty()
+            organizationNotEligible != null -> Optional.empty()
+            providerNotAllowed != null -> Optional.empty()
+            unsupportedRegion != null -> Optional.empty()
+            storageAlreadyRegistered != null -> Optional.empty()
+            authorizationCheckUnavailable != null -> Optional.empty()
+            invalidStorageArn != null -> Optional.empty()
+            externalStorageInUse != null -> Optional.empty()
+            externalStorageInWorkspacePolicy != null -> Optional.empty()
+            storageVerificationFailed != null -> Optional.empty()
             cannotSignOutPrimaryOwner != null -> Optional.empty()
             cannotSignOutSelf != null -> Optional.empty()
             organizationNotEnrolledInBeta != null -> Optional.empty()
@@ -539,6 +662,16 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> Optional.empty()
             cannotSignOutOwner != null -> Optional.empty()
             cannotSignOutPrivilegedMember != null -> Optional.empty()
+            approvalRequired != null -> Optional.empty()
+            externalStorageNotAvailable != null -> Optional.empty()
+            humanReviewNotAvailable != null -> Optional.empty()
+            humanReviewOnWithExternalStorage != null -> Optional.empty()
+            storageNotAttachable != null -> Optional.empty()
+            transcriptsStorageRequired != null -> Optional.empty()
+            storageAttachLimitReached != null -> Optional.empty()
+            storageProfileStillRequired != null -> Optional.empty()
+            storageChangedConcurrently != null -> Optional.empty()
+            workspaceChangedConcurrently != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
             pluginNameTaken != null -> Optional.empty()
@@ -604,6 +737,7 @@ private constructor(
             rampLimitExceeded != null -> Optional.empty()
             cmekKeyUnreachable != null -> Optional.empty()
             compactionUnavailable != null -> Optional.empty()
+            workspaceHumanReviewDisabled != null -> Optional.empty()
             storageQuotaExceeded != null -> Optional.empty()
             fileNotDownloadable != null -> Optional.empty()
             fileExpired != null -> Optional.empty()
@@ -627,6 +761,10 @@ private constructor(
             keyProfileMismatch != null -> Optional.empty()
             workspacePolicyViolation != null -> Optional.empty()
             externalKeyChanged != null -> Optional.empty()
+            workspaceCreatedIncomplete != null -> Optional.empty()
+            storageProfileMismatch != null -> Optional.empty()
+            changeOutcomeUnknown != null -> Optional.empty()
+            storageAttachedDuringArchive != null -> Optional.empty()
             workspaceMemberLimitExceeded != null -> Optional.empty()
             organizationTypeNotSupported != null -> Optional.empty()
             parentOrganizationRequired != null -> Optional.empty()
@@ -637,6 +775,16 @@ private constructor(
             environmentUpdateDisabled != null -> Optional.empty()
             heartbeatPreconditionFailed != null -> Optional.empty()
             invalidMetadata != null -> Optional.empty()
+            grantRequired != null -> Optional.empty()
+            organizationNotEligible != null -> Optional.empty()
+            providerNotAllowed != null -> Optional.empty()
+            unsupportedRegion != null -> Optional.empty()
+            storageAlreadyRegistered != null -> Optional.empty()
+            authorizationCheckUnavailable != null -> Optional.empty()
+            invalidStorageArn != null -> Optional.empty()
+            externalStorageInUse != null -> Optional.empty()
+            externalStorageInWorkspacePolicy != null -> Optional.empty()
+            storageVerificationFailed != null -> Optional.empty()
             cannotSignOutPrimaryOwner != null -> Optional.empty()
             cannotSignOutSelf != null -> Optional.empty()
             organizationNotEnrolledInBeta != null -> Optional.empty()
@@ -644,6 +792,16 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> Optional.empty()
             cannotSignOutOwner != null -> Optional.empty()
             cannotSignOutPrivilegedMember != null -> Optional.empty()
+            approvalRequired != null -> Optional.empty()
+            externalStorageNotAvailable != null -> Optional.empty()
+            humanReviewNotAvailable != null -> Optional.empty()
+            humanReviewOnWithExternalStorage != null -> Optional.empty()
+            storageNotAttachable != null -> Optional.empty()
+            transcriptsStorageRequired != null -> Optional.empty()
+            storageAttachLimitReached != null -> Optional.empty()
+            storageProfileStillRequired != null -> Optional.empty()
+            storageChangedConcurrently != null -> Optional.empty()
+            workspaceChangedConcurrently != null -> Optional.empty()
             spendLimitsAdminApiWritesNotEnabled != null -> Optional.empty()
             unsupportedCharset != null -> Optional.empty()
             pluginNameTaken != null -> Optional.empty()
@@ -897,6 +1055,13 @@ private constructor(
         Optional.ofNullable(compactionUnavailable)
 
     /**
+     * The request's Workspace has Human Review turned off, and this operation is not available
+     * there. Use a Workspace with Human Review on.
+     */
+    fun workspaceHumanReviewDisabled(): Optional<WorkspaceHumanReviewDisabledErrorDetails> =
+        Optional.ofNullable(workspaceHumanReviewDisabled)
+
+    /**
      * The organization's file storage quota is exhausted. Delete files to free up space, then retry
      * the upload.
      */
@@ -1041,6 +1206,36 @@ private constructor(
     fun externalKeyChanged(): Optional<ExternalKeyChangedErrorDetails> =
         Optional.ofNullable(externalKeyChanged)
 
+    /**
+     * The Workspace was created, but some of what the request asked for did not take effect, or may
+     * not have. Don't send the create again. The error's `message` says what to do with the
+     * Workspace at `workspace_id`.
+     */
+    fun workspaceCreatedIncomplete(): Optional<WorkspaceCreatedIncompleteErrorDetails> =
+        Optional.ofNullable(workspaceCreatedIncomplete)
+
+    /**
+     * The Workspace's storage and its user profile don't match: the Workspace and its storage must
+     * have the same user profile, or both have none.
+     */
+    fun storageProfileMismatch(): Optional<StorageProfileMismatchErrorDetails> =
+        Optional.ofNullable(storageProfileMismatch)
+
+    /**
+     * Some of the request's changes may have been saved and others not. Send the same request again
+     * to finish it; changes already saved aren't repeated.
+     */
+    fun changeOutcomeUnknown(): Optional<ChangeOutcomeUnknownErrorDetails> =
+        Optional.ofNullable(changeOutcomeUnknown)
+
+    /**
+     * The Workspace was archived, but External Storage was attached to it during the archive and is
+     * still attached. To detach it, archive the Workspace again as a caller with the
+     * `org:external-storage:use` permission.
+     */
+    fun storageAttachedDuringArchive(): Optional<StorageAttachedDuringArchiveErrorDetails> =
+        Optional.ofNullable(storageAttachedDuringArchive)
+
     /** The workspace has reached the member limit that Anthropic set for it. */
     fun workspaceMemberLimitExceeded(): Optional<WorkspaceMemberLimitExceededErrorDetails> =
         Optional.ofNullable(workspaceMemberLimitExceeded)
@@ -1101,6 +1296,75 @@ private constructor(
     fun invalidMetadata(): Optional<BetaInvalidMetadataErrorDetails> =
         Optional.ofNullable(invalidMetadata)
 
+    /**
+     * Anthropic has not approved External Storage for the organization, for the Workspace or, for
+     * storage bound to a user profile, for that user profile. Contact your Anthropic account team.
+     */
+    fun grantRequired(): Optional<BetaGrantRequiredErrorDetails> =
+        Optional.ofNullable(grantRequired)
+
+    /**
+     * The feature isn't offered to this organization. The error's `message` names the kind of
+     * organization or, when it names none, says to contact your Anthropic account team.
+     */
+    fun organizationNotEligible(): Optional<BetaOrganizationNotEligibleErrorDetails> =
+        Optional.ofNullable(organizationNotEligible)
+
+    /**
+     * The request can't use External Storage on this cloud provider. The error's message says why.
+     */
+    fun providerNotAllowed(): Optional<BetaProviderNotAllowedErrorDetails> =
+        Optional.ofNullable(providerNotAllowed)
+
+    /** `provider_config.region` is not a region where External Storage is available. */
+    fun unsupportedRegion(): Optional<BetaUnsupportedRegionErrorDetails> =
+        Optional.ofNullable(unsupportedRegion)
+
+    /**
+     * The organization already has External Storage for this bucket that it has not deleted. List
+     * the organization's External Storage to find it.
+     */
+    fun storageAlreadyRegistered(): Optional<BetaStorageAlreadyRegisteredErrorDetails> =
+        Optional.ofNullable(storageAlreadyRegistered)
+
+    /**
+     * One of the organization's approvals from Anthropic could not be read right now, so nothing
+     * was done. Retry after the `Retry-After` delay.
+     */
+    fun authorizationCheckUnavailable(): Optional<BetaAuthorizationCheckUnavailableErrorDetails> =
+        Optional.ofNullable(authorizationCheckUnavailable)
+
+    /**
+     * On Claude Platform on AWS, the External Storage ID in the request is neither a bucket ARN nor
+     * an `estrg_` ID, or is the `estrg_` ID of AWS storage. Name AWS storage by its bucket ARN,
+     * `arn:<partition>:s3:::<bucket_name>`, which responses return as its `id`.
+     */
+    fun invalidStorageArn(): Optional<BetaInvalidStorageArnErrorDetails> =
+        Optional.ofNullable(invalidStorageArn)
+
+    /**
+     * The External Storage is `active` or `draining`, so this delete didn't erase it. The message
+     * says what to do next. On `draining` storage this delete may have started a removal that can't
+     * be undone: get the storage and read `status.removal_started`.
+     */
+    fun externalStorageInUse(): Optional<BetaExternalStorageInUseErrorDetails> =
+        Optional.ofNullable(externalStorageInUse)
+
+    /**
+     * The External Storage can't be deleted while an Enterprise Frontier Safeguards workspace
+     * policy lists it as allowed storage.
+     */
+    fun externalStorageInWorkspacePolicy():
+        Optional<BetaExternalStorageInWorkspacePolicyErrorDetails> =
+        Optional.ofNullable(externalStorageInWorkspacePolicy)
+
+    /**
+     * The External Storage failed verification, so the request changed nothing. `failed_checks`
+     * lists what to fix.
+     */
+    fun storageVerificationFailed(): Optional<BetaStorageVerificationFailedErrorDetails> =
+        Optional.ofNullable(storageVerificationFailed)
+
     /** The member is the organization's primary owner, whom no API key or token can sign out. */
     fun cannotSignOutPrimaryOwner(): Optional<BetaCannotSignOutPrimaryOwnerErrorDetails> =
         Optional.ofNullable(cannotSignOutPrimaryOwner)
@@ -1143,6 +1407,85 @@ private constructor(
      */
     fun cannotSignOutPrivilegedMember(): Optional<BetaCannotSignOutPrivilegedMemberErrorDetails> =
         Optional.ofNullable(cannotSignOutPrivilegedMember)
+
+    /**
+     * Turning human review off needs Anthropic's approval for the organization, and the
+     * organization doesn't have it. Contact Anthropic support to request approval.
+     */
+    fun approvalRequired(): Optional<BetaApprovalRequiredErrorDetails> =
+        Optional.ofNullable(approvalRequired)
+
+    /**
+     * External Storage isn't available for this Workspace, so only `internal` storage is accepted.
+     * The error's `message` says why.
+     */
+    fun externalStorageNotAvailable(): Optional<BetaExternalStorageNotAvailableErrorDetails> =
+        Optional.ofNullable(externalStorageNotAvailable)
+
+    /**
+     * Human review can't be set as requested on this Workspace, so the request changed nothing. The
+     * error's `message` says what to do instead.
+     */
+    fun humanReviewNotAvailable(): Optional<BetaHumanReviewNotAvailableErrorDetails> =
+        Optional.ofNullable(humanReviewNotAvailable)
+
+    /**
+     * The request would leave the Workspace with `inference_data_privacy.safeguards_storage` set to
+     * External Storage and `inference_data_privacy.human_review` enabled. Anthropic doesn't offer
+     * human review of data in a customer's own storage. Set `human_review` to `disabled`, or
+     * `safeguards_storage` to `internal`.
+     */
+    fun humanReviewOnWithExternalStorage():
+        Optional<BetaHumanReviewOnWithExternalStorageErrorDetails> =
+        Optional.ofNullable(humanReviewOnWithExternalStorage)
+
+    /**
+     * This External Storage can't be attached to the setting named in `field`. The error's
+     * `message` says why.
+     */
+    fun storageNotAttachable(): Optional<BetaStorageNotAttachableErrorDetails> =
+        Optional.ofNullable(storageNotAttachable)
+
+    /**
+     * In an organization managed through AWS or Google Cloud, the request would leave the Workspace
+     * with `inference_data_privacy.human_review` disabled and
+     * `inference_data_privacy.transcripts_storage` not set to External Storage. With human review
+     * disabled, the organization reviews its own flagged requests, and it receives them only in
+     * that storage.
+     */
+    fun transcriptsStorageRequired(): Optional<BetaTranscriptsStorageRequiredErrorDetails> =
+        Optional.ofNullable(transcriptsStorageRequired)
+
+    /**
+     * The Workspace has reached its limit of 100 different External Storage resources attached over
+     * its lifetime. Detached storage counts toward the limit until it is deleted.
+     */
+    fun storageAttachLimitReached(): Optional<BetaStorageAttachLimitReachedErrorDetails> =
+        Optional.ofNullable(storageAttachLimitReached)
+
+    /**
+     * This storage is bound to a different user profile from storage the Workspace has attached, or
+     * from active or draining storage it once had for safeguards data. Detaching storage the
+     * Workspace uses only for transcripts clears this. Detaching safeguards storage doesn't, so use
+     * a new Workspace instead.
+     */
+    fun storageProfileStillRequired(): Optional<BetaStorageProfileStillRequiredErrorDetails> =
+        Optional.ofNullable(storageProfileStillRequired)
+
+    /**
+     * Another request changed this storage setting while this one was running, so this request left
+     * it as it is. Read the Workspace and send the request again if you still want the change.
+     */
+    fun storageChangedConcurrently(): Optional<BetaStorageChangedConcurrentlyErrorDetails> =
+        Optional.ofNullable(storageChangedConcurrently)
+
+    /**
+     * Another request changed the Workspace, so this request left the setting named in `field` as
+     * it is. The error's `message` says which of this request's other changes are in place. Read
+     * the Workspace and send the request again if you still want the change.
+     */
+    fun workspaceChangedConcurrently(): Optional<BetaWorkspaceChangedConcurrentlyErrorDetails> =
+        Optional.ofNullable(workspaceChangedConcurrently)
 
     /**
      * The organization cannot retrieve, set or delete spend limits with an Admin API credential.
@@ -1369,6 +1712,8 @@ private constructor(
 
     fun isCompactionUnavailable(): Boolean = compactionUnavailable != null
 
+    fun isWorkspaceHumanReviewDisabled(): Boolean = workspaceHumanReviewDisabled != null
+
     fun isStorageQuotaExceeded(): Boolean = storageQuotaExceeded != null
 
     fun isFileNotDownloadable(): Boolean = fileNotDownloadable != null
@@ -1416,6 +1761,14 @@ private constructor(
 
     fun isExternalKeyChanged(): Boolean = externalKeyChanged != null
 
+    fun isWorkspaceCreatedIncomplete(): Boolean = workspaceCreatedIncomplete != null
+
+    fun isStorageProfileMismatch(): Boolean = storageProfileMismatch != null
+
+    fun isChangeOutcomeUnknown(): Boolean = changeOutcomeUnknown != null
+
+    fun isStorageAttachedDuringArchive(): Boolean = storageAttachedDuringArchive != null
+
     fun isWorkspaceMemberLimitExceeded(): Boolean = workspaceMemberLimitExceeded != null
 
     fun isOrganizationTypeNotSupported(): Boolean = organizationTypeNotSupported != null
@@ -1436,6 +1789,26 @@ private constructor(
 
     fun isInvalidMetadata(): Boolean = invalidMetadata != null
 
+    fun isGrantRequired(): Boolean = grantRequired != null
+
+    fun isOrganizationNotEligible(): Boolean = organizationNotEligible != null
+
+    fun isProviderNotAllowed(): Boolean = providerNotAllowed != null
+
+    fun isUnsupportedRegion(): Boolean = unsupportedRegion != null
+
+    fun isStorageAlreadyRegistered(): Boolean = storageAlreadyRegistered != null
+
+    fun isAuthorizationCheckUnavailable(): Boolean = authorizationCheckUnavailable != null
+
+    fun isInvalidStorageArn(): Boolean = invalidStorageArn != null
+
+    fun isExternalStorageInUse(): Boolean = externalStorageInUse != null
+
+    fun isExternalStorageInWorkspacePolicy(): Boolean = externalStorageInWorkspacePolicy != null
+
+    fun isStorageVerificationFailed(): Boolean = storageVerificationFailed != null
+
     fun isCannotSignOutPrimaryOwner(): Boolean = cannotSignOutPrimaryOwner != null
 
     fun isCannotSignOutSelf(): Boolean = cannotSignOutSelf != null
@@ -1449,6 +1822,26 @@ private constructor(
     fun isCannotSignOutOwner(): Boolean = cannotSignOutOwner != null
 
     fun isCannotSignOutPrivilegedMember(): Boolean = cannotSignOutPrivilegedMember != null
+
+    fun isApprovalRequired(): Boolean = approvalRequired != null
+
+    fun isExternalStorageNotAvailable(): Boolean = externalStorageNotAvailable != null
+
+    fun isHumanReviewNotAvailable(): Boolean = humanReviewNotAvailable != null
+
+    fun isHumanReviewOnWithExternalStorage(): Boolean = humanReviewOnWithExternalStorage != null
+
+    fun isStorageNotAttachable(): Boolean = storageNotAttachable != null
+
+    fun isTranscriptsStorageRequired(): Boolean = transcriptsStorageRequired != null
+
+    fun isStorageAttachLimitReached(): Boolean = storageAttachLimitReached != null
+
+    fun isStorageProfileStillRequired(): Boolean = storageProfileStillRequired != null
+
+    fun isStorageChangedConcurrently(): Boolean = storageChangedConcurrently != null
+
+    fun isWorkspaceChangedConcurrently(): Boolean = workspaceChangedConcurrently != null
 
     fun isSpendLimitsAdminApiWritesNotEnabled(): Boolean =
         spendLimitsAdminApiWritesNotEnabled != null
@@ -1722,6 +2115,13 @@ private constructor(
         compactionUnavailable.getOrThrow("compactionUnavailable")
 
     /**
+     * The request's Workspace has Human Review turned off, and this operation is not available
+     * there. Use a Workspace with Human Review on.
+     */
+    fun asWorkspaceHumanReviewDisabled(): WorkspaceHumanReviewDisabledErrorDetails =
+        workspaceHumanReviewDisabled.getOrThrow("workspaceHumanReviewDisabled")
+
+    /**
      * The organization's file storage quota is exhausted. Delete files to free up space, then retry
      * the upload.
      */
@@ -1868,6 +2268,36 @@ private constructor(
     fun asExternalKeyChanged(): ExternalKeyChangedErrorDetails =
         externalKeyChanged.getOrThrow("externalKeyChanged")
 
+    /**
+     * The Workspace was created, but some of what the request asked for did not take effect, or may
+     * not have. Don't send the create again. The error's `message` says what to do with the
+     * Workspace at `workspace_id`.
+     */
+    fun asWorkspaceCreatedIncomplete(): WorkspaceCreatedIncompleteErrorDetails =
+        workspaceCreatedIncomplete.getOrThrow("workspaceCreatedIncomplete")
+
+    /**
+     * The Workspace's storage and its user profile don't match: the Workspace and its storage must
+     * have the same user profile, or both have none.
+     */
+    fun asStorageProfileMismatch(): StorageProfileMismatchErrorDetails =
+        storageProfileMismatch.getOrThrow("storageProfileMismatch")
+
+    /**
+     * Some of the request's changes may have been saved and others not. Send the same request again
+     * to finish it; changes already saved aren't repeated.
+     */
+    fun asChangeOutcomeUnknown(): ChangeOutcomeUnknownErrorDetails =
+        changeOutcomeUnknown.getOrThrow("changeOutcomeUnknown")
+
+    /**
+     * The Workspace was archived, but External Storage was attached to it during the archive and is
+     * still attached. To detach it, archive the Workspace again as a caller with the
+     * `org:external-storage:use` permission.
+     */
+    fun asStorageAttachedDuringArchive(): StorageAttachedDuringArchiveErrorDetails =
+        storageAttachedDuringArchive.getOrThrow("storageAttachedDuringArchive")
+
     /** The workspace has reached the member limit that Anthropic set for it. */
     fun asWorkspaceMemberLimitExceeded(): WorkspaceMemberLimitExceededErrorDetails =
         workspaceMemberLimitExceeded.getOrThrow("workspaceMemberLimitExceeded")
@@ -1928,6 +2358,73 @@ private constructor(
     fun asInvalidMetadata(): BetaInvalidMetadataErrorDetails =
         invalidMetadata.getOrThrow("invalidMetadata")
 
+    /**
+     * Anthropic has not approved External Storage for the organization, for the Workspace or, for
+     * storage bound to a user profile, for that user profile. Contact your Anthropic account team.
+     */
+    fun asGrantRequired(): BetaGrantRequiredErrorDetails = grantRequired.getOrThrow("grantRequired")
+
+    /**
+     * The feature isn't offered to this organization. The error's `message` names the kind of
+     * organization or, when it names none, says to contact your Anthropic account team.
+     */
+    fun asOrganizationNotEligible(): BetaOrganizationNotEligibleErrorDetails =
+        organizationNotEligible.getOrThrow("organizationNotEligible")
+
+    /**
+     * The request can't use External Storage on this cloud provider. The error's message says why.
+     */
+    fun asProviderNotAllowed(): BetaProviderNotAllowedErrorDetails =
+        providerNotAllowed.getOrThrow("providerNotAllowed")
+
+    /** `provider_config.region` is not a region where External Storage is available. */
+    fun asUnsupportedRegion(): BetaUnsupportedRegionErrorDetails =
+        unsupportedRegion.getOrThrow("unsupportedRegion")
+
+    /**
+     * The organization already has External Storage for this bucket that it has not deleted. List
+     * the organization's External Storage to find it.
+     */
+    fun asStorageAlreadyRegistered(): BetaStorageAlreadyRegisteredErrorDetails =
+        storageAlreadyRegistered.getOrThrow("storageAlreadyRegistered")
+
+    /**
+     * One of the organization's approvals from Anthropic could not be read right now, so nothing
+     * was done. Retry after the `Retry-After` delay.
+     */
+    fun asAuthorizationCheckUnavailable(): BetaAuthorizationCheckUnavailableErrorDetails =
+        authorizationCheckUnavailable.getOrThrow("authorizationCheckUnavailable")
+
+    /**
+     * On Claude Platform on AWS, the External Storage ID in the request is neither a bucket ARN nor
+     * an `estrg_` ID, or is the `estrg_` ID of AWS storage. Name AWS storage by its bucket ARN,
+     * `arn:<partition>:s3:::<bucket_name>`, which responses return as its `id`.
+     */
+    fun asInvalidStorageArn(): BetaInvalidStorageArnErrorDetails =
+        invalidStorageArn.getOrThrow("invalidStorageArn")
+
+    /**
+     * The External Storage is `active` or `draining`, so this delete didn't erase it. The message
+     * says what to do next. On `draining` storage this delete may have started a removal that can't
+     * be undone: get the storage and read `status.removal_started`.
+     */
+    fun asExternalStorageInUse(): BetaExternalStorageInUseErrorDetails =
+        externalStorageInUse.getOrThrow("externalStorageInUse")
+
+    /**
+     * The External Storage can't be deleted while an Enterprise Frontier Safeguards workspace
+     * policy lists it as allowed storage.
+     */
+    fun asExternalStorageInWorkspacePolicy(): BetaExternalStorageInWorkspacePolicyErrorDetails =
+        externalStorageInWorkspacePolicy.getOrThrow("externalStorageInWorkspacePolicy")
+
+    /**
+     * The External Storage failed verification, so the request changed nothing. `failed_checks`
+     * lists what to fix.
+     */
+    fun asStorageVerificationFailed(): BetaStorageVerificationFailedErrorDetails =
+        storageVerificationFailed.getOrThrow("storageVerificationFailed")
+
     /** The member is the organization's primary owner, whom no API key or token can sign out. */
     fun asCannotSignOutPrimaryOwner(): BetaCannotSignOutPrimaryOwnerErrorDetails =
         cannotSignOutPrimaryOwner.getOrThrow("cannotSignOutPrimaryOwner")
@@ -1970,6 +2467,84 @@ private constructor(
      */
     fun asCannotSignOutPrivilegedMember(): BetaCannotSignOutPrivilegedMemberErrorDetails =
         cannotSignOutPrivilegedMember.getOrThrow("cannotSignOutPrivilegedMember")
+
+    /**
+     * Turning human review off needs Anthropic's approval for the organization, and the
+     * organization doesn't have it. Contact Anthropic support to request approval.
+     */
+    fun asApprovalRequired(): BetaApprovalRequiredErrorDetails =
+        approvalRequired.getOrThrow("approvalRequired")
+
+    /**
+     * External Storage isn't available for this Workspace, so only `internal` storage is accepted.
+     * The error's `message` says why.
+     */
+    fun asExternalStorageNotAvailable(): BetaExternalStorageNotAvailableErrorDetails =
+        externalStorageNotAvailable.getOrThrow("externalStorageNotAvailable")
+
+    /**
+     * Human review can't be set as requested on this Workspace, so the request changed nothing. The
+     * error's `message` says what to do instead.
+     */
+    fun asHumanReviewNotAvailable(): BetaHumanReviewNotAvailableErrorDetails =
+        humanReviewNotAvailable.getOrThrow("humanReviewNotAvailable")
+
+    /**
+     * The request would leave the Workspace with `inference_data_privacy.safeguards_storage` set to
+     * External Storage and `inference_data_privacy.human_review` enabled. Anthropic doesn't offer
+     * human review of data in a customer's own storage. Set `human_review` to `disabled`, or
+     * `safeguards_storage` to `internal`.
+     */
+    fun asHumanReviewOnWithExternalStorage(): BetaHumanReviewOnWithExternalStorageErrorDetails =
+        humanReviewOnWithExternalStorage.getOrThrow("humanReviewOnWithExternalStorage")
+
+    /**
+     * This External Storage can't be attached to the setting named in `field`. The error's
+     * `message` says why.
+     */
+    fun asStorageNotAttachable(): BetaStorageNotAttachableErrorDetails =
+        storageNotAttachable.getOrThrow("storageNotAttachable")
+
+    /**
+     * In an organization managed through AWS or Google Cloud, the request would leave the Workspace
+     * with `inference_data_privacy.human_review` disabled and
+     * `inference_data_privacy.transcripts_storage` not set to External Storage. With human review
+     * disabled, the organization reviews its own flagged requests, and it receives them only in
+     * that storage.
+     */
+    fun asTranscriptsStorageRequired(): BetaTranscriptsStorageRequiredErrorDetails =
+        transcriptsStorageRequired.getOrThrow("transcriptsStorageRequired")
+
+    /**
+     * The Workspace has reached its limit of 100 different External Storage resources attached over
+     * its lifetime. Detached storage counts toward the limit until it is deleted.
+     */
+    fun asStorageAttachLimitReached(): BetaStorageAttachLimitReachedErrorDetails =
+        storageAttachLimitReached.getOrThrow("storageAttachLimitReached")
+
+    /**
+     * This storage is bound to a different user profile from storage the Workspace has attached, or
+     * from active or draining storage it once had for safeguards data. Detaching storage the
+     * Workspace uses only for transcripts clears this. Detaching safeguards storage doesn't, so use
+     * a new Workspace instead.
+     */
+    fun asStorageProfileStillRequired(): BetaStorageProfileStillRequiredErrorDetails =
+        storageProfileStillRequired.getOrThrow("storageProfileStillRequired")
+
+    /**
+     * Another request changed this storage setting while this one was running, so this request left
+     * it as it is. Read the Workspace and send the request again if you still want the change.
+     */
+    fun asStorageChangedConcurrently(): BetaStorageChangedConcurrentlyErrorDetails =
+        storageChangedConcurrently.getOrThrow("storageChangedConcurrently")
+
+    /**
+     * Another request changed the Workspace, so this request left the setting named in `field` as
+     * it is. The error's `message` says which of this request's other changes are in place. Read
+     * the Workspace and send the request again if you still want the change.
+     */
+    fun asWorkspaceChangedConcurrently(): BetaWorkspaceChangedConcurrentlyErrorDetails =
+        workspaceChangedConcurrently.getOrThrow("workspaceChangedConcurrently")
 
     /**
      * The organization cannot retrieve, set or delete spend limits with an Admin API credential.
@@ -2220,6 +2795,8 @@ private constructor(
             cmekKeyUnreachable != null -> visitor.visitCmekKeyUnreachable(cmekKeyUnreachable)
             compactionUnavailable != null ->
                 visitor.visitCompactionUnavailable(compactionUnavailable)
+            workspaceHumanReviewDisabled != null ->
+                visitor.visitWorkspaceHumanReviewDisabled(workspaceHumanReviewDisabled)
             storageQuotaExceeded != null -> visitor.visitStorageQuotaExceeded(storageQuotaExceeded)
             fileNotDownloadable != null -> visitor.visitFileNotDownloadable(fileNotDownloadable)
             fileExpired != null -> visitor.visitFileExpired(fileExpired)
@@ -2260,6 +2837,13 @@ private constructor(
             workspacePolicyViolation != null ->
                 visitor.visitWorkspacePolicyViolation(workspacePolicyViolation)
             externalKeyChanged != null -> visitor.visitExternalKeyChanged(externalKeyChanged)
+            workspaceCreatedIncomplete != null ->
+                visitor.visitWorkspaceCreatedIncomplete(workspaceCreatedIncomplete)
+            storageProfileMismatch != null ->
+                visitor.visitStorageProfileMismatch(storageProfileMismatch)
+            changeOutcomeUnknown != null -> visitor.visitChangeOutcomeUnknown(changeOutcomeUnknown)
+            storageAttachedDuringArchive != null ->
+                visitor.visitStorageAttachedDuringArchive(storageAttachedDuringArchive)
             workspaceMemberLimitExceeded != null ->
                 visitor.visitWorkspaceMemberLimitExceeded(workspaceMemberLimitExceeded)
             organizationTypeNotSupported != null ->
@@ -2277,6 +2861,21 @@ private constructor(
             heartbeatPreconditionFailed != null ->
                 visitor.visitHeartbeatPreconditionFailed(heartbeatPreconditionFailed)
             invalidMetadata != null -> visitor.visitInvalidMetadata(invalidMetadata)
+            grantRequired != null -> visitor.visitGrantRequired(grantRequired)
+            organizationNotEligible != null ->
+                visitor.visitOrganizationNotEligible(organizationNotEligible)
+            providerNotAllowed != null -> visitor.visitProviderNotAllowed(providerNotAllowed)
+            unsupportedRegion != null -> visitor.visitUnsupportedRegion(unsupportedRegion)
+            storageAlreadyRegistered != null ->
+                visitor.visitStorageAlreadyRegistered(storageAlreadyRegistered)
+            authorizationCheckUnavailable != null ->
+                visitor.visitAuthorizationCheckUnavailable(authorizationCheckUnavailable)
+            invalidStorageArn != null -> visitor.visitInvalidStorageArn(invalidStorageArn)
+            externalStorageInUse != null -> visitor.visitExternalStorageInUse(externalStorageInUse)
+            externalStorageInWorkspacePolicy != null ->
+                visitor.visitExternalStorageInWorkspacePolicy(externalStorageInWorkspacePolicy)
+            storageVerificationFailed != null ->
+                visitor.visitStorageVerificationFailed(storageVerificationFailed)
             cannotSignOutPrimaryOwner != null ->
                 visitor.visitCannotSignOutPrimaryOwner(cannotSignOutPrimaryOwner)
             cannotSignOutSelf != null -> visitor.visitCannotSignOutSelf(cannotSignOutSelf)
@@ -2289,6 +2888,24 @@ private constructor(
             cannotSignOutOwner != null -> visitor.visitCannotSignOutOwner(cannotSignOutOwner)
             cannotSignOutPrivilegedMember != null ->
                 visitor.visitCannotSignOutPrivilegedMember(cannotSignOutPrivilegedMember)
+            approvalRequired != null -> visitor.visitApprovalRequired(approvalRequired)
+            externalStorageNotAvailable != null ->
+                visitor.visitExternalStorageNotAvailable(externalStorageNotAvailable)
+            humanReviewNotAvailable != null ->
+                visitor.visitHumanReviewNotAvailable(humanReviewNotAvailable)
+            humanReviewOnWithExternalStorage != null ->
+                visitor.visitHumanReviewOnWithExternalStorage(humanReviewOnWithExternalStorage)
+            storageNotAttachable != null -> visitor.visitStorageNotAttachable(storageNotAttachable)
+            transcriptsStorageRequired != null ->
+                visitor.visitTranscriptsStorageRequired(transcriptsStorageRequired)
+            storageAttachLimitReached != null ->
+                visitor.visitStorageAttachLimitReached(storageAttachLimitReached)
+            storageProfileStillRequired != null ->
+                visitor.visitStorageProfileStillRequired(storageProfileStillRequired)
+            storageChangedConcurrently != null ->
+                visitor.visitStorageChangedConcurrently(storageChangedConcurrently)
+            workspaceChangedConcurrently != null ->
+                visitor.visitWorkspaceChangedConcurrently(workspaceChangedConcurrently)
             spendLimitsAdminApiWritesNotEnabled != null ->
                 visitor.visitSpendLimitsAdminApiWritesNotEnabled(
                     spendLimitsAdminApiWritesNotEnabled
@@ -2389,6 +3006,7 @@ private constructor(
             rampLimitExceeded != null -> rampLimitExceeded.validate()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validate()
             compactionUnavailable != null -> compactionUnavailable.validate()
+            workspaceHumanReviewDisabled != null -> workspaceHumanReviewDisabled.validate()
             storageQuotaExceeded != null -> storageQuotaExceeded.validate()
             fileNotDownloadable != null -> fileNotDownloadable.validate()
             fileExpired != null -> fileExpired.validate()
@@ -2413,6 +3031,10 @@ private constructor(
             keyProfileMismatch != null -> keyProfileMismatch.validate()
             workspacePolicyViolation != null -> workspacePolicyViolation.validate()
             externalKeyChanged != null -> externalKeyChanged.validate()
+            workspaceCreatedIncomplete != null -> workspaceCreatedIncomplete.validate()
+            storageProfileMismatch != null -> storageProfileMismatch.validate()
+            changeOutcomeUnknown != null -> changeOutcomeUnknown.validate()
+            storageAttachedDuringArchive != null -> storageAttachedDuringArchive.validate()
             workspaceMemberLimitExceeded != null -> workspaceMemberLimitExceeded.validate()
             organizationTypeNotSupported != null -> organizationTypeNotSupported.validate()
             parentOrganizationRequired != null -> parentOrganizationRequired.validate()
@@ -2423,6 +3045,16 @@ private constructor(
             environmentUpdateDisabled != null -> environmentUpdateDisabled.validate()
             heartbeatPreconditionFailed != null -> heartbeatPreconditionFailed.validate()
             invalidMetadata != null -> invalidMetadata.validate()
+            grantRequired != null -> grantRequired.validate()
+            organizationNotEligible != null -> organizationNotEligible.validate()
+            providerNotAllowed != null -> providerNotAllowed.validate()
+            unsupportedRegion != null -> unsupportedRegion.validate()
+            storageAlreadyRegistered != null -> storageAlreadyRegistered.validate()
+            authorizationCheckUnavailable != null -> authorizationCheckUnavailable.validate()
+            invalidStorageArn != null -> invalidStorageArn.validate()
+            externalStorageInUse != null -> externalStorageInUse.validate()
+            externalStorageInWorkspacePolicy != null -> externalStorageInWorkspacePolicy.validate()
+            storageVerificationFailed != null -> storageVerificationFailed.validate()
             cannotSignOutPrimaryOwner != null -> cannotSignOutPrimaryOwner.validate()
             cannotSignOutSelf != null -> cannotSignOutSelf.validate()
             organizationNotEnrolledInBeta != null -> organizationNotEnrolledInBeta.validate()
@@ -2430,6 +3062,16 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> cannotSignOutMembershipAdmin.validate()
             cannotSignOutOwner != null -> cannotSignOutOwner.validate()
             cannotSignOutPrivilegedMember != null -> cannotSignOutPrivilegedMember.validate()
+            approvalRequired != null -> approvalRequired.validate()
+            externalStorageNotAvailable != null -> externalStorageNotAvailable.validate()
+            humanReviewNotAvailable != null -> humanReviewNotAvailable.validate()
+            humanReviewOnWithExternalStorage != null -> humanReviewOnWithExternalStorage.validate()
+            storageNotAttachable != null -> storageNotAttachable.validate()
+            transcriptsStorageRequired != null -> transcriptsStorageRequired.validate()
+            storageAttachLimitReached != null -> storageAttachLimitReached.validate()
+            storageProfileStillRequired != null -> storageProfileStillRequired.validate()
+            storageChangedConcurrently != null -> storageChangedConcurrently.validate()
+            workspaceChangedConcurrently != null -> workspaceChangedConcurrently.validate()
             spendLimitsAdminApiWritesNotEnabled != null ->
                 spendLimitsAdminApiWritesNotEnabled.validate()
             unsupportedCharset != null -> unsupportedCharset.validate()
@@ -2518,6 +3160,7 @@ private constructor(
             rampLimitExceeded != null -> rampLimitExceeded.validity()
             cmekKeyUnreachable != null -> cmekKeyUnreachable.validity()
             compactionUnavailable != null -> compactionUnavailable.validity()
+            workspaceHumanReviewDisabled != null -> workspaceHumanReviewDisabled.validity()
             storageQuotaExceeded != null -> storageQuotaExceeded.validity()
             fileNotDownloadable != null -> fileNotDownloadable.validity()
             fileExpired != null -> fileExpired.validity()
@@ -2542,6 +3185,10 @@ private constructor(
             keyProfileMismatch != null -> keyProfileMismatch.validity()
             workspacePolicyViolation != null -> workspacePolicyViolation.validity()
             externalKeyChanged != null -> externalKeyChanged.validity()
+            workspaceCreatedIncomplete != null -> workspaceCreatedIncomplete.validity()
+            storageProfileMismatch != null -> storageProfileMismatch.validity()
+            changeOutcomeUnknown != null -> changeOutcomeUnknown.validity()
+            storageAttachedDuringArchive != null -> storageAttachedDuringArchive.validity()
             workspaceMemberLimitExceeded != null -> workspaceMemberLimitExceeded.validity()
             organizationTypeNotSupported != null -> organizationTypeNotSupported.validity()
             parentOrganizationRequired != null -> parentOrganizationRequired.validity()
@@ -2552,6 +3199,16 @@ private constructor(
             environmentUpdateDisabled != null -> environmentUpdateDisabled.validity()
             heartbeatPreconditionFailed != null -> heartbeatPreconditionFailed.validity()
             invalidMetadata != null -> invalidMetadata.validity()
+            grantRequired != null -> grantRequired.validity()
+            organizationNotEligible != null -> organizationNotEligible.validity()
+            providerNotAllowed != null -> providerNotAllowed.validity()
+            unsupportedRegion != null -> unsupportedRegion.validity()
+            storageAlreadyRegistered != null -> storageAlreadyRegistered.validity()
+            authorizationCheckUnavailable != null -> authorizationCheckUnavailable.validity()
+            invalidStorageArn != null -> invalidStorageArn.validity()
+            externalStorageInUse != null -> externalStorageInUse.validity()
+            externalStorageInWorkspacePolicy != null -> externalStorageInWorkspacePolicy.validity()
+            storageVerificationFailed != null -> storageVerificationFailed.validity()
             cannotSignOutPrimaryOwner != null -> cannotSignOutPrimaryOwner.validity()
             cannotSignOutSelf != null -> cannotSignOutSelf.validity()
             organizationNotEnrolledInBeta != null -> organizationNotEnrolledInBeta.validity()
@@ -2559,6 +3216,16 @@ private constructor(
             cannotSignOutMembershipAdmin != null -> cannotSignOutMembershipAdmin.validity()
             cannotSignOutOwner != null -> cannotSignOutOwner.validity()
             cannotSignOutPrivilegedMember != null -> cannotSignOutPrivilegedMember.validity()
+            approvalRequired != null -> approvalRequired.validity()
+            externalStorageNotAvailable != null -> externalStorageNotAvailable.validity()
+            humanReviewNotAvailable != null -> humanReviewNotAvailable.validity()
+            humanReviewOnWithExternalStorage != null -> humanReviewOnWithExternalStorage.validity()
+            storageNotAttachable != null -> storageNotAttachable.validity()
+            transcriptsStorageRequired != null -> transcriptsStorageRequired.validity()
+            storageAttachLimitReached != null -> storageAttachLimitReached.validity()
+            storageProfileStillRequired != null -> storageProfileStillRequired.validity()
+            storageChangedConcurrently != null -> storageChangedConcurrently.validity()
+            workspaceChangedConcurrently != null -> workspaceChangedConcurrently.validity()
             spendLimitsAdminApiWritesNotEnabled != null ->
                 spendLimitsAdminApiWritesNotEnabled.validity()
             unsupportedCharset != null -> unsupportedCharset.validity()
@@ -2633,6 +3300,7 @@ private constructor(
             rampLimitExceeded == other.rampLimitExceeded &&
             cmekKeyUnreachable == other.cmekKeyUnreachable &&
             compactionUnavailable == other.compactionUnavailable &&
+            workspaceHumanReviewDisabled == other.workspaceHumanReviewDisabled &&
             storageQuotaExceeded == other.storageQuotaExceeded &&
             fileNotDownloadable == other.fileNotDownloadable &&
             fileExpired == other.fileExpired &&
@@ -2657,6 +3325,10 @@ private constructor(
             keyProfileMismatch == other.keyProfileMismatch &&
             workspacePolicyViolation == other.workspacePolicyViolation &&
             externalKeyChanged == other.externalKeyChanged &&
+            workspaceCreatedIncomplete == other.workspaceCreatedIncomplete &&
+            storageProfileMismatch == other.storageProfileMismatch &&
+            changeOutcomeUnknown == other.changeOutcomeUnknown &&
+            storageAttachedDuringArchive == other.storageAttachedDuringArchive &&
             workspaceMemberLimitExceeded == other.workspaceMemberLimitExceeded &&
             organizationTypeNotSupported == other.organizationTypeNotSupported &&
             parentOrganizationRequired == other.parentOrganizationRequired &&
@@ -2667,6 +3339,16 @@ private constructor(
             environmentUpdateDisabled == other.environmentUpdateDisabled &&
             heartbeatPreconditionFailed == other.heartbeatPreconditionFailed &&
             invalidMetadata == other.invalidMetadata &&
+            grantRequired == other.grantRequired &&
+            organizationNotEligible == other.organizationNotEligible &&
+            providerNotAllowed == other.providerNotAllowed &&
+            unsupportedRegion == other.unsupportedRegion &&
+            storageAlreadyRegistered == other.storageAlreadyRegistered &&
+            authorizationCheckUnavailable == other.authorizationCheckUnavailable &&
+            invalidStorageArn == other.invalidStorageArn &&
+            externalStorageInUse == other.externalStorageInUse &&
+            externalStorageInWorkspacePolicy == other.externalStorageInWorkspacePolicy &&
+            storageVerificationFailed == other.storageVerificationFailed &&
             cannotSignOutPrimaryOwner == other.cannotSignOutPrimaryOwner &&
             cannotSignOutSelf == other.cannotSignOutSelf &&
             organizationNotEnrolledInBeta == other.organizationNotEnrolledInBeta &&
@@ -2674,6 +3356,16 @@ private constructor(
             cannotSignOutMembershipAdmin == other.cannotSignOutMembershipAdmin &&
             cannotSignOutOwner == other.cannotSignOutOwner &&
             cannotSignOutPrivilegedMember == other.cannotSignOutPrivilegedMember &&
+            approvalRequired == other.approvalRequired &&
+            externalStorageNotAvailable == other.externalStorageNotAvailable &&
+            humanReviewNotAvailable == other.humanReviewNotAvailable &&
+            humanReviewOnWithExternalStorage == other.humanReviewOnWithExternalStorage &&
+            storageNotAttachable == other.storageNotAttachable &&
+            transcriptsStorageRequired == other.transcriptsStorageRequired &&
+            storageAttachLimitReached == other.storageAttachLimitReached &&
+            storageProfileStillRequired == other.storageProfileStillRequired &&
+            storageChangedConcurrently == other.storageChangedConcurrently &&
+            workspaceChangedConcurrently == other.workspaceChangedConcurrently &&
             spendLimitsAdminApiWritesNotEnabled == other.spendLimitsAdminApiWritesNotEnabled &&
             unsupportedCharset == other.unsupportedCharset &&
             pluginNameTaken == other.pluginNameTaken &&
@@ -2738,6 +3430,7 @@ private constructor(
             rampLimitExceeded,
             cmekKeyUnreachable,
             compactionUnavailable,
+            workspaceHumanReviewDisabled,
             storageQuotaExceeded,
             fileNotDownloadable,
             fileExpired,
@@ -2761,6 +3454,10 @@ private constructor(
             keyProfileMismatch,
             workspacePolicyViolation,
             externalKeyChanged,
+            workspaceCreatedIncomplete,
+            storageProfileMismatch,
+            changeOutcomeUnknown,
+            storageAttachedDuringArchive,
             workspaceMemberLimitExceeded,
             organizationTypeNotSupported,
             parentOrganizationRequired,
@@ -2771,6 +3468,16 @@ private constructor(
             environmentUpdateDisabled,
             heartbeatPreconditionFailed,
             invalidMetadata,
+            grantRequired,
+            organizationNotEligible,
+            providerNotAllowed,
+            unsupportedRegion,
+            storageAlreadyRegistered,
+            authorizationCheckUnavailable,
+            invalidStorageArn,
+            externalStorageInUse,
+            externalStorageInWorkspacePolicy,
+            storageVerificationFailed,
             cannotSignOutPrimaryOwner,
             cannotSignOutSelf,
             organizationNotEnrolledInBeta,
@@ -2778,6 +3485,16 @@ private constructor(
             cannotSignOutMembershipAdmin,
             cannotSignOutOwner,
             cannotSignOutPrivilegedMember,
+            approvalRequired,
+            externalStorageNotAvailable,
+            humanReviewNotAvailable,
+            humanReviewOnWithExternalStorage,
+            storageNotAttachable,
+            transcriptsStorageRequired,
+            storageAttachLimitReached,
+            storageProfileStillRequired,
+            storageChangedConcurrently,
+            workspaceChangedConcurrently,
             spendLimitsAdminApiWritesNotEnabled,
             unsupportedCharset,
             pluginNameTaken,
@@ -2871,6 +3588,8 @@ private constructor(
             cmekKeyUnreachable != null -> "ErrorDetails{cmekKeyUnreachable=$cmekKeyUnreachable}"
             compactionUnavailable != null ->
                 "ErrorDetails{compactionUnavailable=$compactionUnavailable}"
+            workspaceHumanReviewDisabled != null ->
+                "ErrorDetails{workspaceHumanReviewDisabled=$workspaceHumanReviewDisabled}"
             storageQuotaExceeded != null ->
                 "ErrorDetails{storageQuotaExceeded=$storageQuotaExceeded}"
             fileNotDownloadable != null -> "ErrorDetails{fileNotDownloadable=$fileNotDownloadable}"
@@ -2910,6 +3629,14 @@ private constructor(
             workspacePolicyViolation != null ->
                 "ErrorDetails{workspacePolicyViolation=$workspacePolicyViolation}"
             externalKeyChanged != null -> "ErrorDetails{externalKeyChanged=$externalKeyChanged}"
+            workspaceCreatedIncomplete != null ->
+                "ErrorDetails{workspaceCreatedIncomplete=$workspaceCreatedIncomplete}"
+            storageProfileMismatch != null ->
+                "ErrorDetails{storageProfileMismatch=$storageProfileMismatch}"
+            changeOutcomeUnknown != null ->
+                "ErrorDetails{changeOutcomeUnknown=$changeOutcomeUnknown}"
+            storageAttachedDuringArchive != null ->
+                "ErrorDetails{storageAttachedDuringArchive=$storageAttachedDuringArchive}"
             workspaceMemberLimitExceeded != null ->
                 "ErrorDetails{workspaceMemberLimitExceeded=$workspaceMemberLimitExceeded}"
             organizationTypeNotSupported != null ->
@@ -2927,6 +3654,22 @@ private constructor(
             heartbeatPreconditionFailed != null ->
                 "ErrorDetails{heartbeatPreconditionFailed=$heartbeatPreconditionFailed}"
             invalidMetadata != null -> "ErrorDetails{invalidMetadata=$invalidMetadata}"
+            grantRequired != null -> "ErrorDetails{grantRequired=$grantRequired}"
+            organizationNotEligible != null ->
+                "ErrorDetails{organizationNotEligible=$organizationNotEligible}"
+            providerNotAllowed != null -> "ErrorDetails{providerNotAllowed=$providerNotAllowed}"
+            unsupportedRegion != null -> "ErrorDetails{unsupportedRegion=$unsupportedRegion}"
+            storageAlreadyRegistered != null ->
+                "ErrorDetails{storageAlreadyRegistered=$storageAlreadyRegistered}"
+            authorizationCheckUnavailable != null ->
+                "ErrorDetails{authorizationCheckUnavailable=$authorizationCheckUnavailable}"
+            invalidStorageArn != null -> "ErrorDetails{invalidStorageArn=$invalidStorageArn}"
+            externalStorageInUse != null ->
+                "ErrorDetails{externalStorageInUse=$externalStorageInUse}"
+            externalStorageInWorkspacePolicy != null ->
+                "ErrorDetails{externalStorageInWorkspacePolicy=$externalStorageInWorkspacePolicy}"
+            storageVerificationFailed != null ->
+                "ErrorDetails{storageVerificationFailed=$storageVerificationFailed}"
             cannotSignOutPrimaryOwner != null ->
                 "ErrorDetails{cannotSignOutPrimaryOwner=$cannotSignOutPrimaryOwner}"
             cannotSignOutSelf != null -> "ErrorDetails{cannotSignOutSelf=$cannotSignOutSelf}"
@@ -2939,6 +3682,25 @@ private constructor(
             cannotSignOutOwner != null -> "ErrorDetails{cannotSignOutOwner=$cannotSignOutOwner}"
             cannotSignOutPrivilegedMember != null ->
                 "ErrorDetails{cannotSignOutPrivilegedMember=$cannotSignOutPrivilegedMember}"
+            approvalRequired != null -> "ErrorDetails{approvalRequired=$approvalRequired}"
+            externalStorageNotAvailable != null ->
+                "ErrorDetails{externalStorageNotAvailable=$externalStorageNotAvailable}"
+            humanReviewNotAvailable != null ->
+                "ErrorDetails{humanReviewNotAvailable=$humanReviewNotAvailable}"
+            humanReviewOnWithExternalStorage != null ->
+                "ErrorDetails{humanReviewOnWithExternalStorage=$humanReviewOnWithExternalStorage}"
+            storageNotAttachable != null ->
+                "ErrorDetails{storageNotAttachable=$storageNotAttachable}"
+            transcriptsStorageRequired != null ->
+                "ErrorDetails{transcriptsStorageRequired=$transcriptsStorageRequired}"
+            storageAttachLimitReached != null ->
+                "ErrorDetails{storageAttachLimitReached=$storageAttachLimitReached}"
+            storageProfileStillRequired != null ->
+                "ErrorDetails{storageProfileStillRequired=$storageProfileStillRequired}"
+            storageChangedConcurrently != null ->
+                "ErrorDetails{storageChangedConcurrently=$storageChangedConcurrently}"
+            workspaceChangedConcurrently != null ->
+                "ErrorDetails{workspaceChangedConcurrently=$workspaceChangedConcurrently}"
             spendLimitsAdminApiWritesNotEnabled != null ->
                 "ErrorDetails{spendLimitsAdminApiWritesNotEnabled=$spendLimitsAdminApiWritesNotEnabled}"
             unsupportedCharset != null -> "ErrorDetails{unsupportedCharset=$unsupportedCharset}"
@@ -3272,6 +4034,15 @@ private constructor(
             ErrorDetails(compactionUnavailable = compactionUnavailable)
 
         /**
+         * The request's Workspace has Human Review turned off, and this operation is not available
+         * there. Use a Workspace with Human Review on.
+         */
+        @JvmStatic
+        fun ofWorkspaceHumanReviewDisabled(
+            workspaceHumanReviewDisabled: WorkspaceHumanReviewDisabledErrorDetails
+        ) = ErrorDetails(workspaceHumanReviewDisabled = workspaceHumanReviewDisabled)
+
+        /**
          * The organization's file storage quota is exhausted. Delete files to free up space, then
          * retry the upload.
          */
@@ -3465,6 +4236,58 @@ private constructor(
         fun ofExternalKeyChanged(externalKeyChanged: ExternalKeyChangedErrorDetails) =
             ErrorDetails(externalKeyChanged = externalKeyChanged)
 
+        /**
+         * The Workspace was created, but some of what the request asked for did not take effect, or
+         * may not have. Don't send the create again. The error's `message` says what to do with the
+         * Workspace at `workspace_id`.
+         */
+        @JvmStatic
+        fun ofWorkspaceCreatedIncomplete(
+            workspaceCreatedIncomplete: WorkspaceCreatedIncompleteErrorDetails
+        ) = ErrorDetails(workspaceCreatedIncomplete = workspaceCreatedIncomplete)
+
+        /**
+         * Returns an immutable instance of [ErrorDetails] whose [ofWorkspaceCreatedIncomplete]
+         * variant is built from the given required [workspaceId].
+         */
+        @JvmStatic
+        fun ofWorkspaceCreatedIncomplete(workspaceId: String) =
+            ofWorkspaceCreatedIncomplete(WorkspaceCreatedIncompleteErrorDetails.of(workspaceId))
+
+        /**
+         * The Workspace's storage and its user profile don't match: the Workspace and its storage
+         * must have the same user profile, or both have none.
+         */
+        @JvmStatic
+        fun ofStorageProfileMismatch(storageProfileMismatch: StorageProfileMismatchErrorDetails) =
+            ErrorDetails(storageProfileMismatch = storageProfileMismatch)
+
+        /**
+         * Returns an immutable instance of [ErrorDetails] whose [ofStorageProfileMismatch] variant
+         * is built from the given required [field].
+         */
+        @JvmStatic
+        fun ofStorageProfileMismatch(field: String) =
+            ofStorageProfileMismatch(StorageProfileMismatchErrorDetails.of(field))
+
+        /**
+         * Some of the request's changes may have been saved and others not. Send the same request
+         * again to finish it; changes already saved aren't repeated.
+         */
+        @JvmStatic
+        fun ofChangeOutcomeUnknown(changeOutcomeUnknown: ChangeOutcomeUnknownErrorDetails) =
+            ErrorDetails(changeOutcomeUnknown = changeOutcomeUnknown)
+
+        /**
+         * The Workspace was archived, but External Storage was attached to it during the archive
+         * and is still attached. To detach it, archive the Workspace again as a caller with the
+         * `org:external-storage:use` permission.
+         */
+        @JvmStatic
+        fun ofStorageAttachedDuringArchive(
+            storageAttachedDuringArchive: StorageAttachedDuringArchiveErrorDetails
+        ) = ErrorDetails(storageAttachedDuringArchive = storageAttachedDuringArchive)
+
         /** The workspace has reached the member limit that Anthropic set for it. */
         @JvmStatic
         fun ofWorkspaceMemberLimitExceeded(
@@ -3554,6 +4377,99 @@ private constructor(
             ErrorDetails(invalidMetadata = invalidMetadata)
 
         /**
+         * Anthropic has not approved External Storage for the organization, for the Workspace or,
+         * for storage bound to a user profile, for that user profile. Contact your Anthropic
+         * account team.
+         */
+        @JvmStatic
+        fun ofGrantRequired(grantRequired: BetaGrantRequiredErrorDetails) =
+            ErrorDetails(grantRequired = grantRequired)
+
+        /**
+         * The feature isn't offered to this organization. The error's `message` names the kind of
+         * organization or, when it names none, says to contact your Anthropic account team.
+         */
+        @JvmStatic
+        fun ofOrganizationNotEligible(
+            organizationNotEligible: BetaOrganizationNotEligibleErrorDetails
+        ) = ErrorDetails(organizationNotEligible = organizationNotEligible)
+
+        /**
+         * The request can't use External Storage on this cloud provider. The error's message says
+         * why.
+         */
+        @JvmStatic
+        fun ofProviderNotAllowed(providerNotAllowed: BetaProviderNotAllowedErrorDetails) =
+            ErrorDetails(providerNotAllowed = providerNotAllowed)
+
+        /** `provider_config.region` is not a region where External Storage is available. */
+        @JvmStatic
+        fun ofUnsupportedRegion(unsupportedRegion: BetaUnsupportedRegionErrorDetails) =
+            ErrorDetails(unsupportedRegion = unsupportedRegion)
+
+        /**
+         * The organization already has External Storage for this bucket that it has not deleted.
+         * List the organization's External Storage to find it.
+         */
+        @JvmStatic
+        fun ofStorageAlreadyRegistered(
+            storageAlreadyRegistered: BetaStorageAlreadyRegisteredErrorDetails
+        ) = ErrorDetails(storageAlreadyRegistered = storageAlreadyRegistered)
+
+        /**
+         * One of the organization's approvals from Anthropic could not be read right now, so
+         * nothing was done. Retry after the `Retry-After` delay.
+         */
+        @JvmStatic
+        fun ofAuthorizationCheckUnavailable(
+            authorizationCheckUnavailable: BetaAuthorizationCheckUnavailableErrorDetails
+        ) = ErrorDetails(authorizationCheckUnavailable = authorizationCheckUnavailable)
+
+        /**
+         * On Claude Platform on AWS, the External Storage ID in the request is neither a bucket ARN
+         * nor an `estrg_` ID, or is the `estrg_` ID of AWS storage. Name AWS storage by its bucket
+         * ARN, `arn:<partition>:s3:::<bucket_name>`, which responses return as its `id`.
+         */
+        @JvmStatic
+        fun ofInvalidStorageArn(invalidStorageArn: BetaInvalidStorageArnErrorDetails) =
+            ErrorDetails(invalidStorageArn = invalidStorageArn)
+
+        /**
+         * The External Storage is `active` or `draining`, so this delete didn't erase it. The
+         * message says what to do next. On `draining` storage this delete may have started a
+         * removal that can't be undone: get the storage and read `status.removal_started`.
+         */
+        @JvmStatic
+        fun ofExternalStorageInUse(externalStorageInUse: BetaExternalStorageInUseErrorDetails) =
+            ErrorDetails(externalStorageInUse = externalStorageInUse)
+
+        /**
+         * The External Storage can't be deleted while an Enterprise Frontier Safeguards workspace
+         * policy lists it as allowed storage.
+         */
+        @JvmStatic
+        fun ofExternalStorageInWorkspacePolicy(
+            externalStorageInWorkspacePolicy: BetaExternalStorageInWorkspacePolicyErrorDetails
+        ) = ErrorDetails(externalStorageInWorkspacePolicy = externalStorageInWorkspacePolicy)
+
+        /**
+         * The External Storage failed verification, so the request changed nothing. `failed_checks`
+         * lists what to fix.
+         */
+        @JvmStatic
+        fun ofStorageVerificationFailed(
+            storageVerificationFailed: BetaStorageVerificationFailedErrorDetails
+        ) = ErrorDetails(storageVerificationFailed = storageVerificationFailed)
+
+        /**
+         * Returns an immutable instance of [ErrorDetails] whose [ofStorageVerificationFailed]
+         * variant is built from the given required [failedChecks].
+         */
+        @JvmStatic
+        fun ofStorageVerificationFailed(failedChecks: List<BetaExternalStorageFailedCheck>) =
+            ofStorageVerificationFailed(BetaStorageVerificationFailedErrorDetails.of(failedChecks))
+
+        /**
          * The member is the organization's primary owner, whom no API key or token can sign out.
          */
         @JvmStatic
@@ -3610,6 +4526,135 @@ private constructor(
         fun ofCannotSignOutPrivilegedMember(
             cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails
         ) = ErrorDetails(cannotSignOutPrivilegedMember = cannotSignOutPrivilegedMember)
+
+        /**
+         * Turning human review off needs Anthropic's approval for the organization, and the
+         * organization doesn't have it. Contact Anthropic support to request approval.
+         */
+        @JvmStatic
+        fun ofApprovalRequired(approvalRequired: BetaApprovalRequiredErrorDetails) =
+            ErrorDetails(approvalRequired = approvalRequired)
+
+        /**
+         * Returns an immutable instance of [ErrorDetails] whose [ofApprovalRequired] variant is
+         * built from the given required [field].
+         */
+        @JvmStatic
+        fun ofApprovalRequired(field: String) =
+            ofApprovalRequired(BetaApprovalRequiredErrorDetails.of(field))
+
+        /**
+         * External Storage isn't available for this Workspace, so only `internal` storage is
+         * accepted. The error's `message` says why.
+         */
+        @JvmStatic
+        fun ofExternalStorageNotAvailable(
+            externalStorageNotAvailable: BetaExternalStorageNotAvailableErrorDetails
+        ) = ErrorDetails(externalStorageNotAvailable = externalStorageNotAvailable)
+
+        /**
+         * Human review can't be set as requested on this Workspace, so the request changed nothing.
+         * The error's `message` says what to do instead.
+         */
+        @JvmStatic
+        fun ofHumanReviewNotAvailable(
+            humanReviewNotAvailable: BetaHumanReviewNotAvailableErrorDetails
+        ) = ErrorDetails(humanReviewNotAvailable = humanReviewNotAvailable)
+
+        /**
+         * The request would leave the Workspace with `inference_data_privacy.safeguards_storage`
+         * set to External Storage and `inference_data_privacy.human_review` enabled. Anthropic
+         * doesn't offer human review of data in a customer's own storage. Set `human_review` to
+         * `disabled`, or `safeguards_storage` to `internal`.
+         */
+        @JvmStatic
+        fun ofHumanReviewOnWithExternalStorage(
+            humanReviewOnWithExternalStorage: BetaHumanReviewOnWithExternalStorageErrorDetails
+        ) = ErrorDetails(humanReviewOnWithExternalStorage = humanReviewOnWithExternalStorage)
+
+        /**
+         * This External Storage can't be attached to the setting named in `field`. The error's
+         * `message` says why.
+         */
+        @JvmStatic
+        fun ofStorageNotAttachable(storageNotAttachable: BetaStorageNotAttachableErrorDetails) =
+            ErrorDetails(storageNotAttachable = storageNotAttachable)
+
+        /**
+         * Returns an immutable instance of [ErrorDetails] whose [ofStorageNotAttachable] variant is
+         * built from the given required [field].
+         */
+        @JvmStatic
+        fun ofStorageNotAttachable(field: String) =
+            ofStorageNotAttachable(BetaStorageNotAttachableErrorDetails.of(field))
+
+        /**
+         * In an organization managed through AWS or Google Cloud, the request would leave the
+         * Workspace with `inference_data_privacy.human_review` disabled and
+         * `inference_data_privacy.transcripts_storage` not set to External Storage. With human
+         * review disabled, the organization reviews its own flagged requests, and it receives them
+         * only in that storage.
+         */
+        @JvmStatic
+        fun ofTranscriptsStorageRequired(
+            transcriptsStorageRequired: BetaTranscriptsStorageRequiredErrorDetails
+        ) = ErrorDetails(transcriptsStorageRequired = transcriptsStorageRequired)
+
+        /**
+         * The Workspace has reached its limit of 100 different External Storage resources attached
+         * over its lifetime. Detached storage counts toward the limit until it is deleted.
+         */
+        @JvmStatic
+        fun ofStorageAttachLimitReached(
+            storageAttachLimitReached: BetaStorageAttachLimitReachedErrorDetails
+        ) = ErrorDetails(storageAttachLimitReached = storageAttachLimitReached)
+
+        /**
+         * This storage is bound to a different user profile from storage the Workspace has
+         * attached, or from active or draining storage it once had for safeguards data. Detaching
+         * storage the Workspace uses only for transcripts clears this. Detaching safeguards storage
+         * doesn't, so use a new Workspace instead.
+         */
+        @JvmStatic
+        fun ofStorageProfileStillRequired(
+            storageProfileStillRequired: BetaStorageProfileStillRequiredErrorDetails
+        ) = ErrorDetails(storageProfileStillRequired = storageProfileStillRequired)
+
+        /**
+         * Another request changed this storage setting while this one was running, so this request
+         * left it as it is. Read the Workspace and send the request again if you still want the
+         * change.
+         */
+        @JvmStatic
+        fun ofStorageChangedConcurrently(
+            storageChangedConcurrently: BetaStorageChangedConcurrentlyErrorDetails
+        ) = ErrorDetails(storageChangedConcurrently = storageChangedConcurrently)
+
+        /**
+         * Returns an immutable instance of [ErrorDetails] whose [ofStorageChangedConcurrently]
+         * variant is built from the given required [field].
+         */
+        @JvmStatic
+        fun ofStorageChangedConcurrently(field: String) =
+            ofStorageChangedConcurrently(BetaStorageChangedConcurrentlyErrorDetails.of(field))
+
+        /**
+         * Another request changed the Workspace, so this request left the setting named in `field`
+         * as it is. The error's `message` says which of this request's other changes are in place.
+         * Read the Workspace and send the request again if you still want the change.
+         */
+        @JvmStatic
+        fun ofWorkspaceChangedConcurrently(
+            workspaceChangedConcurrently: BetaWorkspaceChangedConcurrentlyErrorDetails
+        ) = ErrorDetails(workspaceChangedConcurrently = workspaceChangedConcurrently)
+
+        /**
+         * Returns an immutable instance of [ErrorDetails] whose [ofWorkspaceChangedConcurrently]
+         * variant is built from the given required [field].
+         */
+        @JvmStatic
+        fun ofWorkspaceChangedConcurrently(field: BetaWorkspaceChangedConcurrentlyField) =
+            ofWorkspaceChangedConcurrently(BetaWorkspaceChangedConcurrentlyErrorDetails.of(field))
 
         /**
          * The organization cannot retrieve, set or delete spend limits with an Admin API
@@ -4120,6 +5165,14 @@ private constructor(
         fun visitCompactionUnavailable(compactionUnavailable: CompactionUnavailableErrorDetails): T
 
         /**
+         * The request's Workspace has Human Review turned off, and this operation is not available
+         * there. Use a Workspace with Human Review on.
+         */
+        fun visitWorkspaceHumanReviewDisabled(
+            workspaceHumanReviewDisabled: WorkspaceHumanReviewDisabledErrorDetails
+        ): T
+
+        /**
          * The organization's file storage quota is exhausted. Delete files to free up space, then
          * retry the upload.
          */
@@ -4274,6 +5327,38 @@ private constructor(
         /** The external key changed while the request was validating it. Send the request again. */
         fun visitExternalKeyChanged(externalKeyChanged: ExternalKeyChangedErrorDetails): T
 
+        /**
+         * The Workspace was created, but some of what the request asked for did not take effect, or
+         * may not have. Don't send the create again. The error's `message` says what to do with the
+         * Workspace at `workspace_id`.
+         */
+        fun visitWorkspaceCreatedIncomplete(
+            workspaceCreatedIncomplete: WorkspaceCreatedIncompleteErrorDetails
+        ): T
+
+        /**
+         * The Workspace's storage and its user profile don't match: the Workspace and its storage
+         * must have the same user profile, or both have none.
+         */
+        fun visitStorageProfileMismatch(
+            storageProfileMismatch: StorageProfileMismatchErrorDetails
+        ): T
+
+        /**
+         * Some of the request's changes may have been saved and others not. Send the same request
+         * again to finish it; changes already saved aren't repeated.
+         */
+        fun visitChangeOutcomeUnknown(changeOutcomeUnknown: ChangeOutcomeUnknownErrorDetails): T
+
+        /**
+         * The Workspace was archived, but External Storage was attached to it during the archive
+         * and is still attached. To detach it, archive the Workspace again as a caller with the
+         * `org:external-storage:use` permission.
+         */
+        fun visitStorageAttachedDuringArchive(
+            storageAttachedDuringArchive: StorageAttachedDuringArchiveErrorDetails
+        ): T
+
         /** The workspace has reached the member limit that Anthropic set for it. */
         fun visitWorkspaceMemberLimitExceeded(
             workspaceMemberLimitExceeded: WorkspaceMemberLimitExceededErrorDetails
@@ -4340,6 +5425,76 @@ private constructor(
         fun visitInvalidMetadata(invalidMetadata: BetaInvalidMetadataErrorDetails): T
 
         /**
+         * Anthropic has not approved External Storage for the organization, for the Workspace or,
+         * for storage bound to a user profile, for that user profile. Contact your Anthropic
+         * account team.
+         */
+        fun visitGrantRequired(grantRequired: BetaGrantRequiredErrorDetails): T
+
+        /**
+         * The feature isn't offered to this organization. The error's `message` names the kind of
+         * organization or, when it names none, says to contact your Anthropic account team.
+         */
+        fun visitOrganizationNotEligible(
+            organizationNotEligible: BetaOrganizationNotEligibleErrorDetails
+        ): T
+
+        /**
+         * The request can't use External Storage on this cloud provider. The error's message says
+         * why.
+         */
+        fun visitProviderNotAllowed(providerNotAllowed: BetaProviderNotAllowedErrorDetails): T
+
+        /** `provider_config.region` is not a region where External Storage is available. */
+        fun visitUnsupportedRegion(unsupportedRegion: BetaUnsupportedRegionErrorDetails): T
+
+        /**
+         * The organization already has External Storage for this bucket that it has not deleted.
+         * List the organization's External Storage to find it.
+         */
+        fun visitStorageAlreadyRegistered(
+            storageAlreadyRegistered: BetaStorageAlreadyRegisteredErrorDetails
+        ): T
+
+        /**
+         * One of the organization's approvals from Anthropic could not be read right now, so
+         * nothing was done. Retry after the `Retry-After` delay.
+         */
+        fun visitAuthorizationCheckUnavailable(
+            authorizationCheckUnavailable: BetaAuthorizationCheckUnavailableErrorDetails
+        ): T
+
+        /**
+         * On Claude Platform on AWS, the External Storage ID in the request is neither a bucket ARN
+         * nor an `estrg_` ID, or is the `estrg_` ID of AWS storage. Name AWS storage by its bucket
+         * ARN, `arn:<partition>:s3:::<bucket_name>`, which responses return as its `id`.
+         */
+        fun visitInvalidStorageArn(invalidStorageArn: BetaInvalidStorageArnErrorDetails): T
+
+        /**
+         * The External Storage is `active` or `draining`, so this delete didn't erase it. The
+         * message says what to do next. On `draining` storage this delete may have started a
+         * removal that can't be undone: get the storage and read `status.removal_started`.
+         */
+        fun visitExternalStorageInUse(externalStorageInUse: BetaExternalStorageInUseErrorDetails): T
+
+        /**
+         * The External Storage can't be deleted while an Enterprise Frontier Safeguards workspace
+         * policy lists it as allowed storage.
+         */
+        fun visitExternalStorageInWorkspacePolicy(
+            externalStorageInWorkspacePolicy: BetaExternalStorageInWorkspacePolicyErrorDetails
+        ): T
+
+        /**
+         * The External Storage failed verification, so the request changed nothing. `failed_checks`
+         * lists what to fix.
+         */
+        fun visitStorageVerificationFailed(
+            storageVerificationFailed: BetaStorageVerificationFailedErrorDetails
+        ): T
+
+        /**
          * The member is the organization's primary owner, whom no API key or token can sign out.
          */
         fun visitCannotSignOutPrimaryOwner(
@@ -4386,6 +5541,91 @@ private constructor(
          */
         fun visitCannotSignOutPrivilegedMember(
             cannotSignOutPrivilegedMember: BetaCannotSignOutPrivilegedMemberErrorDetails
+        ): T
+
+        /**
+         * Turning human review off needs Anthropic's approval for the organization, and the
+         * organization doesn't have it. Contact Anthropic support to request approval.
+         */
+        fun visitApprovalRequired(approvalRequired: BetaApprovalRequiredErrorDetails): T
+
+        /**
+         * External Storage isn't available for this Workspace, so only `internal` storage is
+         * accepted. The error's `message` says why.
+         */
+        fun visitExternalStorageNotAvailable(
+            externalStorageNotAvailable: BetaExternalStorageNotAvailableErrorDetails
+        ): T
+
+        /**
+         * Human review can't be set as requested on this Workspace, so the request changed nothing.
+         * The error's `message` says what to do instead.
+         */
+        fun visitHumanReviewNotAvailable(
+            humanReviewNotAvailable: BetaHumanReviewNotAvailableErrorDetails
+        ): T
+
+        /**
+         * The request would leave the Workspace with `inference_data_privacy.safeguards_storage`
+         * set to External Storage and `inference_data_privacy.human_review` enabled. Anthropic
+         * doesn't offer human review of data in a customer's own storage. Set `human_review` to
+         * `disabled`, or `safeguards_storage` to `internal`.
+         */
+        fun visitHumanReviewOnWithExternalStorage(
+            humanReviewOnWithExternalStorage: BetaHumanReviewOnWithExternalStorageErrorDetails
+        ): T
+
+        /**
+         * This External Storage can't be attached to the setting named in `field`. The error's
+         * `message` says why.
+         */
+        fun visitStorageNotAttachable(storageNotAttachable: BetaStorageNotAttachableErrorDetails): T
+
+        /**
+         * In an organization managed through AWS or Google Cloud, the request would leave the
+         * Workspace with `inference_data_privacy.human_review` disabled and
+         * `inference_data_privacy.transcripts_storage` not set to External Storage. With human
+         * review disabled, the organization reviews its own flagged requests, and it receives them
+         * only in that storage.
+         */
+        fun visitTranscriptsStorageRequired(
+            transcriptsStorageRequired: BetaTranscriptsStorageRequiredErrorDetails
+        ): T
+
+        /**
+         * The Workspace has reached its limit of 100 different External Storage resources attached
+         * over its lifetime. Detached storage counts toward the limit until it is deleted.
+         */
+        fun visitStorageAttachLimitReached(
+            storageAttachLimitReached: BetaStorageAttachLimitReachedErrorDetails
+        ): T
+
+        /**
+         * This storage is bound to a different user profile from storage the Workspace has
+         * attached, or from active or draining storage it once had for safeguards data. Detaching
+         * storage the Workspace uses only for transcripts clears this. Detaching safeguards storage
+         * doesn't, so use a new Workspace instead.
+         */
+        fun visitStorageProfileStillRequired(
+            storageProfileStillRequired: BetaStorageProfileStillRequiredErrorDetails
+        ): T
+
+        /**
+         * Another request changed this storage setting while this one was running, so this request
+         * left it as it is. Read the Workspace and send the request again if you still want the
+         * change.
+         */
+        fun visitStorageChangedConcurrently(
+            storageChangedConcurrently: BetaStorageChangedConcurrentlyErrorDetails
+        ): T
+
+        /**
+         * Another request changed the Workspace, so this request left the setting named in `field`
+         * as it is. The error's `message` says which of this request's other changes are in place.
+         * Read the Workspace and send the request again if you still want the change.
+         */
+        fun visitWorkspaceChangedConcurrently(
+            workspaceChangedConcurrently: BetaWorkspaceChangedConcurrentlyErrorDetails
         ): T
 
         /**
@@ -4832,6 +6072,14 @@ private constructor(
                         ?.let { ErrorDetails(compactionUnavailable = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "workspace_human_review_disabled" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<WorkspaceHumanReviewDisabledErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(workspaceHumanReviewDisabled = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "storage_quota_exceeded" -> {
                     return tryDeserialize(node, jacksonTypeRef<StorageQuotaExceededErrorDetails>())
                         ?.let { ErrorDetails(storageQuotaExceeded = it, _json = json) }
@@ -4990,6 +6238,35 @@ private constructor(
                         ?.let { ErrorDetails(externalKeyChanged = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "workspace_created_incomplete" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<WorkspaceCreatedIncompleteErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(workspaceCreatedIncomplete = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "storage_profile_mismatch" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<StorageProfileMismatchErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(storageProfileMismatch = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "change_outcome_unknown" -> {
+                    return tryDeserialize(node, jacksonTypeRef<ChangeOutcomeUnknownErrorDetails>())
+                        ?.let { ErrorDetails(changeOutcomeUnknown = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "storage_attached_during_archive" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<StorageAttachedDuringArchiveErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(storageAttachedDuringArchive = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "workspace_member_limit_exceeded" -> {
                     return tryDeserialize(
                             node,
@@ -5064,6 +6341,77 @@ private constructor(
                         ?.let { ErrorDetails(invalidMetadata = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "grant_required" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaGrantRequiredErrorDetails>())
+                        ?.let { ErrorDetails(grantRequired = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "organization_not_eligible" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaOrganizationNotEligibleErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(organizationNotEligible = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "provider_not_allowed" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaProviderNotAllowedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(providerNotAllowed = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "unsupported_region" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaUnsupportedRegionErrorDetails>())
+                        ?.let { ErrorDetails(unsupportedRegion = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "storage_already_registered" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaStorageAlreadyRegisteredErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(storageAlreadyRegistered = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "authorization_check_unavailable" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaAuthorizationCheckUnavailableErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(authorizationCheckUnavailable = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "invalid_storage_arn" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaInvalidStorageArnErrorDetails>())
+                        ?.let { ErrorDetails(invalidStorageArn = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "external_storage_in_use" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaExternalStorageInUseErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(externalStorageInUse = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "external_storage_in_workspace_policy" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaExternalStorageInWorkspacePolicyErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(externalStorageInWorkspacePolicy = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "storage_verification_failed" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaStorageVerificationFailedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(storageVerificationFailed = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "cannot_sign_out_primary_owner" -> {
                     return tryDeserialize(
                             node,
@@ -5115,6 +6463,83 @@ private constructor(
                             jacksonTypeRef<BetaCannotSignOutPrivilegedMemberErrorDetails>(),
                         )
                         ?.let { ErrorDetails(cannotSignOutPrivilegedMember = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "approval_required" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaApprovalRequiredErrorDetails>())
+                        ?.let { ErrorDetails(approvalRequired = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "external_storage_not_available" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaExternalStorageNotAvailableErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(externalStorageNotAvailable = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "human_review_not_available" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaHumanReviewNotAvailableErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(humanReviewNotAvailable = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "human_review_on_with_external_storage" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaHumanReviewOnWithExternalStorageErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(humanReviewOnWithExternalStorage = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "storage_not_attachable" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaStorageNotAttachableErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(storageNotAttachable = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "transcripts_storage_required" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaTranscriptsStorageRequiredErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(transcriptsStorageRequired = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "storage_attach_limit_reached" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaStorageAttachLimitReachedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(storageAttachLimitReached = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "storage_profile_still_required" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaStorageProfileStillRequiredErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(storageProfileStillRequired = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "storage_changed_concurrently" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaStorageChangedConcurrentlyErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(storageChangedConcurrently = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "workspace_changed_concurrently" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWorkspaceChangedConcurrentlyErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(workspaceChangedConcurrently = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
                 "spend_limits_admin_api_writes_not_enabled" -> {
@@ -5374,6 +6799,8 @@ private constructor(
                 value.cmekKeyUnreachable != null -> generator.writeObject(value.cmekKeyUnreachable)
                 value.compactionUnavailable != null ->
                     generator.writeObject(value.compactionUnavailable)
+                value.workspaceHumanReviewDisabled != null ->
+                    generator.writeObject(value.workspaceHumanReviewDisabled)
                 value.storageQuotaExceeded != null ->
                     generator.writeObject(value.storageQuotaExceeded)
                 value.fileNotDownloadable != null ->
@@ -5416,6 +6843,14 @@ private constructor(
                 value.workspacePolicyViolation != null ->
                     generator.writeObject(value.workspacePolicyViolation)
                 value.externalKeyChanged != null -> generator.writeObject(value.externalKeyChanged)
+                value.workspaceCreatedIncomplete != null ->
+                    generator.writeObject(value.workspaceCreatedIncomplete)
+                value.storageProfileMismatch != null ->
+                    generator.writeObject(value.storageProfileMismatch)
+                value.changeOutcomeUnknown != null ->
+                    generator.writeObject(value.changeOutcomeUnknown)
+                value.storageAttachedDuringArchive != null ->
+                    generator.writeObject(value.storageAttachedDuringArchive)
                 value.workspaceMemberLimitExceeded != null ->
                     generator.writeObject(value.workspaceMemberLimitExceeded)
                 value.organizationTypeNotSupported != null ->
@@ -5434,6 +6869,22 @@ private constructor(
                 value.heartbeatPreconditionFailed != null ->
                     generator.writeObject(value.heartbeatPreconditionFailed)
                 value.invalidMetadata != null -> generator.writeObject(value.invalidMetadata)
+                value.grantRequired != null -> generator.writeObject(value.grantRequired)
+                value.organizationNotEligible != null ->
+                    generator.writeObject(value.organizationNotEligible)
+                value.providerNotAllowed != null -> generator.writeObject(value.providerNotAllowed)
+                value.unsupportedRegion != null -> generator.writeObject(value.unsupportedRegion)
+                value.storageAlreadyRegistered != null ->
+                    generator.writeObject(value.storageAlreadyRegistered)
+                value.authorizationCheckUnavailable != null ->
+                    generator.writeObject(value.authorizationCheckUnavailable)
+                value.invalidStorageArn != null -> generator.writeObject(value.invalidStorageArn)
+                value.externalStorageInUse != null ->
+                    generator.writeObject(value.externalStorageInUse)
+                value.externalStorageInWorkspacePolicy != null ->
+                    generator.writeObject(value.externalStorageInWorkspacePolicy)
+                value.storageVerificationFailed != null ->
+                    generator.writeObject(value.storageVerificationFailed)
                 value.cannotSignOutPrimaryOwner != null ->
                     generator.writeObject(value.cannotSignOutPrimaryOwner)
                 value.cannotSignOutSelf != null -> generator.writeObject(value.cannotSignOutSelf)
@@ -5446,6 +6897,25 @@ private constructor(
                 value.cannotSignOutOwner != null -> generator.writeObject(value.cannotSignOutOwner)
                 value.cannotSignOutPrivilegedMember != null ->
                     generator.writeObject(value.cannotSignOutPrivilegedMember)
+                value.approvalRequired != null -> generator.writeObject(value.approvalRequired)
+                value.externalStorageNotAvailable != null ->
+                    generator.writeObject(value.externalStorageNotAvailable)
+                value.humanReviewNotAvailable != null ->
+                    generator.writeObject(value.humanReviewNotAvailable)
+                value.humanReviewOnWithExternalStorage != null ->
+                    generator.writeObject(value.humanReviewOnWithExternalStorage)
+                value.storageNotAttachable != null ->
+                    generator.writeObject(value.storageNotAttachable)
+                value.transcriptsStorageRequired != null ->
+                    generator.writeObject(value.transcriptsStorageRequired)
+                value.storageAttachLimitReached != null ->
+                    generator.writeObject(value.storageAttachLimitReached)
+                value.storageProfileStillRequired != null ->
+                    generator.writeObject(value.storageProfileStillRequired)
+                value.storageChangedConcurrently != null ->
+                    generator.writeObject(value.storageChangedConcurrently)
+                value.workspaceChangedConcurrently != null ->
+                    generator.writeObject(value.workspaceChangedConcurrently)
                 value.spendLimitsAdminApiWritesNotEnabled != null ->
                     generator.writeObject(value.spendLimitsAdminApiWritesNotEnabled)
                 value.unsupportedCharset != null -> generator.writeObject(value.unsupportedCharset)
@@ -5620,6 +7090,10 @@ private constructor(
 
             @JvmField val COMPACTION_UNAVAILABLE = ErrorCode(JsonField.of("compaction_unavailable"))
 
+            @JvmField
+            val WORKSPACE_HUMAN_REVIEW_DISABLED =
+                ErrorCode(JsonField.of("workspace_human_review_disabled"))
+
             @JvmField val STORAGE_QUOTA_EXCEEDED = ErrorCode(JsonField.of("storage_quota_exceeded"))
 
             @JvmField val FILE_NOT_DOWNLOADABLE = ErrorCode(JsonField.of("file_not_downloadable"))
@@ -5690,6 +7164,19 @@ private constructor(
             @JvmField val EXTERNAL_KEY_CHANGED = ErrorCode(JsonField.of("external_key_changed"))
 
             @JvmField
+            val WORKSPACE_CREATED_INCOMPLETE =
+                ErrorCode(JsonField.of("workspace_created_incomplete"))
+
+            @JvmField
+            val STORAGE_PROFILE_MISMATCH = ErrorCode(JsonField.of("storage_profile_mismatch"))
+
+            @JvmField val CHANGE_OUTCOME_UNKNOWN = ErrorCode(JsonField.of("change_outcome_unknown"))
+
+            @JvmField
+            val STORAGE_ATTACHED_DURING_ARCHIVE =
+                ErrorCode(JsonField.of("storage_attached_during_archive"))
+
+            @JvmField
             val WORKSPACE_MEMBER_LIMIT_EXCEEDED =
                 ErrorCode(JsonField.of("workspace_member_limit_exceeded"))
 
@@ -5720,6 +7207,34 @@ private constructor(
 
             @JvmField val INVALID_METADATA = ErrorCode(JsonField.of("invalid_metadata"))
 
+            @JvmField val GRANT_REQUIRED = ErrorCode(JsonField.of("grant_required"))
+
+            @JvmField
+            val ORGANIZATION_NOT_ELIGIBLE = ErrorCode(JsonField.of("organization_not_eligible"))
+
+            @JvmField val PROVIDER_NOT_ALLOWED = ErrorCode(JsonField.of("provider_not_allowed"))
+
+            @JvmField val UNSUPPORTED_REGION = ErrorCode(JsonField.of("unsupported_region"))
+
+            @JvmField
+            val STORAGE_ALREADY_REGISTERED = ErrorCode(JsonField.of("storage_already_registered"))
+
+            @JvmField
+            val AUTHORIZATION_CHECK_UNAVAILABLE =
+                ErrorCode(JsonField.of("authorization_check_unavailable"))
+
+            @JvmField val INVALID_STORAGE_ARN = ErrorCode(JsonField.of("invalid_storage_arn"))
+
+            @JvmField
+            val EXTERNAL_STORAGE_IN_USE = ErrorCode(JsonField.of("external_storage_in_use"))
+
+            @JvmField
+            val EXTERNAL_STORAGE_IN_WORKSPACE_POLICY =
+                ErrorCode(JsonField.of("external_storage_in_workspace_policy"))
+
+            @JvmField
+            val STORAGE_VERIFICATION_FAILED = ErrorCode(JsonField.of("storage_verification_failed"))
+
             @JvmField
             val CANNOT_SIGN_OUT_PRIMARY_OWNER =
                 ErrorCode(JsonField.of("cannot_sign_out_primary_owner"))
@@ -5743,6 +7258,41 @@ private constructor(
             @JvmField
             val CANNOT_SIGN_OUT_PRIVILEGED_MEMBER =
                 ErrorCode(JsonField.of("cannot_sign_out_privileged_member"))
+
+            @JvmField val APPROVAL_REQUIRED = ErrorCode(JsonField.of("approval_required"))
+
+            @JvmField
+            val EXTERNAL_STORAGE_NOT_AVAILABLE =
+                ErrorCode(JsonField.of("external_storage_not_available"))
+
+            @JvmField
+            val HUMAN_REVIEW_NOT_AVAILABLE = ErrorCode(JsonField.of("human_review_not_available"))
+
+            @JvmField
+            val HUMAN_REVIEW_ON_WITH_EXTERNAL_STORAGE =
+                ErrorCode(JsonField.of("human_review_on_with_external_storage"))
+
+            @JvmField val STORAGE_NOT_ATTACHABLE = ErrorCode(JsonField.of("storage_not_attachable"))
+
+            @JvmField
+            val TRANSCRIPTS_STORAGE_REQUIRED =
+                ErrorCode(JsonField.of("transcripts_storage_required"))
+
+            @JvmField
+            val STORAGE_ATTACH_LIMIT_REACHED =
+                ErrorCode(JsonField.of("storage_attach_limit_reached"))
+
+            @JvmField
+            val STORAGE_PROFILE_STILL_REQUIRED =
+                ErrorCode(JsonField.of("storage_profile_still_required"))
+
+            @JvmField
+            val STORAGE_CHANGED_CONCURRENTLY =
+                ErrorCode(JsonField.of("storage_changed_concurrently"))
+
+            @JvmField
+            val WORKSPACE_CHANGED_CONCURRENTLY =
+                ErrorCode(JsonField.of("workspace_changed_concurrently"))
 
             @JvmField
             val SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED =
@@ -5859,6 +7409,7 @@ private constructor(
                     "ramp_limit_exceeded" -> RAMP_LIMIT_EXCEEDED
                     "cmek_key_unreachable" -> CMEK_KEY_UNREACHABLE
                     "compaction_unavailable" -> COMPACTION_UNAVAILABLE
+                    "workspace_human_review_disabled" -> WORKSPACE_HUMAN_REVIEW_DISABLED
                     "storage_quota_exceeded" -> STORAGE_QUOTA_EXCEEDED
                     "file_not_downloadable" -> FILE_NOT_DOWNLOADABLE
                     "file_expired" -> FILE_EXPIRED
@@ -5883,6 +7434,10 @@ private constructor(
                     "key_profile_mismatch" -> KEY_PROFILE_MISMATCH
                     "workspace_policy_violation" -> WORKSPACE_POLICY_VIOLATION
                     "external_key_changed" -> EXTERNAL_KEY_CHANGED
+                    "workspace_created_incomplete" -> WORKSPACE_CREATED_INCOMPLETE
+                    "storage_profile_mismatch" -> STORAGE_PROFILE_MISMATCH
+                    "change_outcome_unknown" -> CHANGE_OUTCOME_UNKNOWN
+                    "storage_attached_during_archive" -> STORAGE_ATTACHED_DURING_ARCHIVE
                     "workspace_member_limit_exceeded" -> WORKSPACE_MEMBER_LIMIT_EXCEEDED
                     "organization_type_not_supported" -> ORGANIZATION_TYPE_NOT_SUPPORTED
                     "parent_organization_required" -> PARENT_ORGANIZATION_REQUIRED
@@ -5893,6 +7448,16 @@ private constructor(
                     "environment_update_disabled" -> ENVIRONMENT_UPDATE_DISABLED
                     "heartbeat_precondition_failed" -> HEARTBEAT_PRECONDITION_FAILED
                     "invalid_metadata" -> INVALID_METADATA
+                    "grant_required" -> GRANT_REQUIRED
+                    "organization_not_eligible" -> ORGANIZATION_NOT_ELIGIBLE
+                    "provider_not_allowed" -> PROVIDER_NOT_ALLOWED
+                    "unsupported_region" -> UNSUPPORTED_REGION
+                    "storage_already_registered" -> STORAGE_ALREADY_REGISTERED
+                    "authorization_check_unavailable" -> AUTHORIZATION_CHECK_UNAVAILABLE
+                    "invalid_storage_arn" -> INVALID_STORAGE_ARN
+                    "external_storage_in_use" -> EXTERNAL_STORAGE_IN_USE
+                    "external_storage_in_workspace_policy" -> EXTERNAL_STORAGE_IN_WORKSPACE_POLICY
+                    "storage_verification_failed" -> STORAGE_VERIFICATION_FAILED
                     "cannot_sign_out_primary_owner" -> CANNOT_SIGN_OUT_PRIMARY_OWNER
                     "cannot_sign_out_self" -> CANNOT_SIGN_OUT_SELF
                     "organization_not_enrolled_in_beta" -> ORGANIZATION_NOT_ENROLLED_IN_BETA
@@ -5900,6 +7465,16 @@ private constructor(
                     "cannot_sign_out_membership_admin" -> CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
                     "cannot_sign_out_owner" -> CANNOT_SIGN_OUT_OWNER
                     "cannot_sign_out_privileged_member" -> CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
+                    "approval_required" -> APPROVAL_REQUIRED
+                    "external_storage_not_available" -> EXTERNAL_STORAGE_NOT_AVAILABLE
+                    "human_review_not_available" -> HUMAN_REVIEW_NOT_AVAILABLE
+                    "human_review_on_with_external_storage" -> HUMAN_REVIEW_ON_WITH_EXTERNAL_STORAGE
+                    "storage_not_attachable" -> STORAGE_NOT_ATTACHABLE
+                    "transcripts_storage_required" -> TRANSCRIPTS_STORAGE_REQUIRED
+                    "storage_attach_limit_reached" -> STORAGE_ATTACH_LIMIT_REACHED
+                    "storage_profile_still_required" -> STORAGE_PROFILE_STILL_REQUIRED
+                    "storage_changed_concurrently" -> STORAGE_CHANGED_CONCURRENTLY
+                    "workspace_changed_concurrently" -> WORKSPACE_CHANGED_CONCURRENTLY
                     "spend_limits_admin_api_writes_not_enabled" ->
                         SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
                     "unsupported_charset" -> UNSUPPORTED_CHARSET
@@ -5975,6 +7550,7 @@ private constructor(
             RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
             COMPACTION_UNAVAILABLE,
+            WORKSPACE_HUMAN_REVIEW_DISABLED,
             STORAGE_QUOTA_EXCEEDED,
             FILE_NOT_DOWNLOADABLE,
             FILE_EXPIRED,
@@ -5998,6 +7574,10 @@ private constructor(
             KEY_PROFILE_MISMATCH,
             WORKSPACE_POLICY_VIOLATION,
             EXTERNAL_KEY_CHANGED,
+            WORKSPACE_CREATED_INCOMPLETE,
+            STORAGE_PROFILE_MISMATCH,
+            CHANGE_OUTCOME_UNKNOWN,
+            STORAGE_ATTACHED_DURING_ARCHIVE,
             WORKSPACE_MEMBER_LIMIT_EXCEEDED,
             ORGANIZATION_TYPE_NOT_SUPPORTED,
             PARENT_ORGANIZATION_REQUIRED,
@@ -6008,6 +7588,16 @@ private constructor(
             ENVIRONMENT_UPDATE_DISABLED,
             HEARTBEAT_PRECONDITION_FAILED,
             INVALID_METADATA,
+            GRANT_REQUIRED,
+            ORGANIZATION_NOT_ELIGIBLE,
+            PROVIDER_NOT_ALLOWED,
+            UNSUPPORTED_REGION,
+            STORAGE_ALREADY_REGISTERED,
+            AUTHORIZATION_CHECK_UNAVAILABLE,
+            INVALID_STORAGE_ARN,
+            EXTERNAL_STORAGE_IN_USE,
+            EXTERNAL_STORAGE_IN_WORKSPACE_POLICY,
+            STORAGE_VERIFICATION_FAILED,
             CANNOT_SIGN_OUT_PRIMARY_OWNER,
             CANNOT_SIGN_OUT_SELF,
             ORGANIZATION_NOT_ENROLLED_IN_BETA,
@@ -6015,6 +7605,16 @@ private constructor(
             CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN,
             CANNOT_SIGN_OUT_OWNER,
             CANNOT_SIGN_OUT_PRIVILEGED_MEMBER,
+            APPROVAL_REQUIRED,
+            EXTERNAL_STORAGE_NOT_AVAILABLE,
+            HUMAN_REVIEW_NOT_AVAILABLE,
+            HUMAN_REVIEW_ON_WITH_EXTERNAL_STORAGE,
+            STORAGE_NOT_ATTACHABLE,
+            TRANSCRIPTS_STORAGE_REQUIRED,
+            STORAGE_ATTACH_LIMIT_REACHED,
+            STORAGE_PROFILE_STILL_REQUIRED,
+            STORAGE_CHANGED_CONCURRENTLY,
+            WORKSPACE_CHANGED_CONCURRENTLY,
             SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED,
             UNSUPPORTED_CHARSET,
             PLUGIN_NAME_TAKEN,
@@ -6087,6 +7687,7 @@ private constructor(
             RAMP_LIMIT_EXCEEDED,
             CMEK_KEY_UNREACHABLE,
             COMPACTION_UNAVAILABLE,
+            WORKSPACE_HUMAN_REVIEW_DISABLED,
             STORAGE_QUOTA_EXCEEDED,
             FILE_NOT_DOWNLOADABLE,
             FILE_EXPIRED,
@@ -6110,6 +7711,10 @@ private constructor(
             KEY_PROFILE_MISMATCH,
             WORKSPACE_POLICY_VIOLATION,
             EXTERNAL_KEY_CHANGED,
+            WORKSPACE_CREATED_INCOMPLETE,
+            STORAGE_PROFILE_MISMATCH,
+            CHANGE_OUTCOME_UNKNOWN,
+            STORAGE_ATTACHED_DURING_ARCHIVE,
             WORKSPACE_MEMBER_LIMIT_EXCEEDED,
             ORGANIZATION_TYPE_NOT_SUPPORTED,
             PARENT_ORGANIZATION_REQUIRED,
@@ -6120,6 +7725,16 @@ private constructor(
             ENVIRONMENT_UPDATE_DISABLED,
             HEARTBEAT_PRECONDITION_FAILED,
             INVALID_METADATA,
+            GRANT_REQUIRED,
+            ORGANIZATION_NOT_ELIGIBLE,
+            PROVIDER_NOT_ALLOWED,
+            UNSUPPORTED_REGION,
+            STORAGE_ALREADY_REGISTERED,
+            AUTHORIZATION_CHECK_UNAVAILABLE,
+            INVALID_STORAGE_ARN,
+            EXTERNAL_STORAGE_IN_USE,
+            EXTERNAL_STORAGE_IN_WORKSPACE_POLICY,
+            STORAGE_VERIFICATION_FAILED,
             CANNOT_SIGN_OUT_PRIMARY_OWNER,
             CANNOT_SIGN_OUT_SELF,
             ORGANIZATION_NOT_ENROLLED_IN_BETA,
@@ -6127,6 +7742,16 @@ private constructor(
             CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN,
             CANNOT_SIGN_OUT_OWNER,
             CANNOT_SIGN_OUT_PRIVILEGED_MEMBER,
+            APPROVAL_REQUIRED,
+            EXTERNAL_STORAGE_NOT_AVAILABLE,
+            HUMAN_REVIEW_NOT_AVAILABLE,
+            HUMAN_REVIEW_ON_WITH_EXTERNAL_STORAGE,
+            STORAGE_NOT_ATTACHABLE,
+            TRANSCRIPTS_STORAGE_REQUIRED,
+            STORAGE_ATTACH_LIMIT_REACHED,
+            STORAGE_PROFILE_STILL_REQUIRED,
+            STORAGE_CHANGED_CONCURRENTLY,
+            WORKSPACE_CHANGED_CONCURRENTLY,
             SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED,
             UNSUPPORTED_CHARSET,
             PLUGIN_NAME_TAKEN,
@@ -6204,6 +7829,7 @@ private constructor(
                 RAMP_LIMIT_EXCEEDED -> Value.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Value.CMEK_KEY_UNREACHABLE
                 COMPACTION_UNAVAILABLE -> Value.COMPACTION_UNAVAILABLE
+                WORKSPACE_HUMAN_REVIEW_DISABLED -> Value.WORKSPACE_HUMAN_REVIEW_DISABLED
                 STORAGE_QUOTA_EXCEEDED -> Value.STORAGE_QUOTA_EXCEEDED
                 FILE_NOT_DOWNLOADABLE -> Value.FILE_NOT_DOWNLOADABLE
                 FILE_EXPIRED -> Value.FILE_EXPIRED
@@ -6228,6 +7854,10 @@ private constructor(
                 KEY_PROFILE_MISMATCH -> Value.KEY_PROFILE_MISMATCH
                 WORKSPACE_POLICY_VIOLATION -> Value.WORKSPACE_POLICY_VIOLATION
                 EXTERNAL_KEY_CHANGED -> Value.EXTERNAL_KEY_CHANGED
+                WORKSPACE_CREATED_INCOMPLETE -> Value.WORKSPACE_CREATED_INCOMPLETE
+                STORAGE_PROFILE_MISMATCH -> Value.STORAGE_PROFILE_MISMATCH
+                CHANGE_OUTCOME_UNKNOWN -> Value.CHANGE_OUTCOME_UNKNOWN
+                STORAGE_ATTACHED_DURING_ARCHIVE -> Value.STORAGE_ATTACHED_DURING_ARCHIVE
                 WORKSPACE_MEMBER_LIMIT_EXCEEDED -> Value.WORKSPACE_MEMBER_LIMIT_EXCEEDED
                 ORGANIZATION_TYPE_NOT_SUPPORTED -> Value.ORGANIZATION_TYPE_NOT_SUPPORTED
                 PARENT_ORGANIZATION_REQUIRED -> Value.PARENT_ORGANIZATION_REQUIRED
@@ -6238,6 +7868,16 @@ private constructor(
                 ENVIRONMENT_UPDATE_DISABLED -> Value.ENVIRONMENT_UPDATE_DISABLED
                 HEARTBEAT_PRECONDITION_FAILED -> Value.HEARTBEAT_PRECONDITION_FAILED
                 INVALID_METADATA -> Value.INVALID_METADATA
+                GRANT_REQUIRED -> Value.GRANT_REQUIRED
+                ORGANIZATION_NOT_ELIGIBLE -> Value.ORGANIZATION_NOT_ELIGIBLE
+                PROVIDER_NOT_ALLOWED -> Value.PROVIDER_NOT_ALLOWED
+                UNSUPPORTED_REGION -> Value.UNSUPPORTED_REGION
+                STORAGE_ALREADY_REGISTERED -> Value.STORAGE_ALREADY_REGISTERED
+                AUTHORIZATION_CHECK_UNAVAILABLE -> Value.AUTHORIZATION_CHECK_UNAVAILABLE
+                INVALID_STORAGE_ARN -> Value.INVALID_STORAGE_ARN
+                EXTERNAL_STORAGE_IN_USE -> Value.EXTERNAL_STORAGE_IN_USE
+                EXTERNAL_STORAGE_IN_WORKSPACE_POLICY -> Value.EXTERNAL_STORAGE_IN_WORKSPACE_POLICY
+                STORAGE_VERIFICATION_FAILED -> Value.STORAGE_VERIFICATION_FAILED
                 CANNOT_SIGN_OUT_PRIMARY_OWNER -> Value.CANNOT_SIGN_OUT_PRIMARY_OWNER
                 CANNOT_SIGN_OUT_SELF -> Value.CANNOT_SIGN_OUT_SELF
                 ORGANIZATION_NOT_ENROLLED_IN_BETA -> Value.ORGANIZATION_NOT_ENROLLED_IN_BETA
@@ -6245,6 +7885,16 @@ private constructor(
                 CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN -> Value.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
                 CANNOT_SIGN_OUT_OWNER -> Value.CANNOT_SIGN_OUT_OWNER
                 CANNOT_SIGN_OUT_PRIVILEGED_MEMBER -> Value.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
+                APPROVAL_REQUIRED -> Value.APPROVAL_REQUIRED
+                EXTERNAL_STORAGE_NOT_AVAILABLE -> Value.EXTERNAL_STORAGE_NOT_AVAILABLE
+                HUMAN_REVIEW_NOT_AVAILABLE -> Value.HUMAN_REVIEW_NOT_AVAILABLE
+                HUMAN_REVIEW_ON_WITH_EXTERNAL_STORAGE -> Value.HUMAN_REVIEW_ON_WITH_EXTERNAL_STORAGE
+                STORAGE_NOT_ATTACHABLE -> Value.STORAGE_NOT_ATTACHABLE
+                TRANSCRIPTS_STORAGE_REQUIRED -> Value.TRANSCRIPTS_STORAGE_REQUIRED
+                STORAGE_ATTACH_LIMIT_REACHED -> Value.STORAGE_ATTACH_LIMIT_REACHED
+                STORAGE_PROFILE_STILL_REQUIRED -> Value.STORAGE_PROFILE_STILL_REQUIRED
+                STORAGE_CHANGED_CONCURRENTLY -> Value.STORAGE_CHANGED_CONCURRENTLY
+                WORKSPACE_CHANGED_CONCURRENTLY -> Value.WORKSPACE_CHANGED_CONCURRENTLY
                 SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED ->
                     Value.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
                 UNSUPPORTED_CHARSET -> Value.UNSUPPORTED_CHARSET
@@ -6325,6 +7975,7 @@ private constructor(
                 RAMP_LIMIT_EXCEEDED -> Known.RAMP_LIMIT_EXCEEDED
                 CMEK_KEY_UNREACHABLE -> Known.CMEK_KEY_UNREACHABLE
                 COMPACTION_UNAVAILABLE -> Known.COMPACTION_UNAVAILABLE
+                WORKSPACE_HUMAN_REVIEW_DISABLED -> Known.WORKSPACE_HUMAN_REVIEW_DISABLED
                 STORAGE_QUOTA_EXCEEDED -> Known.STORAGE_QUOTA_EXCEEDED
                 FILE_NOT_DOWNLOADABLE -> Known.FILE_NOT_DOWNLOADABLE
                 FILE_EXPIRED -> Known.FILE_EXPIRED
@@ -6349,6 +8000,10 @@ private constructor(
                 KEY_PROFILE_MISMATCH -> Known.KEY_PROFILE_MISMATCH
                 WORKSPACE_POLICY_VIOLATION -> Known.WORKSPACE_POLICY_VIOLATION
                 EXTERNAL_KEY_CHANGED -> Known.EXTERNAL_KEY_CHANGED
+                WORKSPACE_CREATED_INCOMPLETE -> Known.WORKSPACE_CREATED_INCOMPLETE
+                STORAGE_PROFILE_MISMATCH -> Known.STORAGE_PROFILE_MISMATCH
+                CHANGE_OUTCOME_UNKNOWN -> Known.CHANGE_OUTCOME_UNKNOWN
+                STORAGE_ATTACHED_DURING_ARCHIVE -> Known.STORAGE_ATTACHED_DURING_ARCHIVE
                 WORKSPACE_MEMBER_LIMIT_EXCEEDED -> Known.WORKSPACE_MEMBER_LIMIT_EXCEEDED
                 ORGANIZATION_TYPE_NOT_SUPPORTED -> Known.ORGANIZATION_TYPE_NOT_SUPPORTED
                 PARENT_ORGANIZATION_REQUIRED -> Known.PARENT_ORGANIZATION_REQUIRED
@@ -6359,6 +8014,16 @@ private constructor(
                 ENVIRONMENT_UPDATE_DISABLED -> Known.ENVIRONMENT_UPDATE_DISABLED
                 HEARTBEAT_PRECONDITION_FAILED -> Known.HEARTBEAT_PRECONDITION_FAILED
                 INVALID_METADATA -> Known.INVALID_METADATA
+                GRANT_REQUIRED -> Known.GRANT_REQUIRED
+                ORGANIZATION_NOT_ELIGIBLE -> Known.ORGANIZATION_NOT_ELIGIBLE
+                PROVIDER_NOT_ALLOWED -> Known.PROVIDER_NOT_ALLOWED
+                UNSUPPORTED_REGION -> Known.UNSUPPORTED_REGION
+                STORAGE_ALREADY_REGISTERED -> Known.STORAGE_ALREADY_REGISTERED
+                AUTHORIZATION_CHECK_UNAVAILABLE -> Known.AUTHORIZATION_CHECK_UNAVAILABLE
+                INVALID_STORAGE_ARN -> Known.INVALID_STORAGE_ARN
+                EXTERNAL_STORAGE_IN_USE -> Known.EXTERNAL_STORAGE_IN_USE
+                EXTERNAL_STORAGE_IN_WORKSPACE_POLICY -> Known.EXTERNAL_STORAGE_IN_WORKSPACE_POLICY
+                STORAGE_VERIFICATION_FAILED -> Known.STORAGE_VERIFICATION_FAILED
                 CANNOT_SIGN_OUT_PRIMARY_OWNER -> Known.CANNOT_SIGN_OUT_PRIMARY_OWNER
                 CANNOT_SIGN_OUT_SELF -> Known.CANNOT_SIGN_OUT_SELF
                 ORGANIZATION_NOT_ENROLLED_IN_BETA -> Known.ORGANIZATION_NOT_ENROLLED_IN_BETA
@@ -6366,6 +8031,16 @@ private constructor(
                 CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN -> Known.CANNOT_SIGN_OUT_MEMBERSHIP_ADMIN
                 CANNOT_SIGN_OUT_OWNER -> Known.CANNOT_SIGN_OUT_OWNER
                 CANNOT_SIGN_OUT_PRIVILEGED_MEMBER -> Known.CANNOT_SIGN_OUT_PRIVILEGED_MEMBER
+                APPROVAL_REQUIRED -> Known.APPROVAL_REQUIRED
+                EXTERNAL_STORAGE_NOT_AVAILABLE -> Known.EXTERNAL_STORAGE_NOT_AVAILABLE
+                HUMAN_REVIEW_NOT_AVAILABLE -> Known.HUMAN_REVIEW_NOT_AVAILABLE
+                HUMAN_REVIEW_ON_WITH_EXTERNAL_STORAGE -> Known.HUMAN_REVIEW_ON_WITH_EXTERNAL_STORAGE
+                STORAGE_NOT_ATTACHABLE -> Known.STORAGE_NOT_ATTACHABLE
+                TRANSCRIPTS_STORAGE_REQUIRED -> Known.TRANSCRIPTS_STORAGE_REQUIRED
+                STORAGE_ATTACH_LIMIT_REACHED -> Known.STORAGE_ATTACH_LIMIT_REACHED
+                STORAGE_PROFILE_STILL_REQUIRED -> Known.STORAGE_PROFILE_STILL_REQUIRED
+                STORAGE_CHANGED_CONCURRENTLY -> Known.STORAGE_CHANGED_CONCURRENTLY
+                WORKSPACE_CHANGED_CONCURRENTLY -> Known.WORKSPACE_CHANGED_CONCURRENTLY
                 SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED ->
                     Known.SPEND_LIMITS_ADMIN_API_WRITES_NOT_ENABLED
                 UNSUPPORTED_CHARSET -> Known.UNSUPPORTED_CHARSET

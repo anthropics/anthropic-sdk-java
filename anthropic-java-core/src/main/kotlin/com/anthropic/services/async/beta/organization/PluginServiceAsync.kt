@@ -197,8 +197,9 @@ interface PluginServiceAsync {
      * own plugin marketplaces and those in members' personal plugin marketplaces.
      *
      * Plugins in members' personal marketplaces are listed with the same detail as the
-     * organization's own, and their files can be downloaded through the version archive endpoint,
-     * which records each such download on the Compliance API activity feed.
+     * organization's own, and their files can be downloaded through the version archive endpoint.
+     * Those downloads can be recorded on the Compliance API activity feed; the version archive
+     * endpoint says when.
      *
      * **Accepted credentials:** an Admin API key with the `read:plugins` or `read:org_audit` scope,
      * or a Compliance Access Key with the `read:compliance_org_data` scope.

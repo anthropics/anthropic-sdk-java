@@ -88,7 +88,7 @@ internal class ServiceAccountServiceAsyncTest {
                 ServiceAccountAddParams.builder()
                     .workspaceId("workspace_id")
                     .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                    .serviceAccountId("service_account_id")
+                    .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
                     .workspaceRole(BetaNoBillingWorkspaceRole.WORKSPACE_ADMIN)
                     .build()
             )

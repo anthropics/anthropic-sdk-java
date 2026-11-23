@@ -14,7 +14,12 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List User Profiles */
+/**
+ * List the user profiles in your organization, newest first by default.
+ *
+ * See the [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles)
+ * for how to set up and manage profiles.
+ */
 class UserProfileListParams
 private constructor(
     private val limit: Int?,

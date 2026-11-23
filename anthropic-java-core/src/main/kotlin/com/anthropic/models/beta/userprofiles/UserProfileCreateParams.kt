@@ -22,7 +22,13 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Create User Profile */
+/**
+ * Register one of your end customers and get the ID to send on the requests you make for them.
+ *
+ * See the
+ * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles#create-a-profile-for-each-end-customer)
+ * for what to send.
+ */
 class UserProfileCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,

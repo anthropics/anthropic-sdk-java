@@ -31,6 +31,7 @@ private constructor(
     private val tags: JsonField<Tags>,
     private val type: JsonValue,
     private val userProfileId: JsonField<String>,
+    private val inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacy>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -61,6 +62,9 @@ private constructor(
         @JsonProperty("user_profile_id")
         @ExcludeMissing
         userProfileId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("inference_data_privacy")
+        @ExcludeMissing
+        inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacy> = JsonMissing.of(),
     ) : this(
         id,
         archivedAt,
@@ -73,6 +77,7 @@ private constructor(
         tags,
         type,
         userProfileId,
+        inferenceDataPrivacy,
         mutableMapOf(),
     )
 
@@ -193,6 +198,17 @@ private constructor(
     fun userProfileId(): Optional<String> = userProfileId.getOptional("user_profile_id")
 
     /**
+     * Where the Workspace's retained inference data and transcript copies go, and whether
+     * Anthropic's human review applies. Returned only to requests that send the `efs-2026-10-01`
+     * `anthropic-beta` value, and each member only to organizations enabled for it.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun inferenceDataPrivacy(): Optional<BetaInferenceDataPrivacy> =
+        inferenceDataPrivacy.getOptional("inference_data_privacy")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -276,6 +292,16 @@ private constructor(
     @ExcludeMissing
     fun _userProfileId(): JsonField<String> = userProfileId
 
+    /**
+     * Returns the raw JSON value of [inferenceDataPrivacy].
+     *
+     * Unlike [inferenceDataPrivacy], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("inference_data_privacy")
+    @ExcludeMissing
+    fun _inferenceDataPrivacy(): JsonField<BetaInferenceDataPrivacy> = inferenceDataPrivacy
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -324,6 +350,7 @@ private constructor(
         private var tags: JsonField<Tags>? = null
         private var type: JsonValue = JsonValue.from("workspace")
         private var userProfileId: JsonField<String>? = null
+        private var inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacy> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -339,6 +366,7 @@ private constructor(
             tags = betaWorkspace.tags
             type = betaWorkspace.type
             userProfileId = betaWorkspace.userProfileId
+            inferenceDataPrivacy = betaWorkspace.inferenceDataPrivacy
             additionalProperties = betaWorkspace.additionalProperties.toMutableMap()
         }
 
@@ -528,6 +556,27 @@ private constructor(
             this.userProfileId = userProfileId
         }
 
+        /**
+         * Where the Workspace's retained inference data and transcript copies go, and whether
+         * Anthropic's human review applies. Returned only to requests that send the
+         * `efs-2026-10-01` `anthropic-beta` value, and each member only to organizations enabled
+         * for it.
+         */
+        fun inferenceDataPrivacy(inferenceDataPrivacy: BetaInferenceDataPrivacy) =
+            inferenceDataPrivacy(JsonField.of(inferenceDataPrivacy))
+
+        /**
+         * Sets [Builder.inferenceDataPrivacy] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inferenceDataPrivacy] with a well-typed
+         * [BetaInferenceDataPrivacy] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun inferenceDataPrivacy(inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacy>) =
+            apply {
+                this.inferenceDataPrivacy = inferenceDataPrivacy
+            }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -581,6 +630,7 @@ private constructor(
                 checkRequired("tags", tags),
                 type,
                 checkRequired("userProfileId", userProfileId),
+                inferenceDataPrivacy,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -615,6 +665,7 @@ private constructor(
             }
         }
         userProfileId()
+        inferenceDataPrivacy().ifPresent { it.validate() }
         validated = true
     }
 
@@ -643,7 +694,8 @@ private constructor(
             (if (name.asKnown().isPresent) 1 else 0) +
             (tags.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("workspace")) 1 else 0 } +
-            (if (userProfileId.asKnown().isPresent) 1 else 0)
+            (if (userProfileId.asKnown().isPresent) 1 else 0) +
+            (inferenceDataPrivacy.asKnown().getOrNull()?.validity() ?: 0)
 
     /** User-defined tags as string key-value pairs. Keys may not begin with `anthropic`. */
     class Tags
@@ -771,6 +823,7 @@ private constructor(
             tags == other.tags &&
             type == other.type &&
             userProfileId == other.userProfileId &&
+            inferenceDataPrivacy == other.inferenceDataPrivacy &&
             additionalProperties == other.additionalProperties
     }
 
@@ -787,6 +840,7 @@ private constructor(
             tags,
             type,
             userProfileId,
+            inferenceDataPrivacy,
             additionalProperties,
         )
     }
@@ -794,5 +848,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaWorkspace{id=$id, archivedAt=$archivedAt, compartmentId=$compartmentId, createdAt=$createdAt, dataResidency=$dataResidency, displayColor=$displayColor, externalKeyId=$externalKeyId, name=$name, tags=$tags, type=$type, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
+        "BetaWorkspace{id=$id, archivedAt=$archivedAt, compartmentId=$compartmentId, createdAt=$createdAt, dataResidency=$dataResidency, displayColor=$displayColor, externalKeyId=$externalKeyId, name=$name, tags=$tags, type=$type, userProfileId=$userProfileId, inferenceDataPrivacy=$inferenceDataPrivacy, additionalProperties=$additionalProperties}"
 }

@@ -47,6 +47,7 @@ import com.anthropic.models.RequestBodyEncodingInvalidException
 import com.anthropic.models.RequestBodyEncodingUnsupportedException
 import com.anthropic.models.RequestBodyTooLargeAfterDecodingException
 import com.anthropic.models.SandboxEgressRestrictedException
+import com.anthropic.models.WorkspaceHumanReviewDisabledException
 import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaException
 import com.anthropic.models.beta.BetaRequestBodyTimeoutException
 import com.anthropic.models.beta.BetaUnsupportedCharsetException
@@ -57,6 +58,10 @@ import com.anthropic.models.beta.environments.BetaEnvironmentUpdateDisabledExcep
 import com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeException
 import com.anthropic.models.beta.environments.BetaInvalidMetadataException
 import com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedException
+import com.anthropic.models.beta.organization.BetaApprovalRequiredException
+import com.anthropic.models.beta.organization.BetaAuthorizationCheckUnavailableException
+import com.anthropic.models.beta.organization.BetaHumanReviewNotAvailableException
+import com.anthropic.models.beta.organization.BetaOrganizationNotEligibleException
 import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaCmekFeatureUnsupportedException
 import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaRbacGroupManagedSettingsNotFoundException
 import com.anthropic.models.beta.organization.claudecode.managedsettings.BetaRbacGroupOrderLimitExceededException
@@ -71,6 +76,19 @@ import com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelSco
 import com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpEnvironmentNotFoundException
 import com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictException
 import com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsRefusedException
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageInUseException
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageInWorkspacePolicyException
+import com.anthropic.models.beta.organization.externalstorage.BetaExternalStorageNotAvailableException
+import com.anthropic.models.beta.organization.externalstorage.BetaGrantRequiredException
+import com.anthropic.models.beta.organization.externalstorage.BetaInvalidStorageArnException
+import com.anthropic.models.beta.organization.externalstorage.BetaProviderNotAllowedException
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageAlreadyRegisteredException
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageAttachLimitReachedException
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageChangedConcurrentlyException
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageNotAttachableException
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageProfileStillRequiredException
+import com.anthropic.models.beta.organization.externalstorage.BetaStorageVerificationFailedException
+import com.anthropic.models.beta.organization.externalstorage.BetaUnsupportedRegionException
 import com.anthropic.models.beta.organization.plugins.BetaPluginNameTakenException
 import com.anthropic.models.beta.organization.plugins.BetaRegistrationPendingException
 import com.anthropic.models.beta.organization.plugins.BetaScanFailedException
@@ -84,6 +102,9 @@ import com.anthropic.models.beta.organization.users.BetaCannotSignOutOwnerExcept
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrimaryOwnerException
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutPrivilegedMemberException
 import com.anthropic.models.beta.organization.users.BetaCannotSignOutSelfException
+import com.anthropic.models.beta.organization.workspaces.BetaHumanReviewOnWithExternalStorageException
+import com.anthropic.models.beta.organization.workspaces.BetaTranscriptsStorageRequiredException
+import com.anthropic.models.beta.organization.workspaces.BetaWorkspaceChangedConcurrentlyException
 import com.anthropic.models.files.FileExpiredException
 import com.anthropic.models.files.FileNotDownloadableException
 import com.anthropic.models.files.StorageQuotaExceededException
@@ -105,6 +126,7 @@ import com.anthropic.models.messages.ThreadNotFoundException
 import com.anthropic.models.messages.ThreadUnsupportedRequestException
 import com.anthropic.models.messages.ToolNameConflictException
 import com.anthropic.models.messages.ToolReferenceUnresolvedException
+import com.anthropic.models.organization.ChangeOutcomeUnknownException
 import com.anthropic.models.organization.ConcurrentMembershipChangeException
 import com.anthropic.models.organization.OrgMemberLimitExceededException
 import com.anthropic.models.organization.RbacRoleNotFoundException
@@ -122,6 +144,9 @@ import com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessEx
 import com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
 import com.anthropic.models.organization.users.CannotRemoveLastMemberException
 import com.anthropic.models.organization.workspaces.KeyProfileMismatchException
+import com.anthropic.models.organization.workspaces.StorageAttachedDuringArchiveException
+import com.anthropic.models.organization.workspaces.StorageProfileMismatchException
+import com.anthropic.models.organization.workspaces.WorkspaceCreatedIncompleteException
 import com.anthropic.models.organization.workspaces.WorkspaceMemberLimitExceededException
 import com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
 import com.anthropic.models.skills.SkillReadBlockedUndecryptableException
@@ -283,6 +308,10 @@ private val errorCodeExceptions:
             { headers, body ->
                 AlreadyMemberException.builder().headers(headers).body(body).build()
             },
+        (400 to "approval_required") to
+            { headers, body ->
+                BetaApprovalRequiredException.builder().headers(headers).body(body).build()
+            },
         (400 to "available_tools_limit_exceeded") to
             { headers, body ->
                 AvailableToolsLimitExceededException.builder().headers(headers).body(body).build()
@@ -392,9 +421,42 @@ private val errorCodeExceptions:
             { headers, body ->
                 ExternalKeyValidationTimedOutException.builder().headers(headers).body(body).build()
             },
+        (400 to "external_storage_in_use") to
+            { headers, body ->
+                BetaExternalStorageInUseException.builder().headers(headers).body(body).build()
+            },
+        (400 to "external_storage_in_workspace_policy") to
+            { headers, body ->
+                BetaExternalStorageInWorkspacePolicyException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (400 to "external_storage_not_available") to
+            { headers, body ->
+                BetaExternalStorageNotAvailableException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
         (400 to "file_not_downloadable") to
             { headers, body ->
                 FileNotDownloadableException.builder().headers(headers).body(body).build()
+            },
+        (400 to "grant_required") to
+            { headers, body ->
+                BetaGrantRequiredException.builder().headers(headers).body(body).build()
+            },
+        (400 to "human_review_not_available") to
+            { headers, body ->
+                BetaHumanReviewNotAvailableException.builder().headers(headers).body(body).build()
+            },
+        (400 to "human_review_on_with_external_storage") to
+            { headers, body ->
+                BetaHumanReviewOnWithExternalStorageException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
             },
         (400 to "image_dimensions_too_large") to
             { headers, body ->
@@ -407,6 +469,10 @@ private val errorCodeExceptions:
         (400 to "invalid_metadata") to
             { headers, body ->
                 BetaInvalidMetadataException.builder().headers(headers).body(body).build()
+            },
+        (400 to "invalid_storage_arn") to
+            { headers, body ->
+                BetaInvalidStorageArnException.builder().headers(headers).body(body).build()
             },
         (400 to "invite_already_exists") to
             { headers, body ->
@@ -423,6 +489,10 @@ private val errorCodeExceptions:
         (400 to "org_member_limit_exceeded") to
             { headers, body ->
                 OrgMemberLimitExceededException.builder().headers(headers).body(body).build()
+            },
+        (400 to "organization_not_eligible") to
+            { headers, body ->
+                BetaOrganizationNotEligibleException.builder().headers(headers).body(body).build()
             },
         (400 to "organization_not_enrolled_in_beta") to
             { headers, body ->
@@ -442,6 +512,10 @@ private val errorCodeExceptions:
         (400 to "parent_organization_required") to
             { headers, body ->
                 ParentOrganizationRequiredException.builder().headers(headers).body(body).build()
+            },
+        (400 to "provider_not_allowed") to
+            { headers, body ->
+                BetaProviderNotAllowedException.builder().headers(headers).body(body).build()
             },
         (400 to "rbac_group_grants_owner_access") to
             { headers, body ->
@@ -501,9 +575,32 @@ private val errorCodeExceptions:
                     .body(body)
                     .build()
             },
+        (400 to "storage_attach_limit_reached") to
+            { headers, body ->
+                BetaStorageAttachLimitReachedException.builder().headers(headers).body(body).build()
+            },
+        (400 to "storage_not_attachable") to
+            { headers, body ->
+                BetaStorageNotAttachableException.builder().headers(headers).body(body).build()
+            },
+        (400 to "storage_profile_mismatch") to
+            { headers, body ->
+                StorageProfileMismatchException.builder().headers(headers).body(body).build()
+            },
+        (400 to "storage_profile_still_required") to
+            { headers, body ->
+                BetaStorageProfileStillRequiredException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
         (400 to "storage_quota_exceeded") to
             { headers, body ->
                 StorageQuotaExceededException.builder().headers(headers).body(body).build()
+            },
+        (400 to "storage_verification_failed") to
+            { headers, body ->
+                BetaStorageVerificationFailedException.builder().headers(headers).body(body).build()
             },
         (400 to "thread_already_continued") to
             { headers, body ->
@@ -529,9 +626,20 @@ private val errorCodeExceptions:
             { headers, body ->
                 ToolReferenceUnresolvedException.builder().headers(headers).body(body).build()
             },
+        (400 to "transcripts_storage_required") to
+            { headers, body ->
+                BetaTranscriptsStorageRequiredException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
         (400 to "unsupported_charset") to
             { headers, body ->
                 BetaUnsupportedCharsetException.builder().headers(headers).body(body).build()
+            },
+        (400 to "unsupported_region") to
+            { headers, body ->
+                BetaUnsupportedRegionException.builder().headers(headers).body(body).build()
             },
         (400 to "user_profile_not_found") to
             { headers, body ->
@@ -544,6 +652,10 @@ private val errorCodeExceptions:
         (400 to "workspace_api_key_limit_exceeded") to
             { headers, body ->
                 WorkspaceApiKeyLimitExceededException.builder().headers(headers).body(body).build()
+            },
+        (400 to "workspace_human_review_disabled") to
+            { headers, body ->
+                WorkspaceHumanReviewDisabledException.builder().headers(headers).body(body).build()
             },
         (400 to "workspace_member_limit_exceeded") to
             { headers, body ->
@@ -709,6 +821,28 @@ private val errorCodeExceptions:
                     .body(body)
                     .build()
             },
+        (409 to "storage_already_registered") to
+            { headers, body ->
+                BetaStorageAlreadyRegisteredException.builder().headers(headers).body(body).build()
+            },
+        (409 to "storage_attached_during_archive") to
+            { headers, body ->
+                StorageAttachedDuringArchiveException.builder().headers(headers).body(body).build()
+            },
+        (409 to "storage_changed_concurrently") to
+            { headers, body ->
+                BetaStorageChangedConcurrentlyException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (409 to "workspace_changed_concurrently") to
+            { headers, body ->
+                BetaWorkspaceChangedConcurrentlyException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
         (412 to "heartbeat_precondition_failed") to
             { headers, body ->
                 BetaHeartbeatPreconditionFailedException.builder()
@@ -735,6 +869,17 @@ private val errorCodeExceptions:
             { headers, body ->
                 RampLimitExceededException.builder().headers(headers).body(body).build()
             },
+        (503 to "authorization_check_unavailable") to
+            { headers, body ->
+                BetaAuthorizationCheckUnavailableException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
+        (503 to "change_outcome_unknown") to
+            { headers, body ->
+                ChangeOutcomeUnknownException.builder().headers(headers).body(body).build()
+            },
         (503 to "cmek_context_unavailable") to
             { headers, body ->
                 CmekContextUnavailableException.builder().headers(headers).body(body).build()
@@ -746,6 +891,10 @@ private val errorCodeExceptions:
         (503 to "registration_pending") to
             { headers, body ->
                 BetaRegistrationPendingException.builder().headers(headers).body(body).build()
+            },
+        (503 to "workspace_created_incomplete") to
+            { headers, body ->
+                WorkspaceCreatedIncompleteException.builder().headers(headers).body(body).build()
             },
         (529 to "compaction_unavailable") to
             { headers, body ->

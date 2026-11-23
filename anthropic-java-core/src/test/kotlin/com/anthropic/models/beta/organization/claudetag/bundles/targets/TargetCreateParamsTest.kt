@@ -12,7 +12,7 @@ internal class TargetCreateParamsTest {
         TargetCreateParams.builder()
             .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
             .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-            .slackChannelTarget("xxxxxxxx")
+            .slackChannelTarget("slch_01SvpyRQK3nN6eH9uhRA7n1q")
             .build()
     }
 
@@ -21,7 +21,7 @@ internal class TargetCreateParamsTest {
         val params =
             TargetCreateParams.builder()
                 .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
-                .slackChannelTarget("xxxxxxxx")
+                .slackChannelTarget("slch_01SvpyRQK3nN6eH9uhRA7n1q")
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("capp_011CZkZjLP1cWxj5EtMmdgbq")
@@ -35,7 +35,7 @@ internal class TargetCreateParamsTest {
             TargetCreateParams.builder()
                 .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .slackChannelTarget("xxxxxxxx")
+                .slackChannelTarget("slch_01SvpyRQK3nN6eH9uhRA7n1q")
                 .build()
 
         val headers = params._headers()
@@ -57,7 +57,7 @@ internal class TargetCreateParamsTest {
         val params =
             TargetCreateParams.builder()
                 .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
-                .slackChannelTarget("xxxxxxxx")
+                .slackChannelTarget("slch_01SvpyRQK3nN6eH9uhRA7n1q")
                 .build()
 
         val headers = params._headers()
@@ -71,12 +71,15 @@ internal class TargetCreateParamsTest {
             TargetCreateParams.builder()
                 .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .slackChannelTarget("xxxxxxxx")
+                .slackChannelTarget("slch_01SvpyRQK3nN6eH9uhRA7n1q")
                 .build()
 
         val body = params._body()
 
-        assertThat(body).isEqualTo(BetaClaudeTagBundleTargetCreate.ofSlackChannel("xxxxxxxx"))
+        assertThat(body)
+            .isEqualTo(
+                BetaClaudeTagBundleTargetCreate.ofSlackChannel("slch_01SvpyRQK3nN6eH9uhRA7n1q")
+            )
     }
 
     @Test
@@ -84,11 +87,14 @@ internal class TargetCreateParamsTest {
         val params =
             TargetCreateParams.builder()
                 .bundleId("capp_011CZkZjLP1cWxj5EtMmdgbq")
-                .slackChannelTarget("xxxxxxxx")
+                .slackChannelTarget("slch_01SvpyRQK3nN6eH9uhRA7n1q")
                 .build()
 
         val body = params._body()
 
-        assertThat(body).isEqualTo(BetaClaudeTagBundleTargetCreate.ofSlackChannel("xxxxxxxx"))
+        assertThat(body)
+            .isEqualTo(
+                BetaClaudeTagBundleTargetCreate.ofSlackChannel("slch_01SvpyRQK3nN6eH9uhRA7n1q")
+            )
     }
 }

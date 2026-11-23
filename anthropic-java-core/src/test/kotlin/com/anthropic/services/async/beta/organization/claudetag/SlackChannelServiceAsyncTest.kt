@@ -40,8 +40,8 @@ internal class SlackChannelServiceAsyncTest {
                     .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
                     .slack(
                         BetaClaudeTagSlackChannelIdentifiers.builder()
-                            .channelId("xx")
-                            .workspaceId("xx")
+                            .channelId("C0456EFGH")
+                            .workspaceId("T0123ABCD")
                             .build()
                     )
                     .settings(

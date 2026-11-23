@@ -12,7 +12,7 @@ internal class RuleCreateParamsTest {
     fun create() {
         RuleCreateParams.builder()
             .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-            .issuerId("issuer_id")
+            .issuerId("fdis_01SDCCSbTxrXDpWc1phhtcfK")
             .match(
                 BetaFederationRuleMatch.builder()
                     .audience("audience")
@@ -25,8 +25,8 @@ internal class RuleCreateParamsTest {
                     .subjectPrefix("subject_prefix")
                     .build()
             )
-            .name("x")
-            .oauthScope("x")
+            .name("prod-deploy-pipeline")
+            .oauthScope("workspace:developer")
             .target(
                 BetaServiceAccountTarget.builder()
                     .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
@@ -41,7 +41,7 @@ internal class RuleCreateParamsTest {
             )
             .description("description")
             .tokenLifetimeSeconds(60L)
-            .workspaceId("workspace_id")
+            .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
             .build()
     }
 
@@ -50,7 +50,7 @@ internal class RuleCreateParamsTest {
         val params =
             RuleCreateParams.builder()
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .issuerId("issuer_id")
+                .issuerId("fdis_01SDCCSbTxrXDpWc1phhtcfK")
                 .match(
                     BetaFederationRuleMatch.builder()
                         .audience("audience")
@@ -63,8 +63,8 @@ internal class RuleCreateParamsTest {
                         .subjectPrefix("subject_prefix")
                         .build()
                 )
-                .name("x")
-                .oauthScope("x")
+                .name("prod-deploy-pipeline")
+                .oauthScope("workspace:developer")
                 .target(
                     BetaServiceAccountTarget.builder()
                         .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
@@ -79,7 +79,7 @@ internal class RuleCreateParamsTest {
                 )
                 .description("description")
                 .tokenLifetimeSeconds(60L)
-                .workspaceId("workspace_id")
+                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .build()
 
         val headers = params._headers()
@@ -96,10 +96,10 @@ internal class RuleCreateParamsTest {
     fun headersWithoutOptionalFields() {
         val params =
             RuleCreateParams.builder()
-                .issuerId("issuer_id")
+                .issuerId("fdis_01SDCCSbTxrXDpWc1phhtcfK")
                 .match(BetaFederationRuleMatch.builder().build())
-                .name("x")
-                .oauthScope("x")
+                .name("prod-deploy-pipeline")
+                .oauthScope("workspace:developer")
                 .target(BetaServiceAccountTarget.of("svac_01SDCCSbTxrXDpWc1phhtcfK"))
                 .build()
 
@@ -113,7 +113,7 @@ internal class RuleCreateParamsTest {
         val params =
             RuleCreateParams.builder()
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .issuerId("issuer_id")
+                .issuerId("fdis_01SDCCSbTxrXDpWc1phhtcfK")
                 .match(
                     BetaFederationRuleMatch.builder()
                         .audience("audience")
@@ -126,8 +126,8 @@ internal class RuleCreateParamsTest {
                         .subjectPrefix("subject_prefix")
                         .build()
                 )
-                .name("x")
-                .oauthScope("x")
+                .name("prod-deploy-pipeline")
+                .oauthScope("workspace:developer")
                 .target(
                     BetaServiceAccountTarget.builder()
                         .serviceAccountId("svac_01SDCCSbTxrXDpWc1phhtcfK")
@@ -142,12 +142,12 @@ internal class RuleCreateParamsTest {
                 )
                 .description("description")
                 .tokenLifetimeSeconds(60L)
-                .workspaceId("workspace_id")
+                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.issuerId()).isEqualTo("issuer_id")
+        assertThat(body.issuerId()).isEqualTo("fdis_01SDCCSbTxrXDpWc1phhtcfK")
         assertThat(body.match())
             .isEqualTo(
                 BetaFederationRuleMatch.builder()
@@ -161,8 +161,8 @@ internal class RuleCreateParamsTest {
                     .subjectPrefix("subject_prefix")
                     .build()
             )
-        assertThat(body.name()).isEqualTo("x")
-        assertThat(body.oauthScope()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("prod-deploy-pipeline")
+        assertThat(body.oauthScope()).isEqualTo("workspace:developer")
         assertThat(body.target())
             .isEqualTo(
                 BetaServiceAccountTarget.builder()
@@ -179,26 +179,26 @@ internal class RuleCreateParamsTest {
             )
         assertThat(body.description()).contains("description")
         assertThat(body.tokenLifetimeSeconds()).contains(60L)
-        assertThat(body.workspaceId()).contains("workspace_id")
+        assertThat(body.workspaceId()).contains("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
         val params =
             RuleCreateParams.builder()
-                .issuerId("issuer_id")
+                .issuerId("fdis_01SDCCSbTxrXDpWc1phhtcfK")
                 .match(BetaFederationRuleMatch.builder().build())
-                .name("x")
-                .oauthScope("x")
+                .name("prod-deploy-pipeline")
+                .oauthScope("workspace:developer")
                 .target(BetaServiceAccountTarget.of("svac_01SDCCSbTxrXDpWc1phhtcfK"))
                 .build()
 
         val body = params._body()
 
-        assertThat(body.issuerId()).isEqualTo("issuer_id")
+        assertThat(body.issuerId()).isEqualTo("fdis_01SDCCSbTxrXDpWc1phhtcfK")
         assertThat(body.match()).isEqualTo(BetaFederationRuleMatch.builder().build())
-        assertThat(body.name()).isEqualTo("x")
-        assertThat(body.oauthScope()).isEqualTo("x")
+        assertThat(body.name()).isEqualTo("prod-deploy-pipeline")
+        assertThat(body.oauthScope()).isEqualTo("workspace:developer")
         assertThat(body.target())
             .isEqualTo(BetaServiceAccountTarget.of("svac_01SDCCSbTxrXDpWc1phhtcfK"))
     }

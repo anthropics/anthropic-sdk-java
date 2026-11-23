@@ -6,6 +6,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
+import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -14,12 +15,19 @@ import kotlin.jvm.optionals.getOrNull
 class WorkspaceArchiveParams
 private constructor(
     private val workspaceId: String?,
+    private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
+
+    /**
+     * Optional. Send `efs-2026-10-01` in this header to use this endpoint's beta features:
+     * additional parameters, accepted values and response fields.
+     */
+    fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -44,6 +52,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var workspaceId: String? = null
+        private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -51,6 +60,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(workspaceArchiveParams: WorkspaceArchiveParams) = apply {
             workspaceId = workspaceArchiveParams.workspaceId
+            betas = workspaceArchiveParams.betas?.toMutableList()
             additionalHeaders = workspaceArchiveParams.additionalHeaders.toBuilder()
             additionalQueryParams = workspaceArchiveParams.additionalQueryParams.toBuilder()
             additionalBodyProperties =
@@ -61,6 +71,33 @@ private constructor(
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
         fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
+
+        /**
+         * Optional. Send `efs-2026-10-01` in this header to use this endpoint's beta features:
+         * additional parameters, accepted values and response fields.
+         */
+        fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
+
+        /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
+        fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
+
+        /**
+         * Adds a single [AnthropicBeta] to [betas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addBeta(beta: AnthropicBeta) = apply {
+            betas = (betas ?: mutableListOf()).apply { add(beta) }
+        }
+
+        /**
+         * Sets [addBeta] to an arbitrary [String].
+         *
+         * You should usually call [addBeta] with a well-typed [AnthropicBeta] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -190,6 +227,7 @@ private constructor(
         fun build(): WorkspaceArchiveParams =
             WorkspaceArchiveParams(
                 workspaceId,
+                betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -205,7 +243,17 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                betas?.let {
+                    if (it.isNotEmpty()) {
+                        put("anthropic-beta", it.joinToString(","))
+                    }
+                }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -223,6 +271,7 @@ private constructor(
 
         return other is WorkspaceArchiveParams &&
             workspaceId == other.workspaceId &&
+            betas == other.betas &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
@@ -231,11 +280,12 @@ private constructor(
     override fun hashCode(): Int =
         Objects.hash(
             workspaceId,
+            betas,
             additionalHeaders,
             additionalQueryParams,
             additionalBodyProperties,
         )
 
     override fun toString() =
-        "WorkspaceArchiveParams{workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "WorkspaceArchiveParams{workspaceId=$workspaceId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

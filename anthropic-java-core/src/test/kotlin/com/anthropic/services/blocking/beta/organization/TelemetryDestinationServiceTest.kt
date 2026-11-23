@@ -36,7 +36,7 @@ internal class TelemetryDestinationServiceTest {
             telemetryDestinationService.create(
                 TelemetryDestinationCreateParams.builder()
                     .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                    .endpointUrl("x")
+                    .endpointUrl("https://gateway.example.com")
                     .workspaces(BetaTelemetryDestinationWorkspacesAllParams.builder().build())
                     .displayName("display_name")
                     .headers(

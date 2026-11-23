@@ -57,6 +57,11 @@ interface BetaServiceAsync {
 
     fun webhooks(): WebhookServiceAsync
 
+    /**
+     * Register the end customers that your platform serves, so each request can name who it's for.
+     * To get started, see the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+     */
     fun userProfiles(): UserProfileServiceAsync
 
     fun dreams(): DreamServiceAsync
@@ -99,6 +104,11 @@ interface BetaServiceAsync {
 
         fun webhooks(): WebhookServiceAsync.WithRawResponse
 
+        /**
+         * Register the end customers that your platform serves, so each request can name who it's
+         * for. To get started, see the
+         * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+         */
         fun userProfiles(): UserProfileServiceAsync.WithRawResponse
 
         fun dreams(): DreamServiceAsync.WithRawResponse

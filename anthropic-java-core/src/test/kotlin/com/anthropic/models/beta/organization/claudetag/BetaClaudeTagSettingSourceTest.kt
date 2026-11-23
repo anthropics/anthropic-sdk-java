@@ -173,8 +173,8 @@ internal class BetaClaudeTagSettingSourceTest {
         val slackGridChannel =
             BetaClaudeTagSlackGridChannelSettingSource.of(
                 BetaClaudeTagSlackChannelIdentifiers.builder()
-                    .channelId("xx")
-                    .workspaceId("xx")
+                    .channelId("C0456EFGH")
+                    .workspaceId("T0123ABCD")
                     .build()
             )
 
@@ -196,8 +196,8 @@ internal class BetaClaudeTagSettingSourceTest {
             BetaClaudeTagSettingSource.ofSlackGridChannel(
                 BetaClaudeTagSlackGridChannelSettingSource.of(
                     BetaClaudeTagSlackChannelIdentifiers.builder()
-                        .channelId("xx")
-                        .workspaceId("xx")
+                        .channelId("C0456EFGH")
+                        .workspaceId("T0123ABCD")
                         .build()
                 )
             )

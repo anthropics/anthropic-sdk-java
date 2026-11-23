@@ -136,7 +136,5 @@ internal constructor(
 
     private fun structured(message: BetaMessage) = StructuredMessage(outputType, message)
 
-    // Not a user callback; the conversion only wraps the reply.
-    @Suppress("ForbiddenMethodCall")
     private fun CompletableFuture<BetaMessage>.structured() = thenApply(::structured)
 }

@@ -77,6 +77,19 @@ private constructor(
     fun externalKeyId(): Optional<String> = body.externalKeyId()
 
     /**
+     * Where the Workspace's retained inference data and transcript copies go, and whether
+     * Anthropic's human review applies. Requires the `efs-2026-10-01` `anthropic-beta` value. When
+     * omitted, `safeguards_storage` and `transcripts_storage` are `internal` and `human_review` is
+     * `enabled`. Cannot be null. An Admin API key can't set this field, because it doesn't belong
+     * to a user or a service account. Use an API key that belongs to one, or an OAuth token.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun inferenceDataPrivacy(): Optional<BetaInferenceDataPrivacyCreateParam> =
+        body.inferenceDataPrivacy()
+
+    /**
      * User-defined tags as string key-value pairs. Keys may not begin with `anthropic`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -122,6 +135,15 @@ private constructor(
      * Unlike [externalKeyId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _externalKeyId(): JsonField<String> = body._externalKeyId()
+
+    /**
+     * Returns the raw JSON value of [inferenceDataPrivacy].
+     *
+     * Unlike [inferenceDataPrivacy], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _inferenceDataPrivacy(): JsonField<BetaInferenceDataPrivacyCreateParam> =
+        body._inferenceDataPrivacy()
 
     /**
      * Returns the raw JSON value of [tags].
@@ -209,7 +231,7 @@ private constructor(
          * - [dataResidency]
          * - [displayColor]
          * - [externalKeyId]
-         * - [tags]
+         * - [inferenceDataPrivacy]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -294,6 +316,38 @@ private constructor(
         fun externalKeyId(externalKeyId: JsonField<String>) = apply {
             body.externalKeyId(externalKeyId)
         }
+
+        /**
+         * Where the Workspace's retained inference data and transcript copies go, and whether
+         * Anthropic's human review applies. Requires the `efs-2026-10-01` `anthropic-beta` value.
+         * When omitted, `safeguards_storage` and `transcripts_storage` are `internal` and
+         * `human_review` is `enabled`. Cannot be null. An Admin API key can't set this field,
+         * because it doesn't belong to a user or a service account. Use an API key that belongs to
+         * one, or an OAuth token.
+         */
+        fun inferenceDataPrivacy(inferenceDataPrivacy: BetaInferenceDataPrivacyCreateParam?) =
+            apply {
+                body.inferenceDataPrivacy(inferenceDataPrivacy)
+            }
+
+        /**
+         * Alias for calling [Builder.inferenceDataPrivacy] with
+         * `inferenceDataPrivacy.orElse(null)`.
+         */
+        fun inferenceDataPrivacy(
+            inferenceDataPrivacy: Optional<BetaInferenceDataPrivacyCreateParam>
+        ) = inferenceDataPrivacy(inferenceDataPrivacy.getOrNull())
+
+        /**
+         * Sets [Builder.inferenceDataPrivacy] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inferenceDataPrivacy] with a well-typed
+         * [BetaInferenceDataPrivacyCreateParam] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun inferenceDataPrivacy(
+            inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacyCreateParam>
+        ) = apply { body.inferenceDataPrivacy(inferenceDataPrivacy) }
 
         /** User-defined tags as string key-value pairs. Keys may not begin with `anthropic`. */
         fun tags(tags: Tags?) = apply { body.tags(tags) }
@@ -499,6 +553,7 @@ private constructor(
         private val dataResidency: JsonField<BetaDataResidencyCreateConfig>,
         private val displayColor: JsonField<String>,
         private val externalKeyId: JsonField<String>,
+        private val inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacyCreateParam>,
         private val tags: JsonField<Tags>,
         private val userProfileId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -516,6 +571,9 @@ private constructor(
             @JsonProperty("external_key_id")
             @ExcludeMissing
             externalKeyId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("inference_data_privacy")
+            @ExcludeMissing
+            inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacyCreateParam> = JsonMissing.of(),
             @JsonProperty("tags") @ExcludeMissing tags: JsonField<Tags> = JsonMissing.of(),
             @JsonProperty("user_profile_id")
             @ExcludeMissing
@@ -525,6 +583,7 @@ private constructor(
             dataResidency,
             displayColor,
             externalKeyId,
+            inferenceDataPrivacy,
             tags,
             userProfileId,
             mutableMapOf(),
@@ -573,6 +632,20 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun externalKeyId(): Optional<String> = externalKeyId.getOptional("external_key_id")
+
+        /**
+         * Where the Workspace's retained inference data and transcript copies go, and whether
+         * Anthropic's human review applies. Requires the `efs-2026-10-01` `anthropic-beta` value.
+         * When omitted, `safeguards_storage` and `transcripts_storage` are `internal` and
+         * `human_review` is `enabled`. Cannot be null. An Admin API key can't set this field,
+         * because it doesn't belong to a user or a service account. Use an API key that belongs to
+         * one, or an OAuth token.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun inferenceDataPrivacy(): Optional<BetaInferenceDataPrivacyCreateParam> =
+            inferenceDataPrivacy.getOptional("inference_data_privacy")
 
         /**
          * User-defined tags as string key-value pairs. Keys may not begin with `anthropic`.
@@ -631,6 +704,17 @@ private constructor(
         fun _externalKeyId(): JsonField<String> = externalKeyId
 
         /**
+         * Returns the raw JSON value of [inferenceDataPrivacy].
+         *
+         * Unlike [inferenceDataPrivacy], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("inference_data_privacy")
+        @ExcludeMissing
+        fun _inferenceDataPrivacy(): JsonField<BetaInferenceDataPrivacyCreateParam> =
+            inferenceDataPrivacy
+
+        /**
          * Returns the raw JSON value of [tags].
          *
          * Unlike [tags], this method doesn't throw if the JSON field has an unexpected type.
@@ -685,6 +769,8 @@ private constructor(
             private var dataResidency: JsonField<BetaDataResidencyCreateConfig> = JsonMissing.of()
             private var displayColor: JsonField<String> = JsonMissing.of()
             private var externalKeyId: JsonField<String> = JsonMissing.of()
+            private var inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacyCreateParam> =
+                JsonMissing.of()
             private var tags: JsonField<Tags> = JsonMissing.of()
             private var userProfileId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -695,6 +781,7 @@ private constructor(
                 dataResidency = body.dataResidency
                 displayColor = body.displayColor
                 externalKeyId = body.externalKeyId
+                inferenceDataPrivacy = body.inferenceDataPrivacy
                 tags = body.tags
                 userProfileId = body.userProfileId
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -785,6 +872,36 @@ private constructor(
                 this.externalKeyId = externalKeyId
             }
 
+            /**
+             * Where the Workspace's retained inference data and transcript copies go, and whether
+             * Anthropic's human review applies. Requires the `efs-2026-10-01` `anthropic-beta`
+             * value. When omitted, `safeguards_storage` and `transcripts_storage` are `internal`
+             * and `human_review` is `enabled`. Cannot be null. An Admin API key can't set this
+             * field, because it doesn't belong to a user or a service account. Use an API key that
+             * belongs to one, or an OAuth token.
+             */
+            fun inferenceDataPrivacy(inferenceDataPrivacy: BetaInferenceDataPrivacyCreateParam?) =
+                inferenceDataPrivacy(JsonField.ofNullable(inferenceDataPrivacy))
+
+            /**
+             * Alias for calling [Builder.inferenceDataPrivacy] with
+             * `inferenceDataPrivacy.orElse(null)`.
+             */
+            fun inferenceDataPrivacy(
+                inferenceDataPrivacy: Optional<BetaInferenceDataPrivacyCreateParam>
+            ) = inferenceDataPrivacy(inferenceDataPrivacy.getOrNull())
+
+            /**
+             * Sets [Builder.inferenceDataPrivacy] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.inferenceDataPrivacy] with a well-typed
+             * [BetaInferenceDataPrivacyCreateParam] value instead. This method is primarily for
+             * setting the field to an undocumented or not yet supported value.
+             */
+            fun inferenceDataPrivacy(
+                inferenceDataPrivacy: JsonField<BetaInferenceDataPrivacyCreateParam>
+            ) = apply { this.inferenceDataPrivacy = inferenceDataPrivacy }
+
             /** User-defined tags as string key-value pairs. Keys may not begin with `anthropic`. */
             fun tags(tags: Tags?) = tags(JsonField.ofNullable(tags))
 
@@ -861,6 +978,7 @@ private constructor(
                     dataResidency,
                     displayColor,
                     externalKeyId,
+                    inferenceDataPrivacy,
                     tags,
                     userProfileId,
                     additionalProperties.toMutableMap(),
@@ -887,6 +1005,7 @@ private constructor(
             dataResidency().ifPresent { it.validate() }
             displayColor()
             externalKeyId()
+            inferenceDataPrivacy().ifPresent { it.validate() }
             tags().ifPresent { it.validate() }
             userProfileId()
             validated = true
@@ -912,6 +1031,7 @@ private constructor(
                 (dataResidency.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (displayColor.asKnown().isPresent) 1 else 0) +
                 (if (externalKeyId.asKnown().isPresent) 1 else 0) +
+                (inferenceDataPrivacy.asKnown().getOrNull()?.validity() ?: 0) +
                 (tags.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (userProfileId.asKnown().isPresent) 1 else 0)
 
@@ -925,6 +1045,7 @@ private constructor(
                 dataResidency == other.dataResidency &&
                 displayColor == other.displayColor &&
                 externalKeyId == other.externalKeyId &&
+                inferenceDataPrivacy == other.inferenceDataPrivacy &&
                 tags == other.tags &&
                 userProfileId == other.userProfileId &&
                 additionalProperties == other.additionalProperties
@@ -936,6 +1057,7 @@ private constructor(
                 dataResidency,
                 displayColor,
                 externalKeyId,
+                inferenceDataPrivacy,
                 tags,
                 userProfileId,
                 additionalProperties,
@@ -945,7 +1067,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{name=$name, dataResidency=$dataResidency, displayColor=$displayColor, externalKeyId=$externalKeyId, tags=$tags, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
+            "Body{name=$name, dataResidency=$dataResidency, displayColor=$displayColor, externalKeyId=$externalKeyId, inferenceDataPrivacy=$inferenceDataPrivacy, tags=$tags, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
     }
 
     /** User-defined tags as string key-value pairs. Keys may not begin with `anthropic`. */

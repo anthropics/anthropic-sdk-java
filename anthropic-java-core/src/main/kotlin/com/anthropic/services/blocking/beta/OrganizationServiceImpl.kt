@@ -27,6 +27,8 @@ import com.anthropic.services.blocking.beta.organization.ComplianceSettingServic
 import com.anthropic.services.blocking.beta.organization.ComplianceSettingServiceImpl
 import com.anthropic.services.blocking.beta.organization.ExternalKeyService
 import com.anthropic.services.blocking.beta.organization.ExternalKeyServiceImpl
+import com.anthropic.services.blocking.beta.organization.ExternalStorageService
+import com.anthropic.services.blocking.beta.organization.ExternalStorageServiceImpl
 import com.anthropic.services.blocking.beta.organization.FederationService
 import com.anthropic.services.blocking.beta.organization.FederationServiceImpl
 import com.anthropic.services.blocking.beta.organization.InviteService
@@ -72,6 +74,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
     private val serviceAccounts: ServiceAccountService by lazy {
         ServiceAccountServiceImpl(clientOptions)
+    }
+
+    private val externalStorage: ExternalStorageService by lazy {
+        ExternalStorageServiceImpl(clientOptions)
     }
 
     private val users: UserService by lazy { UserServiceImpl(clientOptions) }
@@ -122,6 +128,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
     override fun invites(): InviteService = invites
 
     override fun serviceAccounts(): ServiceAccountService = serviceAccounts
+
+    override fun externalStorage(): ExternalStorageService = externalStorage
 
     override fun users(): UserService = users
 
@@ -182,6 +190,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
         private val serviceAccounts: ServiceAccountService.WithRawResponse by lazy {
             ServiceAccountServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val externalStorage: ExternalStorageService.WithRawResponse by lazy {
+            ExternalStorageServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val users: UserService.WithRawResponse by lazy {
@@ -256,6 +268,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
         override fun invites(): InviteService.WithRawResponse = invites
 
         override fun serviceAccounts(): ServiceAccountService.WithRawResponse = serviceAccounts
+
+        override fun externalStorage(): ExternalStorageService.WithRawResponse = externalStorage
 
         override fun users(): UserService.WithRawResponse = users
 

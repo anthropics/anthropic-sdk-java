@@ -104,6 +104,11 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     override fun webhooks(): WebhookService = webhooks
 
+    /**
+     * Register the end customers that your platform serves, so each request can name who it's for.
+     * To get started, see the
+     * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+     */
     override fun userProfiles(): UserProfileService = userProfiles
 
     override fun dreams(): DreamService = dreams
@@ -210,6 +215,11 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
         override fun webhooks(): WebhookService.WithRawResponse = webhooks
 
+        /**
+         * Register the end customers that your platform serves, so each request can name who it's
+         * for. To get started, see the
+         * [User profiles guide](https://platform.claude.com/docs/en/manage-claude/user-profiles).
+         */
         override fun userProfiles(): UserProfileService.WithRawResponse = userProfiles
 
         override fun dreams(): DreamService.WithRawResponse = dreams
