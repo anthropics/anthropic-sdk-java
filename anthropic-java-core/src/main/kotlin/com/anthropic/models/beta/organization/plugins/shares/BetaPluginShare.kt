@@ -32,7 +32,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /**
  * One share the owner of a member-owned Plugin has given. Shares are read-only in this API and have
- * no ID of their own; who gave a share is recorded on the Compliance API activity feed, not here.
+ * no ID of their own. The Plugin's `owner` is the member who gave the share.
  */
 class BetaPluginShare
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
