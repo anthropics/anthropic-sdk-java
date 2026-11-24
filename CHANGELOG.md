@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.14.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.13.0...v3.14.0) (2026-11-24)
+
+### Features
+
+* **api:** add a shorthand for a federation rule's service account target
+* **api:** add Google-managed data controls for Google Cloud projects
+* **api:** add Google-managed data controls for user profiles
+* **api:** add support for compliance review cases, notices, and items
+
+
+### Chores
+
+* **docs:** name both causes of the tool use limit error
+* **docs:** update example workspace and API key IDs
+
 ## [3.13.0](https://github.com/anthropics/anthropic-sdk-java/compare/v3.12.0...v3.13.0) (2026-11-23)
 
 ### Features
