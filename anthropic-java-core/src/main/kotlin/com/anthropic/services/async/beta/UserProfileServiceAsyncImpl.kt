@@ -30,6 +30,8 @@ import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
 import com.anthropic.models.beta.userprofiles.UserProfileUpdateParams
 import com.anthropic.services.async.beta.userprofiles.ActionUrlServiceAsync
 import com.anthropic.services.async.beta.userprofiles.ActionUrlServiceAsyncImpl
+import com.anthropic.services.async.beta.userprofiles.ProviderServiceAsync
+import com.anthropic.services.async.beta.userprofiles.ProviderServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -56,12 +58,16 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
         ActionUrlServiceAsyncImpl(clientOptions)
     }
 
+    private val providers: ProviderServiceAsync by lazy { ProviderServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): UserProfileServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserProfileServiceAsync =
         UserProfileServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun actionUrls(): ActionUrlServiceAsync = actionUrls
+
+    override fun providers(): ProviderServiceAsync = providers
 
     override fun create(
         params: UserProfileCreateParams,
@@ -115,6 +121,10 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
             ActionUrlServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val providers: ProviderServiceAsync.WithRawResponse by lazy {
+            ProviderServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): UserProfileServiceAsync.WithRawResponse =
@@ -123,6 +133,8 @@ class UserProfileServiceAsyncImpl internal constructor(private val clientOptions
             )
 
         override fun actionUrls(): ActionUrlServiceAsync.WithRawResponse = actionUrls
+
+        override fun providers(): ProviderServiceAsync.WithRawResponse = providers
 
         private val createHandler: Handler<BetaUserProfile> =
             jsonHandler<BetaUserProfile>(clientOptions.jsonMapper)

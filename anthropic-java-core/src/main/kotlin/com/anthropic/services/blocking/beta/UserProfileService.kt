@@ -14,6 +14,7 @@ import com.anthropic.models.beta.userprofiles.UserProfileListParams
 import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
 import com.anthropic.models.beta.userprofiles.UserProfileUpdateParams
 import com.anthropic.services.blocking.beta.userprofiles.ActionUrlService
+import com.anthropic.services.blocking.beta.userprofiles.ProviderService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -37,6 +38,8 @@ interface UserProfileService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserProfileService
 
     fun actionUrls(): ActionUrlService
+
+    fun providers(): ProviderService
 
     /**
      * Register one of your end customers and get the ID to send on the requests you make for them.
@@ -261,6 +264,8 @@ interface UserProfileService {
         ): UserProfileService.WithRawResponse
 
         fun actionUrls(): ActionUrlService.WithRawResponse
+
+        fun providers(): ProviderService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/user_profiles`, but is otherwise the same as
