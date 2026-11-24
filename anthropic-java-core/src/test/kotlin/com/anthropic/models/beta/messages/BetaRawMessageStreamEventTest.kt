@@ -6,6 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -111,12 +112,8 @@ internal class BetaRawMessageStreamEventTest {
 
         val betaRawMessageStreamEvent = BetaRawMessageStreamEvent.ofMessageStart(messageStart)
 
-        assertThat(betaRawMessageStreamEvent.messageStart()).contains(messageStart)
-        assertThat(betaRawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockStop()).isEmpty
+        assertThat(presentVariants(betaRawMessageStreamEvent))
+            .isEqualTo(mapOf("messageStart" to Optional.of(messageStart)))
     }
 
     @Test
@@ -318,12 +315,8 @@ internal class BetaRawMessageStreamEventTest {
 
         val betaRawMessageStreamEvent = BetaRawMessageStreamEvent.ofMessageDelta(messageDelta)
 
-        assertThat(betaRawMessageStreamEvent.messageStart()).isEmpty
-        assertThat(betaRawMessageStreamEvent.messageDelta()).contains(messageDelta)
-        assertThat(betaRawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockStop()).isEmpty
+        assertThat(presentVariants(betaRawMessageStreamEvent))
+            .isEqualTo(mapOf("messageDelta" to Optional.of(messageDelta)))
     }
 
     @Test
@@ -433,12 +426,8 @@ internal class BetaRawMessageStreamEventTest {
 
         val betaRawMessageStreamEvent = BetaRawMessageStreamEvent.ofMessageStop(messageStop)
 
-        assertThat(betaRawMessageStreamEvent.messageStart()).isEmpty
-        assertThat(betaRawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.messageStop()).contains(messageStop)
-        assertThat(betaRawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockStop()).isEmpty
+        assertThat(presentVariants(betaRawMessageStreamEvent))
+            .isEqualTo(mapOf("messageStop" to Optional.of(messageStop)))
     }
 
     @Test
@@ -481,12 +470,8 @@ internal class BetaRawMessageStreamEventTest {
         val betaRawMessageStreamEvent =
             BetaRawMessageStreamEvent.ofContentBlockStart(contentBlockStart)
 
-        assertThat(betaRawMessageStreamEvent.messageStart()).isEmpty
-        assertThat(betaRawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockStart()).contains(contentBlockStart)
-        assertThat(betaRawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockStop()).isEmpty
+        assertThat(presentVariants(betaRawMessageStreamEvent))
+            .isEqualTo(mapOf("contentBlockStart" to Optional.of(contentBlockStart)))
     }
 
     @Test
@@ -531,12 +516,8 @@ internal class BetaRawMessageStreamEventTest {
         val betaRawMessageStreamEvent =
             BetaRawMessageStreamEvent.ofContentBlockDelta(contentBlockDelta)
 
-        assertThat(betaRawMessageStreamEvent.messageStart()).isEmpty
-        assertThat(betaRawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockDelta()).contains(contentBlockDelta)
-        assertThat(betaRawMessageStreamEvent.contentBlockStop()).isEmpty
+        assertThat(presentVariants(betaRawMessageStreamEvent))
+            .isEqualTo(mapOf("contentBlockDelta" to Optional.of(contentBlockDelta)))
     }
 
     @Test
@@ -563,12 +544,8 @@ internal class BetaRawMessageStreamEventTest {
         val betaRawMessageStreamEvent =
             BetaRawMessageStreamEvent.ofContentBlockStop(contentBlockStop)
 
-        assertThat(betaRawMessageStreamEvent.messageStart()).isEmpty
-        assertThat(betaRawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(betaRawMessageStreamEvent.contentBlockStop()).contains(contentBlockStop)
+        assertThat(presentVariants(betaRawMessageStreamEvent))
+            .isEqualTo(mapOf("contentBlockStop" to Optional.of(contentBlockStop)))
     }
 
     @Test
@@ -631,4 +608,17 @@ internal class BetaRawMessageStreamEventTest {
 
         assertThat(betaRawMessageStreamEvent.index()).isEmpty
     }
+
+    private fun presentVariants(
+        betaRawMessageStreamEvent: BetaRawMessageStreamEvent
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "messageStart" to betaRawMessageStreamEvent.messageStart(),
+                "messageDelta" to betaRawMessageStreamEvent.messageDelta(),
+                "messageStop" to betaRawMessageStreamEvent.messageStop(),
+                "contentBlockStart" to betaRawMessageStreamEvent.contentBlockStart(),
+                "contentBlockDelta" to betaRawMessageStreamEvent.contentBlockDelta(),
+                "contentBlockStop" to betaRawMessageStreamEvent.contentBlockStop(),
+            )
+            .filterValues { it.isPresent }
 }

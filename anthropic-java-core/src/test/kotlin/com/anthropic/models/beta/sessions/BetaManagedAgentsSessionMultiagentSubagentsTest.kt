@@ -14,6 +14,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSubagentsDisa
 import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -69,8 +70,8 @@ internal class BetaManagedAgentsSessionMultiagentSubagentsTest {
         val betaManagedAgentsSessionMultiagentSubagents =
             BetaManagedAgentsSessionMultiagentSubagents.ofEnabled(enabled)
 
-        assertThat(betaManagedAgentsSessionMultiagentSubagents.enabled()).contains(enabled)
-        assertThat(betaManagedAgentsSessionMultiagentSubagents.disabled()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsSessionMultiagentSubagents))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -137,8 +138,8 @@ internal class BetaManagedAgentsSessionMultiagentSubagentsTest {
         val betaManagedAgentsSessionMultiagentSubagents =
             BetaManagedAgentsSessionMultiagentSubagents.ofDisabled(disabled)
 
-        assertThat(betaManagedAgentsSessionMultiagentSubagents.enabled()).isEmpty
-        assertThat(betaManagedAgentsSessionMultiagentSubagents.disabled()).contains(disabled)
+        assertThat(presentVariants(betaManagedAgentsSessionMultiagentSubagents))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -183,4 +184,13 @@ internal class BetaManagedAgentsSessionMultiagentSubagentsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsSessionMultiagentSubagents: BetaManagedAgentsSessionMultiagentSubagents
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "enabled" to betaManagedAgentsSessionMultiagentSubagents.enabled(),
+                "disabled" to betaManagedAgentsSessionMultiagentSubagents.disabled(),
+            )
+            .filterValues { it.isPresent }
 }

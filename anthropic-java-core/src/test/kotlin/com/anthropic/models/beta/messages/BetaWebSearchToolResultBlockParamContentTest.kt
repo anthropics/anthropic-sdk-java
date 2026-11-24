@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -27,8 +28,8 @@ internal class BetaWebSearchToolResultBlockParamContentTest {
         val betaWebSearchToolResultBlockParamContent =
             BetaWebSearchToolResultBlockParamContent.ofResultBlock(resultBlock)
 
-        assertThat(betaWebSearchToolResultBlockParamContent.resultBlock()).contains(resultBlock)
-        assertThat(betaWebSearchToolResultBlockParamContent.requestError()).isEmpty
+        assertThat(presentVariants(betaWebSearchToolResultBlockParamContent))
+            .isEqualTo(mapOf("resultBlock" to Optional.of(resultBlock)))
     }
 
     @Test
@@ -64,8 +65,8 @@ internal class BetaWebSearchToolResultBlockParamContentTest {
         val betaWebSearchToolResultBlockParamContent =
             BetaWebSearchToolResultBlockParamContent.ofRequestError(requestError)
 
-        assertThat(betaWebSearchToolResultBlockParamContent.resultBlock()).isEmpty
-        assertThat(betaWebSearchToolResultBlockParamContent.requestError()).contains(requestError)
+        assertThat(presentVariants(betaWebSearchToolResultBlockParamContent))
+            .isEqualTo(mapOf("requestError" to Optional.of(requestError)))
     }
 
     @Test
@@ -111,4 +112,13 @@ internal class BetaWebSearchToolResultBlockParamContentTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaWebSearchToolResultBlockParamContent: BetaWebSearchToolResultBlockParamContent
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "resultBlock" to betaWebSearchToolResultBlockParamContent.resultBlock(),
+                "requestError" to betaWebSearchToolResultBlockParamContent.requestError(),
+            )
+            .filterValues { it.isPresent }
 }

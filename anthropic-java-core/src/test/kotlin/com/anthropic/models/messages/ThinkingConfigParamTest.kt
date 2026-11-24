@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,10 +23,8 @@ internal class ThinkingConfigParamTest {
 
         val thinkingConfigParam = ThinkingConfigParam.ofEnabled(enabled)
 
-        assertThat(thinkingConfigParam.enabled()).contains(enabled)
-        assertThat(thinkingConfigParam.disabled()).isEmpty
-        assertThat(thinkingConfigParam.betweenTools()).isEmpty
-        assertThat(thinkingConfigParam.adaptive()).isEmpty
+        assertThat(presentVariants(thinkingConfigParam))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -54,10 +53,8 @@ internal class ThinkingConfigParamTest {
 
         val thinkingConfigParam = ThinkingConfigParam.ofDisabled(disabled)
 
-        assertThat(thinkingConfigParam.enabled()).isEmpty
-        assertThat(thinkingConfigParam.disabled()).contains(disabled)
-        assertThat(thinkingConfigParam.betweenTools()).isEmpty
-        assertThat(thinkingConfigParam.adaptive()).isEmpty
+        assertThat(presentVariants(thinkingConfigParam))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -81,10 +78,8 @@ internal class ThinkingConfigParamTest {
 
         val thinkingConfigParam = ThinkingConfigParam.ofBetweenTools(betweenTools)
 
-        assertThat(thinkingConfigParam.enabled()).isEmpty
-        assertThat(thinkingConfigParam.disabled()).isEmpty
-        assertThat(thinkingConfigParam.betweenTools()).contains(betweenTools)
-        assertThat(thinkingConfigParam.adaptive()).isEmpty
+        assertThat(presentVariants(thinkingConfigParam))
+            .isEqualTo(mapOf("betweenTools" to Optional.of(betweenTools)))
     }
 
     @Test
@@ -111,10 +106,8 @@ internal class ThinkingConfigParamTest {
 
         val thinkingConfigParam = ThinkingConfigParam.ofAdaptive(adaptive)
 
-        assertThat(thinkingConfigParam.enabled()).isEmpty
-        assertThat(thinkingConfigParam.disabled()).isEmpty
-        assertThat(thinkingConfigParam.betweenTools()).isEmpty
-        assertThat(thinkingConfigParam.adaptive()).contains(adaptive)
+        assertThat(presentVariants(thinkingConfigParam))
+            .isEqualTo(mapOf("adaptive" to Optional.of(adaptive)))
     }
 
     @Test
@@ -153,4 +146,15 @@ internal class ThinkingConfigParamTest {
         val e = assertThrows<AnthropicInvalidDataException> { thinkingConfigParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        thinkingConfigParam: ThinkingConfigParam
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "enabled" to thinkingConfigParam.enabled(),
+                "disabled" to thinkingConfigParam.disabled(),
+                "betweenTools" to thinkingConfigParam.betweenTools(),
+                "adaptive" to thinkingConfigParam.adaptive(),
+            )
+            .filterValues { it.isPresent }
 }

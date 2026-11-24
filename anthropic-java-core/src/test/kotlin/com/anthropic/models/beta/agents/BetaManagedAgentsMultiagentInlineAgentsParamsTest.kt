@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaManagedAgentsMultiagentInlineAgentsParamsTest {
         val betaManagedAgentsMultiagentInlineAgentsParams =
             BetaManagedAgentsMultiagentInlineAgentsParams.ofEnabled(enabled)
 
-        assertThat(betaManagedAgentsMultiagentInlineAgentsParams.enabled()).contains(enabled)
-        assertThat(betaManagedAgentsMultiagentInlineAgentsParams.disabled()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagentInlineAgentsParams))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -48,8 +49,8 @@ internal class BetaManagedAgentsMultiagentInlineAgentsParamsTest {
         val betaManagedAgentsMultiagentInlineAgentsParams =
             BetaManagedAgentsMultiagentInlineAgentsParams.ofDisabled(disabled)
 
-        assertThat(betaManagedAgentsMultiagentInlineAgentsParams.enabled()).isEmpty
-        assertThat(betaManagedAgentsMultiagentInlineAgentsParams.disabled()).contains(disabled)
+        assertThat(presentVariants(betaManagedAgentsMultiagentInlineAgentsParams))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -94,4 +95,13 @@ internal class BetaManagedAgentsMultiagentInlineAgentsParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsMultiagentInlineAgentsParams: BetaManagedAgentsMultiagentInlineAgentsParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "enabled" to betaManagedAgentsMultiagentInlineAgentsParams.enabled(),
+                "disabled" to betaManagedAgentsMultiagentInlineAgentsParams.disabled(),
+            )
+            .filterValues { it.isPresent }
 }

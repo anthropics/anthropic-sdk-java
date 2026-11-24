@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,7 +19,8 @@ internal class UserProfileActionTest {
 
         val userProfileAction = UserProfileAction.ofEnrollEndUser(enrollEndUser)
 
-        assertThat(userProfileAction.enrollEndUser()).contains(enrollEndUser)
+        assertThat(presentVariants(userProfileAction))
+            .isEqualTo(mapOf("enrollEndUser" to Optional.of(enrollEndUser)))
     }
 
     @Test
@@ -53,4 +55,8 @@ internal class UserProfileActionTest {
         val e = assertThrows<AnthropicInvalidDataException> { userProfileAction.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(userProfileAction: UserProfileAction): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>("enrollEndUser" to userProfileAction.enrollEndUser())
+            .filterValues { it.isPresent }
 }

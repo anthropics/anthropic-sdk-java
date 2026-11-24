@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,9 +24,8 @@ internal class BetaManagedAgentsDeploymentInitialEventTest {
         val betaManagedAgentsDeploymentInitialEvent =
             BetaManagedAgentsDeploymentInitialEvent.ofUserMessage(userMessage)
 
-        assertThat(betaManagedAgentsDeploymentInitialEvent.userMessage()).contains(userMessage)
-        assertThat(betaManagedAgentsDeploymentInitialEvent.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsDeploymentInitialEvent.systemMessage()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentInitialEvent))
+            .isEqualTo(mapOf("userMessage" to Optional.of(userMessage)))
     }
 
     @Test
@@ -60,10 +60,8 @@ internal class BetaManagedAgentsDeploymentInitialEventTest {
         val betaManagedAgentsDeploymentInitialEvent =
             BetaManagedAgentsDeploymentInitialEvent.ofUserDefineOutcome(userDefineOutcome)
 
-        assertThat(betaManagedAgentsDeploymentInitialEvent.userMessage()).isEmpty
-        assertThat(betaManagedAgentsDeploymentInitialEvent.userDefineOutcome())
-            .contains(userDefineOutcome)
-        assertThat(betaManagedAgentsDeploymentInitialEvent.systemMessage()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentInitialEvent))
+            .isEqualTo(mapOf("userDefineOutcome" to Optional.of(userDefineOutcome)))
     }
 
     @Test
@@ -98,9 +96,8 @@ internal class BetaManagedAgentsDeploymentInitialEventTest {
         val betaManagedAgentsDeploymentInitialEvent =
             BetaManagedAgentsDeploymentInitialEvent.ofSystemMessage(systemMessage)
 
-        assertThat(betaManagedAgentsDeploymentInitialEvent.userMessage()).isEmpty
-        assertThat(betaManagedAgentsDeploymentInitialEvent.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsDeploymentInitialEvent.systemMessage()).contains(systemMessage)
+        assertThat(presentVariants(betaManagedAgentsDeploymentInitialEvent))
+            .isEqualTo(mapOf("systemMessage" to Optional.of(systemMessage)))
     }
 
     @Test
@@ -147,4 +144,14 @@ internal class BetaManagedAgentsDeploymentInitialEventTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsDeploymentInitialEvent: BetaManagedAgentsDeploymentInitialEvent
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "userMessage" to betaManagedAgentsDeploymentInitialEvent.userMessage(),
+                "userDefineOutcome" to betaManagedAgentsDeploymentInitialEvent.userDefineOutcome(),
+                "systemMessage" to betaManagedAgentsDeploymentInitialEvent.systemMessage(),
+            )
+            .filterValues { it.isPresent }
 }

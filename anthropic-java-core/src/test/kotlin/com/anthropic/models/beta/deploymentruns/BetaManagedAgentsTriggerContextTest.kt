@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,8 +23,8 @@ internal class BetaManagedAgentsTriggerContextTest {
 
         val betaManagedAgentsTriggerContext = BetaManagedAgentsTriggerContext.ofSchedule(schedule)
 
-        assertThat(betaManagedAgentsTriggerContext.schedule()).contains(schedule)
-        assertThat(betaManagedAgentsTriggerContext.manual()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsTriggerContext))
+            .isEqualTo(mapOf("schedule" to Optional.of(schedule)))
     }
 
     @Test
@@ -52,8 +53,8 @@ internal class BetaManagedAgentsTriggerContextTest {
 
         val betaManagedAgentsTriggerContext = BetaManagedAgentsTriggerContext.ofManual(manual)
 
-        assertThat(betaManagedAgentsTriggerContext.schedule()).isEmpty
-        assertThat(betaManagedAgentsTriggerContext.manual()).contains(manual)
+        assertThat(presentVariants(betaManagedAgentsTriggerContext))
+            .isEqualTo(mapOf("manual" to Optional.of(manual)))
     }
 
     @Test
@@ -95,4 +96,13 @@ internal class BetaManagedAgentsTriggerContextTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsTriggerContext: BetaManagedAgentsTriggerContext
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "schedule" to betaManagedAgentsTriggerContext.schedule(),
+                "manual" to betaManagedAgentsTriggerContext.manual(),
+            )
+            .filterValues { it.isPresent }
 }

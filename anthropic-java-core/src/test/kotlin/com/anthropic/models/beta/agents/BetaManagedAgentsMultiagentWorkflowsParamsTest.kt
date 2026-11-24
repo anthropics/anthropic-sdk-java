@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentParams
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -31,8 +32,8 @@ internal class BetaManagedAgentsMultiagentWorkflowsParamsTest {
         val betaManagedAgentsMultiagentWorkflowsParams =
             BetaManagedAgentsMultiagentWorkflowsParams.ofEnabled(enabled)
 
-        assertThat(betaManagedAgentsMultiagentWorkflowsParams.enabled()).contains(enabled)
-        assertThat(betaManagedAgentsMultiagentWorkflowsParams.disabled()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagentWorkflowsParams))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -70,8 +71,8 @@ internal class BetaManagedAgentsMultiagentWorkflowsParamsTest {
         val betaManagedAgentsMultiagentWorkflowsParams =
             BetaManagedAgentsMultiagentWorkflowsParams.ofDisabled(disabled)
 
-        assertThat(betaManagedAgentsMultiagentWorkflowsParams.enabled()).isEmpty
-        assertThat(betaManagedAgentsMultiagentWorkflowsParams.disabled()).contains(disabled)
+        assertThat(presentVariants(betaManagedAgentsMultiagentWorkflowsParams))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -116,4 +117,13 @@ internal class BetaManagedAgentsMultiagentWorkflowsParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsMultiagentWorkflowsParams: BetaManagedAgentsMultiagentWorkflowsParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "enabled" to betaManagedAgentsMultiagentWorkflowsParams.enabled(),
+                "disabled" to betaManagedAgentsMultiagentWorkflowsParams.disabled(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -27,11 +28,8 @@ internal class BetaGoogleManagedStorageRegionStatusTest {
         val betaGoogleManagedStorageRegionStatus =
             BetaGoogleManagedStorageRegionStatus.ofNotConfigured(notConfigured)
 
-        assertThat(betaGoogleManagedStorageRegionStatus.notConfigured()).contains(notConfigured)
-        assertThat(betaGoogleManagedStorageRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedStorageRegionStatus))
+            .isEqualTo(mapOf("notConfigured" to Optional.of(notConfigured)))
     }
 
     @Test
@@ -79,11 +77,8 @@ internal class BetaGoogleManagedStorageRegionStatusTest {
         val betaGoogleManagedStorageRegionStatus =
             BetaGoogleManagedStorageRegionStatus.ofPending(pending)
 
-        assertThat(betaGoogleManagedStorageRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.pending()).contains(pending)
-        assertThat(betaGoogleManagedStorageRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedStorageRegionStatus))
+            .isEqualTo(mapOf("pending" to Optional.of(pending)))
     }
 
     @Test
@@ -141,11 +136,8 @@ internal class BetaGoogleManagedStorageRegionStatusTest {
         val betaGoogleManagedStorageRegionStatus =
             BetaGoogleManagedStorageRegionStatus.ofActive(active)
 
-        assertThat(betaGoogleManagedStorageRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.active()).contains(active)
-        assertThat(betaGoogleManagedStorageRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedStorageRegionStatus))
+            .isEqualTo(mapOf("active" to Optional.of(active)))
     }
 
     @Test
@@ -203,11 +195,8 @@ internal class BetaGoogleManagedStorageRegionStatusTest {
         val betaGoogleManagedStorageRegionStatus =
             BetaGoogleManagedStorageRegionStatus.ofFailed(failed)
 
-        assertThat(betaGoogleManagedStorageRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.failed()).contains(failed)
-        assertThat(betaGoogleManagedStorageRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedStorageRegionStatus))
+            .isEqualTo(mapOf("failed" to Optional.of(failed)))
     }
 
     @Test
@@ -255,11 +244,8 @@ internal class BetaGoogleManagedStorageRegionStatusTest {
         val betaGoogleManagedStorageRegionStatus =
             BetaGoogleManagedStorageRegionStatus.ofSuspended(suspended)
 
-        assertThat(betaGoogleManagedStorageRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedStorageRegionStatus.suspended()).contains(suspended)
+        assertThat(presentVariants(betaGoogleManagedStorageRegionStatus))
+            .isEqualTo(mapOf("suspended" to Optional.of(suspended)))
     }
 
     @Test
@@ -372,4 +358,16 @@ internal class BetaGoogleManagedStorageRegionStatusTest {
         assertThat(betaGoogleManagedStorageRegionStatus.effectiveBucket()).isEmpty
         assertThat(betaGoogleManagedStorageRegionStatus.failedChecks()).isEmpty
     }
+
+    private fun presentVariants(
+        betaGoogleManagedStorageRegionStatus: BetaGoogleManagedStorageRegionStatus
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "notConfigured" to betaGoogleManagedStorageRegionStatus.notConfigured(),
+                "pending" to betaGoogleManagedStorageRegionStatus.pending(),
+                "active" to betaGoogleManagedStorageRegionStatus.active(),
+                "failed" to betaGoogleManagedStorageRegionStatus.failed(),
+                "suspended" to betaGoogleManagedStorageRegionStatus.suspended(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -13,6 +13,7 @@ import com.anthropic.models.beta.BetaOverloadedError
 import com.anthropic.models.beta.BetaPermissionError
 import com.anthropic.models.beta.BetaRateLimitError
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -27,16 +28,8 @@ internal class BetaDreamingErrorTest {
 
         val betaDreamingError = BetaDreamingError.ofInvalidRequest(invalidRequest)
 
-        assertThat(betaDreamingError.invalidRequest()).contains(invalidRequest)
-        assertThat(betaDreamingError.authentication()).isEmpty
-        assertThat(betaDreamingError.billing()).isEmpty
-        assertThat(betaDreamingError.permission()).isEmpty
-        assertThat(betaDreamingError.notFound()).isEmpty
-        assertThat(betaDreamingError.rateLimit()).isEmpty
-        assertThat(betaDreamingError.timeout()).isEmpty
-        assertThat(betaDreamingError.api()).isEmpty
-        assertThat(betaDreamingError.overloaded()).isEmpty
-        assertThat(betaDreamingError.conflict()).isEmpty
+        assertThat(presentVariants(betaDreamingError))
+            .isEqualTo(mapOf("invalidRequest" to Optional.of(invalidRequest)))
     }
 
     @Test
@@ -60,16 +53,8 @@ internal class BetaDreamingErrorTest {
 
         val betaDreamingError = BetaDreamingError.ofAuthentication(authentication)
 
-        assertThat(betaDreamingError.invalidRequest()).isEmpty
-        assertThat(betaDreamingError.authentication()).contains(authentication)
-        assertThat(betaDreamingError.billing()).isEmpty
-        assertThat(betaDreamingError.permission()).isEmpty
-        assertThat(betaDreamingError.notFound()).isEmpty
-        assertThat(betaDreamingError.rateLimit()).isEmpty
-        assertThat(betaDreamingError.timeout()).isEmpty
-        assertThat(betaDreamingError.api()).isEmpty
-        assertThat(betaDreamingError.overloaded()).isEmpty
-        assertThat(betaDreamingError.conflict()).isEmpty
+        assertThat(presentVariants(betaDreamingError))
+            .isEqualTo(mapOf("authentication" to Optional.of(authentication)))
     }
 
     @Test
@@ -93,16 +78,8 @@ internal class BetaDreamingErrorTest {
 
         val betaDreamingError = BetaDreamingError.ofBilling(billing)
 
-        assertThat(betaDreamingError.invalidRequest()).isEmpty
-        assertThat(betaDreamingError.authentication()).isEmpty
-        assertThat(betaDreamingError.billing()).contains(billing)
-        assertThat(betaDreamingError.permission()).isEmpty
-        assertThat(betaDreamingError.notFound()).isEmpty
-        assertThat(betaDreamingError.rateLimit()).isEmpty
-        assertThat(betaDreamingError.timeout()).isEmpty
-        assertThat(betaDreamingError.api()).isEmpty
-        assertThat(betaDreamingError.overloaded()).isEmpty
-        assertThat(betaDreamingError.conflict()).isEmpty
+        assertThat(presentVariants(betaDreamingError))
+            .isEqualTo(mapOf("billing" to Optional.of(billing)))
     }
 
     @Test
@@ -125,16 +102,8 @@ internal class BetaDreamingErrorTest {
 
         val betaDreamingError = BetaDreamingError.ofPermission(permission)
 
-        assertThat(betaDreamingError.invalidRequest()).isEmpty
-        assertThat(betaDreamingError.authentication()).isEmpty
-        assertThat(betaDreamingError.billing()).isEmpty
-        assertThat(betaDreamingError.permission()).contains(permission)
-        assertThat(betaDreamingError.notFound()).isEmpty
-        assertThat(betaDreamingError.rateLimit()).isEmpty
-        assertThat(betaDreamingError.timeout()).isEmpty
-        assertThat(betaDreamingError.api()).isEmpty
-        assertThat(betaDreamingError.overloaded()).isEmpty
-        assertThat(betaDreamingError.conflict()).isEmpty
+        assertThat(presentVariants(betaDreamingError))
+            .isEqualTo(mapOf("permission" to Optional.of(permission)))
     }
 
     @Test
@@ -157,16 +126,8 @@ internal class BetaDreamingErrorTest {
 
         val betaDreamingError = BetaDreamingError.ofNotFound(notFound)
 
-        assertThat(betaDreamingError.invalidRequest()).isEmpty
-        assertThat(betaDreamingError.authentication()).isEmpty
-        assertThat(betaDreamingError.billing()).isEmpty
-        assertThat(betaDreamingError.permission()).isEmpty
-        assertThat(betaDreamingError.notFound()).contains(notFound)
-        assertThat(betaDreamingError.rateLimit()).isEmpty
-        assertThat(betaDreamingError.timeout()).isEmpty
-        assertThat(betaDreamingError.api()).isEmpty
-        assertThat(betaDreamingError.overloaded()).isEmpty
-        assertThat(betaDreamingError.conflict()).isEmpty
+        assertThat(presentVariants(betaDreamingError))
+            .isEqualTo(mapOf("notFound" to Optional.of(notFound)))
     }
 
     @Test
@@ -189,16 +150,8 @@ internal class BetaDreamingErrorTest {
 
         val betaDreamingError = BetaDreamingError.ofRateLimit(rateLimit)
 
-        assertThat(betaDreamingError.invalidRequest()).isEmpty
-        assertThat(betaDreamingError.authentication()).isEmpty
-        assertThat(betaDreamingError.billing()).isEmpty
-        assertThat(betaDreamingError.permission()).isEmpty
-        assertThat(betaDreamingError.notFound()).isEmpty
-        assertThat(betaDreamingError.rateLimit()).contains(rateLimit)
-        assertThat(betaDreamingError.timeout()).isEmpty
-        assertThat(betaDreamingError.api()).isEmpty
-        assertThat(betaDreamingError.overloaded()).isEmpty
-        assertThat(betaDreamingError.conflict()).isEmpty
+        assertThat(presentVariants(betaDreamingError))
+            .isEqualTo(mapOf("rateLimit" to Optional.of(rateLimit)))
     }
 
     @Test
@@ -221,16 +174,8 @@ internal class BetaDreamingErrorTest {
 
         val betaDreamingError = BetaDreamingError.ofTimeout(timeout)
 
-        assertThat(betaDreamingError.invalidRequest()).isEmpty
-        assertThat(betaDreamingError.authentication()).isEmpty
-        assertThat(betaDreamingError.billing()).isEmpty
-        assertThat(betaDreamingError.permission()).isEmpty
-        assertThat(betaDreamingError.notFound()).isEmpty
-        assertThat(betaDreamingError.rateLimit()).isEmpty
-        assertThat(betaDreamingError.timeout()).contains(timeout)
-        assertThat(betaDreamingError.api()).isEmpty
-        assertThat(betaDreamingError.overloaded()).isEmpty
-        assertThat(betaDreamingError.conflict()).isEmpty
+        assertThat(presentVariants(betaDreamingError))
+            .isEqualTo(mapOf("timeout" to Optional.of(timeout)))
     }
 
     @Test
@@ -253,16 +198,7 @@ internal class BetaDreamingErrorTest {
 
         val betaDreamingError = BetaDreamingError.ofApi(api)
 
-        assertThat(betaDreamingError.invalidRequest()).isEmpty
-        assertThat(betaDreamingError.authentication()).isEmpty
-        assertThat(betaDreamingError.billing()).isEmpty
-        assertThat(betaDreamingError.permission()).isEmpty
-        assertThat(betaDreamingError.notFound()).isEmpty
-        assertThat(betaDreamingError.rateLimit()).isEmpty
-        assertThat(betaDreamingError.timeout()).isEmpty
-        assertThat(betaDreamingError.api()).contains(api)
-        assertThat(betaDreamingError.overloaded()).isEmpty
-        assertThat(betaDreamingError.conflict()).isEmpty
+        assertThat(presentVariants(betaDreamingError)).isEqualTo(mapOf("api" to Optional.of(api)))
     }
 
     @Test
@@ -285,16 +221,8 @@ internal class BetaDreamingErrorTest {
 
         val betaDreamingError = BetaDreamingError.ofOverloaded(overloaded)
 
-        assertThat(betaDreamingError.invalidRequest()).isEmpty
-        assertThat(betaDreamingError.authentication()).isEmpty
-        assertThat(betaDreamingError.billing()).isEmpty
-        assertThat(betaDreamingError.permission()).isEmpty
-        assertThat(betaDreamingError.notFound()).isEmpty
-        assertThat(betaDreamingError.rateLimit()).isEmpty
-        assertThat(betaDreamingError.timeout()).isEmpty
-        assertThat(betaDreamingError.api()).isEmpty
-        assertThat(betaDreamingError.overloaded()).contains(overloaded)
-        assertThat(betaDreamingError.conflict()).isEmpty
+        assertThat(presentVariants(betaDreamingError))
+            .isEqualTo(mapOf("overloaded" to Optional.of(overloaded)))
     }
 
     @Test
@@ -317,16 +245,8 @@ internal class BetaDreamingErrorTest {
 
         val betaDreamingError = BetaDreamingError.ofConflict(conflict)
 
-        assertThat(betaDreamingError.invalidRequest()).isEmpty
-        assertThat(betaDreamingError.authentication()).isEmpty
-        assertThat(betaDreamingError.billing()).isEmpty
-        assertThat(betaDreamingError.permission()).isEmpty
-        assertThat(betaDreamingError.notFound()).isEmpty
-        assertThat(betaDreamingError.rateLimit()).isEmpty
-        assertThat(betaDreamingError.timeout()).isEmpty
-        assertThat(betaDreamingError.api()).isEmpty
-        assertThat(betaDreamingError.overloaded()).isEmpty
-        assertThat(betaDreamingError.conflict()).contains(conflict)
+        assertThat(presentVariants(betaDreamingError))
+            .isEqualTo(mapOf("conflict" to Optional.of(conflict)))
     }
 
     @Test
@@ -391,4 +311,19 @@ internal class BetaDreamingErrorTest {
 
         assertThat(betaDreamingError.message()).isEmpty
     }
+
+    private fun presentVariants(betaDreamingError: BetaDreamingError): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "invalidRequest" to betaDreamingError.invalidRequest(),
+                "authentication" to betaDreamingError.authentication(),
+                "billing" to betaDreamingError.billing(),
+                "permission" to betaDreamingError.permission(),
+                "notFound" to betaDreamingError.notFound(),
+                "rateLimit" to betaDreamingError.rateLimit(),
+                "timeout" to betaDreamingError.timeout(),
+                "api" to betaDreamingError.api(),
+                "overloaded" to betaDreamingError.overloaded(),
+                "conflict" to betaDreamingError.conflict(),
+            )
+            .filterValues { it.isPresent }
 }

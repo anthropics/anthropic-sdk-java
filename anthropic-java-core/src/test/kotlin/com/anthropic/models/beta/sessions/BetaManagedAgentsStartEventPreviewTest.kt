@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaManagedAgentsStartEventPreviewTest {
         val betaManagedAgentsStartEventPreview =
             BetaManagedAgentsStartEventPreview.ofAgentMessage(agentMessage)
 
-        assertThat(betaManagedAgentsStartEventPreview.agentMessage()).contains(agentMessage)
-        assertThat(betaManagedAgentsStartEventPreview.agentThinking()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStartEventPreview))
+            .isEqualTo(mapOf("agentMessage" to Optional.of(agentMessage)))
     }
 
     @Test
@@ -48,8 +49,8 @@ internal class BetaManagedAgentsStartEventPreviewTest {
         val betaManagedAgentsStartEventPreview =
             BetaManagedAgentsStartEventPreview.ofAgentThinking(agentThinking)
 
-        assertThat(betaManagedAgentsStartEventPreview.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStartEventPreview.agentThinking()).contains(agentThinking)
+        assertThat(presentVariants(betaManagedAgentsStartEventPreview))
+            .isEqualTo(mapOf("agentThinking" to Optional.of(agentThinking)))
     }
 
     @Test
@@ -122,4 +123,13 @@ internal class BetaManagedAgentsStartEventPreviewTest {
 
         assertThrows<AnthropicInvalidDataException> { betaManagedAgentsStartEventPreview.id() }
     }
+
+    private fun presentVariants(
+        betaManagedAgentsStartEventPreview: BetaManagedAgentsStartEventPreview
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "agentMessage" to betaManagedAgentsStartEventPreview.agentMessage(),
+                "agentThinking" to betaManagedAgentsStartEventPreview.agentThinking(),
+            )
+            .filterValues { it.isPresent }
 }

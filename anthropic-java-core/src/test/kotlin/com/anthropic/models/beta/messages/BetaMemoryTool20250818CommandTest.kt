@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,12 +24,8 @@ internal class BetaMemoryTool20250818CommandTest {
 
         val betaMemoryTool20250818Command = BetaMemoryTool20250818Command.ofView(view)
 
-        assertThat(betaMemoryTool20250818Command.view()).contains(view)
-        assertThat(betaMemoryTool20250818Command.create()).isEmpty
-        assertThat(betaMemoryTool20250818Command.strReplace()).isEmpty
-        assertThat(betaMemoryTool20250818Command.insert()).isEmpty
-        assertThat(betaMemoryTool20250818Command.delete()).isEmpty
-        assertThat(betaMemoryTool20250818Command.rename()).isEmpty
+        assertThat(presentVariants(betaMemoryTool20250818Command))
+            .isEqualTo(mapOf("view" to Optional.of(view)))
     }
 
     @Test
@@ -63,12 +60,8 @@ internal class BetaMemoryTool20250818CommandTest {
 
         val betaMemoryTool20250818Command = BetaMemoryTool20250818Command.ofCreate(create)
 
-        assertThat(betaMemoryTool20250818Command.view()).isEmpty
-        assertThat(betaMemoryTool20250818Command.create()).contains(create)
-        assertThat(betaMemoryTool20250818Command.strReplace()).isEmpty
-        assertThat(betaMemoryTool20250818Command.insert()).isEmpty
-        assertThat(betaMemoryTool20250818Command.delete()).isEmpty
-        assertThat(betaMemoryTool20250818Command.rename()).isEmpty
+        assertThat(presentVariants(betaMemoryTool20250818Command))
+            .isEqualTo(mapOf("create" to Optional.of(create)))
     }
 
     @Test
@@ -105,12 +98,8 @@ internal class BetaMemoryTool20250818CommandTest {
 
         val betaMemoryTool20250818Command = BetaMemoryTool20250818Command.ofStrReplace(strReplace)
 
-        assertThat(betaMemoryTool20250818Command.view()).isEmpty
-        assertThat(betaMemoryTool20250818Command.create()).isEmpty
-        assertThat(betaMemoryTool20250818Command.strReplace()).contains(strReplace)
-        assertThat(betaMemoryTool20250818Command.insert()).isEmpty
-        assertThat(betaMemoryTool20250818Command.delete()).isEmpty
-        assertThat(betaMemoryTool20250818Command.rename()).isEmpty
+        assertThat(presentVariants(betaMemoryTool20250818Command))
+            .isEqualTo(mapOf("strReplace" to Optional.of(strReplace)))
     }
 
     @Test
@@ -146,12 +135,8 @@ internal class BetaMemoryTool20250818CommandTest {
 
         val betaMemoryTool20250818Command = BetaMemoryTool20250818Command.ofInsert(insert)
 
-        assertThat(betaMemoryTool20250818Command.view()).isEmpty
-        assertThat(betaMemoryTool20250818Command.create()).isEmpty
-        assertThat(betaMemoryTool20250818Command.strReplace()).isEmpty
-        assertThat(betaMemoryTool20250818Command.insert()).contains(insert)
-        assertThat(betaMemoryTool20250818Command.delete()).isEmpty
-        assertThat(betaMemoryTool20250818Command.rename()).isEmpty
+        assertThat(presentVariants(betaMemoryTool20250818Command))
+            .isEqualTo(mapOf("insert" to Optional.of(insert)))
     }
 
     @Test
@@ -182,12 +167,8 @@ internal class BetaMemoryTool20250818CommandTest {
 
         val betaMemoryTool20250818Command = BetaMemoryTool20250818Command.ofDelete(delete)
 
-        assertThat(betaMemoryTool20250818Command.view()).isEmpty
-        assertThat(betaMemoryTool20250818Command.create()).isEmpty
-        assertThat(betaMemoryTool20250818Command.strReplace()).isEmpty
-        assertThat(betaMemoryTool20250818Command.insert()).isEmpty
-        assertThat(betaMemoryTool20250818Command.delete()).contains(delete)
-        assertThat(betaMemoryTool20250818Command.rename()).isEmpty
+        assertThat(presentVariants(betaMemoryTool20250818Command))
+            .isEqualTo(mapOf("delete" to Optional.of(delete)))
     }
 
     @Test
@@ -218,12 +199,8 @@ internal class BetaMemoryTool20250818CommandTest {
 
         val betaMemoryTool20250818Command = BetaMemoryTool20250818Command.ofRename(rename)
 
-        assertThat(betaMemoryTool20250818Command.view()).isEmpty
-        assertThat(betaMemoryTool20250818Command.create()).isEmpty
-        assertThat(betaMemoryTool20250818Command.strReplace()).isEmpty
-        assertThat(betaMemoryTool20250818Command.insert()).isEmpty
-        assertThat(betaMemoryTool20250818Command.delete()).isEmpty
-        assertThat(betaMemoryTool20250818Command.rename()).contains(rename)
+        assertThat(presentVariants(betaMemoryTool20250818Command))
+            .isEqualTo(mapOf("rename" to Optional.of(rename)))
     }
 
     @Test
@@ -295,4 +272,17 @@ internal class BetaMemoryTool20250818CommandTest {
 
         assertThat(betaMemoryTool20250818Command.path()).isEmpty
     }
+
+    private fun presentVariants(
+        betaMemoryTool20250818Command: BetaMemoryTool20250818Command
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "view" to betaMemoryTool20250818Command.view(),
+                "create" to betaMemoryTool20250818Command.create(),
+                "strReplace" to betaMemoryTool20250818Command.strReplace(),
+                "insert" to betaMemoryTool20250818Command.insert(),
+                "delete" to betaMemoryTool20250818Command.delete(),
+                "rename" to betaMemoryTool20250818Command.rename(),
+            )
+            .filterValues { it.isPresent }
 }

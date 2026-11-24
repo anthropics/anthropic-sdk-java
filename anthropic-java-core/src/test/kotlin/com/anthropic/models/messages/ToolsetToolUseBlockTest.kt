@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -25,9 +26,8 @@ internal class ToolsetToolUseBlockTest {
 
         val toolsetToolUseBlock = ToolsetToolUseBlock.ofBrowser(browser)
 
-        assertThat(toolsetToolUseBlock.browser()).contains(browser)
-        assertThat(toolsetToolUseBlock.computer()).isEmpty
-        assertThat(toolsetToolUseBlock.toolUseBlock()).isEmpty
+        assertThat(presentVariants(toolsetToolUseBlock))
+            .isEqualTo(mapOf("browser" to Optional.of(browser)))
     }
 
     @Test
@@ -66,9 +66,8 @@ internal class ToolsetToolUseBlockTest {
 
         val toolsetToolUseBlock = ToolsetToolUseBlock.ofComputer(computer)
 
-        assertThat(toolsetToolUseBlock.browser()).isEmpty
-        assertThat(toolsetToolUseBlock.computer()).contains(computer)
-        assertThat(toolsetToolUseBlock.toolUseBlock()).isEmpty
+        assertThat(presentVariants(toolsetToolUseBlock))
+            .isEqualTo(mapOf("computer" to Optional.of(computer)))
     }
 
     @Test
@@ -107,9 +106,8 @@ internal class ToolsetToolUseBlockTest {
 
         val toolsetToolUseBlock = ToolsetToolUseBlock.ofToolUseBlock(toolUseBlock)
 
-        assertThat(toolsetToolUseBlock.browser()).isEmpty
-        assertThat(toolsetToolUseBlock.computer()).isEmpty
-        assertThat(toolsetToolUseBlock.toolUseBlock()).contains(toolUseBlock)
+        assertThat(presentVariants(toolsetToolUseBlock))
+            .isEqualTo(mapOf("toolUseBlock" to Optional.of(toolUseBlock)))
     }
 
     @Test
@@ -152,4 +150,14 @@ internal class ToolsetToolUseBlockTest {
         val e = assertThrows<AnthropicInvalidDataException> { toolsetToolUseBlock.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        toolsetToolUseBlock: ToolsetToolUseBlock
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "browser" to toolsetToolUseBlock.browser(),
+                "computer" to toolsetToolUseBlock.computer(),
+                "toolUseBlock" to toolsetToolUseBlock.toolUseBlock(),
+            )
+            .filterValues { it.isPresent }
 }

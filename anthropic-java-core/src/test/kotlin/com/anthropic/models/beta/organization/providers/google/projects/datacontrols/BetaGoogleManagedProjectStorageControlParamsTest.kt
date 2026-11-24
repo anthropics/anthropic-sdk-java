@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaGoogleManagedProjectStorageControlParamsTest {
         val betaGoogleManagedProjectStorageControlParams =
             BetaGoogleManagedProjectStorageControlParams.ofDisabled(disabled)
 
-        assertThat(betaGoogleManagedProjectStorageControlParams.disabled()).contains(disabled)
-        assertThat(betaGoogleManagedProjectStorageControlParams.enabled()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedProjectStorageControlParams))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -63,8 +64,8 @@ internal class BetaGoogleManagedProjectStorageControlParamsTest {
         val betaGoogleManagedProjectStorageControlParams =
             BetaGoogleManagedProjectStorageControlParams.ofEnabled(enabled)
 
-        assertThat(betaGoogleManagedProjectStorageControlParams.disabled()).isEmpty
-        assertThat(betaGoogleManagedProjectStorageControlParams.enabled()).contains(enabled)
+        assertThat(presentVariants(betaGoogleManagedProjectStorageControlParams))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -123,4 +124,13 @@ internal class BetaGoogleManagedProjectStorageControlParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaGoogleManagedProjectStorageControlParams: BetaGoogleManagedProjectStorageControlParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "disabled" to betaGoogleManagedProjectStorageControlParams.disabled(),
+                "enabled" to betaGoogleManagedProjectStorageControlParams.enabled(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,8 +19,8 @@ internal class BetaMessageThreadParamTest {
 
         val betaMessageThreadParam = BetaMessageThreadParam.ofCreate(create)
 
-        assertThat(betaMessageThreadParam.create()).contains(create)
-        assertThat(betaMessageThreadParam.continue_()).isEmpty
+        assertThat(presentVariants(betaMessageThreadParam))
+            .isEqualTo(mapOf("create" to Optional.of(create)))
     }
 
     @Test
@@ -43,8 +44,8 @@ internal class BetaMessageThreadParamTest {
 
         val betaMessageThreadParam = BetaMessageThreadParam.ofContinue(continue_)
 
-        assertThat(betaMessageThreadParam.create()).isEmpty
-        assertThat(betaMessageThreadParam.continue_()).contains(continue_)
+        assertThat(presentVariants(betaMessageThreadParam))
+            .isEqualTo(mapOf("continue_" to Optional.of(continue_)))
     }
 
     @Test
@@ -79,4 +80,13 @@ internal class BetaMessageThreadParamTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaMessageThreadParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaMessageThreadParam: BetaMessageThreadParam
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "create" to betaMessageThreadParam.create(),
+                "continue_" to betaMessageThreadParam.continue_(),
+            )
+            .filterValues { it.isPresent }
 }

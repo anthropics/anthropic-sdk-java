@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,15 +19,8 @@ internal class ErrorObjectTest {
 
         val errorObject = ErrorObject.ofInvalidRequestError(invalidRequestError)
 
-        assertThat(errorObject.invalidRequestError()).contains(invalidRequestError)
-        assertThat(errorObject.authenticationError()).isEmpty
-        assertThat(errorObject.billingError()).isEmpty
-        assertThat(errorObject.permissionError()).isEmpty
-        assertThat(errorObject.notFoundError()).isEmpty
-        assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.timeoutError()).isEmpty
-        assertThat(errorObject.apiError()).isEmpty
-        assertThat(errorObject.overloadedError()).isEmpty
+        assertThat(presentVariants(errorObject))
+            .isEqualTo(mapOf("invalidRequestError" to Optional.of(invalidRequestError)))
     }
 
     @Test
@@ -49,15 +43,8 @@ internal class ErrorObjectTest {
 
         val errorObject = ErrorObject.ofAuthenticationError(authenticationError)
 
-        assertThat(errorObject.invalidRequestError()).isEmpty
-        assertThat(errorObject.authenticationError()).contains(authenticationError)
-        assertThat(errorObject.billingError()).isEmpty
-        assertThat(errorObject.permissionError()).isEmpty
-        assertThat(errorObject.notFoundError()).isEmpty
-        assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.timeoutError()).isEmpty
-        assertThat(errorObject.apiError()).isEmpty
-        assertThat(errorObject.overloadedError()).isEmpty
+        assertThat(presentVariants(errorObject))
+            .isEqualTo(mapOf("authenticationError" to Optional.of(authenticationError)))
     }
 
     @Test
@@ -80,15 +67,8 @@ internal class ErrorObjectTest {
 
         val errorObject = ErrorObject.ofBillingError(billingError)
 
-        assertThat(errorObject.invalidRequestError()).isEmpty
-        assertThat(errorObject.authenticationError()).isEmpty
-        assertThat(errorObject.billingError()).contains(billingError)
-        assertThat(errorObject.permissionError()).isEmpty
-        assertThat(errorObject.notFoundError()).isEmpty
-        assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.timeoutError()).isEmpty
-        assertThat(errorObject.apiError()).isEmpty
-        assertThat(errorObject.overloadedError()).isEmpty
+        assertThat(presentVariants(errorObject))
+            .isEqualTo(mapOf("billingError" to Optional.of(billingError)))
     }
 
     @Test
@@ -111,15 +91,8 @@ internal class ErrorObjectTest {
 
         val errorObject = ErrorObject.ofPermissionError(permissionError)
 
-        assertThat(errorObject.invalidRequestError()).isEmpty
-        assertThat(errorObject.authenticationError()).isEmpty
-        assertThat(errorObject.billingError()).isEmpty
-        assertThat(errorObject.permissionError()).contains(permissionError)
-        assertThat(errorObject.notFoundError()).isEmpty
-        assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.timeoutError()).isEmpty
-        assertThat(errorObject.apiError()).isEmpty
-        assertThat(errorObject.overloadedError()).isEmpty
+        assertThat(presentVariants(errorObject))
+            .isEqualTo(mapOf("permissionError" to Optional.of(permissionError)))
     }
 
     @Test
@@ -142,15 +115,8 @@ internal class ErrorObjectTest {
 
         val errorObject = ErrorObject.ofNotFoundError(notFoundError)
 
-        assertThat(errorObject.invalidRequestError()).isEmpty
-        assertThat(errorObject.authenticationError()).isEmpty
-        assertThat(errorObject.billingError()).isEmpty
-        assertThat(errorObject.permissionError()).isEmpty
-        assertThat(errorObject.notFoundError()).contains(notFoundError)
-        assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.timeoutError()).isEmpty
-        assertThat(errorObject.apiError()).isEmpty
-        assertThat(errorObject.overloadedError()).isEmpty
+        assertThat(presentVariants(errorObject))
+            .isEqualTo(mapOf("notFoundError" to Optional.of(notFoundError)))
     }
 
     @Test
@@ -173,15 +139,8 @@ internal class ErrorObjectTest {
 
         val errorObject = ErrorObject.ofRateLimitError(rateLimitError)
 
-        assertThat(errorObject.invalidRequestError()).isEmpty
-        assertThat(errorObject.authenticationError()).isEmpty
-        assertThat(errorObject.billingError()).isEmpty
-        assertThat(errorObject.permissionError()).isEmpty
-        assertThat(errorObject.notFoundError()).isEmpty
-        assertThat(errorObject.rateLimitError()).contains(rateLimitError)
-        assertThat(errorObject.timeoutError()).isEmpty
-        assertThat(errorObject.apiError()).isEmpty
-        assertThat(errorObject.overloadedError()).isEmpty
+        assertThat(presentVariants(errorObject))
+            .isEqualTo(mapOf("rateLimitError" to Optional.of(rateLimitError)))
     }
 
     @Test
@@ -204,15 +163,8 @@ internal class ErrorObjectTest {
 
         val errorObject = ErrorObject.ofTimeoutError(timeoutError)
 
-        assertThat(errorObject.invalidRequestError()).isEmpty
-        assertThat(errorObject.authenticationError()).isEmpty
-        assertThat(errorObject.billingError()).isEmpty
-        assertThat(errorObject.permissionError()).isEmpty
-        assertThat(errorObject.notFoundError()).isEmpty
-        assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.timeoutError()).contains(timeoutError)
-        assertThat(errorObject.apiError()).isEmpty
-        assertThat(errorObject.overloadedError()).isEmpty
+        assertThat(presentVariants(errorObject))
+            .isEqualTo(mapOf("timeoutError" to Optional.of(timeoutError)))
     }
 
     @Test
@@ -235,15 +187,8 @@ internal class ErrorObjectTest {
 
         val errorObject = ErrorObject.ofApiError(apiError)
 
-        assertThat(errorObject.invalidRequestError()).isEmpty
-        assertThat(errorObject.authenticationError()).isEmpty
-        assertThat(errorObject.billingError()).isEmpty
-        assertThat(errorObject.permissionError()).isEmpty
-        assertThat(errorObject.notFoundError()).isEmpty
-        assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.timeoutError()).isEmpty
-        assertThat(errorObject.apiError()).contains(apiError)
-        assertThat(errorObject.overloadedError()).isEmpty
+        assertThat(presentVariants(errorObject))
+            .isEqualTo(mapOf("apiError" to Optional.of(apiError)))
     }
 
     @Test
@@ -266,15 +211,8 @@ internal class ErrorObjectTest {
 
         val errorObject = ErrorObject.ofOverloadedError(overloadedError)
 
-        assertThat(errorObject.invalidRequestError()).isEmpty
-        assertThat(errorObject.authenticationError()).isEmpty
-        assertThat(errorObject.billingError()).isEmpty
-        assertThat(errorObject.permissionError()).isEmpty
-        assertThat(errorObject.notFoundError()).isEmpty
-        assertThat(errorObject.rateLimitError()).isEmpty
-        assertThat(errorObject.timeoutError()).isEmpty
-        assertThat(errorObject.apiError()).isEmpty
-        assertThat(errorObject.overloadedError()).contains(overloadedError)
+        assertThat(presentVariants(errorObject))
+            .isEqualTo(mapOf("overloadedError" to Optional.of(overloadedError)))
     }
 
     @Test
@@ -335,4 +273,18 @@ internal class ErrorObjectTest {
 
         assertThrows<AnthropicInvalidDataException> { errorObject.message() }
     }
+
+    private fun presentVariants(errorObject: ErrorObject): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "invalidRequestError" to errorObject.invalidRequestError(),
+                "authenticationError" to errorObject.authenticationError(),
+                "billingError" to errorObject.billingError(),
+                "permissionError" to errorObject.permissionError(),
+                "notFoundError" to errorObject.notFoundError(),
+                "rateLimitError" to errorObject.rateLimitError(),
+                "timeoutError" to errorObject.timeoutError(),
+                "apiError" to errorObject.apiError(),
+                "overloadedError" to errorObject.overloadedError(),
+            )
+            .filterValues { it.isPresent }
 }

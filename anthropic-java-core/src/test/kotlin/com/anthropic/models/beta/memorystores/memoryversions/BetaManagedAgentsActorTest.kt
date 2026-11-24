@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,10 +19,8 @@ internal class BetaManagedAgentsActorTest {
 
         val betaManagedAgentsActor = BetaManagedAgentsActor.ofSession(session)
 
-        assertThat(betaManagedAgentsActor.session()).contains(session)
-        assertThat(betaManagedAgentsActor.api()).isEmpty
-        assertThat(betaManagedAgentsActor.user()).isEmpty
-        assertThat(betaManagedAgentsActor.serviceAccount()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsActor))
+            .isEqualTo(mapOf("session" to Optional.of(session)))
     }
 
     @Test
@@ -45,10 +44,8 @@ internal class BetaManagedAgentsActorTest {
 
         val betaManagedAgentsActor = BetaManagedAgentsActor.ofApi(api)
 
-        assertThat(betaManagedAgentsActor.session()).isEmpty
-        assertThat(betaManagedAgentsActor.api()).contains(api)
-        assertThat(betaManagedAgentsActor.user()).isEmpty
-        assertThat(betaManagedAgentsActor.serviceAccount()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsActor))
+            .isEqualTo(mapOf("api" to Optional.of(api)))
     }
 
     @Test
@@ -71,10 +68,8 @@ internal class BetaManagedAgentsActorTest {
 
         val betaManagedAgentsActor = BetaManagedAgentsActor.ofUser(user)
 
-        assertThat(betaManagedAgentsActor.session()).isEmpty
-        assertThat(betaManagedAgentsActor.api()).isEmpty
-        assertThat(betaManagedAgentsActor.user()).contains(user)
-        assertThat(betaManagedAgentsActor.serviceAccount()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsActor))
+            .isEqualTo(mapOf("user" to Optional.of(user)))
     }
 
     @Test
@@ -98,10 +93,8 @@ internal class BetaManagedAgentsActorTest {
 
         val betaManagedAgentsActor = BetaManagedAgentsActor.ofServiceAccount(serviceAccount)
 
-        assertThat(betaManagedAgentsActor.session()).isEmpty
-        assertThat(betaManagedAgentsActor.api()).isEmpty
-        assertThat(betaManagedAgentsActor.user()).isEmpty
-        assertThat(betaManagedAgentsActor.serviceAccount()).contains(serviceAccount)
+        assertThat(presentVariants(betaManagedAgentsActor))
+            .isEqualTo(mapOf("serviceAccount" to Optional.of(serviceAccount)))
     }
 
     @Test
@@ -136,4 +129,15 @@ internal class BetaManagedAgentsActorTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaManagedAgentsActor.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsActor: BetaManagedAgentsActor
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "session" to betaManagedAgentsActor.session(),
+                "api" to betaManagedAgentsActor.api(),
+                "user" to betaManagedAgentsActor.user(),
+                "serviceAccount" to betaManagedAgentsActor.serviceAccount(),
+            )
+            .filterValues { it.isPresent }
 }

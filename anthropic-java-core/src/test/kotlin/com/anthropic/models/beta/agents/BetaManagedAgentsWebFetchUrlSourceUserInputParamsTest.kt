@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,13 +20,8 @@ internal class BetaManagedAgentsWebFetchUrlSourceUserInputParamsTest {
         val betaManagedAgentsWebFetchUrlSourceUserInputParams =
             BetaManagedAgentsWebFetchUrlSourceUserInputParams.ofShorthand(shorthand)
 
-        assertThat(betaManagedAgentsWebFetchUrlSourceUserInputParams.shorthand())
-            .contains(shorthand)
-        assertThat(
-                betaManagedAgentsWebFetchUrlSourceUserInputParams
-                    .betaManagedAgentsWebFetchUrlSourceUserInput()
-            )
-            .isEmpty
+        assertThat(presentVariants(betaManagedAgentsWebFetchUrlSourceUserInputParams))
+            .isEqualTo(mapOf("shorthand" to Optional.of(shorthand)))
     }
 
     @Test
@@ -59,12 +55,13 @@ internal class BetaManagedAgentsWebFetchUrlSourceUserInputParamsTest {
                     betaManagedAgentsWebFetchUrlSourceUserInput
                 )
 
-        assertThat(betaManagedAgentsWebFetchUrlSourceUserInputParams.shorthand()).isEmpty
-        assertThat(
-                betaManagedAgentsWebFetchUrlSourceUserInputParams
-                    .betaManagedAgentsWebFetchUrlSourceUserInput()
+        assertThat(presentVariants(betaManagedAgentsWebFetchUrlSourceUserInputParams))
+            .isEqualTo(
+                mapOf(
+                    "betaManagedAgentsWebFetchUrlSourceUserInput" to
+                        Optional.of(betaManagedAgentsWebFetchUrlSourceUserInput)
+                )
             )
-            .contains(betaManagedAgentsWebFetchUrlSourceUserInput)
     }
 
     @Test
@@ -111,4 +108,16 @@ internal class BetaManagedAgentsWebFetchUrlSourceUserInputParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsWebFetchUrlSourceUserInputParams:
+            BetaManagedAgentsWebFetchUrlSourceUserInputParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "shorthand" to betaManagedAgentsWebFetchUrlSourceUserInputParams.shorthand(),
+                "betaManagedAgentsWebFetchUrlSourceUserInput" to
+                    betaManagedAgentsWebFetchUrlSourceUserInputParams
+                        .betaManagedAgentsWebFetchUrlSourceUserInput(),
+            )
+            .filterValues { it.isPresent }
 }

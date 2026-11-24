@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,10 +19,7 @@ internal class ToolChoiceTest {
 
         val toolChoice = ToolChoice.ofAuto(auto)
 
-        assertThat(toolChoice.auto()).contains(auto)
-        assertThat(toolChoice.any()).isEmpty
-        assertThat(toolChoice.tool()).isEmpty
-        assertThat(toolChoice.none()).isEmpty
+        assertThat(presentVariants(toolChoice)).isEqualTo(mapOf("auto" to Optional.of(auto)))
     }
 
     @Test
@@ -45,10 +43,7 @@ internal class ToolChoiceTest {
 
         val toolChoice = ToolChoice.ofAny(any)
 
-        assertThat(toolChoice.auto()).isEmpty
-        assertThat(toolChoice.any()).contains(any)
-        assertThat(toolChoice.tool()).isEmpty
-        assertThat(toolChoice.none()).isEmpty
+        assertThat(presentVariants(toolChoice)).isEqualTo(mapOf("any" to Optional.of(any)))
     }
 
     @Test
@@ -72,10 +67,7 @@ internal class ToolChoiceTest {
 
         val toolChoice = ToolChoice.ofTool(tool)
 
-        assertThat(toolChoice.auto()).isEmpty
-        assertThat(toolChoice.any()).isEmpty
-        assertThat(toolChoice.tool()).contains(tool)
-        assertThat(toolChoice.none()).isEmpty
+        assertThat(presentVariants(toolChoice)).isEqualTo(mapOf("tool" to Optional.of(tool)))
     }
 
     @Test
@@ -101,10 +93,7 @@ internal class ToolChoiceTest {
 
         val toolChoice = ToolChoice.ofNone(none)
 
-        assertThat(toolChoice.auto()).isEmpty
-        assertThat(toolChoice.any()).isEmpty
-        assertThat(toolChoice.tool()).isEmpty
-        assertThat(toolChoice.none()).contains(none)
+        assertThat(presentVariants(toolChoice)).isEqualTo(mapOf("none" to Optional.of(none)))
     }
 
     @Test
@@ -170,4 +159,13 @@ internal class ToolChoiceTest {
 
         assertThat(toolChoice.disableParallelToolUse()).isEmpty
     }
+
+    private fun presentVariants(toolChoice: ToolChoice): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "auto" to toolChoice.auto(),
+                "any" to toolChoice.any(),
+                "tool" to toolChoice.tool(),
+                "none" to toolChoice.none(),
+            )
+            .filterValues { it.isPresent }
 }

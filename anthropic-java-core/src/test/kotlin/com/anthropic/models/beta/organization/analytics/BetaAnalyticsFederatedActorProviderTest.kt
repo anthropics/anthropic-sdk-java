@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,10 +23,8 @@ internal class BetaAnalyticsFederatedActorProviderTest {
 
         val betaAnalyticsFederatedActorProvider = BetaAnalyticsFederatedActorProvider.ofAws(aws)
 
-        assertThat(betaAnalyticsFederatedActorProvider.aws()).contains(aws)
-        assertThat(betaAnalyticsFederatedActorProvider.azure()).isEmpty
-        assertThat(betaAnalyticsFederatedActorProvider.gcp()).isEmpty
-        assertThat(betaAnalyticsFederatedActorProvider.oidc()).isEmpty
+        assertThat(presentVariants(betaAnalyticsFederatedActorProvider))
+            .isEqualTo(mapOf("aws" to Optional.of(aws)))
     }
 
     @Test
@@ -55,10 +54,8 @@ internal class BetaAnalyticsFederatedActorProviderTest {
 
         val betaAnalyticsFederatedActorProvider = BetaAnalyticsFederatedActorProvider.ofAzure(azure)
 
-        assertThat(betaAnalyticsFederatedActorProvider.aws()).isEmpty
-        assertThat(betaAnalyticsFederatedActorProvider.azure()).contains(azure)
-        assertThat(betaAnalyticsFederatedActorProvider.gcp()).isEmpty
-        assertThat(betaAnalyticsFederatedActorProvider.oidc()).isEmpty
+        assertThat(presentVariants(betaAnalyticsFederatedActorProvider))
+            .isEqualTo(mapOf("azure" to Optional.of(azure)))
     }
 
     @Test
@@ -85,10 +82,8 @@ internal class BetaAnalyticsFederatedActorProviderTest {
 
         val betaAnalyticsFederatedActorProvider = BetaAnalyticsFederatedActorProvider.ofGcp(gcp)
 
-        assertThat(betaAnalyticsFederatedActorProvider.aws()).isEmpty
-        assertThat(betaAnalyticsFederatedActorProvider.azure()).isEmpty
-        assertThat(betaAnalyticsFederatedActorProvider.gcp()).contains(gcp)
-        assertThat(betaAnalyticsFederatedActorProvider.oidc()).isEmpty
+        assertThat(presentVariants(betaAnalyticsFederatedActorProvider))
+            .isEqualTo(mapOf("gcp" to Optional.of(gcp)))
     }
 
     @Test
@@ -115,10 +110,8 @@ internal class BetaAnalyticsFederatedActorProviderTest {
 
         val betaAnalyticsFederatedActorProvider = BetaAnalyticsFederatedActorProvider.ofOidc(oidc)
 
-        assertThat(betaAnalyticsFederatedActorProvider.aws()).isEmpty
-        assertThat(betaAnalyticsFederatedActorProvider.azure()).isEmpty
-        assertThat(betaAnalyticsFederatedActorProvider.gcp()).isEmpty
-        assertThat(betaAnalyticsFederatedActorProvider.oidc()).contains(oidc)
+        assertThat(presentVariants(betaAnalyticsFederatedActorProvider))
+            .isEqualTo(mapOf("oidc" to Optional.of(oidc)))
     }
 
     @Test
@@ -160,4 +153,15 @@ internal class BetaAnalyticsFederatedActorProviderTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaAnalyticsFederatedActorProvider: BetaAnalyticsFederatedActorProvider
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "aws" to betaAnalyticsFederatedActorProvider.aws(),
+                "azure" to betaAnalyticsFederatedActorProvider.azure(),
+                "gcp" to betaAnalyticsFederatedActorProvider.gcp(),
+                "oidc" to betaAnalyticsFederatedActorProvider.oidc(),
+            )
+            .filterValues { it.isPresent }
 }

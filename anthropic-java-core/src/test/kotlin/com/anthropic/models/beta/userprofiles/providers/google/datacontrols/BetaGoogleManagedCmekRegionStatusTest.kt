@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -20,11 +21,8 @@ internal class BetaGoogleManagedCmekRegionStatusTest {
         val betaGoogleManagedCmekRegionStatus =
             BetaGoogleManagedCmekRegionStatus.ofNotConfigured(notConfigured)
 
-        assertThat(betaGoogleManagedCmekRegionStatus.notConfigured()).contains(notConfigured)
-        assertThat(betaGoogleManagedCmekRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedCmekRegionStatus))
+            .isEqualTo(mapOf("notConfigured" to Optional.of(notConfigured)))
     }
 
     @Test
@@ -55,11 +53,8 @@ internal class BetaGoogleManagedCmekRegionStatusTest {
 
         val betaGoogleManagedCmekRegionStatus = BetaGoogleManagedCmekRegionStatus.ofPending(pending)
 
-        assertThat(betaGoogleManagedCmekRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.pending()).contains(pending)
-        assertThat(betaGoogleManagedCmekRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedCmekRegionStatus))
+            .isEqualTo(mapOf("pending" to Optional.of(pending)))
     }
 
     @Test
@@ -95,11 +90,8 @@ internal class BetaGoogleManagedCmekRegionStatusTest {
 
         val betaGoogleManagedCmekRegionStatus = BetaGoogleManagedCmekRegionStatus.ofActive(active)
 
-        assertThat(betaGoogleManagedCmekRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.active()).contains(active)
-        assertThat(betaGoogleManagedCmekRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedCmekRegionStatus))
+            .isEqualTo(mapOf("active" to Optional.of(active)))
     }
 
     @Test
@@ -135,11 +127,8 @@ internal class BetaGoogleManagedCmekRegionStatusTest {
 
         val betaGoogleManagedCmekRegionStatus = BetaGoogleManagedCmekRegionStatus.ofFailed(failed)
 
-        assertThat(betaGoogleManagedCmekRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.failed()).contains(failed)
-        assertThat(betaGoogleManagedCmekRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedCmekRegionStatus))
+            .isEqualTo(mapOf("failed" to Optional.of(failed)))
     }
 
     @Test
@@ -170,11 +159,8 @@ internal class BetaGoogleManagedCmekRegionStatusTest {
         val betaGoogleManagedCmekRegionStatus =
             BetaGoogleManagedCmekRegionStatus.ofSuspended(suspended)
 
-        assertThat(betaGoogleManagedCmekRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedCmekRegionStatus.suspended()).contains(suspended)
+        assertThat(presentVariants(betaGoogleManagedCmekRegionStatus))
+            .isEqualTo(mapOf("suspended" to Optional.of(suspended)))
     }
 
     @Test
@@ -261,4 +247,16 @@ internal class BetaGoogleManagedCmekRegionStatusTest {
         assertThat(betaGoogleManagedCmekRegionStatus.effectiveExternalKeyId()).isEmpty
         assertThat(betaGoogleManagedCmekRegionStatus.error()).isEmpty
     }
+
+    private fun presentVariants(
+        betaGoogleManagedCmekRegionStatus: BetaGoogleManagedCmekRegionStatus
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "notConfigured" to betaGoogleManagedCmekRegionStatus.notConfigured(),
+                "pending" to betaGoogleManagedCmekRegionStatus.pending(),
+                "active" to betaGoogleManagedCmekRegionStatus.active(),
+                "failed" to betaGoogleManagedCmekRegionStatus.failed(),
+                "suspended" to betaGoogleManagedCmekRegionStatus.suspended(),
+            )
+            .filterValues { it.isPresent }
 }

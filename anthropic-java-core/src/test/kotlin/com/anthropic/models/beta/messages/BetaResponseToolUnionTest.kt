@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -44,34 +45,8 @@ internal class BetaResponseToolUnionTest {
 
         val betaResponseToolUnion = BetaResponseToolUnion.ofBetaResponseTool(betaResponseTool)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).contains(betaResponseTool)
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("betaResponseTool" to Optional.of(betaResponseTool)))
     }
 
     @Test
@@ -136,34 +111,8 @@ internal class BetaResponseToolUnionTest {
 
         val betaResponseToolUnion = BetaResponseToolUnion.ofToolBash20241022(toolBash20241022)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).contains(toolBash20241022)
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("toolBash20241022" to Optional.of(toolBash20241022)))
 
         assertThat(betaResponseToolUnion.name()).contains("bash")
     }
@@ -220,34 +169,8 @@ internal class BetaResponseToolUnionTest {
 
         val betaResponseToolUnion = BetaResponseToolUnion.ofToolBash20250124(toolBash20250124)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).contains(toolBash20250124)
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("toolBash20250124" to Optional.of(toolBash20250124)))
 
         assertThat(betaResponseToolUnion.name()).contains("bash")
     }
@@ -300,35 +223,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522())
-            .contains(codeExecutionTool20250522)
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("codeExecutionTool20250522" to Optional.of(codeExecutionTool20250522)))
 
         assertThat(betaResponseToolUnion.name()).contains("code_execution")
     }
@@ -376,35 +272,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825())
-            .contains(codeExecutionTool20250825)
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("codeExecutionTool20250825" to Optional.of(codeExecutionTool20250825)))
 
         assertThat(betaResponseToolUnion.name()).contains("code_execution")
     }
@@ -452,35 +321,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120())
-            .contains(codeExecutionTool20260120)
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("codeExecutionTool20260120" to Optional.of(codeExecutionTool20260120)))
 
         assertThat(betaResponseToolUnion.name()).contains("code_execution")
     }
@@ -528,35 +370,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521())
-            .contains(codeExecutionTool20260521)
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("codeExecutionTool20260521" to Optional.of(codeExecutionTool20260521)))
 
         assertThat(betaResponseToolUnion.name()).contains("code_execution")
     }
@@ -776,34 +591,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofBrowserToolset20260801(browserToolset20260801)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).contains(browserToolset20260801)
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("browserToolset20260801" to Optional.of(browserToolset20260801)))
     }
 
     @Test
@@ -1044,35 +833,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofToolComputerUse20241022(toolComputerUse20241022)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022())
-            .contains(toolComputerUse20241022)
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("toolComputerUse20241022" to Optional.of(toolComputerUse20241022)))
 
         assertThat(betaResponseToolUnion.name()).contains("computer")
     }
@@ -1132,34 +894,8 @@ internal class BetaResponseToolUnionTest {
 
         val betaResponseToolUnion = BetaResponseToolUnion.ofMemoryTool20250818(memoryTool20250818)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).contains(memoryTool20250818)
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("memoryTool20250818" to Optional.of(memoryTool20250818)))
 
         assertThat(betaResponseToolUnion.name()).contains("memory")
     }
@@ -1220,35 +956,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofToolComputerUse20250124(toolComputerUse20250124)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124())
-            .contains(toolComputerUse20250124)
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("toolComputerUse20250124" to Optional.of(toolComputerUse20250124)))
 
         assertThat(betaResponseToolUnion.name()).contains("computer")
     }
@@ -1309,34 +1018,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofToolTextEditor20241022(toolTextEditor20241022)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).contains(toolTextEditor20241022)
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("toolTextEditor20241022" to Optional.of(toolTextEditor20241022)))
 
         assertThat(betaResponseToolUnion.name()).contains("str_replace_editor")
     }
@@ -1398,35 +1081,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofToolComputerUse20251124(toolComputerUse20251124)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124())
-            .contains(toolComputerUse20251124)
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("toolComputerUse20251124" to Optional.of(toolComputerUse20251124)))
 
         assertThat(betaResponseToolUnion.name()).contains("computer")
     }
@@ -1583,35 +1239,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofComputerToolset20260801(computerToolset20260801)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801())
-            .contains(computerToolset20260801)
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("computerToolset20260801" to Optional.of(computerToolset20260801)))
     }
 
     @Test
@@ -1765,34 +1394,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofToolTextEditor20250124(toolTextEditor20250124)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).contains(toolTextEditor20250124)
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("toolTextEditor20250124" to Optional.of(toolTextEditor20250124)))
 
         assertThat(betaResponseToolUnion.name()).contains("str_replace_editor")
     }
@@ -1850,34 +1453,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofToolTextEditor20250429(toolTextEditor20250429)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).contains(toolTextEditor20250429)
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("toolTextEditor20250429" to Optional.of(toolTextEditor20250429)))
 
         assertThat(betaResponseToolUnion.name()).contains("str_replace_based_edit_tool")
     }
@@ -1936,34 +1513,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofToolTextEditor20250728(toolTextEditor20250728)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).contains(toolTextEditor20250728)
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("toolTextEditor20250728" to Optional.of(toolTextEditor20250728)))
 
         assertThat(betaResponseToolUnion.name()).contains("str_replace_based_edit_tool")
     }
@@ -2028,34 +1579,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofWebSearchTool20250305(webSearchTool20250305)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).contains(webSearchTool20250305)
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("webSearchTool20250305" to Optional.of(webSearchTool20250305)))
 
         assertThat(betaResponseToolUnion.name()).contains("web_search")
     }
@@ -2126,34 +1651,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofWebFetchTool20250910(webFetchTool20250910)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).contains(webFetchTool20250910)
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("webFetchTool20250910" to Optional.of(webFetchTool20250910)))
 
         assertThat(betaResponseToolUnion.name()).contains("web_fetch")
     }
@@ -2224,34 +1723,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofWebSearchTool20260209(webSearchTool20260209)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).contains(webSearchTool20260209)
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("webSearchTool20260209" to Optional.of(webSearchTool20260209)))
 
         assertThat(betaResponseToolUnion.name()).contains("web_search")
     }
@@ -2322,34 +1795,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofWebFetchTool20260209(webFetchTool20260209)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).contains(webFetchTool20260209)
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("webFetchTool20260209" to Optional.of(webFetchTool20260209)))
 
         assertThat(betaResponseToolUnion.name()).contains("web_fetch")
     }
@@ -2422,34 +1869,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofWebFetchTool20260309(webFetchTool20260309)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).contains(webFetchTool20260309)
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("webFetchTool20260309" to Optional.of(webFetchTool20260309)))
 
         assertThat(betaResponseToolUnion.name()).contains("web_fetch")
     }
@@ -2522,34 +1943,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofWebSearchTool20260318(webSearchTool20260318)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).contains(webSearchTool20260318)
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("webSearchTool20260318" to Optional.of(webSearchTool20260318)))
 
         assertThat(betaResponseToolUnion.name()).contains("web_search")
     }
@@ -2623,34 +2018,8 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofWebFetchTool20260318(webFetchTool20260318)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).contains(webFetchTool20260318)
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("webFetchTool20260318" to Optional.of(webFetchTool20260318)))
 
         assertThat(betaResponseToolUnion.name()).contains("web_fetch")
     }
@@ -2719,34 +2088,8 @@ internal class BetaResponseToolUnionTest {
 
         val betaResponseToolUnion = BetaResponseToolUnion.ofAdvisorTool20260301(advisorTool20260301)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).contains(advisorTool20260301)
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("advisorTool20260301" to Optional.of(advisorTool20260301)))
 
         assertThat(betaResponseToolUnion.name()).contains("advisor")
     }
@@ -2803,35 +2146,10 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofToolSearchToolBm25_20251119(toolSearchToolBm25_20251119)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119())
-            .contains(toolSearchToolBm25_20251119)
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(
+                mapOf("toolSearchToolBm25_20251119" to Optional.of(toolSearchToolBm25_20251119))
+            )
 
         assertThat(betaResponseToolUnion.name()).contains("tool_search_tool_bm25")
     }
@@ -2881,35 +2199,10 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofToolSearchToolRegex20251119(toolSearchToolRegex20251119)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119())
-            .contains(toolSearchToolRegex20251119)
-        assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(
+                mapOf("toolSearchToolRegex20251119" to Optional.of(toolSearchToolRegex20251119))
+            )
 
         assertThat(betaResponseToolUnion.name()).contains("tool_search_tool_regex")
     }
@@ -2977,34 +2270,8 @@ internal class BetaResponseToolUnionTest {
 
         val betaResponseToolUnion = BetaResponseToolUnion.ofMcpToolset(mcpToolset)
 
-        assertThat(betaResponseToolUnion.betaResponseTool()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolBash20250124()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(betaResponseToolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(betaResponseToolUnion.browserToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20241022()).isEmpty
-        assertThat(betaResponseToolUnion.memoryTool20250818()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20241022()).isEmpty
-        assertThat(betaResponseToolUnion.toolComputerUse20251124()).isEmpty
-        assertThat(betaResponseToolUnion.computerToolset20260801()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250124()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250429()).isEmpty
-        assertThat(betaResponseToolUnion.toolTextEditor20250728()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20250305()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20250910()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260209()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260309()).isEmpty
-        assertThat(betaResponseToolUnion.webSearchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.webFetchTool20260318()).isEmpty
-        assertThat(betaResponseToolUnion.advisorTool20260301()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
-        assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
-        assertThat(betaResponseToolUnion.mcpToolset()).contains(mcpToolset)
+        assertThat(presentVariants(betaResponseToolUnion))
+            .isEqualTo(mapOf("mcpToolset" to Optional.of(mcpToolset)))
     }
 
     @Test
@@ -3086,4 +2353,41 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.urlSources()).isEmpty
         assertThat(betaResponseToolUnion.useCache()).isEmpty
     }
+
+    private fun presentVariants(
+        betaResponseToolUnion: BetaResponseToolUnion
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "betaResponseTool" to betaResponseToolUnion.betaResponseTool(),
+                "toolBash20241022" to betaResponseToolUnion.toolBash20241022(),
+                "toolBash20250124" to betaResponseToolUnion.toolBash20250124(),
+                "codeExecutionTool20250522" to betaResponseToolUnion.codeExecutionTool20250522(),
+                "codeExecutionTool20250825" to betaResponseToolUnion.codeExecutionTool20250825(),
+                "codeExecutionTool20260120" to betaResponseToolUnion.codeExecutionTool20260120(),
+                "codeExecutionTool20260521" to betaResponseToolUnion.codeExecutionTool20260521(),
+                "browserToolset20260801" to betaResponseToolUnion.browserToolset20260801(),
+                "toolComputerUse20241022" to betaResponseToolUnion.toolComputerUse20241022(),
+                "memoryTool20250818" to betaResponseToolUnion.memoryTool20250818(),
+                "toolComputerUse20250124" to betaResponseToolUnion.toolComputerUse20250124(),
+                "toolTextEditor20241022" to betaResponseToolUnion.toolTextEditor20241022(),
+                "toolComputerUse20251124" to betaResponseToolUnion.toolComputerUse20251124(),
+                "computerToolset20260801" to betaResponseToolUnion.computerToolset20260801(),
+                "toolTextEditor20250124" to betaResponseToolUnion.toolTextEditor20250124(),
+                "toolTextEditor20250429" to betaResponseToolUnion.toolTextEditor20250429(),
+                "toolTextEditor20250728" to betaResponseToolUnion.toolTextEditor20250728(),
+                "webSearchTool20250305" to betaResponseToolUnion.webSearchTool20250305(),
+                "webFetchTool20250910" to betaResponseToolUnion.webFetchTool20250910(),
+                "webSearchTool20260209" to betaResponseToolUnion.webSearchTool20260209(),
+                "webFetchTool20260209" to betaResponseToolUnion.webFetchTool20260209(),
+                "webFetchTool20260309" to betaResponseToolUnion.webFetchTool20260309(),
+                "webSearchTool20260318" to betaResponseToolUnion.webSearchTool20260318(),
+                "webFetchTool20260318" to betaResponseToolUnion.webFetchTool20260318(),
+                "advisorTool20260301" to betaResponseToolUnion.advisorTool20260301(),
+                "toolSearchToolBm25_20251119" to
+                    betaResponseToolUnion.toolSearchToolBm25_20251119(),
+                "toolSearchToolRegex20251119" to
+                    betaResponseToolUnion.toolSearchToolRegex20251119(),
+                "mcpToolset" to betaResponseToolUnion.mcpToolset(),
+            )
+            .filterValues { it.isPresent }
 }

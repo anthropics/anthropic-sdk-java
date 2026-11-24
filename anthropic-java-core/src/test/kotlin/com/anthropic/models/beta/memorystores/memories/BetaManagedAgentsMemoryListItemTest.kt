@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -30,8 +31,8 @@ internal class BetaManagedAgentsMemoryListItemTest {
 
         val betaManagedAgentsMemoryListItem = BetaManagedAgentsMemoryListItem.ofMemory(memory)
 
-        assertThat(betaManagedAgentsMemoryListItem.memory()).contains(memory)
-        assertThat(betaManagedAgentsMemoryListItem.memoryPrefix()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMemoryListItem))
+            .isEqualTo(mapOf("memory" to Optional.of(memory)))
     }
 
     @Test
@@ -69,8 +70,8 @@ internal class BetaManagedAgentsMemoryListItemTest {
         val betaManagedAgentsMemoryListItem =
             BetaManagedAgentsMemoryListItem.ofMemoryPrefix(memoryPrefix)
 
-        assertThat(betaManagedAgentsMemoryListItem.memory()).isEmpty
-        assertThat(betaManagedAgentsMemoryListItem.memoryPrefix()).contains(memoryPrefix)
+        assertThat(presentVariants(betaManagedAgentsMemoryListItem))
+            .isEqualTo(mapOf("memoryPrefix" to Optional.of(memoryPrefix)))
     }
 
     @Test
@@ -141,4 +142,13 @@ internal class BetaManagedAgentsMemoryListItemTest {
 
         assertThrows<AnthropicInvalidDataException> { betaManagedAgentsMemoryListItem.path() }
     }
+
+    private fun presentVariants(
+        betaManagedAgentsMemoryListItem: BetaManagedAgentsMemoryListItem
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "memory" to betaManagedAgentsMemoryListItem.memory(),
+                "memoryPrefix" to betaManagedAgentsMemoryListItem.memoryPrefix(),
+            )
+            .filterValues { it.isPresent }
 }

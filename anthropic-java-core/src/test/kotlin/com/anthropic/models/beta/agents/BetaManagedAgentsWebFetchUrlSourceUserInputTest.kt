@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaManagedAgentsWebFetchUrlSourceUserInputTest {
         val betaManagedAgentsWebFetchUrlSourceUserInput =
             BetaManagedAgentsWebFetchUrlSourceUserInput.ofAll(all)
 
-        assertThat(betaManagedAgentsWebFetchUrlSourceUserInput.all()).contains(all)
-        assertThat(betaManagedAgentsWebFetchUrlSourceUserInput.none()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsWebFetchUrlSourceUserInput))
+            .isEqualTo(mapOf("all" to Optional.of(all)))
     }
 
     @Test
@@ -48,8 +49,8 @@ internal class BetaManagedAgentsWebFetchUrlSourceUserInputTest {
         val betaManagedAgentsWebFetchUrlSourceUserInput =
             BetaManagedAgentsWebFetchUrlSourceUserInput.ofNone(none)
 
-        assertThat(betaManagedAgentsWebFetchUrlSourceUserInput.all()).isEmpty
-        assertThat(betaManagedAgentsWebFetchUrlSourceUserInput.none()).contains(none)
+        assertThat(presentVariants(betaManagedAgentsWebFetchUrlSourceUserInput))
+            .isEqualTo(mapOf("none" to Optional.of(none)))
     }
 
     @Test
@@ -94,4 +95,13 @@ internal class BetaManagedAgentsWebFetchUrlSourceUserInputTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsWebFetchUrlSourceUserInput: BetaManagedAgentsWebFetchUrlSourceUserInput
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "all" to betaManagedAgentsWebFetchUrlSourceUserInput.all(),
+                "none" to betaManagedAgentsWebFetchUrlSourceUserInput.none(),
+            )
+            .filterValues { it.isPresent }
 }

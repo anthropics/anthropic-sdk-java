@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -25,9 +26,8 @@ internal class BetaToolsetToolUseBlockTest {
 
         val betaToolsetToolUseBlock = BetaToolsetToolUseBlock.ofBrowser(browser)
 
-        assertThat(betaToolsetToolUseBlock.browser()).contains(browser)
-        assertThat(betaToolsetToolUseBlock.computer()).isEmpty
-        assertThat(betaToolsetToolUseBlock.betaToolUseBlock()).isEmpty
+        assertThat(presentVariants(betaToolsetToolUseBlock))
+            .isEqualTo(mapOf("browser" to Optional.of(browser)))
     }
 
     @Test
@@ -68,9 +68,8 @@ internal class BetaToolsetToolUseBlockTest {
 
         val betaToolsetToolUseBlock = BetaToolsetToolUseBlock.ofComputer(computer)
 
-        assertThat(betaToolsetToolUseBlock.browser()).isEmpty
-        assertThat(betaToolsetToolUseBlock.computer()).contains(computer)
-        assertThat(betaToolsetToolUseBlock.betaToolUseBlock()).isEmpty
+        assertThat(presentVariants(betaToolsetToolUseBlock))
+            .isEqualTo(mapOf("computer" to Optional.of(computer)))
     }
 
     @Test
@@ -109,9 +108,8 @@ internal class BetaToolsetToolUseBlockTest {
 
         val betaToolsetToolUseBlock = BetaToolsetToolUseBlock.ofBetaToolUseBlock(betaToolUseBlock)
 
-        assertThat(betaToolsetToolUseBlock.browser()).isEmpty
-        assertThat(betaToolsetToolUseBlock.computer()).isEmpty
-        assertThat(betaToolsetToolUseBlock.betaToolUseBlock()).contains(betaToolUseBlock)
+        assertThat(presentVariants(betaToolsetToolUseBlock))
+            .isEqualTo(mapOf("betaToolUseBlock" to Optional.of(betaToolUseBlock)))
     }
 
     @Test
@@ -154,4 +152,14 @@ internal class BetaToolsetToolUseBlockTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaToolsetToolUseBlock.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaToolsetToolUseBlock: BetaToolsetToolUseBlock
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "browser" to betaToolsetToolUseBlock.browser(),
+                "computer" to betaToolsetToolUseBlock.computer(),
+                "betaToolUseBlock" to betaToolsetToolUseBlock.betaToolUseBlock(),
+            )
+            .filterValues { it.isPresent }
 }

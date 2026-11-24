@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -69,12 +70,8 @@ internal class RawMessageStreamEventTest {
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofMessageStart(messageStart)
 
-        assertThat(rawMessageStreamEvent.messageStart()).contains(messageStart)
-        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
+        assertThat(presentVariants(rawMessageStreamEvent))
+            .isEqualTo(mapOf("messageStart" to Optional.of(messageStart)))
     }
 
     @Test
@@ -196,12 +193,8 @@ internal class RawMessageStreamEventTest {
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofMessageDelta(messageDelta)
 
-        assertThat(rawMessageStreamEvent.messageStart()).isEmpty
-        assertThat(rawMessageStreamEvent.messageDelta()).contains(messageDelta)
-        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
+        assertThat(presentVariants(rawMessageStreamEvent))
+            .isEqualTo(mapOf("messageDelta" to Optional.of(messageDelta)))
     }
 
     @Test
@@ -270,12 +263,8 @@ internal class RawMessageStreamEventTest {
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofMessageStop(messageStop)
 
-        assertThat(rawMessageStreamEvent.messageStart()).isEmpty
-        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.messageStop()).contains(messageStop)
-        assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
+        assertThat(presentVariants(rawMessageStreamEvent))
+            .isEqualTo(mapOf("messageStop" to Optional.of(messageStop)))
     }
 
     @Test
@@ -317,12 +306,8 @@ internal class RawMessageStreamEventTest {
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofContentBlockStart(contentBlockStart)
 
-        assertThat(rawMessageStreamEvent.messageStart()).isEmpty
-        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStart()).contains(contentBlockStart)
-        assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
+        assertThat(presentVariants(rawMessageStreamEvent))
+            .isEqualTo(mapOf("contentBlockStart" to Optional.of(contentBlockStart)))
     }
 
     @Test
@@ -366,12 +351,8 @@ internal class RawMessageStreamEventTest {
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofContentBlockDelta(contentBlockDelta)
 
-        assertThat(rawMessageStreamEvent.messageStart()).isEmpty
-        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockDelta()).contains(contentBlockDelta)
-        assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
+        assertThat(presentVariants(rawMessageStreamEvent))
+            .isEqualTo(mapOf("contentBlockDelta" to Optional.of(contentBlockDelta)))
     }
 
     @Test
@@ -397,12 +378,8 @@ internal class RawMessageStreamEventTest {
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofContentBlockStop(contentBlockStop)
 
-        assertThat(rawMessageStreamEvent.messageStart()).isEmpty
-        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStop()).contains(contentBlockStop)
+        assertThat(presentVariants(rawMessageStreamEvent))
+            .isEqualTo(mapOf("contentBlockStop" to Optional.of(contentBlockStop)))
     }
 
     @Test
@@ -465,4 +442,17 @@ internal class RawMessageStreamEventTest {
 
         assertThat(rawMessageStreamEvent.index()).isEmpty
     }
+
+    private fun presentVariants(
+        rawMessageStreamEvent: RawMessageStreamEvent
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "messageStart" to rawMessageStreamEvent.messageStart(),
+                "messageDelta" to rawMessageStreamEvent.messageDelta(),
+                "messageStop" to rawMessageStreamEvent.messageStop(),
+                "contentBlockStart" to rawMessageStreamEvent.contentBlockStart(),
+                "contentBlockDelta" to rawMessageStreamEvent.contentBlockDelta(),
+                "contentBlockStop" to rawMessageStreamEvent.contentBlockStop(),
+            )
+            .filterValues { it.isPresent }
 }

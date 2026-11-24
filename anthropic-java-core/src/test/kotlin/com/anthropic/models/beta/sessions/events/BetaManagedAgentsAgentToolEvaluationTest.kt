@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,9 +20,8 @@ internal class BetaManagedAgentsAgentToolEvaluationTest {
         val betaManagedAgentsAgentToolEvaluation =
             BetaManagedAgentsAgentToolEvaluation.ofAlwaysAllow(alwaysAllow)
 
-        assertThat(betaManagedAgentsAgentToolEvaluation.alwaysAllow()).contains(alwaysAllow)
-        assertThat(betaManagedAgentsAgentToolEvaluation.alwaysAsk()).isEmpty
-        assertThat(betaManagedAgentsAgentToolEvaluation.auto()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolEvaluation))
+            .isEqualTo(mapOf("alwaysAllow" to Optional.of(alwaysAllow)))
     }
 
     @Test
@@ -49,9 +49,8 @@ internal class BetaManagedAgentsAgentToolEvaluationTest {
         val betaManagedAgentsAgentToolEvaluation =
             BetaManagedAgentsAgentToolEvaluation.ofAlwaysAsk(alwaysAsk)
 
-        assertThat(betaManagedAgentsAgentToolEvaluation.alwaysAllow()).isEmpty
-        assertThat(betaManagedAgentsAgentToolEvaluation.alwaysAsk()).contains(alwaysAsk)
-        assertThat(betaManagedAgentsAgentToolEvaluation.auto()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolEvaluation))
+            .isEqualTo(mapOf("alwaysAsk" to Optional.of(alwaysAsk)))
     }
 
     @Test
@@ -83,9 +82,8 @@ internal class BetaManagedAgentsAgentToolEvaluationTest {
 
         val betaManagedAgentsAgentToolEvaluation = BetaManagedAgentsAgentToolEvaluation.ofAuto(auto)
 
-        assertThat(betaManagedAgentsAgentToolEvaluation.alwaysAllow()).isEmpty
-        assertThat(betaManagedAgentsAgentToolEvaluation.alwaysAsk()).isEmpty
-        assertThat(betaManagedAgentsAgentToolEvaluation.auto()).contains(auto)
+        assertThat(presentVariants(betaManagedAgentsAgentToolEvaluation))
+            .isEqualTo(mapOf("auto" to Optional.of(auto)))
     }
 
     @Test
@@ -134,4 +132,14 @@ internal class BetaManagedAgentsAgentToolEvaluationTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsAgentToolEvaluation: BetaManagedAgentsAgentToolEvaluation
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "alwaysAllow" to betaManagedAgentsAgentToolEvaluation.alwaysAllow(),
+                "alwaysAsk" to betaManagedAgentsAgentToolEvaluation.alwaysAsk(),
+                "auto" to betaManagedAgentsAgentToolEvaluation.auto(),
+            )
+            .filterValues { it.isPresent }
 }

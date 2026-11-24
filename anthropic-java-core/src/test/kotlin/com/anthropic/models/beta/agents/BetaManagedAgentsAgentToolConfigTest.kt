@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -23,14 +24,8 @@ internal class BetaManagedAgentsAgentToolConfigTest {
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofBash(bash)
 
-        assertThat(betaManagedAgentsAgentToolConfig.bash()).contains(bash)
-        assertThat(betaManagedAgentsAgentToolConfig.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfig))
+            .isEqualTo(mapOf("bash" to Optional.of(bash)))
     }
 
     @Test
@@ -64,14 +59,8 @@ internal class BetaManagedAgentsAgentToolConfigTest {
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofEdit(edit)
 
-        assertThat(betaManagedAgentsAgentToolConfig.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.edit()).contains(edit)
-        assertThat(betaManagedAgentsAgentToolConfig.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfig))
+            .isEqualTo(mapOf("edit" to Optional.of(edit)))
     }
 
     @Test
@@ -105,14 +94,8 @@ internal class BetaManagedAgentsAgentToolConfigTest {
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofRead(read)
 
-        assertThat(betaManagedAgentsAgentToolConfig.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.read()).contains(read)
-        assertThat(betaManagedAgentsAgentToolConfig.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfig))
+            .isEqualTo(mapOf("read" to Optional.of(read)))
     }
 
     @Test
@@ -146,14 +129,8 @@ internal class BetaManagedAgentsAgentToolConfigTest {
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofWrite(write)
 
-        assertThat(betaManagedAgentsAgentToolConfig.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.write()).contains(write)
-        assertThat(betaManagedAgentsAgentToolConfig.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfig))
+            .isEqualTo(mapOf("write" to Optional.of(write)))
     }
 
     @Test
@@ -187,14 +164,8 @@ internal class BetaManagedAgentsAgentToolConfigTest {
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofGlob(glob)
 
-        assertThat(betaManagedAgentsAgentToolConfig.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.glob()).contains(glob)
-        assertThat(betaManagedAgentsAgentToolConfig.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfig))
+            .isEqualTo(mapOf("glob" to Optional.of(glob)))
     }
 
     @Test
@@ -228,14 +199,8 @@ internal class BetaManagedAgentsAgentToolConfigTest {
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofGrep(grep)
 
-        assertThat(betaManagedAgentsAgentToolConfig.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.grep()).contains(grep)
-        assertThat(betaManagedAgentsAgentToolConfig.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfig))
+            .isEqualTo(mapOf("grep" to Optional.of(grep)))
     }
 
     @Test
@@ -279,14 +244,8 @@ internal class BetaManagedAgentsAgentToolConfigTest {
 
         val betaManagedAgentsAgentToolConfig = BetaManagedAgentsAgentToolConfig.ofWebFetch(webFetch)
 
-        assertThat(betaManagedAgentsAgentToolConfig.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webFetch()).contains(webFetch)
-        assertThat(betaManagedAgentsAgentToolConfig.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfig))
+            .isEqualTo(mapOf("webFetch" to Optional.of(webFetch)))
     }
 
     @Test
@@ -345,14 +304,8 @@ internal class BetaManagedAgentsAgentToolConfigTest {
         val betaManagedAgentsAgentToolConfig =
             BetaManagedAgentsAgentToolConfig.ofWebSearch(webSearch)
 
-        assertThat(betaManagedAgentsAgentToolConfig.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfig.webSearch()).contains(webSearch)
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfig))
+            .isEqualTo(mapOf("webSearch" to Optional.of(webSearch)))
     }
 
     @Test
@@ -453,4 +406,19 @@ internal class BetaManagedAgentsAgentToolConfigTest {
         assertThat(betaManagedAgentsAgentToolConfig.allowedDomains()).isEmpty
         assertThat(betaManagedAgentsAgentToolConfig.blockedDomains()).isEmpty
     }
+
+    private fun presentVariants(
+        betaManagedAgentsAgentToolConfig: BetaManagedAgentsAgentToolConfig
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "bash" to betaManagedAgentsAgentToolConfig.bash(),
+                "edit" to betaManagedAgentsAgentToolConfig.edit(),
+                "read" to betaManagedAgentsAgentToolConfig.read(),
+                "write" to betaManagedAgentsAgentToolConfig.write(),
+                "glob" to betaManagedAgentsAgentToolConfig.glob(),
+                "grep" to betaManagedAgentsAgentToolConfig.grep(),
+                "webFetch" to betaManagedAgentsAgentToolConfig.webFetch(),
+                "webSearch" to betaManagedAgentsAgentToolConfig.webSearch(),
+            )
+            .filterValues { it.isPresent }
 }

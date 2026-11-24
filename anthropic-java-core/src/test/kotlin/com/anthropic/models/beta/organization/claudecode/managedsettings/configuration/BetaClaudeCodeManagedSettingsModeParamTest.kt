@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaClaudeCodeManagedSettingsModeParamTest {
         val betaClaudeCodeManagedSettingsModeParam =
             BetaClaudeCodeManagedSettingsModeParam.ofOrganization(organization)
 
-        assertThat(betaClaudeCodeManagedSettingsModeParam.organization()).contains(organization)
-        assertThat(betaClaudeCodeManagedSettingsModeParam.rbacGroups()).isEmpty
+        assertThat(presentVariants(betaClaudeCodeManagedSettingsModeParam))
+            .isEqualTo(mapOf("organization" to Optional.of(organization)))
     }
 
     @Test
@@ -48,8 +49,8 @@ internal class BetaClaudeCodeManagedSettingsModeParamTest {
         val betaClaudeCodeManagedSettingsModeParam =
             BetaClaudeCodeManagedSettingsModeParam.ofRbacGroups(rbacGroups)
 
-        assertThat(betaClaudeCodeManagedSettingsModeParam.organization()).isEmpty
-        assertThat(betaClaudeCodeManagedSettingsModeParam.rbacGroups()).contains(rbacGroups)
+        assertThat(presentVariants(betaClaudeCodeManagedSettingsModeParam))
+            .isEqualTo(mapOf("rbacGroups" to Optional.of(rbacGroups)))
     }
 
     @Test
@@ -94,4 +95,13 @@ internal class BetaClaudeCodeManagedSettingsModeParamTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaClaudeCodeManagedSettingsModeParam: BetaClaudeCodeManagedSettingsModeParam
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "organization" to betaClaudeCodeManagedSettingsModeParam.organization(),
+                "rbacGroups" to betaClaudeCodeManagedSettingsModeParam.rbacGroups(),
+            )
+            .filterValues { it.isPresent }
 }

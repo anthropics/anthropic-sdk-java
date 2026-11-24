@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,8 +19,8 @@ internal class BetaOutputBehaviorTest {
 
         val betaOutputBehavior = BetaOutputBehavior.ofCreateNew(createNew)
 
-        assertThat(betaOutputBehavior.createNew()).contains(createNew)
-        assertThat(betaOutputBehavior.updateExisting()).isEmpty
+        assertThat(presentVariants(betaOutputBehavior))
+            .isEqualTo(mapOf("createNew" to Optional.of(createNew)))
     }
 
     @Test
@@ -43,8 +44,8 @@ internal class BetaOutputBehaviorTest {
 
         val betaOutputBehavior = BetaOutputBehavior.ofUpdateExisting(updateExisting)
 
-        assertThat(betaOutputBehavior.createNew()).isEmpty
-        assertThat(betaOutputBehavior.updateExisting()).contains(updateExisting)
+        assertThat(presentVariants(betaOutputBehavior))
+            .isEqualTo(mapOf("updateExisting" to Optional.of(updateExisting)))
     }
 
     @Test
@@ -79,4 +80,11 @@ internal class BetaOutputBehaviorTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaOutputBehavior.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(betaOutputBehavior: BetaOutputBehavior): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "createNew" to betaOutputBehavior.createNew(),
+                "updateExisting" to betaOutputBehavior.updateExisting(),
+            )
+            .filterValues { it.isPresent }
 }

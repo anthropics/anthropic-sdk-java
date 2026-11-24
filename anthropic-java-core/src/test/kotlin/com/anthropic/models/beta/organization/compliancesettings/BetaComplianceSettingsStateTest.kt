@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,8 +19,8 @@ internal class BetaComplianceSettingsStateTest {
 
         val betaComplianceSettingsState = BetaComplianceSettingsState.ofEnabled(enabled)
 
-        assertThat(betaComplianceSettingsState.enabled()).contains(enabled)
-        assertThat(betaComplianceSettingsState.disabled()).isEmpty
+        assertThat(presentVariants(betaComplianceSettingsState))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -45,8 +46,8 @@ internal class BetaComplianceSettingsStateTest {
 
         val betaComplianceSettingsState = BetaComplianceSettingsState.ofDisabled(disabled)
 
-        assertThat(betaComplianceSettingsState.enabled()).isEmpty
-        assertThat(betaComplianceSettingsState.disabled()).contains(disabled)
+        assertThat(presentVariants(betaComplianceSettingsState))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -84,4 +85,13 @@ internal class BetaComplianceSettingsStateTest {
             assertThrows<AnthropicInvalidDataException> { betaComplianceSettingsState.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaComplianceSettingsState: BetaComplianceSettingsState
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "enabled" to betaComplianceSettingsState.enabled(),
+                "disabled" to betaComplianceSettingsState.disabled(),
+            )
+            .filterValues { it.isPresent }
 }

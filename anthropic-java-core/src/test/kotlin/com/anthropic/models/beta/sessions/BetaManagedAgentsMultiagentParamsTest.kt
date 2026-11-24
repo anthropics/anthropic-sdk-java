@@ -11,6 +11,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSelfParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSubagentsEnabledParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentWorkflowsEnabledParams
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -30,8 +31,8 @@ internal class BetaManagedAgentsMultiagentParamsTest {
         val betaManagedAgentsMultiagentParams =
             BetaManagedAgentsMultiagentParams.ofCoordinator(coordinator)
 
-        assertThat(betaManagedAgentsMultiagentParams.coordinator()).contains(coordinator)
-        assertThat(betaManagedAgentsMultiagentParams.multiagent20261001()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagentParams))
+            .isEqualTo(mapOf("coordinator" to Optional.of(coordinator)))
     }
 
     @Test
@@ -86,9 +87,8 @@ internal class BetaManagedAgentsMultiagentParamsTest {
         val betaManagedAgentsMultiagentParams =
             BetaManagedAgentsMultiagentParams.ofMultiagent20261001(multiagent20261001)
 
-        assertThat(betaManagedAgentsMultiagentParams.coordinator()).isEmpty
-        assertThat(betaManagedAgentsMultiagentParams.multiagent20261001())
-            .contains(multiagent20261001)
+        assertThat(presentVariants(betaManagedAgentsMultiagentParams))
+            .isEqualTo(mapOf("multiagent20261001" to Optional.of(multiagent20261001)))
     }
 
     @Test
@@ -155,4 +155,13 @@ internal class BetaManagedAgentsMultiagentParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsMultiagentParams: BetaManagedAgentsMultiagentParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "coordinator" to betaManagedAgentsMultiagentParams.coordinator(),
+                "multiagent20261001" to betaManagedAgentsMultiagentParams.multiagent20261001(),
+            )
+            .filterValues { it.isPresent }
 }

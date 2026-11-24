@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,9 +19,8 @@ internal class BrowserFormInputValueTest {
 
         val browserFormInputValue = BrowserFormInputValue.ofString(string)
 
-        assertThat(browserFormInputValue.string()).contains(string)
-        assertThat(browserFormInputValue.number()).isEmpty
-        assertThat(browserFormInputValue.bool()).isEmpty
+        assertThat(presentVariants(browserFormInputValue))
+            .isEqualTo(mapOf("string" to Optional.of(string)))
     }
 
     @Test
@@ -43,9 +43,8 @@ internal class BrowserFormInputValueTest {
 
         val browserFormInputValue = BrowserFormInputValue.ofNumber(number)
 
-        assertThat(browserFormInputValue.string()).isEmpty
-        assertThat(browserFormInputValue.number()).contains(number)
-        assertThat(browserFormInputValue.bool()).isEmpty
+        assertThat(presentVariants(browserFormInputValue))
+            .isEqualTo(mapOf("number" to Optional.of(number)))
     }
 
     @Test
@@ -68,9 +67,8 @@ internal class BrowserFormInputValueTest {
 
         val browserFormInputValue = BrowserFormInputValue.ofBool(bool)
 
-        assertThat(browserFormInputValue.string()).isEmpty
-        assertThat(browserFormInputValue.number()).isEmpty
-        assertThat(browserFormInputValue.bool()).contains(bool)
+        assertThat(presentVariants(browserFormInputValue))
+            .isEqualTo(mapOf("bool" to Optional.of(bool)))
     }
 
     @Test
@@ -101,4 +99,14 @@ internal class BrowserFormInputValueTest {
         val e = assertThrows<AnthropicInvalidDataException> { browserFormInputValue.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        browserFormInputValue: BrowserFormInputValue
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "string" to browserFormInputValue.string(),
+                "number" to browserFormInputValue.number(),
+                "bool" to browserFormInputValue.bool(),
+            )
+            .filterValues { it.isPresent }
 }

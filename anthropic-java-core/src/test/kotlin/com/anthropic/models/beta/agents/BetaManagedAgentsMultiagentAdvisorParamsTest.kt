@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaManagedAgentsMultiagentAdvisorParamsTest {
         val betaManagedAgentsMultiagentAdvisorParams =
             BetaManagedAgentsMultiagentAdvisorParams.ofEnabled(enabled)
 
-        assertThat(betaManagedAgentsMultiagentAdvisorParams.enabled()).contains(enabled)
-        assertThat(betaManagedAgentsMultiagentAdvisorParams.disabled()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagentAdvisorParams))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -48,8 +49,8 @@ internal class BetaManagedAgentsMultiagentAdvisorParamsTest {
         val betaManagedAgentsMultiagentAdvisorParams =
             BetaManagedAgentsMultiagentAdvisorParams.ofDisabled(disabled)
 
-        assertThat(betaManagedAgentsMultiagentAdvisorParams.enabled()).isEmpty
-        assertThat(betaManagedAgentsMultiagentAdvisorParams.disabled()).contains(disabled)
+        assertThat(presentVariants(betaManagedAgentsMultiagentAdvisorParams))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -94,4 +95,13 @@ internal class BetaManagedAgentsMultiagentAdvisorParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsMultiagentAdvisorParams: BetaManagedAgentsMultiagentAdvisorParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "enabled" to betaManagedAgentsMultiagentAdvisorParams.enabled(),
+                "disabled" to betaManagedAgentsMultiagentAdvisorParams.disabled(),
+            )
+            .filterValues { it.isPresent }
 }

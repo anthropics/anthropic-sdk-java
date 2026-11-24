@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -28,9 +29,8 @@ internal class BetaManagedAgentsSessionResourceTest {
         val betaManagedAgentsSessionResource =
             BetaManagedAgentsSessionResource.ofGitHubRepository(githubRepository)
 
-        assertThat(betaManagedAgentsSessionResource.githubRepository()).contains(githubRepository)
-        assertThat(betaManagedAgentsSessionResource.file()).isEmpty
-        assertThat(betaManagedAgentsSessionResource.memoryStore()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsSessionResource))
+            .isEqualTo(mapOf("githubRepository" to Optional.of(githubRepository)))
     }
 
     @Test
@@ -71,9 +71,8 @@ internal class BetaManagedAgentsSessionResourceTest {
 
         val betaManagedAgentsSessionResource = BetaManagedAgentsSessionResource.ofFile(file)
 
-        assertThat(betaManagedAgentsSessionResource.githubRepository()).isEmpty
-        assertThat(betaManagedAgentsSessionResource.file()).contains(file)
-        assertThat(betaManagedAgentsSessionResource.memoryStore()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsSessionResource))
+            .isEqualTo(mapOf("file" to Optional.of(file)))
     }
 
     @Test
@@ -115,9 +114,8 @@ internal class BetaManagedAgentsSessionResourceTest {
         val betaManagedAgentsSessionResource =
             BetaManagedAgentsSessionResource.ofMemoryStore(memoryStore)
 
-        assertThat(betaManagedAgentsSessionResource.githubRepository()).isEmpty
-        assertThat(betaManagedAgentsSessionResource.file()).isEmpty
-        assertThat(betaManagedAgentsSessionResource.memoryStore()).contains(memoryStore)
+        assertThat(presentVariants(betaManagedAgentsSessionResource))
+            .isEqualTo(mapOf("memoryStore" to Optional.of(memoryStore)))
     }
 
     @Test
@@ -223,4 +221,14 @@ internal class BetaManagedAgentsSessionResourceTest {
         assertThat(betaManagedAgentsSessionResource.mountPath()).isEmpty
         assertThat(betaManagedAgentsSessionResource.updatedAt()).isEmpty
     }
+
+    private fun presentVariants(
+        betaManagedAgentsSessionResource: BetaManagedAgentsSessionResource
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "githubRepository" to betaManagedAgentsSessionResource.githubRepository(),
+                "file" to betaManagedAgentsSessionResource.file(),
+                "memoryStore" to betaManagedAgentsSessionResource.memoryStore(),
+            )
+            .filterValues { it.isPresent }
 }

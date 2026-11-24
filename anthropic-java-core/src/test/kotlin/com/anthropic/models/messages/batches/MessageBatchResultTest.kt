@@ -16,6 +16,7 @@ import com.anthropic.models.messages.TextBlock
 import com.anthropic.models.messages.Usage
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -80,10 +81,8 @@ internal class MessageBatchResultTest {
 
         val messageBatchResult = MessageBatchResult.ofSucceeded(succeeded)
 
-        assertThat(messageBatchResult.succeeded()).contains(succeeded)
-        assertThat(messageBatchResult.errored()).isEmpty
-        assertThat(messageBatchResult.canceled()).isEmpty
-        assertThat(messageBatchResult.expired()).isEmpty
+        assertThat(presentVariants(messageBatchResult))
+            .isEqualTo(mapOf("succeeded" to Optional.of(succeeded)))
     }
 
     @Test
@@ -167,10 +166,8 @@ internal class MessageBatchResultTest {
 
         val messageBatchResult = MessageBatchResult.ofErrored(errored)
 
-        assertThat(messageBatchResult.succeeded()).isEmpty
-        assertThat(messageBatchResult.errored()).contains(errored)
-        assertThat(messageBatchResult.canceled()).isEmpty
-        assertThat(messageBatchResult.expired()).isEmpty
+        assertThat(presentVariants(messageBatchResult))
+            .isEqualTo(mapOf("errored" to Optional.of(errored)))
     }
 
     @Test
@@ -201,10 +198,8 @@ internal class MessageBatchResultTest {
 
         val messageBatchResult = MessageBatchResult.ofCanceled(canceled)
 
-        assertThat(messageBatchResult.succeeded()).isEmpty
-        assertThat(messageBatchResult.errored()).isEmpty
-        assertThat(messageBatchResult.canceled()).contains(canceled)
-        assertThat(messageBatchResult.expired()).isEmpty
+        assertThat(presentVariants(messageBatchResult))
+            .isEqualTo(mapOf("canceled" to Optional.of(canceled)))
     }
 
     @Test
@@ -228,10 +223,8 @@ internal class MessageBatchResultTest {
 
         val messageBatchResult = MessageBatchResult.ofExpired(expired)
 
-        assertThat(messageBatchResult.succeeded()).isEmpty
-        assertThat(messageBatchResult.errored()).isEmpty
-        assertThat(messageBatchResult.canceled()).isEmpty
-        assertThat(messageBatchResult.expired()).contains(expired)
+        assertThat(presentVariants(messageBatchResult))
+            .isEqualTo(mapOf("expired" to Optional.of(expired)))
     }
 
     @Test
@@ -266,4 +259,13 @@ internal class MessageBatchResultTest {
         val e = assertThrows<AnthropicInvalidDataException> { messageBatchResult.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(messageBatchResult: MessageBatchResult): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "succeeded" to messageBatchResult.succeeded(),
+                "errored" to messageBatchResult.errored(),
+                "canceled" to messageBatchResult.canceled(),
+                "expired" to messageBatchResult.expired(),
+            )
+            .filterValues { it.isPresent }
 }

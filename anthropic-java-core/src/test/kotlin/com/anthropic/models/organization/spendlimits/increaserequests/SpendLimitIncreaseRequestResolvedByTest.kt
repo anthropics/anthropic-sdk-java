@@ -6,6 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.organization.spendlimits.SpendLimitScopedApiKeyActor
 import com.anthropic.models.organization.spendlimits.SpendLimitUserActor
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -27,8 +28,8 @@ internal class SpendLimitIncreaseRequestResolvedByTest {
         val spendLimitIncreaseRequestResolvedBy =
             SpendLimitIncreaseRequestResolvedBy.ofUserActor(userActor)
 
-        assertThat(spendLimitIncreaseRequestResolvedBy.userActor()).contains(userActor)
-        assertThat(spendLimitIncreaseRequestResolvedBy.scopedApiKeyActor()).isEmpty
+        assertThat(presentVariants(spendLimitIncreaseRequestResolvedBy))
+            .isEqualTo(mapOf("userActor" to Optional.of(userActor)))
     }
 
     @Test
@@ -61,9 +62,8 @@ internal class SpendLimitIncreaseRequestResolvedByTest {
         val spendLimitIncreaseRequestResolvedBy =
             SpendLimitIncreaseRequestResolvedBy.ofScopedApiKeyActor(scopedApiKeyActor)
 
-        assertThat(spendLimitIncreaseRequestResolvedBy.userActor()).isEmpty
-        assertThat(spendLimitIncreaseRequestResolvedBy.scopedApiKeyActor())
-            .contains(scopedApiKeyActor)
+        assertThat(presentVariants(spendLimitIncreaseRequestResolvedBy))
+            .isEqualTo(mapOf("scopedApiKeyActor" to Optional.of(scopedApiKeyActor)))
     }
 
     @Test
@@ -105,4 +105,13 @@ internal class SpendLimitIncreaseRequestResolvedByTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        spendLimitIncreaseRequestResolvedBy: SpendLimitIncreaseRequestResolvedBy
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "userActor" to spendLimitIncreaseRequestResolvedBy.userActor(),
+                "scopedApiKeyActor" to spendLimitIncreaseRequestResolvedBy.scopedApiKeyActor(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -43,9 +44,7 @@ internal class MessageParamTest {
 
         val messageParam = MessageParam.ofUser(user)
 
-        assertThat(messageParam.user()).contains(user)
-        assertThat(messageParam.assistant()).isEmpty
-        assertThat(messageParam.system()).isEmpty
+        assertThat(presentVariants(messageParam)).isEqualTo(mapOf("user" to Optional.of(user)))
     }
 
     @Test
@@ -120,9 +119,8 @@ internal class MessageParamTest {
 
         val messageParam = MessageParam.ofAssistant(assistant)
 
-        assertThat(messageParam.user()).isEmpty
-        assertThat(messageParam.assistant()).contains(assistant)
-        assertThat(messageParam.system()).isEmpty
+        assertThat(presentVariants(messageParam))
+            .isEqualTo(mapOf("assistant" to Optional.of(assistant)))
     }
 
     @Test
@@ -172,9 +170,7 @@ internal class MessageParamTest {
 
         val messageParam = MessageParam.ofSystem(system)
 
-        assertThat(messageParam.user()).isEmpty
-        assertThat(messageParam.assistant()).isEmpty
-        assertThat(messageParam.system()).contains(system)
+        assertThat(presentVariants(messageParam)).isEqualTo(mapOf("system" to Optional.of(system)))
     }
 
     @Test
@@ -275,4 +271,12 @@ internal class MessageParamTest {
 
         assertThrows<AnthropicInvalidDataException> { messageParam.content() }
     }
+
+    private fun presentVariants(messageParam: MessageParam): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "user" to messageParam.user(),
+                "assistant" to messageParam.assistant(),
+                "system" to messageParam.system(),
+            )
+            .filterValues { it.isPresent }
 }

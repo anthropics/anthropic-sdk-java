@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -24,8 +25,8 @@ internal class BetaClaudeTagBundleTargetTest {
 
         val betaClaudeTagBundleTarget = BetaClaudeTagBundleTarget.ofSlackChannel(slackChannel)
 
-        assertThat(betaClaudeTagBundleTarget.slackChannel()).contains(slackChannel)
-        assertThat(betaClaudeTagBundleTarget.slackWorkspace()).isEmpty
+        assertThat(presentVariants(betaClaudeTagBundleTarget))
+            .isEqualTo(mapOf("slackChannel" to Optional.of(slackChannel)))
     }
 
     @Test
@@ -60,8 +61,8 @@ internal class BetaClaudeTagBundleTargetTest {
 
         val betaClaudeTagBundleTarget = BetaClaudeTagBundleTarget.ofSlackWorkspace(slackWorkspace)
 
-        assertThat(betaClaudeTagBundleTarget.slackChannel()).isEmpty
-        assertThat(betaClaudeTagBundleTarget.slackWorkspace()).contains(slackWorkspace)
+        assertThat(presentVariants(betaClaudeTagBundleTarget))
+            .isEqualTo(mapOf("slackWorkspace" to Optional.of(slackWorkspace)))
     }
 
     @Test
@@ -146,4 +147,13 @@ internal class BetaClaudeTagBundleTargetTest {
         assertThrows<AnthropicInvalidDataException> { betaClaudeTagBundleTarget.id() }
         assertThrows<AnthropicInvalidDataException> { betaClaudeTagBundleTarget.createdAt() }
     }
+
+    private fun presentVariants(
+        betaClaudeTagBundleTarget: BetaClaudeTagBundleTarget
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "slackChannel" to betaClaudeTagBundleTarget.slackChannel(),
+                "slackWorkspace" to betaClaudeTagBundleTarget.slackWorkspace(),
+            )
+            .filterValues { it.isPresent }
 }

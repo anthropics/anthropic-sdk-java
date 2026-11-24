@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,8 +19,8 @@ internal class BetaDreamInputTest {
 
         val betaDreamInput = BetaDreamInput.ofMemoryStore(memoryStore)
 
-        assertThat(betaDreamInput.memoryStore()).contains(memoryStore)
-        assertThat(betaDreamInput.sessions()).isEmpty
+        assertThat(presentVariants(betaDreamInput))
+            .isEqualTo(mapOf("memoryStore" to Optional.of(memoryStore)))
     }
 
     @Test
@@ -42,8 +43,8 @@ internal class BetaDreamInputTest {
 
         val betaDreamInput = BetaDreamInput.ofSessions(sessions)
 
-        assertThat(betaDreamInput.memoryStore()).isEmpty
-        assertThat(betaDreamInput.sessions()).contains(sessions)
+        assertThat(presentVariants(betaDreamInput))
+            .isEqualTo(mapOf("sessions" to Optional.of(sessions)))
     }
 
     @Test
@@ -80,4 +81,11 @@ internal class BetaDreamInputTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaDreamInput.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(betaDreamInput: BetaDreamInput): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "memoryStore" to betaDreamInput.memoryStore(),
+                "sessions" to betaDreamInput.sessions(),
+            )
+            .filterValues { it.isPresent }
 }

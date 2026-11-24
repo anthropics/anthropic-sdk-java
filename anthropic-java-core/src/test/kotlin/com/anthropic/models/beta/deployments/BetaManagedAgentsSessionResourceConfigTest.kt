@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -24,10 +25,8 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
         val betaManagedAgentsSessionResourceConfig =
             BetaManagedAgentsSessionResourceConfig.ofGitHubRepository(githubRepository)
 
-        assertThat(betaManagedAgentsSessionResourceConfig.githubRepository())
-            .contains(githubRepository)
-        assertThat(betaManagedAgentsSessionResourceConfig.file()).isEmpty
-        assertThat(betaManagedAgentsSessionResourceConfig.memoryStore()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsSessionResourceConfig))
+            .isEqualTo(mapOf("githubRepository" to Optional.of(githubRepository)))
     }
 
     @Test
@@ -63,9 +62,8 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
         val betaManagedAgentsSessionResourceConfig =
             BetaManagedAgentsSessionResourceConfig.ofFile(file)
 
-        assertThat(betaManagedAgentsSessionResourceConfig.githubRepository()).isEmpty
-        assertThat(betaManagedAgentsSessionResourceConfig.file()).contains(file)
-        assertThat(betaManagedAgentsSessionResourceConfig.memoryStore()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsSessionResourceConfig))
+            .isEqualTo(mapOf("file" to Optional.of(file)))
     }
 
     @Test
@@ -101,9 +99,8 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
         val betaManagedAgentsSessionResourceConfig =
             BetaManagedAgentsSessionResourceConfig.ofMemoryStore(memoryStore)
 
-        assertThat(betaManagedAgentsSessionResourceConfig.githubRepository()).isEmpty
-        assertThat(betaManagedAgentsSessionResourceConfig.file()).isEmpty
-        assertThat(betaManagedAgentsSessionResourceConfig.memoryStore()).contains(memoryStore)
+        assertThat(presentVariants(betaManagedAgentsSessionResourceConfig))
+            .isEqualTo(mapOf("memoryStore" to Optional.of(memoryStore)))
     }
 
     @Test
@@ -185,4 +182,14 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
 
         assertThat(betaManagedAgentsSessionResourceConfig.mountPath()).isEmpty
     }
+
+    private fun presentVariants(
+        betaManagedAgentsSessionResourceConfig: BetaManagedAgentsSessionResourceConfig
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "githubRepository" to betaManagedAgentsSessionResourceConfig.githubRepository(),
+                "file" to betaManagedAgentsSessionResourceConfig.file(),
+                "memoryStore" to betaManagedAgentsSessionResourceConfig.memoryStore(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,8 +19,8 @@ internal class MessageContentParamTest {
 
         val messageContentParam = MessageContentParam.ofString(string)
 
-        assertThat(messageContentParam.string()).contains(string)
-        assertThat(messageContentParam.contentBlockParams()).isEmpty
+        assertThat(presentVariants(messageContentParam))
+            .isEqualTo(mapOf("string" to Optional.of(string)))
     }
 
     @Test
@@ -63,8 +64,8 @@ internal class MessageContentParamTest {
 
         val messageContentParam = MessageContentParam.ofContentBlockParams(contentBlockParams)
 
-        assertThat(messageContentParam.string()).isEmpty
-        assertThat(messageContentParam.contentBlockParams()).contains(contentBlockParams)
+        assertThat(presentVariants(messageContentParam))
+            .isEqualTo(mapOf("contentBlockParams" to Optional.of(contentBlockParams)))
     }
 
     @Test
@@ -120,4 +121,13 @@ internal class MessageContentParamTest {
         val e = assertThrows<AnthropicInvalidDataException> { messageContentParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        messageContentParam: MessageContentParam
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "string" to messageContentParam.string(),
+                "contentBlockParams" to messageContentParam.contentBlockParams(),
+            )
+            .filterValues { it.isPresent }
 }

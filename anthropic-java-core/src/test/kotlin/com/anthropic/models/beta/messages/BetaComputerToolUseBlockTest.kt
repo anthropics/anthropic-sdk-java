@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,23 +24,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofKey(key)
 
-        assertThat(betaComputerToolUseBlock.key()).contains(key)
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("key" to Optional.of(key)))
     }
 
     @Test
@@ -74,23 +60,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofHoldKey(holdKey)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).contains(holdKey)
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("holdKey" to Optional.of(holdKey)))
     }
 
     @Test
@@ -125,23 +96,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofType(type)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).contains(type)
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("type" to Optional.of(type)))
     }
 
     @Test
@@ -176,23 +132,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofCursorPosition(cursorPosition)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).contains(cursorPosition)
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("cursorPosition" to Optional.of(cursorPosition)))
     }
 
     @Test
@@ -229,23 +170,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofMouseMove(mouseMove)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).contains(mouseMove)
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("mouseMove" to Optional.of(mouseMove)))
     }
 
     @Test
@@ -285,23 +211,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofLeftMouseDown(leftMouseDown)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).contains(leftMouseDown)
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("leftMouseDown" to Optional.of(leftMouseDown)))
     }
 
     @Test
@@ -336,23 +247,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofLeftMouseUp(leftMouseUp)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).contains(leftMouseUp)
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("leftMouseUp" to Optional.of(leftMouseUp)))
     }
 
     @Test
@@ -393,23 +289,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofLeftClick(leftClick)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).contains(leftClick)
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("leftClick" to Optional.of(leftClick)))
     }
 
     @Test
@@ -458,23 +339,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofLeftClickDrag(leftClickDrag)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).contains(leftClickDrag)
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("leftClickDrag" to Optional.of(leftClickDrag)))
     }
 
     @Test
@@ -523,23 +389,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofRightClick(rightClick)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).contains(rightClick)
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("rightClick" to Optional.of(rightClick)))
     }
 
     @Test
@@ -586,23 +437,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofMiddleClick(middleClick)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).contains(middleClick)
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("middleClick" to Optional.of(middleClick)))
     }
 
     @Test
@@ -649,23 +485,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofDoubleClick(doubleClick)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).contains(doubleClick)
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("doubleClick" to Optional.of(doubleClick)))
     }
 
     @Test
@@ -712,23 +533,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofTripleClick(tripleClick)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).contains(tripleClick)
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("tripleClick" to Optional.of(tripleClick)))
     }
 
     @Test
@@ -777,23 +583,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofScroll(scroll)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).contains(scroll)
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("scroll" to Optional.of(scroll)))
     }
 
     @Test
@@ -836,23 +627,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofWait(wait)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).contains(wait)
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("wait" to Optional.of(wait)))
     }
 
     @Test
@@ -887,23 +663,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofScreenshot(screenshot)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).contains(screenshot)
-        assertThat(betaComputerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("screenshot" to Optional.of(screenshot)))
     }
 
     @Test
@@ -938,23 +699,8 @@ internal class BetaComputerToolUseBlockTest {
 
         val betaComputerToolUseBlock = BetaComputerToolUseBlock.ofZoom(zoom)
 
-        assertThat(betaComputerToolUseBlock.key()).isEmpty
-        assertThat(betaComputerToolUseBlock.holdKey()).isEmpty
-        assertThat(betaComputerToolUseBlock.type()).isEmpty
-        assertThat(betaComputerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(betaComputerToolUseBlock.mouseMove()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(betaComputerToolUseBlock.rightClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.middleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.doubleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.tripleClick()).isEmpty
-        assertThat(betaComputerToolUseBlock.scroll()).isEmpty
-        assertThat(betaComputerToolUseBlock.wait()).isEmpty
-        assertThat(betaComputerToolUseBlock.screenshot()).isEmpty
-        assertThat(betaComputerToolUseBlock.zoom()).contains(zoom)
+        assertThat(presentVariants(betaComputerToolUseBlock))
+            .isEqualTo(mapOf("zoom" to Optional.of(zoom)))
     }
 
     @Test
@@ -1030,4 +776,28 @@ internal class BetaComputerToolUseBlockTest {
         assertThrows<AnthropicInvalidDataException> { betaComputerToolUseBlock.id() }
         assertThat(betaComputerToolUseBlock.caller()).isEmpty
     }
+
+    private fun presentVariants(
+        betaComputerToolUseBlock: BetaComputerToolUseBlock
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "key" to betaComputerToolUseBlock.key(),
+                "holdKey" to betaComputerToolUseBlock.holdKey(),
+                "type" to betaComputerToolUseBlock.type(),
+                "cursorPosition" to betaComputerToolUseBlock.cursorPosition(),
+                "mouseMove" to betaComputerToolUseBlock.mouseMove(),
+                "leftMouseDown" to betaComputerToolUseBlock.leftMouseDown(),
+                "leftMouseUp" to betaComputerToolUseBlock.leftMouseUp(),
+                "leftClick" to betaComputerToolUseBlock.leftClick(),
+                "leftClickDrag" to betaComputerToolUseBlock.leftClickDrag(),
+                "rightClick" to betaComputerToolUseBlock.rightClick(),
+                "middleClick" to betaComputerToolUseBlock.middleClick(),
+                "doubleClick" to betaComputerToolUseBlock.doubleClick(),
+                "tripleClick" to betaComputerToolUseBlock.tripleClick(),
+                "scroll" to betaComputerToolUseBlock.scroll(),
+                "wait" to betaComputerToolUseBlock.wait(),
+                "screenshot" to betaComputerToolUseBlock.screenshot(),
+                "zoom" to betaComputerToolUseBlock.zoom(),
+            )
+            .filterValues { it.isPresent }
 }

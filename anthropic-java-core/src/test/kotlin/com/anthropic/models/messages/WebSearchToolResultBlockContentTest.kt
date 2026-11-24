@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,8 +19,8 @@ internal class WebSearchToolResultBlockContentTest {
 
         val webSearchToolResultBlockContent = WebSearchToolResultBlockContent.ofError(error)
 
-        assertThat(webSearchToolResultBlockContent.error()).contains(error)
-        assertThat(webSearchToolResultBlockContent.resultBlocks()).isEmpty
+        assertThat(presentVariants(webSearchToolResultBlockContent))
+            .isEqualTo(mapOf("error" to Optional.of(error)))
     }
 
     @Test
@@ -55,8 +56,8 @@ internal class WebSearchToolResultBlockContentTest {
         val webSearchToolResultBlockContent =
             WebSearchToolResultBlockContent.ofResultBlocks(resultBlocks)
 
-        assertThat(webSearchToolResultBlockContent.error()).isEmpty
-        assertThat(webSearchToolResultBlockContent.resultBlocks()).contains(resultBlocks)
+        assertThat(presentVariants(webSearchToolResultBlockContent))
+            .isEqualTo(mapOf("resultBlocks" to Optional.of(resultBlocks)))
     }
 
     @Test
@@ -104,4 +105,13 @@ internal class WebSearchToolResultBlockContentTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        webSearchToolResultBlockContent: WebSearchToolResultBlockContent
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "error" to webSearchToolResultBlockContent.error(),
+                "resultBlocks" to webSearchToolResultBlockContent.resultBlocks(),
+            )
+            .filterValues { it.isPresent }
 }

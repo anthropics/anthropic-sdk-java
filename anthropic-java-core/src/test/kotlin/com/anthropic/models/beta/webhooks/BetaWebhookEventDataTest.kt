@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,57 +24,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionCreated(sessionCreated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).contains(sessionCreated)
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionCreated" to Optional.of(sessionCreated)))
     }
 
     @Test
@@ -108,57 +60,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionPending(sessionPending)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).contains(sessionPending)
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionPending" to Optional.of(sessionPending)))
     }
 
     @Test
@@ -193,57 +96,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionRunning(sessionRunning)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).contains(sessionRunning)
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionRunning" to Optional.of(sessionRunning)))
     }
 
     @Test
@@ -278,57 +132,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionIdled(sessionIdled)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).contains(sessionIdled)
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionIdled" to Optional.of(sessionIdled)))
     }
 
     @Test
@@ -364,57 +169,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofSessionRequiresAction(sessionRequiresAction)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).contains(sessionRequiresAction)
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionRequiresAction" to Optional.of(sessionRequiresAction)))
     }
 
     @Test
@@ -449,57 +205,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionArchived(sessionArchived)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).contains(sessionArchived)
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionArchived" to Optional.of(sessionArchived)))
     }
 
     @Test
@@ -534,57 +241,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionDeleted(sessionDeleted)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).contains(sessionDeleted)
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionDeleted" to Optional.of(sessionDeleted)))
     }
 
     @Test
@@ -620,58 +278,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofSessionStatusRescheduled(sessionStatusRescheduled)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled())
-            .contains(sessionStatusRescheduled)
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionStatusRescheduled" to Optional.of(sessionStatusRescheduled)))
     }
 
     @Test
@@ -707,57 +315,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofSessionStatusRunStarted(sessionStatusRunStarted)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).contains(sessionStatusRunStarted)
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionStatusRunStarted" to Optional.of(sessionStatusRunStarted)))
     }
 
     @Test
@@ -792,57 +351,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionStatusIdled(sessionStatusIdled)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).contains(sessionStatusIdled)
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionStatusIdled" to Optional.of(sessionStatusIdled)))
     }
 
     @Test
@@ -878,57 +388,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofSessionStatusTerminated(sessionStatusTerminated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).contains(sessionStatusTerminated)
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionStatusTerminated" to Optional.of(sessionStatusTerminated)))
     }
 
     @Test
@@ -964,57 +425,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionThreadCreated(sessionThreadCreated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).contains(sessionThreadCreated)
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionThreadCreated" to Optional.of(sessionThreadCreated)))
     }
 
     @Test
@@ -1051,57 +463,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionThreadIdled(sessionThreadIdled)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).contains(sessionThreadIdled)
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionThreadIdled" to Optional.of(sessionThreadIdled)))
     }
 
     @Test
@@ -1139,57 +502,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofSessionThreadTerminated(sessionThreadTerminated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).contains(sessionThreadTerminated)
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionThreadTerminated" to Optional.of(sessionThreadTerminated)))
     }
 
     @Test
@@ -1226,58 +540,10 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofSessionOutcomeEvaluationEnded(sessionOutcomeEvaluationEnded)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded())
-            .contains(sessionOutcomeEvaluationEnded)
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(
+                mapOf("sessionOutcomeEvaluationEnded" to Optional.of(sessionOutcomeEvaluationEnded))
+            )
     }
 
     @Test
@@ -1312,57 +578,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofVaultCreated(vaultCreated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).contains(vaultCreated)
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("vaultCreated" to Optional.of(vaultCreated)))
     }
 
     @Test
@@ -1397,57 +614,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofVaultArchived(vaultArchived)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).contains(vaultArchived)
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("vaultArchived" to Optional.of(vaultArchived)))
     }
 
     @Test
@@ -1482,57 +650,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofVaultDeleted(vaultDeleted)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).contains(vaultDeleted)
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("vaultDeleted" to Optional.of(vaultDeleted)))
     }
 
     @Test
@@ -1569,57 +688,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofVaultCredentialCreated(vaultCredentialCreated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).contains(vaultCredentialCreated)
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("vaultCredentialCreated" to Optional.of(vaultCredentialCreated)))
     }
 
     @Test
@@ -1657,57 +727,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofVaultCredentialArchived(vaultCredentialArchived)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).contains(vaultCredentialArchived)
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("vaultCredentialArchived" to Optional.of(vaultCredentialArchived)))
     }
 
     @Test
@@ -1745,57 +766,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofVaultCredentialDeleted(vaultCredentialDeleted)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).contains(vaultCredentialDeleted)
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("vaultCredentialDeleted" to Optional.of(vaultCredentialDeleted)))
     }
 
     @Test
@@ -1833,58 +805,10 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofVaultCredentialRefreshFailed(vaultCredentialRefreshFailed)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed())
-            .contains(vaultCredentialRefreshFailed)
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(
+                mapOf("vaultCredentialRefreshFailed" to Optional.of(vaultCredentialRefreshFailed))
+            )
     }
 
     @Test
@@ -1920,57 +844,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionUpdated(sessionUpdated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).contains(sessionUpdated)
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionUpdated" to Optional.of(sessionUpdated)))
     }
 
     @Test
@@ -2005,57 +880,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofAgentCreated(agentCreated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).contains(agentCreated)
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("agentCreated" to Optional.of(agentCreated)))
     }
 
     @Test
@@ -2090,57 +916,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofAgentArchived(agentArchived)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).contains(agentArchived)
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("agentArchived" to Optional.of(agentArchived)))
     }
 
     @Test
@@ -2175,57 +952,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofAgentDeleted(agentDeleted)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).contains(agentDeleted)
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("agentDeleted" to Optional.of(agentDeleted)))
     }
 
     @Test
@@ -2260,57 +988,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofDeploymentPaused(deploymentPaused)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).contains(deploymentPaused)
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("deploymentPaused" to Optional.of(deploymentPaused)))
     }
 
     @Test
@@ -2345,57 +1024,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofDeploymentRunFailed(deploymentRunFailed)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).contains(deploymentRunFailed)
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("deploymentRunFailed" to Optional.of(deploymentRunFailed)))
     }
 
     @Test
@@ -2430,57 +1060,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofDeploymentCreated(deploymentCreated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).contains(deploymentCreated)
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("deploymentCreated" to Optional.of(deploymentCreated)))
     }
 
     @Test
@@ -2515,57 +1096,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofDeploymentUpdated(deploymentUpdated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).contains(deploymentUpdated)
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("deploymentUpdated" to Optional.of(deploymentUpdated)))
     }
 
     @Test
@@ -2600,57 +1132,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofDeploymentUnpaused(deploymentUnpaused)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).contains(deploymentUnpaused)
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("deploymentUnpaused" to Optional.of(deploymentUnpaused)))
     }
 
     @Test
@@ -2685,57 +1168,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofAgentUpdated(agentUpdated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).contains(agentUpdated)
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("agentUpdated" to Optional.of(agentUpdated)))
     }
 
     @Test
@@ -2770,57 +1204,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofDeploymentArchived(deploymentArchived)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).contains(deploymentArchived)
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("deploymentArchived" to Optional.of(deploymentArchived)))
     }
 
     @Test
@@ -2855,57 +1240,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofDeploymentRunStarted(deploymentRunStarted)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).contains(deploymentRunStarted)
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("deploymentRunStarted" to Optional.of(deploymentRunStarted)))
     }
 
     @Test
@@ -2940,57 +1276,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofDeploymentDeleted(deploymentDeleted)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).contains(deploymentDeleted)
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("deploymentDeleted" to Optional.of(deploymentDeleted)))
     }
 
     @Test
@@ -3026,57 +1313,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofDeploymentRunSucceeded(deploymentRunSucceeded)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).contains(deploymentRunSucceeded)
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("deploymentRunSucceeded" to Optional.of(deploymentRunSucceeded)))
     }
 
     @Test
@@ -3111,57 +1349,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofEnvironmentCreated(environmentCreated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).contains(environmentCreated)
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("environmentCreated" to Optional.of(environmentCreated)))
     }
 
     @Test
@@ -3196,57 +1385,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofEnvironmentUpdated(environmentUpdated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).contains(environmentUpdated)
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("environmentUpdated" to Optional.of(environmentUpdated)))
     }
 
     @Test
@@ -3281,57 +1421,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofEnvironmentArchived(environmentArchived)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).contains(environmentArchived)
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("environmentArchived" to Optional.of(environmentArchived)))
     }
 
     @Test
@@ -3366,57 +1457,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofEnvironmentDeleted(environmentDeleted)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).contains(environmentDeleted)
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("environmentDeleted" to Optional.of(environmentDeleted)))
     }
 
     @Test
@@ -3451,57 +1493,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofMemoryStoreCreated(memoryStoreCreated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).contains(memoryStoreCreated)
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("memoryStoreCreated" to Optional.of(memoryStoreCreated)))
     }
 
     @Test
@@ -3536,57 +1529,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofMemoryStoreArchived(memoryStoreArchived)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).contains(memoryStoreArchived)
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("memoryStoreArchived" to Optional.of(memoryStoreArchived)))
     }
 
     @Test
@@ -3621,57 +1565,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofMemoryStoreDeleted(memoryStoreDeleted)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).contains(memoryStoreDeleted)
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("memoryStoreDeleted" to Optional.of(memoryStoreDeleted)))
     }
 
     @Test
@@ -3706,57 +1601,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofSessionBudgetReached(sessionBudgetReached)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).contains(sessionBudgetReached)
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("sessionBudgetReached" to Optional.of(sessionBudgetReached)))
     }
 
     @Test
@@ -3794,58 +1640,13 @@ internal class BetaWebhookEventDataTest {
                 userProfileEnforcementActionOpened
             )
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened())
-            .contains(userProfileEnforcementActionOpened)
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(
+                mapOf(
+                    "userProfileEnforcementActionOpened" to
+                        Optional.of(userProfileEnforcementActionOpened)
+                )
+            )
     }
 
     @Test
@@ -3883,58 +1684,13 @@ internal class BetaWebhookEventDataTest {
                 userProfileEnforcementActionResolved
             )
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved())
-            .contains(userProfileEnforcementActionResolved)
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(
+                mapOf(
+                    "userProfileEnforcementActionResolved" to
+                        Optional.of(userProfileEnforcementActionResolved)
+                )
+            )
     }
 
     @Test
@@ -3969,58 +1725,13 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofUserProfileProgramStatusUpdated(userProfileProgramStatusUpdated)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated())
-            .contains(userProfileProgramStatusUpdated)
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(
+                mapOf(
+                    "userProfileProgramStatusUpdated" to
+                        Optional.of(userProfileProgramStatusUpdated)
+                )
+            )
     }
 
     @Test
@@ -4053,57 +1764,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofExternalKeyFailed(externalKeyFailed)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).contains(externalKeyFailed)
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("externalKeyFailed" to Optional.of(externalKeyFailed)))
     }
 
     @Test
@@ -4136,57 +1798,8 @@ internal class BetaWebhookEventDataTest {
 
         val betaWebhookEventData = BetaWebhookEventData.ofExternalKeyRecovered(externalKeyRecovered)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).contains(externalKeyRecovered)
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("externalKeyRecovered" to Optional.of(externalKeyRecovered)))
     }
 
     @Test
@@ -4220,57 +1833,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofExternalStorageFailed(externalStorageFailed)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).contains(externalStorageFailed)
-        assertThat(betaWebhookEventData.externalStorageRecovered()).isEmpty
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("externalStorageFailed" to Optional.of(externalStorageFailed)))
     }
 
     @Test
@@ -4304,58 +1868,8 @@ internal class BetaWebhookEventDataTest {
         val betaWebhookEventData =
             BetaWebhookEventData.ofExternalStorageRecovered(externalStorageRecovered)
 
-        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionPending()).isEmpty
-        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
-        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
-        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
-        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
-        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
-        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
-        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
-        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
-        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
-        assertThat(betaWebhookEventData.agentCreated()).isEmpty
-        assertThat(betaWebhookEventData.agentArchived()).isEmpty
-        assertThat(betaWebhookEventData.agentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentPaused()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunFailed()).isEmpty
-        assertThat(betaWebhookEventData.deploymentCreated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentUnpaused()).isEmpty
-        assertThat(betaWebhookEventData.agentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.deploymentArchived()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunStarted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.deploymentRunSucceeded()).isEmpty
-        assertThat(betaWebhookEventData.environmentCreated()).isEmpty
-        assertThat(betaWebhookEventData.environmentUpdated()).isEmpty
-        assertThat(betaWebhookEventData.environmentArchived()).isEmpty
-        assertThat(betaWebhookEventData.environmentDeleted()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreCreated()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreArchived()).isEmpty
-        assertThat(betaWebhookEventData.memoryStoreDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionBudgetReached()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionOpened()).isEmpty
-        assertThat(betaWebhookEventData.userProfileEnforcementActionResolved()).isEmpty
-        assertThat(betaWebhookEventData.userProfileProgramStatusUpdated()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalKeyRecovered()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageFailed()).isEmpty
-        assertThat(betaWebhookEventData.externalStorageRecovered())
-            .contains(externalStorageRecovered)
+        assertThat(presentVariants(betaWebhookEventData))
+            .isEqualTo(mapOf("externalStorageRecovered" to Optional.of(externalStorageRecovered)))
     }
 
     @Test
@@ -4458,4 +1972,67 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultId()).isEmpty
         assertThat(betaWebhookEventData.enforcementActionId()).isEmpty
     }
+
+    private fun presentVariants(
+        betaWebhookEventData: BetaWebhookEventData
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "sessionCreated" to betaWebhookEventData.sessionCreated(),
+                "sessionPending" to betaWebhookEventData.sessionPending(),
+                "sessionRunning" to betaWebhookEventData.sessionRunning(),
+                "sessionIdled" to betaWebhookEventData.sessionIdled(),
+                "sessionRequiresAction" to betaWebhookEventData.sessionRequiresAction(),
+                "sessionArchived" to betaWebhookEventData.sessionArchived(),
+                "sessionDeleted" to betaWebhookEventData.sessionDeleted(),
+                "sessionStatusRescheduled" to betaWebhookEventData.sessionStatusRescheduled(),
+                "sessionStatusRunStarted" to betaWebhookEventData.sessionStatusRunStarted(),
+                "sessionStatusIdled" to betaWebhookEventData.sessionStatusIdled(),
+                "sessionStatusTerminated" to betaWebhookEventData.sessionStatusTerminated(),
+                "sessionThreadCreated" to betaWebhookEventData.sessionThreadCreated(),
+                "sessionThreadIdled" to betaWebhookEventData.sessionThreadIdled(),
+                "sessionThreadTerminated" to betaWebhookEventData.sessionThreadTerminated(),
+                "sessionOutcomeEvaluationEnded" to
+                    betaWebhookEventData.sessionOutcomeEvaluationEnded(),
+                "vaultCreated" to betaWebhookEventData.vaultCreated(),
+                "vaultArchived" to betaWebhookEventData.vaultArchived(),
+                "vaultDeleted" to betaWebhookEventData.vaultDeleted(),
+                "vaultCredentialCreated" to betaWebhookEventData.vaultCredentialCreated(),
+                "vaultCredentialArchived" to betaWebhookEventData.vaultCredentialArchived(),
+                "vaultCredentialDeleted" to betaWebhookEventData.vaultCredentialDeleted(),
+                "vaultCredentialRefreshFailed" to
+                    betaWebhookEventData.vaultCredentialRefreshFailed(),
+                "sessionUpdated" to betaWebhookEventData.sessionUpdated(),
+                "agentCreated" to betaWebhookEventData.agentCreated(),
+                "agentArchived" to betaWebhookEventData.agentArchived(),
+                "agentDeleted" to betaWebhookEventData.agentDeleted(),
+                "deploymentPaused" to betaWebhookEventData.deploymentPaused(),
+                "deploymentRunFailed" to betaWebhookEventData.deploymentRunFailed(),
+                "deploymentCreated" to betaWebhookEventData.deploymentCreated(),
+                "deploymentUpdated" to betaWebhookEventData.deploymentUpdated(),
+                "deploymentUnpaused" to betaWebhookEventData.deploymentUnpaused(),
+                "agentUpdated" to betaWebhookEventData.agentUpdated(),
+                "deploymentArchived" to betaWebhookEventData.deploymentArchived(),
+                "deploymentRunStarted" to betaWebhookEventData.deploymentRunStarted(),
+                "deploymentDeleted" to betaWebhookEventData.deploymentDeleted(),
+                "deploymentRunSucceeded" to betaWebhookEventData.deploymentRunSucceeded(),
+                "environmentCreated" to betaWebhookEventData.environmentCreated(),
+                "environmentUpdated" to betaWebhookEventData.environmentUpdated(),
+                "environmentArchived" to betaWebhookEventData.environmentArchived(),
+                "environmentDeleted" to betaWebhookEventData.environmentDeleted(),
+                "memoryStoreCreated" to betaWebhookEventData.memoryStoreCreated(),
+                "memoryStoreArchived" to betaWebhookEventData.memoryStoreArchived(),
+                "memoryStoreDeleted" to betaWebhookEventData.memoryStoreDeleted(),
+                "sessionBudgetReached" to betaWebhookEventData.sessionBudgetReached(),
+                "userProfileEnforcementActionOpened" to
+                    betaWebhookEventData.userProfileEnforcementActionOpened(),
+                "userProfileEnforcementActionResolved" to
+                    betaWebhookEventData.userProfileEnforcementActionResolved(),
+                "userProfileProgramStatusUpdated" to
+                    betaWebhookEventData.userProfileProgramStatusUpdated(),
+                "externalKeyFailed" to betaWebhookEventData.externalKeyFailed(),
+                "externalKeyRecovered" to betaWebhookEventData.externalKeyRecovered(),
+                "externalStorageFailed" to betaWebhookEventData.externalStorageFailed(),
+                "externalStorageRecovered" to betaWebhookEventData.externalStorageRecovered(),
+            )
+            .filterValues { it.isPresent }
 }

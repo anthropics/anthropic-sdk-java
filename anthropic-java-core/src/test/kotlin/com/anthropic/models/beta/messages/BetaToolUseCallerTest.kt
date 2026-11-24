@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,9 +19,8 @@ internal class BetaToolUseCallerTest {
 
         val betaToolUseCaller = BetaToolUseCaller.ofDirect(direct)
 
-        assertThat(betaToolUseCaller.direct()).contains(direct)
-        assertThat(betaToolUseCaller.codeExecution20250825()).isEmpty
-        assertThat(betaToolUseCaller.codeExecution20260120()).isEmpty
+        assertThat(presentVariants(betaToolUseCaller))
+            .isEqualTo(mapOf("direct" to Optional.of(direct)))
     }
 
     @Test
@@ -43,9 +43,8 @@ internal class BetaToolUseCallerTest {
 
         val betaToolUseCaller = BetaToolUseCaller.ofCodeExecution20250825(codeExecution20250825)
 
-        assertThat(betaToolUseCaller.direct()).isEmpty
-        assertThat(betaToolUseCaller.codeExecution20250825()).contains(codeExecution20250825)
-        assertThat(betaToolUseCaller.codeExecution20260120()).isEmpty
+        assertThat(presentVariants(betaToolUseCaller))
+            .isEqualTo(mapOf("codeExecution20250825" to Optional.of(codeExecution20250825)))
     }
 
     @Test
@@ -69,9 +68,8 @@ internal class BetaToolUseCallerTest {
 
         val betaToolUseCaller = BetaToolUseCaller.ofCodeExecution20260120(codeExecution20260120)
 
-        assertThat(betaToolUseCaller.direct()).isEmpty
-        assertThat(betaToolUseCaller.codeExecution20250825()).isEmpty
-        assertThat(betaToolUseCaller.codeExecution20260120()).contains(codeExecution20260120)
+        assertThat(presentVariants(betaToolUseCaller))
+            .isEqualTo(mapOf("codeExecution20260120" to Optional.of(codeExecution20260120)))
     }
 
     @Test
@@ -134,4 +132,12 @@ internal class BetaToolUseCallerTest {
 
         assertThat(betaToolUseCaller.toolId()).isEmpty
     }
+
+    private fun presentVariants(betaToolUseCaller: BetaToolUseCaller): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "direct" to betaToolUseCaller.direct(),
+                "codeExecution20250825" to betaToolUseCaller.codeExecution20250825(),
+                "codeExecution20260120" to betaToolUseCaller.codeExecution20260120(),
+            )
+            .filterValues { it.isPresent }
 }

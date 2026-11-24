@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,13 +23,8 @@ internal class BetaCodeExecutionToolResultBlockParamContentTest {
         val betaCodeExecutionToolResultBlockParamContent =
             BetaCodeExecutionToolResultBlockParamContent.ofErrorParam(errorParam)
 
-        assertThat(betaCodeExecutionToolResultBlockParamContent.errorParam()).contains(errorParam)
-        assertThat(betaCodeExecutionToolResultBlockParamContent.resultBlockParam()).isEmpty
-        assertThat(
-                betaCodeExecutionToolResultBlockParamContent
-                    .encryptedCodeExecutionResultBlockParam()
-            )
-            .isEmpty
+        assertThat(presentVariants(betaCodeExecutionToolResultBlockParamContent))
+            .isEqualTo(mapOf("errorParam" to Optional.of(errorParam)))
     }
 
     @Test
@@ -64,14 +60,8 @@ internal class BetaCodeExecutionToolResultBlockParamContentTest {
         val betaCodeExecutionToolResultBlockParamContent =
             BetaCodeExecutionToolResultBlockParamContent.ofResultBlockParam(resultBlockParam)
 
-        assertThat(betaCodeExecutionToolResultBlockParamContent.errorParam()).isEmpty
-        assertThat(betaCodeExecutionToolResultBlockParamContent.resultBlockParam())
-            .contains(resultBlockParam)
-        assertThat(
-                betaCodeExecutionToolResultBlockParamContent
-                    .encryptedCodeExecutionResultBlockParam()
-            )
-            .isEmpty
+        assertThat(presentVariants(betaCodeExecutionToolResultBlockParamContent))
+            .isEqualTo(mapOf("resultBlockParam" to Optional.of(resultBlockParam)))
     }
 
     @Test
@@ -112,13 +102,13 @@ internal class BetaCodeExecutionToolResultBlockParamContentTest {
                 encryptedCodeExecutionResultBlockParam
             )
 
-        assertThat(betaCodeExecutionToolResultBlockParamContent.errorParam()).isEmpty
-        assertThat(betaCodeExecutionToolResultBlockParamContent.resultBlockParam()).isEmpty
-        assertThat(
-                betaCodeExecutionToolResultBlockParamContent
-                    .encryptedCodeExecutionResultBlockParam()
+        assertThat(presentVariants(betaCodeExecutionToolResultBlockParamContent))
+            .isEqualTo(
+                mapOf(
+                    "encryptedCodeExecutionResultBlockParam" to
+                        Optional.of(encryptedCodeExecutionResultBlockParam)
+                )
             )
-            .contains(encryptedCodeExecutionResultBlockParam)
     }
 
     @Test
@@ -172,4 +162,17 @@ internal class BetaCodeExecutionToolResultBlockParamContentTest {
         assertThat(betaCodeExecutionToolResultBlockParamContent.returnCode()).isEmpty
         assertThat(betaCodeExecutionToolResultBlockParamContent.stderr()).isEmpty
     }
+
+    private fun presentVariants(
+        betaCodeExecutionToolResultBlockParamContent: BetaCodeExecutionToolResultBlockParamContent
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "errorParam" to betaCodeExecutionToolResultBlockParamContent.errorParam(),
+                "resultBlockParam" to
+                    betaCodeExecutionToolResultBlockParamContent.resultBlockParam(),
+                "encryptedCodeExecutionResultBlockParam" to
+                    betaCodeExecutionToolResultBlockParamContent
+                        .encryptedCodeExecutionResultBlockParam(),
+            )
+            .filterValues { it.isPresent }
 }

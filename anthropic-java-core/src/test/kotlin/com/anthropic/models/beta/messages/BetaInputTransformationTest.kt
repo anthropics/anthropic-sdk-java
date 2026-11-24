@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,8 +23,8 @@ internal class BetaInputTransformationTest {
 
         val betaInputTransformation = BetaInputTransformation.ofThinkingDropped(thinkingDropped)
 
-        assertThat(betaInputTransformation.thinkingDropped()).contains(thinkingDropped)
-        assertThat(betaInputTransformation.thinkingMismatchAllowed()).isEmpty
+        assertThat(presentVariants(betaInputTransformation))
+            .isEqualTo(mapOf("thinkingDropped" to Optional.of(thinkingDropped)))
     }
 
     @Test
@@ -59,9 +60,8 @@ internal class BetaInputTransformationTest {
         val betaInputTransformation =
             BetaInputTransformation.ofThinkingMismatchAllowed(thinkingMismatchAllowed)
 
-        assertThat(betaInputTransformation.thinkingDropped()).isEmpty
-        assertThat(betaInputTransformation.thinkingMismatchAllowed())
-            .contains(thinkingMismatchAllowed)
+        assertThat(presentVariants(betaInputTransformation))
+            .isEqualTo(mapOf("thinkingMismatchAllowed" to Optional.of(thinkingMismatchAllowed)))
     }
 
     @Test
@@ -129,4 +129,13 @@ internal class BetaInputTransformationTest {
 
         assertThrows<AnthropicInvalidDataException> { betaInputTransformation.path() }
     }
+
+    private fun presentVariants(
+        betaInputTransformation: BetaInputTransformation
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "thinkingDropped" to betaInputTransformation.thinkingDropped(),
+                "thinkingMismatchAllowed" to betaInputTransformation.thinkingMismatchAllowed(),
+            )
+            .filterValues { it.isPresent }
 }

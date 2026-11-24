@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,12 +19,8 @@ internal class CacheMissReasonTest {
 
         val cacheMissReason = CacheMissReason.ofModelChanged(modelChanged)
 
-        assertThat(cacheMissReason.modelChanged()).contains(modelChanged)
-        assertThat(cacheMissReason.systemChanged()).isEmpty
-        assertThat(cacheMissReason.toolsChanged()).isEmpty
-        assertThat(cacheMissReason.messagesChanged()).isEmpty
-        assertThat(cacheMissReason.previousMessageNotFound()).isEmpty
-        assertThat(cacheMissReason.unavailable()).isEmpty
+        assertThat(presentVariants(cacheMissReason))
+            .isEqualTo(mapOf("modelChanged" to Optional.of(modelChanged)))
     }
 
     @Test
@@ -46,12 +43,8 @@ internal class CacheMissReasonTest {
 
         val cacheMissReason = CacheMissReason.ofSystemChanged(systemChanged)
 
-        assertThat(cacheMissReason.modelChanged()).isEmpty
-        assertThat(cacheMissReason.systemChanged()).contains(systemChanged)
-        assertThat(cacheMissReason.toolsChanged()).isEmpty
-        assertThat(cacheMissReason.messagesChanged()).isEmpty
-        assertThat(cacheMissReason.previousMessageNotFound()).isEmpty
-        assertThat(cacheMissReason.unavailable()).isEmpty
+        assertThat(presentVariants(cacheMissReason))
+            .isEqualTo(mapOf("systemChanged" to Optional.of(systemChanged)))
     }
 
     @Test
@@ -74,12 +67,8 @@ internal class CacheMissReasonTest {
 
         val cacheMissReason = CacheMissReason.ofToolsChanged(toolsChanged)
 
-        assertThat(cacheMissReason.modelChanged()).isEmpty
-        assertThat(cacheMissReason.systemChanged()).isEmpty
-        assertThat(cacheMissReason.toolsChanged()).contains(toolsChanged)
-        assertThat(cacheMissReason.messagesChanged()).isEmpty
-        assertThat(cacheMissReason.previousMessageNotFound()).isEmpty
-        assertThat(cacheMissReason.unavailable()).isEmpty
+        assertThat(presentVariants(cacheMissReason))
+            .isEqualTo(mapOf("toolsChanged" to Optional.of(toolsChanged)))
     }
 
     @Test
@@ -102,12 +91,8 @@ internal class CacheMissReasonTest {
 
         val cacheMissReason = CacheMissReason.ofMessagesChanged(messagesChanged)
 
-        assertThat(cacheMissReason.modelChanged()).isEmpty
-        assertThat(cacheMissReason.systemChanged()).isEmpty
-        assertThat(cacheMissReason.toolsChanged()).isEmpty
-        assertThat(cacheMissReason.messagesChanged()).contains(messagesChanged)
-        assertThat(cacheMissReason.previousMessageNotFound()).isEmpty
-        assertThat(cacheMissReason.unavailable()).isEmpty
+        assertThat(presentVariants(cacheMissReason))
+            .isEqualTo(mapOf("messagesChanged" to Optional.of(messagesChanged)))
     }
 
     @Test
@@ -130,12 +115,8 @@ internal class CacheMissReasonTest {
 
         val cacheMissReason = CacheMissReason.ofPreviousMessageNotFound(previousMessageNotFound)
 
-        assertThat(cacheMissReason.modelChanged()).isEmpty
-        assertThat(cacheMissReason.systemChanged()).isEmpty
-        assertThat(cacheMissReason.toolsChanged()).isEmpty
-        assertThat(cacheMissReason.messagesChanged()).isEmpty
-        assertThat(cacheMissReason.previousMessageNotFound()).contains(previousMessageNotFound)
-        assertThat(cacheMissReason.unavailable()).isEmpty
+        assertThat(presentVariants(cacheMissReason))
+            .isEqualTo(mapOf("previousMessageNotFound" to Optional.of(previousMessageNotFound)))
     }
 
     @Test
@@ -161,12 +142,8 @@ internal class CacheMissReasonTest {
 
         val cacheMissReason = CacheMissReason.ofUnavailable(unavailable)
 
-        assertThat(cacheMissReason.modelChanged()).isEmpty
-        assertThat(cacheMissReason.systemChanged()).isEmpty
-        assertThat(cacheMissReason.toolsChanged()).isEmpty
-        assertThat(cacheMissReason.messagesChanged()).isEmpty
-        assertThat(cacheMissReason.previousMessageNotFound()).isEmpty
-        assertThat(cacheMissReason.unavailable()).contains(unavailable)
+        assertThat(presentVariants(cacheMissReason))
+            .isEqualTo(mapOf("unavailable" to Optional.of(unavailable)))
     }
 
     @Test
@@ -233,4 +210,15 @@ internal class CacheMissReasonTest {
 
         assertThat(cacheMissReason.cacheMissedInputTokens()).isEmpty
     }
+
+    private fun presentVariants(cacheMissReason: CacheMissReason): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "modelChanged" to cacheMissReason.modelChanged(),
+                "systemChanged" to cacheMissReason.systemChanged(),
+                "toolsChanged" to cacheMissReason.toolsChanged(),
+                "messagesChanged" to cacheMissReason.messagesChanged(),
+                "previousMessageNotFound" to cacheMissReason.previousMessageNotFound(),
+                "unavailable" to cacheMissReason.unavailable(),
+            )
+            .filterValues { it.isPresent }
 }

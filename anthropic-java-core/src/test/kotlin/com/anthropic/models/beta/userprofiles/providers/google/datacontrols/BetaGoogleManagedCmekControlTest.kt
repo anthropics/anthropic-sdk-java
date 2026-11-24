@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -28,8 +29,8 @@ internal class BetaGoogleManagedCmekControlTest {
 
         val betaGoogleManagedCmekControl = BetaGoogleManagedCmekControl.ofDisabled(disabled)
 
-        assertThat(betaGoogleManagedCmekControl.disabled()).contains(disabled)
-        assertThat(betaGoogleManagedCmekControl.enabled()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedCmekControl))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -90,8 +91,8 @@ internal class BetaGoogleManagedCmekControlTest {
 
         val betaGoogleManagedCmekControl = BetaGoogleManagedCmekControl.ofEnabled(enabled)
 
-        assertThat(betaGoogleManagedCmekControl.disabled()).isEmpty
-        assertThat(betaGoogleManagedCmekControl.enabled()).contains(enabled)
+        assertThat(presentVariants(betaGoogleManagedCmekControl))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -193,4 +194,13 @@ internal class BetaGoogleManagedCmekControlTest {
 
         assertThrows<AnthropicInvalidDataException> { betaGoogleManagedCmekControl.retiredKeys() }
     }
+
+    private fun presentVariants(
+        betaGoogleManagedCmekControl: BetaGoogleManagedCmekControl
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "disabled" to betaGoogleManagedCmekControl.disabled(),
+                "enabled" to betaGoogleManagedCmekControl.enabled(),
+            )
+            .filterValues { it.isPresent }
 }

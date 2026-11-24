@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -21,11 +22,8 @@ internal class BetaGoogleManagedProjectCmekRegionStatusTest {
         val betaGoogleManagedProjectCmekRegionStatus =
             BetaGoogleManagedProjectCmekRegionStatus.ofNotConfigured(notConfigured)
 
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.notConfigured()).contains(notConfigured)
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedProjectCmekRegionStatus))
+            .isEqualTo(mapOf("notConfigured" to Optional.of(notConfigured)))
     }
 
     @Test
@@ -57,11 +55,8 @@ internal class BetaGoogleManagedProjectCmekRegionStatusTest {
         val betaGoogleManagedProjectCmekRegionStatus =
             BetaGoogleManagedProjectCmekRegionStatus.ofPending(pending)
 
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.pending()).contains(pending)
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedProjectCmekRegionStatus))
+            .isEqualTo(mapOf("pending" to Optional.of(pending)))
     }
 
     @Test
@@ -98,11 +93,8 @@ internal class BetaGoogleManagedProjectCmekRegionStatusTest {
         val betaGoogleManagedProjectCmekRegionStatus =
             BetaGoogleManagedProjectCmekRegionStatus.ofActive(active)
 
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.active()).contains(active)
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedProjectCmekRegionStatus))
+            .isEqualTo(mapOf("active" to Optional.of(active)))
     }
 
     @Test
@@ -139,11 +131,8 @@ internal class BetaGoogleManagedProjectCmekRegionStatusTest {
         val betaGoogleManagedProjectCmekRegionStatus =
             BetaGoogleManagedProjectCmekRegionStatus.ofFailed(failed)
 
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.failed()).contains(failed)
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.suspended()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedProjectCmekRegionStatus))
+            .isEqualTo(mapOf("failed" to Optional.of(failed)))
     }
 
     @Test
@@ -174,11 +163,8 @@ internal class BetaGoogleManagedProjectCmekRegionStatusTest {
         val betaGoogleManagedProjectCmekRegionStatus =
             BetaGoogleManagedProjectCmekRegionStatus.ofSuspended(suspended)
 
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.notConfigured()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.pending()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.active()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.failed()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekRegionStatus.suspended()).contains(suspended)
+        assertThat(presentVariants(betaGoogleManagedProjectCmekRegionStatus))
+            .isEqualTo(mapOf("suspended" to Optional.of(suspended)))
     }
 
     @Test
@@ -269,4 +255,16 @@ internal class BetaGoogleManagedProjectCmekRegionStatusTest {
         assertThat(betaGoogleManagedProjectCmekRegionStatus.effectiveExternalKeyId()).isEmpty
         assertThat(betaGoogleManagedProjectCmekRegionStatus.error()).isEmpty
     }
+
+    private fun presentVariants(
+        betaGoogleManagedProjectCmekRegionStatus: BetaGoogleManagedProjectCmekRegionStatus
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "notConfigured" to betaGoogleManagedProjectCmekRegionStatus.notConfigured(),
+                "pending" to betaGoogleManagedProjectCmekRegionStatus.pending(),
+                "active" to betaGoogleManagedProjectCmekRegionStatus.active(),
+                "failed" to betaGoogleManagedProjectCmekRegionStatus.failed(),
+                "suspended" to betaGoogleManagedProjectCmekRegionStatus.suspended(),
+            )
+            .filterValues { it.isPresent }
 }

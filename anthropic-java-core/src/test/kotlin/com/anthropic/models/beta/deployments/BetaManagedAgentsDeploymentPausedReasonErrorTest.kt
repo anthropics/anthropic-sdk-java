@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -20,22 +21,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentArchived(environmentArchived)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived())
-            .contains(environmentArchived)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("environmentArchived" to Optional.of(environmentArchived)))
     }
 
     @Test
@@ -64,22 +51,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofAgentArchived(agentArchived)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived())
-            .contains(agentArchived)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("agentArchived" to Optional.of(agentArchived)))
     }
 
     @Test
@@ -108,22 +81,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentNotFound(environmentNotFound)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound())
-            .contains(environmentNotFound)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("environmentNotFound" to Optional.of(environmentNotFound)))
     }
 
     @Test
@@ -152,22 +111,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofVaultNotFound(vaultNotFound)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound())
-            .contains(vaultNotFound)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("vaultNotFound" to Optional.of(vaultNotFound)))
     }
 
     @Test
@@ -196,22 +141,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofFileNotFound(fileNotFound)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound())
-            .contains(fileNotFound)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("fileNotFound" to Optional.of(fileNotFound)))
     }
 
     @Test
@@ -242,22 +173,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
                 sessionResourceNotFound
             )
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound())
-            .contains(sessionResourceNotFound)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("sessionResourceNotFound" to Optional.of(sessionResourceNotFound)))
     }
 
     @Test
@@ -287,22 +204,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofWorkspaceArchived(workspaceArchived)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived())
-            .contains(workspaceArchived)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("workspaceArchived" to Optional.of(workspaceArchived)))
     }
 
     @Test
@@ -333,22 +236,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
                 organizationDisabled
             )
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled())
-            .contains(organizationDisabled)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("organizationDisabled" to Optional.of(organizationDisabled)))
     }
 
     @Test
@@ -377,22 +266,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofMemoryStoreArchived(memoryStoreArchived)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived())
-            .contains(memoryStoreArchived)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("memoryStoreArchived" to Optional.of(memoryStoreArchived)))
     }
 
     @Test
@@ -421,22 +296,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofSkillNotFound(skillNotFound)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound())
-            .contains(skillNotFound)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("skillNotFound" to Optional.of(skillNotFound)))
     }
 
     @Test
@@ -465,22 +326,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofVaultArchived(vaultArchived)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived())
-            .contains(vaultArchived)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("vaultArchived" to Optional.of(vaultArchived)))
     }
 
     @Test
@@ -508,21 +355,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofUnknown(unknown)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).contains(unknown)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("unknown" to Optional.of(unknown)))
     }
 
     @Test
@@ -554,21 +388,12 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
                 selfHostedResourcesUnsupported
             )
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .contains(selfHostedResourcesUnsupported)
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(
+                mapOf(
+                    "selfHostedResourcesUnsupported" to Optional.of(selfHostedResourcesUnsupported)
+                )
+            )
     }
 
     @Test
@@ -598,22 +423,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofMcpEgressBlocked(mcpEgressBlocked)
 
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.agentArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.environmentNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.fileNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.workspaceArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.organizationDisabled()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.skillNotFound()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.vaultArchived()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.unknown()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported())
-            .isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked())
-            .contains(mcpEgressBlocked)
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReasonError))
+            .isEqualTo(mapOf("mcpEgressBlocked" to Optional.of(mcpEgressBlocked)))
     }
 
     @Test
@@ -658,4 +469,33 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsDeploymentPausedReasonError: BetaManagedAgentsDeploymentPausedReasonError
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "environmentArchived" to
+                    betaManagedAgentsDeploymentPausedReasonError.environmentArchived(),
+                "agentArchived" to betaManagedAgentsDeploymentPausedReasonError.agentArchived(),
+                "environmentNotFound" to
+                    betaManagedAgentsDeploymentPausedReasonError.environmentNotFound(),
+                "vaultNotFound" to betaManagedAgentsDeploymentPausedReasonError.vaultNotFound(),
+                "fileNotFound" to betaManagedAgentsDeploymentPausedReasonError.fileNotFound(),
+                "sessionResourceNotFound" to
+                    betaManagedAgentsDeploymentPausedReasonError.sessionResourceNotFound(),
+                "workspaceArchived" to
+                    betaManagedAgentsDeploymentPausedReasonError.workspaceArchived(),
+                "organizationDisabled" to
+                    betaManagedAgentsDeploymentPausedReasonError.organizationDisabled(),
+                "memoryStoreArchived" to
+                    betaManagedAgentsDeploymentPausedReasonError.memoryStoreArchived(),
+                "skillNotFound" to betaManagedAgentsDeploymentPausedReasonError.skillNotFound(),
+                "vaultArchived" to betaManagedAgentsDeploymentPausedReasonError.vaultArchived(),
+                "unknown" to betaManagedAgentsDeploymentPausedReasonError.unknown(),
+                "selfHostedResourcesUnsupported" to
+                    betaManagedAgentsDeploymentPausedReasonError.selfHostedResourcesUnsupported(),
+                "mcpEgressBlocked" to
+                    betaManagedAgentsDeploymentPausedReasonError.mcpEgressBlocked(),
+            )
+            .filterValues { it.isPresent }
 }

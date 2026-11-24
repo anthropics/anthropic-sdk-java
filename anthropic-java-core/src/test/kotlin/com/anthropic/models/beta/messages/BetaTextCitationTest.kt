@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -26,11 +27,8 @@ internal class BetaTextCitationTest {
 
         val betaTextCitation = BetaTextCitation.ofCharLocation(charLocation)
 
-        assertThat(betaTextCitation.charLocation()).contains(charLocation)
-        assertThat(betaTextCitation.pageLocation()).isEmpty
-        assertThat(betaTextCitation.contentBlockLocation()).isEmpty
-        assertThat(betaTextCitation.webSearchResultLocation()).isEmpty
-        assertThat(betaTextCitation.searchResultLocation()).isEmpty
+        assertThat(presentVariants(betaTextCitation))
+            .isEqualTo(mapOf("charLocation" to Optional.of(charLocation)))
     }
 
     @Test
@@ -71,11 +69,8 @@ internal class BetaTextCitationTest {
 
         val betaTextCitation = BetaTextCitation.ofPageLocation(pageLocation)
 
-        assertThat(betaTextCitation.charLocation()).isEmpty
-        assertThat(betaTextCitation.pageLocation()).contains(pageLocation)
-        assertThat(betaTextCitation.contentBlockLocation()).isEmpty
-        assertThat(betaTextCitation.webSearchResultLocation()).isEmpty
-        assertThat(betaTextCitation.searchResultLocation()).isEmpty
+        assertThat(presentVariants(betaTextCitation))
+            .isEqualTo(mapOf("pageLocation" to Optional.of(pageLocation)))
     }
 
     @Test
@@ -116,11 +111,8 @@ internal class BetaTextCitationTest {
 
         val betaTextCitation = BetaTextCitation.ofContentBlockLocation(contentBlockLocation)
 
-        assertThat(betaTextCitation.charLocation()).isEmpty
-        assertThat(betaTextCitation.pageLocation()).isEmpty
-        assertThat(betaTextCitation.contentBlockLocation()).contains(contentBlockLocation)
-        assertThat(betaTextCitation.webSearchResultLocation()).isEmpty
-        assertThat(betaTextCitation.searchResultLocation()).isEmpty
+        assertThat(presentVariants(betaTextCitation))
+            .isEqualTo(mapOf("contentBlockLocation" to Optional.of(contentBlockLocation)))
     }
 
     @Test
@@ -159,11 +151,8 @@ internal class BetaTextCitationTest {
 
         val betaTextCitation = BetaTextCitation.ofWebSearchResultLocation(webSearchResultLocation)
 
-        assertThat(betaTextCitation.charLocation()).isEmpty
-        assertThat(betaTextCitation.pageLocation()).isEmpty
-        assertThat(betaTextCitation.contentBlockLocation()).isEmpty
-        assertThat(betaTextCitation.webSearchResultLocation()).contains(webSearchResultLocation)
-        assertThat(betaTextCitation.searchResultLocation()).isEmpty
+        assertThat(presentVariants(betaTextCitation))
+            .isEqualTo(mapOf("webSearchResultLocation" to Optional.of(webSearchResultLocation)))
     }
 
     @Test
@@ -202,11 +191,8 @@ internal class BetaTextCitationTest {
 
         val betaTextCitation = BetaTextCitation.ofSearchResultLocation(searchResultLocation)
 
-        assertThat(betaTextCitation.charLocation()).isEmpty
-        assertThat(betaTextCitation.pageLocation()).isEmpty
-        assertThat(betaTextCitation.contentBlockLocation()).isEmpty
-        assertThat(betaTextCitation.webSearchResultLocation()).isEmpty
-        assertThat(betaTextCitation.searchResultLocation()).contains(searchResultLocation)
+        assertThat(presentVariants(betaTextCitation))
+            .isEqualTo(mapOf("searchResultLocation" to Optional.of(searchResultLocation)))
     }
 
     @Test
@@ -316,4 +302,14 @@ internal class BetaTextCitationTest {
         assertThat(betaTextCitation.startBlockIndex()).isEmpty
         assertThat(betaTextCitation.title()).isEmpty
     }
+
+    private fun presentVariants(betaTextCitation: BetaTextCitation): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "charLocation" to betaTextCitation.charLocation(),
+                "pageLocation" to betaTextCitation.pageLocation(),
+                "contentBlockLocation" to betaTextCitation.contentBlockLocation(),
+                "webSearchResultLocation" to betaTextCitation.webSearchResultLocation(),
+                "searchResultLocation" to betaTextCitation.searchResultLocation(),
+            )
+            .filterValues { it.isPresent }
 }

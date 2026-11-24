@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaGoogleManagedCmekControlParamsTest {
         val betaGoogleManagedCmekControlParams =
             BetaGoogleManagedCmekControlParams.ofDisabled(disabled)
 
-        assertThat(betaGoogleManagedCmekControlParams.disabled()).contains(disabled)
-        assertThat(betaGoogleManagedCmekControlParams.enabled()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedCmekControlParams))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -55,8 +56,8 @@ internal class BetaGoogleManagedCmekControlParamsTest {
         val betaGoogleManagedCmekControlParams =
             BetaGoogleManagedCmekControlParams.ofEnabled(enabled)
 
-        assertThat(betaGoogleManagedCmekControlParams.disabled()).isEmpty
-        assertThat(betaGoogleManagedCmekControlParams.enabled()).contains(enabled)
+        assertThat(presentVariants(betaGoogleManagedCmekControlParams))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -104,4 +105,13 @@ internal class BetaGoogleManagedCmekControlParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaGoogleManagedCmekControlParams: BetaGoogleManagedCmekControlParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "disabled" to betaGoogleManagedCmekControlParams.disabled(),
+                "enabled" to betaGoogleManagedCmekControlParams.enabled(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,23 +24,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofKey(key)
 
-        assertThat(computerToolUseBlock.key()).contains(key)
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("key" to Optional.of(key)))
     }
 
     @Test
@@ -74,23 +60,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofHoldKey(holdKey)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).contains(holdKey)
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("holdKey" to Optional.of(holdKey)))
     }
 
     @Test
@@ -125,23 +96,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofType(type)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).contains(type)
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("type" to Optional.of(type)))
     }
 
     @Test
@@ -176,23 +132,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofCursorPosition(cursorPosition)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).contains(cursorPosition)
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("cursorPosition" to Optional.of(cursorPosition)))
     }
 
     @Test
@@ -227,23 +168,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofMouseMove(mouseMove)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).contains(mouseMove)
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("mouseMove" to Optional.of(mouseMove)))
     }
 
     @Test
@@ -280,23 +206,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofLeftMouseDown(leftMouseDown)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).contains(leftMouseDown)
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("leftMouseDown" to Optional.of(leftMouseDown)))
     }
 
     @Test
@@ -331,23 +242,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofLeftMouseUp(leftMouseUp)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).contains(leftMouseUp)
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("leftMouseUp" to Optional.of(leftMouseUp)))
     }
 
     @Test
@@ -388,23 +284,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofLeftClick(leftClick)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).contains(leftClick)
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("leftClick" to Optional.of(leftClick)))
     }
 
     @Test
@@ -453,23 +334,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofLeftClickDrag(leftClickDrag)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).contains(leftClickDrag)
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("leftClickDrag" to Optional.of(leftClickDrag)))
     }
 
     @Test
@@ -518,23 +384,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofRightClick(rightClick)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).contains(rightClick)
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("rightClick" to Optional.of(rightClick)))
     }
 
     @Test
@@ -581,23 +432,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofMiddleClick(middleClick)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).contains(middleClick)
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("middleClick" to Optional.of(middleClick)))
     }
 
     @Test
@@ -644,23 +480,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofDoubleClick(doubleClick)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).contains(doubleClick)
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("doubleClick" to Optional.of(doubleClick)))
     }
 
     @Test
@@ -707,23 +528,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofTripleClick(tripleClick)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).contains(tripleClick)
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("tripleClick" to Optional.of(tripleClick)))
     }
 
     @Test
@@ -772,23 +578,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofScroll(scroll)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).contains(scroll)
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("scroll" to Optional.of(scroll)))
     }
 
     @Test
@@ -831,23 +622,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofWait(wait)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).contains(wait)
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("wait" to Optional.of(wait)))
     }
 
     @Test
@@ -882,23 +658,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofScreenshot(screenshot)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).contains(screenshot)
-        assertThat(computerToolUseBlock.zoom()).isEmpty
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("screenshot" to Optional.of(screenshot)))
     }
 
     @Test
@@ -933,23 +694,8 @@ internal class ComputerToolUseBlockTest {
 
         val computerToolUseBlock = ComputerToolUseBlock.ofZoom(zoom)
 
-        assertThat(computerToolUseBlock.key()).isEmpty
-        assertThat(computerToolUseBlock.holdKey()).isEmpty
-        assertThat(computerToolUseBlock.type()).isEmpty
-        assertThat(computerToolUseBlock.cursorPosition()).isEmpty
-        assertThat(computerToolUseBlock.mouseMove()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(computerToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(computerToolUseBlock.leftClick()).isEmpty
-        assertThat(computerToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(computerToolUseBlock.rightClick()).isEmpty
-        assertThat(computerToolUseBlock.middleClick()).isEmpty
-        assertThat(computerToolUseBlock.doubleClick()).isEmpty
-        assertThat(computerToolUseBlock.tripleClick()).isEmpty
-        assertThat(computerToolUseBlock.scroll()).isEmpty
-        assertThat(computerToolUseBlock.wait()).isEmpty
-        assertThat(computerToolUseBlock.screenshot()).isEmpty
-        assertThat(computerToolUseBlock.zoom()).contains(zoom)
+        assertThat(presentVariants(computerToolUseBlock))
+            .isEqualTo(mapOf("zoom" to Optional.of(zoom)))
     }
 
     @Test
@@ -1025,4 +771,28 @@ internal class ComputerToolUseBlockTest {
         assertThrows<AnthropicInvalidDataException> { computerToolUseBlock.id() }
         assertThrows<AnthropicInvalidDataException> { computerToolUseBlock.caller() }
     }
+
+    private fun presentVariants(
+        computerToolUseBlock: ComputerToolUseBlock
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "key" to computerToolUseBlock.key(),
+                "holdKey" to computerToolUseBlock.holdKey(),
+                "type" to computerToolUseBlock.type(),
+                "cursorPosition" to computerToolUseBlock.cursorPosition(),
+                "mouseMove" to computerToolUseBlock.mouseMove(),
+                "leftMouseDown" to computerToolUseBlock.leftMouseDown(),
+                "leftMouseUp" to computerToolUseBlock.leftMouseUp(),
+                "leftClick" to computerToolUseBlock.leftClick(),
+                "leftClickDrag" to computerToolUseBlock.leftClickDrag(),
+                "rightClick" to computerToolUseBlock.rightClick(),
+                "middleClick" to computerToolUseBlock.middleClick(),
+                "doubleClick" to computerToolUseBlock.doubleClick(),
+                "tripleClick" to computerToolUseBlock.tripleClick(),
+                "scroll" to computerToolUseBlock.scroll(),
+                "wait" to computerToolUseBlock.wait(),
+                "screenshot" to computerToolUseBlock.screenshot(),
+                "zoom" to computerToolUseBlock.zoom(),
+            )
+            .filterValues { it.isPresent }
 }

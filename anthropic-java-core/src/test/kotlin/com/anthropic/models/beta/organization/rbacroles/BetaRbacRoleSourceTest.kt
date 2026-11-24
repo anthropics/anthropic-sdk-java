@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,8 +19,8 @@ internal class BetaRbacRoleSourceTest {
 
         val betaRbacRoleSource = BetaRbacRoleSource.ofBuiltIn(builtIn)
 
-        assertThat(betaRbacRoleSource.builtIn()).contains(builtIn)
-        assertThat(betaRbacRoleSource.custom()).isEmpty
+        assertThat(presentVariants(betaRbacRoleSource))
+            .isEqualTo(mapOf("builtIn" to Optional.of(builtIn)))
     }
 
     @Test
@@ -43,8 +44,8 @@ internal class BetaRbacRoleSourceTest {
 
         val betaRbacRoleSource = BetaRbacRoleSource.ofCustom(custom)
 
-        assertThat(betaRbacRoleSource.builtIn()).isEmpty
-        assertThat(betaRbacRoleSource.custom()).contains(custom)
+        assertThat(presentVariants(betaRbacRoleSource))
+            .isEqualTo(mapOf("custom" to Optional.of(custom)))
     }
 
     @Test
@@ -79,4 +80,11 @@ internal class BetaRbacRoleSourceTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaRbacRoleSource.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(betaRbacRoleSource: BetaRbacRoleSource): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "builtIn" to betaRbacRoleSource.builtIn(),
+                "custom" to betaRbacRoleSource.custom(),
+            )
+            .filterValues { it.isPresent }
 }

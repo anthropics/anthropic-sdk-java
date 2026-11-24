@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaGoogleManagedStorageControlParamsTest {
         val betaGoogleManagedStorageControlParams =
             BetaGoogleManagedStorageControlParams.ofDisabled(disabled)
 
-        assertThat(betaGoogleManagedStorageControlParams.disabled()).contains(disabled)
-        assertThat(betaGoogleManagedStorageControlParams.enabled()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedStorageControlParams))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -63,8 +64,8 @@ internal class BetaGoogleManagedStorageControlParamsTest {
         val betaGoogleManagedStorageControlParams =
             BetaGoogleManagedStorageControlParams.ofEnabled(enabled)
 
-        assertThat(betaGoogleManagedStorageControlParams.disabled()).isEmpty
-        assertThat(betaGoogleManagedStorageControlParams.enabled()).contains(enabled)
+        assertThat(presentVariants(betaGoogleManagedStorageControlParams))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -123,4 +124,13 @@ internal class BetaGoogleManagedStorageControlParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaGoogleManagedStorageControlParams: BetaGoogleManagedStorageControlParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "disabled" to betaGoogleManagedStorageControlParams.disabled(),
+                "enabled" to betaGoogleManagedStorageControlParams.enabled(),
+            )
+            .filterValues { it.isPresent }
 }

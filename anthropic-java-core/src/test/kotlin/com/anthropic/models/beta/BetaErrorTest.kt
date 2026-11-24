@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,15 +19,8 @@ internal class BetaErrorTest {
 
         val betaError = BetaError.ofInvalidRequest(invalidRequest)
 
-        assertThat(betaError.invalidRequest()).contains(invalidRequest)
-        assertThat(betaError.authentication()).isEmpty
-        assertThat(betaError.billing()).isEmpty
-        assertThat(betaError.permission()).isEmpty
-        assertThat(betaError.notFound()).isEmpty
-        assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.timeout()).isEmpty
-        assertThat(betaError.api()).isEmpty
-        assertThat(betaError.overloaded()).isEmpty
+        assertThat(presentVariants(betaError))
+            .isEqualTo(mapOf("invalidRequest" to Optional.of(invalidRequest)))
     }
 
     @Test
@@ -49,15 +43,8 @@ internal class BetaErrorTest {
 
         val betaError = BetaError.ofAuthentication(authentication)
 
-        assertThat(betaError.invalidRequest()).isEmpty
-        assertThat(betaError.authentication()).contains(authentication)
-        assertThat(betaError.billing()).isEmpty
-        assertThat(betaError.permission()).isEmpty
-        assertThat(betaError.notFound()).isEmpty
-        assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.timeout()).isEmpty
-        assertThat(betaError.api()).isEmpty
-        assertThat(betaError.overloaded()).isEmpty
+        assertThat(presentVariants(betaError))
+            .isEqualTo(mapOf("authentication" to Optional.of(authentication)))
     }
 
     @Test
@@ -80,15 +67,7 @@ internal class BetaErrorTest {
 
         val betaError = BetaError.ofBilling(billing)
 
-        assertThat(betaError.invalidRequest()).isEmpty
-        assertThat(betaError.authentication()).isEmpty
-        assertThat(betaError.billing()).contains(billing)
-        assertThat(betaError.permission()).isEmpty
-        assertThat(betaError.notFound()).isEmpty
-        assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.timeout()).isEmpty
-        assertThat(betaError.api()).isEmpty
-        assertThat(betaError.overloaded()).isEmpty
+        assertThat(presentVariants(betaError)).isEqualTo(mapOf("billing" to Optional.of(billing)))
     }
 
     @Test
@@ -111,15 +90,8 @@ internal class BetaErrorTest {
 
         val betaError = BetaError.ofPermission(permission)
 
-        assertThat(betaError.invalidRequest()).isEmpty
-        assertThat(betaError.authentication()).isEmpty
-        assertThat(betaError.billing()).isEmpty
-        assertThat(betaError.permission()).contains(permission)
-        assertThat(betaError.notFound()).isEmpty
-        assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.timeout()).isEmpty
-        assertThat(betaError.api()).isEmpty
-        assertThat(betaError.overloaded()).isEmpty
+        assertThat(presentVariants(betaError))
+            .isEqualTo(mapOf("permission" to Optional.of(permission)))
     }
 
     @Test
@@ -142,15 +114,7 @@ internal class BetaErrorTest {
 
         val betaError = BetaError.ofNotFound(notFound)
 
-        assertThat(betaError.invalidRequest()).isEmpty
-        assertThat(betaError.authentication()).isEmpty
-        assertThat(betaError.billing()).isEmpty
-        assertThat(betaError.permission()).isEmpty
-        assertThat(betaError.notFound()).contains(notFound)
-        assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.timeout()).isEmpty
-        assertThat(betaError.api()).isEmpty
-        assertThat(betaError.overloaded()).isEmpty
+        assertThat(presentVariants(betaError)).isEqualTo(mapOf("notFound" to Optional.of(notFound)))
     }
 
     @Test
@@ -173,15 +137,8 @@ internal class BetaErrorTest {
 
         val betaError = BetaError.ofRateLimit(rateLimit)
 
-        assertThat(betaError.invalidRequest()).isEmpty
-        assertThat(betaError.authentication()).isEmpty
-        assertThat(betaError.billing()).isEmpty
-        assertThat(betaError.permission()).isEmpty
-        assertThat(betaError.notFound()).isEmpty
-        assertThat(betaError.rateLimit()).contains(rateLimit)
-        assertThat(betaError.timeout()).isEmpty
-        assertThat(betaError.api()).isEmpty
-        assertThat(betaError.overloaded()).isEmpty
+        assertThat(presentVariants(betaError))
+            .isEqualTo(mapOf("rateLimit" to Optional.of(rateLimit)))
     }
 
     @Test
@@ -204,15 +161,7 @@ internal class BetaErrorTest {
 
         val betaError = BetaError.ofTimeout(timeout)
 
-        assertThat(betaError.invalidRequest()).isEmpty
-        assertThat(betaError.authentication()).isEmpty
-        assertThat(betaError.billing()).isEmpty
-        assertThat(betaError.permission()).isEmpty
-        assertThat(betaError.notFound()).isEmpty
-        assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.timeout()).contains(timeout)
-        assertThat(betaError.api()).isEmpty
-        assertThat(betaError.overloaded()).isEmpty
+        assertThat(presentVariants(betaError)).isEqualTo(mapOf("timeout" to Optional.of(timeout)))
     }
 
     @Test
@@ -235,15 +184,7 @@ internal class BetaErrorTest {
 
         val betaError = BetaError.ofApi(api)
 
-        assertThat(betaError.invalidRequest()).isEmpty
-        assertThat(betaError.authentication()).isEmpty
-        assertThat(betaError.billing()).isEmpty
-        assertThat(betaError.permission()).isEmpty
-        assertThat(betaError.notFound()).isEmpty
-        assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.timeout()).isEmpty
-        assertThat(betaError.api()).contains(api)
-        assertThat(betaError.overloaded()).isEmpty
+        assertThat(presentVariants(betaError)).isEqualTo(mapOf("api" to Optional.of(api)))
     }
 
     @Test
@@ -266,15 +207,8 @@ internal class BetaErrorTest {
 
         val betaError = BetaError.ofOverloaded(overloaded)
 
-        assertThat(betaError.invalidRequest()).isEmpty
-        assertThat(betaError.authentication()).isEmpty
-        assertThat(betaError.billing()).isEmpty
-        assertThat(betaError.permission()).isEmpty
-        assertThat(betaError.notFound()).isEmpty
-        assertThat(betaError.rateLimit()).isEmpty
-        assertThat(betaError.timeout()).isEmpty
-        assertThat(betaError.api()).isEmpty
-        assertThat(betaError.overloaded()).contains(overloaded)
+        assertThat(presentVariants(betaError))
+            .isEqualTo(mapOf("overloaded" to Optional.of(overloaded)))
     }
 
     @Test
@@ -335,4 +269,18 @@ internal class BetaErrorTest {
 
         assertThrows<AnthropicInvalidDataException> { betaError.message() }
     }
+
+    private fun presentVariants(betaError: BetaError): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "invalidRequest" to betaError.invalidRequest(),
+                "authentication" to betaError.authentication(),
+                "billing" to betaError.billing(),
+                "permission" to betaError.permission(),
+                "notFound" to betaError.notFound(),
+                "rateLimit" to betaError.rateLimit(),
+                "timeout" to betaError.timeout(),
+                "api" to betaError.api(),
+                "overloaded" to betaError.overloaded(),
+            )
+            .filterValues { it.isPresent }
 }

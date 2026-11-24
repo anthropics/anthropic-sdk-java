@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,10 +19,8 @@ internal class BrowserStateChangeTest {
 
         val browserStateChange = BrowserStateChange.ofTabOpened(tabOpened)
 
-        assertThat(browserStateChange.tabOpened()).contains(tabOpened)
-        assertThat(browserStateChange.downloadStarted()).isEmpty
-        assertThat(browserStateChange.downloadCompleted()).isEmpty
-        assertThat(browserStateChange.downloadFailed()).isEmpty
+        assertThat(presentVariants(browserStateChange))
+            .isEqualTo(mapOf("tabOpened" to Optional.of(tabOpened)))
     }
 
     @Test
@@ -46,10 +45,8 @@ internal class BrowserStateChangeTest {
 
         val browserStateChange = BrowserStateChange.ofDownloadStarted(downloadStarted)
 
-        assertThat(browserStateChange.tabOpened()).isEmpty
-        assertThat(browserStateChange.downloadStarted()).contains(downloadStarted)
-        assertThat(browserStateChange.downloadCompleted()).isEmpty
-        assertThat(browserStateChange.downloadFailed()).isEmpty
+        assertThat(presentVariants(browserStateChange))
+            .isEqualTo(mapOf("downloadStarted" to Optional.of(downloadStarted)))
     }
 
     @Test
@@ -84,10 +81,8 @@ internal class BrowserStateChangeTest {
 
         val browserStateChange = BrowserStateChange.ofDownloadCompleted(downloadCompleted)
 
-        assertThat(browserStateChange.tabOpened()).isEmpty
-        assertThat(browserStateChange.downloadStarted()).isEmpty
-        assertThat(browserStateChange.downloadCompleted()).contains(downloadCompleted)
-        assertThat(browserStateChange.downloadFailed()).isEmpty
+        assertThat(presentVariants(browserStateChange))
+            .isEqualTo(mapOf("downloadCompleted" to Optional.of(downloadCompleted)))
     }
 
     @Test
@@ -123,10 +118,8 @@ internal class BrowserStateChangeTest {
 
         val browserStateChange = BrowserStateChange.ofDownloadFailed(downloadFailed)
 
-        assertThat(browserStateChange.tabOpened()).isEmpty
-        assertThat(browserStateChange.downloadStarted()).isEmpty
-        assertThat(browserStateChange.downloadCompleted()).isEmpty
-        assertThat(browserStateChange.downloadFailed()).contains(downloadFailed)
+        assertThat(presentVariants(browserStateChange))
+            .isEqualTo(mapOf("downloadFailed" to Optional.of(downloadFailed)))
     }
 
     @Test
@@ -208,4 +201,13 @@ internal class BrowserStateChangeTest {
         assertThat(browserStateChange.downloadId()).isEmpty
         assertThat(browserStateChange.url()).isEmpty
     }
+
+    private fun presentVariants(browserStateChange: BrowserStateChange): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "tabOpened" to browserStateChange.tabOpened(),
+                "downloadStarted" to browserStateChange.downloadStarted(),
+                "downloadCompleted" to browserStateChange.downloadCompleted(),
+                "downloadFailed" to browserStateChange.downloadFailed(),
+            )
+            .filterValues { it.isPresent }
 }

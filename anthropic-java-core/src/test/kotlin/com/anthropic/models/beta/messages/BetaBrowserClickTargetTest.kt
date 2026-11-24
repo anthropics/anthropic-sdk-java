@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,8 +19,8 @@ internal class BetaBrowserClickTargetTest {
 
         val betaBrowserClickTarget = BetaBrowserClickTarget.ofCoordinate(coordinate)
 
-        assertThat(betaBrowserClickTarget.coordinate()).contains(coordinate)
-        assertThat(betaBrowserClickTarget.ref()).isEmpty
+        assertThat(presentVariants(betaBrowserClickTarget))
+            .isEqualTo(mapOf("coordinate" to Optional.of(coordinate)))
     }
 
     @Test
@@ -45,8 +46,8 @@ internal class BetaBrowserClickTargetTest {
 
         val betaBrowserClickTarget = BetaBrowserClickTarget.ofRef(ref)
 
-        assertThat(betaBrowserClickTarget.coordinate()).isEmpty
-        assertThat(betaBrowserClickTarget.ref()).contains(ref)
+        assertThat(presentVariants(betaBrowserClickTarget))
+            .isEqualTo(mapOf("ref" to Optional.of(ref)))
     }
 
     @Test
@@ -80,4 +81,13 @@ internal class BetaBrowserClickTargetTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaBrowserClickTarget.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaBrowserClickTarget: BetaBrowserClickTarget
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "coordinate" to betaBrowserClickTarget.coordinate(),
+                "ref" to betaBrowserClickTarget.ref(),
+            )
+            .filterValues { it.isPresent }
 }

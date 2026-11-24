@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -20,10 +21,8 @@ internal class BetaManagedAgentsWebFetchUrlSourceToolFilterTest {
         val betaManagedAgentsWebFetchUrlSourceToolFilter =
             BetaManagedAgentsWebFetchUrlSourceToolFilter.ofAll(all)
 
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.all()).contains(all)
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.none()).isEmpty
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.only()).isEmpty
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.except()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsWebFetchUrlSourceToolFilter))
+            .isEqualTo(mapOf("all" to Optional.of(all)))
     }
 
     @Test
@@ -51,10 +50,8 @@ internal class BetaManagedAgentsWebFetchUrlSourceToolFilterTest {
         val betaManagedAgentsWebFetchUrlSourceToolFilter =
             BetaManagedAgentsWebFetchUrlSourceToolFilter.ofNone(none)
 
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.all()).isEmpty
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.none()).contains(none)
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.only()).isEmpty
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.except()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsWebFetchUrlSourceToolFilter))
+            .isEqualTo(mapOf("none" to Optional.of(none)))
     }
 
     @Test
@@ -85,10 +82,8 @@ internal class BetaManagedAgentsWebFetchUrlSourceToolFilterTest {
         val betaManagedAgentsWebFetchUrlSourceToolFilter =
             BetaManagedAgentsWebFetchUrlSourceToolFilter.ofOnly(only)
 
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.all()).isEmpty
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.none()).isEmpty
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.only()).contains(only)
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.except()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsWebFetchUrlSourceToolFilter))
+            .isEqualTo(mapOf("only" to Optional.of(only)))
     }
 
     @Test
@@ -121,10 +116,8 @@ internal class BetaManagedAgentsWebFetchUrlSourceToolFilterTest {
         val betaManagedAgentsWebFetchUrlSourceToolFilter =
             BetaManagedAgentsWebFetchUrlSourceToolFilter.ofExcept(except)
 
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.all()).isEmpty
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.none()).isEmpty
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.only()).isEmpty
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.except()).contains(except)
+        assertThat(presentVariants(betaManagedAgentsWebFetchUrlSourceToolFilter))
+            .isEqualTo(mapOf("except" to Optional.of(except)))
     }
 
     @Test
@@ -197,4 +190,15 @@ internal class BetaManagedAgentsWebFetchUrlSourceToolFilterTest {
 
         assertThat(betaManagedAgentsWebFetchUrlSourceToolFilter.tools()).isEmpty
     }
+
+    private fun presentVariants(
+        betaManagedAgentsWebFetchUrlSourceToolFilter: BetaManagedAgentsWebFetchUrlSourceToolFilter
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "all" to betaManagedAgentsWebFetchUrlSourceToolFilter.all(),
+                "none" to betaManagedAgentsWebFetchUrlSourceToolFilter.none(),
+                "only" to betaManagedAgentsWebFetchUrlSourceToolFilter.only(),
+                "except" to betaManagedAgentsWebFetchUrlSourceToolFilter.except(),
+            )
+            .filterValues { it.isPresent }
 }

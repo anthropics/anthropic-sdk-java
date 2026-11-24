@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,8 +19,8 @@ internal class BetaStorageMemberTest {
 
         val betaStorageMember = BetaStorageMember.ofInternal(internal_)
 
-        assertThat(betaStorageMember.internal_()).contains(internal_)
-        assertThat(betaStorageMember.external()).isEmpty
+        assertThat(presentVariants(betaStorageMember))
+            .isEqualTo(mapOf("internal_" to Optional.of(internal_)))
     }
 
     @Test
@@ -42,8 +43,8 @@ internal class BetaStorageMemberTest {
 
         val betaStorageMember = BetaStorageMember.ofExternal(external)
 
-        assertThat(betaStorageMember.internal_()).isEmpty
-        assertThat(betaStorageMember.external()).contains(external)
+        assertThat(presentVariants(betaStorageMember))
+            .isEqualTo(mapOf("external" to Optional.of(external)))
     }
 
     @Test
@@ -78,4 +79,11 @@ internal class BetaStorageMemberTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaStorageMember.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(betaStorageMember: BetaStorageMember): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "internal_" to betaStorageMember.internal_(),
+                "external" to betaStorageMember.external(),
+            )
+            .filterValues { it.isPresent }
 }

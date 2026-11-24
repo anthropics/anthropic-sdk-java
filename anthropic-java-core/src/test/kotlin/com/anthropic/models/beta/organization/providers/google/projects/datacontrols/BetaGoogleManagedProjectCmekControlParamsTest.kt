@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaGoogleManagedProjectCmekControlParamsTest {
         val betaGoogleManagedProjectCmekControlParams =
             BetaGoogleManagedProjectCmekControlParams.ofDisabled(disabled)
 
-        assertThat(betaGoogleManagedProjectCmekControlParams.disabled()).contains(disabled)
-        assertThat(betaGoogleManagedProjectCmekControlParams.enabled()).isEmpty
+        assertThat(presentVariants(betaGoogleManagedProjectCmekControlParams))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -58,8 +59,8 @@ internal class BetaGoogleManagedProjectCmekControlParamsTest {
         val betaGoogleManagedProjectCmekControlParams =
             BetaGoogleManagedProjectCmekControlParams.ofEnabled(enabled)
 
-        assertThat(betaGoogleManagedProjectCmekControlParams.disabled()).isEmpty
-        assertThat(betaGoogleManagedProjectCmekControlParams.enabled()).contains(enabled)
+        assertThat(presentVariants(betaGoogleManagedProjectCmekControlParams))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -113,4 +114,13 @@ internal class BetaGoogleManagedProjectCmekControlParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaGoogleManagedProjectCmekControlParams: BetaGoogleManagedProjectCmekControlParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "disabled" to betaGoogleManagedProjectCmekControlParams.disabled(),
+                "enabled" to betaGoogleManagedProjectCmekControlParams.enabled(),
+            )
+            .filterValues { it.isPresent }
 }

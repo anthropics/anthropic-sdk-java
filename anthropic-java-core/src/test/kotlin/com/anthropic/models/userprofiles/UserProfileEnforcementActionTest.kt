@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -26,8 +27,8 @@ internal class UserProfileEnforcementActionTest {
 
         val userProfileEnforcementAction = UserProfileEnforcementAction.ofRestriction(restriction)
 
-        assertThat(userProfileEnforcementAction.restriction()).contains(restriction)
-        assertThat(userProfileEnforcementAction.ban()).isEmpty
+        assertThat(presentVariants(userProfileEnforcementAction))
+            .isEqualTo(mapOf("restriction" to Optional.of(restriction)))
     }
 
     @Test
@@ -66,8 +67,8 @@ internal class UserProfileEnforcementActionTest {
 
         val userProfileEnforcementAction = UserProfileEnforcementAction.ofBan(ban)
 
-        assertThat(userProfileEnforcementAction.restriction()).isEmpty
-        assertThat(userProfileEnforcementAction.ban()).contains(ban)
+        assertThat(presentVariants(userProfileEnforcementAction))
+            .isEqualTo(mapOf("ban" to Optional.of(ban)))
     }
 
     @Test
@@ -170,4 +171,13 @@ internal class UserProfileEnforcementActionTest {
         assertThrows<AnthropicInvalidDataException> { userProfileEnforcementAction.openedAt() }
         assertThrows<AnthropicInvalidDataException> { userProfileEnforcementAction.reason() }
     }
+
+    private fun presentVariants(
+        userProfileEnforcementAction: UserProfileEnforcementAction
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "restriction" to userProfileEnforcementAction.restriction(),
+                "ban" to userProfileEnforcementAction.ban(),
+            )
+            .filterValues { it.isPresent }
 }

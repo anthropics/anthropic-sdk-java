@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,9 +19,7 @@ internal class ToolUseCallerTest {
 
         val toolUseCaller = ToolUseCaller.ofDirect(direct)
 
-        assertThat(toolUseCaller.direct()).contains(direct)
-        assertThat(toolUseCaller.codeExecution20250825()).isEmpty
-        assertThat(toolUseCaller.codeExecution20260120()).isEmpty
+        assertThat(presentVariants(toolUseCaller)).isEqualTo(mapOf("direct" to Optional.of(direct)))
     }
 
     @Test
@@ -43,9 +42,8 @@ internal class ToolUseCallerTest {
 
         val toolUseCaller = ToolUseCaller.ofCodeExecution20250825(codeExecution20250825)
 
-        assertThat(toolUseCaller.direct()).isEmpty
-        assertThat(toolUseCaller.codeExecution20250825()).contains(codeExecution20250825)
-        assertThat(toolUseCaller.codeExecution20260120()).isEmpty
+        assertThat(presentVariants(toolUseCaller))
+            .isEqualTo(mapOf("codeExecution20250825" to Optional.of(codeExecution20250825)))
     }
 
     @Test
@@ -68,9 +66,8 @@ internal class ToolUseCallerTest {
 
         val toolUseCaller = ToolUseCaller.ofCodeExecution20260120(codeExecution20260120)
 
-        assertThat(toolUseCaller.direct()).isEmpty
-        assertThat(toolUseCaller.codeExecution20250825()).isEmpty
-        assertThat(toolUseCaller.codeExecution20260120()).contains(codeExecution20260120)
+        assertThat(presentVariants(toolUseCaller))
+            .isEqualTo(mapOf("codeExecution20260120" to Optional.of(codeExecution20260120)))
     }
 
     @Test
@@ -133,4 +130,12 @@ internal class ToolUseCallerTest {
 
         assertThat(toolUseCaller.toolId()).isEmpty
     }
+
+    private fun presentVariants(toolUseCaller: ToolUseCaller): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "direct" to toolUseCaller.direct(),
+                "codeExecution20250825" to toolUseCaller.codeExecution20250825(),
+                "codeExecution20260120" to toolUseCaller.codeExecution20260120(),
+            )
+            .filterValues { it.isPresent }
 }
