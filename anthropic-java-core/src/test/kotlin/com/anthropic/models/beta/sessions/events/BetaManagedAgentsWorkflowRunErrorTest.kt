@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,11 +20,8 @@ internal class BetaManagedAgentsWorkflowRunErrorTest {
 
         val betaManagedAgentsWorkflowRunError = BetaManagedAgentsWorkflowRunError.ofTimeout(timeout)
 
-        assertThat(betaManagedAgentsWorkflowRunError.timeout()).contains(timeout)
-        assertThat(betaManagedAgentsWorkflowRunError.program()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.unknown()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.threadLimit()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.maxWorkflowRuns()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsWorkflowRunError))
+            .isEqualTo(mapOf("timeout" to Optional.of(timeout)))
     }
 
     @Test
@@ -52,11 +50,8 @@ internal class BetaManagedAgentsWorkflowRunErrorTest {
 
         val betaManagedAgentsWorkflowRunError = BetaManagedAgentsWorkflowRunError.ofProgram(program)
 
-        assertThat(betaManagedAgentsWorkflowRunError.timeout()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.program()).contains(program)
-        assertThat(betaManagedAgentsWorkflowRunError.unknown()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.threadLimit()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.maxWorkflowRuns()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsWorkflowRunError))
+            .isEqualTo(mapOf("program" to Optional.of(program)))
     }
 
     @Test
@@ -83,11 +78,8 @@ internal class BetaManagedAgentsWorkflowRunErrorTest {
 
         val betaManagedAgentsWorkflowRunError = BetaManagedAgentsWorkflowRunError.ofUnknown(unknown)
 
-        assertThat(betaManagedAgentsWorkflowRunError.timeout()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.program()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.unknown()).contains(unknown)
-        assertThat(betaManagedAgentsWorkflowRunError.threadLimit()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.maxWorkflowRuns()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsWorkflowRunError))
+            .isEqualTo(mapOf("unknown" to Optional.of(unknown)))
     }
 
     @Test
@@ -118,11 +110,8 @@ internal class BetaManagedAgentsWorkflowRunErrorTest {
         val betaManagedAgentsWorkflowRunError =
             BetaManagedAgentsWorkflowRunError.ofThreadLimit(threadLimit)
 
-        assertThat(betaManagedAgentsWorkflowRunError.timeout()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.program()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.unknown()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.threadLimit()).contains(threadLimit)
-        assertThat(betaManagedAgentsWorkflowRunError.maxWorkflowRuns()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsWorkflowRunError))
+            .isEqualTo(mapOf("threadLimit" to Optional.of(threadLimit)))
     }
 
     @Test
@@ -155,11 +144,8 @@ internal class BetaManagedAgentsWorkflowRunErrorTest {
         val betaManagedAgentsWorkflowRunError =
             BetaManagedAgentsWorkflowRunError.ofMaxWorkflowRuns(maxWorkflowRuns)
 
-        assertThat(betaManagedAgentsWorkflowRunError.timeout()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.program()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.unknown()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.threadLimit()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunError.maxWorkflowRuns()).contains(maxWorkflowRuns)
+        assertThat(presentVariants(betaManagedAgentsWorkflowRunError))
+            .isEqualTo(mapOf("maxWorkflowRuns" to Optional.of(maxWorkflowRuns)))
     }
 
     @Test
@@ -242,4 +228,16 @@ internal class BetaManagedAgentsWorkflowRunErrorTest {
 
         assertThrows<AnthropicInvalidDataException> { betaManagedAgentsWorkflowRunError.message() }
     }
+
+    private fun presentVariants(
+        betaManagedAgentsWorkflowRunError: BetaManagedAgentsWorkflowRunError
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "timeout" to betaManagedAgentsWorkflowRunError.timeout(),
+                "program" to betaManagedAgentsWorkflowRunError.program(),
+                "unknown" to betaManagedAgentsWorkflowRunError.unknown(),
+                "threadLimit" to betaManagedAgentsWorkflowRunError.threadLimit(),
+                "maxWorkflowRuns" to betaManagedAgentsWorkflowRunError.maxWorkflowRuns(),
+            )
+            .filterValues { it.isPresent }
 }

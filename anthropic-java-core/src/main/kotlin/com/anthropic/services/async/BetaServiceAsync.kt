@@ -2,6 +2,7 @@ package com.anthropic.services.async
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.async.beta.AgentServiceAsync
+import com.anthropic.services.async.beta.ComplianceServiceAsync
 import com.anthropic.services.async.beta.DeploymentRunServiceAsync
 import com.anthropic.services.async.beta.DeploymentServiceAsync
 import com.anthropic.services.async.beta.DreamServiceAsync
@@ -68,6 +69,8 @@ interface BetaServiceAsync {
 
     fun tunnels(): TunnelServiceAsync
 
+    fun compliance(): ComplianceServiceAsync
+
     fun organization(): OrganizationServiceAsync
 
     /** A view of [BetaServiceAsync] that provides access to raw HTTP responses for each method. */
@@ -114,6 +117,8 @@ interface BetaServiceAsync {
         fun dreams(): DreamServiceAsync.WithRawResponse
 
         fun tunnels(): TunnelServiceAsync.WithRawResponse
+
+        fun compliance(): ComplianceServiceAsync.WithRawResponse
 
         fun organization(): OrganizationServiceAsync.WithRawResponse
     }

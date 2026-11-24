@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentParams
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -20,10 +21,8 @@ internal class BetaManagedAgentsMultiagentPredefinedAgentParamsTest {
         val betaManagedAgentsMultiagentPredefinedAgentParams =
             BetaManagedAgentsMultiagentPredefinedAgentParams.ofString(string)
 
-        assertThat(betaManagedAgentsMultiagentPredefinedAgentParams.string()).contains(string)
-        assertThat(betaManagedAgentsMultiagentPredefinedAgentParams.betaManagedAgentsAgentParams())
-            .isEmpty
-        assertThat(betaManagedAgentsMultiagentPredefinedAgentParams.self()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagentPredefinedAgentParams))
+            .isEqualTo(mapOf("string" to Optional.of(string)))
     }
 
     @Test
@@ -52,10 +51,10 @@ internal class BetaManagedAgentsMultiagentPredefinedAgentParamsTest {
                 betaManagedAgentsAgentParams
             )
 
-        assertThat(betaManagedAgentsMultiagentPredefinedAgentParams.string()).isEmpty
-        assertThat(betaManagedAgentsMultiagentPredefinedAgentParams.betaManagedAgentsAgentParams())
-            .contains(betaManagedAgentsAgentParams)
-        assertThat(betaManagedAgentsMultiagentPredefinedAgentParams.self()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagentPredefinedAgentParams))
+            .isEqualTo(
+                mapOf("betaManagedAgentsAgentParams" to Optional.of(betaManagedAgentsAgentParams))
+            )
     }
 
     @Test
@@ -83,10 +82,8 @@ internal class BetaManagedAgentsMultiagentPredefinedAgentParamsTest {
         val betaManagedAgentsMultiagentPredefinedAgentParams =
             BetaManagedAgentsMultiagentPredefinedAgentParams.ofSelf(self)
 
-        assertThat(betaManagedAgentsMultiagentPredefinedAgentParams.string()).isEmpty
-        assertThat(betaManagedAgentsMultiagentPredefinedAgentParams.betaManagedAgentsAgentParams())
-            .isEmpty
-        assertThat(betaManagedAgentsMultiagentPredefinedAgentParams.self()).contains(self)
+        assertThat(presentVariants(betaManagedAgentsMultiagentPredefinedAgentParams))
+            .isEqualTo(mapOf("self" to Optional.of(self)))
     }
 
     @Test
@@ -130,4 +127,16 @@ internal class BetaManagedAgentsMultiagentPredefinedAgentParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsMultiagentPredefinedAgentParams:
+            BetaManagedAgentsMultiagentPredefinedAgentParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "string" to betaManagedAgentsMultiagentPredefinedAgentParams.string(),
+                "betaManagedAgentsAgentParams" to
+                    betaManagedAgentsMultiagentPredefinedAgentParams.betaManagedAgentsAgentParams(),
+                "self" to betaManagedAgentsMultiagentPredefinedAgentParams.self(),
+            )
+            .filterValues { it.isPresent }
 }

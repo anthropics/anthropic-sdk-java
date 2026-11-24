@@ -62,7 +62,7 @@ internal class RuleServiceTest {
                     )
                     .description("description")
                     .tokenLifetimeSeconds(60L)
-                    .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                    .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                     .build()
             )
 

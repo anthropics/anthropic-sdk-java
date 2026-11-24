@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -35,8 +36,8 @@ internal class BetaContentBlockSourceContentTest {
 
         val betaContentBlockSourceContent = BetaContentBlockSourceContent.ofText(text)
 
-        assertThat(betaContentBlockSourceContent.text()).contains(text)
-        assertThat(betaContentBlockSourceContent.image()).isEmpty
+        assertThat(presentVariants(betaContentBlockSourceContent))
+            .isEqualTo(mapOf("text" to Optional.of(text)))
     }
 
     @Test
@@ -97,8 +98,8 @@ internal class BetaContentBlockSourceContentTest {
 
         val betaContentBlockSourceContent = BetaContentBlockSourceContent.ofImage(image)
 
-        assertThat(betaContentBlockSourceContent.text()).isEmpty
-        assertThat(betaContentBlockSourceContent.image()).contains(image)
+        assertThat(presentVariants(betaContentBlockSourceContent))
+            .isEqualTo(mapOf("image" to Optional.of(image)))
     }
 
     @Test
@@ -194,4 +195,13 @@ internal class BetaContentBlockSourceContentTest {
 
         assertThat(betaContentBlockSourceContent.cacheControl()).isEmpty
     }
+
+    private fun presentVariants(
+        betaContentBlockSourceContent: BetaContentBlockSourceContent
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "text" to betaContentBlockSourceContent.text(),
+                "image" to betaContentBlockSourceContent.image(),
+            )
+            .filterValues { it.isPresent }
 }

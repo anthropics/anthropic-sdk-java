@@ -2,6 +2,7 @@ package com.anthropic.services.blocking
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.blocking.beta.AgentService
+import com.anthropic.services.blocking.beta.ComplianceService
 import com.anthropic.services.blocking.beta.DeploymentRunService
 import com.anthropic.services.blocking.beta.DeploymentService
 import com.anthropic.services.blocking.beta.DreamService
@@ -68,6 +69,8 @@ interface BetaService {
 
     fun tunnels(): TunnelService
 
+    fun compliance(): ComplianceService
+
     fun organization(): OrganizationService
 
     /** A view of [BetaService] that provides access to raw HTTP responses for each method. */
@@ -114,6 +117,8 @@ interface BetaService {
         fun dreams(): DreamService.WithRawResponse
 
         fun tunnels(): TunnelService.WithRawResponse
+
+        fun compliance(): ComplianceService.WithRawResponse
 
         fun organization(): OrganizationService.WithRawResponse
     }

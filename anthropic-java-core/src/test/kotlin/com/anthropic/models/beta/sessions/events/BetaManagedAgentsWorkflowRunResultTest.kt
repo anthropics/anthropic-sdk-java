@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,9 +20,8 @@ internal class BetaManagedAgentsWorkflowRunResultTest {
         val betaManagedAgentsWorkflowRunResult =
             BetaManagedAgentsWorkflowRunResult.ofCompleted(completed)
 
-        assertThat(betaManagedAgentsWorkflowRunResult.completed()).contains(completed)
-        assertThat(betaManagedAgentsWorkflowRunResult.error()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunResult.stopped()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsWorkflowRunResult))
+            .isEqualTo(mapOf("completed" to Optional.of(completed)))
     }
 
     @Test
@@ -51,9 +51,8 @@ internal class BetaManagedAgentsWorkflowRunResultTest {
 
         val betaManagedAgentsWorkflowRunResult = BetaManagedAgentsWorkflowRunResult.ofError(error)
 
-        assertThat(betaManagedAgentsWorkflowRunResult.completed()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunResult.error()).contains(error)
-        assertThat(betaManagedAgentsWorkflowRunResult.stopped()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsWorkflowRunResult))
+            .isEqualTo(mapOf("error" to Optional.of(error)))
     }
 
     @Test
@@ -83,9 +82,8 @@ internal class BetaManagedAgentsWorkflowRunResultTest {
         val betaManagedAgentsWorkflowRunResult =
             BetaManagedAgentsWorkflowRunResult.ofStopped(stopped)
 
-        assertThat(betaManagedAgentsWorkflowRunResult.completed()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunResult.error()).isEmpty
-        assertThat(betaManagedAgentsWorkflowRunResult.stopped()).contains(stopped)
+        assertThat(presentVariants(betaManagedAgentsWorkflowRunResult))
+            .isEqualTo(mapOf("stopped" to Optional.of(stopped)))
     }
 
     @Test
@@ -127,4 +125,14 @@ internal class BetaManagedAgentsWorkflowRunResultTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsWorkflowRunResult: BetaManagedAgentsWorkflowRunResult
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "completed" to betaManagedAgentsWorkflowRunResult.completed(),
+                "error" to betaManagedAgentsWorkflowRunResult.error(),
+                "stopped" to betaManagedAgentsWorkflowRunResult.stopped(),
+            )
+            .filterValues { it.isPresent }
 }

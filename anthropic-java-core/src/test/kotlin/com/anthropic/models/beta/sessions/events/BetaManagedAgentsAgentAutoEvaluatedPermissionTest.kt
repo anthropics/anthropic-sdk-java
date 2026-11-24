@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,9 +20,8 @@ internal class BetaManagedAgentsAgentAutoEvaluatedPermissionTest {
         val betaManagedAgentsAgentAutoEvaluatedPermission =
             BetaManagedAgentsAgentAutoEvaluatedPermission.ofAllow(allow)
 
-        assertThat(betaManagedAgentsAgentAutoEvaluatedPermission.allow()).contains(allow)
-        assertThat(betaManagedAgentsAgentAutoEvaluatedPermission.ask()).isEmpty
-        assertThat(betaManagedAgentsAgentAutoEvaluatedPermission.deny()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentAutoEvaluatedPermission))
+            .isEqualTo(mapOf("allow" to Optional.of(allow)))
     }
 
     @Test
@@ -49,9 +49,8 @@ internal class BetaManagedAgentsAgentAutoEvaluatedPermissionTest {
         val betaManagedAgentsAgentAutoEvaluatedPermission =
             BetaManagedAgentsAgentAutoEvaluatedPermission.ofAsk(ask)
 
-        assertThat(betaManagedAgentsAgentAutoEvaluatedPermission.allow()).isEmpty
-        assertThat(betaManagedAgentsAgentAutoEvaluatedPermission.ask()).contains(ask)
-        assertThat(betaManagedAgentsAgentAutoEvaluatedPermission.deny()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentAutoEvaluatedPermission))
+            .isEqualTo(mapOf("ask" to Optional.of(ask)))
     }
 
     @Test
@@ -79,9 +78,8 @@ internal class BetaManagedAgentsAgentAutoEvaluatedPermissionTest {
         val betaManagedAgentsAgentAutoEvaluatedPermission =
             BetaManagedAgentsAgentAutoEvaluatedPermission.ofDeny(deny)
 
-        assertThat(betaManagedAgentsAgentAutoEvaluatedPermission.allow()).isEmpty
-        assertThat(betaManagedAgentsAgentAutoEvaluatedPermission.ask()).isEmpty
-        assertThat(betaManagedAgentsAgentAutoEvaluatedPermission.deny()).contains(deny)
+        assertThat(presentVariants(betaManagedAgentsAgentAutoEvaluatedPermission))
+            .isEqualTo(mapOf("deny" to Optional.of(deny)))
     }
 
     @Test
@@ -160,4 +158,14 @@ internal class BetaManagedAgentsAgentAutoEvaluatedPermissionTest {
 
         assertThat(betaManagedAgentsAgentAutoEvaluatedPermission.reasonCode()).isEmpty
     }
+
+    private fun presentVariants(
+        betaManagedAgentsAgentAutoEvaluatedPermission: BetaManagedAgentsAgentAutoEvaluatedPermission
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "allow" to betaManagedAgentsAgentAutoEvaluatedPermission.allow(),
+                "ask" to betaManagedAgentsAgentAutoEvaluatedPermission.ask(),
+                "deny" to betaManagedAgentsAgentAutoEvaluatedPermission.deny(),
+            )
+            .filterValues { it.isPresent }
 }

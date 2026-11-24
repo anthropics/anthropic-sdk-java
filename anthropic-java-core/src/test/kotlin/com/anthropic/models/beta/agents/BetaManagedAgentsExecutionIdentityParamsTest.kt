@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -20,8 +21,8 @@ internal class BetaManagedAgentsExecutionIdentityParamsTest {
         val betaManagedAgentsExecutionIdentityParams =
             BetaManagedAgentsExecutionIdentityParams.ofAwsRole(awsRole)
 
-        assertThat(betaManagedAgentsExecutionIdentityParams.awsRole()).contains(awsRole)
-        assertThat(betaManagedAgentsExecutionIdentityParams.serviceAccount()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsExecutionIdentityParams))
+            .isEqualTo(mapOf("awsRole" to Optional.of(awsRole)))
     }
 
     @Test
@@ -52,9 +53,8 @@ internal class BetaManagedAgentsExecutionIdentityParamsTest {
         val betaManagedAgentsExecutionIdentityParams =
             BetaManagedAgentsExecutionIdentityParams.ofServiceAccount(serviceAccount)
 
-        assertThat(betaManagedAgentsExecutionIdentityParams.awsRole()).isEmpty
-        assertThat(betaManagedAgentsExecutionIdentityParams.serviceAccount())
-            .contains(serviceAccount)
+        assertThat(presentVariants(betaManagedAgentsExecutionIdentityParams))
+            .isEqualTo(mapOf("serviceAccount" to Optional.of(serviceAccount)))
     }
 
     @Test
@@ -99,4 +99,13 @@ internal class BetaManagedAgentsExecutionIdentityParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsExecutionIdentityParams: BetaManagedAgentsExecutionIdentityParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "awsRole" to betaManagedAgentsExecutionIdentityParams.awsRole(),
+                "serviceAccount" to betaManagedAgentsExecutionIdentityParams.serviceAccount(),
+            )
+            .filterValues { it.isPresent }
 }

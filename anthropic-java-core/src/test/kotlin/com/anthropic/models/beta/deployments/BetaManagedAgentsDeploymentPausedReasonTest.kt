@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonTest {
         val betaManagedAgentsDeploymentPausedReason =
             BetaManagedAgentsDeploymentPausedReason.ofManual(manual)
 
-        assertThat(betaManagedAgentsDeploymentPausedReason.manual()).contains(manual)
-        assertThat(betaManagedAgentsDeploymentPausedReason.error()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReason))
+            .isEqualTo(mapOf("manual" to Optional.of(manual)))
     }
 
     @Test
@@ -54,8 +55,8 @@ internal class BetaManagedAgentsDeploymentPausedReasonTest {
         val betaManagedAgentsDeploymentPausedReason =
             BetaManagedAgentsDeploymentPausedReason.ofError(error)
 
-        assertThat(betaManagedAgentsDeploymentPausedReason.manual()).isEmpty
-        assertThat(betaManagedAgentsDeploymentPausedReason.error()).contains(error)
+        assertThat(presentVariants(betaManagedAgentsDeploymentPausedReason))
+            .isEqualTo(mapOf("error" to Optional.of(error)))
     }
 
     @Test
@@ -105,4 +106,13 @@ internal class BetaManagedAgentsDeploymentPausedReasonTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsDeploymentPausedReason: BetaManagedAgentsDeploymentPausedReason
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "manual" to betaManagedAgentsDeploymentPausedReason.manual(),
+                "error" to betaManagedAgentsDeploymentPausedReason.error(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -20,9 +21,8 @@ internal class BetaTelemetryDestinationWorkspacesParamsTest {
         val betaTelemetryDestinationWorkspacesParams =
             BetaTelemetryDestinationWorkspacesParams.ofAll(all)
 
-        assertThat(betaTelemetryDestinationWorkspacesParams.all()).contains(all)
-        assertThat(betaTelemetryDestinationWorkspacesParams.include()).isEmpty
-        assertThat(betaTelemetryDestinationWorkspacesParams.exclude()).isEmpty
+        assertThat(presentVariants(betaTelemetryDestinationWorkspacesParams))
+            .isEqualTo(mapOf("all" to Optional.of(all)))
     }
 
     @Test
@@ -53,9 +53,8 @@ internal class BetaTelemetryDestinationWorkspacesParamsTest {
         val betaTelemetryDestinationWorkspacesParams =
             BetaTelemetryDestinationWorkspacesParams.ofInclude(include)
 
-        assertThat(betaTelemetryDestinationWorkspacesParams.all()).isEmpty
-        assertThat(betaTelemetryDestinationWorkspacesParams.include()).contains(include)
-        assertThat(betaTelemetryDestinationWorkspacesParams.exclude()).isEmpty
+        assertThat(presentVariants(betaTelemetryDestinationWorkspacesParams))
+            .isEqualTo(mapOf("include" to Optional.of(include)))
     }
 
     @Test
@@ -88,9 +87,8 @@ internal class BetaTelemetryDestinationWorkspacesParamsTest {
         val betaTelemetryDestinationWorkspacesParams =
             BetaTelemetryDestinationWorkspacesParams.ofExclude(exclude)
 
-        assertThat(betaTelemetryDestinationWorkspacesParams.all()).isEmpty
-        assertThat(betaTelemetryDestinationWorkspacesParams.include()).isEmpty
-        assertThat(betaTelemetryDestinationWorkspacesParams.exclude()).contains(exclude)
+        assertThat(presentVariants(betaTelemetryDestinationWorkspacesParams))
+            .isEqualTo(mapOf("exclude" to Optional.of(exclude)))
     }
 
     @Test
@@ -160,4 +158,14 @@ internal class BetaTelemetryDestinationWorkspacesParamsTest {
 
         assertThat(betaTelemetryDestinationWorkspacesParams.workspaceIds()).isEmpty
     }
+
+    private fun presentVariants(
+        betaTelemetryDestinationWorkspacesParams: BetaTelemetryDestinationWorkspacesParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "all" to betaTelemetryDestinationWorkspacesParams.all(),
+                "include" to betaTelemetryDestinationWorkspacesParams.include(),
+                "exclude" to betaTelemetryDestinationWorkspacesParams.exclude(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -25,14 +26,8 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val betaManagedAgentsAgentToolConfigParams =
             BetaManagedAgentsAgentToolConfigParams.ofBash(bash)
 
-        assertThat(betaManagedAgentsAgentToolConfigParams.bash()).contains(bash)
-        assertThat(betaManagedAgentsAgentToolConfigParams.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfigParams))
+            .isEqualTo(mapOf("bash" to Optional.of(bash)))
     }
 
     @Test
@@ -69,14 +64,8 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val betaManagedAgentsAgentToolConfigParams =
             BetaManagedAgentsAgentToolConfigParams.ofEdit(edit)
 
-        assertThat(betaManagedAgentsAgentToolConfigParams.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.edit()).contains(edit)
-        assertThat(betaManagedAgentsAgentToolConfigParams.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfigParams))
+            .isEqualTo(mapOf("edit" to Optional.of(edit)))
     }
 
     @Test
@@ -113,14 +102,8 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val betaManagedAgentsAgentToolConfigParams =
             BetaManagedAgentsAgentToolConfigParams.ofRead(read)
 
-        assertThat(betaManagedAgentsAgentToolConfigParams.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.read()).contains(read)
-        assertThat(betaManagedAgentsAgentToolConfigParams.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfigParams))
+            .isEqualTo(mapOf("read" to Optional.of(read)))
     }
 
     @Test
@@ -157,14 +140,8 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val betaManagedAgentsAgentToolConfigParams =
             BetaManagedAgentsAgentToolConfigParams.ofWrite(write)
 
-        assertThat(betaManagedAgentsAgentToolConfigParams.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.write()).contains(write)
-        assertThat(betaManagedAgentsAgentToolConfigParams.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfigParams))
+            .isEqualTo(mapOf("write" to Optional.of(write)))
     }
 
     @Test
@@ -201,14 +178,8 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val betaManagedAgentsAgentToolConfigParams =
             BetaManagedAgentsAgentToolConfigParams.ofGlob(glob)
 
-        assertThat(betaManagedAgentsAgentToolConfigParams.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.glob()).contains(glob)
-        assertThat(betaManagedAgentsAgentToolConfigParams.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfigParams))
+            .isEqualTo(mapOf("glob" to Optional.of(glob)))
     }
 
     @Test
@@ -245,14 +216,8 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val betaManagedAgentsAgentToolConfigParams =
             BetaManagedAgentsAgentToolConfigParams.ofGrep(grep)
 
-        assertThat(betaManagedAgentsAgentToolConfigParams.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.grep()).contains(grep)
-        assertThat(betaManagedAgentsAgentToolConfigParams.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfigParams))
+            .isEqualTo(mapOf("grep" to Optional.of(grep)))
     }
 
     @Test
@@ -299,14 +264,8 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val betaManagedAgentsAgentToolConfigParams =
             BetaManagedAgentsAgentToolConfigParams.ofWebFetch(webFetch)
 
-        assertThat(betaManagedAgentsAgentToolConfigParams.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webFetch()).contains(webFetch)
-        assertThat(betaManagedAgentsAgentToolConfigParams.webSearch()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfigParams))
+            .isEqualTo(mapOf("webFetch" to Optional.of(webFetch)))
     }
 
     @Test
@@ -363,14 +322,8 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         val betaManagedAgentsAgentToolConfigParams =
             BetaManagedAgentsAgentToolConfigParams.ofWebSearch(webSearch)
 
-        assertThat(betaManagedAgentsAgentToolConfigParams.bash()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.edit()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.read()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.write()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.glob()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.grep()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webFetch()).isEmpty
-        assertThat(betaManagedAgentsAgentToolConfigParams.webSearch()).contains(webSearch)
+        assertThat(presentVariants(betaManagedAgentsAgentToolConfigParams))
+            .isEqualTo(mapOf("webSearch" to Optional.of(webSearch)))
     }
 
     @Test
@@ -473,4 +426,19 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         assertThat(betaManagedAgentsAgentToolConfigParams.allowedDomains()).isEmpty
         assertThat(betaManagedAgentsAgentToolConfigParams.blockedDomains()).isEmpty
     }
+
+    private fun presentVariants(
+        betaManagedAgentsAgentToolConfigParams: BetaManagedAgentsAgentToolConfigParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "bash" to betaManagedAgentsAgentToolConfigParams.bash(),
+                "edit" to betaManagedAgentsAgentToolConfigParams.edit(),
+                "read" to betaManagedAgentsAgentToolConfigParams.read(),
+                "write" to betaManagedAgentsAgentToolConfigParams.write(),
+                "glob" to betaManagedAgentsAgentToolConfigParams.glob(),
+                "grep" to betaManagedAgentsAgentToolConfigParams.grep(),
+                "webFetch" to betaManagedAgentsAgentToolConfigParams.webFetch(),
+                "webSearch" to betaManagedAgentsAgentToolConfigParams.webSearch(),
+            )
+            .filterValues { it.isPresent }
 }

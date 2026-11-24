@@ -10,17 +10,17 @@ internal class BetaApiKeyWorkspaceScopeTest {
     @Test
     fun create() {
         val betaApiKeyWorkspaceScope =
-            BetaApiKeyWorkspaceScope.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            BetaApiKeyWorkspaceScope.of("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
 
         assertThat(betaApiKeyWorkspaceScope.workspaceId())
-            .isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            .isEqualTo("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaApiKeyWorkspaceScope =
-            BetaApiKeyWorkspaceScope.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            BetaApiKeyWorkspaceScope.of("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
 
         val roundtrippedBetaApiKeyWorkspaceScope =
             jsonMapper.readValue(

@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,9 +19,8 @@ internal class BetaClaudeCodeRbacGroupStatusTest {
 
         val betaClaudeCodeRbacGroupStatus = BetaClaudeCodeRbacGroupStatus.ofActive(active)
 
-        assertThat(betaClaudeCodeRbacGroupStatus.active()).contains(active)
-        assertThat(betaClaudeCodeRbacGroupStatus.deleted()).isEmpty
-        assertThat(betaClaudeCodeRbacGroupStatus.unknown()).isEmpty
+        assertThat(presentVariants(betaClaudeCodeRbacGroupStatus))
+            .isEqualTo(mapOf("active" to Optional.of(active)))
     }
 
     @Test
@@ -47,9 +47,8 @@ internal class BetaClaudeCodeRbacGroupStatusTest {
 
         val betaClaudeCodeRbacGroupStatus = BetaClaudeCodeRbacGroupStatus.ofDeleted(deleted)
 
-        assertThat(betaClaudeCodeRbacGroupStatus.active()).isEmpty
-        assertThat(betaClaudeCodeRbacGroupStatus.deleted()).contains(deleted)
-        assertThat(betaClaudeCodeRbacGroupStatus.unknown()).isEmpty
+        assertThat(presentVariants(betaClaudeCodeRbacGroupStatus))
+            .isEqualTo(mapOf("deleted" to Optional.of(deleted)))
     }
 
     @Test
@@ -76,9 +75,8 @@ internal class BetaClaudeCodeRbacGroupStatusTest {
 
         val betaClaudeCodeRbacGroupStatus = BetaClaudeCodeRbacGroupStatus.ofUnknown(unknown)
 
-        assertThat(betaClaudeCodeRbacGroupStatus.active()).isEmpty
-        assertThat(betaClaudeCodeRbacGroupStatus.deleted()).isEmpty
-        assertThat(betaClaudeCodeRbacGroupStatus.unknown()).contains(unknown)
+        assertThat(presentVariants(betaClaudeCodeRbacGroupStatus))
+            .isEqualTo(mapOf("unknown" to Optional.of(unknown)))
     }
 
     @Test
@@ -118,4 +116,14 @@ internal class BetaClaudeCodeRbacGroupStatusTest {
             assertThrows<AnthropicInvalidDataException> { betaClaudeCodeRbacGroupStatus.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaClaudeCodeRbacGroupStatus: BetaClaudeCodeRbacGroupStatus
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "active" to betaClaudeCodeRbacGroupStatus.active(),
+                "deleted" to betaClaudeCodeRbacGroupStatus.deleted(),
+                "unknown" to betaClaudeCodeRbacGroupStatus.unknown(),
+            )
+            .filterValues { it.isPresent }
 }

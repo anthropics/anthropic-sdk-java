@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,12 +19,8 @@ internal class BetaRawContentBlockDeltaTest {
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofText(text)
 
-        assertThat(betaRawContentBlockDelta.text()).contains(text)
-        assertThat(betaRawContentBlockDelta.inputJson()).isEmpty
-        assertThat(betaRawContentBlockDelta.citations()).isEmpty
-        assertThat(betaRawContentBlockDelta.thinking()).isEmpty
-        assertThat(betaRawContentBlockDelta.signature()).isEmpty
-        assertThat(betaRawContentBlockDelta.compaction()).isEmpty
+        assertThat(presentVariants(betaRawContentBlockDelta))
+            .isEqualTo(mapOf("text" to Optional.of(text)))
     }
 
     @Test
@@ -46,12 +43,8 @@ internal class BetaRawContentBlockDeltaTest {
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofInputJson(inputJson)
 
-        assertThat(betaRawContentBlockDelta.text()).isEmpty
-        assertThat(betaRawContentBlockDelta.inputJson()).contains(inputJson)
-        assertThat(betaRawContentBlockDelta.citations()).isEmpty
-        assertThat(betaRawContentBlockDelta.thinking()).isEmpty
-        assertThat(betaRawContentBlockDelta.signature()).isEmpty
-        assertThat(betaRawContentBlockDelta.compaction()).isEmpty
+        assertThat(presentVariants(betaRawContentBlockDelta))
+            .isEqualTo(mapOf("inputJson" to Optional.of(inputJson)))
     }
 
     @Test
@@ -87,12 +80,8 @@ internal class BetaRawContentBlockDeltaTest {
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofCitations(citations)
 
-        assertThat(betaRawContentBlockDelta.text()).isEmpty
-        assertThat(betaRawContentBlockDelta.inputJson()).isEmpty
-        assertThat(betaRawContentBlockDelta.citations()).contains(citations)
-        assertThat(betaRawContentBlockDelta.thinking()).isEmpty
-        assertThat(betaRawContentBlockDelta.signature()).isEmpty
-        assertThat(betaRawContentBlockDelta.compaction()).isEmpty
+        assertThat(presentVariants(betaRawContentBlockDelta))
+            .isEqualTo(mapOf("citations" to Optional.of(citations)))
     }
 
     @Test
@@ -129,12 +118,8 @@ internal class BetaRawContentBlockDeltaTest {
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofThinking(thinking)
 
-        assertThat(betaRawContentBlockDelta.text()).isEmpty
-        assertThat(betaRawContentBlockDelta.inputJson()).isEmpty
-        assertThat(betaRawContentBlockDelta.citations()).isEmpty
-        assertThat(betaRawContentBlockDelta.thinking()).contains(thinking)
-        assertThat(betaRawContentBlockDelta.signature()).isEmpty
-        assertThat(betaRawContentBlockDelta.compaction()).isEmpty
+        assertThat(presentVariants(betaRawContentBlockDelta))
+            .isEqualTo(mapOf("thinking" to Optional.of(thinking)))
     }
 
     @Test
@@ -160,12 +145,8 @@ internal class BetaRawContentBlockDeltaTest {
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofSignature(signature)
 
-        assertThat(betaRawContentBlockDelta.text()).isEmpty
-        assertThat(betaRawContentBlockDelta.inputJson()).isEmpty
-        assertThat(betaRawContentBlockDelta.citations()).isEmpty
-        assertThat(betaRawContentBlockDelta.thinking()).isEmpty
-        assertThat(betaRawContentBlockDelta.signature()).contains(signature)
-        assertThat(betaRawContentBlockDelta.compaction()).isEmpty
+        assertThat(presentVariants(betaRawContentBlockDelta))
+            .isEqualTo(mapOf("signature" to Optional.of(signature)))
     }
 
     @Test
@@ -193,12 +174,8 @@ internal class BetaRawContentBlockDeltaTest {
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofCompaction(compaction)
 
-        assertThat(betaRawContentBlockDelta.text()).isEmpty
-        assertThat(betaRawContentBlockDelta.inputJson()).isEmpty
-        assertThat(betaRawContentBlockDelta.citations()).isEmpty
-        assertThat(betaRawContentBlockDelta.thinking()).isEmpty
-        assertThat(betaRawContentBlockDelta.signature()).isEmpty
-        assertThat(betaRawContentBlockDelta.compaction()).contains(compaction)
+        assertThat(presentVariants(betaRawContentBlockDelta))
+            .isEqualTo(mapOf("compaction" to Optional.of(compaction)))
     }
 
     @Test
@@ -238,4 +215,17 @@ internal class BetaRawContentBlockDeltaTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaRawContentBlockDelta.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaRawContentBlockDelta: BetaRawContentBlockDelta
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "text" to betaRawContentBlockDelta.text(),
+                "inputJson" to betaRawContentBlockDelta.inputJson(),
+                "citations" to betaRawContentBlockDelta.citations(),
+                "thinking" to betaRawContentBlockDelta.thinking(),
+                "signature" to betaRawContentBlockDelta.signature(),
+                "compaction" to betaRawContentBlockDelta.compaction(),
+            )
+            .filterValues { it.isPresent }
 }

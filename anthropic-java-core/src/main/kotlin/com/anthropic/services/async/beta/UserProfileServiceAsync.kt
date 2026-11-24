@@ -14,6 +14,7 @@ import com.anthropic.models.beta.userprofiles.UserProfileListParams
 import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
 import com.anthropic.models.beta.userprofiles.UserProfileUpdateParams
 import com.anthropic.services.async.beta.userprofiles.ActionUrlServiceAsync
+import com.anthropic.services.async.beta.userprofiles.ProviderServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -37,6 +38,8 @@ interface UserProfileServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserProfileServiceAsync
 
     fun actionUrls(): ActionUrlServiceAsync
+
+    fun providers(): ProviderServiceAsync
 
     /**
      * Register one of your end customers and get the ID to send on the requests you make for them.
@@ -277,6 +280,8 @@ interface UserProfileServiceAsync {
         ): UserProfileServiceAsync.WithRawResponse
 
         fun actionUrls(): ActionUrlServiceAsync.WithRawResponse
+
+        fun providers(): ProviderServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/user_profiles`, but is otherwise the same as

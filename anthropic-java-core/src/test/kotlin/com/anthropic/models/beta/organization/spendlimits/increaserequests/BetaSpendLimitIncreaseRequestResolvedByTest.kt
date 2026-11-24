@@ -6,6 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitScopedApiKeyActor
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitUserActor
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -27,8 +28,8 @@ internal class BetaSpendLimitIncreaseRequestResolvedByTest {
         val betaSpendLimitIncreaseRequestResolvedBy =
             BetaSpendLimitIncreaseRequestResolvedBy.ofUserActor(userActor)
 
-        assertThat(betaSpendLimitIncreaseRequestResolvedBy.userActor()).contains(userActor)
-        assertThat(betaSpendLimitIncreaseRequestResolvedBy.scopedApiKeyActor()).isEmpty
+        assertThat(presentVariants(betaSpendLimitIncreaseRequestResolvedBy))
+            .isEqualTo(mapOf("userActor" to Optional.of(userActor)))
     }
 
     @Test
@@ -61,9 +62,8 @@ internal class BetaSpendLimitIncreaseRequestResolvedByTest {
         val betaSpendLimitIncreaseRequestResolvedBy =
             BetaSpendLimitIncreaseRequestResolvedBy.ofScopedApiKeyActor(scopedApiKeyActor)
 
-        assertThat(betaSpendLimitIncreaseRequestResolvedBy.userActor()).isEmpty
-        assertThat(betaSpendLimitIncreaseRequestResolvedBy.scopedApiKeyActor())
-            .contains(scopedApiKeyActor)
+        assertThat(presentVariants(betaSpendLimitIncreaseRequestResolvedBy))
+            .isEqualTo(mapOf("scopedApiKeyActor" to Optional.of(scopedApiKeyActor)))
     }
 
     @Test
@@ -108,4 +108,13 @@ internal class BetaSpendLimitIncreaseRequestResolvedByTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaSpendLimitIncreaseRequestResolvedBy: BetaSpendLimitIncreaseRequestResolvedBy
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "userActor" to betaSpendLimitIncreaseRequestResolvedBy.userActor(),
+                "scopedApiKeyActor" to betaSpendLimitIncreaseRequestResolvedBy.scopedApiKeyActor(),
+            )
+            .filterValues { it.isPresent }
 }

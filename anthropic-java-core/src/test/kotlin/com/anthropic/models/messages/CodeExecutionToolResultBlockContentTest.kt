@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,9 +20,8 @@ internal class CodeExecutionToolResultBlockContentTest {
 
         val codeExecutionToolResultBlockContent = CodeExecutionToolResultBlockContent.ofError(error)
 
-        assertThat(codeExecutionToolResultBlockContent.error()).contains(error)
-        assertThat(codeExecutionToolResultBlockContent.resultBlock()).isEmpty
-        assertThat(codeExecutionToolResultBlockContent.encryptedCodeExecutionResultBlock()).isEmpty
+        assertThat(presentVariants(codeExecutionToolResultBlockContent))
+            .isEqualTo(mapOf("error" to Optional.of(error)))
     }
 
     @Test
@@ -55,9 +55,8 @@ internal class CodeExecutionToolResultBlockContentTest {
         val codeExecutionToolResultBlockContent =
             CodeExecutionToolResultBlockContent.ofResultBlock(resultBlock)
 
-        assertThat(codeExecutionToolResultBlockContent.error()).isEmpty
-        assertThat(codeExecutionToolResultBlockContent.resultBlock()).contains(resultBlock)
-        assertThat(codeExecutionToolResultBlockContent.encryptedCodeExecutionResultBlock()).isEmpty
+        assertThat(presentVariants(codeExecutionToolResultBlockContent))
+            .isEqualTo(mapOf("resultBlock" to Optional.of(resultBlock)))
     }
 
     @Test
@@ -98,10 +97,13 @@ internal class CodeExecutionToolResultBlockContentTest {
                 encryptedCodeExecutionResultBlock
             )
 
-        assertThat(codeExecutionToolResultBlockContent.error()).isEmpty
-        assertThat(codeExecutionToolResultBlockContent.resultBlock()).isEmpty
-        assertThat(codeExecutionToolResultBlockContent.encryptedCodeExecutionResultBlock())
-            .contains(encryptedCodeExecutionResultBlock)
+        assertThat(presentVariants(codeExecutionToolResultBlockContent))
+            .isEqualTo(
+                mapOf(
+                    "encryptedCodeExecutionResultBlock" to
+                        Optional.of(encryptedCodeExecutionResultBlock)
+                )
+            )
     }
 
     @Test
@@ -152,4 +154,15 @@ internal class CodeExecutionToolResultBlockContentTest {
         assertThat(codeExecutionToolResultBlockContent.returnCode()).isEmpty
         assertThat(codeExecutionToolResultBlockContent.stderr()).isEmpty
     }
+
+    private fun presentVariants(
+        codeExecutionToolResultBlockContent: CodeExecutionToolResultBlockContent
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "error" to codeExecutionToolResultBlockContent.error(),
+                "resultBlock" to codeExecutionToolResultBlockContent.resultBlock(),
+                "encryptedCodeExecutionResultBlock" to
+                    codeExecutionToolResultBlockContent.encryptedCodeExecutionResultBlock(),
+            )
+            .filterValues { it.isPresent }
 }

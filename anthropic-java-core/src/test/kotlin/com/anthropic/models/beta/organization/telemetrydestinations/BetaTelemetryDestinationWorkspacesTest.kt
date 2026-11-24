@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,9 +19,8 @@ internal class BetaTelemetryDestinationWorkspacesTest {
 
         val betaTelemetryDestinationWorkspaces = BetaTelemetryDestinationWorkspaces.ofAll(all)
 
-        assertThat(betaTelemetryDestinationWorkspaces.all()).contains(all)
-        assertThat(betaTelemetryDestinationWorkspaces.include()).isEmpty
-        assertThat(betaTelemetryDestinationWorkspaces.exclude()).isEmpty
+        assertThat(presentVariants(betaTelemetryDestinationWorkspaces))
+            .isEqualTo(mapOf("all" to Optional.of(all)))
     }
 
     @Test
@@ -48,9 +48,8 @@ internal class BetaTelemetryDestinationWorkspacesTest {
         val betaTelemetryDestinationWorkspaces =
             BetaTelemetryDestinationWorkspaces.ofInclude(include)
 
-        assertThat(betaTelemetryDestinationWorkspaces.all()).isEmpty
-        assertThat(betaTelemetryDestinationWorkspaces.include()).contains(include)
-        assertThat(betaTelemetryDestinationWorkspaces.exclude()).isEmpty
+        assertThat(presentVariants(betaTelemetryDestinationWorkspaces))
+            .isEqualTo(mapOf("include" to Optional.of(include)))
     }
 
     @Test
@@ -78,9 +77,8 @@ internal class BetaTelemetryDestinationWorkspacesTest {
         val betaTelemetryDestinationWorkspaces =
             BetaTelemetryDestinationWorkspaces.ofExclude(exclude)
 
-        assertThat(betaTelemetryDestinationWorkspaces.all()).isEmpty
-        assertThat(betaTelemetryDestinationWorkspaces.include()).isEmpty
-        assertThat(betaTelemetryDestinationWorkspaces.exclude()).contains(exclude)
+        assertThat(presentVariants(betaTelemetryDestinationWorkspaces))
+            .isEqualTo(mapOf("exclude" to Optional.of(exclude)))
     }
 
     @Test
@@ -122,4 +120,14 @@ internal class BetaTelemetryDestinationWorkspacesTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaTelemetryDestinationWorkspaces: BetaTelemetryDestinationWorkspaces
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "all" to betaTelemetryDestinationWorkspaces.all(),
+                "include" to betaTelemetryDestinationWorkspaces.include(),
+                "exclude" to betaTelemetryDestinationWorkspaces.exclude(),
+            )
+            .filterValues { it.isPresent }
 }

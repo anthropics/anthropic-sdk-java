@@ -13,6 +13,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentInlineAgentsE
 import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -67,8 +68,8 @@ internal class BetaManagedAgentsSessionMultiagentTest {
         val betaManagedAgentsSessionMultiagent =
             BetaManagedAgentsSessionMultiagent.ofCoordinator(coordinator)
 
-        assertThat(betaManagedAgentsSessionMultiagent.coordinator()).contains(coordinator)
-        assertThat(betaManagedAgentsSessionMultiagent.multiagent20261001()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsSessionMultiagent))
+            .isEqualTo(mapOf("coordinator" to Optional.of(coordinator)))
     }
 
     @Test
@@ -229,9 +230,8 @@ internal class BetaManagedAgentsSessionMultiagentTest {
         val betaManagedAgentsSessionMultiagent =
             BetaManagedAgentsSessionMultiagent.ofMultiagent20261001(multiagent20261001)
 
-        assertThat(betaManagedAgentsSessionMultiagent.coordinator()).isEmpty
-        assertThat(betaManagedAgentsSessionMultiagent.multiagent20261001())
-            .contains(multiagent20261001)
+        assertThat(presentVariants(betaManagedAgentsSessionMultiagent))
+            .isEqualTo(mapOf("multiagent20261001" to Optional.of(multiagent20261001)))
     }
 
     @Test
@@ -367,4 +367,13 @@ internal class BetaManagedAgentsSessionMultiagentTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsSessionMultiagent: BetaManagedAgentsSessionMultiagent
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "coordinator" to betaManagedAgentsSessionMultiagent.coordinator(),
+                "multiagent20261001" to betaManagedAgentsSessionMultiagent.multiagent20261001(),
+            )
+            .filterValues { it.isPresent }
 }

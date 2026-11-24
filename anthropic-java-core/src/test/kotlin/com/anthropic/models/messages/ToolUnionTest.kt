@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -46,27 +47,7 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofTool(tool)
 
-        assertThat(toolUnion.tool()).contains(tool)
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion)).isEqualTo(mapOf("tool" to Optional.of(tool)))
     }
 
     @Test
@@ -134,27 +115,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofBash20250124(bash20250124)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).contains(bash20250124)
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("bash20250124" to Optional.of(bash20250124)))
 
         assertThat(toolUnion.name()).contains("bash")
     }
@@ -204,27 +166,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).contains(codeExecutionTool20250522)
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("codeExecutionTool20250522" to Optional.of(codeExecutionTool20250522)))
 
         assertThat(toolUnion.name()).contains("code_execution")
     }
@@ -269,27 +212,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).contains(codeExecutionTool20250825)
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("codeExecutionTool20250825" to Optional.of(codeExecutionTool20250825)))
 
         assertThat(toolUnion.name()).contains("code_execution")
     }
@@ -334,27 +258,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).contains(codeExecutionTool20260120)
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("codeExecutionTool20260120" to Optional.of(codeExecutionTool20260120)))
 
         assertThat(toolUnion.name()).contains("code_execution")
     }
@@ -399,27 +304,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).contains(codeExecutionTool20260521)
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("codeExecutionTool20260521" to Optional.of(codeExecutionTool20260521)))
 
         assertThat(toolUnion.name()).contains("code_execution")
     }
@@ -599,27 +485,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofBrowserToolset20260801(browserToolset20260801)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).contains(browserToolset20260801)
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("browserToolset20260801" to Optional.of(browserToolset20260801)))
     }
 
     @Test
@@ -839,27 +706,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofMemoryTool20250818(memoryTool20250818)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).contains(memoryTool20250818)
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("memoryTool20250818" to Optional.of(memoryTool20250818)))
 
         assertThat(toolUnion.name()).contains("memory")
     }
@@ -986,27 +834,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofComputerToolset20260801(computerToolset20260801)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).contains(computerToolset20260801)
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("computerToolset20260801" to Optional.of(computerToolset20260801)))
     }
 
     @Test
@@ -1154,27 +983,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofTextEditor20250124(textEditor20250124)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).contains(textEditor20250124)
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("textEditor20250124" to Optional.of(textEditor20250124)))
 
         assertThat(toolUnion.name()).contains("str_replace_editor")
     }
@@ -1229,27 +1039,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofTextEditor20250429(textEditor20250429)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).contains(textEditor20250429)
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("textEditor20250429" to Optional.of(textEditor20250429)))
 
         assertThat(toolUnion.name()).contains("str_replace_based_edit_tool")
     }
@@ -1305,27 +1096,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofTextEditor20250728(textEditor20250728)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).contains(textEditor20250728)
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("textEditor20250728" to Optional.of(textEditor20250728)))
 
         assertThat(toolUnion.name()).contains("str_replace_based_edit_tool")
     }
@@ -1387,27 +1159,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofWebSearchTool20250305(webSearchTool20250305)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).contains(webSearchTool20250305)
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("webSearchTool20250305" to Optional.of(webSearchTool20250305)))
 
         assertThat(toolUnion.name()).contains("web_search")
     }
@@ -1475,27 +1228,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofWebFetchTool20250910(webFetchTool20250910)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).contains(webFetchTool20250910)
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("webFetchTool20250910" to Optional.of(webFetchTool20250910)))
 
         assertThat(toolUnion.name()).contains("web_fetch")
     }
@@ -1563,27 +1297,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofWebSearchTool20260209(webSearchTool20260209)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).contains(webSearchTool20260209)
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("webSearchTool20260209" to Optional.of(webSearchTool20260209)))
 
         assertThat(toolUnion.name()).contains("web_search")
     }
@@ -1651,27 +1366,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofWebFetchTool20260209(webFetchTool20260209)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).contains(webFetchTool20260209)
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("webFetchTool20260209" to Optional.of(webFetchTool20260209)))
 
         assertThat(toolUnion.name()).contains("web_fetch")
     }
@@ -1741,27 +1437,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofWebFetchTool20260309(webFetchTool20260309)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).contains(webFetchTool20260309)
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("webFetchTool20260309" to Optional.of(webFetchTool20260309)))
 
         assertThat(toolUnion.name()).contains("web_fetch")
     }
@@ -1831,27 +1508,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofWebSearchTool20260318(webSearchTool20260318)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).contains(webSearchTool20260318)
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("webSearchTool20260318" to Optional.of(webSearchTool20260318)))
 
         assertThat(toolUnion.name()).contains("web_search")
     }
@@ -1922,27 +1580,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofWebFetchTool20260318(webFetchTool20260318)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).contains(webFetchTool20260318)
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("webFetchTool20260318" to Optional.of(webFetchTool20260318)))
 
         assertThat(toolUnion.name()).contains("web_fetch")
     }
@@ -2002,27 +1641,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofSearchToolBm25_20251119(searchToolBm25_20251119)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).contains(searchToolBm25_20251119)
-        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("searchToolBm25_20251119" to Optional.of(searchToolBm25_20251119)))
 
         assertThat(toolUnion.name()).contains("tool_search_tool_bm25")
     }
@@ -2069,27 +1689,8 @@ internal class ToolUnionTest {
 
         val toolUnion = ToolUnion.ofSearchToolRegex20251119(searchToolRegex20251119)
 
-        assertThat(toolUnion.tool()).isEmpty
-        assertThat(toolUnion.bash20250124()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
-        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
-        assertThat(toolUnion.browserToolset20260801()).isEmpty
-        assertThat(toolUnion.memoryTool20250818()).isEmpty
-        assertThat(toolUnion.computerToolset20260801()).isEmpty
-        assertThat(toolUnion.textEditor20250124()).isEmpty
-        assertThat(toolUnion.textEditor20250429()).isEmpty
-        assertThat(toolUnion.textEditor20250728()).isEmpty
-        assertThat(toolUnion.webSearchTool20250305()).isEmpty
-        assertThat(toolUnion.webFetchTool20250910()).isEmpty
-        assertThat(toolUnion.webSearchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260209()).isEmpty
-        assertThat(toolUnion.webFetchTool20260309()).isEmpty
-        assertThat(toolUnion.webSearchTool20260318()).isEmpty
-        assertThat(toolUnion.webFetchTool20260318()).isEmpty
-        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
-        assertThat(toolUnion.searchToolRegex20251119()).contains(searchToolRegex20251119)
+        assertThat(presentVariants(toolUnion))
+            .isEqualTo(mapOf("searchToolRegex20251119" to Optional.of(searchToolRegex20251119)))
 
         assertThat(toolUnion.name()).contains("tool_search_tool_regex")
     }
@@ -2150,4 +1751,30 @@ internal class ToolUnionTest {
         assertThat(toolUnion.urlSources()).isEmpty
         assertThat(toolUnion.useCache()).isEmpty
     }
+
+    private fun presentVariants(toolUnion: ToolUnion): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "tool" to toolUnion.tool(),
+                "bash20250124" to toolUnion.bash20250124(),
+                "codeExecutionTool20250522" to toolUnion.codeExecutionTool20250522(),
+                "codeExecutionTool20250825" to toolUnion.codeExecutionTool20250825(),
+                "codeExecutionTool20260120" to toolUnion.codeExecutionTool20260120(),
+                "codeExecutionTool20260521" to toolUnion.codeExecutionTool20260521(),
+                "browserToolset20260801" to toolUnion.browserToolset20260801(),
+                "memoryTool20250818" to toolUnion.memoryTool20250818(),
+                "computerToolset20260801" to toolUnion.computerToolset20260801(),
+                "textEditor20250124" to toolUnion.textEditor20250124(),
+                "textEditor20250429" to toolUnion.textEditor20250429(),
+                "textEditor20250728" to toolUnion.textEditor20250728(),
+                "webSearchTool20250305" to toolUnion.webSearchTool20250305(),
+                "webFetchTool20250910" to toolUnion.webFetchTool20250910(),
+                "webSearchTool20260209" to toolUnion.webSearchTool20260209(),
+                "webFetchTool20260209" to toolUnion.webFetchTool20260209(),
+                "webFetchTool20260309" to toolUnion.webFetchTool20260309(),
+                "webSearchTool20260318" to toolUnion.webSearchTool20260318(),
+                "webFetchTool20260318" to toolUnion.webFetchTool20260318(),
+                "searchToolBm25_20251119" to toolUnion.searchToolBm25_20251119(),
+                "searchToolRegex20251119" to toolUnion.searchToolRegex20251119(),
+            )
+            .filterValues { it.isPresent }
 }

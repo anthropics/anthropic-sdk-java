@@ -16,6 +16,7 @@ import com.anthropic.services.blocking.beta.organization.FederationService
 import com.anthropic.services.blocking.beta.organization.InviteService
 import com.anthropic.services.blocking.beta.organization.PluginMarketplaceService
 import com.anthropic.services.blocking.beta.organization.PluginService
+import com.anthropic.services.blocking.beta.organization.ProviderService
 import com.anthropic.services.blocking.beta.organization.RateLimitService
 import com.anthropic.services.blocking.beta.organization.RbacGroupService
 import com.anthropic.services.blocking.beta.organization.RbacRoleService
@@ -53,6 +54,8 @@ interface OrganizationService {
     fun serviceAccounts(): ServiceAccountService
 
     fun externalStorage(): ExternalStorageService
+
+    fun providers(): ProviderService
 
     fun users(): UserService
 
@@ -125,6 +128,8 @@ interface OrganizationService {
         fun serviceAccounts(): ServiceAccountService.WithRawResponse
 
         fun externalStorage(): ExternalStorageService.WithRawResponse
+
+        fun providers(): ProviderService.WithRawResponse
 
         fun users(): UserService.WithRawResponse
 

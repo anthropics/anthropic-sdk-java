@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaManagedAgentsMultiagentInlineAgentsTest {
         val betaManagedAgentsMultiagentInlineAgents =
             BetaManagedAgentsMultiagentInlineAgents.ofEnabled(enabled)
 
-        assertThat(betaManagedAgentsMultiagentInlineAgents.enabled()).contains(enabled)
-        assertThat(betaManagedAgentsMultiagentInlineAgents.disabled()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagentInlineAgents))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -48,8 +49,8 @@ internal class BetaManagedAgentsMultiagentInlineAgentsTest {
         val betaManagedAgentsMultiagentInlineAgents =
             BetaManagedAgentsMultiagentInlineAgents.ofDisabled(disabled)
 
-        assertThat(betaManagedAgentsMultiagentInlineAgents.enabled()).isEmpty
-        assertThat(betaManagedAgentsMultiagentInlineAgents.disabled()).contains(disabled)
+        assertThat(presentVariants(betaManagedAgentsMultiagentInlineAgents))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -94,4 +95,13 @@ internal class BetaManagedAgentsMultiagentInlineAgentsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsMultiagentInlineAgents: BetaManagedAgentsMultiagentInlineAgents
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "enabled" to betaManagedAgentsMultiagentInlineAgents.enabled(),
+                "disabled" to betaManagedAgentsMultiagentInlineAgents.disabled(),
+            )
+            .filterValues { it.isPresent }
 }

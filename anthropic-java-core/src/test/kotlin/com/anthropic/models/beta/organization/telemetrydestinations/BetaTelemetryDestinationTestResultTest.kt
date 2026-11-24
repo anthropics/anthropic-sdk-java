@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaTelemetryDestinationTestResultTest {
         val betaTelemetryDestinationTestResult =
             BetaTelemetryDestinationTestResult.ofSuccess(success)
 
-        assertThat(betaTelemetryDestinationTestResult.success()).contains(success)
-        assertThat(betaTelemetryDestinationTestResult.failure()).isEmpty
+        assertThat(presentVariants(betaTelemetryDestinationTestResult))
+            .isEqualTo(mapOf("success" to Optional.of(success)))
     }
 
     @Test
@@ -48,8 +49,8 @@ internal class BetaTelemetryDestinationTestResultTest {
         val betaTelemetryDestinationTestResult =
             BetaTelemetryDestinationTestResult.ofFailure(failure)
 
-        assertThat(betaTelemetryDestinationTestResult.success()).isEmpty
-        assertThat(betaTelemetryDestinationTestResult.failure()).contains(failure)
+        assertThat(presentVariants(betaTelemetryDestinationTestResult))
+            .isEqualTo(mapOf("failure" to Optional.of(failure)))
     }
 
     @Test
@@ -91,4 +92,13 @@ internal class BetaTelemetryDestinationTestResultTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaTelemetryDestinationTestResult: BetaTelemetryDestinationTestResult
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "success" to betaTelemetryDestinationTestResult.success(),
+                "failure" to betaTelemetryDestinationTestResult.failure(),
+            )
+            .filterValues { it.isPresent }
 }

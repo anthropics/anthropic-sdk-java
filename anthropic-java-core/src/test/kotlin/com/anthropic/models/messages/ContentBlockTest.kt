@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -31,18 +32,7 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofText(text)
 
-        assertThat(contentBlock.text()).contains(text)
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock)).isEqualTo(mapOf("text" to Optional.of(text)))
     }
 
     @Test
@@ -80,18 +70,8 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofThinking(thinking)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).contains(thinking)
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(mapOf("thinking" to Optional.of(thinking)))
     }
 
     @Test
@@ -117,18 +97,8 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofRedactedThinking(redactedThinking)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).contains(redactedThinking)
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(mapOf("redactedThinking" to Optional.of(redactedThinking)))
     }
 
     @Test
@@ -158,18 +128,8 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofToolUse(toolUse)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).contains(toolUse)
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(mapOf("toolUse" to Optional.of(toolUse)))
     }
 
     @Test
@@ -207,18 +167,8 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofServerToolUse(serverToolUse)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).contains(serverToolUse)
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(mapOf("serverToolUse" to Optional.of(serverToolUse)))
     }
 
     @Test
@@ -256,18 +206,8 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofWebSearchToolResult(webSearchToolResult)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).contains(webSearchToolResult)
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(mapOf("webSearchToolResult" to Optional.of(webSearchToolResult)))
     }
 
     @Test
@@ -306,18 +246,8 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofWebFetchToolResult(webFetchToolResult)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).contains(webFetchToolResult)
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(mapOf("webFetchToolResult" to Optional.of(webFetchToolResult)))
     }
 
     @Test
@@ -359,18 +289,8 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofCodeExecutionToolResult(codeExecutionToolResult)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).contains(codeExecutionToolResult)
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(mapOf("codeExecutionToolResult" to Optional.of(codeExecutionToolResult)))
     }
 
     @Test
@@ -411,18 +331,10 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofBashCodeExecutionToolResult(bashCodeExecutionToolResult)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).contains(bashCodeExecutionToolResult)
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(
+                mapOf("bashCodeExecutionToolResult" to Optional.of(bashCodeExecutionToolResult))
+            )
     }
 
     @Test
@@ -465,19 +377,13 @@ internal class ContentBlockTest {
         val contentBlock =
             ContentBlock.ofTextEditorCodeExecutionToolResult(textEditorCodeExecutionToolResult)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult())
-            .contains(textEditorCodeExecutionToolResult)
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(
+                mapOf(
+                    "textEditorCodeExecutionToolResult" to
+                        Optional.of(textEditorCodeExecutionToolResult)
+                )
+            )
     }
 
     @Test
@@ -522,18 +428,8 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofToolSearchToolResult(toolSearchToolResult)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).contains(toolSearchToolResult)
-        assertThat(contentBlock.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(mapOf("toolSearchToolResult" to Optional.of(toolSearchToolResult)))
     }
 
     @Test
@@ -567,18 +463,8 @@ internal class ContentBlockTest {
 
         val contentBlock = ContentBlock.ofContainerUpload(containerUpload)
 
-        assertThat(contentBlock.text()).isEmpty
-        assertThat(contentBlock.thinking()).isEmpty
-        assertThat(contentBlock.redactedThinking()).isEmpty
-        assertThat(contentBlock.toolUse()).isEmpty
-        assertThat(contentBlock.serverToolUse()).isEmpty
-        assertThat(contentBlock.webSearchToolResult()).isEmpty
-        assertThat(contentBlock.webFetchToolResult()).isEmpty
-        assertThat(contentBlock.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlock.toolSearchToolResult()).isEmpty
-        assertThat(contentBlock.containerUpload()).contains(containerUpload)
+        assertThat(presentVariants(contentBlock))
+            .isEqualTo(mapOf("containerUpload" to Optional.of(containerUpload)))
     }
 
     @Test
@@ -652,4 +538,22 @@ internal class ContentBlockTest {
         assertThat(contentBlock.id()).isEmpty
         assertThat(contentBlock.toolUseId()).isEmpty
     }
+
+    private fun presentVariants(contentBlock: ContentBlock): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "text" to contentBlock.text(),
+                "thinking" to contentBlock.thinking(),
+                "redactedThinking" to contentBlock.redactedThinking(),
+                "toolUse" to contentBlock.toolUse(),
+                "serverToolUse" to contentBlock.serverToolUse(),
+                "webSearchToolResult" to contentBlock.webSearchToolResult(),
+                "webFetchToolResult" to contentBlock.webFetchToolResult(),
+                "codeExecutionToolResult" to contentBlock.codeExecutionToolResult(),
+                "bashCodeExecutionToolResult" to contentBlock.bashCodeExecutionToolResult(),
+                "textEditorCodeExecutionToolResult" to
+                    contentBlock.textEditorCodeExecutionToolResult(),
+                "toolSearchToolResult" to contentBlock.toolSearchToolResult(),
+                "containerUpload" to contentBlock.containerUpload(),
+            )
+            .filterValues { it.isPresent }
 }

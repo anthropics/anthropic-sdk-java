@@ -35,6 +35,10 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta;
     exports com.anthropic.models.beta.agents;
     exports com.anthropic.models.beta.agents.versions;
+    exports com.anthropic.models.beta.compliance.review;
+    exports com.anthropic.models.beta.compliance.review.cases;
+    exports com.anthropic.models.beta.compliance.review.items;
+    exports com.anthropic.models.beta.compliance.review.notices;
     exports com.anthropic.models.beta.deploymentruns;
     exports com.anthropic.models.beta.deployments;
     exports com.anthropic.models.beta.dreams;
@@ -84,6 +88,7 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.organization.plugins.installationsettings;
     exports com.anthropic.models.beta.organization.plugins.shares;
     exports com.anthropic.models.beta.organization.plugins.versions;
+    exports com.anthropic.models.beta.organization.providers.google.projects.datacontrols;
     exports com.anthropic.models.beta.organization.ratelimits;
     exports com.anthropic.models.beta.organization.rbacgroups;
     exports com.anthropic.models.beta.organization.rbacgroups.members;
@@ -113,6 +118,7 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.tunnels.certificates;
     exports com.anthropic.models.beta.userprofiles;
     exports com.anthropic.models.beta.userprofiles.actionurls;
+    exports com.anthropic.models.beta.userprofiles.providers.google.datacontrols;
     exports com.anthropic.models.beta.vaults;
     exports com.anthropic.models.beta.vaults.credentials;
     exports com.anthropic.models.beta.webhooks;
@@ -158,6 +164,8 @@ open module com.anthropic.core {
     exports com.anthropic.services.async;
     exports com.anthropic.services.async.beta;
     exports com.anthropic.services.async.beta.agents;
+    exports com.anthropic.services.async.beta.compliance;
+    exports com.anthropic.services.async.beta.compliance.review;
     exports com.anthropic.services.async.beta.environments;
     exports com.anthropic.services.async.beta.memorystores;
     exports com.anthropic.services.async.beta.messages;
@@ -172,6 +180,9 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.beta.organization.federation;
     exports com.anthropic.services.async.beta.organization.federation.rules;
     exports com.anthropic.services.async.beta.organization.plugins;
+    exports com.anthropic.services.async.beta.organization.providers;
+    exports com.anthropic.services.async.beta.organization.providers.google;
+    exports com.anthropic.services.async.beta.organization.providers.google.projects;
     exports com.anthropic.services.async.beta.organization.rbacgroups;
     exports com.anthropic.services.async.beta.organization.rbacroles;
     exports com.anthropic.services.async.beta.organization.serviceaccounts;
@@ -183,6 +194,8 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.beta.skills;
     exports com.anthropic.services.async.beta.tunnels;
     exports com.anthropic.services.async.beta.userprofiles;
+    exports com.anthropic.services.async.beta.userprofiles.providers;
+    exports com.anthropic.services.async.beta.userprofiles.providers.google;
     exports com.anthropic.services.async.beta.vaults;
     exports com.anthropic.services.async.messages;
     exports com.anthropic.services.async.organization;
@@ -201,6 +214,8 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking;
     exports com.anthropic.services.blocking.beta;
     exports com.anthropic.services.blocking.beta.agents;
+    exports com.anthropic.services.blocking.beta.compliance;
+    exports com.anthropic.services.blocking.beta.compliance.review;
     exports com.anthropic.services.blocking.beta.environments;
     exports com.anthropic.services.blocking.beta.memorystores;
     exports com.anthropic.services.blocking.beta.messages;
@@ -215,6 +230,9 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.beta.organization.federation;
     exports com.anthropic.services.blocking.beta.organization.federation.rules;
     exports com.anthropic.services.blocking.beta.organization.plugins;
+    exports com.anthropic.services.blocking.beta.organization.providers;
+    exports com.anthropic.services.blocking.beta.organization.providers.google;
+    exports com.anthropic.services.blocking.beta.organization.providers.google.projects;
     exports com.anthropic.services.blocking.beta.organization.rbacgroups;
     exports com.anthropic.services.blocking.beta.organization.rbacroles;
     exports com.anthropic.services.blocking.beta.organization.serviceaccounts;
@@ -226,6 +244,8 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.beta.skills;
     exports com.anthropic.services.blocking.beta.tunnels;
     exports com.anthropic.services.blocking.beta.userprofiles;
+    exports com.anthropic.services.blocking.beta.userprofiles.providers;
+    exports com.anthropic.services.blocking.beta.userprofiles.providers.google;
     exports com.anthropic.services.blocking.beta.vaults;
     exports com.anthropic.services.blocking.messages;
     exports com.anthropic.services.blocking.organization;

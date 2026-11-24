@@ -6,6 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.organization.spendlimits.SpendLimitScopedApiKeyActor
 import com.anthropic.models.organization.spendlimits.SpendLimitUserActor
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -26,8 +27,8 @@ internal class SpendLimitIncreaseRequestActorTest {
 
         val spendLimitIncreaseRequestActor = SpendLimitIncreaseRequestActor.ofUser(user)
 
-        assertThat(spendLimitIncreaseRequestActor.user()).contains(user)
-        assertThat(spendLimitIncreaseRequestActor.scopedApiKey()).isEmpty
+        assertThat(presentVariants(spendLimitIncreaseRequestActor))
+            .isEqualTo(mapOf("user" to Optional.of(user)))
     }
 
     @Test
@@ -60,8 +61,8 @@ internal class SpendLimitIncreaseRequestActorTest {
         val spendLimitIncreaseRequestActor =
             SpendLimitIncreaseRequestActor.ofScopedApiKey(scopedApiKey)
 
-        assertThat(spendLimitIncreaseRequestActor.user()).isEmpty
-        assertThat(spendLimitIncreaseRequestActor.scopedApiKey()).contains(scopedApiKey)
+        assertThat(presentVariants(spendLimitIncreaseRequestActor))
+            .isEqualTo(mapOf("scopedApiKey" to Optional.of(scopedApiKey)))
     }
 
     @Test
@@ -103,4 +104,13 @@ internal class SpendLimitIncreaseRequestActorTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        spendLimitIncreaseRequestActor: SpendLimitIncreaseRequestActor
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "user" to spendLimitIncreaseRequestActor.user(),
+                "scopedApiKey" to spendLimitIncreaseRequestActor.scopedApiKey(),
+            )
+            .filterValues { it.isPresent }
 }

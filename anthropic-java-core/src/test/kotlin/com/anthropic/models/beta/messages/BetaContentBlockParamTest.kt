@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -36,30 +37,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofText(text)
 
-        assertThat(betaContentBlockParam.text()).contains(text)
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("text" to Optional.of(text)))
     }
 
     @Test
@@ -119,30 +98,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofImage(image)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).contains(image)
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("image" to Optional.of(image)))
     }
 
     @Test
@@ -196,30 +153,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofDocument(document)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).contains(document)
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("document" to Optional.of(document)))
     }
 
     @Test
@@ -284,30 +219,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofSearchResult(searchResult)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).contains(searchResult)
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("searchResult" to Optional.of(searchResult)))
     }
 
     @Test
@@ -362,30 +275,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofThinking(thinking)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).contains(thinking)
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("thinking" to Optional.of(thinking)))
     }
 
     @Test
@@ -411,30 +302,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofRedactedThinking(redactedThinking)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).contains(redactedThinking)
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("redactedThinking" to Optional.of(redactedThinking)))
     }
 
     @Test
@@ -474,30 +343,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofToolUse(toolUse)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).contains(toolUse)
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("toolUse" to Optional.of(toolUse)))
     }
 
     @Test
@@ -549,30 +396,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofToolResult(toolResult)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).contains(toolResult)
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("toolResult" to Optional.of(toolResult)))
     }
 
     @Test
@@ -623,30 +448,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofServerToolUse(serverToolUse)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).contains(serverToolUse)
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("serverToolUse" to Optional.of(serverToolUse)))
     }
 
     @Test
@@ -705,30 +508,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofWebSearchToolResult(webSearchToolResult)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).contains(webSearchToolResult)
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("webSearchToolResult" to Optional.of(webSearchToolResult)))
     }
 
     @Test
@@ -786,30 +567,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofWebFetchToolResult(webFetchToolResult)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).contains(webFetchToolResult)
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("webFetchToolResult" to Optional.of(webFetchToolResult)))
     }
 
     @Test
@@ -861,30 +620,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofAdvisorToolResult(advisorToolResult)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).contains(advisorToolResult)
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("advisorToolResult" to Optional.of(advisorToolResult)))
     }
 
     @Test
@@ -936,31 +673,8 @@ internal class BetaContentBlockParamTest {
         val betaContentBlockParam =
             BetaContentBlockParam.ofCodeExecutionToolResult(codeExecutionToolResult)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult())
-            .contains(codeExecutionToolResult)
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("codeExecutionToolResult" to Optional.of(codeExecutionToolResult)))
     }
 
     @Test
@@ -1012,31 +726,10 @@ internal class BetaContentBlockParamTest {
         val betaContentBlockParam =
             BetaContentBlockParam.ofBashCodeExecutionToolResult(bashCodeExecutionToolResult)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult())
-            .contains(bashCodeExecutionToolResult)
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(
+                mapOf("bashCodeExecutionToolResult" to Optional.of(bashCodeExecutionToolResult))
+            )
     }
 
     @Test
@@ -1094,31 +787,13 @@ internal class BetaContentBlockParamTest {
                 textEditorCodeExecutionToolResult
             )
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult())
-            .contains(textEditorCodeExecutionToolResult)
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(
+                mapOf(
+                    "textEditorCodeExecutionToolResult" to
+                        Optional.of(textEditorCodeExecutionToolResult)
+                )
+            )
     }
 
     @Test
@@ -1175,30 +850,8 @@ internal class BetaContentBlockParamTest {
         val betaContentBlockParam =
             BetaContentBlockParam.ofToolSearchToolResult(toolSearchToolResult)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).contains(toolSearchToolResult)
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("toolSearchToolResult" to Optional.of(toolSearchToolResult)))
     }
 
     @Test
@@ -1254,30 +907,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofMcpToolUse(mcpToolUse)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).contains(mcpToolUse)
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("mcpToolUse" to Optional.of(mcpToolUse)))
     }
 
     @Test
@@ -1327,30 +958,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofMcpToolResult(mcpToolResult)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).contains(mcpToolResult)
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("mcpToolResult" to Optional.of(mcpToolResult)))
     }
 
     @Test
@@ -1393,30 +1002,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofContainerUpload(containerUpload)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).contains(containerUpload)
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("containerUpload" to Optional.of(containerUpload)))
     }
 
     @Test
@@ -1469,30 +1056,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofCompaction(compaction)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).contains(compaction)
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("compaction" to Optional.of(compaction)))
     }
 
     @Test
@@ -1545,30 +1110,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofToolAddition(toolAddition)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).contains(toolAddition)
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("toolAddition" to Optional.of(toolAddition)))
     }
 
     @Test
@@ -1609,30 +1152,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofToolRemoval(toolRemoval)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).contains(toolRemoval)
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("toolRemoval" to Optional.of(toolRemoval)))
     }
 
     @Test
@@ -1679,30 +1200,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofMcpToolListing(mcpToolListing)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).contains(mcpToolListing)
-        assertThat(betaContentBlockParam.fallback()).isEmpty
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("mcpToolListing" to Optional.of(mcpToolListing)))
     }
 
     @Test
@@ -1746,30 +1245,8 @@ internal class BetaContentBlockParamTest {
 
         val betaContentBlockParam = BetaContentBlockParam.ofFallback(fallback)
 
-        assertThat(betaContentBlockParam.text()).isEmpty
-        assertThat(betaContentBlockParam.image()).isEmpty
-        assertThat(betaContentBlockParam.document()).isEmpty
-        assertThat(betaContentBlockParam.searchResult()).isEmpty
-        assertThat(betaContentBlockParam.thinking()).isEmpty
-        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
-        assertThat(betaContentBlockParam.toolUse()).isEmpty
-        assertThat(betaContentBlockParam.toolResult()).isEmpty
-        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
-        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
-        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
-        assertThat(betaContentBlockParam.containerUpload()).isEmpty
-        assertThat(betaContentBlockParam.compaction()).isEmpty
-        assertThat(betaContentBlockParam.toolAddition()).isEmpty
-        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
-        assertThat(betaContentBlockParam.mcpToolListing()).isEmpty
-        assertThat(betaContentBlockParam.fallback()).contains(fallback)
+        assertThat(presentVariants(betaContentBlockParam))
+            .isEqualTo(mapOf("fallback" to Optional.of(fallback)))
     }
 
     @Test
@@ -1881,4 +1358,37 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.toolUseId()).isEmpty
         assertThat(betaContentBlockParam.isError()).isEmpty
     }
+
+    private fun presentVariants(
+        betaContentBlockParam: BetaContentBlockParam
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "text" to betaContentBlockParam.text(),
+                "image" to betaContentBlockParam.image(),
+                "document" to betaContentBlockParam.document(),
+                "searchResult" to betaContentBlockParam.searchResult(),
+                "thinking" to betaContentBlockParam.thinking(),
+                "redactedThinking" to betaContentBlockParam.redactedThinking(),
+                "toolUse" to betaContentBlockParam.toolUse(),
+                "toolResult" to betaContentBlockParam.toolResult(),
+                "serverToolUse" to betaContentBlockParam.serverToolUse(),
+                "webSearchToolResult" to betaContentBlockParam.webSearchToolResult(),
+                "webFetchToolResult" to betaContentBlockParam.webFetchToolResult(),
+                "advisorToolResult" to betaContentBlockParam.advisorToolResult(),
+                "codeExecutionToolResult" to betaContentBlockParam.codeExecutionToolResult(),
+                "bashCodeExecutionToolResult" to
+                    betaContentBlockParam.bashCodeExecutionToolResult(),
+                "textEditorCodeExecutionToolResult" to
+                    betaContentBlockParam.textEditorCodeExecutionToolResult(),
+                "toolSearchToolResult" to betaContentBlockParam.toolSearchToolResult(),
+                "mcpToolUse" to betaContentBlockParam.mcpToolUse(),
+                "mcpToolResult" to betaContentBlockParam.mcpToolResult(),
+                "containerUpload" to betaContentBlockParam.containerUpload(),
+                "compaction" to betaContentBlockParam.compaction(),
+                "toolAddition" to betaContentBlockParam.toolAddition(),
+                "toolRemoval" to betaContentBlockParam.toolRemoval(),
+                "mcpToolListing" to betaContentBlockParam.mcpToolListing(),
+                "fallback" to betaContentBlockParam.fallback(),
+            )
+            .filterValues { it.isPresent }
 }

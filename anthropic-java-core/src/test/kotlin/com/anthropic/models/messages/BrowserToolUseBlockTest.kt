@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,37 +24,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofNavigate(navigate)
 
-        assertThat(browserToolUseBlock.navigate()).contains(navigate)
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("navigate" to Optional.of(navigate)))
     }
 
     @Test
@@ -88,37 +60,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofListTabs(listTabs)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).contains(listTabs)
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("listTabs" to Optional.of(listTabs)))
     }
 
     @Test
@@ -153,37 +96,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofNewTab(newTab)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).contains(newTab)
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("newTab" to Optional.of(newTab)))
     }
 
     @Test
@@ -218,37 +132,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofSwitchTab(switchTab)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).contains(switchTab)
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("switchTab" to Optional.of(switchTab)))
     }
 
     @Test
@@ -283,37 +168,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofCloseTab(closeTab)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).contains(closeTab)
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("closeTab" to Optional.of(closeTab)))
     }
 
     @Test
@@ -355,37 +211,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofReadPage(readPage)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).contains(readPage)
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("readPage" to Optional.of(readPage)))
     }
 
     @Test
@@ -427,37 +254,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofGetPageText(getPageText)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).contains(getPageText)
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("getPageText" to Optional.of(getPageText)))
     }
 
     @Test
@@ -492,37 +290,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofReadConsole(readConsole)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).contains(readConsole)
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("readConsole" to Optional.of(readConsole)))
     }
 
     @Test
@@ -557,37 +326,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofReadNetwork(readNetwork)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).contains(readNetwork)
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("readNetwork" to Optional.of(readNetwork)))
     }
 
     @Test
@@ -622,37 +362,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofFind(find)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).contains(find)
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("find" to Optional.of(find)))
     }
 
     @Test
@@ -693,37 +404,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofFormInput(formInput)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).contains(formInput)
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("formInput" to Optional.of(formInput)))
     }
 
     @Test
@@ -771,37 +453,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofFileUpload(fileUpload)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).contains(fileUpload)
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("fileUpload" to Optional.of(fileUpload)))
     }
 
     @Test
@@ -848,37 +501,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofScrollTo(scrollTo)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).contains(scrollTo)
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("scrollTo" to Optional.of(scrollTo)))
     }
 
     @Test
@@ -918,37 +542,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofScreenshot(screenshot)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).contains(screenshot)
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("screenshot" to Optional.of(screenshot)))
     }
 
     @Test
@@ -988,37 +583,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofZoom(zoom)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).contains(zoom)
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("zoom" to Optional.of(zoom)))
     }
 
     @Test
@@ -1064,37 +630,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofLeftClick(leftClick)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).contains(leftClick)
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("leftClick" to Optional.of(leftClick)))
     }
 
     @Test
@@ -1141,37 +678,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofRightClick(rightClick)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).contains(rightClick)
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("rightClick" to Optional.of(rightClick)))
     }
 
     @Test
@@ -1218,37 +726,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofMiddleClick(middleClick)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).contains(middleClick)
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("middleClick" to Optional.of(middleClick)))
     }
 
     @Test
@@ -1295,37 +774,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofDoubleClick(doubleClick)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).contains(doubleClick)
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("doubleClick" to Optional.of(doubleClick)))
     }
 
     @Test
@@ -1372,37 +822,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofTripleClick(tripleClick)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).contains(tripleClick)
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("tripleClick" to Optional.of(tripleClick)))
     }
 
     @Test
@@ -1448,37 +869,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofHover(hover)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).contains(hover)
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("hover" to Optional.of(hover)))
     }
 
     @Test
@@ -1524,37 +916,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofLeftClickDrag(leftClickDrag)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).contains(leftClickDrag)
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("leftClickDrag" to Optional.of(leftClickDrag)))
     }
 
     @Test
@@ -1600,37 +963,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofLeftMouseDown(leftMouseDown)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).contains(leftMouseDown)
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("leftMouseDown" to Optional.of(leftMouseDown)))
     }
 
     @Test
@@ -1675,37 +1009,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofLeftMouseUp(leftMouseUp)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).contains(leftMouseUp)
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("leftMouseUp" to Optional.of(leftMouseUp)))
     }
 
     @Test
@@ -1750,37 +1055,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofMouseMove(mouseMove)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).contains(mouseMove)
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("mouseMove" to Optional.of(mouseMove)))
     }
 
     @Test
@@ -1827,37 +1103,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofScroll(scroll)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).contains(scroll)
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("scroll" to Optional.of(scroll)))
     }
 
     @Test
@@ -1899,37 +1146,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofType(type)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).contains(type)
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("type" to Optional.of(type)))
     }
 
     @Test
@@ -1964,37 +1182,7 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofKey(key)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).contains(key)
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock)).isEqualTo(mapOf("key" to Optional.of(key)))
     }
 
     @Test
@@ -2033,37 +1221,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofHoldKey(holdKey)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).contains(holdKey)
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("holdKey" to Optional.of(holdKey)))
     }
 
     @Test
@@ -2104,37 +1263,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofWait(wait)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).contains(wait)
-        assertThat(browserToolUseBlock.javascriptExec()).isEmpty
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("wait" to Optional.of(wait)))
     }
 
     @Test
@@ -2169,37 +1299,8 @@ internal class BrowserToolUseBlockTest {
 
         val browserToolUseBlock = BrowserToolUseBlock.ofJavascriptExec(javascriptExec)
 
-        assertThat(browserToolUseBlock.navigate()).isEmpty
-        assertThat(browserToolUseBlock.listTabs()).isEmpty
-        assertThat(browserToolUseBlock.newTab()).isEmpty
-        assertThat(browserToolUseBlock.switchTab()).isEmpty
-        assertThat(browserToolUseBlock.closeTab()).isEmpty
-        assertThat(browserToolUseBlock.readPage()).isEmpty
-        assertThat(browserToolUseBlock.getPageText()).isEmpty
-        assertThat(browserToolUseBlock.readConsole()).isEmpty
-        assertThat(browserToolUseBlock.readNetwork()).isEmpty
-        assertThat(browserToolUseBlock.find()).isEmpty
-        assertThat(browserToolUseBlock.formInput()).isEmpty
-        assertThat(browserToolUseBlock.fileUpload()).isEmpty
-        assertThat(browserToolUseBlock.scrollTo()).isEmpty
-        assertThat(browserToolUseBlock.screenshot()).isEmpty
-        assertThat(browserToolUseBlock.zoom()).isEmpty
-        assertThat(browserToolUseBlock.leftClick()).isEmpty
-        assertThat(browserToolUseBlock.rightClick()).isEmpty
-        assertThat(browserToolUseBlock.middleClick()).isEmpty
-        assertThat(browserToolUseBlock.doubleClick()).isEmpty
-        assertThat(browserToolUseBlock.tripleClick()).isEmpty
-        assertThat(browserToolUseBlock.hover()).isEmpty
-        assertThat(browserToolUseBlock.leftClickDrag()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseDown()).isEmpty
-        assertThat(browserToolUseBlock.leftMouseUp()).isEmpty
-        assertThat(browserToolUseBlock.mouseMove()).isEmpty
-        assertThat(browserToolUseBlock.scroll()).isEmpty
-        assertThat(browserToolUseBlock.type()).isEmpty
-        assertThat(browserToolUseBlock.key()).isEmpty
-        assertThat(browserToolUseBlock.holdKey()).isEmpty
-        assertThat(browserToolUseBlock.wait()).isEmpty
-        assertThat(browserToolUseBlock.javascriptExec()).contains(javascriptExec)
+        assertThat(presentVariants(browserToolUseBlock))
+            .isEqualTo(mapOf("javascriptExec" to Optional.of(javascriptExec)))
     }
 
     @Test
@@ -2277,4 +1378,42 @@ internal class BrowserToolUseBlockTest {
         assertThrows<AnthropicInvalidDataException> { browserToolUseBlock.id() }
         assertThrows<AnthropicInvalidDataException> { browserToolUseBlock.caller() }
     }
+
+    private fun presentVariants(
+        browserToolUseBlock: BrowserToolUseBlock
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "navigate" to browserToolUseBlock.navigate(),
+                "listTabs" to browserToolUseBlock.listTabs(),
+                "newTab" to browserToolUseBlock.newTab(),
+                "switchTab" to browserToolUseBlock.switchTab(),
+                "closeTab" to browserToolUseBlock.closeTab(),
+                "readPage" to browserToolUseBlock.readPage(),
+                "getPageText" to browserToolUseBlock.getPageText(),
+                "readConsole" to browserToolUseBlock.readConsole(),
+                "readNetwork" to browserToolUseBlock.readNetwork(),
+                "find" to browserToolUseBlock.find(),
+                "formInput" to browserToolUseBlock.formInput(),
+                "fileUpload" to browserToolUseBlock.fileUpload(),
+                "scrollTo" to browserToolUseBlock.scrollTo(),
+                "screenshot" to browserToolUseBlock.screenshot(),
+                "zoom" to browserToolUseBlock.zoom(),
+                "leftClick" to browserToolUseBlock.leftClick(),
+                "rightClick" to browserToolUseBlock.rightClick(),
+                "middleClick" to browserToolUseBlock.middleClick(),
+                "doubleClick" to browserToolUseBlock.doubleClick(),
+                "tripleClick" to browserToolUseBlock.tripleClick(),
+                "hover" to browserToolUseBlock.hover(),
+                "leftClickDrag" to browserToolUseBlock.leftClickDrag(),
+                "leftMouseDown" to browserToolUseBlock.leftMouseDown(),
+                "leftMouseUp" to browserToolUseBlock.leftMouseUp(),
+                "mouseMove" to browserToolUseBlock.mouseMove(),
+                "scroll" to browserToolUseBlock.scroll(),
+                "type" to browserToolUseBlock.type(),
+                "key" to browserToolUseBlock.key(),
+                "holdKey" to browserToolUseBlock.holdKey(),
+                "wait" to browserToolUseBlock.wait(),
+                "javascriptExec" to browserToolUseBlock.javascriptExec(),
+            )
+            .filterValues { it.isPresent }
 }

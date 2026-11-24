@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaClaudeCodeManagedSettingsModeTest {
         val betaClaudeCodeManagedSettingsMode =
             BetaClaudeCodeManagedSettingsMode.ofOrganization(organization)
 
-        assertThat(betaClaudeCodeManagedSettingsMode.organization()).contains(organization)
-        assertThat(betaClaudeCodeManagedSettingsMode.rbacGroups()).isEmpty
+        assertThat(presentVariants(betaClaudeCodeManagedSettingsMode))
+            .isEqualTo(mapOf("organization" to Optional.of(organization)))
     }
 
     @Test
@@ -48,8 +49,8 @@ internal class BetaClaudeCodeManagedSettingsModeTest {
         val betaClaudeCodeManagedSettingsMode =
             BetaClaudeCodeManagedSettingsMode.ofRbacGroups(rbacGroups)
 
-        assertThat(betaClaudeCodeManagedSettingsMode.organization()).isEmpty
-        assertThat(betaClaudeCodeManagedSettingsMode.rbacGroups()).contains(rbacGroups)
+        assertThat(presentVariants(betaClaudeCodeManagedSettingsMode))
+            .isEqualTo(mapOf("rbacGroups" to Optional.of(rbacGroups)))
     }
 
     @Test
@@ -91,4 +92,13 @@ internal class BetaClaudeCodeManagedSettingsModeTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaClaudeCodeManagedSettingsMode: BetaClaudeCodeManagedSettingsMode
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "organization" to betaClaudeCodeManagedSettingsMode.organization(),
+                "rbacGroups" to betaClaudeCodeManagedSettingsMode.rbacGroups(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -27,10 +28,8 @@ internal class BetaThinkingConfigParamTest {
 
         val betaThinkingConfigParam = BetaThinkingConfigParam.ofEnabled(enabled)
 
-        assertThat(betaThinkingConfigParam.enabled()).contains(enabled)
-        assertThat(betaThinkingConfigParam.disabled()).isEmpty
-        assertThat(betaThinkingConfigParam.betweenTools()).isEmpty
-        assertThat(betaThinkingConfigParam.adaptive()).isEmpty
+        assertThat(presentVariants(betaThinkingConfigParam))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -64,10 +63,8 @@ internal class BetaThinkingConfigParamTest {
 
         val betaThinkingConfigParam = BetaThinkingConfigParam.ofDisabled(disabled)
 
-        assertThat(betaThinkingConfigParam.enabled()).isEmpty
-        assertThat(betaThinkingConfigParam.disabled()).contains(disabled)
-        assertThat(betaThinkingConfigParam.betweenTools()).isEmpty
-        assertThat(betaThinkingConfigParam.adaptive()).isEmpty
+        assertThat(presentVariants(betaThinkingConfigParam))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -91,10 +88,8 @@ internal class BetaThinkingConfigParamTest {
 
         val betaThinkingConfigParam = BetaThinkingConfigParam.ofBetweenTools(betweenTools)
 
-        assertThat(betaThinkingConfigParam.enabled()).isEmpty
-        assertThat(betaThinkingConfigParam.disabled()).isEmpty
-        assertThat(betaThinkingConfigParam.betweenTools()).contains(betweenTools)
-        assertThat(betaThinkingConfigParam.adaptive()).isEmpty
+        assertThat(presentVariants(betaThinkingConfigParam))
+            .isEqualTo(mapOf("betweenTools" to Optional.of(betweenTools)))
     }
 
     @Test
@@ -126,10 +121,8 @@ internal class BetaThinkingConfigParamTest {
 
         val betaThinkingConfigParam = BetaThinkingConfigParam.ofAdaptive(adaptive)
 
-        assertThat(betaThinkingConfigParam.enabled()).isEmpty
-        assertThat(betaThinkingConfigParam.disabled()).isEmpty
-        assertThat(betaThinkingConfigParam.betweenTools()).isEmpty
-        assertThat(betaThinkingConfigParam.adaptive()).contains(adaptive)
+        assertThat(presentVariants(betaThinkingConfigParam))
+            .isEqualTo(mapOf("adaptive" to Optional.of(adaptive)))
     }
 
     @Test
@@ -211,4 +204,15 @@ internal class BetaThinkingConfigParamTest {
 
         assertThat(betaThinkingConfigParam.blockBinding()).isEmpty
     }
+
+    private fun presentVariants(
+        betaThinkingConfigParam: BetaThinkingConfigParam
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "enabled" to betaThinkingConfigParam.enabled(),
+                "disabled" to betaThinkingConfigParam.disabled(),
+                "betweenTools" to betaThinkingConfigParam.betweenTools(),
+                "adaptive" to betaThinkingConfigParam.adaptive(),
+            )
+            .filterValues { it.isPresent }
 }

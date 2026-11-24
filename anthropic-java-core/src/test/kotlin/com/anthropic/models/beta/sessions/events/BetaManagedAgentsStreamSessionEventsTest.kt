@@ -29,6 +29,7 @@ import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -49,50 +50,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofUserMessage(userMessage)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).contains(userMessage)
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("userMessage" to Optional.of(userMessage)))
     }
 
     @Test
@@ -129,50 +88,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofUserInterrupt(userInterrupt)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).contains(userInterrupt)
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("userInterrupt" to Optional.of(userInterrupt)))
     }
 
     @Test
@@ -212,51 +129,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofUserToolConfirmation(userToolConfirmation)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation())
-            .contains(userToolConfirmation)
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("userToolConfirmation" to Optional.of(userToolConfirmation)))
     }
 
     @Test
@@ -299,51 +173,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofUserCustomToolResult(userCustomToolResult)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult())
-            .contains(userCustomToolResult)
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("userCustomToolResult" to Optional.of(userCustomToolResult)))
     }
 
     @Test
@@ -389,51 +220,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofAgentCustomToolUse(agentCustomToolUse)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse())
-            .contains(agentCustomToolUse)
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("agentCustomToolUse" to Optional.of(agentCustomToolUse)))
     }
 
     @Test
@@ -476,50 +264,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofAgentMessage(agentMessage)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).contains(agentMessage)
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("agentMessage" to Optional.of(agentMessage)))
     }
 
     @Test
@@ -555,50 +301,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofAgentThinking(agentThinking)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).contains(agentThinking)
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("agentThinking" to Optional.of(agentThinking)))
     }
 
     @Test
@@ -643,50 +347,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofAgentMcpToolUse(agentMcpToolUse)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).contains(agentMcpToolUse)
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("agentMcpToolUse" to Optional.of(agentMcpToolUse)))
     }
 
     @Test
@@ -734,51 +396,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofAgentMcpToolResult(agentMcpToolResult)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult())
-            .contains(agentMcpToolResult)
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("agentMcpToolResult" to Optional.of(agentMcpToolResult)))
     }
 
     @Test
@@ -825,50 +444,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofAgentToolUse(agentToolUse)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).contains(agentToolUse)
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("agentToolUse" to Optional.of(agentToolUse)))
     }
 
     @Test
@@ -915,50 +492,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofAgentToolResult(agentToolResult)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).contains(agentToolResult)
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("agentToolResult" to Optional.of(agentToolResult)))
     }
 
     @Test
@@ -1001,51 +536,10 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 agentThreadMessageReceived
             )
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived())
-            .contains(agentThreadMessageReceived)
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(
+                mapOf("agentThreadMessageReceived" to Optional.of(agentThreadMessageReceived))
+            )
     }
 
     @Test
@@ -1086,51 +580,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofAgentThreadMessageSent(agentThreadMessageSent)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent())
-            .contains(agentThreadMessageSent)
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("agentThreadMessageSent" to Optional.of(agentThreadMessageSent)))
     }
 
     @Test
@@ -1170,51 +621,10 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 agentThreadContextCompacted
             )
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted())
-            .contains(agentThreadContextCompacted)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(
+                mapOf("agentThreadContextCompacted" to Optional.of(agentThreadContextCompacted))
+            )
     }
 
     @Test
@@ -1257,50 +667,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSessionError(sessionError)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).contains(sessionError)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("sessionError" to Optional.of(sessionError)))
     }
 
     @Test
@@ -1345,51 +713,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 sessionStatusRescheduled
             )
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled())
-            .contains(sessionStatusRescheduled)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("sessionStatusRescheduled" to Optional.of(sessionStatusRescheduled)))
     }
 
     @Test
@@ -1424,51 +749,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSessionStatusRunning(sessionStatusRunning)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning())
-            .contains(sessionStatusRunning)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("sessionStatusRunning" to Optional.of(sessionStatusRunning)))
     }
 
     @Test
@@ -1510,51 +792,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSessionStatusIdle(sessionStatusIdle)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle())
-            .contains(sessionStatusIdle)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("sessionStatusIdle" to Optional.of(sessionStatusIdle)))
     }
 
     @Test
@@ -1596,51 +835,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSessionStatusTerminated(sessionStatusTerminated)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated())
-            .contains(sessionStatusTerminated)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("sessionStatusTerminated" to Optional.of(sessionStatusTerminated)))
     }
 
     @Test
@@ -1678,51 +874,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSessionThreadCreated(sessionThreadCreated)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated())
-            .contains(sessionThreadCreated)
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("sessionThreadCreated" to Optional.of(sessionThreadCreated)))
     }
 
     @Test
@@ -1764,51 +917,10 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 spanOutcomeEvaluationStart
             )
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart())
-            .contains(spanOutcomeEvaluationStart)
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(
+                mapOf("spanOutcomeEvaluationStart" to Optional.of(spanOutcomeEvaluationStart))
+            )
     }
 
     @Test
@@ -1861,51 +973,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 spanOutcomeEvaluationEnd
             )
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd())
-            .contains(spanOutcomeEvaluationEnd)
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("spanOutcomeEvaluationEnd" to Optional.of(spanOutcomeEvaluationEnd)))
     }
 
     @Test
@@ -1954,51 +1023,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSpanModelRequestStart(spanModelRequestStart)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart())
-            .contains(spanModelRequestStart)
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("spanModelRequestStart" to Optional.of(spanModelRequestStart)))
     }
 
     @Test
@@ -2044,51 +1070,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSpanModelRequestEnd(spanModelRequestEnd)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd())
-            .contains(spanModelRequestEnd)
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("spanModelRequestEnd" to Optional.of(spanModelRequestEnd)))
     }
 
     @Test
@@ -2138,51 +1121,10 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 spanOutcomeEvaluationOngoing
             )
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing())
-            .contains(spanOutcomeEvaluationOngoing)
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(
+                mapOf("spanOutcomeEvaluationOngoing" to Optional.of(spanOutcomeEvaluationOngoing))
+            )
     }
 
     @Test
@@ -2223,51 +1165,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofUserDefineOutcome(userDefineOutcome)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome())
-            .contains(userDefineOutcome)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("userDefineOutcome" to Optional.of(userDefineOutcome)))
     }
 
     @Test
@@ -2306,50 +1205,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSessionDeleted(sessionDeleted)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).contains(sessionDeleted)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("sessionDeleted" to Optional.of(sessionDeleted)))
     }
 
     @Test
@@ -2388,51 +1245,10 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 sessionThreadStatusRunning
             )
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning())
-            .contains(sessionThreadStatusRunning)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(
+                mapOf("sessionThreadStatusRunning" to Optional.of(sessionThreadStatusRunning))
+            )
     }
 
     @Test
@@ -2473,51 +1289,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSessionThreadStatusIdle(sessionThreadStatusIdle)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle())
-            .contains(sessionThreadStatusIdle)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("sessionThreadStatusIdle" to Optional.of(sessionThreadStatusIdle)))
     }
 
     @Test
@@ -2560,51 +1333,10 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 sessionThreadStatusTerminated
             )
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated())
-            .contains(sessionThreadStatusTerminated)
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(
+                mapOf("sessionThreadStatusTerminated" to Optional.of(sessionThreadStatusTerminated))
+            )
     }
 
     @Test
@@ -2645,50 +1377,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofUserToolResult(userToolResult)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).contains(userToolResult)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("userToolResult" to Optional.of(userToolResult)))
     }
 
     @Test
@@ -2731,51 +1421,12 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 sessionThreadStatusRescheduled
             )
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled())
-            .contains(sessionThreadStatusRescheduled)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(
+                mapOf(
+                    "sessionThreadStatusRescheduled" to Optional.of(sessionThreadStatusRescheduled)
+                )
+            )
     }
 
     @Test
@@ -2880,50 +1531,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSessionUpdated(sessionUpdated)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).contains(sessionUpdated)
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("sessionUpdated" to Optional.of(sessionUpdated)))
     }
 
     @Test
@@ -3022,50 +1631,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofEventStart(eventStart)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).contains(eventStart)
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("eventStart" to Optional.of(eventStart)))
     }
 
     @Test
@@ -3102,50 +1669,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofEventDelta(eventDelta)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).contains(eventDelta)
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("eventDelta" to Optional.of(eventDelta)))
     }
 
     @Test
@@ -3186,50 +1711,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSystemMessage(systemMessage)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).contains(systemMessage)
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("systemMessage" to Optional.of(systemMessage)))
     }
 
     @Test
@@ -3299,50 +1782,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofSessionUsage(sessionUsage)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).contains(sessionUsage)
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("sessionUsage" to Optional.of(sessionUsage)))
     }
 
     @Test
@@ -3421,51 +1862,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofWorkflowRunCreated(workflowRunCreated)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated())
-            .contains(workflowRunCreated)
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("workflowRunCreated" to Optional.of(workflowRunCreated)))
     }
 
     @Test
@@ -3512,51 +1910,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofWorkflowRunStatusEnded(workflowRunStatusEnded)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded())
-            .contains(workflowRunStatusEnded)
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("workflowRunStatusEnded" to Optional.of(workflowRunStatusEnded)))
     }
 
     @Test
@@ -3595,51 +1950,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofWorkflowRunPhaseStarted(workflowRunPhaseStarted)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted())
-            .contains(workflowRunPhaseStarted)
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("workflowRunPhaseStarted" to Optional.of(workflowRunPhaseStarted)))
     }
 
     @Test
@@ -3679,51 +1991,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofWorkflowRunPhaseEnded(workflowRunPhaseEnded)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded())
-            .contains(workflowRunPhaseEnded)
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("workflowRunPhaseEnded" to Optional.of(workflowRunPhaseEnded)))
     }
 
     @Test
@@ -3764,51 +2033,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 workflowRunStatusRunning
             )
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning())
-            .contains(workflowRunStatusRunning)
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("workflowRunStatusRunning" to Optional.of(workflowRunStatusRunning)))
     }
 
     @Test
@@ -3845,51 +2071,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofWorkflowRunStatusIdle(workflowRunStatusIdle)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle())
-            .contains(workflowRunStatusIdle)
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("workflowRunStatusIdle" to Optional.of(workflowRunStatusIdle)))
     }
 
     @Test
@@ -3927,51 +2110,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         val betaManagedAgentsStreamSessionEvents =
             BetaManagedAgentsStreamSessionEvents.ofWorkflowRunError(workflowRunError)
 
-        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventStart()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.eventDelta()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.sessionUsage()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunCreated()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionEvents.workflowRunError())
-            .contains(workflowRunError)
+        assertThat(presentVariants(betaManagedAgentsStreamSessionEvents))
+            .isEqualTo(mapOf("workflowRunError" to Optional.of(workflowRunError)))
     }
 
     @Test
@@ -4164,4 +2304,77 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.budget()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.workflowRunPhaseId()).isEmpty
     }
+
+    private fun presentVariants(
+        betaManagedAgentsStreamSessionEvents: BetaManagedAgentsStreamSessionEvents
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "userMessage" to betaManagedAgentsStreamSessionEvents.userMessage(),
+                "userInterrupt" to betaManagedAgentsStreamSessionEvents.userInterrupt(),
+                "userToolConfirmation" to
+                    betaManagedAgentsStreamSessionEvents.userToolConfirmation(),
+                "userCustomToolResult" to
+                    betaManagedAgentsStreamSessionEvents.userCustomToolResult(),
+                "agentCustomToolUse" to betaManagedAgentsStreamSessionEvents.agentCustomToolUse(),
+                "agentMessage" to betaManagedAgentsStreamSessionEvents.agentMessage(),
+                "agentThinking" to betaManagedAgentsStreamSessionEvents.agentThinking(),
+                "agentMcpToolUse" to betaManagedAgentsStreamSessionEvents.agentMcpToolUse(),
+                "agentMcpToolResult" to betaManagedAgentsStreamSessionEvents.agentMcpToolResult(),
+                "agentToolUse" to betaManagedAgentsStreamSessionEvents.agentToolUse(),
+                "agentToolResult" to betaManagedAgentsStreamSessionEvents.agentToolResult(),
+                "agentThreadMessageReceived" to
+                    betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived(),
+                "agentThreadMessageSent" to
+                    betaManagedAgentsStreamSessionEvents.agentThreadMessageSent(),
+                "agentThreadContextCompacted" to
+                    betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted(),
+                "sessionError" to betaManagedAgentsStreamSessionEvents.sessionError(),
+                "sessionStatusRescheduled" to
+                    betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled(),
+                "sessionStatusRunning" to
+                    betaManagedAgentsStreamSessionEvents.sessionStatusRunning(),
+                "sessionStatusIdle" to betaManagedAgentsStreamSessionEvents.sessionStatusIdle(),
+                "sessionStatusTerminated" to
+                    betaManagedAgentsStreamSessionEvents.sessionStatusTerminated(),
+                "sessionThreadCreated" to
+                    betaManagedAgentsStreamSessionEvents.sessionThreadCreated(),
+                "spanOutcomeEvaluationStart" to
+                    betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart(),
+                "spanOutcomeEvaluationEnd" to
+                    betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd(),
+                "spanModelRequestStart" to
+                    betaManagedAgentsStreamSessionEvents.spanModelRequestStart(),
+                "spanModelRequestEnd" to betaManagedAgentsStreamSessionEvents.spanModelRequestEnd(),
+                "spanOutcomeEvaluationOngoing" to
+                    betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing(),
+                "userDefineOutcome" to betaManagedAgentsStreamSessionEvents.userDefineOutcome(),
+                "sessionDeleted" to betaManagedAgentsStreamSessionEvents.sessionDeleted(),
+                "sessionThreadStatusRunning" to
+                    betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning(),
+                "sessionThreadStatusIdle" to
+                    betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle(),
+                "sessionThreadStatusTerminated" to
+                    betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated(),
+                "userToolResult" to betaManagedAgentsStreamSessionEvents.userToolResult(),
+                "sessionThreadStatusRescheduled" to
+                    betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled(),
+                "sessionUpdated" to betaManagedAgentsStreamSessionEvents.sessionUpdated(),
+                "eventStart" to betaManagedAgentsStreamSessionEvents.eventStart(),
+                "eventDelta" to betaManagedAgentsStreamSessionEvents.eventDelta(),
+                "systemMessage" to betaManagedAgentsStreamSessionEvents.systemMessage(),
+                "sessionUsage" to betaManagedAgentsStreamSessionEvents.sessionUsage(),
+                "workflowRunCreated" to betaManagedAgentsStreamSessionEvents.workflowRunCreated(),
+                "workflowRunStatusEnded" to
+                    betaManagedAgentsStreamSessionEvents.workflowRunStatusEnded(),
+                "workflowRunPhaseStarted" to
+                    betaManagedAgentsStreamSessionEvents.workflowRunPhaseStarted(),
+                "workflowRunPhaseEnded" to
+                    betaManagedAgentsStreamSessionEvents.workflowRunPhaseEnded(),
+                "workflowRunStatusRunning" to
+                    betaManagedAgentsStreamSessionEvents.workflowRunStatusRunning(),
+                "workflowRunStatusIdle" to
+                    betaManagedAgentsStreamSessionEvents.workflowRunStatusIdle(),
+                "workflowRunError" to betaManagedAgentsStreamSessionEvents.workflowRunError(),
+            )
+            .filterValues { it.isPresent }
 }

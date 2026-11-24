@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,13 +20,8 @@ internal class BetaManagedAgentsWebFetchUrlSourceToolFilterParamsTest {
         val betaManagedAgentsWebFetchUrlSourceToolFilterParams =
             BetaManagedAgentsWebFetchUrlSourceToolFilterParams.ofShorthand(shorthand)
 
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilterParams.shorthand())
-            .contains(shorthand)
-        assertThat(
-                betaManagedAgentsWebFetchUrlSourceToolFilterParams
-                    .betaManagedAgentsWebFetchUrlSourceToolFilter()
-            )
-            .isEmpty
+        assertThat(presentVariants(betaManagedAgentsWebFetchUrlSourceToolFilterParams))
+            .isEqualTo(mapOf("shorthand" to Optional.of(shorthand)))
     }
 
     @Test
@@ -59,12 +55,13 @@ internal class BetaManagedAgentsWebFetchUrlSourceToolFilterParamsTest {
                     betaManagedAgentsWebFetchUrlSourceToolFilter
                 )
 
-        assertThat(betaManagedAgentsWebFetchUrlSourceToolFilterParams.shorthand()).isEmpty
-        assertThat(
-                betaManagedAgentsWebFetchUrlSourceToolFilterParams
-                    .betaManagedAgentsWebFetchUrlSourceToolFilter()
+        assertThat(presentVariants(betaManagedAgentsWebFetchUrlSourceToolFilterParams))
+            .isEqualTo(
+                mapOf(
+                    "betaManagedAgentsWebFetchUrlSourceToolFilter" to
+                        Optional.of(betaManagedAgentsWebFetchUrlSourceToolFilter)
+                )
             )
-            .contains(betaManagedAgentsWebFetchUrlSourceToolFilter)
     }
 
     @Test
@@ -111,4 +108,16 @@ internal class BetaManagedAgentsWebFetchUrlSourceToolFilterParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsWebFetchUrlSourceToolFilterParams:
+            BetaManagedAgentsWebFetchUrlSourceToolFilterParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "shorthand" to betaManagedAgentsWebFetchUrlSourceToolFilterParams.shorthand(),
+                "betaManagedAgentsWebFetchUrlSourceToolFilter" to
+                    betaManagedAgentsWebFetchUrlSourceToolFilterParams
+                        .betaManagedAgentsWebFetchUrlSourceToolFilter(),
+            )
+            .filterValues { it.isPresent }
 }

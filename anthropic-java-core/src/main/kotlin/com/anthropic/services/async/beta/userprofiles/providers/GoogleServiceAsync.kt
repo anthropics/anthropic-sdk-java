@@ -1,0 +1,39 @@
+package com.anthropic.services.async.beta.userprofiles.providers
+
+import com.anthropic.core.ClientOptions
+import com.anthropic.services.async.beta.userprofiles.providers.google.DataControlServiceAsync
+import java.util.function.Consumer
+
+interface GoogleServiceAsync {
+
+    /**
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     */
+    fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): GoogleServiceAsync
+
+    fun dataControls(): DataControlServiceAsync
+
+    /**
+     * A view of [GoogleServiceAsync] that provides access to raw HTTP responses for each method.
+     */
+    interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): GoogleServiceAsync.WithRawResponse
+
+        fun dataControls(): DataControlServiceAsync.WithRawResponse
+    }
+}

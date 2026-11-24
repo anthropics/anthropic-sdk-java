@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -54,8 +55,8 @@ internal class BetaFallbacksParamTest {
 
         val betaFallbacksParam = BetaFallbacksParam.ofFallbackParams(fallbackParams)
 
-        assertThat(betaFallbacksParam.fallbackParams()).contains(fallbackParams)
-        assertThat(betaFallbacksParam.default_()).isEmpty
+        assertThat(presentVariants(betaFallbacksParam))
+            .isEqualTo(mapOf("fallbackParams" to Optional.of(fallbackParams)))
     }
 
     @Test
@@ -113,8 +114,8 @@ internal class BetaFallbacksParamTest {
     fun ofDefault() {
         val betaFallbacksParam = BetaFallbacksParam.ofDefault()
 
-        assertThat(betaFallbacksParam.fallbackParams()).isEmpty
-        assertThat(betaFallbacksParam.default_()).contains(JsonValue.from("default"))
+        assertThat(presentVariants(betaFallbacksParam))
+            .isEqualTo(mapOf("default_" to Optional.of(JsonValue.from("default"))))
     }
 
     @Test
@@ -147,4 +148,11 @@ internal class BetaFallbacksParamTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaFallbacksParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(betaFallbacksParam: BetaFallbacksParam): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "fallbackParams" to betaFallbacksParam.fallbackParams(),
+                "default_" to betaFallbacksParam.default_(),
+            )
+            .filterValues { it.isPresent }
 }

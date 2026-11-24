@@ -13,6 +13,7 @@ import com.anthropic.models.beta.BetaOverloadedError
 import com.anthropic.models.beta.BetaPermissionError
 import com.anthropic.models.beta.BetaRateLimitError
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -27,18 +28,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofInvalidRequest(invalidRequest)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).contains(invalidRequest)
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("invalidRequest" to Optional.of(invalidRequest)))
     }
 
     @Test
@@ -62,18 +53,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofAuthentication(authentication)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).contains(authentication)
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("authentication" to Optional.of(authentication)))
     }
 
     @Test
@@ -97,18 +78,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofBilling(billing)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).contains(billing)
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("billing" to Optional.of(billing)))
     }
 
     @Test
@@ -132,18 +103,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofPermission(permission)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).contains(permission)
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("permission" to Optional.of(permission)))
     }
 
     @Test
@@ -167,18 +128,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofNotFound(notFound)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).contains(notFound)
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("notFound" to Optional.of(notFound)))
     }
 
     @Test
@@ -202,18 +153,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofRateLimit(rateLimit)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).contains(rateLimit)
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("rateLimit" to Optional.of(rateLimit)))
     }
 
     @Test
@@ -237,18 +178,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofTimeout(timeout)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).contains(timeout)
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("timeout" to Optional.of(timeout)))
     }
 
     @Test
@@ -272,18 +203,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofApi(api)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).contains(api)
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("api" to Optional.of(api)))
     }
 
     @Test
@@ -306,18 +227,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofOverloaded(overloaded)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).contains(overloaded)
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("overloaded" to Optional.of(overloaded)))
     }
 
     @Test
@@ -343,19 +254,8 @@ internal class BetaManagedAgentsErrorTest {
         val betaManagedAgentsError =
             BetaManagedAgentsError.ofMemoryPreconditionFailed(memoryPreconditionFailed)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed())
-            .contains(memoryPreconditionFailed)
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("memoryPreconditionFailed" to Optional.of(memoryPreconditionFailed)))
     }
 
     @Test
@@ -386,18 +286,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofMemoryPathConflict(memoryPathConflict)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).contains(memoryPathConflict)
-        assertThat(betaManagedAgentsError.conflict()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("memoryPathConflict" to Optional.of(memoryPathConflict)))
     }
 
     @Test
@@ -427,18 +317,8 @@ internal class BetaManagedAgentsErrorTest {
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofConflict(conflict)
 
-        assertThat(betaManagedAgentsError.invalidRequest()).isEmpty
-        assertThat(betaManagedAgentsError.authentication()).isEmpty
-        assertThat(betaManagedAgentsError.billing()).isEmpty
-        assertThat(betaManagedAgentsError.permission()).isEmpty
-        assertThat(betaManagedAgentsError.notFound()).isEmpty
-        assertThat(betaManagedAgentsError.rateLimit()).isEmpty
-        assertThat(betaManagedAgentsError.timeout()).isEmpty
-        assertThat(betaManagedAgentsError.api()).isEmpty
-        assertThat(betaManagedAgentsError.overloaded()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPreconditionFailed()).isEmpty
-        assertThat(betaManagedAgentsError.memoryPathConflict()).isEmpty
-        assertThat(betaManagedAgentsError.conflict()).contains(conflict)
+        assertThat(presentVariants(betaManagedAgentsError))
+            .isEqualTo(mapOf("conflict" to Optional.of(conflict)))
     }
 
     @Test
@@ -503,4 +383,23 @@ internal class BetaManagedAgentsErrorTest {
 
         assertThat(betaManagedAgentsError.message()).isEmpty
     }
+
+    private fun presentVariants(
+        betaManagedAgentsError: BetaManagedAgentsError
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "invalidRequest" to betaManagedAgentsError.invalidRequest(),
+                "authentication" to betaManagedAgentsError.authentication(),
+                "billing" to betaManagedAgentsError.billing(),
+                "permission" to betaManagedAgentsError.permission(),
+                "notFound" to betaManagedAgentsError.notFound(),
+                "rateLimit" to betaManagedAgentsError.rateLimit(),
+                "timeout" to betaManagedAgentsError.timeout(),
+                "api" to betaManagedAgentsError.api(),
+                "overloaded" to betaManagedAgentsError.overloaded(),
+                "memoryPreconditionFailed" to betaManagedAgentsError.memoryPreconditionFailed(),
+                "memoryPathConflict" to betaManagedAgentsError.memoryPathConflict(),
+                "conflict" to betaManagedAgentsError.conflict(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -15,7 +15,7 @@ internal class WorkspaceListPageResponseTest {
             WorkspaceListPageResponse.builder()
                 .addData(
                     BetaWorkspace.builder()
-                        .id("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                        .id("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                         .archivedAt(OffsetDateTime.parse("2024-11-01T23:59:27.427722Z"))
                         .compartmentId("f8a7b6c5-4d3e-4f1a-8b9c-0d1e2f3a4b5c")
                         .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
@@ -57,7 +57,7 @@ internal class WorkspaceListPageResponseTest {
         assertThat(workspaceListPageResponse.data())
             .containsExactly(
                 BetaWorkspace.builder()
-                    .id("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                    .id("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                     .archivedAt(OffsetDateTime.parse("2024-11-01T23:59:27.427722Z"))
                     .compartmentId("f8a7b6c5-4d3e-4f1a-8b9c-0d1e2f3a4b5c")
                     .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
@@ -101,7 +101,7 @@ internal class WorkspaceListPageResponseTest {
             WorkspaceListPageResponse.builder()
                 .addData(
                     BetaWorkspace.builder()
-                        .id("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                        .id("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                         .archivedAt(OffsetDateTime.parse("2024-11-01T23:59:27.427722Z"))
                         .compartmentId("f8a7b6c5-4d3e-4f1a-8b9c-0d1e2f3a4b5c")
                         .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))

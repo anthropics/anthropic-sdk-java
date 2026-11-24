@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,10 +19,7 @@ internal class BetaToolChoiceTest {
 
         val betaToolChoice = BetaToolChoice.ofAuto(auto)
 
-        assertThat(betaToolChoice.auto()).contains(auto)
-        assertThat(betaToolChoice.any()).isEmpty
-        assertThat(betaToolChoice.tool()).isEmpty
-        assertThat(betaToolChoice.none()).isEmpty
+        assertThat(presentVariants(betaToolChoice)).isEqualTo(mapOf("auto" to Optional.of(auto)))
     }
 
     @Test
@@ -45,10 +43,7 @@ internal class BetaToolChoiceTest {
 
         val betaToolChoice = BetaToolChoice.ofAny(any)
 
-        assertThat(betaToolChoice.auto()).isEmpty
-        assertThat(betaToolChoice.any()).contains(any)
-        assertThat(betaToolChoice.tool()).isEmpty
-        assertThat(betaToolChoice.none()).isEmpty
+        assertThat(presentVariants(betaToolChoice)).isEqualTo(mapOf("any" to Optional.of(any)))
     }
 
     @Test
@@ -72,10 +67,7 @@ internal class BetaToolChoiceTest {
 
         val betaToolChoice = BetaToolChoice.ofTool(tool)
 
-        assertThat(betaToolChoice.auto()).isEmpty
-        assertThat(betaToolChoice.any()).isEmpty
-        assertThat(betaToolChoice.tool()).contains(tool)
-        assertThat(betaToolChoice.none()).isEmpty
+        assertThat(presentVariants(betaToolChoice)).isEqualTo(mapOf("tool" to Optional.of(tool)))
     }
 
     @Test
@@ -101,10 +93,7 @@ internal class BetaToolChoiceTest {
 
         val betaToolChoice = BetaToolChoice.ofNone(none)
 
-        assertThat(betaToolChoice.auto()).isEmpty
-        assertThat(betaToolChoice.any()).isEmpty
-        assertThat(betaToolChoice.tool()).isEmpty
-        assertThat(betaToolChoice.none()).contains(none)
+        assertThat(presentVariants(betaToolChoice)).isEqualTo(mapOf("none" to Optional.of(none)))
     }
 
     @Test
@@ -171,4 +160,13 @@ internal class BetaToolChoiceTest {
 
         assertThat(betaToolChoice.disableParallelToolUse()).isEmpty
     }
+
+    private fun presentVariants(betaToolChoice: BetaToolChoice): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "auto" to betaToolChoice.auto(),
+                "any" to betaToolChoice.any(),
+                "tool" to betaToolChoice.tool(),
+                "none" to betaToolChoice.none(),
+            )
+            .filterValues { it.isPresent }
 }

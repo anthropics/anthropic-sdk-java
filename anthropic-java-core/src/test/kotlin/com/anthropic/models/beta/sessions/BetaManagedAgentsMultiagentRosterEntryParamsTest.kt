@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSelfParams
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -20,10 +21,8 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
         val betaManagedAgentsMultiagentRosterEntryParams =
             BetaManagedAgentsMultiagentRosterEntryParams.ofString(string)
 
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.string()).contains(string)
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.agent()).isEmpty
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.self()).isEmpty
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.advisor()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagentRosterEntryParams))
+            .isEqualTo(mapOf("string" to Optional.of(string)))
     }
 
     @Test
@@ -49,10 +48,8 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
         val betaManagedAgentsMultiagentRosterEntryParams =
             BetaManagedAgentsMultiagentRosterEntryParams.ofAgent(agent)
 
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.string()).isEmpty
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.agent()).contains(agent)
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.self()).isEmpty
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.advisor()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagentRosterEntryParams))
+            .isEqualTo(mapOf("agent" to Optional.of(agent)))
     }
 
     @Test
@@ -80,10 +77,8 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
         val betaManagedAgentsMultiagentRosterEntryParams =
             BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(self)
 
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.string()).isEmpty
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.agent()).isEmpty
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.self()).contains(self)
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.advisor()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagentRosterEntryParams))
+            .isEqualTo(mapOf("self" to Optional.of(self)))
     }
 
     @Test
@@ -111,10 +106,8 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
         val betaManagedAgentsMultiagentRosterEntryParams =
             BetaManagedAgentsMultiagentRosterEntryParams.ofAdvisor(advisor)
 
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.string()).isEmpty
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.agent()).isEmpty
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.self()).isEmpty
-        assertThat(betaManagedAgentsMultiagentRosterEntryParams.advisor()).contains(advisor)
+        assertThat(presentVariants(betaManagedAgentsMultiagentRosterEntryParams))
+            .isEqualTo(mapOf("advisor" to Optional.of(advisor)))
     }
 
     @Test
@@ -158,4 +151,15 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsMultiagentRosterEntryParams: BetaManagedAgentsMultiagentRosterEntryParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "string" to betaManagedAgentsMultiagentRosterEntryParams.string(),
+                "agent" to betaManagedAgentsMultiagentRosterEntryParams.agent(),
+                "self" to betaManagedAgentsMultiagentRosterEntryParams.self(),
+                "advisor" to betaManagedAgentsMultiagentRosterEntryParams.advisor(),
+            )
+            .filterValues { it.isPresent }
 }

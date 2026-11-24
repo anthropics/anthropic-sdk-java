@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -33,22 +34,7 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofText(text)
 
-        assertThat(contentBlockParam.text()).contains(text)
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam)).isEqualTo(mapOf("text" to Optional.of(text)))
     }
 
     @Test
@@ -106,22 +92,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofImage(image)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).contains(image)
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("image" to Optional.of(image)))
     }
 
     @Test
@@ -173,22 +145,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofDocument(document)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).contains(document)
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("document" to Optional.of(document)))
     }
 
     @Test
@@ -251,22 +209,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofSearchResult(searchResult)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).contains(searchResult)
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("searchResult" to Optional.of(searchResult)))
     }
 
     @Test
@@ -321,22 +265,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofThinking(thinking)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).contains(thinking)
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("thinking" to Optional.of(thinking)))
     }
 
     @Test
@@ -362,22 +292,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofRedactedThinking(redactedThinking)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).contains(redactedThinking)
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("redactedThinking" to Optional.of(redactedThinking)))
     }
 
     @Test
@@ -415,22 +331,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofToolUse(toolUse)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).contains(toolUse)
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("toolUse" to Optional.of(toolUse)))
     }
 
     @Test
@@ -480,22 +382,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofToolResult(toolResult)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).contains(toolResult)
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("toolResult" to Optional.of(toolResult)))
     }
 
     @Test
@@ -544,22 +432,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofServerToolUse(serverToolUse)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).contains(serverToolUse)
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("serverToolUse" to Optional.of(serverToolUse)))
     }
 
     @Test
@@ -616,22 +490,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofWebSearchToolResult(webSearchToolResult)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).contains(webSearchToolResult)
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("webSearchToolResult" to Optional.of(webSearchToolResult)))
     }
 
     @Test
@@ -687,22 +547,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofWebFetchToolResult(webFetchToolResult)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).contains(webFetchToolResult)
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("webFetchToolResult" to Optional.of(webFetchToolResult)))
     }
 
     @Test
@@ -752,22 +598,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofCodeExecutionToolResult(codeExecutionToolResult)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).contains(codeExecutionToolResult)
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("codeExecutionToolResult" to Optional.of(codeExecutionToolResult)))
     }
 
     @Test
@@ -817,23 +649,10 @@ internal class ContentBlockParamTest {
         val contentBlockParam =
             ContentBlockParam.ofBashCodeExecutionToolResult(bashCodeExecutionToolResult)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult())
-            .contains(bashCodeExecutionToolResult)
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(
+                mapOf("bashCodeExecutionToolResult" to Optional.of(bashCodeExecutionToolResult))
+            )
     }
 
     @Test
@@ -884,23 +703,13 @@ internal class ContentBlockParamTest {
         val contentBlockParam =
             ContentBlockParam.ofTextEditorCodeExecutionToolResult(textEditorCodeExecutionToolResult)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult())
-            .contains(textEditorCodeExecutionToolResult)
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(
+                mapOf(
+                    "textEditorCodeExecutionToolResult" to
+                        Optional.of(textEditorCodeExecutionToolResult)
+                )
+            )
     }
 
     @Test
@@ -953,22 +762,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofToolSearchToolResult(toolSearchToolResult)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).contains(toolSearchToolResult)
-        assertThat(contentBlockParam.containerUpload()).isEmpty
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("toolSearchToolResult" to Optional.of(toolSearchToolResult)))
     }
 
     @Test
@@ -1013,22 +808,8 @@ internal class ContentBlockParamTest {
 
         val contentBlockParam = ContentBlockParam.ofContainerUpload(containerUpload)
 
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).contains(containerUpload)
+        assertThat(presentVariants(contentBlockParam))
+            .isEqualTo(mapOf("containerUpload" to Optional.of(containerUpload)))
     }
 
     @Test
@@ -1129,4 +910,26 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.toolsetName()).isEmpty
         assertThat(contentBlockParam.toolUseId()).isEmpty
     }
+
+    private fun presentVariants(contentBlockParam: ContentBlockParam): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "text" to contentBlockParam.text(),
+                "image" to contentBlockParam.image(),
+                "document" to contentBlockParam.document(),
+                "searchResult" to contentBlockParam.searchResult(),
+                "thinking" to contentBlockParam.thinking(),
+                "redactedThinking" to contentBlockParam.redactedThinking(),
+                "toolUse" to contentBlockParam.toolUse(),
+                "toolResult" to contentBlockParam.toolResult(),
+                "serverToolUse" to contentBlockParam.serverToolUse(),
+                "webSearchToolResult" to contentBlockParam.webSearchToolResult(),
+                "webFetchToolResult" to contentBlockParam.webFetchToolResult(),
+                "codeExecutionToolResult" to contentBlockParam.codeExecutionToolResult(),
+                "bashCodeExecutionToolResult" to contentBlockParam.bashCodeExecutionToolResult(),
+                "textEditorCodeExecutionToolResult" to
+                    contentBlockParam.textEditorCodeExecutionToolResult(),
+                "toolSearchToolResult" to contentBlockParam.toolSearchToolResult(),
+                "containerUpload" to contentBlockParam.containerUpload(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,9 +19,8 @@ internal class BetaClaudeTagGuestPolicyTest {
 
         val betaClaudeTagGuestPolicy = BetaClaudeTagGuestPolicy.ofAllow(allow)
 
-        assertThat(betaClaudeTagGuestPolicy.allow()).contains(allow)
-        assertThat(betaClaudeTagGuestPolicy.restrict()).isEmpty
-        assertThat(betaClaudeTagGuestPolicy.channelOnly()).isEmpty
+        assertThat(presentVariants(betaClaudeTagGuestPolicy))
+            .isEqualTo(mapOf("allow" to Optional.of(allow)))
     }
 
     @Test
@@ -44,9 +44,8 @@ internal class BetaClaudeTagGuestPolicyTest {
 
         val betaClaudeTagGuestPolicy = BetaClaudeTagGuestPolicy.ofRestrict(restrict)
 
-        assertThat(betaClaudeTagGuestPolicy.allow()).isEmpty
-        assertThat(betaClaudeTagGuestPolicy.restrict()).contains(restrict)
-        assertThat(betaClaudeTagGuestPolicy.channelOnly()).isEmpty
+        assertThat(presentVariants(betaClaudeTagGuestPolicy))
+            .isEqualTo(mapOf("restrict" to Optional.of(restrict)))
     }
 
     @Test
@@ -70,9 +69,8 @@ internal class BetaClaudeTagGuestPolicyTest {
 
         val betaClaudeTagGuestPolicy = BetaClaudeTagGuestPolicy.ofChannelOnly(channelOnly)
 
-        assertThat(betaClaudeTagGuestPolicy.allow()).isEmpty
-        assertThat(betaClaudeTagGuestPolicy.restrict()).isEmpty
-        assertThat(betaClaudeTagGuestPolicy.channelOnly()).contains(channelOnly)
+        assertThat(presentVariants(betaClaudeTagGuestPolicy))
+            .isEqualTo(mapOf("channelOnly" to Optional.of(channelOnly)))
     }
 
     @Test
@@ -109,4 +107,14 @@ internal class BetaClaudeTagGuestPolicyTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaClaudeTagGuestPolicy.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaClaudeTagGuestPolicy: BetaClaudeTagGuestPolicy
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "allow" to betaClaudeTagGuestPolicy.allow(),
+                "restrict" to betaClaudeTagGuestPolicy.restrict(),
+                "channelOnly" to betaClaudeTagGuestPolicy.channelOnly(),
+            )
+            .filterValues { it.isPresent }
 }

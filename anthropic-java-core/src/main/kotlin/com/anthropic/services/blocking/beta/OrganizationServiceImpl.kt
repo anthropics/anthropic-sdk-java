@@ -37,6 +37,8 @@ import com.anthropic.services.blocking.beta.organization.PluginMarketplaceServic
 import com.anthropic.services.blocking.beta.organization.PluginMarketplaceServiceImpl
 import com.anthropic.services.blocking.beta.organization.PluginService
 import com.anthropic.services.blocking.beta.organization.PluginServiceImpl
+import com.anthropic.services.blocking.beta.organization.ProviderService
+import com.anthropic.services.blocking.beta.organization.ProviderServiceImpl
 import com.anthropic.services.blocking.beta.organization.RateLimitService
 import com.anthropic.services.blocking.beta.organization.RateLimitServiceImpl
 import com.anthropic.services.blocking.beta.organization.RbacGroupService
@@ -79,6 +81,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
     private val externalStorage: ExternalStorageService by lazy {
         ExternalStorageServiceImpl(clientOptions)
     }
+
+    private val providers: ProviderService by lazy { ProviderServiceImpl(clientOptions) }
 
     private val users: UserService by lazy { UserServiceImpl(clientOptions) }
 
@@ -130,6 +134,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
     override fun serviceAccounts(): ServiceAccountService = serviceAccounts
 
     override fun externalStorage(): ExternalStorageService = externalStorage
+
+    override fun providers(): ProviderService = providers
 
     override fun users(): UserService = users
 
@@ -194,6 +200,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
         private val externalStorage: ExternalStorageService.WithRawResponse by lazy {
             ExternalStorageServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val providers: ProviderService.WithRawResponse by lazy {
+            ProviderServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val users: UserService.WithRawResponse by lazy {
@@ -270,6 +280,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
         override fun serviceAccounts(): ServiceAccountService.WithRawResponse = serviceAccounts
 
         override fun externalStorage(): ExternalStorageService.WithRawResponse = externalStorage
+
+        override fun providers(): ProviderService.WithRawResponse = providers
 
         override fun users(): UserService.WithRawResponse = users
 

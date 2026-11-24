@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaTelemetryDestinationStateParamsTest {
         val betaTelemetryDestinationStateParams =
             BetaTelemetryDestinationStateParams.ofEnabled(enabled)
 
-        assertThat(betaTelemetryDestinationStateParams.enabled()).contains(enabled)
-        assertThat(betaTelemetryDestinationStateParams.disabled()).isEmpty
+        assertThat(presentVariants(betaTelemetryDestinationStateParams))
+            .isEqualTo(mapOf("enabled" to Optional.of(enabled)))
     }
 
     @Test
@@ -48,8 +49,8 @@ internal class BetaTelemetryDestinationStateParamsTest {
         val betaTelemetryDestinationStateParams =
             BetaTelemetryDestinationStateParams.ofDisabled(disabled)
 
-        assertThat(betaTelemetryDestinationStateParams.enabled()).isEmpty
-        assertThat(betaTelemetryDestinationStateParams.disabled()).contains(disabled)
+        assertThat(presentVariants(betaTelemetryDestinationStateParams))
+            .isEqualTo(mapOf("disabled" to Optional.of(disabled)))
     }
 
     @Test
@@ -91,4 +92,13 @@ internal class BetaTelemetryDestinationStateParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaTelemetryDestinationStateParams: BetaTelemetryDestinationStateParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "enabled" to betaTelemetryDestinationStateParams.enabled(),
+                "disabled" to betaTelemetryDestinationStateParams.disabled(),
+            )
+            .filterValues { it.isPresent }
 }

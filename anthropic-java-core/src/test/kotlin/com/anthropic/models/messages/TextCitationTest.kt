@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -26,11 +27,8 @@ internal class TextCitationTest {
 
         val textCitation = TextCitation.ofCharLocation(charLocation)
 
-        assertThat(textCitation.charLocation()).contains(charLocation)
-        assertThat(textCitation.pageLocation()).isEmpty
-        assertThat(textCitation.contentBlockLocation()).isEmpty
-        assertThat(textCitation.webSearchResultLocation()).isEmpty
-        assertThat(textCitation.searchResultLocation()).isEmpty
+        assertThat(presentVariants(textCitation))
+            .isEqualTo(mapOf("charLocation" to Optional.of(charLocation)))
     }
 
     @Test
@@ -71,11 +69,8 @@ internal class TextCitationTest {
 
         val textCitation = TextCitation.ofPageLocation(pageLocation)
 
-        assertThat(textCitation.charLocation()).isEmpty
-        assertThat(textCitation.pageLocation()).contains(pageLocation)
-        assertThat(textCitation.contentBlockLocation()).isEmpty
-        assertThat(textCitation.webSearchResultLocation()).isEmpty
-        assertThat(textCitation.searchResultLocation()).isEmpty
+        assertThat(presentVariants(textCitation))
+            .isEqualTo(mapOf("pageLocation" to Optional.of(pageLocation)))
     }
 
     @Test
@@ -116,11 +111,8 @@ internal class TextCitationTest {
 
         val textCitation = TextCitation.ofContentBlockLocation(contentBlockLocation)
 
-        assertThat(textCitation.charLocation()).isEmpty
-        assertThat(textCitation.pageLocation()).isEmpty
-        assertThat(textCitation.contentBlockLocation()).contains(contentBlockLocation)
-        assertThat(textCitation.webSearchResultLocation()).isEmpty
-        assertThat(textCitation.searchResultLocation()).isEmpty
+        assertThat(presentVariants(textCitation))
+            .isEqualTo(mapOf("contentBlockLocation" to Optional.of(contentBlockLocation)))
     }
 
     @Test
@@ -159,11 +151,8 @@ internal class TextCitationTest {
 
         val textCitation = TextCitation.ofWebSearchResultLocation(webSearchResultLocation)
 
-        assertThat(textCitation.charLocation()).isEmpty
-        assertThat(textCitation.pageLocation()).isEmpty
-        assertThat(textCitation.contentBlockLocation()).isEmpty
-        assertThat(textCitation.webSearchResultLocation()).contains(webSearchResultLocation)
-        assertThat(textCitation.searchResultLocation()).isEmpty
+        assertThat(presentVariants(textCitation))
+            .isEqualTo(mapOf("webSearchResultLocation" to Optional.of(webSearchResultLocation)))
     }
 
     @Test
@@ -202,11 +191,8 @@ internal class TextCitationTest {
 
         val textCitation = TextCitation.ofSearchResultLocation(searchResultLocation)
 
-        assertThat(textCitation.charLocation()).isEmpty
-        assertThat(textCitation.pageLocation()).isEmpty
-        assertThat(textCitation.contentBlockLocation()).isEmpty
-        assertThat(textCitation.webSearchResultLocation()).isEmpty
-        assertThat(textCitation.searchResultLocation()).contains(searchResultLocation)
+        assertThat(presentVariants(textCitation))
+            .isEqualTo(mapOf("searchResultLocation" to Optional.of(searchResultLocation)))
     }
 
     @Test
@@ -315,4 +301,14 @@ internal class TextCitationTest {
         assertThat(textCitation.startBlockIndex()).isEmpty
         assertThat(textCitation.title()).isEmpty
     }
+
+    private fun presentVariants(textCitation: TextCitation): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "charLocation" to textCitation.charLocation(),
+                "pageLocation" to textCitation.pageLocation(),
+                "contentBlockLocation" to textCitation.contentBlockLocation(),
+                "webSearchResultLocation" to textCitation.webSearchResultLocation(),
+                "searchResultLocation" to textCitation.searchResultLocation(),
+            )
+            .filterValues { it.isPresent }
 }

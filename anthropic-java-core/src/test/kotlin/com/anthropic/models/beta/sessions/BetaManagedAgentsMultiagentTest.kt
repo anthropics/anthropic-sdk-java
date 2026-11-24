@@ -11,6 +11,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentInlineAgentsE
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSubagentsEnabled
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentWorkflowsEnabled
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -33,8 +34,8 @@ internal class BetaManagedAgentsMultiagentTest {
 
         val betaManagedAgentsMultiagent = BetaManagedAgentsMultiagent.ofCoordinator(coordinator)
 
-        assertThat(betaManagedAgentsMultiagent.coordinator()).contains(coordinator)
-        assertThat(betaManagedAgentsMultiagent.multiagent20261001()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsMultiagent))
+            .isEqualTo(mapOf("coordinator" to Optional.of(coordinator)))
     }
 
     @Test
@@ -92,8 +93,8 @@ internal class BetaManagedAgentsMultiagentTest {
         val betaManagedAgentsMultiagent =
             BetaManagedAgentsMultiagent.ofMultiagent20261001(multiagent20261001)
 
-        assertThat(betaManagedAgentsMultiagent.coordinator()).isEmpty
-        assertThat(betaManagedAgentsMultiagent.multiagent20261001()).contains(multiagent20261001)
+        assertThat(presentVariants(betaManagedAgentsMultiagent))
+            .isEqualTo(mapOf("multiagent20261001" to Optional.of(multiagent20261001)))
     }
 
     @Test
@@ -154,4 +155,13 @@ internal class BetaManagedAgentsMultiagentTest {
             assertThrows<AnthropicInvalidDataException> { betaManagedAgentsMultiagent.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsMultiagent: BetaManagedAgentsMultiagent
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "coordinator" to betaManagedAgentsMultiagent.coordinator(),
+                "multiagent20261001" to betaManagedAgentsMultiagent.multiagent20261001(),
+            )
+            .filterValues { it.isPresent }
 }

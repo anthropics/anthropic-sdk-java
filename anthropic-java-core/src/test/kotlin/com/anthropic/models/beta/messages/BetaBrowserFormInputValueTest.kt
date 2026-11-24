@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,9 +19,8 @@ internal class BetaBrowserFormInputValueTest {
 
         val betaBrowserFormInputValue = BetaBrowserFormInputValue.ofString(string)
 
-        assertThat(betaBrowserFormInputValue.string()).contains(string)
-        assertThat(betaBrowserFormInputValue.number()).isEmpty
-        assertThat(betaBrowserFormInputValue.bool()).isEmpty
+        assertThat(presentVariants(betaBrowserFormInputValue))
+            .isEqualTo(mapOf("string" to Optional.of(string)))
     }
 
     @Test
@@ -43,9 +43,8 @@ internal class BetaBrowserFormInputValueTest {
 
         val betaBrowserFormInputValue = BetaBrowserFormInputValue.ofNumber(number)
 
-        assertThat(betaBrowserFormInputValue.string()).isEmpty
-        assertThat(betaBrowserFormInputValue.number()).contains(number)
-        assertThat(betaBrowserFormInputValue.bool()).isEmpty
+        assertThat(presentVariants(betaBrowserFormInputValue))
+            .isEqualTo(mapOf("number" to Optional.of(number)))
     }
 
     @Test
@@ -68,9 +67,8 @@ internal class BetaBrowserFormInputValueTest {
 
         val betaBrowserFormInputValue = BetaBrowserFormInputValue.ofBool(bool)
 
-        assertThat(betaBrowserFormInputValue.string()).isEmpty
-        assertThat(betaBrowserFormInputValue.number()).isEmpty
-        assertThat(betaBrowserFormInputValue.bool()).contains(bool)
+        assertThat(presentVariants(betaBrowserFormInputValue))
+            .isEqualTo(mapOf("bool" to Optional.of(bool)))
     }
 
     @Test
@@ -101,4 +99,14 @@ internal class BetaBrowserFormInputValueTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaBrowserFormInputValue.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaBrowserFormInputValue: BetaBrowserFormInputValue
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "string" to betaBrowserFormInputValue.string(),
+                "number" to betaBrowserFormInputValue.number(),
+                "bool" to betaBrowserFormInputValue.bool(),
+            )
+            .filterValues { it.isPresent }
 }

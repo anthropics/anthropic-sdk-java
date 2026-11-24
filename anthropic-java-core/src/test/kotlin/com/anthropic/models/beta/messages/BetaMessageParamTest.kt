@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -43,9 +44,7 @@ internal class BetaMessageParamTest {
 
         val betaMessageParam = BetaMessageParam.ofUser(user)
 
-        assertThat(betaMessageParam.user()).contains(user)
-        assertThat(betaMessageParam.assistant()).isEmpty
-        assertThat(betaMessageParam.system()).isEmpty
+        assertThat(presentVariants(betaMessageParam)).isEqualTo(mapOf("user" to Optional.of(user)))
     }
 
     @Test
@@ -120,9 +119,8 @@ internal class BetaMessageParamTest {
 
         val betaMessageParam = BetaMessageParam.ofAssistant(assistant)
 
-        assertThat(betaMessageParam.user()).isEmpty
-        assertThat(betaMessageParam.assistant()).contains(assistant)
-        assertThat(betaMessageParam.system()).isEmpty
+        assertThat(presentVariants(betaMessageParam))
+            .isEqualTo(mapOf("assistant" to Optional.of(assistant)))
     }
 
     @Test
@@ -181,9 +179,8 @@ internal class BetaMessageParamTest {
 
         val betaMessageParam = BetaMessageParam.ofSystem(system)
 
-        assertThat(betaMessageParam.user()).isEmpty
-        assertThat(betaMessageParam.assistant()).isEmpty
-        assertThat(betaMessageParam.system()).contains(system)
+        assertThat(presentVariants(betaMessageParam))
+            .isEqualTo(mapOf("system" to Optional.of(system)))
     }
 
     @Test
@@ -295,4 +292,12 @@ internal class BetaMessageParamTest {
 
         assertThat(betaMessageParam.content()).isEmpty
     }
+
+    private fun presentVariants(betaMessageParam: BetaMessageParam): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "user" to betaMessageParam.user(),
+                "assistant" to betaMessageParam.assistant(),
+                "system" to betaMessageParam.system(),
+            )
+            .filterValues { it.isPresent }
 }

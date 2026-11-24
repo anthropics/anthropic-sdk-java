@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,10 +19,8 @@ internal class BetaClaudeTagReplyModeTest {
 
         val betaClaudeTagReplyMode = BetaClaudeTagReplyMode.ofAutomatic(automatic)
 
-        assertThat(betaClaudeTagReplyMode.automatic()).contains(automatic)
-        assertThat(betaClaudeTagReplyMode.mentionOnly()).isEmpty
-        assertThat(betaClaudeTagReplyMode.alwaysAwake()).isEmpty
-        assertThat(betaClaudeTagReplyMode.thread()).isEmpty
+        assertThat(presentVariants(betaClaudeTagReplyMode))
+            .isEqualTo(mapOf("automatic" to Optional.of(automatic)))
     }
 
     @Test
@@ -45,10 +44,8 @@ internal class BetaClaudeTagReplyModeTest {
 
         val betaClaudeTagReplyMode = BetaClaudeTagReplyMode.ofMentionOnly(mentionOnly)
 
-        assertThat(betaClaudeTagReplyMode.automatic()).isEmpty
-        assertThat(betaClaudeTagReplyMode.mentionOnly()).contains(mentionOnly)
-        assertThat(betaClaudeTagReplyMode.alwaysAwake()).isEmpty
-        assertThat(betaClaudeTagReplyMode.thread()).isEmpty
+        assertThat(presentVariants(betaClaudeTagReplyMode))
+            .isEqualTo(mapOf("mentionOnly" to Optional.of(mentionOnly)))
     }
 
     @Test
@@ -74,10 +71,8 @@ internal class BetaClaudeTagReplyModeTest {
 
         val betaClaudeTagReplyMode = BetaClaudeTagReplyMode.ofAlwaysAwake(alwaysAwake)
 
-        assertThat(betaClaudeTagReplyMode.automatic()).isEmpty
-        assertThat(betaClaudeTagReplyMode.mentionOnly()).isEmpty
-        assertThat(betaClaudeTagReplyMode.alwaysAwake()).contains(alwaysAwake)
-        assertThat(betaClaudeTagReplyMode.thread()).isEmpty
+        assertThat(presentVariants(betaClaudeTagReplyMode))
+            .isEqualTo(mapOf("alwaysAwake" to Optional.of(alwaysAwake)))
     }
 
     @Test
@@ -103,10 +98,8 @@ internal class BetaClaudeTagReplyModeTest {
 
         val betaClaudeTagReplyMode = BetaClaudeTagReplyMode.ofThread(thread)
 
-        assertThat(betaClaudeTagReplyMode.automatic()).isEmpty
-        assertThat(betaClaudeTagReplyMode.mentionOnly()).isEmpty
-        assertThat(betaClaudeTagReplyMode.alwaysAwake()).isEmpty
-        assertThat(betaClaudeTagReplyMode.thread()).contains(thread)
+        assertThat(presentVariants(betaClaudeTagReplyMode))
+            .isEqualTo(mapOf("thread" to Optional.of(thread)))
     }
 
     @Test
@@ -141,4 +134,15 @@ internal class BetaClaudeTagReplyModeTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaClaudeTagReplyMode.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaClaudeTagReplyMode: BetaClaudeTagReplyMode
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "automatic" to betaClaudeTagReplyMode.automatic(),
+                "mentionOnly" to betaClaudeTagReplyMode.mentionOnly(),
+                "alwaysAwake" to betaClaudeTagReplyMode.alwaysAwake(),
+                "thread" to betaClaudeTagReplyMode.thread(),
+            )
+            .filterValues { it.isPresent }
 }

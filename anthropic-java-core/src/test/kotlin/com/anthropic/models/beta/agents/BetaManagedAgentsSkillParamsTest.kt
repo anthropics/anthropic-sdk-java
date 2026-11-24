@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaManagedAgentsSkillParamsTest {
 
         val betaManagedAgentsSkillParams = BetaManagedAgentsSkillParams.ofAnthropic(anthropic)
 
-        assertThat(betaManagedAgentsSkillParams.anthropic()).contains(anthropic)
-        assertThat(betaManagedAgentsSkillParams.custom()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsSkillParams))
+            .isEqualTo(mapOf("anthropic" to Optional.of(anthropic)))
     }
 
     @Test
@@ -50,8 +51,8 @@ internal class BetaManagedAgentsSkillParamsTest {
 
         val betaManagedAgentsSkillParams = BetaManagedAgentsSkillParams.ofCustom(custom)
 
-        assertThat(betaManagedAgentsSkillParams.anthropic()).isEmpty
-        assertThat(betaManagedAgentsSkillParams.custom()).contains(custom)
+        assertThat(presentVariants(betaManagedAgentsSkillParams))
+            .isEqualTo(mapOf("custom" to Optional.of(custom)))
     }
 
     @Test
@@ -133,4 +134,13 @@ internal class BetaManagedAgentsSkillParamsTest {
         assertThrows<AnthropicInvalidDataException> { betaManagedAgentsSkillParams.skillId() }
         assertThat(betaManagedAgentsSkillParams.version()).isEmpty
     }
+
+    private fun presentVariants(
+        betaManagedAgentsSkillParams: BetaManagedAgentsSkillParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "anthropic" to betaManagedAgentsSkillParams.anthropic(),
+                "custom" to betaManagedAgentsSkillParams.custom(),
+            )
+            .filterValues { it.isPresent }
 }

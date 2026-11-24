@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -27,9 +28,8 @@ internal class ResourceRetrieveResponseTest {
 
         val resourceRetrieveResponse = ResourceRetrieveResponse.ofGitHubRepository(githubRepository)
 
-        assertThat(resourceRetrieveResponse.githubRepository()).contains(githubRepository)
-        assertThat(resourceRetrieveResponse.file()).isEmpty
-        assertThat(resourceRetrieveResponse.memoryStore()).isEmpty
+        assertThat(presentVariants(resourceRetrieveResponse))
+            .isEqualTo(mapOf("githubRepository" to Optional.of(githubRepository)))
     }
 
     @Test
@@ -69,9 +69,8 @@ internal class ResourceRetrieveResponseTest {
 
         val resourceRetrieveResponse = ResourceRetrieveResponse.ofFile(file)
 
-        assertThat(resourceRetrieveResponse.githubRepository()).isEmpty
-        assertThat(resourceRetrieveResponse.file()).contains(file)
-        assertThat(resourceRetrieveResponse.memoryStore()).isEmpty
+        assertThat(presentVariants(resourceRetrieveResponse))
+            .isEqualTo(mapOf("file" to Optional.of(file)))
     }
 
     @Test
@@ -111,9 +110,8 @@ internal class ResourceRetrieveResponseTest {
 
         val resourceRetrieveResponse = ResourceRetrieveResponse.ofMemoryStore(memoryStore)
 
-        assertThat(resourceRetrieveResponse.githubRepository()).isEmpty
-        assertThat(resourceRetrieveResponse.file()).isEmpty
-        assertThat(resourceRetrieveResponse.memoryStore()).contains(memoryStore)
+        assertThat(presentVariants(resourceRetrieveResponse))
+            .isEqualTo(mapOf("memoryStore" to Optional.of(memoryStore)))
     }
 
     @Test
@@ -210,4 +208,14 @@ internal class ResourceRetrieveResponseTest {
         assertThat(resourceRetrieveResponse.mountPath()).isEmpty
         assertThat(resourceRetrieveResponse.updatedAt()).isEmpty
     }
+
+    private fun presentVariants(
+        resourceRetrieveResponse: ResourceRetrieveResponse
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "githubRepository" to resourceRetrieveResponse.githubRepository(),
+                "file" to resourceRetrieveResponse.file(),
+                "memoryStore" to resourceRetrieveResponse.memoryStore(),
+            )
+            .filterValues { it.isPresent }
 }

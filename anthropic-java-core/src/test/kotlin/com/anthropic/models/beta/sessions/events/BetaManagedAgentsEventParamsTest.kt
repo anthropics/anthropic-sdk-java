@@ -5,6 +5,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,13 +23,8 @@ internal class BetaManagedAgentsEventParamsTest {
 
         val betaManagedAgentsEventParams = BetaManagedAgentsEventParams.ofUserMessage(userMessage)
 
-        assertThat(betaManagedAgentsEventParams.userMessage()).contains(userMessage)
-        assertThat(betaManagedAgentsEventParams.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsEventParams))
+            .isEqualTo(mapOf("userMessage" to Optional.of(userMessage)))
     }
 
     @Test
@@ -60,13 +56,8 @@ internal class BetaManagedAgentsEventParamsTest {
         val betaManagedAgentsEventParams =
             BetaManagedAgentsEventParams.ofUserInterrupt(userInterrupt)
 
-        assertThat(betaManagedAgentsEventParams.userMessage()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userInterrupt()).contains(userInterrupt)
-        assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsEventParams))
+            .isEqualTo(mapOf("userInterrupt" to Optional.of(userInterrupt)))
     }
 
     @Test
@@ -100,14 +91,8 @@ internal class BetaManagedAgentsEventParamsTest {
         val betaManagedAgentsEventParams =
             BetaManagedAgentsEventParams.ofUserToolConfirmation(userToolConfirmation)
 
-        assertThat(betaManagedAgentsEventParams.userMessage()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolConfirmation())
-            .contains(userToolConfirmation)
-        assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsEventParams))
+            .isEqualTo(mapOf("userToolConfirmation" to Optional.of(userToolConfirmation)))
     }
 
     @Test
@@ -143,14 +128,8 @@ internal class BetaManagedAgentsEventParamsTest {
         val betaManagedAgentsEventParams =
             BetaManagedAgentsEventParams.ofUserCustomToolResult(userCustomToolResult)
 
-        assertThat(betaManagedAgentsEventParams.userMessage()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userCustomToolResult())
-            .contains(userCustomToolResult)
-        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsEventParams))
+            .isEqualTo(mapOf("userCustomToolResult" to Optional.of(userCustomToolResult)))
     }
 
     @Test
@@ -186,13 +165,8 @@ internal class BetaManagedAgentsEventParamsTest {
         val betaManagedAgentsEventParams =
             BetaManagedAgentsEventParams.ofUserDefineOutcome(userDefineOutcome)
 
-        assertThat(betaManagedAgentsEventParams.userMessage()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).contains(userDefineOutcome)
-        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsEventParams))
+            .isEqualTo(mapOf("userDefineOutcome" to Optional.of(userDefineOutcome)))
     }
 
     @Test
@@ -228,13 +202,8 @@ internal class BetaManagedAgentsEventParamsTest {
         val betaManagedAgentsEventParams =
             BetaManagedAgentsEventParams.ofUserToolResult(userToolResult)
 
-        assertThat(betaManagedAgentsEventParams.userMessage()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolResult()).contains(userToolResult)
-        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsEventParams))
+            .isEqualTo(mapOf("userToolResult" to Optional.of(userToolResult)))
     }
 
     @Test
@@ -268,13 +237,8 @@ internal class BetaManagedAgentsEventParamsTest {
         val betaManagedAgentsEventParams =
             BetaManagedAgentsEventParams.ofSystemMessage(systemMessage)
 
-        assertThat(betaManagedAgentsEventParams.userMessage()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userInterrupt()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
-        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
-        assertThat(betaManagedAgentsEventParams.systemMessage()).contains(systemMessage)
+        assertThat(presentVariants(betaManagedAgentsEventParams))
+            .isEqualTo(mapOf("systemMessage" to Optional.of(systemMessage)))
     }
 
     @Test
@@ -353,4 +317,18 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.toolUseId()).isEmpty
         assertThat(betaManagedAgentsEventParams.isError()).isEmpty
     }
+
+    private fun presentVariants(
+        betaManagedAgentsEventParams: BetaManagedAgentsEventParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "userMessage" to betaManagedAgentsEventParams.userMessage(),
+                "userInterrupt" to betaManagedAgentsEventParams.userInterrupt(),
+                "userToolConfirmation" to betaManagedAgentsEventParams.userToolConfirmation(),
+                "userCustomToolResult" to betaManagedAgentsEventParams.userCustomToolResult(),
+                "userDefineOutcome" to betaManagedAgentsEventParams.userDefineOutcome(),
+                "userToolResult" to betaManagedAgentsEventParams.userToolResult(),
+                "systemMessage" to betaManagedAgentsEventParams.systemMessage(),
+            )
+            .filterValues { it.isPresent }
 }

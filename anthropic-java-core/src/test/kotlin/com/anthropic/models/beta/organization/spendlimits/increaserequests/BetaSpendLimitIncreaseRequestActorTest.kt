@@ -6,6 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitScopedApiKeyActor
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitUserActor
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -26,8 +27,8 @@ internal class BetaSpendLimitIncreaseRequestActorTest {
 
         val betaSpendLimitIncreaseRequestActor = BetaSpendLimitIncreaseRequestActor.ofUser(user)
 
-        assertThat(betaSpendLimitIncreaseRequestActor.user()).contains(user)
-        assertThat(betaSpendLimitIncreaseRequestActor.scopedApiKey()).isEmpty
+        assertThat(presentVariants(betaSpendLimitIncreaseRequestActor))
+            .isEqualTo(mapOf("user" to Optional.of(user)))
     }
 
     @Test
@@ -60,8 +61,8 @@ internal class BetaSpendLimitIncreaseRequestActorTest {
         val betaSpendLimitIncreaseRequestActor =
             BetaSpendLimitIncreaseRequestActor.ofScopedApiKey(scopedApiKey)
 
-        assertThat(betaSpendLimitIncreaseRequestActor.user()).isEmpty
-        assertThat(betaSpendLimitIncreaseRequestActor.scopedApiKey()).contains(scopedApiKey)
+        assertThat(presentVariants(betaSpendLimitIncreaseRequestActor))
+            .isEqualTo(mapOf("scopedApiKey" to Optional.of(scopedApiKey)))
     }
 
     @Test
@@ -103,4 +104,13 @@ internal class BetaSpendLimitIncreaseRequestActorTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaSpendLimitIncreaseRequestActor: BetaSpendLimitIncreaseRequestActor
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "user" to betaSpendLimitIncreaseRequestActor.user(),
+                "scopedApiKey" to betaSpendLimitIncreaseRequestActor.scopedApiKey(),
+            )
+            .filterValues { it.isPresent }
 }

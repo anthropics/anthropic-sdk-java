@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -29,8 +30,8 @@ internal class MessageCreateParamsContainerTest {
         val messageCreateParamsContainer =
             MessageCreateParamsContainer.ofContainerParams(containerParams)
 
-        assertThat(messageCreateParamsContainer.containerParams()).contains(containerParams)
-        assertThat(messageCreateParamsContainer.string()).isEmpty
+        assertThat(presentVariants(messageCreateParamsContainer))
+            .isEqualTo(mapOf("containerParams" to Optional.of(containerParams)))
     }
 
     @Test
@@ -65,8 +66,8 @@ internal class MessageCreateParamsContainerTest {
 
         val messageCreateParamsContainer = MessageCreateParamsContainer.ofString(string)
 
-        assertThat(messageCreateParamsContainer.containerParams()).isEmpty
-        assertThat(messageCreateParamsContainer.string()).contains(string)
+        assertThat(presentVariants(messageCreateParamsContainer))
+            .isEqualTo(mapOf("string" to Optional.of(string)))
     }
 
     @Test
@@ -101,4 +102,13 @@ internal class MessageCreateParamsContainerTest {
             assertThrows<AnthropicInvalidDataException> { messageCreateParamsContainer.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        messageCreateParamsContainer: MessageCreateParamsContainer
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "containerParams" to messageCreateParamsContainer.containerParams(),
+                "string" to messageCreateParamsContainer.string(),
+            )
+            .filterValues { it.isPresent }
 }

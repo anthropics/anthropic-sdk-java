@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,12 +19,8 @@ internal class BetaClaudeTagSettingSourceTest {
 
         val betaClaudeTagSettingSource = BetaClaudeTagSettingSource.ofSlackChannel(slackChannel)
 
-        assertThat(betaClaudeTagSettingSource.slackChannel()).contains(slackChannel)
-        assertThat(betaClaudeTagSettingSource.slackWorkspace()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackParentChannel()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackDefault()).isEmpty
-        assertThat(betaClaudeTagSettingSource.default_()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackGridChannel()).isEmpty
+        assertThat(presentVariants(betaClaudeTagSettingSource))
+            .isEqualTo(mapOf("slackChannel" to Optional.of(slackChannel)))
     }
 
     @Test
@@ -49,12 +46,8 @@ internal class BetaClaudeTagSettingSourceTest {
 
         val betaClaudeTagSettingSource = BetaClaudeTagSettingSource.ofSlackWorkspace(slackWorkspace)
 
-        assertThat(betaClaudeTagSettingSource.slackChannel()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackWorkspace()).contains(slackWorkspace)
-        assertThat(betaClaudeTagSettingSource.slackParentChannel()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackDefault()).isEmpty
-        assertThat(betaClaudeTagSettingSource.default_()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackGridChannel()).isEmpty
+        assertThat(presentVariants(betaClaudeTagSettingSource))
+            .isEqualTo(mapOf("slackWorkspace" to Optional.of(slackWorkspace)))
     }
 
     @Test
@@ -81,12 +74,8 @@ internal class BetaClaudeTagSettingSourceTest {
         val betaClaudeTagSettingSource =
             BetaClaudeTagSettingSource.ofSlackParentChannel(slackParentChannel)
 
-        assertThat(betaClaudeTagSettingSource.slackChannel()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackWorkspace()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackParentChannel()).contains(slackParentChannel)
-        assertThat(betaClaudeTagSettingSource.slackDefault()).isEmpty
-        assertThat(betaClaudeTagSettingSource.default_()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackGridChannel()).isEmpty
+        assertThat(presentVariants(betaClaudeTagSettingSource))
+            .isEqualTo(mapOf("slackParentChannel" to Optional.of(slackParentChannel)))
     }
 
     @Test
@@ -112,12 +101,8 @@ internal class BetaClaudeTagSettingSourceTest {
 
         val betaClaudeTagSettingSource = BetaClaudeTagSettingSource.ofSlackDefault(slackDefault)
 
-        assertThat(betaClaudeTagSettingSource.slackChannel()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackWorkspace()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackParentChannel()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackDefault()).contains(slackDefault)
-        assertThat(betaClaudeTagSettingSource.default_()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackGridChannel()).isEmpty
+        assertThat(presentVariants(betaClaudeTagSettingSource))
+            .isEqualTo(mapOf("slackDefault" to Optional.of(slackDefault)))
     }
 
     @Test
@@ -143,12 +128,8 @@ internal class BetaClaudeTagSettingSourceTest {
 
         val betaClaudeTagSettingSource = BetaClaudeTagSettingSource.ofDefault(default_)
 
-        assertThat(betaClaudeTagSettingSource.slackChannel()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackWorkspace()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackParentChannel()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackDefault()).isEmpty
-        assertThat(betaClaudeTagSettingSource.default_()).contains(default_)
-        assertThat(betaClaudeTagSettingSource.slackGridChannel()).isEmpty
+        assertThat(presentVariants(betaClaudeTagSettingSource))
+            .isEqualTo(mapOf("default_" to Optional.of(default_)))
     }
 
     @Test
@@ -181,12 +162,8 @@ internal class BetaClaudeTagSettingSourceTest {
         val betaClaudeTagSettingSource =
             BetaClaudeTagSettingSource.ofSlackGridChannel(slackGridChannel)
 
-        assertThat(betaClaudeTagSettingSource.slackChannel()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackWorkspace()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackParentChannel()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackDefault()).isEmpty
-        assertThat(betaClaudeTagSettingSource.default_()).isEmpty
-        assertThat(betaClaudeTagSettingSource.slackGridChannel()).contains(slackGridChannel)
+        assertThat(presentVariants(betaClaudeTagSettingSource))
+            .isEqualTo(mapOf("slackGridChannel" to Optional.of(slackGridChannel)))
     }
 
     @Test
@@ -260,4 +237,17 @@ internal class BetaClaudeTagSettingSourceTest {
 
         assertThat(betaClaudeTagSettingSource.slackChannelId()).isEmpty
     }
+
+    private fun presentVariants(
+        betaClaudeTagSettingSource: BetaClaudeTagSettingSource
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "slackChannel" to betaClaudeTagSettingSource.slackChannel(),
+                "slackWorkspace" to betaClaudeTagSettingSource.slackWorkspace(),
+                "slackParentChannel" to betaClaudeTagSettingSource.slackParentChannel(),
+                "slackDefault" to betaClaudeTagSettingSource.slackDefault(),
+                "default_" to betaClaudeTagSettingSource.default_(),
+                "slackGridChannel" to betaClaudeTagSettingSource.slackGridChannel(),
+            )
+            .filterValues { it.isPresent }
 }

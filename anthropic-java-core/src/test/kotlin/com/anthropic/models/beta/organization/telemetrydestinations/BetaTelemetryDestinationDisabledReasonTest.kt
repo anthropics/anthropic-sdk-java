@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,10 +20,8 @@ internal class BetaTelemetryDestinationDisabledReasonTest {
         val betaTelemetryDestinationDisabledReason =
             BetaTelemetryDestinationDisabledReason.ofCaller(caller)
 
-        assertThat(betaTelemetryDestinationDisabledReason.caller()).contains(caller)
-        assertThat(betaTelemetryDestinationDisabledReason.sustainedFailure()).isEmpty
-        assertThat(betaTelemetryDestinationDisabledReason.invalidAddress()).isEmpty
-        assertThat(betaTelemetryDestinationDisabledReason.redirect()).isEmpty
+        assertThat(presentVariants(betaTelemetryDestinationDisabledReason))
+            .isEqualTo(mapOf("caller" to Optional.of(caller)))
     }
 
     @Test
@@ -51,11 +50,8 @@ internal class BetaTelemetryDestinationDisabledReasonTest {
         val betaTelemetryDestinationDisabledReason =
             BetaTelemetryDestinationDisabledReason.ofSustainedFailure(sustainedFailure)
 
-        assertThat(betaTelemetryDestinationDisabledReason.caller()).isEmpty
-        assertThat(betaTelemetryDestinationDisabledReason.sustainedFailure())
-            .contains(sustainedFailure)
-        assertThat(betaTelemetryDestinationDisabledReason.invalidAddress()).isEmpty
-        assertThat(betaTelemetryDestinationDisabledReason.redirect()).isEmpty
+        assertThat(presentVariants(betaTelemetryDestinationDisabledReason))
+            .isEqualTo(mapOf("sustainedFailure" to Optional.of(sustainedFailure)))
     }
 
     @Test
@@ -83,10 +79,8 @@ internal class BetaTelemetryDestinationDisabledReasonTest {
         val betaTelemetryDestinationDisabledReason =
             BetaTelemetryDestinationDisabledReason.ofInvalidAddress(invalidAddress)
 
-        assertThat(betaTelemetryDestinationDisabledReason.caller()).isEmpty
-        assertThat(betaTelemetryDestinationDisabledReason.sustainedFailure()).isEmpty
-        assertThat(betaTelemetryDestinationDisabledReason.invalidAddress()).contains(invalidAddress)
-        assertThat(betaTelemetryDestinationDisabledReason.redirect()).isEmpty
+        assertThat(presentVariants(betaTelemetryDestinationDisabledReason))
+            .isEqualTo(mapOf("invalidAddress" to Optional.of(invalidAddress)))
     }
 
     @Test
@@ -114,10 +108,8 @@ internal class BetaTelemetryDestinationDisabledReasonTest {
         val betaTelemetryDestinationDisabledReason =
             BetaTelemetryDestinationDisabledReason.ofRedirect(redirect)
 
-        assertThat(betaTelemetryDestinationDisabledReason.caller()).isEmpty
-        assertThat(betaTelemetryDestinationDisabledReason.sustainedFailure()).isEmpty
-        assertThat(betaTelemetryDestinationDisabledReason.invalidAddress()).isEmpty
-        assertThat(betaTelemetryDestinationDisabledReason.redirect()).contains(redirect)
+        assertThat(presentVariants(betaTelemetryDestinationDisabledReason))
+            .isEqualTo(mapOf("redirect" to Optional.of(redirect)))
     }
 
     @Test
@@ -162,4 +154,15 @@ internal class BetaTelemetryDestinationDisabledReasonTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaTelemetryDestinationDisabledReason: BetaTelemetryDestinationDisabledReason
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "caller" to betaTelemetryDestinationDisabledReason.caller(),
+                "sustainedFailure" to betaTelemetryDestinationDisabledReason.sustainedFailure(),
+                "invalidAddress" to betaTelemetryDestinationDisabledReason.invalidAddress(),
+                "redirect" to betaTelemetryDestinationDisabledReason.redirect(),
+            )
+            .filterValues { it.isPresent }
 }

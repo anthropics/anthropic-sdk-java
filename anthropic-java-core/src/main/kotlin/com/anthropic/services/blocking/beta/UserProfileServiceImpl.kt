@@ -29,6 +29,8 @@ import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
 import com.anthropic.models.beta.userprofiles.UserProfileUpdateParams
 import com.anthropic.services.blocking.beta.userprofiles.ActionUrlService
 import com.anthropic.services.blocking.beta.userprofiles.ActionUrlServiceImpl
+import com.anthropic.services.blocking.beta.userprofiles.ProviderService
+import com.anthropic.services.blocking.beta.userprofiles.ProviderServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -52,12 +54,16 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
 
     private val actionUrls: ActionUrlService by lazy { ActionUrlServiceImpl(clientOptions) }
 
+    private val providers: ProviderService by lazy { ProviderServiceImpl(clientOptions) }
+
     override fun withRawResponse(): UserProfileService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserProfileService =
         UserProfileServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun actionUrls(): ActionUrlService = actionUrls
+
+    override fun providers(): ProviderService = providers
 
     override fun create(
         params: UserProfileCreateParams,
@@ -111,6 +117,10 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
             ActionUrlServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val providers: ProviderService.WithRawResponse by lazy {
+            ProviderServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): UserProfileService.WithRawResponse =
@@ -119,6 +129,8 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
             )
 
         override fun actionUrls(): ActionUrlService.WithRawResponse = actionUrls
+
+        override fun providers(): ProviderService.WithRawResponse = providers
 
         private val createHandler: Handler<BetaUserProfile> =
             jsonHandler<BetaUserProfile>(clientOptions.jsonMapper)

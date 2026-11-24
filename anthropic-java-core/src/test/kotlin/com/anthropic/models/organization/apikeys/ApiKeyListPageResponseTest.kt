@@ -14,7 +14,7 @@ internal class ApiKeyListPageResponseTest {
             ApiKeyListPageResponse.builder()
                 .addData(
                     ApiKey.builder()
-                        .id("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                        .id("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                         .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                         .createdBy(
                             ApiKeyCreatedBy.builder()
@@ -26,7 +26,7 @@ internal class ApiKeyListPageResponseTest {
                         .name("Developer Key")
                         .partialKeyHint("sk-ant-api03-R2D...igAA")
                         .userActorPrincipal("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                        .workspaceScope("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                        .workspaceScope("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                         .status(ApiKey.Status.ACTIVE)
                         .build()
                 )
@@ -38,7 +38,7 @@ internal class ApiKeyListPageResponseTest {
         assertThat(apiKeyListPageResponse.data())
             .containsExactly(
                 ApiKey.builder()
-                    .id("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                    .id("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                     .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                     .createdBy(
                         ApiKeyCreatedBy.builder()
@@ -50,7 +50,7 @@ internal class ApiKeyListPageResponseTest {
                     .name("Developer Key")
                     .partialKeyHint("sk-ant-api03-R2D...igAA")
                     .userActorPrincipal("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                    .workspaceScope("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                    .workspaceScope("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                     .status(ApiKey.Status.ACTIVE)
                     .build()
             )
@@ -66,7 +66,7 @@ internal class ApiKeyListPageResponseTest {
             ApiKeyListPageResponse.builder()
                 .addData(
                     ApiKey.builder()
-                        .id("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                        .id("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                         .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                         .createdBy(
                             ApiKeyCreatedBy.builder()
@@ -78,7 +78,7 @@ internal class ApiKeyListPageResponseTest {
                         .name("Developer Key")
                         .partialKeyHint("sk-ant-api03-R2D...igAA")
                         .userActorPrincipal("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                        .workspaceScope("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                        .workspaceScope("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                         .status(ApiKey.Status.ACTIVE)
                         .build()
                 )

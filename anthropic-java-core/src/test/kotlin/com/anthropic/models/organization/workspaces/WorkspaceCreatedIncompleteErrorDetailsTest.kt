@@ -10,17 +10,17 @@ internal class WorkspaceCreatedIncompleteErrorDetailsTest {
     @Test
     fun create() {
         val workspaceCreatedIncompleteErrorDetails =
-            WorkspaceCreatedIncompleteErrorDetails.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            WorkspaceCreatedIncompleteErrorDetails.of("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
 
         assertThat(workspaceCreatedIncompleteErrorDetails.workspaceId())
-            .isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            .isEqualTo("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val workspaceCreatedIncompleteErrorDetails =
-            WorkspaceCreatedIncompleteErrorDetails.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            WorkspaceCreatedIncompleteErrorDetails.of("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
 
         val roundtrippedWorkspaceCreatedIncompleteErrorDetails =
             jsonMapper.readValue(

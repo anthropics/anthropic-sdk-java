@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,9 +20,8 @@ internal class BetaManagedAgentsCredentialNetworkingParamsTest {
         val betaManagedAgentsCredentialNetworkingParams =
             BetaManagedAgentsCredentialNetworkingParams.ofUnrestricted(unrestricted)
 
-        assertThat(betaManagedAgentsCredentialNetworkingParams.unrestricted())
-            .contains(unrestricted)
-        assertThat(betaManagedAgentsCredentialNetworkingParams.limited()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsCredentialNetworkingParams))
+            .isEqualTo(mapOf("unrestricted" to Optional.of(unrestricted)))
     }
 
     @Test
@@ -52,8 +52,8 @@ internal class BetaManagedAgentsCredentialNetworkingParamsTest {
         val betaManagedAgentsCredentialNetworkingParams =
             BetaManagedAgentsCredentialNetworkingParams.ofLimited(limited)
 
-        assertThat(betaManagedAgentsCredentialNetworkingParams.unrestricted()).isEmpty
-        assertThat(betaManagedAgentsCredentialNetworkingParams.limited()).contains(limited)
+        assertThat(presentVariants(betaManagedAgentsCredentialNetworkingParams))
+            .isEqualTo(mapOf("limited" to Optional.of(limited)))
     }
 
     @Test
@@ -100,4 +100,13 @@ internal class BetaManagedAgentsCredentialNetworkingParamsTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsCredentialNetworkingParams: BetaManagedAgentsCredentialNetworkingParams
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "unrestricted" to betaManagedAgentsCredentialNetworkingParams.unrestricted(),
+                "limited" to betaManagedAgentsCredentialNetworkingParams.limited(),
+            )
+            .filterValues { it.isPresent }
 }

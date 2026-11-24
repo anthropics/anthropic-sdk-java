@@ -22,6 +22,7 @@ import com.anthropic.models.beta.messages.BetaUsage
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -127,10 +128,8 @@ internal class BetaMessageBatchResultTest {
 
         val betaMessageBatchResult = BetaMessageBatchResult.ofSucceeded(succeeded)
 
-        assertThat(betaMessageBatchResult.succeeded()).contains(succeeded)
-        assertThat(betaMessageBatchResult.errored()).isEmpty
-        assertThat(betaMessageBatchResult.canceled()).isEmpty
-        assertThat(betaMessageBatchResult.expired()).isEmpty
+        assertThat(presentVariants(betaMessageBatchResult))
+            .isEqualTo(mapOf("succeeded" to Optional.of(succeeded)))
     }
 
     @Test
@@ -253,10 +252,8 @@ internal class BetaMessageBatchResultTest {
 
         val betaMessageBatchResult = BetaMessageBatchResult.ofErrored(errored)
 
-        assertThat(betaMessageBatchResult.succeeded()).isEmpty
-        assertThat(betaMessageBatchResult.errored()).contains(errored)
-        assertThat(betaMessageBatchResult.canceled()).isEmpty
-        assertThat(betaMessageBatchResult.expired()).isEmpty
+        assertThat(presentVariants(betaMessageBatchResult))
+            .isEqualTo(mapOf("errored" to Optional.of(errored)))
     }
 
     @Test
@@ -287,10 +284,8 @@ internal class BetaMessageBatchResultTest {
 
         val betaMessageBatchResult = BetaMessageBatchResult.ofCanceled(canceled)
 
-        assertThat(betaMessageBatchResult.succeeded()).isEmpty
-        assertThat(betaMessageBatchResult.errored()).isEmpty
-        assertThat(betaMessageBatchResult.canceled()).contains(canceled)
-        assertThat(betaMessageBatchResult.expired()).isEmpty
+        assertThat(presentVariants(betaMessageBatchResult))
+            .isEqualTo(mapOf("canceled" to Optional.of(canceled)))
     }
 
     @Test
@@ -314,10 +309,8 @@ internal class BetaMessageBatchResultTest {
 
         val betaMessageBatchResult = BetaMessageBatchResult.ofExpired(expired)
 
-        assertThat(betaMessageBatchResult.succeeded()).isEmpty
-        assertThat(betaMessageBatchResult.errored()).isEmpty
-        assertThat(betaMessageBatchResult.canceled()).isEmpty
-        assertThat(betaMessageBatchResult.expired()).contains(expired)
+        assertThat(presentVariants(betaMessageBatchResult))
+            .isEqualTo(mapOf("expired" to Optional.of(expired)))
     }
 
     @Test
@@ -352,4 +345,15 @@ internal class BetaMessageBatchResultTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaMessageBatchResult.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaMessageBatchResult: BetaMessageBatchResult
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "succeeded" to betaMessageBatchResult.succeeded(),
+                "errored" to betaMessageBatchResult.errored(),
+                "canceled" to betaMessageBatchResult.canceled(),
+                "expired" to betaMessageBatchResult.expired(),
+            )
+            .filterValues { it.isPresent }
 }

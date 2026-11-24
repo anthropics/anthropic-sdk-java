@@ -366,6 +366,18 @@ private constructor(
         fun target(target: JsonField<BetaServiceAccountTarget>) = apply { body.target(target) }
 
         /**
+         * Alias for calling [target] with the following:
+         * ```java
+         * BetaServiceAccountTarget.builder()
+         *     .serviceAccountId(serviceAccountId)
+         *     .build()
+         * ```
+         */
+        fun serviceAccountTarget(serviceAccountId: String) = apply {
+            body.serviceAccountTarget(serviceAccountId)
+        }
+
+        /**
          * When true, enable this rule for every workspace in the org (including workspaces created
          * later).
          */
@@ -992,6 +1004,19 @@ private constructor(
              * not yet supported value.
              */
             fun target(target: JsonField<BetaServiceAccountTarget>) = apply { this.target = target }
+
+            /**
+             * Alias for calling [target] with the following:
+             * ```java
+             * BetaServiceAccountTarget.builder()
+             *     .serviceAccountId(serviceAccountId)
+             *     .build()
+             * ```
+             */
+            fun serviceAccountTarget(serviceAccountId: String) =
+                target(
+                    BetaServiceAccountTarget.builder().serviceAccountId(serviceAccountId).build()
+                )
 
             /**
              * When true, enable this rule for every workspace in the org (including workspaces

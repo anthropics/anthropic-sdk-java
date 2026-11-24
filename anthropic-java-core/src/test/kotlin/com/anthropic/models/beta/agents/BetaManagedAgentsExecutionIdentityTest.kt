@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +20,8 @@ internal class BetaManagedAgentsExecutionIdentityTest {
         val betaManagedAgentsExecutionIdentity =
             BetaManagedAgentsExecutionIdentity.ofAwsRole(awsRole)
 
-        assertThat(betaManagedAgentsExecutionIdentity.awsRole()).contains(awsRole)
-        assertThat(betaManagedAgentsExecutionIdentity.serviceAccount()).isEmpty
+        assertThat(presentVariants(betaManagedAgentsExecutionIdentity))
+            .isEqualTo(mapOf("awsRole" to Optional.of(awsRole)))
     }
 
     @Test
@@ -48,8 +49,8 @@ internal class BetaManagedAgentsExecutionIdentityTest {
         val betaManagedAgentsExecutionIdentity =
             BetaManagedAgentsExecutionIdentity.ofServiceAccount(serviceAccount)
 
-        assertThat(betaManagedAgentsExecutionIdentity.awsRole()).isEmpty
-        assertThat(betaManagedAgentsExecutionIdentity.serviceAccount()).contains(serviceAccount)
+        assertThat(presentVariants(betaManagedAgentsExecutionIdentity))
+            .isEqualTo(mapOf("serviceAccount" to Optional.of(serviceAccount)))
     }
 
     @Test
@@ -91,4 +92,13 @@ internal class BetaManagedAgentsExecutionIdentityTest {
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        betaManagedAgentsExecutionIdentity: BetaManagedAgentsExecutionIdentity
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "awsRole" to betaManagedAgentsExecutionIdentity.awsRole(),
+                "serviceAccount" to betaManagedAgentsExecutionIdentity.serviceAccount(),
+            )
+            .filterValues { it.isPresent }
 }

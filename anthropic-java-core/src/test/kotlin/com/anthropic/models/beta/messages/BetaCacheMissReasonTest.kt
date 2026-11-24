@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,12 +19,8 @@ internal class BetaCacheMissReasonTest {
 
         val betaCacheMissReason = BetaCacheMissReason.ofModelChanged(modelChanged)
 
-        assertThat(betaCacheMissReason.modelChanged()).contains(modelChanged)
-        assertThat(betaCacheMissReason.systemChanged()).isEmpty
-        assertThat(betaCacheMissReason.toolsChanged()).isEmpty
-        assertThat(betaCacheMissReason.messagesChanged()).isEmpty
-        assertThat(betaCacheMissReason.previousMessageNotFound()).isEmpty
-        assertThat(betaCacheMissReason.unavailable()).isEmpty
+        assertThat(presentVariants(betaCacheMissReason))
+            .isEqualTo(mapOf("modelChanged" to Optional.of(modelChanged)))
     }
 
     @Test
@@ -47,12 +44,8 @@ internal class BetaCacheMissReasonTest {
 
         val betaCacheMissReason = BetaCacheMissReason.ofSystemChanged(systemChanged)
 
-        assertThat(betaCacheMissReason.modelChanged()).isEmpty
-        assertThat(betaCacheMissReason.systemChanged()).contains(systemChanged)
-        assertThat(betaCacheMissReason.toolsChanged()).isEmpty
-        assertThat(betaCacheMissReason.messagesChanged()).isEmpty
-        assertThat(betaCacheMissReason.previousMessageNotFound()).isEmpty
-        assertThat(betaCacheMissReason.unavailable()).isEmpty
+        assertThat(presentVariants(betaCacheMissReason))
+            .isEqualTo(mapOf("systemChanged" to Optional.of(systemChanged)))
     }
 
     @Test
@@ -76,12 +69,8 @@ internal class BetaCacheMissReasonTest {
 
         val betaCacheMissReason = BetaCacheMissReason.ofToolsChanged(toolsChanged)
 
-        assertThat(betaCacheMissReason.modelChanged()).isEmpty
-        assertThat(betaCacheMissReason.systemChanged()).isEmpty
-        assertThat(betaCacheMissReason.toolsChanged()).contains(toolsChanged)
-        assertThat(betaCacheMissReason.messagesChanged()).isEmpty
-        assertThat(betaCacheMissReason.previousMessageNotFound()).isEmpty
-        assertThat(betaCacheMissReason.unavailable()).isEmpty
+        assertThat(presentVariants(betaCacheMissReason))
+            .isEqualTo(mapOf("toolsChanged" to Optional.of(toolsChanged)))
     }
 
     @Test
@@ -105,12 +94,8 @@ internal class BetaCacheMissReasonTest {
 
         val betaCacheMissReason = BetaCacheMissReason.ofMessagesChanged(messagesChanged)
 
-        assertThat(betaCacheMissReason.modelChanged()).isEmpty
-        assertThat(betaCacheMissReason.systemChanged()).isEmpty
-        assertThat(betaCacheMissReason.toolsChanged()).isEmpty
-        assertThat(betaCacheMissReason.messagesChanged()).contains(messagesChanged)
-        assertThat(betaCacheMissReason.previousMessageNotFound()).isEmpty
-        assertThat(betaCacheMissReason.unavailable()).isEmpty
+        assertThat(presentVariants(betaCacheMissReason))
+            .isEqualTo(mapOf("messagesChanged" to Optional.of(messagesChanged)))
     }
 
     @Test
@@ -135,12 +120,8 @@ internal class BetaCacheMissReasonTest {
         val betaCacheMissReason =
             BetaCacheMissReason.ofPreviousMessageNotFound(previousMessageNotFound)
 
-        assertThat(betaCacheMissReason.modelChanged()).isEmpty
-        assertThat(betaCacheMissReason.systemChanged()).isEmpty
-        assertThat(betaCacheMissReason.toolsChanged()).isEmpty
-        assertThat(betaCacheMissReason.messagesChanged()).isEmpty
-        assertThat(betaCacheMissReason.previousMessageNotFound()).contains(previousMessageNotFound)
-        assertThat(betaCacheMissReason.unavailable()).isEmpty
+        assertThat(presentVariants(betaCacheMissReason))
+            .isEqualTo(mapOf("previousMessageNotFound" to Optional.of(previousMessageNotFound)))
     }
 
     @Test
@@ -166,12 +147,8 @@ internal class BetaCacheMissReasonTest {
 
         val betaCacheMissReason = BetaCacheMissReason.ofUnavailable(unavailable)
 
-        assertThat(betaCacheMissReason.modelChanged()).isEmpty
-        assertThat(betaCacheMissReason.systemChanged()).isEmpty
-        assertThat(betaCacheMissReason.toolsChanged()).isEmpty
-        assertThat(betaCacheMissReason.messagesChanged()).isEmpty
-        assertThat(betaCacheMissReason.previousMessageNotFound()).isEmpty
-        assertThat(betaCacheMissReason.unavailable()).contains(unavailable)
+        assertThat(presentVariants(betaCacheMissReason))
+            .isEqualTo(mapOf("unavailable" to Optional.of(unavailable)))
     }
 
     @Test
@@ -239,4 +216,17 @@ internal class BetaCacheMissReasonTest {
 
         assertThat(betaCacheMissReason.cacheMissedInputTokens()).isEmpty
     }
+
+    private fun presentVariants(
+        betaCacheMissReason: BetaCacheMissReason
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "modelChanged" to betaCacheMissReason.modelChanged(),
+                "systemChanged" to betaCacheMissReason.systemChanged(),
+                "toolsChanged" to betaCacheMissReason.toolsChanged(),
+                "messagesChanged" to betaCacheMissReason.messagesChanged(),
+                "previousMessageNotFound" to betaCacheMissReason.previousMessageNotFound(),
+                "unavailable" to betaCacheMissReason.unavailable(),
+            )
+            .filterValues { it.isPresent }
 }

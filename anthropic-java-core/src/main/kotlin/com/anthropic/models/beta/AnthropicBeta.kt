@@ -222,6 +222,10 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         @JvmField val EFS_2026_10_01 = AnthropicBeta(JsonField.of("efs-2026-10-01"))
 
         @JvmField
+        val GOOGLE_MANAGED_DATA_CONTROLS_2026_09_01 =
+            AnthropicBeta(JsonField.of("google-managed-data-controls-2026-09-01"))
+
+        @JvmField
         val USER_PROFILES_BILLING_2026_10_01 =
             AnthropicBeta(JsonField.of("user-profiles-billing-2026-10-01"))
 
@@ -292,6 +296,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
                 "ce-claude-code-managed-settings-2026-10-06" ->
                     CE_CLAUDE_CODE_MANAGED_SETTINGS_2026_10_06
                 "efs-2026-10-01" -> EFS_2026_10_01
+                "google-managed-data-controls-2026-09-01" -> GOOGLE_MANAGED_DATA_CONTROLS_2026_09_01
                 "user-profiles-billing-2026-10-01" -> USER_PROFILES_BILLING_2026_10_01
                 else -> AnthropicBeta(JsonField.of(value))
             }
@@ -376,6 +381,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         CE_USER_MANAGEMENT_2026_07_13,
         CE_CLAUDE_CODE_MANAGED_SETTINGS_2026_10_06,
         EFS_2026_10_01,
+        GOOGLE_MANAGED_DATA_CONTROLS_2026_09_01,
         USER_PROFILES_BILLING_2026_10_01,
     }
 
@@ -461,6 +467,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         CE_USER_MANAGEMENT_2026_07_13,
         CE_CLAUDE_CODE_MANAGED_SETTINGS_2026_10_06,
         EFS_2026_10_01,
+        GOOGLE_MANAGED_DATA_CONTROLS_2026_09_01,
         USER_PROFILES_BILLING_2026_10_01,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
@@ -540,6 +547,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             CE_CLAUDE_CODE_MANAGED_SETTINGS_2026_10_06 ->
                 Value.CE_CLAUDE_CODE_MANAGED_SETTINGS_2026_10_06
             EFS_2026_10_01 -> Value.EFS_2026_10_01
+            GOOGLE_MANAGED_DATA_CONTROLS_2026_09_01 -> Value.GOOGLE_MANAGED_DATA_CONTROLS_2026_09_01
             USER_PROFILES_BILLING_2026_10_01 -> Value.USER_PROFILES_BILLING_2026_10_01
             else -> Value._UNKNOWN
         }
@@ -617,6 +625,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             CE_CLAUDE_CODE_MANAGED_SETTINGS_2026_10_06 ->
                 Known.CE_CLAUDE_CODE_MANAGED_SETTINGS_2026_10_06
             EFS_2026_10_01 -> Known.EFS_2026_10_01
+            GOOGLE_MANAGED_DATA_CONTROLS_2026_09_01 -> Known.GOOGLE_MANAGED_DATA_CONTROLS_2026_09_01
             USER_PROFILES_BILLING_2026_10_01 -> Known.USER_PROFILES_BILLING_2026_10_01
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }

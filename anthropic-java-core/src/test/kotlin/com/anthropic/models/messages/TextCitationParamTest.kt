@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -25,11 +26,8 @@ internal class TextCitationParamTest {
 
         val textCitationParam = TextCitationParam.ofCharLocation(charLocation)
 
-        assertThat(textCitationParam.charLocation()).contains(charLocation)
-        assertThat(textCitationParam.pageLocation()).isEmpty
-        assertThat(textCitationParam.contentBlockLocation()).isEmpty
-        assertThat(textCitationParam.webSearchResultLocation()).isEmpty
-        assertThat(textCitationParam.searchResultLocation()).isEmpty
+        assertThat(presentVariants(textCitationParam))
+            .isEqualTo(mapOf("charLocation" to Optional.of(charLocation)))
     }
 
     @Test
@@ -68,11 +66,8 @@ internal class TextCitationParamTest {
 
         val textCitationParam = TextCitationParam.ofPageLocation(pageLocation)
 
-        assertThat(textCitationParam.charLocation()).isEmpty
-        assertThat(textCitationParam.pageLocation()).contains(pageLocation)
-        assertThat(textCitationParam.contentBlockLocation()).isEmpty
-        assertThat(textCitationParam.webSearchResultLocation()).isEmpty
-        assertThat(textCitationParam.searchResultLocation()).isEmpty
+        assertThat(presentVariants(textCitationParam))
+            .isEqualTo(mapOf("pageLocation" to Optional.of(pageLocation)))
     }
 
     @Test
@@ -111,11 +106,8 @@ internal class TextCitationParamTest {
 
         val textCitationParam = TextCitationParam.ofContentBlockLocation(contentBlockLocation)
 
-        assertThat(textCitationParam.charLocation()).isEmpty
-        assertThat(textCitationParam.pageLocation()).isEmpty
-        assertThat(textCitationParam.contentBlockLocation()).contains(contentBlockLocation)
-        assertThat(textCitationParam.webSearchResultLocation()).isEmpty
-        assertThat(textCitationParam.searchResultLocation()).isEmpty
+        assertThat(presentVariants(textCitationParam))
+            .isEqualTo(mapOf("contentBlockLocation" to Optional.of(contentBlockLocation)))
     }
 
     @Test
@@ -153,11 +145,8 @@ internal class TextCitationParamTest {
 
         val textCitationParam = TextCitationParam.ofWebSearchResultLocation(webSearchResultLocation)
 
-        assertThat(textCitationParam.charLocation()).isEmpty
-        assertThat(textCitationParam.pageLocation()).isEmpty
-        assertThat(textCitationParam.contentBlockLocation()).isEmpty
-        assertThat(textCitationParam.webSearchResultLocation()).contains(webSearchResultLocation)
-        assertThat(textCitationParam.searchResultLocation()).isEmpty
+        assertThat(presentVariants(textCitationParam))
+            .isEqualTo(mapOf("webSearchResultLocation" to Optional.of(webSearchResultLocation)))
     }
 
     @Test
@@ -196,11 +185,8 @@ internal class TextCitationParamTest {
 
         val textCitationParam = TextCitationParam.ofSearchResultLocation(searchResultLocation)
 
-        assertThat(textCitationParam.charLocation()).isEmpty
-        assertThat(textCitationParam.pageLocation()).isEmpty
-        assertThat(textCitationParam.contentBlockLocation()).isEmpty
-        assertThat(textCitationParam.webSearchResultLocation()).isEmpty
-        assertThat(textCitationParam.searchResultLocation()).contains(searchResultLocation)
+        assertThat(presentVariants(textCitationParam))
+            .isEqualTo(mapOf("searchResultLocation" to Optional.of(searchResultLocation)))
     }
 
     @Test
@@ -305,4 +291,14 @@ internal class TextCitationParamTest {
         assertThat(textCitationParam.startBlockIndex()).isEmpty
         assertThat(textCitationParam.title()).isEmpty
     }
+
+    private fun presentVariants(textCitationParam: TextCitationParam): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "charLocation" to textCitationParam.charLocation(),
+                "pageLocation" to textCitationParam.pageLocation(),
+                "contentBlockLocation" to textCitationParam.contentBlockLocation(),
+                "webSearchResultLocation" to textCitationParam.webSearchResultLocation(),
+                "searchResultLocation" to textCitationParam.searchResultLocation(),
+            )
+            .filterValues { it.isPresent }
 }

@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,11 +19,8 @@ internal class RawContentBlockDeltaTest {
 
         val rawContentBlockDelta = RawContentBlockDelta.ofText(text)
 
-        assertThat(rawContentBlockDelta.text()).contains(text)
-        assertThat(rawContentBlockDelta.inputJson()).isEmpty
-        assertThat(rawContentBlockDelta.citations()).isEmpty
-        assertThat(rawContentBlockDelta.thinking()).isEmpty
-        assertThat(rawContentBlockDelta.signature()).isEmpty
+        assertThat(presentVariants(rawContentBlockDelta))
+            .isEqualTo(mapOf("text" to Optional.of(text)))
     }
 
     @Test
@@ -45,11 +43,8 @@ internal class RawContentBlockDeltaTest {
 
         val rawContentBlockDelta = RawContentBlockDelta.ofInputJson(inputJson)
 
-        assertThat(rawContentBlockDelta.text()).isEmpty
-        assertThat(rawContentBlockDelta.inputJson()).contains(inputJson)
-        assertThat(rawContentBlockDelta.citations()).isEmpty
-        assertThat(rawContentBlockDelta.thinking()).isEmpty
-        assertThat(rawContentBlockDelta.signature()).isEmpty
+        assertThat(presentVariants(rawContentBlockDelta))
+            .isEqualTo(mapOf("inputJson" to Optional.of(inputJson)))
     }
 
     @Test
@@ -85,11 +80,8 @@ internal class RawContentBlockDeltaTest {
 
         val rawContentBlockDelta = RawContentBlockDelta.ofCitations(citations)
 
-        assertThat(rawContentBlockDelta.text()).isEmpty
-        assertThat(rawContentBlockDelta.inputJson()).isEmpty
-        assertThat(rawContentBlockDelta.citations()).contains(citations)
-        assertThat(rawContentBlockDelta.thinking()).isEmpty
-        assertThat(rawContentBlockDelta.signature()).isEmpty
+        assertThat(presentVariants(rawContentBlockDelta))
+            .isEqualTo(mapOf("citations" to Optional.of(citations)))
     }
 
     @Test
@@ -126,11 +118,8 @@ internal class RawContentBlockDeltaTest {
 
         val rawContentBlockDelta = RawContentBlockDelta.ofThinking(thinking)
 
-        assertThat(rawContentBlockDelta.text()).isEmpty
-        assertThat(rawContentBlockDelta.inputJson()).isEmpty
-        assertThat(rawContentBlockDelta.citations()).isEmpty
-        assertThat(rawContentBlockDelta.thinking()).contains(thinking)
-        assertThat(rawContentBlockDelta.signature()).isEmpty
+        assertThat(presentVariants(rawContentBlockDelta))
+            .isEqualTo(mapOf("thinking" to Optional.of(thinking)))
     }
 
     @Test
@@ -153,11 +142,8 @@ internal class RawContentBlockDeltaTest {
 
         val rawContentBlockDelta = RawContentBlockDelta.ofSignature(signature)
 
-        assertThat(rawContentBlockDelta.text()).isEmpty
-        assertThat(rawContentBlockDelta.inputJson()).isEmpty
-        assertThat(rawContentBlockDelta.citations()).isEmpty
-        assertThat(rawContentBlockDelta.thinking()).isEmpty
-        assertThat(rawContentBlockDelta.signature()).contains(signature)
+        assertThat(presentVariants(rawContentBlockDelta))
+            .isEqualTo(mapOf("signature" to Optional.of(signature)))
     }
 
     @Test
@@ -191,4 +177,16 @@ internal class RawContentBlockDeltaTest {
         val e = assertThrows<AnthropicInvalidDataException> { rawContentBlockDelta.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
     }
+
+    private fun presentVariants(
+        rawContentBlockDelta: RawContentBlockDelta
+    ): Map<String, Optional<*>> =
+        mapOf<String, Optional<*>>(
+                "text" to rawContentBlockDelta.text(),
+                "inputJson" to rawContentBlockDelta.inputJson(),
+                "citations" to rawContentBlockDelta.citations(),
+                "thinking" to rawContentBlockDelta.thinking(),
+                "signature" to rawContentBlockDelta.signature(),
+            )
+            .filterValues { it.isPresent }
 }
