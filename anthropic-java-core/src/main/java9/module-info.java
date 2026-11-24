@@ -35,6 +35,10 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta;
     exports com.anthropic.models.beta.agents;
     exports com.anthropic.models.beta.agents.versions;
+    exports com.anthropic.models.beta.compliance.review;
+    exports com.anthropic.models.beta.compliance.review.cases;
+    exports com.anthropic.models.beta.compliance.review.items;
+    exports com.anthropic.models.beta.compliance.review.notices;
     exports com.anthropic.models.beta.deploymentruns;
     exports com.anthropic.models.beta.deployments;
     exports com.anthropic.models.beta.dreams;
@@ -160,6 +164,8 @@ open module com.anthropic.core {
     exports com.anthropic.services.async;
     exports com.anthropic.services.async.beta;
     exports com.anthropic.services.async.beta.agents;
+    exports com.anthropic.services.async.beta.compliance;
+    exports com.anthropic.services.async.beta.compliance.review;
     exports com.anthropic.services.async.beta.environments;
     exports com.anthropic.services.async.beta.memorystores;
     exports com.anthropic.services.async.beta.messages;
@@ -208,6 +214,8 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking;
     exports com.anthropic.services.blocking.beta;
     exports com.anthropic.services.blocking.beta.agents;
+    exports com.anthropic.services.blocking.beta.compliance;
+    exports com.anthropic.services.blocking.beta.compliance.review;
     exports com.anthropic.services.blocking.beta.environments;
     exports com.anthropic.services.blocking.beta.memorystores;
     exports com.anthropic.services.blocking.beta.messages;
