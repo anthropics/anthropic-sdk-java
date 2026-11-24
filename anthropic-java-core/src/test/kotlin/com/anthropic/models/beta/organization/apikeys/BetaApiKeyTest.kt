@@ -12,7 +12,7 @@ internal class BetaApiKeyTest {
     fun create() {
         val betaApiKey =
             BetaApiKey.builder()
-                .id("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                .id("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                 .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .createdBy(
                     BetaApiKeyCreatedBy.builder()
@@ -24,11 +24,11 @@ internal class BetaApiKeyTest {
                 .name("Developer Key")
                 .partialKeyHint("sk-ant-api03-R2D...igAA")
                 .userActorPrincipal("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                .workspaceScope("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceScope("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .status(BetaApiKey.Status.ACTIVE)
                 .build()
 
-        assertThat(betaApiKey.id()).isEqualTo("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+        assertThat(betaApiKey.id()).isEqualTo("apikey_01BcDeFgHjKmNpQrStUvWxYz")
         assertThat(betaApiKey.createdAt())
             .isEqualTo(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
         assertThat(betaApiKey.createdBy())
@@ -45,7 +45,7 @@ internal class BetaApiKeyTest {
         assertThat(betaApiKey.principal())
             .contains(BetaApiKey.Principal.ofUserActor("user_01WxYzAbCdEfGhJkMnPqRsTu"))
         assertThat(betaApiKey.scope())
-            .isEqualTo(BetaApiKey.Scope.ofWorkspace("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ"))
+            .isEqualTo(BetaApiKey.Scope.ofWorkspace("wrkspc_01AbCdEfGhJkLmNpQrStUvWx"))
         assertThat(betaApiKey.status()).isEqualTo(BetaApiKey.Status.ACTIVE)
     }
 
@@ -54,7 +54,7 @@ internal class BetaApiKeyTest {
         val jsonMapper = jsonMapper()
         val betaApiKey =
             BetaApiKey.builder()
-                .id("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                .id("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                 .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .createdBy(
                     BetaApiKeyCreatedBy.builder()
@@ -66,7 +66,7 @@ internal class BetaApiKeyTest {
                 .name("Developer Key")
                 .partialKeyHint("sk-ant-api03-R2D...igAA")
                 .userActorPrincipal("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                .workspaceScope("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceScope("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .status(BetaApiKey.Status.ACTIVE)
                 .build()
 

@@ -29,7 +29,7 @@ internal class BetaAnalyticsUsageGroupTest {
                 )
                 .actorType(BetaAnalyticsActorType.USER_ACTOR)
                 .agentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
-                .apiKeyId("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                .apiKeyId("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                 .claudeTagCategory(BetaAnalyticsClaudeTagCategory.DM)
                 .claudeTagUserId("U0123ABCDEF")
                 .contextWindow(BetaAnalyticsContextWindow.FROM_0_TO_200K)
@@ -45,7 +45,7 @@ internal class BetaAnalyticsUsageGroupTest {
                 .slackChannelId("C0123ABCDEF")
                 .speed(BetaAnalyticsSpeed.FAST)
                 .userProfileId("uprof_01M33NeYUQK2WV9PpYcsPHLi")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         assertThat(betaAnalyticsUsageGroup.actor())
@@ -61,7 +61,7 @@ internal class BetaAnalyticsUsageGroupTest {
             )
         assertThat(betaAnalyticsUsageGroup.actorType()).contains(BetaAnalyticsActorType.USER_ACTOR)
         assertThat(betaAnalyticsUsageGroup.agentId()).contains("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
-        assertThat(betaAnalyticsUsageGroup.apiKeyId()).contains("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+        assertThat(betaAnalyticsUsageGroup.apiKeyId()).contains("apikey_01BcDeFgHjKmNpQrStUvWxYz")
         assertThat(betaAnalyticsUsageGroup.claudeTagCategory())
             .contains(BetaAnalyticsClaudeTagCategory.DM)
         assertThat(betaAnalyticsUsageGroup.claudeTagUserId()).contains("U0123ABCDEF")
@@ -85,7 +85,7 @@ internal class BetaAnalyticsUsageGroupTest {
         assertThat(betaAnalyticsUsageGroup.userProfileId())
             .contains("uprof_01M33NeYUQK2WV9PpYcsPHLi")
         assertThat(betaAnalyticsUsageGroup.workspaceId())
-            .contains("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            .contains("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
     }
 
     @Test
@@ -103,7 +103,7 @@ internal class BetaAnalyticsUsageGroupTest {
                 )
                 .actorType(BetaAnalyticsActorType.USER_ACTOR)
                 .agentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
-                .apiKeyId("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                .apiKeyId("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                 .claudeTagCategory(BetaAnalyticsClaudeTagCategory.DM)
                 .claudeTagUserId("U0123ABCDEF")
                 .contextWindow(BetaAnalyticsContextWindow.FROM_0_TO_200K)
@@ -119,7 +119,7 @@ internal class BetaAnalyticsUsageGroupTest {
                 .slackChannelId("C0123ABCDEF")
                 .speed(BetaAnalyticsSpeed.FAST)
                 .userProfileId("uprof_01M33NeYUQK2WV9PpYcsPHLi")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         val roundtrippedBetaAnalyticsUsageGroup =

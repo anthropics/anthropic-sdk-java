@@ -12,7 +12,7 @@ internal class WorkspaceAddParamsTest {
         WorkspaceAddParams.builder()
             .federationRuleId("federation_rule_id")
             .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-            .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
             .build()
     }
 
@@ -21,7 +21,7 @@ internal class WorkspaceAddParamsTest {
         val params =
             WorkspaceAddParams.builder()
                 .federationRuleId("federation_rule_id")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("federation_rule_id")
@@ -35,7 +35,7 @@ internal class WorkspaceAddParamsTest {
             WorkspaceAddParams.builder()
                 .federationRuleId("federation_rule_id")
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         val headers = params._headers()
@@ -53,7 +53,7 @@ internal class WorkspaceAddParamsTest {
         val params =
             WorkspaceAddParams.builder()
                 .federationRuleId("federation_rule_id")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         val headers = params._headers()
@@ -67,12 +67,12 @@ internal class WorkspaceAddParamsTest {
             WorkspaceAddParams.builder()
                 .federationRuleId("federation_rule_id")
                 .addBeta(AnthropicBeta.COMPUTER_USE_2024_10_22)
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.workspaceId()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+        assertThat(body.workspaceId()).isEqualTo("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
     }
 
     @Test
@@ -80,11 +80,11 @@ internal class WorkspaceAddParamsTest {
         val params =
             WorkspaceAddParams.builder()
                 .federationRuleId("federation_rule_id")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.workspaceId()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+        assertThat(body.workspaceId()).isEqualTo("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
     }
 }

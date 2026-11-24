@@ -16,7 +16,7 @@ internal class MemberListPageResponseTest {
                 .addData(
                     BetaWorkspaceMember.builder()
                         .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                        .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                        .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                         .workspaceRole(BetaWorkspaceRole.WORKSPACE_ADMIN)
                         .build()
                 )
@@ -29,7 +29,7 @@ internal class MemberListPageResponseTest {
             .containsExactly(
                 BetaWorkspaceMember.builder()
                     .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                    .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                    .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                     .workspaceRole(BetaWorkspaceRole.WORKSPACE_ADMIN)
                     .build()
             )
@@ -46,7 +46,7 @@ internal class MemberListPageResponseTest {
                 .addData(
                     BetaWorkspaceMember.builder()
                         .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                        .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                        .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                         .workspaceRole(BetaWorkspaceRole.WORKSPACE_ADMIN)
                         .build()
                 )

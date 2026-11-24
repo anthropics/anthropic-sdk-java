@@ -13,7 +13,7 @@ internal class WorkspaceTest {
     fun create() {
         val workspace =
             Workspace.builder()
-                .id("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .id("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .archivedAt(OffsetDateTime.parse("2024-11-01T23:59:27.427722Z"))
                 .compartmentId("f8a7b6c5-4d3e-4f1a-8b9c-0d1e2f3a4b5c")
                 .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
@@ -36,7 +36,7 @@ internal class WorkspaceTest {
                 .userProfileId("uprof_01SDCCSbTxrXDpWc1phhtcfK")
                 .build()
 
-        assertThat(workspace.id()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+        assertThat(workspace.id()).isEqualTo("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
         assertThat(workspace.archivedAt())
             .contains(OffsetDateTime.parse("2024-11-01T23:59:27.427722Z"))
         assertThat(workspace.compartmentId()).isEqualTo("f8a7b6c5-4d3e-4f1a-8b9c-0d1e2f3a4b5c")
@@ -68,7 +68,7 @@ internal class WorkspaceTest {
         val jsonMapper = jsonMapper()
         val workspace =
             Workspace.builder()
-                .id("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .id("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .archivedAt(OffsetDateTime.parse("2024-11-01T23:59:27.427722Z"))
                 .compartmentId("f8a7b6c5-4d3e-4f1a-8b9c-0d1e2f3a4b5c")
                 .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))

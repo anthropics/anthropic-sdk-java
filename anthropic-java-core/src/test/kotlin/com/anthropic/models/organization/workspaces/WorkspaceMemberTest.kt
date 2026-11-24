@@ -12,12 +12,12 @@ internal class WorkspaceMemberTest {
         val workspaceMember =
             WorkspaceMember.builder()
                 .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .workspaceRole(WorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 
         assertThat(workspaceMember.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
-        assertThat(workspaceMember.workspaceId()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+        assertThat(workspaceMember.workspaceId()).isEqualTo("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
         assertThat(workspaceMember.workspaceRole()).isEqualTo(WorkspaceRole.WORKSPACE_ADMIN)
     }
 
@@ -27,7 +27,7 @@ internal class WorkspaceMemberTest {
         val workspaceMember =
             WorkspaceMember.builder()
                 .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .workspaceRole(WorkspaceRole.WORKSPACE_ADMIN)
                 .build()
 

@@ -12,7 +12,7 @@ internal class ApiKeyTest {
     fun create() {
         val apiKey =
             ApiKey.builder()
-                .id("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                .id("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                 .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .createdBy(
                     ApiKeyCreatedBy.builder()
@@ -24,11 +24,11 @@ internal class ApiKeyTest {
                 .name("Developer Key")
                 .partialKeyHint("sk-ant-api03-R2D...igAA")
                 .userActorPrincipal("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                .workspaceScope("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceScope("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .status(ApiKey.Status.ACTIVE)
                 .build()
 
-        assertThat(apiKey.id()).isEqualTo("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+        assertThat(apiKey.id()).isEqualTo("apikey_01BcDeFgHjKmNpQrStUvWxYz")
         assertThat(apiKey.createdAt())
             .isEqualTo(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
         assertThat(apiKey.createdBy())
@@ -44,7 +44,7 @@ internal class ApiKeyTest {
         assertThat(apiKey.principal())
             .contains(ApiKey.Principal.ofUserActor("user_01WxYzAbCdEfGhJkMnPqRsTu"))
         assertThat(apiKey.scope())
-            .isEqualTo(ApiKey.Scope.ofWorkspace("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ"))
+            .isEqualTo(ApiKey.Scope.ofWorkspace("wrkspc_01AbCdEfGhJkLmNpQrStUvWx"))
         assertThat(apiKey.status()).isEqualTo(ApiKey.Status.ACTIVE)
     }
 
@@ -53,7 +53,7 @@ internal class ApiKeyTest {
         val jsonMapper = jsonMapper()
         val apiKey =
             ApiKey.builder()
-                .id("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                .id("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                 .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                 .createdBy(
                     ApiKeyCreatedBy.builder()
@@ -65,7 +65,7 @@ internal class ApiKeyTest {
                 .name("Developer Key")
                 .partialKeyHint("sk-ant-api03-R2D...igAA")
                 .userActorPrincipal("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                .workspaceScope("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceScope("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .status(ApiKey.Status.ACTIVE)
                 .build()
 

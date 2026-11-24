@@ -9,15 +9,15 @@ internal class ApiKeyWorkspaceScopeTest {
 
     @Test
     fun create() {
-        val apiKeyWorkspaceScope = ApiKeyWorkspaceScope.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+        val apiKeyWorkspaceScope = ApiKeyWorkspaceScope.of("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
 
-        assertThat(apiKeyWorkspaceScope.workspaceId()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+        assertThat(apiKeyWorkspaceScope.workspaceId()).isEqualTo("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val apiKeyWorkspaceScope = ApiKeyWorkspaceScope.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+        val apiKeyWorkspaceScope = ApiKeyWorkspaceScope.of("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
 
         val roundtrippedApiKeyWorkspaceScope =
             jsonMapper.readValue(

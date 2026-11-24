@@ -41,7 +41,7 @@ internal class RuleCreateParamsTest {
             )
             .description("description")
             .tokenLifetimeSeconds(60L)
-            .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
             .build()
     }
 
@@ -79,7 +79,7 @@ internal class RuleCreateParamsTest {
                 )
                 .description("description")
                 .tokenLifetimeSeconds(60L)
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         val headers = params._headers()
@@ -142,7 +142,7 @@ internal class RuleCreateParamsTest {
                 )
                 .description("description")
                 .tokenLifetimeSeconds(60L)
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         val body = params._body()
@@ -179,7 +179,7 @@ internal class RuleCreateParamsTest {
             )
         assertThat(body.description()).contains("description")
         assertThat(body.tokenLifetimeSeconds()).contains(60L)
-        assertThat(body.workspaceId()).contains("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+        assertThat(body.workspaceId()).contains("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
     }
 
     @Test

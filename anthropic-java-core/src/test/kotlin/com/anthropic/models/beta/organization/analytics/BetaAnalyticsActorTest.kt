@@ -129,7 +129,7 @@ internal class BetaAnalyticsActorTest {
 
     @Test
     fun ofApi() {
-        val api = BetaAnalyticsApiActor.of("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+        val api = BetaAnalyticsApiActor.of("apikey_01BcDeFgHjKmNpQrStUvWxYz")
 
         val betaAnalyticsActor = BetaAnalyticsActor.ofApi(api)
 
@@ -143,7 +143,7 @@ internal class BetaAnalyticsActorTest {
     fun ofApiRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaAnalyticsActor =
-            BetaAnalyticsActor.ofApi(BetaAnalyticsApiActor.of("apikey_01Rj2N8SVvo6BePZj99NhmiT"))
+            BetaAnalyticsActor.ofApi(BetaAnalyticsApiActor.of("apikey_01BcDeFgHjKmNpQrStUvWxYz"))
 
         val roundtrippedBetaAnalyticsActor =
             jsonMapper.readValue(

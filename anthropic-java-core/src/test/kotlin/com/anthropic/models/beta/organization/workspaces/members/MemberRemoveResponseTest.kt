@@ -12,11 +12,11 @@ internal class MemberRemoveResponseTest {
         val memberRemoveResponse =
             MemberRemoveResponse.builder()
                 .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         assertThat(memberRemoveResponse.userId()).isEqualTo("user_01WxYzAbCdEfGhJkMnPqRsTu")
-        assertThat(memberRemoveResponse.workspaceId()).isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+        assertThat(memberRemoveResponse.workspaceId()).isEqualTo("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
     }
 
     @Test
@@ -25,7 +25,7 @@ internal class MemberRemoveResponseTest {
         val memberRemoveResponse =
             MemberRemoveResponse.builder()
                 .userId("user_01WxYzAbCdEfGhJkMnPqRsTu")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         val roundtrippedMemberRemoveResponse =

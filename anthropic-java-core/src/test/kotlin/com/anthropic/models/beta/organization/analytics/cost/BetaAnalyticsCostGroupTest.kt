@@ -31,7 +31,7 @@ internal class BetaAnalyticsCostGroupTest {
                 )
                 .actorType(BetaAnalyticsActorType.USER_ACTOR)
                 .agentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
-                .apiKeyId("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                .apiKeyId("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                 .claudeTagCategory(BetaAnalyticsClaudeTagCategory.DM)
                 .claudeTagUserId("U0123ABCDEF")
                 .contextWindow(BetaAnalyticsContextWindow.FROM_0_TO_200K)
@@ -49,7 +49,7 @@ internal class BetaAnalyticsCostGroupTest {
                 .speed(BetaAnalyticsSpeed.FAST)
                 .tokenType(BetaAnalyticsTokenType.CACHE_CREATION_EPHEMERAL_1H_INPUT_TOKENS)
                 .userProfileId("uprof_01M33NeYUQK2WV9PpYcsPHLi")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         assertThat(betaAnalyticsCostGroup.actor())
@@ -65,7 +65,7 @@ internal class BetaAnalyticsCostGroupTest {
             )
         assertThat(betaAnalyticsCostGroup.actorType()).contains(BetaAnalyticsActorType.USER_ACTOR)
         assertThat(betaAnalyticsCostGroup.agentId()).contains("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
-        assertThat(betaAnalyticsCostGroup.apiKeyId()).contains("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+        assertThat(betaAnalyticsCostGroup.apiKeyId()).contains("apikey_01BcDeFgHjKmNpQrStUvWxYz")
         assertThat(betaAnalyticsCostGroup.claudeTagCategory())
             .contains(BetaAnalyticsClaudeTagCategory.DM)
         assertThat(betaAnalyticsCostGroup.claudeTagUserId()).contains("U0123ABCDEF")
@@ -90,7 +90,7 @@ internal class BetaAnalyticsCostGroupTest {
             .contains(BetaAnalyticsTokenType.CACHE_CREATION_EPHEMERAL_1H_INPUT_TOKENS)
         assertThat(betaAnalyticsCostGroup.userProfileId())
             .contains("uprof_01M33NeYUQK2WV9PpYcsPHLi")
-        assertThat(betaAnalyticsCostGroup.workspaceId()).contains("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+        assertThat(betaAnalyticsCostGroup.workspaceId()).contains("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
     }
 
     @Test
@@ -108,7 +108,7 @@ internal class BetaAnalyticsCostGroupTest {
                 )
                 .actorType(BetaAnalyticsActorType.USER_ACTOR)
                 .agentId("agent_01VHd3EAGJ6PLkP9LM7DDu3f")
-                .apiKeyId("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+                .apiKeyId("apikey_01BcDeFgHjKmNpQrStUvWxYz")
                 .claudeTagCategory(BetaAnalyticsClaudeTagCategory.DM)
                 .claudeTagUserId("U0123ABCDEF")
                 .contextWindow(BetaAnalyticsContextWindow.FROM_0_TO_200K)
@@ -126,7 +126,7 @@ internal class BetaAnalyticsCostGroupTest {
                 .speed(BetaAnalyticsSpeed.FAST)
                 .tokenType(BetaAnalyticsTokenType.CACHE_CREATION_EPHEMERAL_1H_INPUT_TOKENS)
                 .userProfileId("uprof_01M33NeYUQK2WV9PpYcsPHLi")
-                .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                 .build()
 
         val roundtrippedBetaAnalyticsCostGroup =

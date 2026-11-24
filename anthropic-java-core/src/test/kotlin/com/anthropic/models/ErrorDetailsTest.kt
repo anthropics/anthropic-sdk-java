@@ -9646,7 +9646,7 @@ internal class ErrorDetailsTest {
     @Test
     fun ofWorkspaceCreatedIncomplete() {
         val workspaceCreatedIncomplete =
-            WorkspaceCreatedIncompleteErrorDetails.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            WorkspaceCreatedIncompleteErrorDetails.of("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
 
         val errorDetails = ErrorDetails.ofWorkspaceCreatedIncomplete(workspaceCreatedIncomplete)
 
@@ -9790,7 +9790,7 @@ internal class ErrorDetailsTest {
         val jsonMapper = jsonMapper()
         val errorDetails =
             ErrorDetails.ofWorkspaceCreatedIncomplete(
-                WorkspaceCreatedIncompleteErrorDetails.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                WorkspaceCreatedIncompleteErrorDetails.of("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
             )
 
         val roundtrippedErrorDetails =

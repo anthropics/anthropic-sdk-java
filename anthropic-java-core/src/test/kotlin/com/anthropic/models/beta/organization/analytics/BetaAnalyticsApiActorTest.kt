@@ -9,15 +9,15 @@ internal class BetaAnalyticsApiActorTest {
 
     @Test
     fun create() {
-        val betaAnalyticsApiActor = BetaAnalyticsApiActor.of("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+        val betaAnalyticsApiActor = BetaAnalyticsApiActor.of("apikey_01BcDeFgHjKmNpQrStUvWxYz")
 
-        assertThat(betaAnalyticsApiActor.apiKeyId()).isEqualTo("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+        assertThat(betaAnalyticsApiActor.apiKeyId()).isEqualTo("apikey_01BcDeFgHjKmNpQrStUvWxYz")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaAnalyticsApiActor = BetaAnalyticsApiActor.of("apikey_01Rj2N8SVvo6BePZj99NhmiT")
+        val betaAnalyticsApiActor = BetaAnalyticsApiActor.of("apikey_01BcDeFgHjKmNpQrStUvWxYz")
 
         val roundtrippedBetaAnalyticsApiActor =
             jsonMapper.readValue(

@@ -10,17 +10,17 @@ internal class BetaSpendLimitWorkspaceScopeTest {
     @Test
     fun create() {
         val betaSpendLimitWorkspaceScope =
-            BetaSpendLimitWorkspaceScope.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            BetaSpendLimitWorkspaceScope.of("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
 
         assertThat(betaSpendLimitWorkspaceScope.workspaceId())
-            .isEqualTo("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            .isEqualTo("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaSpendLimitWorkspaceScope =
-            BetaSpendLimitWorkspaceScope.of("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+            BetaSpendLimitWorkspaceScope.of("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
 
         val roundtrippedBetaSpendLimitWorkspaceScope =
             jsonMapper.readValue(

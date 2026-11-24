@@ -33,7 +33,7 @@ internal class WorkspaceServiceTest {
             workspaceService.add(
                 WorkspaceAddParams.builder()
                     .federationRuleId("federation_rule_id")
-                    .workspaceId("wrkspc_01JwQvzr7rXLA5AGx3HKfFUJ")
+                    .workspaceId("wrkspc_01AbCdEfGhJkLmNpQrStUvWx")
                     .build()
             )
 
