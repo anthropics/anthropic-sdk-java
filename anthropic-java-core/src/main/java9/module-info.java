@@ -84,6 +84,7 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.organization.plugins.installationsettings;
     exports com.anthropic.models.beta.organization.plugins.shares;
     exports com.anthropic.models.beta.organization.plugins.versions;
+    exports com.anthropic.models.beta.organization.providers.google.projects.datacontrols;
     exports com.anthropic.models.beta.organization.ratelimits;
     exports com.anthropic.models.beta.organization.rbacgroups;
     exports com.anthropic.models.beta.organization.rbacgroups.members;
@@ -173,6 +174,9 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.beta.organization.federation;
     exports com.anthropic.services.async.beta.organization.federation.rules;
     exports com.anthropic.services.async.beta.organization.plugins;
+    exports com.anthropic.services.async.beta.organization.providers;
+    exports com.anthropic.services.async.beta.organization.providers.google;
+    exports com.anthropic.services.async.beta.organization.providers.google.projects;
     exports com.anthropic.services.async.beta.organization.rbacgroups;
     exports com.anthropic.services.async.beta.organization.rbacroles;
     exports com.anthropic.services.async.beta.organization.serviceaccounts;
@@ -218,6 +222,9 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.beta.organization.federation;
     exports com.anthropic.services.blocking.beta.organization.federation.rules;
     exports com.anthropic.services.blocking.beta.organization.plugins;
+    exports com.anthropic.services.blocking.beta.organization.providers;
+    exports com.anthropic.services.blocking.beta.organization.providers.google;
+    exports com.anthropic.services.blocking.beta.organization.providers.google.projects;
     exports com.anthropic.services.blocking.beta.organization.rbacgroups;
     exports com.anthropic.services.blocking.beta.organization.rbacroles;
     exports com.anthropic.services.blocking.beta.organization.serviceaccounts;

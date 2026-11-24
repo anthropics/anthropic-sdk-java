@@ -9,8 +9,16 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.BetaCmekNotApprovedErrorDetails
+import com.anthropic.models.beta.BetaExternalKeyNotFoundErrorDetails
+import com.anthropic.models.beta.BetaExternalKeyProviderMismatchErrorDetails
+import com.anthropic.models.beta.BetaGcpProjectControlledByAnotherOrganizationErrorDetails
+import com.anthropic.models.beta.BetaGcpProjectNotVerifiedErrorDetails
 import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaErrorDetails
+import com.anthropic.models.beta.BetaRegionNotSupportedErrorDetails
 import com.anthropic.models.beta.BetaRequestBodyTimeoutErrorDetails
+import com.anthropic.models.beta.BetaStorageInUseErrorDetails
+import com.anthropic.models.beta.BetaStorageNotApprovedErrorDetails
 import com.anthropic.models.beta.BetaUnsupportedCharsetErrorDetails
 import com.anthropic.models.beta.environments.BetaEnvironmentArchivedErrorDetails
 import com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledErrorDetails
@@ -232,6 +240,16 @@ private constructor(
         BetaExternalStorageInWorkspacePolicyErrorDetails? =
         null,
     private val storageVerificationFailed: BetaStorageVerificationFailedErrorDetails? = null,
+    private val cmekNotApproved: BetaCmekNotApprovedErrorDetails? = null,
+    private val externalKeyNotFound: BetaExternalKeyNotFoundErrorDetails? = null,
+    private val externalKeyProviderMismatch: BetaExternalKeyProviderMismatchErrorDetails? = null,
+    private val gcpProjectNotVerified: BetaGcpProjectNotVerifiedErrorDetails? = null,
+    private val regionNotSupported: BetaRegionNotSupportedErrorDetails? = null,
+    private val storageNotApproved: BetaStorageNotApprovedErrorDetails? = null,
+    private val gcpProjectControlledByAnotherOrganization:
+        BetaGcpProjectControlledByAnotherOrganizationErrorDetails? =
+        null,
+    private val storageInUse: BetaStorageInUseErrorDetails? = null,
     private val cannotSignOutPrimaryOwner: BetaCannotSignOutPrimaryOwnerErrorDetails? = null,
     private val cannotSignOutSelf: BetaCannotSignOutSelfErrorDetails? = null,
     private val organizationNotEnrolledInBeta: BetaOrganizationNotEnrolledInBetaErrorDetails? =
@@ -386,6 +404,15 @@ private constructor(
             externalStorageInWorkspacePolicy != null ->
                 ErrorCode.EXTERNAL_STORAGE_IN_WORKSPACE_POLICY
             storageVerificationFailed != null -> ErrorCode.STORAGE_VERIFICATION_FAILED
+            cmekNotApproved != null -> ErrorCode.CMEK_NOT_APPROVED
+            externalKeyNotFound != null -> ErrorCode.EXTERNAL_KEY_NOT_FOUND
+            externalKeyProviderMismatch != null -> ErrorCode.EXTERNAL_KEY_PROVIDER_MISMATCH
+            gcpProjectNotVerified != null -> ErrorCode.GCP_PROJECT_NOT_VERIFIED
+            regionNotSupported != null -> ErrorCode.REGION_NOT_SUPPORTED
+            storageNotApproved != null -> ErrorCode.STORAGE_NOT_APPROVED
+            gcpProjectControlledByAnotherOrganization != null ->
+                ErrorCode.GCP_PROJECT_CONTROLLED_BY_ANOTHER_ORGANIZATION
+            storageInUse != null -> ErrorCode.STORAGE_IN_USE
             cannotSignOutPrimaryOwner != null -> ErrorCode.CANNOT_SIGN_OUT_PRIMARY_OWNER
             cannotSignOutSelf != null -> ErrorCode.CANNOT_SIGN_OUT_SELF
             organizationNotEnrolledInBeta != null -> ErrorCode.ORGANIZATION_NOT_ENROLLED_IN_BETA
@@ -525,6 +552,14 @@ private constructor(
             externalStorageInUse != null -> Optional.empty()
             externalStorageInWorkspacePolicy != null -> Optional.empty()
             storageVerificationFailed != null -> Optional.empty()
+            cmekNotApproved != null -> Optional.empty()
+            externalKeyNotFound != null -> Optional.empty()
+            externalKeyProviderMismatch != null -> Optional.empty()
+            gcpProjectNotVerified != null -> Optional.empty()
+            regionNotSupported != null -> Optional.empty()
+            storageNotApproved != null -> Optional.empty()
+            gcpProjectControlledByAnotherOrganization != null -> Optional.empty()
+            storageInUse != null -> Optional.empty()
             cannotSignOutPrimaryOwner != null -> Optional.empty()
             cannotSignOutSelf != null -> Optional.empty()
             organizationNotEnrolledInBeta != null -> Optional.empty()
@@ -655,6 +690,14 @@ private constructor(
             externalStorageInUse != null -> Optional.empty()
             externalStorageInWorkspacePolicy != null -> Optional.empty()
             storageVerificationFailed != null -> Optional.empty()
+            cmekNotApproved != null -> Optional.empty()
+            externalKeyNotFound != null -> Optional.empty()
+            externalKeyProviderMismatch != null -> Optional.empty()
+            gcpProjectNotVerified != null -> Optional.empty()
+            regionNotSupported != null -> Optional.empty()
+            storageNotApproved != null -> Optional.empty()
+            gcpProjectControlledByAnotherOrganization != null -> Optional.empty()
+            storageInUse != null -> Optional.empty()
             cannotSignOutPrimaryOwner != null -> Optional.empty()
             cannotSignOutSelf != null -> Optional.empty()
             organizationNotEnrolledInBeta != null -> Optional.empty()
@@ -785,6 +828,14 @@ private constructor(
             externalStorageInUse != null -> Optional.empty()
             externalStorageInWorkspacePolicy != null -> Optional.empty()
             storageVerificationFailed != null -> Optional.empty()
+            cmekNotApproved != null -> Optional.empty()
+            externalKeyNotFound != null -> Optional.empty()
+            externalKeyProviderMismatch != null -> Optional.empty()
+            gcpProjectNotVerified != null -> Optional.empty()
+            regionNotSupported != null -> Optional.empty()
+            storageNotApproved != null -> Optional.empty()
+            gcpProjectControlledByAnotherOrganization != null -> Optional.empty()
+            storageInUse != null -> Optional.empty()
             cannotSignOutPrimaryOwner != null -> Optional.empty()
             cannotSignOutSelf != null -> Optional.empty()
             organizationNotEnrolledInBeta != null -> Optional.empty()
@@ -1365,6 +1416,58 @@ private constructor(
     fun storageVerificationFailed(): Optional<BetaStorageVerificationFailedErrorDetails> =
         Optional.ofNullable(storageVerificationFailed)
 
+    /**
+     * Anthropic has not approved customer-managed encryption keys for the organization, project or
+     * user profile this request applies to, or has paused or withdrawn its approval. If you did not
+     * expect this, contact Anthropic.
+     */
+    fun cmekNotApproved(): Optional<BetaCmekNotApprovedErrorDetails> =
+        Optional.ofNullable(cmekNotApproved)
+
+    /** The organization has no active External Key with this ID. The message names the field. */
+    fun externalKeyNotFound(): Optional<BetaExternalKeyNotFoundErrorDetails> =
+        Optional.ofNullable(externalKeyNotFound)
+
+    /**
+     * The External Key is held by a key management service that this endpoint does not take. The
+     * message names the field and the service it takes.
+     */
+    fun externalKeyProviderMismatch(): Optional<BetaExternalKeyProviderMismatchErrorDetails> =
+        Optional.ofNullable(externalKeyProviderMismatch)
+
+    /**
+     * The organization has not proved that it owns the Google Cloud project that holds the key or
+     * bucket. The message names the field.
+     */
+    fun gcpProjectNotVerified(): Optional<BetaGcpProjectNotVerifiedErrorDetails> =
+        Optional.ofNullable(gcpProjectNotVerified)
+
+    /**
+     * The request names a region code that the control does not take from this organization. The
+     * message names the field.
+     */
+    fun regionNotSupported(): Optional<BetaRegionNotSupportedErrorDetails> =
+        Optional.ofNullable(regionNotSupported)
+
+    /**
+     * Anthropic has not approved keeping data in a customer-owned storage bucket for the
+     * organization, project or user profile this request applies to, or has paused or withdrawn its
+     * approval. If you did not expect this, contact Anthropic.
+     */
+    fun storageNotApproved(): Optional<BetaStorageNotApprovedErrorDetails> =
+        Optional.ofNullable(storageNotApproved)
+
+    /**
+     * Another organization has data controls turned on for this Google Cloud project, or turned
+     * them off recently. The message says how long to wait.
+     */
+    fun gcpProjectControlledByAnotherOrganization():
+        Optional<BetaGcpProjectControlledByAnotherOrganizationErrorDetails> =
+        Optional.ofNullable(gcpProjectControlledByAnotherOrganization)
+
+    /** The bucket is already in use, or was in use recently. Name a different bucket. */
+    fun storageInUse(): Optional<BetaStorageInUseErrorDetails> = Optional.ofNullable(storageInUse)
+
     /** The member is the organization's primary owner, whom no API key or token can sign out. */
     fun cannotSignOutPrimaryOwner(): Optional<BetaCannotSignOutPrimaryOwnerErrorDetails> =
         Optional.ofNullable(cannotSignOutPrimaryOwner)
@@ -1808,6 +1911,23 @@ private constructor(
     fun isExternalStorageInWorkspacePolicy(): Boolean = externalStorageInWorkspacePolicy != null
 
     fun isStorageVerificationFailed(): Boolean = storageVerificationFailed != null
+
+    fun isCmekNotApproved(): Boolean = cmekNotApproved != null
+
+    fun isExternalKeyNotFound(): Boolean = externalKeyNotFound != null
+
+    fun isExternalKeyProviderMismatch(): Boolean = externalKeyProviderMismatch != null
+
+    fun isGcpProjectNotVerified(): Boolean = gcpProjectNotVerified != null
+
+    fun isRegionNotSupported(): Boolean = regionNotSupported != null
+
+    fun isStorageNotApproved(): Boolean = storageNotApproved != null
+
+    fun isGcpProjectControlledByAnotherOrganization(): Boolean =
+        gcpProjectControlledByAnotherOrganization != null
+
+    fun isStorageInUse(): Boolean = storageInUse != null
 
     fun isCannotSignOutPrimaryOwner(): Boolean = cannotSignOutPrimaryOwner != null
 
@@ -2425,6 +2545,60 @@ private constructor(
     fun asStorageVerificationFailed(): BetaStorageVerificationFailedErrorDetails =
         storageVerificationFailed.getOrThrow("storageVerificationFailed")
 
+    /**
+     * Anthropic has not approved customer-managed encryption keys for the organization, project or
+     * user profile this request applies to, or has paused or withdrawn its approval. If you did not
+     * expect this, contact Anthropic.
+     */
+    fun asCmekNotApproved(): BetaCmekNotApprovedErrorDetails =
+        cmekNotApproved.getOrThrow("cmekNotApproved")
+
+    /** The organization has no active External Key with this ID. The message names the field. */
+    fun asExternalKeyNotFound(): BetaExternalKeyNotFoundErrorDetails =
+        externalKeyNotFound.getOrThrow("externalKeyNotFound")
+
+    /**
+     * The External Key is held by a key management service that this endpoint does not take. The
+     * message names the field and the service it takes.
+     */
+    fun asExternalKeyProviderMismatch(): BetaExternalKeyProviderMismatchErrorDetails =
+        externalKeyProviderMismatch.getOrThrow("externalKeyProviderMismatch")
+
+    /**
+     * The organization has not proved that it owns the Google Cloud project that holds the key or
+     * bucket. The message names the field.
+     */
+    fun asGcpProjectNotVerified(): BetaGcpProjectNotVerifiedErrorDetails =
+        gcpProjectNotVerified.getOrThrow("gcpProjectNotVerified")
+
+    /**
+     * The request names a region code that the control does not take from this organization. The
+     * message names the field.
+     */
+    fun asRegionNotSupported(): BetaRegionNotSupportedErrorDetails =
+        regionNotSupported.getOrThrow("regionNotSupported")
+
+    /**
+     * Anthropic has not approved keeping data in a customer-owned storage bucket for the
+     * organization, project or user profile this request applies to, or has paused or withdrawn its
+     * approval. If you did not expect this, contact Anthropic.
+     */
+    fun asStorageNotApproved(): BetaStorageNotApprovedErrorDetails =
+        storageNotApproved.getOrThrow("storageNotApproved")
+
+    /**
+     * Another organization has data controls turned on for this Google Cloud project, or turned
+     * them off recently. The message says how long to wait.
+     */
+    fun asGcpProjectControlledByAnotherOrganization():
+        BetaGcpProjectControlledByAnotherOrganizationErrorDetails =
+        gcpProjectControlledByAnotherOrganization.getOrThrow(
+            "gcpProjectControlledByAnotherOrganization"
+        )
+
+    /** The bucket is already in use, or was in use recently. Name a different bucket. */
+    fun asStorageInUse(): BetaStorageInUseErrorDetails = storageInUse.getOrThrow("storageInUse")
+
     /** The member is the organization's primary owner, whom no API key or token can sign out. */
     fun asCannotSignOutPrimaryOwner(): BetaCannotSignOutPrimaryOwnerErrorDetails =
         cannotSignOutPrimaryOwner.getOrThrow("cannotSignOutPrimaryOwner")
@@ -2876,6 +3050,19 @@ private constructor(
                 visitor.visitExternalStorageInWorkspacePolicy(externalStorageInWorkspacePolicy)
             storageVerificationFailed != null ->
                 visitor.visitStorageVerificationFailed(storageVerificationFailed)
+            cmekNotApproved != null -> visitor.visitCmekNotApproved(cmekNotApproved)
+            externalKeyNotFound != null -> visitor.visitExternalKeyNotFound(externalKeyNotFound)
+            externalKeyProviderMismatch != null ->
+                visitor.visitExternalKeyProviderMismatch(externalKeyProviderMismatch)
+            gcpProjectNotVerified != null ->
+                visitor.visitGcpProjectNotVerified(gcpProjectNotVerified)
+            regionNotSupported != null -> visitor.visitRegionNotSupported(regionNotSupported)
+            storageNotApproved != null -> visitor.visitStorageNotApproved(storageNotApproved)
+            gcpProjectControlledByAnotherOrganization != null ->
+                visitor.visitGcpProjectControlledByAnotherOrganization(
+                    gcpProjectControlledByAnotherOrganization
+                )
+            storageInUse != null -> visitor.visitStorageInUse(storageInUse)
             cannotSignOutPrimaryOwner != null ->
                 visitor.visitCannotSignOutPrimaryOwner(cannotSignOutPrimaryOwner)
             cannotSignOutSelf != null -> visitor.visitCannotSignOutSelf(cannotSignOutSelf)
@@ -3055,6 +3242,15 @@ private constructor(
             externalStorageInUse != null -> externalStorageInUse.validate()
             externalStorageInWorkspacePolicy != null -> externalStorageInWorkspacePolicy.validate()
             storageVerificationFailed != null -> storageVerificationFailed.validate()
+            cmekNotApproved != null -> cmekNotApproved.validate()
+            externalKeyNotFound != null -> externalKeyNotFound.validate()
+            externalKeyProviderMismatch != null -> externalKeyProviderMismatch.validate()
+            gcpProjectNotVerified != null -> gcpProjectNotVerified.validate()
+            regionNotSupported != null -> regionNotSupported.validate()
+            storageNotApproved != null -> storageNotApproved.validate()
+            gcpProjectControlledByAnotherOrganization != null ->
+                gcpProjectControlledByAnotherOrganization.validate()
+            storageInUse != null -> storageInUse.validate()
             cannotSignOutPrimaryOwner != null -> cannotSignOutPrimaryOwner.validate()
             cannotSignOutSelf != null -> cannotSignOutSelf.validate()
             organizationNotEnrolledInBeta != null -> organizationNotEnrolledInBeta.validate()
@@ -3209,6 +3405,15 @@ private constructor(
             externalStorageInUse != null -> externalStorageInUse.validity()
             externalStorageInWorkspacePolicy != null -> externalStorageInWorkspacePolicy.validity()
             storageVerificationFailed != null -> storageVerificationFailed.validity()
+            cmekNotApproved != null -> cmekNotApproved.validity()
+            externalKeyNotFound != null -> externalKeyNotFound.validity()
+            externalKeyProviderMismatch != null -> externalKeyProviderMismatch.validity()
+            gcpProjectNotVerified != null -> gcpProjectNotVerified.validity()
+            regionNotSupported != null -> regionNotSupported.validity()
+            storageNotApproved != null -> storageNotApproved.validity()
+            gcpProjectControlledByAnotherOrganization != null ->
+                gcpProjectControlledByAnotherOrganization.validity()
+            storageInUse != null -> storageInUse.validity()
             cannotSignOutPrimaryOwner != null -> cannotSignOutPrimaryOwner.validity()
             cannotSignOutSelf != null -> cannotSignOutSelf.validity()
             organizationNotEnrolledInBeta != null -> organizationNotEnrolledInBeta.validity()
@@ -3349,6 +3554,15 @@ private constructor(
             externalStorageInUse == other.externalStorageInUse &&
             externalStorageInWorkspacePolicy == other.externalStorageInWorkspacePolicy &&
             storageVerificationFailed == other.storageVerificationFailed &&
+            cmekNotApproved == other.cmekNotApproved &&
+            externalKeyNotFound == other.externalKeyNotFound &&
+            externalKeyProviderMismatch == other.externalKeyProviderMismatch &&
+            gcpProjectNotVerified == other.gcpProjectNotVerified &&
+            regionNotSupported == other.regionNotSupported &&
+            storageNotApproved == other.storageNotApproved &&
+            gcpProjectControlledByAnotherOrganization ==
+                other.gcpProjectControlledByAnotherOrganization &&
+            storageInUse == other.storageInUse &&
             cannotSignOutPrimaryOwner == other.cannotSignOutPrimaryOwner &&
             cannotSignOutSelf == other.cannotSignOutSelf &&
             organizationNotEnrolledInBeta == other.organizationNotEnrolledInBeta &&
@@ -3478,6 +3692,14 @@ private constructor(
             externalStorageInUse,
             externalStorageInWorkspacePolicy,
             storageVerificationFailed,
+            cmekNotApproved,
+            externalKeyNotFound,
+            externalKeyProviderMismatch,
+            gcpProjectNotVerified,
+            regionNotSupported,
+            storageNotApproved,
+            gcpProjectControlledByAnotherOrganization,
+            storageInUse,
             cannotSignOutPrimaryOwner,
             cannotSignOutSelf,
             organizationNotEnrolledInBeta,
@@ -3670,6 +3892,17 @@ private constructor(
                 "ErrorDetails{externalStorageInWorkspacePolicy=$externalStorageInWorkspacePolicy}"
             storageVerificationFailed != null ->
                 "ErrorDetails{storageVerificationFailed=$storageVerificationFailed}"
+            cmekNotApproved != null -> "ErrorDetails{cmekNotApproved=$cmekNotApproved}"
+            externalKeyNotFound != null -> "ErrorDetails{externalKeyNotFound=$externalKeyNotFound}"
+            externalKeyProviderMismatch != null ->
+                "ErrorDetails{externalKeyProviderMismatch=$externalKeyProviderMismatch}"
+            gcpProjectNotVerified != null ->
+                "ErrorDetails{gcpProjectNotVerified=$gcpProjectNotVerified}"
+            regionNotSupported != null -> "ErrorDetails{regionNotSupported=$regionNotSupported}"
+            storageNotApproved != null -> "ErrorDetails{storageNotApproved=$storageNotApproved}"
+            gcpProjectControlledByAnotherOrganization != null ->
+                "ErrorDetails{gcpProjectControlledByAnotherOrganization=$gcpProjectControlledByAnotherOrganization}"
+            storageInUse != null -> "ErrorDetails{storageInUse=$storageInUse}"
             cannotSignOutPrimaryOwner != null ->
                 "ErrorDetails{cannotSignOutPrimaryOwner=$cannotSignOutPrimaryOwner}"
             cannotSignOutSelf != null -> "ErrorDetails{cannotSignOutSelf=$cannotSignOutSelf}"
@@ -4468,6 +4701,75 @@ private constructor(
         @JvmStatic
         fun ofStorageVerificationFailed(failedChecks: List<BetaExternalStorageFailedCheck>) =
             ofStorageVerificationFailed(BetaStorageVerificationFailedErrorDetails.of(failedChecks))
+
+        /**
+         * Anthropic has not approved customer-managed encryption keys for the organization, project
+         * or user profile this request applies to, or has paused or withdrawn its approval. If you
+         * did not expect this, contact Anthropic.
+         */
+        @JvmStatic
+        fun ofCmekNotApproved(cmekNotApproved: BetaCmekNotApprovedErrorDetails) =
+            ErrorDetails(cmekNotApproved = cmekNotApproved)
+
+        /**
+         * The organization has no active External Key with this ID. The message names the field.
+         */
+        @JvmStatic
+        fun ofExternalKeyNotFound(externalKeyNotFound: BetaExternalKeyNotFoundErrorDetails) =
+            ErrorDetails(externalKeyNotFound = externalKeyNotFound)
+
+        /**
+         * The External Key is held by a key management service that this endpoint does not take.
+         * The message names the field and the service it takes.
+         */
+        @JvmStatic
+        fun ofExternalKeyProviderMismatch(
+            externalKeyProviderMismatch: BetaExternalKeyProviderMismatchErrorDetails
+        ) = ErrorDetails(externalKeyProviderMismatch = externalKeyProviderMismatch)
+
+        /**
+         * The organization has not proved that it owns the Google Cloud project that holds the key
+         * or bucket. The message names the field.
+         */
+        @JvmStatic
+        fun ofGcpProjectNotVerified(gcpProjectNotVerified: BetaGcpProjectNotVerifiedErrorDetails) =
+            ErrorDetails(gcpProjectNotVerified = gcpProjectNotVerified)
+
+        /**
+         * The request names a region code that the control does not take from this organization.
+         * The message names the field.
+         */
+        @JvmStatic
+        fun ofRegionNotSupported(regionNotSupported: BetaRegionNotSupportedErrorDetails) =
+            ErrorDetails(regionNotSupported = regionNotSupported)
+
+        /**
+         * Anthropic has not approved keeping data in a customer-owned storage bucket for the
+         * organization, project or user profile this request applies to, or has paused or withdrawn
+         * its approval. If you did not expect this, contact Anthropic.
+         */
+        @JvmStatic
+        fun ofStorageNotApproved(storageNotApproved: BetaStorageNotApprovedErrorDetails) =
+            ErrorDetails(storageNotApproved = storageNotApproved)
+
+        /**
+         * Another organization has data controls turned on for this Google Cloud project, or turned
+         * them off recently. The message says how long to wait.
+         */
+        @JvmStatic
+        fun ofGcpProjectControlledByAnotherOrganization(
+            gcpProjectControlledByAnotherOrganization:
+                BetaGcpProjectControlledByAnotherOrganizationErrorDetails
+        ) =
+            ErrorDetails(
+                gcpProjectControlledByAnotherOrganization =
+                    gcpProjectControlledByAnotherOrganization
+            )
+
+        /** The bucket is already in use, or was in use recently. Name a different bucket. */
+        @JvmStatic
+        fun ofStorageInUse(storageInUse: BetaStorageInUseErrorDetails) =
+            ErrorDetails(storageInUse = storageInUse)
 
         /**
          * The member is the organization's primary owner, whom no API key or token can sign out.
@@ -5495,6 +5797,59 @@ private constructor(
         ): T
 
         /**
+         * Anthropic has not approved customer-managed encryption keys for the organization, project
+         * or user profile this request applies to, or has paused or withdrawn its approval. If you
+         * did not expect this, contact Anthropic.
+         */
+        fun visitCmekNotApproved(cmekNotApproved: BetaCmekNotApprovedErrorDetails): T
+
+        /**
+         * The organization has no active External Key with this ID. The message names the field.
+         */
+        fun visitExternalKeyNotFound(externalKeyNotFound: BetaExternalKeyNotFoundErrorDetails): T
+
+        /**
+         * The External Key is held by a key management service that this endpoint does not take.
+         * The message names the field and the service it takes.
+         */
+        fun visitExternalKeyProviderMismatch(
+            externalKeyProviderMismatch: BetaExternalKeyProviderMismatchErrorDetails
+        ): T
+
+        /**
+         * The organization has not proved that it owns the Google Cloud project that holds the key
+         * or bucket. The message names the field.
+         */
+        fun visitGcpProjectNotVerified(
+            gcpProjectNotVerified: BetaGcpProjectNotVerifiedErrorDetails
+        ): T
+
+        /**
+         * The request names a region code that the control does not take from this organization.
+         * The message names the field.
+         */
+        fun visitRegionNotSupported(regionNotSupported: BetaRegionNotSupportedErrorDetails): T
+
+        /**
+         * Anthropic has not approved keeping data in a customer-owned storage bucket for the
+         * organization, project or user profile this request applies to, or has paused or withdrawn
+         * its approval. If you did not expect this, contact Anthropic.
+         */
+        fun visitStorageNotApproved(storageNotApproved: BetaStorageNotApprovedErrorDetails): T
+
+        /**
+         * Another organization has data controls turned on for this Google Cloud project, or turned
+         * them off recently. The message says how long to wait.
+         */
+        fun visitGcpProjectControlledByAnotherOrganization(
+            gcpProjectControlledByAnotherOrganization:
+                BetaGcpProjectControlledByAnotherOrganizationErrorDetails
+        ): T
+
+        /** The bucket is already in use, or was in use recently. Name a different bucket. */
+        fun visitStorageInUse(storageInUse: BetaStorageInUseErrorDetails): T
+
+        /**
          * The member is the organization's primary owner, whom no API key or token can sign out.
          */
         fun visitCannotSignOutPrimaryOwner(
@@ -6412,6 +6767,70 @@ private constructor(
                         ?.let { ErrorDetails(storageVerificationFailed = it, _json = json) }
                         ?: ErrorDetails(_json = json)
                 }
+                "cmek_not_approved" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaCmekNotApprovedErrorDetails>())
+                        ?.let { ErrorDetails(cmekNotApproved = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "external_key_not_found" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaExternalKeyNotFoundErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(externalKeyNotFound = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "external_key_provider_mismatch" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaExternalKeyProviderMismatchErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(externalKeyProviderMismatch = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "gcp_project_not_verified" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaGcpProjectNotVerifiedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(gcpProjectNotVerified = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "region_not_supported" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaRegionNotSupportedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(regionNotSupported = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "storage_not_approved" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaStorageNotApprovedErrorDetails>(),
+                        )
+                        ?.let { ErrorDetails(storageNotApproved = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
+                "gcp_project_controlled_by_another_organization" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<
+                                BetaGcpProjectControlledByAnotherOrganizationErrorDetails
+                            >(),
+                        )
+                        ?.let {
+                            ErrorDetails(
+                                gcpProjectControlledByAnotherOrganization = it,
+                                _json = json,
+                            )
+                        } ?: ErrorDetails(_json = json)
+                }
+                "storage_in_use" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaStorageInUseErrorDetails>())
+                        ?.let { ErrorDetails(storageInUse = it, _json = json) }
+                        ?: ErrorDetails(_json = json)
+                }
                 "cannot_sign_out_primary_owner" -> {
                     return tryDeserialize(
                             node,
@@ -6885,6 +7304,18 @@ private constructor(
                     generator.writeObject(value.externalStorageInWorkspacePolicy)
                 value.storageVerificationFailed != null ->
                     generator.writeObject(value.storageVerificationFailed)
+                value.cmekNotApproved != null -> generator.writeObject(value.cmekNotApproved)
+                value.externalKeyNotFound != null ->
+                    generator.writeObject(value.externalKeyNotFound)
+                value.externalKeyProviderMismatch != null ->
+                    generator.writeObject(value.externalKeyProviderMismatch)
+                value.gcpProjectNotVerified != null ->
+                    generator.writeObject(value.gcpProjectNotVerified)
+                value.regionNotSupported != null -> generator.writeObject(value.regionNotSupported)
+                value.storageNotApproved != null -> generator.writeObject(value.storageNotApproved)
+                value.gcpProjectControlledByAnotherOrganization != null ->
+                    generator.writeObject(value.gcpProjectControlledByAnotherOrganization)
+                value.storageInUse != null -> generator.writeObject(value.storageInUse)
                 value.cannotSignOutPrimaryOwner != null ->
                     generator.writeObject(value.cannotSignOutPrimaryOwner)
                 value.cannotSignOutSelf != null -> generator.writeObject(value.cannotSignOutSelf)
@@ -7235,6 +7666,27 @@ private constructor(
             @JvmField
             val STORAGE_VERIFICATION_FAILED = ErrorCode(JsonField.of("storage_verification_failed"))
 
+            @JvmField val CMEK_NOT_APPROVED = ErrorCode(JsonField.of("cmek_not_approved"))
+
+            @JvmField val EXTERNAL_KEY_NOT_FOUND = ErrorCode(JsonField.of("external_key_not_found"))
+
+            @JvmField
+            val EXTERNAL_KEY_PROVIDER_MISMATCH =
+                ErrorCode(JsonField.of("external_key_provider_mismatch"))
+
+            @JvmField
+            val GCP_PROJECT_NOT_VERIFIED = ErrorCode(JsonField.of("gcp_project_not_verified"))
+
+            @JvmField val REGION_NOT_SUPPORTED = ErrorCode(JsonField.of("region_not_supported"))
+
+            @JvmField val STORAGE_NOT_APPROVED = ErrorCode(JsonField.of("storage_not_approved"))
+
+            @JvmField
+            val GCP_PROJECT_CONTROLLED_BY_ANOTHER_ORGANIZATION =
+                ErrorCode(JsonField.of("gcp_project_controlled_by_another_organization"))
+
+            @JvmField val STORAGE_IN_USE = ErrorCode(JsonField.of("storage_in_use"))
+
             @JvmField
             val CANNOT_SIGN_OUT_PRIMARY_OWNER =
                 ErrorCode(JsonField.of("cannot_sign_out_primary_owner"))
@@ -7458,6 +7910,15 @@ private constructor(
                     "external_storage_in_use" -> EXTERNAL_STORAGE_IN_USE
                     "external_storage_in_workspace_policy" -> EXTERNAL_STORAGE_IN_WORKSPACE_POLICY
                     "storage_verification_failed" -> STORAGE_VERIFICATION_FAILED
+                    "cmek_not_approved" -> CMEK_NOT_APPROVED
+                    "external_key_not_found" -> EXTERNAL_KEY_NOT_FOUND
+                    "external_key_provider_mismatch" -> EXTERNAL_KEY_PROVIDER_MISMATCH
+                    "gcp_project_not_verified" -> GCP_PROJECT_NOT_VERIFIED
+                    "region_not_supported" -> REGION_NOT_SUPPORTED
+                    "storage_not_approved" -> STORAGE_NOT_APPROVED
+                    "gcp_project_controlled_by_another_organization" ->
+                        GCP_PROJECT_CONTROLLED_BY_ANOTHER_ORGANIZATION
+                    "storage_in_use" -> STORAGE_IN_USE
                     "cannot_sign_out_primary_owner" -> CANNOT_SIGN_OUT_PRIMARY_OWNER
                     "cannot_sign_out_self" -> CANNOT_SIGN_OUT_SELF
                     "organization_not_enrolled_in_beta" -> ORGANIZATION_NOT_ENROLLED_IN_BETA
@@ -7598,6 +8059,14 @@ private constructor(
             EXTERNAL_STORAGE_IN_USE,
             EXTERNAL_STORAGE_IN_WORKSPACE_POLICY,
             STORAGE_VERIFICATION_FAILED,
+            CMEK_NOT_APPROVED,
+            EXTERNAL_KEY_NOT_FOUND,
+            EXTERNAL_KEY_PROVIDER_MISMATCH,
+            GCP_PROJECT_NOT_VERIFIED,
+            REGION_NOT_SUPPORTED,
+            STORAGE_NOT_APPROVED,
+            GCP_PROJECT_CONTROLLED_BY_ANOTHER_ORGANIZATION,
+            STORAGE_IN_USE,
             CANNOT_SIGN_OUT_PRIMARY_OWNER,
             CANNOT_SIGN_OUT_SELF,
             ORGANIZATION_NOT_ENROLLED_IN_BETA,
@@ -7735,6 +8204,14 @@ private constructor(
             EXTERNAL_STORAGE_IN_USE,
             EXTERNAL_STORAGE_IN_WORKSPACE_POLICY,
             STORAGE_VERIFICATION_FAILED,
+            CMEK_NOT_APPROVED,
+            EXTERNAL_KEY_NOT_FOUND,
+            EXTERNAL_KEY_PROVIDER_MISMATCH,
+            GCP_PROJECT_NOT_VERIFIED,
+            REGION_NOT_SUPPORTED,
+            STORAGE_NOT_APPROVED,
+            GCP_PROJECT_CONTROLLED_BY_ANOTHER_ORGANIZATION,
+            STORAGE_IN_USE,
             CANNOT_SIGN_OUT_PRIMARY_OWNER,
             CANNOT_SIGN_OUT_SELF,
             ORGANIZATION_NOT_ENROLLED_IN_BETA,
@@ -7878,6 +8355,15 @@ private constructor(
                 EXTERNAL_STORAGE_IN_USE -> Value.EXTERNAL_STORAGE_IN_USE
                 EXTERNAL_STORAGE_IN_WORKSPACE_POLICY -> Value.EXTERNAL_STORAGE_IN_WORKSPACE_POLICY
                 STORAGE_VERIFICATION_FAILED -> Value.STORAGE_VERIFICATION_FAILED
+                CMEK_NOT_APPROVED -> Value.CMEK_NOT_APPROVED
+                EXTERNAL_KEY_NOT_FOUND -> Value.EXTERNAL_KEY_NOT_FOUND
+                EXTERNAL_KEY_PROVIDER_MISMATCH -> Value.EXTERNAL_KEY_PROVIDER_MISMATCH
+                GCP_PROJECT_NOT_VERIFIED -> Value.GCP_PROJECT_NOT_VERIFIED
+                REGION_NOT_SUPPORTED -> Value.REGION_NOT_SUPPORTED
+                STORAGE_NOT_APPROVED -> Value.STORAGE_NOT_APPROVED
+                GCP_PROJECT_CONTROLLED_BY_ANOTHER_ORGANIZATION ->
+                    Value.GCP_PROJECT_CONTROLLED_BY_ANOTHER_ORGANIZATION
+                STORAGE_IN_USE -> Value.STORAGE_IN_USE
                 CANNOT_SIGN_OUT_PRIMARY_OWNER -> Value.CANNOT_SIGN_OUT_PRIMARY_OWNER
                 CANNOT_SIGN_OUT_SELF -> Value.CANNOT_SIGN_OUT_SELF
                 ORGANIZATION_NOT_ENROLLED_IN_BETA -> Value.ORGANIZATION_NOT_ENROLLED_IN_BETA
@@ -8024,6 +8510,15 @@ private constructor(
                 EXTERNAL_STORAGE_IN_USE -> Known.EXTERNAL_STORAGE_IN_USE
                 EXTERNAL_STORAGE_IN_WORKSPACE_POLICY -> Known.EXTERNAL_STORAGE_IN_WORKSPACE_POLICY
                 STORAGE_VERIFICATION_FAILED -> Known.STORAGE_VERIFICATION_FAILED
+                CMEK_NOT_APPROVED -> Known.CMEK_NOT_APPROVED
+                EXTERNAL_KEY_NOT_FOUND -> Known.EXTERNAL_KEY_NOT_FOUND
+                EXTERNAL_KEY_PROVIDER_MISMATCH -> Known.EXTERNAL_KEY_PROVIDER_MISMATCH
+                GCP_PROJECT_NOT_VERIFIED -> Known.GCP_PROJECT_NOT_VERIFIED
+                REGION_NOT_SUPPORTED -> Known.REGION_NOT_SUPPORTED
+                STORAGE_NOT_APPROVED -> Known.STORAGE_NOT_APPROVED
+                GCP_PROJECT_CONTROLLED_BY_ANOTHER_ORGANIZATION ->
+                    Known.GCP_PROJECT_CONTROLLED_BY_ANOTHER_ORGANIZATION
+                STORAGE_IN_USE -> Known.STORAGE_IN_USE
                 CANNOT_SIGN_OUT_PRIMARY_OWNER -> Known.CANNOT_SIGN_OUT_PRIMARY_OWNER
                 CANNOT_SIGN_OUT_SELF -> Known.CANNOT_SIGN_OUT_SELF
                 ORGANIZATION_NOT_ENROLLED_IN_BETA -> Known.ORGANIZATION_NOT_ENROLLED_IN_BETA

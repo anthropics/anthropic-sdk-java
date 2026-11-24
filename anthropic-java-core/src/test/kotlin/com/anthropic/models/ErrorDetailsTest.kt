@@ -3,8 +3,16 @@ package com.anthropic.models
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.BetaCmekNotApprovedErrorDetails
+import com.anthropic.models.beta.BetaExternalKeyNotFoundErrorDetails
+import com.anthropic.models.beta.BetaExternalKeyProviderMismatchErrorDetails
+import com.anthropic.models.beta.BetaGcpProjectControlledByAnotherOrganizationErrorDetails
+import com.anthropic.models.beta.BetaGcpProjectNotVerifiedErrorDetails
 import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaErrorDetails
+import com.anthropic.models.beta.BetaRegionNotSupportedErrorDetails
 import com.anthropic.models.beta.BetaRequestBodyTimeoutErrorDetails
+import com.anthropic.models.beta.BetaStorageInUseErrorDetails
+import com.anthropic.models.beta.BetaStorageNotApprovedErrorDetails
 import com.anthropic.models.beta.BetaUnsupportedCharsetErrorDetails
 import com.anthropic.models.beta.environments.BetaEnvironmentArchivedErrorDetails
 import com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledErrorDetails
@@ -213,6 +221,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -366,6 +382,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -516,6 +540,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -666,6 +698,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -814,6 +854,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -964,6 +1012,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1114,6 +1170,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1264,6 +1328,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1414,6 +1486,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1566,6 +1646,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1716,6 +1804,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -1869,6 +1965,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2022,6 +2126,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2176,6 +2288,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2330,6 +2450,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2480,6 +2608,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2633,6 +2769,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2783,6 +2927,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -2933,6 +3085,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3083,6 +3243,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3236,6 +3404,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3388,6 +3564,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3536,6 +3720,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3686,6 +3878,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3839,6 +4039,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -3992,6 +4200,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4145,6 +4361,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4295,6 +4519,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4445,6 +4677,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4596,6 +4836,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4749,6 +4997,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -4899,6 +5155,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5049,6 +5313,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5199,6 +5471,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5347,6 +5627,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5495,6 +5783,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5647,6 +5943,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5797,6 +6101,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -5945,6 +6257,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6093,6 +6413,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6240,6 +6568,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6390,6 +6726,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6542,6 +6886,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6692,6 +7044,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6842,6 +7202,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -6992,6 +7360,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7142,6 +7518,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7294,6 +7678,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7444,6 +7836,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7594,6 +7994,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7742,6 +8150,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -7892,6 +8308,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8045,6 +8469,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8195,6 +8627,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8345,6 +8785,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8495,6 +8943,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8648,6 +9104,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8798,6 +9262,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -8947,6 +9419,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9097,6 +9577,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9246,6 +9734,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9396,6 +9892,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9544,6 +10048,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9694,6 +10206,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9846,6 +10366,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -9998,6 +10526,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10148,6 +10684,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10298,6 +10842,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10446,6 +10998,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10596,6 +11156,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10746,6 +11314,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -10896,6 +11472,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11054,6 +11638,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11211,6 +11803,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11359,6 +11959,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11507,6 +12115,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11657,6 +12273,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11805,6 +12429,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -11953,6 +12585,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12106,6 +12746,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12256,6 +12904,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12404,6 +13060,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).contains(externalStorageInUse)
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12557,6 +13221,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInWorkspacePolicy())
             .contains(externalStorageInWorkspacePolicy)
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12717,6 +13389,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).contains(storageVerificationFailed)
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -12776,6 +13456,1268 @@ internal class ErrorDetailsTest {
                     .field("inference_data_privacy.safeguards_storage")
                     .build()
             )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofCmekNotApproved() {
+        val cmekNotApproved = BetaCmekNotApprovedErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofCmekNotApproved(cmekNotApproved)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).contains(cmekNotApproved)
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofCmekNotApprovedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofCmekNotApproved(BetaCmekNotApprovedErrorDetails.builder().build())
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofExternalKeyNotFound() {
+        val externalKeyNotFound = BetaExternalKeyNotFoundErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofExternalKeyNotFound(externalKeyNotFound)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).contains(externalKeyNotFound)
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofExternalKeyNotFoundRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofExternalKeyNotFound(
+                BetaExternalKeyNotFoundErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofExternalKeyProviderMismatch() {
+        val externalKeyProviderMismatch =
+            BetaExternalKeyProviderMismatchErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofExternalKeyProviderMismatch(externalKeyProviderMismatch)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).contains(externalKeyProviderMismatch)
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofExternalKeyProviderMismatchRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofExternalKeyProviderMismatch(
+                BetaExternalKeyProviderMismatchErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofGcpProjectNotVerified() {
+        val gcpProjectNotVerified = BetaGcpProjectNotVerifiedErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofGcpProjectNotVerified(gcpProjectNotVerified)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).contains(gcpProjectNotVerified)
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofGcpProjectNotVerifiedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofGcpProjectNotVerified(
+                BetaGcpProjectNotVerifiedErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofRegionNotSupported() {
+        val regionNotSupported = BetaRegionNotSupportedErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofRegionNotSupported(regionNotSupported)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).contains(regionNotSupported)
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofRegionNotSupportedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofRegionNotSupported(BetaRegionNotSupportedErrorDetails.builder().build())
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofStorageNotApproved() {
+        val storageNotApproved = BetaStorageNotApprovedErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofStorageNotApproved(storageNotApproved)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).contains(storageNotApproved)
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofStorageNotApprovedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofStorageNotApproved(BetaStorageNotApprovedErrorDetails.builder().build())
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofGcpProjectControlledByAnotherOrganization() {
+        val gcpProjectControlledByAnotherOrganization =
+            BetaGcpProjectControlledByAnotherOrganizationErrorDetails.builder().build()
+
+        val errorDetails =
+            ErrorDetails.ofGcpProjectControlledByAnotherOrganization(
+                gcpProjectControlledByAnotherOrganization
+            )
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization())
+            .contains(gcpProjectControlledByAnotherOrganization)
+        assertThat(errorDetails.storageInUse()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofGcpProjectControlledByAnotherOrganizationRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofGcpProjectControlledByAnotherOrganization(
+                BetaGcpProjectControlledByAnotherOrganizationErrorDetails.builder().build()
+            )
+
+        val roundtrippedErrorDetails =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(errorDetails),
+                jacksonTypeRef<ErrorDetails>(),
+            )
+
+        assertThat(roundtrippedErrorDetails).isEqualTo(errorDetails)
+    }
+
+    @Test
+    fun ofStorageInUse() {
+        val storageInUse = BetaStorageInUseErrorDetails.builder().build()
+
+        val errorDetails = ErrorDetails.ofStorageInUse(storageInUse)
+
+        assertThat(errorDetails.availableToolsLimitExceeded()).isEmpty
+        assertThat(errorDetails.claudeCodeKeyCreatorNotMember()).isEmpty
+        assertThat(errorDetails.claudeCodeVersionTooOld()).isEmpty
+        assertThat(errorDetails.cmekKeyDisabled()).isEmpty
+        assertThat(errorDetails.cmekKeyNetworkBlocked()).isEmpty
+        assertThat(errorDetails.compactionBlockAmbiguous()).isEmpty
+        assertThat(errorDetails.compactionBlockMisplaced()).isEmpty
+        assertThat(errorDetails.compactionContentMismatch()).isEmpty
+        assertThat(errorDetails.compactionIncompleteTurn()).isEmpty
+        assertThat(errorDetails.compactionNothingToSummarize()).isEmpty
+        assertThat(errorDetails.compactionSignatureInvalid()).isEmpty
+        assertThat(errorDetails.compactionTooManyToolReferences()).isEmpty
+        assertThat(errorDetails.compactionToolChangesMismatch()).isEmpty
+        assertThat(errorDetails.imageDimensionsTooLarge()).isEmpty
+        assertThat(errorDetails.organizationOnHold()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingInvalid()).isEmpty
+        assertThat(errorDetails.requestBodyEncodingUnsupported()).isEmpty
+        assertThat(errorDetails.threadAlreadyContinued()).isEmpty
+        assertThat(errorDetails.threadContinueInFlight()).isEmpty
+        assertThat(errorDetails.threadFingerprintMismatch()).isEmpty
+        assertThat(errorDetails.threadUnsupportedRequest()).isEmpty
+        assertThat(errorDetails.toolNameConflict()).isEmpty
+        assertThat(errorDetails.toolReferenceUnresolved()).isEmpty
+        assertThat(errorDetails.userProfileRequired()).isEmpty
+        assertThat(errorDetails.linkedOrganizationBillingUnavailable()).isEmpty
+        assertThat(errorDetails.linkedOrganizationSpendLimitReached()).isEmpty
+        assertThat(errorDetails.userProfileBillingNotAuthorized()).isEmpty
+        assertThat(errorDetails.userProfileNotBillable()).isEmpty
+        assertThat(errorDetails.threadNotFound()).isEmpty
+        assertThat(errorDetails.skillReadBlockedUndecryptable()).isEmpty
+        assertThat(errorDetails.requestBodyTooLargeAfterDecoding()).isEmpty
+        assertThat(errorDetails.contractSpendLimitReached()).isEmpty
+        assertThat(errorDetails.enforcedSpendLimitReached()).isEmpty
+        assertThat(errorDetails.rampLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekKeyUnreachable()).isEmpty
+        assertThat(errorDetails.compactionUnavailable()).isEmpty
+        assertThat(errorDetails.workspaceHumanReviewDisabled()).isEmpty
+        assertThat(errorDetails.storageQuotaExceeded()).isEmpty
+        assertThat(errorDetails.fileNotDownloadable()).isEmpty
+        assertThat(errorDetails.fileExpired()).isEmpty
+        assertThat(errorDetails.cmekContextUnavailable()).isEmpty
+        assertThat(errorDetails.orgApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.workspaceApiKeyLimitExceeded()).isEmpty
+        assertThat(errorDetails.sandboxEgressRestricted()).isEmpty
+        assertThat(errorDetails.userProfileNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.alreadyMember()).isEmpty
+        assertThat(errorDetails.cannotInviteEmailsWithUnverifiedDomains()).isEmpty
+        assertThat(errorDetails.emailDomainNotAllowed()).isEmpty
+        assertThat(errorDetails.inviteAlreadyExists()).isEmpty
+        assertThat(errorDetails.orgMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupGrantsOwnerAccess()).isEmpty
+        assertThat(errorDetails.rbacGroupOwnerAccessUnconfirmed()).isEmpty
+        assertThat(errorDetails.cannotRemoveLastMember()).isEmpty
+        assertThat(errorDetails.concurrentMembershipChange()).isEmpty
+        assertThat(errorDetails.externalKeyValidationFailed()).isEmpty
+        assertThat(errorDetails.externalKeyValidationTimedOut()).isEmpty
+        assertThat(errorDetails.keyProfileMismatch()).isEmpty
+        assertThat(errorDetails.workspacePolicyViolation()).isEmpty
+        assertThat(errorDetails.externalKeyChanged()).isEmpty
+        assertThat(errorDetails.workspaceCreatedIncomplete()).isEmpty
+        assertThat(errorDetails.storageProfileMismatch()).isEmpty
+        assertThat(errorDetails.changeOutcomeUnknown()).isEmpty
+        assertThat(errorDetails.storageAttachedDuringArchive()).isEmpty
+        assertThat(errorDetails.workspaceMemberLimitExceeded()).isEmpty
+        assertThat(errorDetails.organizationTypeNotSupported()).isEmpty
+        assertThat(errorDetails.parentOrganizationRequired()).isEmpty
+        assertThat(errorDetails.rbacRoleNotFound()).isEmpty
+        assertThat(errorDetails.environmentCreateDisabled()).isEmpty
+        assertThat(errorDetails.environmentArchived()).isEmpty
+        assertThat(errorDetails.invalidConfigTypeChange()).isEmpty
+        assertThat(errorDetails.environmentUpdateDisabled()).isEmpty
+        assertThat(errorDetails.heartbeatPreconditionFailed()).isEmpty
+        assertThat(errorDetails.invalidMetadata()).isEmpty
+        assertThat(errorDetails.grantRequired()).isEmpty
+        assertThat(errorDetails.organizationNotEligible()).isEmpty
+        assertThat(errorDetails.providerNotAllowed()).isEmpty
+        assertThat(errorDetails.unsupportedRegion()).isEmpty
+        assertThat(errorDetails.storageAlreadyRegistered()).isEmpty
+        assertThat(errorDetails.authorizationCheckUnavailable()).isEmpty
+        assertThat(errorDetails.invalidStorageArn()).isEmpty
+        assertThat(errorDetails.externalStorageInUse()).isEmpty
+        assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
+        assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).contains(storageInUse)
+        assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutSelf()).isEmpty
+        assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
+        assertThat(errorDetails.cannotSignOutManagedMember()).isEmpty
+        assertThat(errorDetails.cannotSignOutMembershipAdmin()).isEmpty
+        assertThat(errorDetails.cannotSignOutOwner()).isEmpty
+        assertThat(errorDetails.cannotSignOutPrivilegedMember()).isEmpty
+        assertThat(errorDetails.approvalRequired()).isEmpty
+        assertThat(errorDetails.externalStorageNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewNotAvailable()).isEmpty
+        assertThat(errorDetails.humanReviewOnWithExternalStorage()).isEmpty
+        assertThat(errorDetails.storageNotAttachable()).isEmpty
+        assertThat(errorDetails.transcriptsStorageRequired()).isEmpty
+        assertThat(errorDetails.storageAttachLimitReached()).isEmpty
+        assertThat(errorDetails.storageProfileStillRequired()).isEmpty
+        assertThat(errorDetails.storageChangedConcurrently()).isEmpty
+        assertThat(errorDetails.workspaceChangedConcurrently()).isEmpty
+        assertThat(errorDetails.spendLimitsAdminApiWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.unsupportedCharset()).isEmpty
+        assertThat(errorDetails.pluginNameTaken()).isEmpty
+        assertThat(errorDetails.skillNameTaken()).isEmpty
+        assertThat(errorDetails.registrationPending()).isEmpty
+        assertThat(errorDetails.scanFailed()).isEmpty
+        assertThat(errorDetails.scanPending()).isEmpty
+        assertThat(errorDetails.requestBodyTimeout()).isEmpty
+        assertThat(errorDetails.settingsDocumentLimitExceeded()).isEmpty
+        assertThat(errorDetails.settingsHistoryLimitExceeded()).isEmpty
+        assertThat(errorDetails.cmekFeatureUnsupported()).isEmpty
+        assertThat(errorDetails.rbacGroupManagedSettingsNotFound()).isEmpty
+        assertThat(errorDetails.rbacGroupOrderLimitExceeded()).isEmpty
+        assertThat(errorDetails.rbacGroupNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsRefused()).isEmpty
+        assertThat(errorDetails.apiKeyScopeMissing()).isEmpty
+        assertThat(errorDetails.claudeTagWritesNotEnabled()).isEmpty
+        assertThat(errorDetails.complianceConfigurationRestricted()).isEmpty
+        assertThat(errorDetails.organizationLevelScopedApiKeyRequired()).isEmpty
+        assertThat(errorDetails.environmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpEnvironmentNotFound()).isEmpty
+        assertThat(errorDetails.slackChannelSetUpSettingsConflict()).isEmpty
+        assertThat(errorDetails.bundleAttachmentNotSupported()).isEmpty
+        assertThat(errorDetails.bundleOnCall()).isEmpty
+    }
+
+    @Test
+    fun ofStorageInUseRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val errorDetails =
+            ErrorDetails.ofStorageInUse(BetaStorageInUseErrorDetails.builder().build())
 
         val roundtrippedErrorDetails =
             jsonMapper.readValue(
@@ -12876,6 +14818,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).contains(cannotSignOutPrimaryOwner)
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -13026,6 +14976,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).contains(cannotSignOutSelf)
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -13176,6 +15134,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta())
@@ -13328,6 +15294,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -13479,6 +15453,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -13630,6 +15612,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -13780,6 +15770,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -13932,6 +15930,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -14083,6 +16089,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -14233,6 +16247,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -14385,6 +16407,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -14537,6 +16567,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -14688,6 +16726,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -14838,6 +16884,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -14989,6 +17043,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -15142,6 +17204,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -15297,6 +17367,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -15452,6 +17530,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -15603,6 +17689,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -15752,6 +17846,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -15902,6 +18004,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -16054,6 +18164,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -16207,6 +18325,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -16355,6 +18481,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -16503,6 +18637,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -16653,6 +18795,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -16805,6 +18955,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -16956,6 +19114,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -17108,6 +19274,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -17260,6 +19434,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -17410,6 +19592,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -17560,6 +19750,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -17711,6 +19909,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -17859,6 +20065,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -18011,6 +20225,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -18166,6 +20388,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -18317,6 +20547,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -18471,6 +20709,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -18624,6 +20870,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -18776,6 +21030,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty
@@ -18927,6 +21189,14 @@ internal class ErrorDetailsTest {
         assertThat(errorDetails.externalStorageInUse()).isEmpty
         assertThat(errorDetails.externalStorageInWorkspacePolicy()).isEmpty
         assertThat(errorDetails.storageVerificationFailed()).isEmpty
+        assertThat(errorDetails.cmekNotApproved()).isEmpty
+        assertThat(errorDetails.externalKeyNotFound()).isEmpty
+        assertThat(errorDetails.externalKeyProviderMismatch()).isEmpty
+        assertThat(errorDetails.gcpProjectNotVerified()).isEmpty
+        assertThat(errorDetails.regionNotSupported()).isEmpty
+        assertThat(errorDetails.storageNotApproved()).isEmpty
+        assertThat(errorDetails.gcpProjectControlledByAnotherOrganization()).isEmpty
+        assertThat(errorDetails.storageInUse()).isEmpty
         assertThat(errorDetails.cannotSignOutPrimaryOwner()).isEmpty
         assertThat(errorDetails.cannotSignOutSelf()).isEmpty
         assertThat(errorDetails.organizationNotEnrolledInBeta()).isEmpty

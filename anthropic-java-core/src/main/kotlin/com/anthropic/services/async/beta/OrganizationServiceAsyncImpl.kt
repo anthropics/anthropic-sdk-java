@@ -38,6 +38,8 @@ import com.anthropic.services.async.beta.organization.PluginMarketplaceServiceAs
 import com.anthropic.services.async.beta.organization.PluginMarketplaceServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.PluginServiceAsync
 import com.anthropic.services.async.beta.organization.PluginServiceAsyncImpl
+import com.anthropic.services.async.beta.organization.ProviderServiceAsync
+import com.anthropic.services.async.beta.organization.ProviderServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.RateLimitServiceAsync
 import com.anthropic.services.async.beta.organization.RateLimitServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.RbacGroupServiceAsync
@@ -85,6 +87,8 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
     private val externalStorage: ExternalStorageServiceAsync by lazy {
         ExternalStorageServiceAsyncImpl(clientOptions)
     }
+
+    private val providers: ProviderServiceAsync by lazy { ProviderServiceAsyncImpl(clientOptions) }
 
     private val users: UserServiceAsync by lazy { UserServiceAsyncImpl(clientOptions) }
 
@@ -151,6 +155,8 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
 
     override fun externalStorage(): ExternalStorageServiceAsync = externalStorage
 
+    override fun providers(): ProviderServiceAsync = providers
+
     override fun users(): UserServiceAsync = users
 
     override fun workspaces(): WorkspaceServiceAsync = workspaces
@@ -214,6 +220,10 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
 
         private val externalStorage: ExternalStorageServiceAsync.WithRawResponse by lazy {
             ExternalStorageServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val providers: ProviderServiceAsync.WithRawResponse by lazy {
+            ProviderServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val users: UserServiceAsync.WithRawResponse by lazy {
@@ -292,6 +302,8 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
 
         override fun externalStorage(): ExternalStorageServiceAsync.WithRawResponse =
             externalStorage
+
+        override fun providers(): ProviderServiceAsync.WithRawResponse = providers
 
         override fun users(): UserServiceAsync.WithRawResponse = users
 

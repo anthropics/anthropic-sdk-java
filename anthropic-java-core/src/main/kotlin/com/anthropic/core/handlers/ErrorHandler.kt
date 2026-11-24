@@ -48,8 +48,16 @@ import com.anthropic.models.RequestBodyEncodingUnsupportedException
 import com.anthropic.models.RequestBodyTooLargeAfterDecodingException
 import com.anthropic.models.SandboxEgressRestrictedException
 import com.anthropic.models.WorkspaceHumanReviewDisabledException
+import com.anthropic.models.beta.BetaCmekNotApprovedException
+import com.anthropic.models.beta.BetaExternalKeyNotFoundException
+import com.anthropic.models.beta.BetaExternalKeyProviderMismatchException
+import com.anthropic.models.beta.BetaGcpProjectControlledByAnotherOrganizationException
+import com.anthropic.models.beta.BetaGcpProjectNotVerifiedException
 import com.anthropic.models.beta.BetaOrganizationNotEnrolledInBetaException
+import com.anthropic.models.beta.BetaRegionNotSupportedException
 import com.anthropic.models.beta.BetaRequestBodyTimeoutException
+import com.anthropic.models.beta.BetaStorageInUseException
+import com.anthropic.models.beta.BetaStorageNotApprovedException
 import com.anthropic.models.beta.BetaUnsupportedCharsetException
 import com.anthropic.models.beta.environments.BetaEnvironmentArchivedException
 import com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledException
@@ -366,6 +374,10 @@ private val errorCodeExceptions:
             { headers, body ->
                 CmekKeyNetworkBlockedException.builder().headers(headers).body(body).build()
             },
+        (400 to "cmek_not_approved") to
+            { headers, body ->
+                BetaCmekNotApprovedException.builder().headers(headers).body(body).build()
+            },
         (400 to "compaction_block_ambiguous") to
             { headers, body ->
                 CompactionBlockAmbiguousException.builder().headers(headers).body(body).build()
@@ -413,6 +425,17 @@ private val errorCodeExceptions:
             { headers, body ->
                 ExternalKeyInWorkspacePolicyException.builder().headers(headers).body(body).build()
             },
+        (400 to "external_key_not_found") to
+            { headers, body ->
+                BetaExternalKeyNotFoundException.builder().headers(headers).body(body).build()
+            },
+        (400 to "external_key_provider_mismatch") to
+            { headers, body ->
+                BetaExternalKeyProviderMismatchException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
         (400 to "external_key_validation_failed") to
             { headers, body ->
                 ExternalKeyValidationFailedException.builder().headers(headers).body(body).build()
@@ -442,6 +465,10 @@ private val errorCodeExceptions:
         (400 to "file_not_downloadable") to
             { headers, body ->
                 FileNotDownloadableException.builder().headers(headers).body(body).build()
+            },
+        (400 to "gcp_project_not_verified") to
+            { headers, body ->
+                BetaGcpProjectNotVerifiedException.builder().headers(headers).body(body).build()
             },
         (400 to "grant_required") to
             { headers, body ->
@@ -535,6 +562,10 @@ private val errorCodeExceptions:
                     .body(body)
                     .build()
             },
+        (400 to "region_not_supported") to
+            { headers, body ->
+                BetaRegionNotSupportedException.builder().headers(headers).body(body).build()
+            },
         (400 to "request_body_encoding_invalid") to
             { headers, body ->
                 RequestBodyEncodingInvalidException.builder().headers(headers).body(body).build()
@@ -578,6 +609,10 @@ private val errorCodeExceptions:
         (400 to "storage_attach_limit_reached") to
             { headers, body ->
                 BetaStorageAttachLimitReachedException.builder().headers(headers).body(body).build()
+            },
+        (400 to "storage_not_approved") to
+            { headers, body ->
+                BetaStorageNotApprovedException.builder().headers(headers).body(body).build()
             },
         (400 to "storage_not_attachable") to
             { headers, body ->
@@ -798,6 +833,13 @@ private val errorCodeExceptions:
             { headers, body ->
                 ExternalKeyChangedException.builder().headers(headers).body(body).build()
             },
+        (409 to "gcp_project_controlled_by_another_organization") to
+            { headers, body ->
+                BetaGcpProjectControlledByAnotherOrganizationException.builder()
+                    .headers(headers)
+                    .body(body)
+                    .build()
+            },
         (409 to "plugin_name_taken") to
             { headers, body ->
                 BetaPluginNameTakenException.builder().headers(headers).body(body).build()
@@ -835,6 +877,10 @@ private val errorCodeExceptions:
                     .headers(headers)
                     .body(body)
                     .build()
+            },
+        (409 to "storage_in_use") to
+            { headers, body ->
+                BetaStorageInUseException.builder().headers(headers).body(body).build()
             },
         (409 to "workspace_changed_concurrently") to
             { headers, body ->

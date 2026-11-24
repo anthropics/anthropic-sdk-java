@@ -16,6 +16,7 @@ import com.anthropic.services.async.beta.organization.FederationServiceAsync
 import com.anthropic.services.async.beta.organization.InviteServiceAsync
 import com.anthropic.services.async.beta.organization.PluginMarketplaceServiceAsync
 import com.anthropic.services.async.beta.organization.PluginServiceAsync
+import com.anthropic.services.async.beta.organization.ProviderServiceAsync
 import com.anthropic.services.async.beta.organization.RateLimitServiceAsync
 import com.anthropic.services.async.beta.organization.RbacGroupServiceAsync
 import com.anthropic.services.async.beta.organization.RbacRoleServiceAsync
@@ -53,6 +54,8 @@ interface OrganizationServiceAsync {
     fun serviceAccounts(): ServiceAccountServiceAsync
 
     fun externalStorage(): ExternalStorageServiceAsync
+
+    fun providers(): ProviderServiceAsync
 
     fun users(): UserServiceAsync
 
@@ -127,6 +130,8 @@ interface OrganizationServiceAsync {
         fun serviceAccounts(): ServiceAccountServiceAsync.WithRawResponse
 
         fun externalStorage(): ExternalStorageServiceAsync.WithRawResponse
+
+        fun providers(): ProviderServiceAsync.WithRawResponse
 
         fun users(): UserServiceAsync.WithRawResponse
 
