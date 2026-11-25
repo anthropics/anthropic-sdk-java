@@ -83,6 +83,8 @@ internal class BedrockBackendTest {
 
         private const val ENV_API_KEY = "AWS_BEARER_TOKEN_BEDROCK"
         private const val ENV_BASE_URL = "ANTHROPIC_BEDROCK_BASE_URL"
+        private const val ENV_AWS_ENDPOINT_URL_BEDROCK_RUNTIME = "AWS_ENDPOINT_URL_BEDROCK_RUNTIME"
+        private const val ENV_AWS_ENDPOINT_URL = "AWS_ENDPOINT_URL"
 
         private val hasRegionInEnvironment by lazy {
             try {
@@ -396,6 +398,68 @@ internal class BedrockBackendTest {
         initEnv()
         val builder = BedrockBackend.builder().withoutApiKeyEnvVar()
         Mockito.doReturn(CUSTOM_BASE_URL).`when`(builder).getEnv(ENV_BASE_URL)
+
+        val backend = builder.fromEnv().build()
+
+        assertThat(backend.baseUrl()).isEqualTo(CUSTOM_BASE_URL)
+    }
+
+    @Test
+    fun baseUrlFromAwsEndpointUrlBedrockRuntime() {
+        initEnv()
+        val builder = BedrockBackend.builder().withoutApiKeyEnvVar()
+        Mockito.doReturn(null).`when`(builder).getEnv(ENV_BASE_URL)
+        Mockito.doReturn(CUSTOM_BASE_URL).`when`(builder).getEnv(ENV_AWS_ENDPOINT_URL_BEDROCK_RUNTIME)
+
+        val backend = builder.fromEnv().build()
+
+        assertThat(backend.baseUrl()).isEqualTo(CUSTOM_BASE_URL)
+    }
+
+    @Test
+    fun baseUrlFromAwsEndpointUrl() {
+        initEnv()
+        val builder = BedrockBackend.builder().withoutApiKeyEnvVar()
+        Mockito.doReturn(null).`when`(builder).getEnv(ENV_BASE_URL)
+        Mockito.doReturn(null).`when`(builder).getEnv(ENV_AWS_ENDPOINT_URL_BEDROCK_RUNTIME)
+        Mockito.doReturn(CUSTOM_BASE_URL).`when`(builder).getEnv(ENV_AWS_ENDPOINT_URL)
+
+        val backend = builder.fromEnv().build()
+
+        assertThat(backend.baseUrl()).isEqualTo(CUSTOM_BASE_URL)
+    }
+
+    @Test
+    fun baseUrlAwsServiceSpecificEndpointTakesPrecedenceOverGeneric() {
+        initEnv()
+        val builder = BedrockBackend.builder().withoutApiKeyEnvVar()
+        Mockito.doReturn(null).`when`(builder).getEnv(ENV_BASE_URL)
+        Mockito.doReturn(CUSTOM_BASE_URL).`when`(builder).getEnv(ENV_AWS_ENDPOINT_URL_BEDROCK_RUNTIME)
+        Mockito.doReturn("https://generic.example.com").`when`(builder).getEnv(ENV_AWS_ENDPOINT_URL)
+
+        val backend = builder.fromEnv().build()
+
+        assertThat(backend.baseUrl()).isEqualTo(CUSTOM_BASE_URL)
+    }
+
+    @Test
+    fun baseUrlAnthropicEnvTakesPrecedenceOverAwsEndpointUrl() {
+        initEnv()
+        val builder = BedrockBackend.builder().withoutApiKeyEnvVar()
+        Mockito.doReturn(CUSTOM_BASE_URL).`when`(builder).getEnv(ENV_BASE_URL)
+        Mockito.doReturn("https://generic.example.com").`when`(builder).getEnv(ENV_AWS_ENDPOINT_URL_BEDROCK_RUNTIME)
+
+        val backend = builder.fromEnv().build()
+
+        assertThat(backend.baseUrl()).isEqualTo(CUSTOM_BASE_URL)
+    }
+
+    @Test
+    fun baseUrlExplicitOverrideTakesPrecedenceOverAwsEndpointUrl() {
+        initEnv()
+        val builder = BedrockBackend.builder().withoutApiKeyEnvVar().baseUrl(CUSTOM_BASE_URL)
+        Mockito.doReturn(null).`when`(builder).getEnv(ENV_BASE_URL)
+        Mockito.doReturn("https://generic.example.com").`when`(builder).getEnv(ENV_AWS_ENDPOINT_URL_BEDROCK_RUNTIME)
 
         val backend = builder.fromEnv().build()
 

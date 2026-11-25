@@ -151,6 +151,15 @@ private constructor(
 
         private const val ENV_BASE_URL = "ANTHROPIC_BEDROCK_BASE_URL"
 
+        /**
+         * Service-specific AWS endpoint override, as documented by the AWS SDKs
+         * (`AWS_ENDPOINT_URL_<SERVICE>`). Takes precedence over [ENV_AWS_ENDPOINT_URL].
+         */
+        private const val ENV_AWS_ENDPOINT_URL_BEDROCK_RUNTIME = "AWS_ENDPOINT_URL_BEDROCK_RUNTIME"
+
+        /** Generic AWS endpoint override (`AWS_ENDPOINT_URL`). */
+        private const val ENV_AWS_ENDPOINT_URL = "AWS_ENDPOINT_URL"
+
         @JvmStatic fun builder() = Builder()
 
         /**
@@ -600,8 +609,10 @@ private constructor(
          * The region is also resolved immediately using the default AWS region provider chain. Once
          * resolved here, the region will not be changed again.
          *
-         * The base URL is resolved from the `ANTHROPIC_BEDROCK_BASE_URL` environment variable if
-         * set.
+         * The base URL is resolved from the environment if not already set via [baseUrl]. The
+         * `ANTHROPIC_BEDROCK_BASE_URL` variable takes precedence, then the AWS SDK variables
+         * `AWS_ENDPOINT_URL_BEDROCK_RUNTIME` and `AWS_ENDPOINT_URL`. This supports VPC interface
+         * endpoints and other custom Bedrock runtimes (issue #433).
          *
          * When called, this method will immediately attempt to resolve the AWS credentials (or API
          * key) and region. An error will occur if they cannot be resolved.
@@ -645,7 +656,13 @@ private constructor(
                 throw IllegalStateException("No AWS region found.", e)
             }
 
-            getEnv(ENV_BASE_URL)?.let { baseUrlOverride = it }
+            val anthropicBaseUrl = getEnv(ENV_BASE_URL)
+            if (anthropicBaseUrl != null) {
+                baseUrlOverride = anthropicBaseUrl
+            } else if (baseUrlOverride == null) {
+                baseUrlOverride =
+                    getEnv(ENV_AWS_ENDPOINT_URL_BEDROCK_RUNTIME) ?: getEnv(ENV_AWS_ENDPOINT_URL)
+            }
         }
 
         /**
@@ -697,9 +714,10 @@ private constructor(
         /**
          * Overrides the base URL for requests, such as with the URL of a VPC interface endpoint.
          * When set, this takes precedence over the URL derived from the region, which is still used
-         * to sign requests. Alternatively, this may be resolved from the
-         * `ANTHROPIC_BEDROCK_BASE_URL` environment variable by calling [fromEnv]. If called after
-         * [fromEnv], this overrides the base URL resolved by [fromEnv].
+         * to sign requests. Alternatively, this may be resolved from
+         * `ANTHROPIC_BEDROCK_BASE_URL`, `AWS_ENDPOINT_URL_BEDROCK_RUNTIME`, or `AWS_ENDPOINT_URL`
+         * by calling [fromEnv]. If called after [fromEnv], this overrides the base URL resolved by
+         * [fromEnv].
          */
         fun baseUrl(baseUrl: String) = apply { this.baseUrlOverride = baseUrl }
 
